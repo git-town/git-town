@@ -8,7 +8,7 @@ Feature: already existing branch
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      there is already a branch "existing"
+      branch "existing" is already a feature branch
       """
 
   Scenario: the branch to create already exists at the origin remote
