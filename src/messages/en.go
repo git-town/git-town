@@ -82,7 +82,7 @@ END OUTPUT FROM 'git branch -vva'
 	HackBranchIsAlreadyFeature            = "branch %q is already a feature branch"
 	HackBranchIsNowFeature                = "branch %q is now a feature branch\n"
 	HackCannotFeatureMainBranch           = "cannot make the main branch a feature branch"
-	HackCannotFeaturePerennialBranch      = "branch %q is a perennial branch"
+	HackCannotFeaturePerennialBranch      = "branch %q is a perennial branch and therefore be a feature branch"
 	HostingBitBucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGitlabMergingViaAPI            = "GitLab API: Merging MR !%d ... "
 	HostingGitlabUpdateMRViaAPI           = "GitLab API: Updating target branch for MR !%d to %q ... "
