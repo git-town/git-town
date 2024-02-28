@@ -57,10 +57,6 @@ func (self *FullConfig) IsContributionBranch(branch gitdomain.LocalBranchName) b
 	return slice.Contains(self.ContributionBranches, branch)
 }
 
-func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
-	return self.BranchType(branch) == BranchTypeFeatureBranch
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {

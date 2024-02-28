@@ -234,7 +234,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if !state.fixture.DevRepo.Config.FullConfig.IsFeatureBranch(branch) {
+		if state.fixture.DevRepo.Config.FullConfig.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
 			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
 		}
 		return nil
