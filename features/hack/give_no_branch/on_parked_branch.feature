@@ -1,4 +1,4 @@
-Feature: making a parked branch a feature branch
+Feature: making the current parked branch a feature branch
 
   Background:
     Given the current branch is a parked branch "parked"

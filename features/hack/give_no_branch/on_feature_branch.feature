@@ -1,4 +1,4 @@
-Feature: cannot make a feature branch a feature branch
+Feature: cannot make the current feature branch a feature branch
 
   Background:
     Given the current branch is a feature branch "feature"

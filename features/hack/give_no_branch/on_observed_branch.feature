@@ -1,4 +1,4 @@
-Feature: making a observed branch a feature branch
+Feature: making the current observed branch a feature branch
 
   Background:
     Given the current branch is an observed branch "observed"

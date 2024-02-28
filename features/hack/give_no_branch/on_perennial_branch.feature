@@ -1,4 +1,4 @@
-Feature: cannot make a perennial branch a feature branch
+Feature: cannot make the current perennial branch a feature branch
 
   Background:
     Given the current branch is a perennial branch "perennial"

@@ -1,4 +1,4 @@
-Feature: making a contribution branch a feature branch
+Feature: making the current contribution branch a feature branch
 
   Background:
     Given the current branch is a contribution branch "contribution"
