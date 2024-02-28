@@ -1152,7 +1152,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a contribution branch "([^"]+)"$`, func(branch string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), "main")
+		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch))
+	})
+
 	suite.Step(`^the contribution branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch1), "main")
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch2), "main")
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
