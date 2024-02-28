@@ -11,8 +11,8 @@ Feature: making a parked branch a contribution branch
       """
       branch "branch" is now a contribution branch
       """
-    And the current branch is still "branch"
     And branch "branch" is now a contribution branch
+    And the current branch is still "branch"
     And there are now no parked branches
     And the uncommitted file still exists
 

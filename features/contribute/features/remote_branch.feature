@@ -13,8 +13,8 @@ Feature: make a remote branch a contribution branch
       """
       branch "remote-feature" is now a contribution branch
       """
-    And the current branch is now "remote-feature"
     And branch "remote-feature" is now a contribution branch
+    And the current branch is now "remote-feature"
     And the uncommitted file still exists
 
   Scenario: undo
