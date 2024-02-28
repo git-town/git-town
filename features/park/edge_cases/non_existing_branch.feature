@@ -7,12 +7,12 @@ Feature: cannot park non-existing branches
 
   Scenario: result
     Then it runs no commands
-    And the current branch is still "feature"
-    And the uncommitted file still exists
     And it prints the error:
       """
       there is no branch "non-existing"
       """
+    And the current branch is still "feature"
+    And the uncommitted file still exists
     And there are still no parked branches
 
   Scenario: undo

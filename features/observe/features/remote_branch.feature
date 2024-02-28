@@ -9,6 +9,10 @@ Feature: observe a remote branch
     Then it runs the commands
       | BRANCH | COMMAND                     |
       |        | git checkout remote-feature |
+    And it prints:
+      """
+      branch "remote-feature" is now an observed branch
+      """
     And the current branch is now "remote-feature"
     And branch "remote-feature" is now observed
     And the uncommitted file still exists

@@ -20,6 +20,10 @@ Feature: park a branch verbosely
       """
       Ran 8 shell commands
       """
+    And it prints:
+      """
+      branch "branch" is now parked
+      """
     And the current branch is still "branch"
     And branch "branch" is now parked
     And the uncommitted file still exists

@@ -20,6 +20,10 @@ Feature: observe a branch verbosely
       """
       Ran 8 shell commands
       """
+    And it prints:
+      """
+      branch "branch" is now an observed branch
+      """
     And the current branch is still "branch"
     And branch "branch" is now observed
     And the uncommitted file still exists

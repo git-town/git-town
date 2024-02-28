@@ -7,8 +7,12 @@ Feature: making an observed branch a contribution branch
 
   Scenario: result
     Then it runs no commands
-    And the current branch is still "branch"
+    And it prints:
+      """
+      branch "branch" is now a contribution branch
+      """
     And branch "branch" is now a contribution branch
+    And the current branch is still "branch"
     And there are now no observed branches
     And the uncommitted file still exists
 
