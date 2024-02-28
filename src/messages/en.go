@@ -104,6 +104,7 @@ END OUTPUT FROM 'git branch -vva'
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
+	ObservedBranchIsNowObserved           = "branch %q is now observed"
 	OfflineNotAllowed                     = "this command requires an active internet connection"
 	OpcodeUnknown                         = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                    = "cannot determine open changes: %w"
