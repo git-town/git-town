@@ -7,6 +7,10 @@ Feature: parking multiple branches
 
   Scenario: result
     Then it runs no commands
+    And it prints:
+      """
+      branch "feature-1" is now parked
+      """
     And branch "feature-1" is now parked
     And branch "feature-2" is now parked
     And branch "feature-3" is now parked

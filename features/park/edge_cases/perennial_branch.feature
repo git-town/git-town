@@ -7,13 +7,13 @@ Feature: cannot park perennial branches
 
   Scenario: result
     Then it runs no commands
-    And the current branch is still "perennial"
-    And the perennial branches are still "perennial"
-    And the uncommitted file still exists
     And it prints the error:
       """
       cannot park perennial branches
       """
+    And the current branch is still "perennial"
+    And the perennial branches are still "perennial"
+    And the uncommitted file still exists
     And there are still no parked branches
 
   Scenario: undo

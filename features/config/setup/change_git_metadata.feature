@@ -29,9 +29,12 @@ Feature: change existing information in Git metadata
     Then it runs the commands
       | COMMAND                                                      |
       | git config --global alias.append "town append"               |
+      | git config --global alias.contribute "town contribute"       |
       | git config --global alias.diff-parent "town diff-parent"     |
       | git config --global alias.hack "town hack"                   |
       | git config --global alias.kill "town kill"                   |
+      | git config --global alias.observe "town observe"             |
+      | git config --global alias.park "town park"                   |
       | git config --global alias.prepend "town prepend"             |
       | git config --global alias.propose "town propose"             |
       | git config --global alias.rename-branch "town rename-branch" |

@@ -29,9 +29,12 @@ func (self *Key) UnmarshalJSON(b []byte) error {
 
 const (
 	KeyAliasAppend                         = Key("alias.append")
+	KeyAliasContribute                     = Key("alias.contribute")
 	KeyAliasDiffParent                     = Key("alias.diff-parent")
 	KeyAliasHack                           = Key("alias.hack")
 	KeyAliasKill                           = Key("alias.kill")
+	KeyAliasObserve                        = Key("alias.observe")
+	KeyAliasPark                           = Key("alias.park")
 	KeyAliasPrepend                        = Key("alias.prepend")
 	KeyAliasPropose                        = Key("alias.propose")
 	KeyAliasRenameBranch                   = Key("alias.rename-branch")
@@ -121,12 +124,18 @@ func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key 
 	switch aliasableCommand {
 	case configdomain.AliasableCommandAppend:
 		return KeyAliasAppend
+	case configdomain.AliasableCommandContribute:
+		return KeyAliasContribute
 	case configdomain.AliasableCommandDiffParent:
 		return KeyAliasDiffParent
 	case configdomain.AliasableCommandHack:
 		return KeyAliasHack
 	case configdomain.AliasableCommandKill:
 		return KeyAliasKill
+	case configdomain.AliasableCommandObserve:
+		return KeyAliasObserve
+	case configdomain.AliasableCommandPark:
+		return KeyAliasPark
 	case configdomain.AliasableCommandPrepend:
 		return KeyAliasPrepend
 	case configdomain.AliasableCommandPropose:

@@ -45,12 +45,18 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	switch key {
 	case KeyAliasAppend:
 		config.Aliases[configdomain.AliasableCommandAppend] = value
+	case KeyAliasContribute:
+		config.Aliases[configdomain.AliasableCommandContribute] = value
 	case KeyAliasDiffParent:
 		config.Aliases[configdomain.AliasableCommandDiffParent] = value
 	case KeyAliasHack:
 		config.Aliases[configdomain.AliasableCommandHack] = value
 	case KeyAliasKill:
 		config.Aliases[configdomain.AliasableCommandKill] = value
+	case KeyAliasObserve:
+		config.Aliases[configdomain.AliasableCommandObserve] = value
+	case KeyAliasPark:
+		config.Aliases[configdomain.AliasableCommandPark] = value
 	case KeyAliasPrepend:
 		config.Aliases[configdomain.AliasableCommandPrepend] = value
 	case KeyAliasPropose:

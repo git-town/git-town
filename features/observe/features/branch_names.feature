@@ -7,8 +7,20 @@ Feature: observing multiple branches
 
   Scenario: result
     Then it runs no commands
+    And it prints:
+      """
+      branch "feature-1" is now an observed branch
+      """
     And branch "feature-1" is now observed
+    And it prints:
+      """
+      branch "feature-2" is now an observed branch
+      """
     And branch "feature-2" is now observed
+    And it prints:
+      """
+      branch "feature-3" is now an observed branch
+      """
     And branch "feature-3" is now observed
     And the current branch is still "main"
     And the uncommitted file still exists

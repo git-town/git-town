@@ -70,12 +70,14 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToContributionBranches(config.branchesToMark.Keys()...); err != nil {
+	branchNames := config.branchesToMark.Keys()
+	if err = repo.Runner.Config.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
 		return err
 	}
+	printContributeBranches(branchNames)
 	if !config.checkout.IsEmpty() {
 		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
 			return err
@@ -95,6 +97,12 @@ type contributeConfig struct {
 	allBranches    gitdomain.BranchInfos
 	branchesToMark commandconfig.BranchesAndTypes
 	checkout       gitdomain.LocalBranchName
+}
+
+func printContributeBranches(branches gitdomain.LocalBranchNames) {
+	for _, branch := range branches {
+		fmt.Printf(messages.ContributeBranchIsNowContribution, branch)
+	}
 }
 
 func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config *config.Config) error {

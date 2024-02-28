@@ -69,12 +69,14 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToObservedBranches(config.branchesToObserve.Keys()...); err != nil {
+	branchNames := config.branchesToObserve.Keys()
+	if err = repo.Runner.Config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
+	printObservedBranches(branchNames)
 	if !config.checkout.IsEmpty() {
 		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
 			return err
@@ -94,6 +96,12 @@ type observeConfig struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
+}
+
+func printObservedBranches(branches gitdomain.LocalBranchNames) {
+	for _, branch := range branches {
+		fmt.Printf(messages.ObservedBranchIsNowObserved, branch)
+	}
 }
 
 func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {

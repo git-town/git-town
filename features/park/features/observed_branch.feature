@@ -7,6 +7,10 @@ Feature: parking an observed branch
 
   Scenario: result
     Then it runs no commands
+    And it prints:
+      """
+      branch "observed" is now parked
+      """
     And the current branch is still "observed"
     And branch "observed" is now parked
     And there are now no observed branches
