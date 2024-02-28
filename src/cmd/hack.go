@@ -8,6 +8,9 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/config/commandconfig"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
@@ -58,6 +61,26 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	if config.appendConfig != nil {
+		return createBranch(repo, config.appendConfig, initialBranchesSnapshot, initialStashSize, dryRun, verbose)
+	}
+	if config.makeFeatureConfig != nil {
+		return makeFeatureBranch(config.makeFeatureConfig, repo.Runner.Config)
+	}
+	panic("both config arms were nil")
+}
+
+type hackConfig struct {
+	appendConfig      *appendConfig
+	makeFeatureConfig *makeFeatureConfig
+}
+
+// this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
+type makeFeatureConfig struct {
+	targetBranches commandconfig.BranchesAndTypes
+}
+
+func createBranch(repo *execute.OpenRepoResult, config *appendConfig, initialBranchesSnapshot gitdomain.BranchesSnapshot, initialStashSize gitdomain.StashSize, dryRun, verbose bool) error {
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -84,16 +107,6 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	})
 }
 
-type hackConfig struct {
-	*appendConfig
-	*makeFeatureConfig
-}
-
-// this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
-type makeFeatureConfig struct {
-	targetBranches gitdomain.LocalBranchNames
-}
-
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*hackConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
@@ -116,7 +129,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return &hackConfig{
 			appendConfig: nil,
 			makeFeatureConfig: &makeFeatureConfig{
-				targetBranches: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+				targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.FullConfig),
 			},
 		}, branchesSnapshot, stashSize, false, nil
 	}
@@ -124,7 +137,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return &hackConfig{
 			appendConfig: nil,
 			makeFeatureConfig: &makeFeatureConfig{
-				targetBranches: targetBranches,
+				targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.FullConfig),
 			},
 		}, branchesSnapshot, stashSize, false, nil
 	}
@@ -158,4 +171,41 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		},
 		makeFeatureConfig: nil,
 	}, branchesSnapshot, stashSize, false, fc.Err
+}
+
+func makeFeatureBranch(makeFeatureConfig *makeFeatureConfig, config *config.Config) error {
+	if err := validateMakeFeatureConfig(makeFeatureConfig); err != nil {
+		return err
+	}
+	for branchName, branchType := range makeFeatureConfig.targetBranches {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch:
+			config.RemoveFromContributionBranches(branchName)
+		case configdomain.BranchTypeObservedBranch:
+			config.RemoveFromObservedBranches(branchName)
+		case configdomain.BranchTypeParkedBranch:
+			config.RemoveFromParkedBranches(branchName)
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
+		}
+		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
+	}
+	return nil
+}
+
+func validateMakeFeatureConfig(config *makeFeatureConfig) error {
+	for branchName, branchType := range config.targetBranches {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+			return nil
+		case configdomain.BranchTypeFeatureBranch:
+			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
+		case configdomain.BranchTypeMainBranch:
+			return fmt.Errorf(messages.HackCannotFeatureMainBranch, branchName)
+		case configdomain.BranchTypePerennialBranch:
+			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
+		}
+		panic(fmt.Sprintf("unhandled branch type: %s", branchType))
+	}
+	return nil
 }
