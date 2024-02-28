@@ -9,10 +9,10 @@ Feature: make the current branch a contribution branch
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "branch" is now a contribution branch
       """
-    And the current branch is still "branch"
     And branch "branch" is now a contribution branch
+    And the current branch is still "branch"
     And the uncommitted file still exists
 
   Scenario: undo

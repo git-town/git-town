@@ -22,7 +22,7 @@ Feature: make a branch contribution verbosely
       """
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "branch" is now a contribution branch
       """
     And the current branch is still "branch"
     And branch "branch" is now a contribution branch
