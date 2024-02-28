@@ -70,7 +70,6 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        initialStashSize,
 			dryRun:                dryRun,
-			fullConfig:            &configdomain.FullConfig{},
 			rootDir:               repo.RootDir,
 			runner:                repo.Runner,
 			verbose:               verbose,
@@ -114,7 +113,7 @@ func createBranch(args createBranchArgs) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
-		FullConfig:              args.fullConfig,
+		FullConfig:              args.appendConfig.FullConfig,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
@@ -132,7 +131,6 @@ type createBranchArgs struct {
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	dryRun                bool
-	fullConfig            *configdomain.FullConfig
 	rootDir               gitdomain.RepoRootDir
 	runner                *git.ProdRunner
 	verbose               bool
