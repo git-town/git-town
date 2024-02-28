@@ -6,7 +6,6 @@ Feature: making multiple branches a feature branch
     And a parked branch "parked"
     When I run "git-town hack contribution observed parked"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -31,3 +30,5 @@ Feature: making multiple branches a feature branch
     When I run "git-town undo"
     Then it runs no commands
     And branch "contribution" is now a contribution branch
+    And branch "observed" is now observed
+    And branch "parked" is now parked
