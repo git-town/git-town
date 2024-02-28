@@ -174,19 +174,23 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 }
 
 func makeFeatureBranch(makeFeatureConfig *makeFeatureConfig, config *config.Config) error {
-	if err := validateMakeFeatureConfig(makeFeatureConfig); err != nil {
+	err := validateMakeFeatureConfig(makeFeatureConfig)
+	if err != nil {
 		return err
 	}
 	for branchName, branchType := range makeFeatureConfig.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			config.RemoveFromContributionBranches(branchName)
+			err = config.RemoveFromContributionBranches(branchName)
 		case configdomain.BranchTypeObservedBranch:
-			config.RemoveFromObservedBranches(branchName)
+			err = config.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
-			config.RemoveFromParkedBranches(branchName)
+			err = config.RemoveFromParkedBranches(branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
+		}
+		if err != nil {
+			return err
 		}
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
