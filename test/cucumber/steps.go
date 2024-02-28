@@ -232,6 +232,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if state.fixture.DevRepo.Config.FullConfig.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
+			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
+		}
+		return nil
+	})
+
 	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
@@ -251,6 +259,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				"branch %q isn't parked as expected.\nParked branches: %s",
 				branch,
 				strings.Join(state.fixture.DevRepo.Config.FullConfig.ParkedBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't perennial as expected.\nPerennial branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.PerennialBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -1132,7 +1152,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a contribution branch "([^"]+)"$`, func(branch string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), "main")
+		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch))
+	})
+
 	suite.Step(`^the contribution branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch1), "main")
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch2), "main")
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 

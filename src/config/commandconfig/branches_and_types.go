@@ -14,6 +14,14 @@ type FullConfig interface {
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]configdomain.BranchType
 
+func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, fullConfig configdomain.FullConfig) BranchesAndTypes {
+	result := make(BranchesAndTypes, len(branches))
+	for _, branch := range branches {
+		result[branch] = fullConfig.BranchType(branch)
+	}
+	return result
+}
+
 func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig FullConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
