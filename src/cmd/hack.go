@@ -64,7 +64,17 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	if config.appendConfig != nil {
-		return createBranch(repo, config.appendConfig, initialBranchesSnapshot, initialStashSize, dryRun, verbose)
+		return createBranch(createBranchArgs{
+			appendConfig:          config.appendConfig,
+			beginBranchesSnapshot: initialBranchesSnapshot,
+			beginConfigSnapshot:   repo.ConfigSnapshot,
+			beginStashSize:        initialStashSize,
+			dryRun:                dryRun,
+			fullConfig:            &configdomain.FullConfig{},
+			rootDir:               repo.RootDir,
+			runner:                repo.Runner,
+			verbose:               verbose,
+		})
 	}
 	if config.makeFeatureConfig != nil {
 		return makeFeatureBranch(makeFeatureBranchArgs{
@@ -89,31 +99,43 @@ type makeFeatureConfig struct {
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createBranch(repo *execute.OpenRepoResult, config *appendConfig, initialBranchesSnapshot gitdomain.BranchesSnapshot, initialStashSize gitdomain.StashSize, dryRun, verbose bool) error {
+func createBranch(args createBranchArgs) error {
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: initialBranchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        initialStashSize,
+		BeginBranchesSnapshot: args.beginBranchesSnapshot,
+		BeginConfigSnapshot:   args.beginConfigSnapshot,
+		BeginStashSize:        args.beginStashSize,
 		Command:               "hack",
-		DryRun:                dryRun,
+		DryRun:                args.dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            appendProgram(config),
+		RunProgram:            appendProgram(args.appendConfig),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
-		HasOpenChanges:          config.hasOpenChanges,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
-		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
+		FullConfig:              args.fullConfig,
+		HasOpenChanges:          args.appendConfig.hasOpenChanges,
+		InitialBranchesSnapshot: args.beginBranchesSnapshot,
+		InitialConfigSnapshot:   args.beginConfigSnapshot,
+		InitialStashSize:        args.beginStashSize,
+		RootDir:                 args.rootDir,
+		Run:                     args.runner,
 		RunState:                &runState,
-		Verbose:                 verbose,
+		Verbose:                 args.verbose,
 	})
+}
+
+type createBranchArgs struct {
+	appendConfig          *appendConfig
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	beginConfigSnapshot   undoconfig.ConfigSnapshot
+	beginStashSize        gitdomain.StashSize
+	dryRun                bool
+	fullConfig            *configdomain.FullConfig
+	rootDir               gitdomain.RepoRootDir
+	runner                *git.ProdRunner
+	verbose               bool
 }
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*hackConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
