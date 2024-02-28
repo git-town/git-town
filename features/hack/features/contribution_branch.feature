@@ -1,3 +1,4 @@
+@this
 Feature: making a contribution branch a feature branch
 
   Background:
@@ -13,3 +14,8 @@ Feature: making a contribution branch a feature branch
       branch "contribution" is now a feature branch
       """
     And branch "feature" is now a feature branch
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And branch "feature" is now a contribution branch

@@ -12,9 +12,11 @@ import (
 	"github.com/git-town/git-town/v12/src/config/commandconfig"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
+	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
+	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -65,7 +67,14 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return createBranch(repo, config.appendConfig, initialBranchesSnapshot, initialStashSize, dryRun, verbose)
 	}
 	if config.makeFeatureConfig != nil {
-		return makeFeatureBranch(config.makeFeatureConfig, repo.Runner.Config)
+		return makeFeatureBranch(makeFeatureBranchArgs{
+			config:              repo.Runner.Config,
+			beginConfigSnapshot: repo.ConfigSnapshot,
+			makeFeatureConfig:   config.makeFeatureConfig,
+			rootDir:             repo.RootDir,
+			runner:              repo.Runner,
+			verbose:             verbose,
+		})
 	}
 	panic("both config arms were nil")
 }
@@ -173,19 +182,19 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func makeFeatureBranch(makeFeatureConfig *makeFeatureConfig, config *config.Config) error {
-	err := validateMakeFeatureConfig(makeFeatureConfig)
+func makeFeatureBranch(args makeFeatureBranchArgs) error {
+	err := validateMakeFeatureConfig(args.makeFeatureConfig)
 	if err != nil {
 		return err
 	}
-	for branchName, branchType := range makeFeatureConfig.targetBranches {
+	for branchName, branchType := range args.makeFeatureConfig.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			err = config.RemoveFromContributionBranches(branchName)
+			err = args.config.RemoveFromContributionBranches(branchName)
 		case configdomain.BranchTypeObservedBranch:
-			err = config.RemoveFromObservedBranches(branchName)
+			err = args.config.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
-			err = config.RemoveFromParkedBranches(branchName)
+			err = args.config.RemoveFromParkedBranches(branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
 		}
@@ -194,7 +203,23 @@ func makeFeatureBranch(makeFeatureConfig *makeFeatureConfig, config *config.Conf
 		}
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
-	return nil
+	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		BeginConfigSnapshot: args.beginConfigSnapshot,
+		Command:             "observe",
+		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		RootDir:             args.rootDir,
+		Runner:              args.runner,
+		Verbose:             args.verbose,
+	})
+}
+
+type makeFeatureBranchArgs struct {
+	config              *config.Config
+	beginConfigSnapshot undoconfig.ConfigSnapshot
+	makeFeatureConfig   *makeFeatureConfig
+	rootDir             gitdomain.RepoRootDir
+	runner              *git.ProdRunner
+	verbose             bool
 }
 
 func validateMakeFeatureConfig(config *makeFeatureConfig) error {
