@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -114,6 +115,14 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
+	if len(targetBranches) == 0 {
+		return &hackConfig{
+			appendConfig: nil,
+			makeFeatureConfig: &makeFeatureConfig{
+				targetBranches: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+			},
+		}, branchesSnapshot, stashSize, false, nil
+	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		return &hackConfig{
 			appendConfig: nil,
@@ -122,6 +131,10 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			},
 		}, branchesSnapshot, stashSize, false, nil
 	}
+	if len(targetBranches) > 1 {
+		return nil, branchesSnapshot, stashSize, false, errors.New(messages.HackTooManyArguments)
+	}
+	targetBranch := targetBranches[0]
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -146,6 +159,6 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			remotes:                   remotes,
 			targetBranch:              targetBranch,
 		},
-		targetBranches: gitdomain.LocalBranchNames{},
+		makeFeatureConfig: nil,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }

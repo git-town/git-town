@@ -78,6 +78,7 @@ END OUTPUT FROM 'git branch -vva'
 	GitVersionProblem                     = "cannot determine Git version: %w"
 	GitVersionUnexpectedOutput            = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 	GitVersionTooLow                      = "this app requires Git 2.7.0 or higher"
+	HackTooManyArguments                  = "please provide only one branch to create"
 	HostingBitBucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGitlabMergingViaAPI            = "GitLab API: Merging MR !%d ... "
 	HostingGitlabUpdateMRViaAPI           = "GitLab API: Updating target branch for MR !%d to %q ... "
