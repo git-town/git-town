@@ -45,13 +45,23 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 }
 
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
-func (self BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
+func (self BranchInfos) HasLocalBranch(branch LocalBranchName) bool {
 	for _, bi := range self {
-		if bi.LocalName == localBranch {
+		if bi.LocalName == branch {
 			return true
 		}
 	}
 	return false
+}
+
+// HasLocalBranches indicates whether this BranchInfos instance contains all the given branches.
+func (self BranchInfos) HasLocalBranches(branches LocalBranchNames) bool {
+	for _, branch := range branches {
+		if !self.HasLocalBranch(branch) {
+			return false
+		}
+	}
+	return true
 }
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.

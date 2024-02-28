@@ -29,11 +29,11 @@ func hackCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
-		Args:    cobra.ExactArgs(1),
+		Args:    cobra.ArbitraryArgs,
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executeHackCreateBranch(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -42,6 +42,9 @@ func hackCmd() *cobra.Command {
 }
 
 func executeHack(args []string, dryRun, verbose bool) error {
+}
+
+func executeHackCreateBranch(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -83,7 +86,17 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+type hackConfig struct {
+	*appendConfig
+	*makeFeatureConfig
+}
+
+// this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
+type makeFeatureConfig struct {
+	targetBranches gitdomain.LocalBranchNames
+}
+
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*hackConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
@@ -100,7 +113,15 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	targetBranch := gitdomain.NewLocalBranchName(args[0])
+	targetBranches := gitdomain.NewLocalBranchNames(args...)
+	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
+		return &hackConfig{
+			appendConfig: nil,
+			makeFeatureConfig: &makeFeatureConfig{
+				targetBranches: targetBranches,
+			},
+		}, branchesSnapshot, stashSize, false, nil
+	}
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -110,18 +131,21 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
-	return &appendConfig{
-		FullConfig:                &repo.Runner.Config.FullConfig,
-		allBranches:               branchesSnapshot.Branches,
-		branchesToSync:            branchesToSync,
-		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    dryRun,
-		hasOpenChanges:            repoStatus.OpenChanges,
-		initialBranch:             branchesSnapshot.Active,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch},
-		parentBranch:              repo.Runner.Config.FullConfig.MainBranch,
-		previousBranch:            previousBranch,
-		remotes:                   remotes,
-		targetBranch:              targetBranch,
+	return &hackConfig{
+		appendConfig: &appendConfig{
+			FullConfig:                &repo.Runner.Config.FullConfig,
+			allBranches:               branchesSnapshot.Branches,
+			branchesToSync:            branchesToSync,
+			dialogTestInputs:          dialogTestInputs,
+			dryRun:                    dryRun,
+			hasOpenChanges:            repoStatus.OpenChanges,
+			initialBranch:             branchesSnapshot.Active,
+			newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch},
+			parentBranch:              repo.Runner.Config.FullConfig.MainBranch,
+			previousBranch:            previousBranch,
+			remotes:                   remotes,
+			targetBranch:              targetBranch,
+		},
+		targetBranches: gitdomain.LocalBranchNames{},
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
