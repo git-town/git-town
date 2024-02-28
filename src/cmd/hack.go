@@ -68,8 +68,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	}
 	if config.makeFeatureConfig != nil {
 		return makeFeatureBranch(makeFeatureBranchArgs{
-			config:              repo.Runner.Config,
 			beginConfigSnapshot: repo.ConfigSnapshot,
+			config:              repo.Runner.Config,
 			makeFeatureConfig:   config.makeFeatureConfig,
 			rootDir:             repo.RootDir,
 			runner:              repo.Runner,
@@ -214,8 +214,8 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 }
 
 type makeFeatureBranchArgs struct {
-	config              *config.Config
 	beginConfigSnapshot undoconfig.ConfigSnapshot
+	config              *config.Config
 	makeFeatureConfig   *makeFeatureConfig
 	rootDir             gitdomain.RepoRootDir
 	runner              *git.ProdRunner
