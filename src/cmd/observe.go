@@ -69,14 +69,14 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	observedKeys := config.branchesToObserve.Keys()
-	if err = repo.Runner.Config.AddToObservedBranches(observedKeys...); err != nil {
+	branchNames := config.branchesToObserve.Keys()
+	if err = repo.Runner.Config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
-	printObservedBranches(observedKeys)
+	printObservedBranches(branchNames)
 	if !config.checkout.IsEmpty() {
 		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
 			return err

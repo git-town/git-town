@@ -70,14 +70,14 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	contributionKeys := config.branchesToMark.Keys()
-	if err = repo.Runner.Config.AddToContributionBranches(contributionKeys...); err != nil {
+	branchNames := config.branchesToMark.Keys()
+	if err = repo.Runner.Config.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
 		return err
 	}
-	printContributeBranches(contributionKeys)
+	printContributeBranches(branchNames)
 	if !config.checkout.IsEmpty() {
 		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
 			return err

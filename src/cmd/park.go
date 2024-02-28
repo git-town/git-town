@@ -63,14 +63,14 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branchKeys := config.branchesToPark.Keys()
-	if err = repo.Runner.Config.AddToParkedBranches(branchKeys...); err != nil {
+	branchNames := config.branchesToPark.Keys()
+	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonParkBranchTypes(config.branchesToPark, repo.Runner.Config); err != nil {
 		return err
 	}
-	printParkedBranches(branchKeys)
+	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "park",
