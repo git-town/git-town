@@ -20,6 +20,10 @@ Feature: make a branch contribution verbosely
       """
       Ran 8 shell commands
       """
+    And it prints:
+      """
+      branch "branch" is now an observed branch
+      """
     And the current branch is still "branch"
     And branch "branch" is now a contribution branch
     And the uncommitted file still exists

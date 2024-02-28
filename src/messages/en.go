@@ -37,6 +37,7 @@ const (
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git-town skip\"."
+	ContributeBranchIsNowContribution  = "branch %q is now a contribution branch\n"
 	ContributionBranchCannotPark       = "cannot park contribution branches"
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
@@ -104,7 +105,7 @@ END OUTPUT FROM 'git branch -vva'
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
-	ObservedBranchIsNowObserved           = "branch %q is now observed"
+	ObservedBranchIsNowObserved           = "branch %q is now an observed branch\n"
 	OfflineNotAllowed                     = "this command requires an active internet connection"
 	OpcodeUnknown                         = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                    = "cannot determine open changes: %w"

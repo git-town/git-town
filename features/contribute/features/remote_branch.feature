@@ -9,6 +9,10 @@ Feature: make a remote branch a contribution branch
     Then it runs the commands
       | BRANCH | COMMAND                     |
       |        | git checkout remote-feature |
+    And it prints:
+      """
+      branch "remote-feature" is now a contribution branch
+      """
     And the current branch is now "remote-feature"
     And branch "remote-feature" is now a contribution branch
     And the uncommitted file still exists
