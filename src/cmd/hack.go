@@ -250,7 +250,7 @@ func validateMakeFeatureConfig(config *makeFeatureConfig) error {
 		case configdomain.BranchTypeFeatureBranch:
 			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
 		case configdomain.BranchTypeMainBranch:
-			return fmt.Errorf(messages.HackCannotFeatureMainBranch, branchName)
+			return errors.New(messages.HackCannotFeatureMainBranch)
 		case configdomain.BranchTypePerennialBranch:
 			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
 		}

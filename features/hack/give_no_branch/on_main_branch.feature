@@ -8,7 +8,7 @@ Feature: cannot make the current main branch a feature branch
     Then it runs no commands
     And it prints the error:
       """
-      branch "main" is the main branch
+      cannot make the main branch a feature branch
       """
     And the main branch is still "main"
 
