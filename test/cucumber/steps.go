@@ -264,6 +264,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't perennial as expected.\nPerennial branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.PerennialBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
 	suite.Step(`^branch "([^"]+)" is now a feature branch`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		if state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
