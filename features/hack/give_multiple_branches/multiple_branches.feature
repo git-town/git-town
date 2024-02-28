@@ -14,7 +14,12 @@ Feature: making multiple branches a feature branch
       """
       branch "contribution" is now a feature branch
       """
+    And it prints:
+      """
+      branch "observed" is now a feature branch
+      """
     And branch "contribution" is now a feature branch
+    And branch "observed" is now a feature branch
 
   Scenario: undo
     When I run "git-town undo"
