@@ -34,7 +34,7 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHackCreateBranch(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executeHack(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -43,9 +43,6 @@ func hackCmd() *cobra.Command {
 }
 
 func executeHack(args []string, dryRun, verbose bool) error {
-}
-
-func executeHackCreateBranch(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
