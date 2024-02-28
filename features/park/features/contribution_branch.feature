@@ -7,6 +7,10 @@ Feature: parking a contribution branch
 
   Scenario: result
     Then it runs no commands
+    And it prints:
+      """
+      branch "branch" is now parked
+      """
     And the current branch is still "branch"
     And branch "branch" is now parked
     And there are now no contribution branches

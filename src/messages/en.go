@@ -111,6 +111,7 @@ END OUTPUT FROM 'git branch -vva'
 	OpenChangesProblem                    = "cannot determine open changes: %w"
 	OriginHostname                        = "Origin hostname: %s\n"
 	ParentDialogSelected                  = "Selected parent branch for %q: %s\n"
+	ParkedBranchIsNowParked               = "branch %q is now parked\n"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
 	PerennialBranchCannotPark             = "cannot park perennial branches"
