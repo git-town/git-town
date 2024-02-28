@@ -5,9 +5,7 @@ Feature: cannot make a feature branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
+    Then it runs no commands
     And it prints the error:
       """
       branch "feature" is already a feature branch

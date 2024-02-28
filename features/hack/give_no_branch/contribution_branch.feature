@@ -5,9 +5,7 @@ Feature: making a contribution branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH       | COMMAND                  |
-      | contribution | git fetch --prune --tags |
+    Then it runs no commands
     And it prints:
       """
       branch "contribution" is now a feature branch

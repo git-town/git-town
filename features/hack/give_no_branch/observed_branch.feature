@@ -5,9 +5,7 @@ Feature: making a observed branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | observed | git fetch --prune --tags |
+    Then it runs no commands
     And it prints:
       """
       branch "observed" is now a feature branch

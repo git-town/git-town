@@ -7,9 +7,7 @@ Feature: making multiple branches a feature branch
     When I run "git-town hack contribution observed parked"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then it runs no commands
     And it prints:
       """
       branch "contribution" is now a feature branch

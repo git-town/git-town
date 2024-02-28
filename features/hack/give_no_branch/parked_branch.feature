@@ -5,9 +5,7 @@ Feature: making a parked branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | parked | git fetch --prune --tags |
+    Then it runs no commands
     And it prints:
       """
       branch "parked" is now a feature branch

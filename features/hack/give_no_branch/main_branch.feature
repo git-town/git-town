@@ -5,9 +5,7 @@ Feature: cannot make the main branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then it runs no commands
     And it prints the error:
       """
       branch "main" is the main branch

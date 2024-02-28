@@ -5,9 +5,7 @@ Feature: cannot make a perennial branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH    | COMMAND                  |
-      | perennial | git fetch --prune --tags |
+    Then it runs no commands
     And it prints the error:
       """
       branch "perennial" is a perennial branch
