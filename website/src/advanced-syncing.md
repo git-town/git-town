@@ -6,9 +6,9 @@ will get synced in the specific ways it's supposed to get synced or not synced.
 
 ## Branch Ownership
 
-The "owner" of a branch is responsible for the larger lifetime events of this
-branch. The branch owner pulls in updates from the parent branch, creates the
-pull request, and delete the branch from the hosting server. Typically you own
+The "owner" of a branch is responsible for the lifetime events of this branch.
+The branch owner pulls in updates from the parent branch, creates the pull
+request, and delete the branch from the hosting server. Typically you own
 branches that you create with [git hack](commands/hack.md),
 [git append](commands/append.md), or [git prepend](commands/prepend.md).
 
