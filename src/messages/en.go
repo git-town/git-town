@@ -95,7 +95,8 @@ END OUTPUT FROM 'git branch -vva'
 	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	KillBranchOtherWorktree               = `branch %q is active in another worktree`
-	KillOnlyFeatureBranches               = "you can only kill feature branches"
+	KillCannotKillMainBranch              = "you cannot kill the main branch"
+	KillCannotKillPerennialBranches       = "you cannot kill perennial branches"
 	MainBranch                            = "Main branch: %s\n"
 	MainBranchCannotMakeContribution      = "cannot make the main branch a contribution branch"
 	MainBranchCannotObserve               = "cannot observe the main branch"
