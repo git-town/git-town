@@ -1,7 +1,8 @@
-# git park [branches]
+# git contribute [branches]
 
-The _park_ command parks some of your branches. Parked branches don't get synced
-unless you run `git sync` directly on a parked branch.
+The _contribute_ command makes some of your branches contribution branches.
+Parked branches don't get synced unless you run `git sync` directly on a parked
+branch.
 
 You might want to park a branch if you
 
