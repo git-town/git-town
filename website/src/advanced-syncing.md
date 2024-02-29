@@ -25,9 +25,9 @@ branch to receive additional commits made to this branch.
 ## Contribution branches
 
 Contribution branches are for people who contribute commits to somebody else's
-branch. `git sync` always [rebases](preferences/sync-feature-strategy#rebase)
-your local commits on a contribution branch. It does not pull updates from the
-parent branch. You cannot [propose](commands/propose.md) or
+branch. On a contribution branch `git sync` does not pull updates from the
+parent branch and always [rebases](preferences/sync-feature-strategy#rebase)
+your local commits. You cannot [propose](commands/propose.md) or
 [ship](commands/ship.md) contribution branches. `git sync` removes contribution
 branches from your machine as soon as their tracking branch is gone, even if you
 have unpushed local commits. When you [kill](commands/kill.md) a contribution
