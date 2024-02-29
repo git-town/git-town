@@ -1,42 +1,52 @@
 # Advanced Branch Syncing (beta)
 
-Git branches can be used in many different ways. If you tell Git Town how you
-use the branches in your workspace, you can always run `git sync` or
-`git sync --all` and all your local branches will get synced the way you want
-them to be synced.
+Git branches can be used in many different ways. When Git Town is configured
+correctly, you can run `git sync` or `git sync --all` any time and each of your
+local branches will get synced in the specific ways it's supposed to get synced
+or not synced.
 
 ## Branch Ownership
 
-Branches that you create using [git hack](commands/hack.md),
-[git append](commands/append.md), and [git prepend](commands/prepend.md) are
-owned by you. Owning a branch means that you are the person that manages this
-branch. You [propose](commands/propose.md), [ship](commands/ship.md), pull in
-updates from its parent branch, and [delete](commands/kill.md) it from the
-hosting server.
+The "owner" of a branch is responsible for the larger lifetime events of this
+branch. The branch owner pulls in updates from the parent branch, creates the
+pull request, and delete the branch from the hosting server. Typically you own
+branches that you create with [git hack](commands/hack.md),
+[git append](commands/append.md), or [git prepend](commands/prepend.md).
 
 You might also have branches on your machine that you don't own. An example is
-when you help somebody with a problem on a branch that this person owns. You
-might want to do some experiments on copy of the other person's branch on your
-machine. But you want to commit these experiments on your machine so that you
-can switch branches. You don't want to pull in parent updates or accidentally
-ship or delete the other person's branch from the hosting service because those
-are responsibilities of the person owning that branch or feature.
+when you review somebody elses branch in your local editor. Or when you help
+somebody solve a problem that happens on a branch this person owns.
 
-## Observed branches
-
-If you want that `git sync` doesn't push your local commits to the tracking
-branch,
+In both cases, you don't want to pull in parent updates or accidentally ship or
+delete the other person's branch from the hosting service because those are
+responsibilities of the person owning that branch. But you want your local
+branch to receive additional commits made to this branch.
 
 ## Contribution branches
 
-If you want that `git sync` pushes your local commits to the tracking branch,
-you make this branch a `contribution branch`.
+Contribution branches are for people who contribute to somebody else's branch.
+`git sync` pushes your local commits on a contribution branch to the tracking
+branch. It does not pull in updates from the parent branch. You cannot
+[propose](commands/propose.md) or [ship](commands/ship.md) contribution
+branches. When you [kill](commands/kill.md) a contribution branch, it only
+deletes your local copy and not the tracking branch.
+
+Run [git contribute](commands/contribute.md) on a branch to make it a
+contribution branch.
+
+## Observed branches
+
+Observed branches are for people who want to observe the work of somebody else
+without contributing to it. If you want that `git sync` doesn't push your local
+commits to the tracking branch,
 
 ## Parked Branches
 
-Parked branches don't get synced unless you run `git sync` directly on a parked
-branch. You might want to park a branch if you
+Parked branches don't get synced at all unless you run `git sync` directly on a
+parked branch. You might want to park a branch if you
 
 - want to intentionally keep the branch at an older state
 - don't want to deal with merge conflicts on this branch right now
 - reduce load on your CI server
+
+You park a branch by running [git park](commands/park.md) on it.
