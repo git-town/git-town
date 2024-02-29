@@ -1,12 +1,9 @@
-# Advanced Branch Syncing (preview)
+# Advanced Branch Syncing
 
 Git branches can be used in many different ways. When Git Town is configured
 correctly, you can run `git sync` or `git sync --all` any time and each of your
 local branches will get synced in the specific ways it's supposed to get synced
 or not synced.
-
-This feature is currently in preview and might change without major version
-changes as we gain more experience with it.
 
 ## Branch Ownership
 
