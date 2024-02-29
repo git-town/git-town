@@ -1,19 +1,37 @@
 # Git Town Changelog
 
-## 12.0.2 (2023-02-14)
+## 12.1.0 (2024-02-29)
+
+Git Town 12.1 implements some of the most requested features by the Git Town community. It also continues the modernization of Git Town's internals. This time we made Git Town's undo engine simpler, more robust, and more reliable by removing all remaining mutable state.
+
+#### New Features
+
+- New options to fine-tune how Git Town syncs branches: `git contribute`, `git observe`, and `git park`. More info at https://www.git-town.com/advanced-syncing and [#3095](https://github.com/git-town/git-town/issues/3095).
+- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc ([#2659](https://github.com/git-town/git-town/issues/2659)).
+
+#### Bug Fixes
+
+- [git town skip](https://www.git-town.com/commands/skip) now works correctly in complex situations ([#2978](https://github.com/git-town/git-town/issues/2978)).
+- Git Town now deletes branches more reliably ([#3097](https://github.com/git-town/git-town/issues/3097)).
+
+#### Statistics
+
+Many thanks to @100rab-S, @harrismcc, @kevgo, @ruudk, @tranhl for contributing feedback, ideas, and solutions to 70 shipped PRs and 11 resolved issues!
+
+## 12.0.2 (2024-02-14)
 
 #### Bug Fixes
 
 - All dialogs that show local branches now paginate ([#3119](https://github.com/git-town/git-town/issues/3119)).
 
-## 12.0.1 (2023-02-12)
+## 12.0.1 (2024-02-12)
 
 #### Bug Fixes
 
 - removes crashes when using a self-hosted platform instance ([#3114](https://github.com/git-town/git-town/pull/3114))
 - improve the CLI output when using a hosting connector ([#3115](https://github.com/git-town/git-town/pull/3115))
 
-## 12.0.0 (2023-02-05)
+## 12.0.0 (2024-02-05)
 
 Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive by modernizing Git Town's configuration system.
 

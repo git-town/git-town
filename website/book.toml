@@ -4,7 +4,7 @@ description = "Git Town user manual"
 language = "en"
 multilingual = false
 src = "src"
-title = "Git Town 12.0"
+title = "Git Town 12.1"
 
 [output.html]
 git-repository-url = "https://github.com/git-town/git-town"

@@ -1,6 +1,8 @@
 package git
 
 import (
+	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -18,7 +20,9 @@ func LoadTag(name string) Tag {
 	cmd := exec.Command("git", "log", "-1", "--format=%cI", name)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(string(output))
+		fmt.Println("Error: " + err.Error())
+		os.Exit(1)
 	}
 	tagTime, err := time.Parse(time.RFC3339, strings.TrimSpace(string(output)))
 	if err != nil {
