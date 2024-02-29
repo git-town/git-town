@@ -5,14 +5,24 @@ branches with changes from their parent and tracking branches.
 
 ## options
 
-When set to `merge` (the default value), Git Town merges the parent and tracking
-branches into local feature branches. When set to `rebase`, it rebases local
-feature branches against their parent and tracking branches.
+### merge
+
+When using the "merge" sync-feature-strategy, [git sync](../commands/sync.md)
+merges the parent and tracking branches into local feature branches.
+
+`merge` is the default value because it is the safest and easiest option.
+
+### rebase
+
+When set to `rebase`, it rebases local feature branches against their parent and
+tracking branches.
+
+## change this setting
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
 
-## in config file
+### config file
 
 In the [config file](../configuration-file.md) the sync-feature-strategy is part
 of the `[sync-strategy]` section:
@@ -22,7 +32,7 @@ of the `[sync-strategy]` section:
 feature-branches = "merge"
 ```
 
-## in Git metadata
+### Git metadata
 
 To manually configure the sync-feature-strategy in Git, run this command:
 

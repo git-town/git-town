@@ -1,16 +1,9 @@
 # git park [branches]
 
-The _park_ command parks some of your branches. Parked branches don't get synced
-unless you run `git sync` directly on a parked branch.
+The _park_ command [parks](../advanced-syncing#parked-branches) some of your
+branches.
 
-You might want to park a branch if you
-
-- want to intentionally keep the branch at an older state
-- don't want to deal with merge conflicts on this branch right now
-- reduce load on your CI server
-
-Perennial branches and the main branch cannot get parked. Use
-[git hack](hack.md) to unpark branches ("I want to resume hacking on this
+Use [git hack](hack.md) to unpark branches ("I want to continue hacking on this
 branch").
 
 ## Examples

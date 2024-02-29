@@ -1,9 +1,12 @@
-# Advanced Branch Syncing (beta)
+# Advanced Branch Syncing (preview)
 
 Git branches can be used in many different ways. When Git Town is configured
 correctly, you can run `git sync` or `git sync --all` any time and each of your
 local branches will get synced in the specific ways it's supposed to get synced
 or not synced.
+
+This feature is currently in preview and might change without major version
+changes as we gain more experience with it.
 
 ## Branch Ownership
 
@@ -24,12 +27,14 @@ branch to receive additional commits made to this branch.
 
 ## Contribution branches
 
-Contribution branches are for people who contribute to somebody else's branch.
-`git sync` pushes your local commits on a contribution branch to the tracking
-branch. It does not pull in updates from the parent branch. You cannot
-[propose](commands/propose.md) or [ship](commands/ship.md) contribution
-branches. When you [kill](commands/kill.md) a contribution branch, it only
-deletes your local copy and not the tracking branch.
+Contribution branches are for people who contribute commits to somebody else's
+branch. `git sync` always [rebases](preferences/sync-feature-strategy#rebase)
+your local commits on a contribution branch. It does not pull updates from the
+parent branch. You cannot [propose](commands/propose.md) or
+[ship](commands/ship.md) contribution branches. `git sync` removes contribution
+branches from your machine as soon as their tracking branch is gone, even if you
+have unpushed local commits. When you [kill](commands/kill.md) a contribution
+branch, it only deletes your local copy and not the tracking branch.
 
 Run [git contribute](commands/contribute.md) on a branch to make it a
 contribution branch.
@@ -38,10 +43,13 @@ contribution branch.
 
 Observed branches are for people who want to observe the work of somebody else
 without contributing to it. `git sync` only pulls updates from the tracking
-branch. It doesn't push your local commits. You cannot
+branch, always using the [rebase](preferences/sync-feature-strategy#rebase)
+sync-feature-strategy. It doesn't push your local commits. You cannot
 [propose](commands/propose.md) or [ship](commands/ship.md) observed branches.
-When you [kill](commands/kill.md) an observed branch, it only deletes your local
-copy and not the tracking branch.
+`git sync` removes observed branches from your machine as soon as their tracking
+branch is gone, even if you have unpushed local commits. When you
+[kill](commands/kill.md) an observed branch, it only deletes your local copy and
+not the tracking branch.
 
 Run [git observe](commands/observe.md) on a branch to make it an observed
 branch.
@@ -53,6 +61,8 @@ parked branch. You might want to park a branch if you
 
 - want to intentionally keep the branch at an older state
 - don't want to deal with merge conflicts on this branch right now
-- reduce load on your CI server
+- reduce load on your CI server by syncing only your actively developed local
+  branches
 
-Run [git park](commands/park.md) on a branch to park it.
+Run [git park](commands/park.md) on a branch to park it. You cannot park the
+perennial branches including the main branch.
