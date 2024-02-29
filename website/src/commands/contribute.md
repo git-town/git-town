@@ -17,8 +17,8 @@ Make branches "alpha" and "beta" contribution branches:
 git park alpha beta
 ```
 
-Check out a remote branch (that doesn't exists locally on your machine yet) and
-make it a contribution branch:
+Check out a remote branch (that exists at origin but not on your local machine)
+and make it a contribution branch:
 
 ```fish
 git contribute other-branch

@@ -17,8 +17,8 @@ Observe branches "alpha" and "beta":
 git observe alpha beta
 ```
 
-Check out a remote branch (that doesn't exists locally on your machine yet) and
-make it observed:
+Check out a remote branch (that exists at origin but not on your local machine)
+and make it observed:
 
 ```fish
 git observe other-branch
