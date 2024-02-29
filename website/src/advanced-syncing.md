@@ -24,7 +24,7 @@ back to a feature branch by running [git hack](commands/hack.md) on it.
 ## Observed branches
 
 Observed branches are for people who want to observe the work of somebody else
-without contributing commits to it. Like contribution branches, you cannot
+without contributing commits to it. Similar to contribution branches, you cannot
 [propose](commands/propose.md) or [ship](commands/ship.md) observed branches,
 [kill](commands/kill.md) only deletes your local copy and not the tracking
 branch, `git sync` always uses the
