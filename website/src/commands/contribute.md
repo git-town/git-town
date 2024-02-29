@@ -5,26 +5,25 @@ The _contribute_ command makes some of your branches
 
 ## Examples
 
-Park the current branch:
+Make the current branch a contribution branch:
 
 ```fish
 git park
 ```
 
-Park branches "alpha" and "beta":
+Make branches "alpha" and "beta" contribution branches:
 
 ```fish
 git park alpha beta
 ```
 
-Unpark the current branch (makes it an
-[owned branch](../advanced-syncing#branch-ownership)):
+Convert the current contribution branch back to a feature branch:
 
 ```fish
 git hack
 ```
 
-Unpark branches "alpha" and "beta":
+Convert the contribution branches "alpha" and "beta" back to a feature branch:
 
 ```fish
 git hack alpha beta
