@@ -3,9 +3,6 @@
 The _park_ command [parks](../advanced-syncing#parked-branches) some of your
 branches.
 
-Use [git hack](hack.md) to unpark branches ("I want to continue hacking on this
-branch").
-
 ## Examples
 
 Park the current branch:
@@ -20,13 +17,13 @@ Park branches "alpha" and "beta":
 git park alpha beta
 ```
 
-Unpark the current branch:
+Convert the current parked branch back to a feature branch:
 
 ```fish
 git hack
 ```
 
-Unpark branches "alpha" and "beta":
+Convert the parked branches "alpha" and "beta" back to feature branches:
 
 ```fish
 git hack alpha beta
