@@ -171,6 +171,8 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 		killFeatureBranch(&prog, &finalUndoProgram, config)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch:
 		killLocalBranch(&prog, &finalUndoProgram, config)
+	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", config.branchTypeToKill))
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
