@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -174,8 +175,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchNameToShip) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
+	if err = validateShippableBranchType(repo.Runner.Config.FullConfig.BranchType(branchNameToShip)); err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
@@ -336,4 +337,20 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	return prog
+}
+
+func validateShippableBranchType(branchType configdomain.BranchType) error {
+	switch branchType {
+	case configdomain.BranchTypeContributionBranch:
+		return errors.New(messages.ContributionBranchCannotShip)
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
+		return nil
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.MainBranchCannotShip)
+	case configdomain.BranchTypeObservedBranch:
+		return errors.New(messages.ObservedBranchCannotShip)
+	case configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.PerennialBranchCannotShip)
+	}
+	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
 }

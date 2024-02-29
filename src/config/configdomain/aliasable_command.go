@@ -17,9 +17,12 @@ func (self AliasableCommands) Strings() []string {
 
 const (
 	AliasableCommandAppend       = AliasableCommand("append")
+	AliasableCommandContribute   = AliasableCommand("contribute")
 	AliasableCommandDiffParent   = AliasableCommand("diff-parent")
 	AliasableCommandHack         = AliasableCommand("hack")
 	AliasableCommandKill         = AliasableCommand("kill")
+	AliasableCommandObserve      = AliasableCommand("observe")
+	AliasableCommandPark         = AliasableCommand("park")
 	AliasableCommandPrepend      = AliasableCommand("prepend")
 	AliasableCommandPropose      = AliasableCommand("propose")
 	AliasableCommandRenameBranch = AliasableCommand("rename-branch")
@@ -33,9 +36,12 @@ const (
 func AllAliasableCommands() AliasableCommands {
 	return []AliasableCommand{
 		AliasableCommandAppend,
+		AliasableCommandContribute,
 		AliasableCommandDiffParent,
 		AliasableCommandHack,
 		AliasableCommandKill,
+		AliasableCommandObserve,
+		AliasableCommandPark,
 		AliasableCommandPrepend,
 		AliasableCommandPropose,
 		AliasableCommandRenameBranch,

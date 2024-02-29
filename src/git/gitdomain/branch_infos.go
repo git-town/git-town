@@ -44,14 +44,24 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	return EmptyBranchInfo()
 }
 
-// IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
-func (self BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
+// HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
+func (self BranchInfos) HasLocalBranch(branch LocalBranchName) bool {
 	for _, bi := range self {
-		if bi.LocalName == localBranch {
+		if bi.LocalName == branch {
 			return true
 		}
 	}
 	return false
+}
+
+// HasLocalBranches indicates whether this BranchInfos instance contains all the given branches.
+func (self BranchInfos) HasLocalBranches(branches LocalBranchNames) bool {
+	for _, branch := range branches {
+		if !self.HasLocalBranch(branch) {
+			return false
+		}
+	}
+	return true
 }
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
@@ -103,6 +113,7 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchSyncStatus elements with the given names.
+// TODO: make argument variadic
 func (self BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {

@@ -105,6 +105,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
+		branch := gitdomain.NewLocalBranchName(branchText)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		// we are creating a remote branch in the remote repo --> it is a local branch there
+		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.DevRepo.TestCommands.Fetch()
+		return nil
+	})
+
 	suite.Step(`^a merge is now in progress$`, func() error {
 		if !state.fixture.DevRepo.HasMergeInProgress() {
 			return errors.New("expected merge in progress")
@@ -208,6 +217,79 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is active in another worktree`, func(branch string) error {
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is (?:now|still) a contribution branch`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't contribution as expected.\nContribution branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ContributionBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if state.fixture.DevRepo.Config.FullConfig.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
+			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't observed as expected.\nObserved branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ObservedBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is now parked`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't parked as expected.\nParked branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ParkedBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't perennial as expected.\nPerennial branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.PerennialBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is now a feature branch`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+			return fmt.Errorf("branch %q is parked", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+			return fmt.Errorf("branch %q is observed", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+			return fmt.Errorf("branch %q is contribution", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+			return fmt.Errorf("branch %q is perennial", branch)
+		}
 		return nil
 	})
 
@@ -1070,7 +1152,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a contribution branch "([^"]+)"$`, func(branch string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), "main")
+		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch))
+	})
+
 	suite.Step(`^the contribution branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch1), "main")
+		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch2), "main")
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
@@ -1366,6 +1455,30 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.BackendCommands.PreviouslyCheckedOutBranch()
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^there are (?:now|still) no contribution branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.LocalGitConfig.ContributionBranches
+		if branches != nil && len(*branches) > 0 {
+			return fmt.Errorf("expected no contribution branches, got %q", branches)
+		}
+		return nil
+	})
+
+	suite.Step(`^there are (?:now|still) no observed branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.LocalGitConfig.ObservedBranches
+		if branches != nil && len(*branches) > 0 {
+			return fmt.Errorf("expected no observed branches, got %q", branches)
+		}
+		return nil
+	})
+
+	suite.Step(`^there are (?:now|still) no parked branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.LocalGitConfig.ParkedBranches
+		if branches != nil && len(*branches) > 0 {
+			return fmt.Errorf("expected no parked branches, got %q", branches)
 		}
 		return nil
 	})

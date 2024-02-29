@@ -1,4 +1,4 @@
-Feature: remove the contribution branch as soon as the tracking branch is gone, even if it has unpushed commits
+Feature: remove a contribution branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
     Given the current branch is a contribution branch "contribution"
@@ -19,6 +19,10 @@ Feature: remove the contribution branch as soon as the tracking branch is gone, 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
+    And it prints:
+      """
+      deleted branch "contribution"
+      """
 
   Scenario: undo
     When I run "git-town undo"
