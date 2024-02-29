@@ -17,14 +17,13 @@ Observe branches "alpha" and "beta":
 git observe alpha beta
 ```
 
-Un-observe the current branch (makes it an
-[owned branch](../advanced-syncing#branch-ownership)):
+Convert the current observed branch back to a feature branch:
 
 ```fish
 git hack
 ```
 
-Un-observe branches "alpha" and "beta":
+Convert the observed branches "alpha" and "beta" back to feature branches:
 
 ```fish
 git hack alpha beta
