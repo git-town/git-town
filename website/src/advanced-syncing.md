@@ -12,10 +12,11 @@ branch. You cannot [propose](commands/propose.md) or [ship](commands/ship.md)
 contribution branches because those are responsibilities of the person owning
 the branch you contribute to. For the same reason `git sync` does not pull
 updates from the parent branch of a contribution branch and always
-[rebases](preferences/sync-feature-strategy#rebase) your local commits. Syncing
-removes contribution branches from your machine as soon as their tracking branch
-is gone, even if you have unpushed local commits. [Killing](commands/kill.md) a
-contribution branch only deletes your local copy and not the tracking branch.
+[rebases](preferences/sync-feature-strategy.md#rebase) your local commits.
+Syncing removes contribution branches from your machine as soon as their
+tracking branch is gone, even if you have unpushed local commits.
+[Killing](commands/kill.md) a contribution branch only deletes your local copy
+and not the tracking branch.
 
 You can make any feature branch a contribution branch by running
 [git contribute](commands/contribute.md) on it. Convert a contribution branch
@@ -28,7 +29,7 @@ without contributing commits to it. Similar to contribution branches, you cannot
 [propose](commands/propose.md) or [ship](commands/ship.md) observed branches,
 [kill](commands/kill.md) only deletes your local copy and not the tracking
 branch, `git sync` always uses the
-[rebase](preferences/sync-feature-strategy#rebase) sync-feature-strategy and
+[rebase](preferences/sync-feature-strategy.md#rebase) sync-feature-strategy and
 will remove a local observed branch as soon as its tracking branch is gone, even
 if there are unmerged local commits.
 

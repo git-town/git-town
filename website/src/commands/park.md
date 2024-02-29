@@ -1,6 +1,6 @@
 # git park [branches]
 
-The _park_ command [parks](../advanced-syncing#parked-branches) some of your
+The _park_ command [parks](../advanced-syncing.md#parked-branches) some of your
 branches.
 
 ## Examples

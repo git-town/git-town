@@ -1,7 +1,7 @@
 # git contribute [branches]
 
 The _contribute_ command makes some of your branches
-[contribution](../advanced-syncing#contribution-branches) branches.
+[contribution](../advanced-syncing.md#contribution-branches) branches.
 
 ## Examples
 
