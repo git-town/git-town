@@ -19,7 +19,8 @@ branch is gone, even if you have unpushed local commits.
 and not the tracking branch.
 
 You can make any feature branch a contribution branch by running
-[git contribute](commands/contribute.md) on it.
+[git contribute](commands/contribute.md) on it. Convert a contribution branch
+back to a feature branch by running [git hack](commands/hack.md) on it.
 
 ## Observed branches
 
@@ -32,11 +33,12 @@ branch, `git sync` always uses the
 will remove a local observed branch as soon as its tracking branch is gone, even
 if there are unmerged local commits.
 
-Unlike contributing branches, `git sync` does not push your local commits to the
-tracking branch.
+Unlike with contributing branches, `git sync` does not push your local commits
+made to an observed branch to its tracking branch.
 
 You can make any feature branch an observed branch by running
-[git observe](commands/observe.md) on it.
+[git observe](commands/observe.md) on it. Convert an observed branch back to a
+feature branch by running [git hack](commands/hack.md) on it.
 
 ## Parked Branches
 
@@ -48,5 +50,6 @@ parked branch. You might want to park a branch if you
 - reduce load on your CI server by syncing only your actively developed local
   branches
 
-Run [git park](commands/park.md) on a branch to park it. You cannot park the
-perennial branches including the main branch.
+You can park any feature branch by running [git park](commands/park.md) on it.
+You cannot park the perennial branches as well as the main branch. Unpark a
+parked branch by running `git hack` on it.
