@@ -1,9 +1,8 @@
 # Advanced Branch Syncing
 
-Git branches can be used in many different ways. When Git Town is configured
-correctly, you can run `git sync` or `git sync --all` any time and each of your
-local branches will get synced in the specific ways it's supposed to get synced
-or not synced.
+Git branches can be used in many different ways. When properly configured, you
+can run `git sync` or `git sync --all` any time and each of your local branches
+will get synced in the specific ways it's supposed to get synced or not synced.
 
 ## Branch Ownership
 
