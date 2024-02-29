@@ -7,6 +7,6 @@ Feature: ask for missing configuration
       | main development branch | enter |
     Then it prints the error:
       """
-      you can only kill feature branches
+      you cannot kill the main branch
       """
     And the main branch is now "main"

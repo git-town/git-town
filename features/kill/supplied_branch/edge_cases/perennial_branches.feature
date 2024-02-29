@@ -8,7 +8,7 @@ Feature: does not kill perennial branches
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      you can only kill feature branches
+      you cannot kill the main branch
       """
     And the current branch is still "feature"
     And the initial branches and lineage exist
@@ -22,5 +22,5 @@ Feature: does not kill perennial branches
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      you can only kill feature branches
+      you cannot kill perennial branches
       """
