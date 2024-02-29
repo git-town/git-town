@@ -21,7 +21,7 @@ Check out a remote branch (that exists at origin but not on your local machine)
 and make it a contribution branch:
 
 ```fish
-git contribute other-branch
+git contribute somebody-elses-branch
 ```
 
 Convert the current contribution branch back to a feature branch:
