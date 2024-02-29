@@ -50,5 +50,4 @@ parked branch. You might want to park a branch if you
   branches
 
 You can park any feature branch by running [git park](commands/park.md) on it.
-You cannot park the perennial branches as well as the main branch. Unpark a
-parked branch by running `git hack` on it.
+Unpark a parked branch by running `git hack` on it.
