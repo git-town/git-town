@@ -37,8 +37,14 @@ contribution branch.
 ## Observed branches
 
 Observed branches are for people who want to observe the work of somebody else
-without contributing to it. If you want that `git sync` doesn't push your local
-commits to the tracking branch,
+without contributing to it. `git sync` only pulls updates from the tracking
+branch. It doesn't push your local commits. You cannot
+[propose](commands/propose.md) or [ship](commands/ship.md) observed branches.
+When you [kill](commands/kill.md) an observed branch, it only deletes your local
+copy and not the tracking branch.
+
+Run [git observe](commands/observe.md) on a branch to make it an observed
+branch.
 
 ## Parked Branches
 
@@ -49,4 +55,4 @@ parked branch. You might want to park a branch if you
 - don't want to deal with merge conflicts on this branch right now
 - reduce load on your CI server
 
-You park a branch by running [git park](commands/park.md) on it.
+Run [git park](commands/park.md) on a branch to park it.
