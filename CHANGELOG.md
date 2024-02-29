@@ -16,7 +16,7 @@ Git Town 12.1 implements some of the most requested features by the Git Town com
 
 #### Statistics
 
-Many thanks to @kevgo, @ruudk, and @tranhl for contributing feedback, ideas, and solutions to 38 shipped PRs and 7 resolved issues!
+Many thanks to @100rab-S, @harrismcc, @kevgo, @ruudk, @tranhl for contributing feedback, ideas, and solutions to 70 shipped PRs and 11 resolved issues!
 
 ## 12.0.2 (2024-02-14)
 

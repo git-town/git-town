@@ -4,8 +4,8 @@ This guide is for maintainers who make releases of Git Town.
 
 - in a branch:
   - update CHANGELOG.md
-  - run `make stats-release <last tag>` and copy the release stats and
-    contributors into CHANGELOG.md
+  - run `make stats-release` and copy the release stats and contributors into
+    CHANGELOG.md
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `12.1.0`
