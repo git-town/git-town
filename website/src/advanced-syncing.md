@@ -14,7 +14,7 @@ branches that you create with [git hack](commands/hack.md),
 [git append](commands/append.md), or [git prepend](commands/prepend.md).
 
 You might also have branches on your machine that you don't own. An example is
-when you review somebody elses branch in your local editor. Or when you help
+when you review somebody else's branch in your local editor. Or when you help
 somebody solve a problem that happens on a branch this person owns.
 
 In both cases, you don't want to pull in parent updates or accidentally ship or
