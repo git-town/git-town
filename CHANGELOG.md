@@ -7,7 +7,7 @@ Git Town 12.1 implements some of the most requested features by the Git Town com
 #### New Features
 
 - New options to fine-tune how Git Town syncs branches: `git contribute`, `git observe`, and `git park`. More info at https://www.git-town.com/advanced-syncing and [#3095](https://github.com/git-town/git-town/issues/3095).
-- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc. More info at https://www.git-town.com/perennial-regex and [#2659](https://github.com/git-town/git-town/issues/2659).
+- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc ([#2659](https://github.com/git-town/git-town/issues/2659)).
 
 #### Bug Fixes
 
