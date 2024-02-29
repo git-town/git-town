@@ -1,12 +1,13 @@
 # Git Town Changelog
 
-## 12.1.0 (2024-02-22)
+## 12.1.0 (2024-02-29)
 
-Git Town 12.1 implements community feedback and makes Git Town's undo engine simpler, more robust, and more reliable.
+Git Town 12.1 implements some of the most requested features by the Git Town community. It also continues the modernization of Git Town's internals. This time we made Git Town's undo engine simpler, more robust, and more reliable by removing all remaining mutable state.
 
 #### New Features
 
-- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc ([#2659](https://github.com/git-town/git-town/issues/2659)).
+- New options to fine-tune how Git Town syncs branches: `git contribute`, `git observe`, and `git park`. More info at https://www.git-town.com/advanced-syncing and [#3095](https://github.com/git-town/git-town/issues/3095).
+- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc. More info at https://www.git-town.com/perennial-regex and [#2659](https://github.com/git-town/git-town/issues/2659).
 
 #### Bug Fixes
 
