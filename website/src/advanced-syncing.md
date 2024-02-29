@@ -13,10 +13,9 @@ contribution branches because those are responsibilities of the person owning
 the branch you contribute to. For the same reason `git sync` does not pull
 updates from the parent branch of a contribution branch and always
 [rebases](preferences/sync-feature-strategy#rebase) your local commits. Syncing
-also removes contribution branches from your machine as soon as their tracking
-branch is gone, even if you have unpushed local commits.
-[Killing](commands/kill.md) a contribution branch only deletes your local copy
-and not the tracking branch.
+removes contribution branches from your machine as soon as their tracking branch
+is gone, even if you have unpushed local commits. [Killing](commands/kill.md) a
+contribution branch only deletes your local copy and not the tracking branch.
 
 You can make any feature branch a contribution branch by running
 [git contribute](commands/contribute.md) on it. Convert a contribution branch
