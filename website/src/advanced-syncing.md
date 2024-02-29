@@ -5,51 +5,38 @@ can run `git sync` or `git sync --all` at any time and each of your local
 branches will get synced in the specific ways it's supposed to get synced or not
 synced.
 
-## Branch Ownership
-
-The "owner" of a branch is responsible for the lifetime events of this branch.
-The branch owner pulls in updates from the parent branch, creates the pull
-request, and delete the branch from the hosting server. Typically you own
-branches that you create with [git hack](commands/hack.md),
-[git append](commands/append.md), or [git prepend](commands/prepend.md).
-
-You might also have branches on your machine that you don't own. An example is
-when you review somebody else's branch in your local editor. Or when you help
-somebody solve a problem that happens on a branch this person owns.
-
-In both cases, you don't want to pull in parent updates or accidentally ship or
-delete the other person's branch from the hosting service because those are
-responsibilities of the person owning that branch. But you want your local
-branch to receive additional commits made to this branch.
-
 ## Contribution branches
 
 Contribution branches are for people who contribute commits to somebody else's
-branch. For contribution branches `git sync` does not pull updates from the
-parent branch and always [rebases](preferences/sync-feature-strategy#rebase)
-your local commits. You cannot [propose](commands/propose.md) or
-[ship](commands/ship.md) contribution branches. `git sync` removes contribution
-branches from your machine as soon as their tracking branch is gone, even if you
-have unpushed local commits. When you [kill](commands/kill.md) a contribution
-branch, it only deletes your local copy and not the tracking branch.
+branch. You cannot [propose](commands/propose.md) or [ship](commands/ship.md)
+contribution branches because those are responsibilities of the person owning
+the branch you contribute to. For the same reason `git sync` does not pull
+updates from the parent branch of a contribution branch and always
+[rebases](preferences/sync-feature-strategy#rebase) your local commits. Syncing
+also removes contribution branches from your machine as soon as their tracking
+branch is gone, even if you have unpushed local commits.
+[Killing](commands/kill.md) a contribution branch only deletes your local copy
+and not the tracking branch.
 
-Run [git contribute](commands/contribute.md) on a branch to make it a
-contribution branch.
+You can make any feature branch a contribution branch by running
+[git contribute](commands/contribute.md) on it.
 
 ## Observed branches
 
 Observed branches are for people who want to observe the work of somebody else
-without contributing to it. `git sync` only pulls updates from the tracking
-branch, always using the [rebase](preferences/sync-feature-strategy#rebase)
-sync-feature-strategy. It doesn't push your local commits. You cannot
-[propose](commands/propose.md) or [ship](commands/ship.md) observed branches.
-`git sync` removes observed branches from your machine as soon as their tracking
-branch is gone, even if you have unpushed local commits. When you
-[kill](commands/kill.md) an observed branch, it only deletes your local copy and
-not the tracking branch.
+without contributing commits to it. Like contributing branches, you cannot
+[propose](commands/propose.md) or [ship](commands/ship.md) observed branches,
+[kill](commands/kill.md) only deletes your local copy and not the tracking
+branch, `git sync` always uses the
+[rebase](preferences/sync-feature-strategy#rebase) sync-feature-strategy and
+will remove a local observed branch as soon as its tracking branch is gone, even
+if there are unmerged local commits.
 
-Run [git observe](commands/observe.md) on a branch to make it an observed
-branch.
+Unlike contributing branches, `git sync` does not push your local commits to the
+tracking branch.
+
+You can make any feature branch an observed branch by running
+[git observe](commands/observe.md) on it.
 
 ## Parked Branches
 
