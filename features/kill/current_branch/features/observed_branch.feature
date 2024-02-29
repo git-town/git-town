@@ -1,7 +1,7 @@
-Feature: delete the current contribution branch
+Feature: delete the current observed branch
 
   Background:
-    Given the current branch is a contribution branch "current"
+    Given the current branch is a observed branch "current"
     And a feature branch "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
@@ -44,4 +44,4 @@ Feature: delete the current contribution branch
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
-    And branch "current" is now a contribution branch
+    And branch "current" is now observed
