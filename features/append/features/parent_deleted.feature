@@ -44,14 +44,14 @@ Feature: append a branch to a branch whose parent was shipped on the remote
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | new    | git checkout child                          |
-      | child  | git reset --hard {{ sha 'child commit' }}   |
-      |        | git push --force-with-lease                 |
-      |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git branch parent {{ sha 'parent commit' }} |
-      |        | git checkout child                          |
-      | child  | git branch -D new                           |
+      | BRANCH | COMMAND                                         |
+      | new    | git checkout child                              |
+      | child  | git reset --hard {{ sha 'child commit' }}       |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout main                               |
+      | main   | git reset --hard {{ sha 'initial commit' }}     |
+      |        | git branch parent {{ sha 'parent commit' }}     |
+      |        | git checkout child                              |
+      | child  | git branch -D new                               |
     And the current branch is still "child"
     And the initial branches and lineage exist
