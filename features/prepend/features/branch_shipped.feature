@@ -44,14 +44,14 @@ Feature: prepend a branch to a branch that was shipped at the remote
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | new    | git checkout parent                         |
-      | parent | git reset --hard {{ sha 'parent commit' }}  |
-      |        | git push --force-with-lease                 |
-      |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git branch child {{ sha 'child commit' }}   |
-      |        | git checkout child                          |
-      | child  | git branch -D new                           |
+      | BRANCH | COMMAND                                         |
+      | new    | git checkout parent                             |
+      | parent | git reset --hard {{ sha 'parent commit' }}      |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout main                               |
+      | main   | git reset --hard {{ sha 'initial commit' }}     |
+      |        | git branch child {{ sha 'child commit' }}       |
+      |        | git checkout child                              |
+      | child  | git branch -D new                               |
     And the current branch is now "child"
     And the initial branches and lineage exist
