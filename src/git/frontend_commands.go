@@ -151,7 +151,7 @@ func (self *FrontendCommands) FetchUpstream(branch gitdomain.LocalBranchName) er
 
 // PushBranch pushes the branch with the given name to origin.
 func (self *FrontendCommands) ForcePushBranch(noPushHook configdomain.NoPushHook) error {
-	args := []string{"push", "--force-with-lease"}
+	args := []string{"push", "--force-with-lease", "--force-if-includes"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
