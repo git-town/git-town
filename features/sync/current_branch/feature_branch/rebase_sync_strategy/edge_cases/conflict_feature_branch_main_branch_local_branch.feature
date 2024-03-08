@@ -11,6 +11,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And an uncommitted file
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                   |
