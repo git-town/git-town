@@ -21,7 +21,7 @@ func rootCmd() cobra.Command {
 		SilenceUsage:  true,
 		Short:         rootDesc,
 		Long:          cmdhelpers.Long(rootDesc, rootHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeRoot(cmd, readVersionFlag(cmd))
 		},
 	}

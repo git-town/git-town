@@ -23,7 +23,7 @@ func resetRunstateCommand() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
 		Long:  cmdhelpers.Long(statusResetDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeStatusReset(readVerboseFlag(cmd))
 		},
 	}

@@ -15,7 +15,7 @@ func enterPerennialBranches() *cobra.Command {
 	return &cobra.Command{
 		Use:  "perennial-branches <number of branches>",
 		Args: cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			amount, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err

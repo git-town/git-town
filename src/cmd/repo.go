@@ -31,7 +31,7 @@ func repoCommand() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeRepo(readVerboseFlag(cmd))
 		},
 	}

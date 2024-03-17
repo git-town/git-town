@@ -11,7 +11,7 @@ import (
 func enterHostingPlatform() *cobra.Command {
 	return &cobra.Command{
 		Use: "hosting-platform",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.HostingPlatform("", dialogInputs.Next())
 			return err

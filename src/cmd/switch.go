@@ -24,7 +24,7 @@ func switchCmd() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeSwitch(readVerboseFlag(cmd))
 		},
 	}
