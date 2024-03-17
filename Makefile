@@ -1,4 +1,4 @@
-RTA_VERSION = 0.3.0 # run-that-app version to use
+RTA_VERSION = 0.5.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -8,13 +8,13 @@ GO_BUILD_ARGS = LANG=C GOGC=off
 build:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
-clear:  # clears the build and lint caches
+clear: tools/rta@${RTA_VERSION}  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
-cuke: build   # runs all end-to-end tests
+cuke: build  # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
-cukethis: build   # runs the end-to-end tests that have a @this tag
+cukethis: build  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
@@ -45,7 +45,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/rta dprint fmt --config dprint-changelog.json
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
-	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --include-path --optional shellcheck
+	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	@make --no-print-directory golangci-lint
@@ -85,7 +85,7 @@ stats-release:  # displays statistics about the changes since the last release
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
+test-go:  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@make --no-print-directory unit &
 	@make --no-print-directory deadcode &

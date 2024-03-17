@@ -12,7 +12,7 @@ import (
 func enterGitLabToken() *cobra.Command {
 	return &cobra.Command{
 		Use: "gitlab-token",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.GitLabToken(configdomain.GitLabToken(""), dialogInputs.Next())
 			return err

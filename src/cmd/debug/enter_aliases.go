@@ -12,7 +12,7 @@ import (
 func enterAliases() *cobra.Command {
 	return &cobra.Command{
 		Use: "aliases",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			all := configdomain.AllAliasableCommands()
 			existing := configdomain.Aliases{
 				configdomain.AliasableCommandAppend: "town append",

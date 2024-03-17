@@ -25,7 +25,7 @@ func statusCommand() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeStatus(readVerboseFlag(cmd))
 		},
 	}

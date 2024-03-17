@@ -12,7 +12,7 @@ import (
 func enterPerennialRegex() *cobra.Command {
 	return &cobra.Command{
 		Use: "perennial-regex",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.PerennialRegex(configdomain.PerennialRegex(""), dialogInputs.Next())
 			return err

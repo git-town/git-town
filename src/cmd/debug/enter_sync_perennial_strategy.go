@@ -12,7 +12,7 @@ import (
 func enterSyncPerennialStrategy() *cobra.Command {
 	return &cobra.Command{
 		Use: "sync-perennial-strategy",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.SyncPerennialStrategy(configdomain.SyncPerennialStrategyRebase, dialogTestInputs.Next())
 			return err

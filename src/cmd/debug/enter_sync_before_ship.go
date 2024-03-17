@@ -11,7 +11,7 @@ import (
 func enterSyncBeforeShip() *cobra.Command {
 	return &cobra.Command{
 		Use: "sync-before-ship",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.SyncBeforeShip(false, dialogTestInputs.Next())
 			return err

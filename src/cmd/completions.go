@@ -52,7 +52,7 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		DisableFlagsInUseLine: true,
 		Short:                 completionsDesc,
 		Long:                  cmdhelpers.Long(completionsDesc, completionsHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			return executeCompletions(args, completionsNoDescFlag, rootCmd)
 		},
 	}

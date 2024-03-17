@@ -13,7 +13,7 @@ import (
 func unfinishedStateCommitAuthorCmd() *cobra.Command {
 	return &cobra.Command{
 		Use: "unfinished-state",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			branch := gitdomain.NewLocalBranchName("feature-branch")
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.AskHowToHandleUnfinishedRunState("sync", branch, time.Now().Add(time.Second*-1), true, dialogTestInputs.Next())

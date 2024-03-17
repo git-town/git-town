@@ -11,7 +11,7 @@ import (
 func welcome() *cobra.Command {
 	return &cobra.Command{
 		Use: "welcome",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, err := dialog.Welcome(dialogTestInputs.Next())
 			return err
