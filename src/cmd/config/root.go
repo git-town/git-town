@@ -22,7 +22,7 @@ func RootCmd() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeConfig(readVerboseFlag(cmd))
 		},
 	}

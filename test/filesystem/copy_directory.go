@@ -13,7 +13,7 @@ import (
 // CopyDirectory copies all files in the given src directory into the given dst directory.
 // Both the source and the destination directory must exist.
 func CopyDirectory(src, dst string) {
-	asserts.NoError(filepath.Walk(src, func(srcPath string, fileInfo os.FileInfo, e error) error {
+	asserts.NoError(filepath.Walk(src, func(srcPath string, fileInfo os.FileInfo, _ error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
 		if fileInfo.IsDir() {
 			err := os.Mkdir(dstPath, fileInfo.Mode())

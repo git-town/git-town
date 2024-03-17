@@ -20,7 +20,7 @@ func removeConfigCommand() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: removeConfigDesc,
 		Long:  cmdhelpers.Long(removeConfigDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeRemoveConfig(readVerboseFlag(cmd))
 		},
 	}
