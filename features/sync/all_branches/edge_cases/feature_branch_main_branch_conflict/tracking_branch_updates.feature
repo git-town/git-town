@@ -33,8 +33,8 @@ Feature: handle merge conflicts between feature branch and main branch
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is now "beta"

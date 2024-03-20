@@ -24,8 +24,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       """
     And the uncommitted file is stashed
     And a rebase is now in progress
@@ -52,7 +52,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
+    And I run "git town continue".and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |

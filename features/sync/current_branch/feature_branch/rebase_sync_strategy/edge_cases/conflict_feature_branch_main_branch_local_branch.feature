@@ -29,8 +29,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is still "feature"
@@ -64,7 +64,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and enter "resolved commit" for the commit message
+    And I run "git town continue".and enter "resolved commit" for the commit message
     Then it runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git rebase --continue       |
@@ -81,7 +81,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: resolve resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
-    And I run "git-town continue" and enter "resolved commit" for the commit message
+    And I run "git town continue".and enter "resolved commit" for the commit message
     Then it runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git rebase --continue       |

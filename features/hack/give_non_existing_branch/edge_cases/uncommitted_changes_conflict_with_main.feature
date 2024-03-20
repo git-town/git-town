@@ -61,7 +61,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
+    And I run "git town continue".and close the editor
     Then it runs no commands
     And the current branch is now "new"
     And these commits exist now
@@ -72,7 +72,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
+    And I run "git town continue".and close the editor
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |

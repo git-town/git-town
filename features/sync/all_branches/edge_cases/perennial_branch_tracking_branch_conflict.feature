@@ -30,8 +30,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the uncommitted file is stashed
@@ -82,7 +82,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
+    And I run "git town continue".and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                 |
       | beta   | git rebase --continue   |

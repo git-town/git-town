@@ -32,7 +32,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
 
   Scenario: undo
-    When I run "git-town undo" in the "new_folder" folder
+    When I run "git town undo".in the "new_folder" folder
     Then it runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
@@ -44,7 +44,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
-    When I run "git-town continue" in the "new_folder" folder
+    When I run "git town continue".in the "new_folder" folder
     Then it runs no commands
     And it prints the error:
       """
@@ -56,7 +56,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" in the "new_folder" folder
+    And I run "git town continue".in the "new_folder" folder
     Then it runs the commands
       | BRANCH  | COMMAND                          |
       | current | git commit --no-edit             |
