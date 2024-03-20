@@ -34,7 +34,7 @@ Feature: hack a new branch while the main branch is active in another worktree
       | new      | main   |
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |

@@ -30,7 +30,7 @@ Feature: on a forked repo
       | new    | local                   | upstream commit |
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND           |
       | new    | git add -A        |

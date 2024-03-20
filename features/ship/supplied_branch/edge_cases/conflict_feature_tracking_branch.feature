@@ -27,8 +27,8 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       """
     And the current branch is now "feature"
     And the uncommitted file is stashed

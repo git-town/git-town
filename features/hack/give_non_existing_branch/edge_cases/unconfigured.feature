@@ -20,7 +20,7 @@ Feature: missing configuration
       | feature | main   |
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |

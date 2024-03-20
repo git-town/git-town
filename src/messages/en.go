@@ -1,7 +1,7 @@
 package messages
 
 const (
-	UndoContinueGuidance               = "\n\nTo continue after having resolved conflicts, run \"git-town continue\".\nTo go back to where you started, run \"git-town undo\".\n"
+	UndoContinueGuidance               = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	AliasedCommands                    = "Aliased commands: %s\n"
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
@@ -36,7 +36,7 @@ const (
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
-	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git-town skip\"."
+	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git town skip\"."
 	ContributeBranchIsNowContribution  = "branch %q is now a contribution branch\n"
 	ContributionBranchCannotPark       = "cannot park contribution branches"
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"

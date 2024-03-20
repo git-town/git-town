@@ -26,7 +26,7 @@ Feature: dry-run hacking a new feature branch
     And the initial branches and lineage exist
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "existing"
     And the initial commits exist

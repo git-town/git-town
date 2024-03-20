@@ -30,7 +30,7 @@ Feature: in a subfolder on the main branch
       | new    | main   |
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND           |
       | new    | git add -A        |
