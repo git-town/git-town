@@ -82,7 +82,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git town continue".and close the editor
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                 |
       | beta   | git rebase --continue   |

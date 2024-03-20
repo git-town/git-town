@@ -53,7 +53,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git town continue".and close the editor
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
