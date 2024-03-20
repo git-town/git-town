@@ -16,7 +16,7 @@ Git Town helps create, sync, and ship changes efficiently and with minimal merge
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()
 	rootCmd := cobra.Command{
-		Use:           "git-town",
+		Use:           "git town",
 		SilenceErrors: true,
 		SilenceUsage:  true,
 		Short:         rootDesc,
