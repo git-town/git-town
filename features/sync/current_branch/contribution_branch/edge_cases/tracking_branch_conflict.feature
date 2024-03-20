@@ -24,7 +24,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
-      To continue by skipping the current branch, run "git-town skip".
+      To continue by skipping the current branch, run "git town skip".
       """
     And a rebase is now in progress
     And the uncommitted file is stashed
