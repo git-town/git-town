@@ -32,7 +32,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
 
   Scenario: undo
-    When I run "git town undo".in the "new_folder" folder
+    When I run "git-town undo" in the "new_folder" folder
     Then it runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
