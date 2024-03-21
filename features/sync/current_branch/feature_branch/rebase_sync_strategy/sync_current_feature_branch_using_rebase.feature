@@ -11,7 +11,6 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
       |         | origin   | origin feature commit |
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -30,9 +29,9 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local, origin | origin main commit    |
+      | feature | local, origin | origin feature commit |
+      |         |               | origin main commit    |
       |         |               | local main commit     |
-      |         |               | origin feature commit |
       |         |               | local feature commit  |
 
   Scenario: undo
