@@ -7,7 +7,7 @@ import (
 
 // RebaseFeatureTrackingBranch rebases the current feature branch against its tracking branch.
 type RebaseFeatureTrackingBranch struct {
-	remoteBranch gitdomain.RemoteBranchName
+	RemoteBranch gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods
 }
 
@@ -22,9 +22,9 @@ func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {
 	// We need to integrate them into the local branch.
 	args.PrependOpcodes(
 		// Rebase the local commits against the remote commits.
-		&RebaseBranch{Branch: self.remoteBranch.BranchName()},
+		&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
 		// Now try force-pushing again.
-		&RebaseFeatureTrackingBranch{},
+		&RebaseFeatureTrackingBranch{RemoteBranch: self.RemoteBranch},
 	)
-	return err
+	return nil
 }

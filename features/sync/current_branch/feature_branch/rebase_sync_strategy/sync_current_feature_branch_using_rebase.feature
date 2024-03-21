@@ -11,17 +11,19 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
       |         | origin   | origin feature commit |
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git fetch --prune --tags    |
-      |         | git checkout main           |
-      | main    | git rebase origin/main      |
-      |         | git push                    |
-      |         | git checkout feature        |
-      | feature | git rebase origin/feature   |
-      |         | git rebase main             |
-      |         | git push --force-with-lease |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git checkout main                               |
+      | main    | git rebase origin/main                          |
+      |         | git push                                        |
+      |         | git checkout feature                            |
+      | feature | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
