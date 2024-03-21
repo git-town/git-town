@@ -5,20 +5,26 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
-// RebaseFeatureTrackingBranch pushes newly created Git commits to origin.
+// RebaseFeatureTrackingBranch rebases the current feature branch against its tracking branch.
 type RebaseFeatureTrackingBranch struct {
 	remoteBranch gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods
 }
 
 func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {
-	err := args.Runner.Frontend.ForcePushBranch(args.Runner.Config.FullConfig.NoPushHook())
+	// Try to force-push the local branch with lease and includes oven the remote branch.
+	err := args.Runner.Frontend.ForcePushBranchSafely(args.Runner.Config.FullConfig.NoPushHook())
 	if err == nil {
+		// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
 		return nil
 	}
+	// The force-push failed --> the remote branch contains new commits.
+	// We need to integrate them into the local branch.
 	args.PrependOpcodes(
+		// Rebase the local commits against the remote commits.
 		&RebaseBranch{Branch: self.remoteBranch.BranchName()},
+		// Now try force-pushing again.
 		&RebaseFeatureTrackingBranch{},
 	)
-	return nil
+	return err
 }
