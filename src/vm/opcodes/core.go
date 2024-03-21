@@ -78,6 +78,7 @@ func Types() []shared.Opcode {
 		&PushCurrentBranch{},
 		&PushTags{},
 		&RebaseBranch{},
+		&RebaseFeatureTrackingBranch{},
 		&RebaseParent{},
 		&RemoveBranchFromLineage{},
 		&RemoveFromPerennialBranches{},
