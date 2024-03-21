@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
-// PushFeatureTrackingBranch pushes newly created Git tags to origin.
+// RebaseFeatureTrackingBranch pushes newly created Git commits to origin.
 type RebaseFeatureTrackingBranch struct {
 	remoteBranch gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods
