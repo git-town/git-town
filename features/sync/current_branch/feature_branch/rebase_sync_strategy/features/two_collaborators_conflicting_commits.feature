@@ -15,9 +15,11 @@ Feature: collaborative feature branch syncing
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
-    And the commits
-      | BRANCH  | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT  |
-      | feature | local    | my commit | file.txt  | my content 01 |
+
+    # I make a commit and sync
+    Given I add this commit:
+      | MESSAGE     | FILE NAME | FILE CONTENT  |
+      | my commit 1 | file.txt  | my content 01 |
     When I run "git town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -31,7 +33,7 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION                | MESSAGE     |
       | main    | local, coworker, origin | config file |
       | feature | local, coworker, origin | config file |
-      |         | local, origin           | my commit   |
+      |         | local, origin           | my commit 1 |
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
@@ -63,7 +65,7 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, coworker, origin | config file     |
       | feature | local, coworker, origin | config file     |
-      |         |                         | my commit       |
+      |         |                         | my commit 1     |
       |         | coworker, origin        | coworker commit |
 
     # I add a conflicting commit locally and then sync
@@ -95,6 +97,6 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, coworker, origin | config file     |
       | feature | local, coworker, origin | config file     |
-      |         |                         | my commit       |
+      |         |                         | my commit 1     |
       |         |                         | coworker commit |
       |         | local, origin           | my commit 2     |
