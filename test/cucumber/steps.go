@@ -538,6 +538,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I add this commit:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		commits := git.FromGherkinTable(table)
+		commit := commits[0]
+		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
+		state.fixture.DevRepo.StageFiles(commit.FileName)
+		state.fixture.DevRepo.CommitStagedChanges(commit.Message)
+		return nil
+	})
+
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
 		if strings.Contains(state.runOutput, notExpected) {

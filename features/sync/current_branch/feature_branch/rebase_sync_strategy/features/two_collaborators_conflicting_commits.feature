@@ -1,6 +1,5 @@
 Feature: collaborative feature branch syncing
 
-  @debug @this
   Scenario: I and my coworker work together on a branch
     Given the committed configuration file:
       """
@@ -35,7 +34,7 @@ Feature: collaborative feature branch syncing
       |         | local, origin           | my commit   |
     And all branches are now synchronized
 
-    # coworker makes a conflicting local commit concurrently with me
+    # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit:
       | MESSAGE         | FILE NAME | FILE CONTENT        |
       | coworker commit | file.txt  | coworker content 01 |
@@ -67,17 +66,35 @@ Feature: collaborative feature branch syncing
       |         |                         | my commit       |
       |         | coworker, origin        | coworker commit |
 
+    # I add a conflicting commit locally and then sync
+    Given I add this commit:
+      | MESSAGE     | FILE NAME | FILE CONTENT  |
+      | my commit 2 | file.txt  | my content 02 |
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | feature | git fetch --prune --tags  |
-      |         | git checkout main         |
-      | main    | git rebase origin/main    |
-      |         | git checkout feature      |
-      | feature | git rebase origin/feature |
-      |         | git rebase main           |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git checkout main                               |
+      | main    | git rebase origin/main                          |
+      |         | git checkout feature                            |
+      | feature | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
+    And it prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      """
+    When I resolve the conflict in "file.txt" with "my and coworker content 02"
+    And I run "git town continue" and close the editor
+    Then it runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
-      | feature | local, coworker, origin | my commit       |
+      | main    | local, coworker, origin | config file     |
+      | feature | local, coworker, origin | config file     |
+      |         |                         | my commit       |
       |         |                         | coworker commit |
+      |         | local, origin           | my commit 2     |
