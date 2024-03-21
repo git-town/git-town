@@ -41,7 +41,7 @@ Feature: display all executed Git commands
 
   Scenario: undo
     Given I ran "git-town hack new"
-    When I run "git town undo --verbose"
+    When I run "git-town undo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |

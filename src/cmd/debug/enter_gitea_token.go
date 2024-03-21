@@ -12,7 +12,7 @@ import (
 func enterGiteaToken() *cobra.Command {
 	return &cobra.Command{
 		Use: "gitea-token",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.GiteaToken(configdomain.GiteaToken(""), dialogInputs.Next())
 			return err

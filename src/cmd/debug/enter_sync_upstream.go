@@ -11,7 +11,7 @@ import (
 func enterSyncUpstream() *cobra.Command {
 	return &cobra.Command{
 		Use: "sync-upstream",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.SyncUpstream(true, dialogTestInputs.Next())
 			return err

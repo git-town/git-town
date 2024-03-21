@@ -12,7 +12,7 @@ import (
 func enterGitHubToken() *cobra.Command {
 	return &cobra.Command{
 		Use: "github-token",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.GitHubToken(configdomain.GitHubToken(""), dialogInputs.Next())
 			return err

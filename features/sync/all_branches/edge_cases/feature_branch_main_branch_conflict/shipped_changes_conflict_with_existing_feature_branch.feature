@@ -26,9 +26,9 @@ Feature: shipped changes conflict with multiple existing feature branches
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
-      To continue by skipping the current branch, run "git-town skip".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
+      To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is now "alpha"
     And the uncommitted file is stashed
@@ -56,9 +56,9 @@ Feature: shipped changes conflict with multiple existing feature branches
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
-      To continue by skipping the current branch, run "git-town skip".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
+      To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is now "gamma"
     When I resolve the conflict in "conflicting_file"

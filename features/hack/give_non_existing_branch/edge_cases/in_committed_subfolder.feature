@@ -23,7 +23,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | new      | main   |
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |

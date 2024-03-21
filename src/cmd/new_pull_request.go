@@ -21,7 +21,7 @@ func newPullRequestCommand() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			printDeprecationNotice()
 			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
 			printDeprecationNotice()

@@ -43,7 +43,7 @@ func proposeCommand() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}

@@ -23,8 +23,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
     And it prints the error:
       """
-      To continue after having resolved conflicts, run "git-town continue".
-      To go back to where you started, run "git-town undo".
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
       """
     And a rebase is now in progress
     And the uncommitted file is stashed

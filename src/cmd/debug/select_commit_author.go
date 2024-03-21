@@ -12,7 +12,7 @@ import (
 func selectCommitAuthorCmd() *cobra.Command {
 	return &cobra.Command{
 		Use: "select-commit-author",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			branch := gitdomain.NewLocalBranchName("feature-branch")
 			authors := []string{"Jean-Luc Picard <captain@enterprise.com>", "William Riker <numberone@enterprise.com>"}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())

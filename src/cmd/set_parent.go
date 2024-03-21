@@ -23,7 +23,7 @@ func setParentCommand() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeSetParent(readVerboseFlag(cmd))
 		},
 	}

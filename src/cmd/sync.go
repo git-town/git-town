@@ -46,7 +46,7 @@ func syncCmd() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, gitconfig.KeySyncUpstream)),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}

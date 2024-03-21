@@ -11,7 +11,7 @@ import (
 func enterPushHookCmd() *cobra.Command {
 	return &cobra.Command{
 		Use: "push-hook",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.PushHook(true, dialogTestInputs.Next())
 			return err
