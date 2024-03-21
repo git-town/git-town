@@ -40,7 +40,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
