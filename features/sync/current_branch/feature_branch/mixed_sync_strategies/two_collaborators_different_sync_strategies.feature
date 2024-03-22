@@ -10,7 +10,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And the coworker sets the parent branch of "feature" as "main"
 
     # I make a commit and sync
-    Given I add this commit:
+    Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
       | my first commit | file.txt  | my content   |
     When I run "git town sync"
@@ -59,7 +59,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And the coworkers workspace now contains file "file.txt" with content "my and coworker content"
 
     # I add a conflicting commit locally and then sync
-    Given I add this commit:
+    Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"

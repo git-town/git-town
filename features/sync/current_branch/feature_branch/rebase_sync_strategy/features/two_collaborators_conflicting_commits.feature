@@ -17,7 +17,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And the coworker sets the parent branch of "feature" as "main"
 
     # I make a commit and sync
-    Given I add this commit:
+    Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
       | my first commit | file.txt  | my content   |
     When I run "git town sync"
@@ -65,7 +65,7 @@ Feature: two people using rebase make conflicting changes to a branch
       |         | coworker, origin        | coworker first commit | file.txt  | my and coworker content |
 
     # I add a conflicting commit locally and then sync
-    Given I add this commit:
+    Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"

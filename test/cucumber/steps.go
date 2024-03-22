@@ -538,7 +538,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I add this commit:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I add this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		commits := git.FromGherkinTable(table)
 		commit := commits[0]
 		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
