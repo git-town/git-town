@@ -40,10 +40,9 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                           |
-      | feature | git rebase --abort                                                |
-      |         | git reset --hard {{ sha-in-origin 'conflicting feature commit' }} |
-      |         | git stash pop                                                     |
+      | BRANCH  | COMMAND            |
+      | feature | git rebase --abort |
+      |         | git stash pop      |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress
