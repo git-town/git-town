@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## Unreleased
+
+Git Town now supports rebase workflows fully.
+
+#### BREAKING CHANGES
+
+When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) is set to `rebase`, Git Town now force-pushes your locally rebased commits to the tracking branch. This prevents problems where locally rebased commits were mixed with the old commits from the tracking branch. To not accidentally override commits on the tracking branch that haven't been integrated into your local commits, Git Town now uses the [--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes) feature of Git. The minimally required Git version is therefore now 2.30, up from 2.7. Git 2.30 has been released over 2 years ago and should be widely available at this point.
+
 ## 12.1.0 (2024-02-29)
 
 Git Town 12.1 implements some of the most requested features by the Git Town community. It also continues the modernization of Git Town's internals. This time we made Git Town's undo engine simpler, more robust, and more reliable by removing all remaining mutable state.
