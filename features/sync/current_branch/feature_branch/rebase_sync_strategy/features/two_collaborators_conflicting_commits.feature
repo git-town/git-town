@@ -1,4 +1,4 @@
-Feature: collaborative feature branch syncing
+Feature: two people using rebase make conflicting changes to a branch
 
   Scenario: I and my coworker work together on a branch
     Given the committed configuration file:
