@@ -8,7 +8,7 @@ Git Town v13 supports syncing feature branches via rebase better.
 
 When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) is set to `rebase`, Git Town now force-pushes your locally rebased commits to the tracking branch. This avoids mixing locally rebased commits with outdated commits on the tracking branch during branch syncing. To not accidentally override new commits on the tracking branch that haven't been integrated into your local commits, Git Town now uses the [--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes) feature of Git. This requires raising the minimally required Git version from 2.7 to 2.30. Git 2.30 has been released over 2 years ago and should be widely available at this point.
 
-While Git Town's new behavior removes the chance of mixing old and new commits in over 95% of cases, it can still happen when encountering conflicting changes. If you have ideas on how to further improve Git Town's behavior in those edge cases, please reach out to the Git Town team.
+While Git Town's new behavior removes the chance of mixing old and new commits in over 95% of cases, it can still happen when encountering conflicting changes. If you have ideas on how to further improve Git Town's behavior in those edge cases, please reach out to the Git Town team by opening a ticket on https://github.com/git-town/git-town.
 
 ## 12.1.0 (2024-02-29)
 
