@@ -1,12 +1,19 @@
 Feature: collaborative feature branch syncing
 
   Scenario: I and my coworker work together on a branch
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    Given the committed configuration file:
+      """
+      [sync-strategy]
+      feature-branches = "rebase"
+
+      [branches]
+      main = "main"
+      perennials = []
+      """
     And a coworker clones the repository
     And the current branch is a feature branch "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
-    And the coworker sets the "sync-feature-strategy" to "rebase"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
