@@ -11,14 +11,15 @@ func Footer(verbose bool, commandsCount int, finalMessages []string) {
 	if verbose {
 		fmt.Printf(messages.CommandsRun, commandsCount)
 	}
-	FinalMessages(finalMessages)
+	Messages(finalMessages)
 }
 
 // NoFinalMessages can be used by callers of PrintFooter to indicate
 // that the command has no final messages to print.
 var NoFinalMessages = []string{} //nolint:gochecknoglobals
 
-func FinalMessages(messages []string) {
+// Messages prints the given messages to the user.
+func Messages(messages []string) {
 	for _, message := range messages {
 		fmt.Println("\n" + message)
 	}
