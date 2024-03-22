@@ -28,7 +28,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
-    Given the coworker adds this commit to the current branch:
+    Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT     |
       | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
