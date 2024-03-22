@@ -60,8 +60,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git rebase --continue                           |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase origin/feature                       |
-      |         | git rebase main                                 |
+      | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
@@ -81,8 +80,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH  | COMMAND                                         |
       | main    | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase origin/feature                       |
-      |         | git rebase main                                 |
+      | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
