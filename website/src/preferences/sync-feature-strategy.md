@@ -16,11 +16,16 @@ merges the parent and tracking branches into local feature branches.
 
 When set to `rebase`, [git sync](../commands/sync.md) rebases local feature
 branches against their parent branches and then does a safe force-push of your
-rebased local commits into the tracking branch. This safe force-push will fail
-if the tracking branch contains commits that haven't been integrated into the
-local Git history. In such cases, Git Town rebases your local branch against its
-tracking branch. This can lead to mixing of outdated commits from your tracking
-branch with newer commits from your local branch.
+rebased local commits into the tracking branch. This safe force-push uses the
+[--force-with-lease](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-with-lease)
+and
+[--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes)
+switches to guarantee that the force-push will never overwrite commits on the
+tracking branch that haven't been integrated into your local Git history.
+
+If the safe force-push fails, Git Town rebases your local branch against its
+tracking branch. If that leads to conflicts, you have a chance to resolve them
+and continue syncing by calling [git town continue](../commands/continue.md).
 
 ## change this setting
 
