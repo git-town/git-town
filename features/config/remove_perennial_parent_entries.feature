@@ -1,7 +1,7 @@
 Feature: remove parent entries for perennial branches
 
   Scenario: parent branch entry for a perennial branch exists
-    Given the feature branches "feature-1" and "feature-2"
+    Given the local feature branches "feature-1" and "feature-2"
     And the configuration file:
       """
       [branches]
