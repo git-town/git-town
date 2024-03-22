@@ -1,5 +1,6 @@
 Feature: collaborative feature branch syncing
 
+  @this
   Scenario: I and my coworker work together on a branch
     Given the committed configuration file:
       """
@@ -30,10 +31,8 @@ Feature: collaborative feature branch syncing
       | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE         |
-      | main    | local, coworker, origin | config file     |
-      | feature | local, coworker, origin | config file     |
-      |         | local, origin           | my first commit |
+      | BRANCH  | LOCATION      | MESSAGE         |
+      | feature | local, origin | my first commit |
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
@@ -63,9 +62,7 @@ Feature: collaborative feature branch syncing
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE               |
-      | main    | local, coworker, origin | config file           |
-      | feature | local, coworker, origin | config file           |
-      |         |                         | my first commit       |
+      | feature | local, coworker, origin | my first commit       |
       |         | coworker, origin        | coworker first commit |
 
     # I add a conflicting commit locally and then sync
@@ -95,8 +92,6 @@ Feature: collaborative feature branch syncing
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE               |
-      | main    | local, coworker, origin | config file           |
-      | feature | local, coworker, origin | config file           |
-      |         |                         | my first commit       |
+      | feature | local, coworker, origin | my first commit       |
       |         |                         | coworker first commit |
       |         | local, origin           | my second commit      |

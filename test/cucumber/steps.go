@@ -1145,7 +1145,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the committed configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 		state.fixture.DevRepo.StageFiles(configfile.FileName)
-		state.fixture.DevRepo.CommitStagedChanges("config file")
+		state.fixture.DevRepo.CommitStagedChanges("persisted config file")
 		state.fixture.DevRepo.PushBranch()
 		return nil
 	})
