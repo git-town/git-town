@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Git Town now supports rebase workflows fully.
+Git Town v13 improves support for people who rebase their branches.
 
 #### BREAKING CHANGES
 
