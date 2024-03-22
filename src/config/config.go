@@ -4,6 +4,7 @@
 package config
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v12/src/config/configdomain"
@@ -13,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/git/giturl"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -307,11 +309,13 @@ func NewConfig(args NewConfigArgs) (*Config, error) {
 	}
 	config.Merge(args.GlobalConfig)
 	config.Merge(args.LocalConfig)
+	configAccess := gitconfig.Access{Runner: args.Runner}
+	cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess)
 	return &Config{
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
 		FullConfig:      config,
-		GitConfig:       gitconfig.Access{Runner: args.Runner},
+		GitConfig:       configAccess,
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
@@ -324,4 +328,18 @@ type NewConfigArgs struct {
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
 	Runner       gitconfig.Runner
+}
+
+// cleanupPerennialParentEntries removes outdated entries from the configuration.
+func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access) error {
+	for _, perennialBranch := range perennialBranches {
+		if !lineage.Parent(perennialBranch).IsEmpty() {
+			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
+				return err
+			}
+			lineage.RemoveBranch(perennialBranch)
+			fmt.Printf(messages.PerennialBranchRemovedParentEntry, perennialBranch)
+		}
+	}
+	return nil
 }
