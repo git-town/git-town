@@ -65,7 +65,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
-      |         | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
@@ -83,6 +82,5 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
-      |         | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
