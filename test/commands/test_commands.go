@@ -18,6 +18,8 @@ import (
 	"github.com/git-town/git-town/v12/test/subshell"
 )
 
+const ConfigFileCommitMessage = "persisted config file"
+
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	*subshell.TestRunner

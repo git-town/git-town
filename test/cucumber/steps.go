@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v12/src/gohacks"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"github.com/git-town/git-town/v12/test/asserts"
+	"github.com/git-town/git-town/v12/test/commands"
 	"github.com/git-town/git-town/v12/test/datatable"
 	"github.com/git-town/git-town/v12/test/fixture"
 	"github.com/git-town/git-town/v12/test/git"
@@ -1145,7 +1146,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the committed configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 		state.fixture.DevRepo.StageFiles(configfile.FileName)
-		state.fixture.DevRepo.CommitStagedChanges("persisted config file")
+		state.fixture.DevRepo.CommitStagedChanges(commands.ConfigFileCommitMessage)
 		state.fixture.DevRepo.PushBranch()
 		return nil
 	})
