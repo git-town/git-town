@@ -19,7 +19,7 @@ Feature: collaborative feature branch syncing
     # I make a commit and sync
     Given I add this commit:
       | MESSAGE         | FILE NAME | FILE CONTENT |
-      | my first commit | file.txt  | my content 1 |
+      | my first commit | file.txt  | my content   |
     When I run "git town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -71,7 +71,7 @@ Feature: collaborative feature branch syncing
     # I add a conflicting commit locally and then sync
     Given I add this commit:
       | MESSAGE          | FILE NAME | FILE CONTENT |
-      | my second commit | file.txt  | my content 2 |
+      | my second commit | file.txt  | my content   |
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
