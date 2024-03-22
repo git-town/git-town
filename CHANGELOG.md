@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Git Town v13 improves support for people who rebase their branches.
+Git Town v13 supports syncing feature branches via rebase better.
 
 #### BREAKING CHANGES
 
