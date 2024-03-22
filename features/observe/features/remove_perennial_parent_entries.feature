@@ -9,7 +9,7 @@ Feature: remove parent entries for perennial branches
       main = "main"
       perennials = [ "feature-2" ]
       """
-    When I run "git town contribute"
+    When I run "git town observe"
     Then this branch lineage exists now
       | BRANCH    | PARENT |
       | feature-1 | main   |
