@@ -86,7 +86,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fiel
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, "persisted config file") {
+		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, ConfigFileCommitMessage) {
 			continue
 		}
 		if slice.Contains(fields, "FILE NAME") {
