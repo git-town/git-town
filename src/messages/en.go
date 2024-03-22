@@ -119,6 +119,7 @@ END OUTPUT FROM 'git branch -vva'
 	PerennialBranchCannotPropose          = "cannot propose perennial branches"
 	PerennialBranchCannotShip             = "cannot ship perennial branches"
 	PerennialBranches                     = "Perennial branches: %s\n"
+	PerennialBranchRemovedParentEntry     = "Removed parent entry for perennial branch %q\n"
 	PerennialRegex                        = "Perennial regex: %s\n"
 	PreviousCommandFinished               = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem                = "The last Git Town command (%s) hit a problem %v ago.\n"

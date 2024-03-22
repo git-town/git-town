@@ -1357,6 +1357,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.compareTable(state.initialCommits)
 	})
 
+	suite.Step(`^the local feature branch "([^"]+)"$`, func(branch string) error {
+		branchName := gitdomain.NewLocalBranchName(branch)
+		state.fixture.DevRepo.CreateFeatureBranch(branchName)
+		state.initialLocalBranches = append(state.initialLocalBranches, branchName)
+		state.initialLineage.AddRow(branch, "main")
+		return nil
+	})
+
 	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2} {

@@ -56,7 +56,7 @@ func executeRepo(verbose bool) error {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.Runner, repo.Runner.Backend.Runner)
-	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), repo.Runner.FinalMessages.Result())
 	return nil
 }
 
