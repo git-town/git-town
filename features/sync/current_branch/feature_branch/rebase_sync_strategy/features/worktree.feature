@@ -16,15 +16,15 @@ Feature: sync a branch whose parent is active in another worktree
     And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH | COMMAND                     |
-      | child  | git fetch --prune --tags    |
-      |        | git checkout main           |
-      | main   | git rebase origin/main      |
-      |        | git push                    |
-      |        | git checkout child          |
-      | child  | git rebase origin/child     |
-      |        | git rebase origin/parent    |
-      |        | git push --force-with-lease |
+      | BRANCH | COMMAND                                         |
+      | child  | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main                          |
+      |        | git push                                        |
+      |        | git checkout child                              |
+      | child  | git rebase origin/child                         |
+      |        | git rebase origin/parent                        |
+      |        | git push --force-with-lease --force-if-includes |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |

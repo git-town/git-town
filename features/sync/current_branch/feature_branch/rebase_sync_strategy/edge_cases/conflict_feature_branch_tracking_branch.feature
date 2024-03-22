@@ -61,11 +61,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git rebase --continue       |
-      |         | git rebase main             |
-      |         | git push --force-with-lease |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is in progress
@@ -79,8 +79,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git rebase --continue       |
-      |         | git rebase main             |
-      |         | git push --force-with-lease |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |

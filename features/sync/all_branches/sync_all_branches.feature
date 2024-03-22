@@ -68,28 +68,28 @@ Feature: sync all feature branches
     Given Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
     Then it runs the commands
-      | BRANCH     | COMMAND                      |
-      | alpha      | git fetch --prune --tags     |
-      |            | git checkout main            |
-      | main       | git rebase origin/main       |
-      |            | git checkout alpha           |
-      | alpha      | git rebase origin/alpha      |
-      |            | git rebase main              |
-      |            | git push --force-with-lease  |
-      |            | git checkout beta            |
-      | beta       | git rebase origin/beta       |
-      |            | git rebase main              |
-      |            | git push --force-with-lease  |
-      |            | git checkout observed        |
-      | observed   | git rebase origin/observed   |
-      |            | git checkout production      |
-      | production | git rebase origin/production |
-      |            | git push                     |
-      |            | git checkout qa              |
-      | qa         | git rebase origin/qa         |
-      |            | git push                     |
-      |            | git checkout alpha           |
-      | alpha      | git push --tags              |
+      | BRANCH     | COMMAND                                         |
+      | alpha      | git fetch --prune --tags                        |
+      |            | git checkout main                               |
+      | main       | git rebase origin/main                          |
+      |            | git checkout alpha                              |
+      | alpha      | git rebase origin/alpha                         |
+      |            | git rebase main                                 |
+      |            | git push --force-with-lease --force-if-includes |
+      |            | git checkout beta                               |
+      | beta       | git rebase origin/beta                          |
+      |            | git rebase main                                 |
+      |            | git push --force-with-lease --force-if-includes |
+      |            | git checkout observed                           |
+      | observed   | git rebase origin/observed                      |
+      |            | git checkout production                         |
+      | production | git rebase origin/production                    |
+      |            | git push                                        |
+      |            | git checkout qa                                 |
+      | qa         | git rebase origin/qa                            |
+      |            | git push                                        |
+      |            | git checkout alpha                              |
+      | alpha      | git push --tags                                 |
     And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |

@@ -12,14 +12,14 @@ Feature: collaborative feature branch syncing
       |         | coworker | coworker commit |
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git fetch --prune --tags    |
-      |         | git checkout main           |
-      | main    | git rebase origin/main      |
-      |         | git checkout feature        |
-      | feature | git rebase origin/feature   |
-      |         | git rebase main             |
-      |         | git push --force-with-lease |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git checkout main                               |
+      | main    | git rebase origin/main                          |
+      |         | git checkout feature                            |
+      | feature | git rebase origin/feature                       |
+      |         | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |

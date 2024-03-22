@@ -17,19 +17,19 @@ Feature: stacked changes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                     |
-      | child  | git fetch --prune --tags    |
-      |        | git checkout main           |
-      | main   | git rebase origin/main      |
-      |        | git push                    |
-      |        | git checkout parent         |
-      | parent | git rebase origin/parent    |
-      |        | git rebase main             |
-      |        | git push --force-with-lease |
-      |        | git checkout child          |
-      | child  | git rebase origin/child     |
-      |        | git rebase parent           |
-      |        | git push --force-with-lease |
+      | BRANCH | COMMAND                                         |
+      | child  | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main                          |
+      |        | git push                                        |
+      |        | git checkout parent                             |
+      | parent | git rebase origin/parent                        |
+      |        | git rebase main                                 |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout child                              |
+      | child  | git rebase origin/child                         |
+      |        | git rebase parent                               |
+      |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "child"
     And these commits exist now
