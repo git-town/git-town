@@ -14,12 +14,11 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | feature | git checkout main         |
-      | main    | git rebase origin/main    |
-      |         | git checkout feature      |
-      | feature | git rebase origin/feature |
-      |         | git rebase main           |
+      | BRANCH  | COMMAND                |
+      | feature | git checkout main      |
+      | main    | git rebase origin/main |
+      |         | git checkout feature   |
+      | feature | git rebase main        |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |

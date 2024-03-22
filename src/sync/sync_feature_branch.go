@@ -22,6 +22,7 @@ type featureBranchArgs struct {
 	parentOtherWorktree bool                             // whether the parent of this branch exists on another worktre
 	program             *program.Program                 // the program to update
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
+	offline             configdomain.Offline
 }
 
 func syncFeatureBranchMergeProgram(args featureBranchArgs) {
@@ -37,7 +38,7 @@ func syncFeatureBranchRebaseProgram(args featureBranchArgs) {
 		CurrentBranch:               args.branch.LocalName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
-	if args.branch.HasTrackingBranch() {
+	if args.branch.HasTrackingBranch() && !args.offline.Bool() {
 		args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: args.branch.RemoteName})
 	}
 }
