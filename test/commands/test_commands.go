@@ -18,6 +18,8 @@ import (
 	"github.com/git-town/git-town/v12/test/subshell"
 )
 
+const ConfigFileCommitMessage = "persisted config file"
+
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	*subshell.TestRunner
@@ -84,7 +86,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fiel
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") {
+		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, ConfigFileCommitMessage) {
 			continue
 		}
 		if slice.Contains(fields, "FILE NAME") {

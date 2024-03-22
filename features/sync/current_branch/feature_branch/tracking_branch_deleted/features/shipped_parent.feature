@@ -40,12 +40,12 @@ Feature: syncing a branch whose parent was shipped
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | child  | git reset --hard {{ sha 'child commit' }}   |
-      |        | git push --force-with-lease                 |
-      |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git branch parent {{ sha 'parent commit' }} |
-      |        | git checkout child                          |
+      | BRANCH | COMMAND                                         |
+      | child  | git reset --hard {{ sha 'child commit' }}       |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout main                               |
+      | main   | git reset --hard {{ sha 'initial commit' }}     |
+      |        | git branch parent {{ sha 'parent commit' }}     |
+      |        | git checkout child                              |
     And the current branch is still "child"
     And the initial branches and lineage exist

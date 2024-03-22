@@ -14,9 +14,9 @@ func TestIsAcceptableGitVersion(t *testing.T) {
 		minor int
 		want  bool
 	}{
-		{2, 7, true},
+		{2, 30, true},
 		{3, 0, true},
-		{2, 6, false},
+		{2, 29, false},
 		{1, 8, false},
 	}
 	for _, tt := range tests {

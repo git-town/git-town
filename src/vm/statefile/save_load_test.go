@@ -111,6 +111,9 @@ func TestLoadSave(t *testing.T) {
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
 					ParentActiveInOtherWorktree: true,
 				},
+				&opcodes.RebaseFeatureTrackingBranch{
+					RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch"),
+				},
 				&opcodes.RemoveFromPerennialBranches{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -355,6 +358,12 @@ func TestLoadSave(t *testing.T) {
         "ParentActiveInOtherWorktree": true
       },
       "type": "RebaseParent"
+    },
+    {
+      "data": {
+        "RemoteBranch": "origin/branch"
+      },
+      "type": "RebaseFeatureTrackingBranch"
     },
     {
       "data": {

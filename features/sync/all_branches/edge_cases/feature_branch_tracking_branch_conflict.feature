@@ -43,14 +43,14 @@ Feature: handle merge conflicts between feature branches and their tracking bran
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | beta   | git merge --abort                           |
-      |        | git checkout alpha                          |
-      | alpha  | git reset --hard {{ sha 'alpha commit' }}   |
-      |        | git push --force-with-lease                 |
-      |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git stash pop                               |
+      | BRANCH | COMMAND                                         |
+      | beta   | git merge --abort                               |
+      |        | git checkout alpha                              |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout main                               |
+      | main   | git reset --hard {{ sha 'initial commit' }}     |
+      |        | git stash pop                                   |
     And the current branch is now "main"
     And the uncommitted file still exists
     And the initial commits exist

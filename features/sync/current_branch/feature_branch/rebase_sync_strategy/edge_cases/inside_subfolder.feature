@@ -14,23 +14,21 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                     |
-      | alpha  | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash                   |
-      |        | git checkout main           |
-      | main   | git rebase origin/main      |
-      |        | git checkout alpha          |
-      | alpha  | git rebase origin/alpha     |
-      |        | git rebase main             |
-      |        | git push --force-with-lease |
-      |        | git checkout beta           |
-      | beta   | git rebase origin/beta      |
-      |        | git rebase main             |
-      |        | git push --force-with-lease |
-      |        | git checkout alpha          |
-      | alpha  | git push --tags             |
-      |        | git stash pop               |
+      | BRANCH | COMMAND                                         |
+      | alpha  | git fetch --prune --tags                        |
+      |        | git add -A                                      |
+      |        | git stash                                       |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main                          |
+      |        | git checkout alpha                              |
+      | alpha  | git rebase main                                 |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout beta                               |
+      | beta   | git rebase main                                 |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout alpha                              |
+      | alpha  | git push --tags                                 |
+      |        | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And the uncommitted file still exists
@@ -49,10 +47,10 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | alpha  | git add -A                                            |
       |        | git stash                                             |
       |        | git reset --hard {{ sha-before-run 'folder commit' }} |
-      |        | git push --force-with-lease                           |
+      |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout beta                                     |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
-      |        | git push --force-with-lease                           |
+      |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout alpha                                    |
       | alpha  | git stash pop                                         |
     And the current branch is still "alpha"

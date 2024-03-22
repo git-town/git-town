@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v12/src/gohacks"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"github.com/git-town/git-town/v12/test/asserts"
+	"github.com/git-town/git-town/v12/test/commands"
 	"github.com/git-town/git-town/v12/test/datatable"
 	"github.com/git-town/git-town/v12/test/fixture"
 	"github.com/git-town/git-town/v12/test/git"
@@ -535,6 +536,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			FileName: "new_file",
 			Message:  message,
 		})
+		return nil
+	})
+
+	suite.Step(`^I add this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		commits := git.FromGherkinTable(table)
+		commit := commits[0]
+		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
+		state.fixture.DevRepo.StageFiles(commit.FileName)
+		state.fixture.DevRepo.CommitStagedChanges(commit.Message)
 		return nil
 	})
 
@@ -1133,6 +1143,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the committed configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
+		state.fixture.DevRepo.StageFiles(configfile.FileName)
+		state.fixture.DevRepo.CommitStagedChanges(commands.ConfigFileCommitMessage)
+		state.fixture.DevRepo.PushBranch()
+		return nil
+	})
+
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 		return nil
@@ -1163,6 +1181,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
+	suite.Step(`^the coworker adds this commit to their current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		commits := git.FromGherkinTable(table)
+		commit := commits[0]
+		state.fixture.CoworkerRepo.CreateFile(commit.FileName, commit.FileContent)
+		state.fixture.CoworkerRepo.StageFiles(commit.FileName)
+		state.fixture.CoworkerRepo.CommitStagedChanges(commit.Message)
+		return nil
+	})
+
 	suite.Step(`^the coworker fetches updates$`, func() error {
 		state.fixture.CoworkerRepo.Fetch()
 		return nil
@@ -1173,8 +1200,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(filename, content string) error {
+		state.fixture.CoworkerRepo.CreateFile(filename, content)
+		state.fixture.CoworkerRepo.StageFiles(filename)
+		return nil
+	})
+
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
 		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCode(command)
+		return nil
+	})
+
+	suite.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(cmd string) error {
+		env := append(os.Environ(), "GIT_EDITOR=true")
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
@@ -1189,6 +1228,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		_ = state.fixture.CoworkerRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
+		return nil
+	})
+
+	suite.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+		actualContent := state.fixture.CoworkerRepo.FileContent(file)
+		if expectedContent != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+		}
 		return nil
 	})
 

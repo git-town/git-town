@@ -14,8 +14,35 @@ merges the parent and tracking branches into local feature branches.
 
 ### rebase
 
-When set to `rebase`, it rebases local feature branches against their parent and
-tracking branches.
+When set to `rebase`, [git sync](../commands/sync.md) rebases local feature
+branches against their parent branches and then does a safe force-push of your
+rebased local commits to the tracking branch. This safe force-push uses Git's
+[--force-with-lease](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-with-lease)
+and
+[--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes)
+switches to guarantee that the force-push will never overwrite commits on the
+tracking branch that haven't been integrated into the local Git history.
+
+If the safe force-push fails, Git Town rebases your local branch against its
+tracking branch to pull in new commits from the tracking branch. If that leads
+to conflicts, you have a chance to resolve them and continue syncing by running
+[git town continue](../commands/continue.md).
+
+When continuing the sync this way, Git Town tries again to safe-force-push and
+rebase until the safe-force-push succeeds without removing commits from the
+tracking branch that aren't part of the local Git history.
+
+This can lead to an infinite loop if you do an interactive rebase that removes
+commits from the tracking branch while syncing it. You can break out of this
+infinite loop by doing a less aggressive rebase that doesn't remove the remote
+commits. Finish the `git sync` command and then clean up your commits via a
+separate interactive rebase after the sync. At this point another sync will
+succeed because the commits you have just cleaned up are now a part of your
+local Git history.
+
+The rule of thumb is that pulling in new commits via `git sync` and cleaning up
+old commits must happen separately from each other. Only then can Git guarantee
+that the necessary force-push happens without losing commits.
 
 ## change this setting
 

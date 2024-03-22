@@ -13,16 +13,15 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | feature | git fetch --prune --tags  |
-      |         | git add -A                |
-      |         | git stash                 |
-      |         | git checkout main         |
-      | main    | git rebase origin/main    |
-      |         | git push                  |
-      |         | git checkout feature      |
-      | feature | git rebase origin/feature |
-      |         | git rebase main           |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
+      |         | git push                 |
+      |         | git checkout feature     |
+      | feature | git rebase main          |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -66,10 +65,10 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git rebase --continue       |
-      |         | git push --force-with-lease |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is in progress
@@ -83,10 +82,10 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file" with "feature content"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git rebase --continue       |
-      |         | git push --force-with-lease |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
@@ -101,9 +100,9 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git rebase --continue" and enter "resolved commit" for the commit message
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git push --force-with-lease |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                                         |
+      | feature | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
