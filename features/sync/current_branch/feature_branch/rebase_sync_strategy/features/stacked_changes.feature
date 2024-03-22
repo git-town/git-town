@@ -23,12 +23,14 @@ Feature: stacked changes
       | main   | git rebase origin/main                          |
       |        | git push                                        |
       |        | git checkout parent                             |
-      | parent | git rebase origin/parent                        |
-      |        | git rebase main                                 |
+      | parent | git rebase main                                 |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase origin/parent                        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
-      | child  | git rebase origin/child                         |
-      |        | git rebase parent                               |
+      | child  | git rebase parent                               |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase origin/child                         |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "child"
@@ -36,15 +38,15 @@ Feature: stacked changes
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
-      | child  | local, origin | origin main commit   |
-      |        |               | local main commit    |
+      | child  | local, origin | origin child commit  |
       |        |               | origin parent commit |
+      |        |               | origin main commit   |
+      |        |               | local main commit    |
       |        |               | local parent commit  |
-      |        |               | origin child commit  |
       |        |               | local child commit   |
-      | parent | local, origin | origin main commit   |
+      | parent | local, origin | origin parent commit |
+      |        |               | origin main commit   |
       |        |               | local main commit    |
-      |        |               | origin parent commit |
       |        |               | local parent commit  |
 
   Scenario: undo
