@@ -9,6 +9,10 @@ Feature: remove parent entries for perennial branches
       perennials = [ "feature-1" ]
       """
     When I run "git town append feature-3"
+    Then it prints:
+      """
+      Removed parent entry for perennial branch "feature-1"
+      """
     Then this branch lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
