@@ -1180,7 +1180,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
-	suite.Step(`^the coworker adds this commit:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the coworker adds this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		commits := git.FromGherkinTable(table)
 		commit := commits[0]
 		state.fixture.CoworkerRepo.CreateFile(commit.FileName, commit.FileContent)
