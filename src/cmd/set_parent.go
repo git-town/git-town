@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"errors"
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
@@ -58,7 +58,7 @@ func executeSetParent(verbose bool) error {
 		return err
 	}
 	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active) {
-		return errors.New(messages.SetParentNoFeatureBranch)
+		return fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
 	if !existingParent.IsEmpty() {
