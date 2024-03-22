@@ -1,6 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
-  Scenario: I and my coworker work together on a branch
+  Scenario: I use rebase and my coworker uses merge
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And a coworker clones the repository

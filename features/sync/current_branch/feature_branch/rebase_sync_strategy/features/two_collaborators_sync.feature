@@ -1,6 +1,6 @@
 Feature: two people with rebase strategy sync changes made by them
 
-  Scenario: I and my coworker work together on a branch
+  Scenario: I and my coworker sync changes we both made to the same branch
     Given the committed configuration file:
       """
       [sync-strategy]
