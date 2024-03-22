@@ -38,8 +38,8 @@ Feature: collaborative feature branch syncing
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit:
-      | MESSAGE               | FILE NAME | FILE CONTENT       |
-      | coworker first commit | file.txt  | coworker content 1 |
+      | MESSAGE               | FILE NAME | FILE CONTENT     |
+      | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
