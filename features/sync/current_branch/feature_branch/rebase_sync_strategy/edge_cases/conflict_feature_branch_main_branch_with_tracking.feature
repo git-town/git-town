@@ -63,7 +63,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
@@ -91,14 +90,14 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue" and enter "resolved commit" for the commit message
+    And I run "git rebase --continue" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and enter "resolved commit again" for the commit message
+    And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
