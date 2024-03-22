@@ -1,6 +1,5 @@
 Feature: collaborative feature branch syncing
 
-  @this
   Scenario: I and my coworker work together on a branch
     Given the committed configuration file:
       """

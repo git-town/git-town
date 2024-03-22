@@ -1230,6 +1230,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+		actualContent := state.fixture.CoworkerRepo.FileContent(file)
+		if expectedContent != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+		}
+		return nil
+	})
+
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = branch
