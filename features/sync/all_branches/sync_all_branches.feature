@@ -73,12 +73,10 @@ Feature: sync all feature branches
       |            | git checkout main                               |
       | main       | git rebase origin/main                          |
       |            | git checkout alpha                              |
-      | alpha      | git rebase origin/alpha                         |
-      |            | git rebase main                                 |
+      | alpha      | git rebase main                                 |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout beta                               |
-      | beta       | git rebase origin/beta                          |
-      |            | git rebase main                                 |
+      | beta       | git rebase main                                 |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout observed                           |
       | observed   | git rebase origin/observed                      |
