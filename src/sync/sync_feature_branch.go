@@ -18,8 +18,8 @@ func FeatureBranchProgram(args featureBranchArgs) {
 }
 
 type featureBranchArgs struct {
-	branch              gitdomain.BranchInfo // the branch to sync
-	offline             configdomain.Offline
+	branch              gitdomain.BranchInfo             // the branch to sync
+	offline             configdomain.Offline             // whether offline mode is enabled
 	parentOtherWorktree bool                             // whether the parent of this branch exists on another worktre
 	program             *program.Program                 // the program to update
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
