@@ -450,7 +450,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 			continue
 		}
 		parts := spaceRE.Split(line[2:], 3)
-		if parts[0] == "remotes/origin/HEAD" {
+		if strings.HasSuffix(parts[0], "/HEAD") {
 			continue
 		}
 		if len(parts) < 2 {
