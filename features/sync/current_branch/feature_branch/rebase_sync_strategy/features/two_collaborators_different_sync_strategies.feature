@@ -1,6 +1,5 @@
 Feature: compatibility between different sync-feature-strategy settings
 
-  @this
   Scenario: I and my coworker work together on a branch
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is a feature branch "feature"
