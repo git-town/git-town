@@ -31,8 +31,8 @@ Feature: collaborative feature branch syncing
       | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE         |
-      | feature | local, origin | my first commit |
+      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
+      | feature | local, origin | my first commit | file.txt  | my content   |
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
@@ -61,9 +61,9 @@ Feature: collaborative feature branch syncing
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE               |
-      | feature | local, coworker, origin | my first commit       |
-      |         | coworker, origin        | coworker first commit |
+      | BRANCH  | LOCATION                | MESSAGE               | FILE NAME | FILE CONTENT            |
+      | feature | local, coworker, origin | my first commit       | file.txt  | my content              |
+      |         | coworker, origin        | coworker first commit | file.txt  | my and coworker content |
 
     # I add a conflicting commit locally and then sync
     Given I add this commit:
@@ -83,7 +83,7 @@ Feature: collaborative feature branch syncing
       """
       To continue after having resolved conflicts, run "git town continue".
       """
-    When I resolve the conflict in "file.txt" with "coworker and my new content"
+    When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -91,7 +91,7 @@ Feature: collaborative feature branch syncing
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE               |
-      | feature | local, coworker, origin | my first commit       |
-      |         |                         | coworker first commit |
-      |         | local, origin           | my second commit      |
+      | BRANCH  | LOCATION                | MESSAGE               | FILE NAME | FILE CONTENT                |
+      | feature | local, coworker, origin | my first commit       | file.txt  | my content                  |
+      |         |                         | coworker first commit | file.txt  | my and coworker content     |
+      |         | local, origin           | my second commit      | file.txt  | my new and coworker content |
