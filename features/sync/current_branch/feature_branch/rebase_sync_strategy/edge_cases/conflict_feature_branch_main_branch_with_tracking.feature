@@ -14,16 +14,15 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | feature | git fetch --prune --tags  |
-      |         | git add -A                |
-      |         | git stash                 |
-      |         | git checkout main         |
-      | main    | git rebase origin/main    |
-      |         | git push                  |
-      |         | git checkout feature      |
-      | feature | git rebase origin/feature |
-      |         | git rebase main           |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
+      |         | git push                 |
+      |         | git checkout feature     |
+      | feature | git rebase main          |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
