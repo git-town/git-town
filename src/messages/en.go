@@ -78,7 +78,7 @@ END OUTPUT FROM 'git branch -vva'
 	GitVersionMinorNotNumber              = "cannot convert minor version %q to int: %w"
 	GitVersionProblem                     = "cannot determine Git version: %w"
 	GitVersionUnexpectedOutput            = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
-	GitVersionTooLow                      = "this app requires Git 2.7.0 or higher"
+	GitVersionTooLow                      = "this app requires Git 2.30.0 or higher"
 	HackTooManyArguments                  = "please provide only one branch to create"
 	HackBranchIsAlreadyFeature            = "branch %q is already a feature branch"
 	HackBranchIsNowFeature                = "branch %q is now a feature branch\n"
