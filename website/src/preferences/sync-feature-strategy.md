@@ -35,10 +35,10 @@ tracking branch that aren't part of the local Git history.
 This can lead to an infinite loop if you do an interactive rebase that removes
 commits from the tracking branch while syncing it. You can break out of this
 infinite loop by doing a less aggressive rebase that doesn't remove the remote
-commits. Finish the Git Town command and then clean up your commits via a
+commits. Finish the `git sync` command and then clean up your commits via a
 separate interactive rebase after the sync. At this point another sync will
-succeed because the commits you have just cleaned up are a part of your local
-Git history now.
+succeed because the commits you have just cleaned up are now a part of your
+local Git history.
 
 The rule of thumb is that pulling in new commits and cleaning up old commits
 must happen separately from each other. Only then can Git guarantee that pulling
