@@ -11,7 +11,7 @@ Feature: remove parent entries for perennial branches
       main = "main"
       perennials = [ "feature-2" ]
       """
-    When I run "git town propose"
+    When I run "git town repo"
     Then this branch lineage exists now
       | BRANCH    | PARENT |
       | feature-1 | main   |
