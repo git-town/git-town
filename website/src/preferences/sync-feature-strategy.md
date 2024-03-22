@@ -14,8 +14,12 @@ merges the parent and tracking branches into local feature branches.
 
 ### rebase
 
-When set to `rebase`, it rebases local feature branches against their parent and
-tracking branches.
+When set to `rebase`, [git sync](../commands/sync.md) rebases local feature
+branches against their parent branches and then does a safe force-push of your
+rebased local commits into the tracking branch. This safe force-push will fail
+if the tracking branch contains commits that haven't been integrated into the
+local Git history. In such cases, Git Town rebases your local branch against its
+tracking branch.
 
 ## change this setting
 
