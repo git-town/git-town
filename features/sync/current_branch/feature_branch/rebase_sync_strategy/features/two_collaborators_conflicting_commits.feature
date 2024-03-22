@@ -70,8 +70,8 @@ Feature: collaborative feature branch syncing
 
     # I add a conflicting commit locally and then sync
     Given I add this commit:
-      | MESSAGE          | FILE NAME | FILE CONTENT |
-      | my second commit | file.txt  | my content   |
+      | MESSAGE          | FILE NAME | FILE CONTENT   |
+      | my second commit | file.txt  | my new content |
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
