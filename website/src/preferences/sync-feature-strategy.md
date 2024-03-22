@@ -19,7 +19,8 @@ branches against their parent branches and then does a safe force-push of your
 rebased local commits into the tracking branch. This safe force-push will fail
 if the tracking branch contains commits that haven't been integrated into the
 local Git history. In such cases, Git Town rebases your local branch against its
-tracking branch.
+tracking branch. This can lead to mixing of outdated commits from your tracking
+branch with newer commits from your local branch.
 
 ## change this setting
 
