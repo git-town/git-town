@@ -28,17 +28,21 @@ tracking branch to pull in new commits from the tracking branch. If that leads
 to conflicts, you have a chance to resolve them and continue syncing by running
 [git town continue](../commands/continue.md).
 
-When continuing an interrupted sync, Git Town continues to safe-force-push and
+When continuing the sync this way, Git Town tries again to safe-force-push and
 rebase until the safe-force-push succeeds without removing commits from the
 tracking branch that aren't part of the local Git history.
 
-If you do an interactive rebase that removes commits from the tracking branch as
-part of a sync, this will lead to an infinite loop. You can break out of that by
-doing a less aggressive rebase that doesn't remove the remote commits. Finish
-the Git Town command and then clean up your commits via a separate interactive
-rebase after the sync. At this point all commits from the tracking branch will
-be a part of your local Git history, and the safe-force-push will remove them
-even if your local branch no longer contains them.
+This can lead to an infinite loop if you do an interactive rebase that removes
+commits from the tracking branch while syncing it. You can break out of this
+infinite loop by doing a less aggressive rebase that doesn't remove the remote
+commits. Finish the Git Town command and then clean up your commits via a
+separate interactive rebase after the sync. At this point another sync will
+succeed because the commits you have just cleaned up are a part of your local
+Git history now.
+
+The rule of thumb is that pulling in new commits and cleaning up old commits
+must happen separately from each other. Only then can Git guarantee that pulling
+in changes happens without losing commits.
 
 ## change this setting
 
