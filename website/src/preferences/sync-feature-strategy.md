@@ -42,7 +42,7 @@ local Git history.
 
 The rule of thumb is that pulling in new commits via `git sync` and cleaning up
 old commits must happen separately from each other. Only then can Git guarantee
-that pulling in changes happens without losing commits.
+that the necessary force-push happens without losing commits.
 
 ## change this setting
 
