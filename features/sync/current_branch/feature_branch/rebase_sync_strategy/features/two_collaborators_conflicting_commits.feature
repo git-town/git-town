@@ -18,8 +18,8 @@ Feature: collaborative feature branch syncing
 
     # I make a commit and sync
     Given I add this commit:
-      | MESSAGE     | FILE NAME | FILE CONTENT  |
-      | my commit 1 | file.txt  | my content 01 |
+      | MESSAGE         | FILE NAME | FILE CONTENT |
+      | my first commit | file.txt  | my content 1 |
     When I run "git town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -30,16 +30,16 @@ Feature: collaborative feature branch syncing
       | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE     |
-      | main    | local, coworker, origin | config file |
-      | feature | local, coworker, origin | config file |
-      |         | local, origin           | my commit 1 |
+      | BRANCH  | LOCATION                | MESSAGE         |
+      | main    | local, coworker, origin | config file     |
+      | feature | local, coworker, origin | config file     |
+      |         | local, origin           | my first commit |
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit:
-      | MESSAGE         | FILE NAME | FILE CONTENT        |
-      | coworker commit | file.txt  | coworker content 01 |
+      | MESSAGE               | FILE NAME | FILE CONTENT       |
+      | coworker first commit | file.txt  | coworker content 1 |
     When the coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -62,16 +62,16 @@ Feature: collaborative feature branch syncing
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE         |
-      | main    | local, coworker, origin | config file     |
-      | feature | local, coworker, origin | config file     |
-      |         |                         | my commit 1     |
-      |         | coworker, origin        | coworker commit |
+      | BRANCH  | LOCATION                | MESSAGE               |
+      | main    | local, coworker, origin | config file           |
+      | feature | local, coworker, origin | config file           |
+      |         |                         | my first commit       |
+      |         | coworker, origin        | coworker first commit |
 
     # I add a conflicting commit locally and then sync
     Given I add this commit:
-      | MESSAGE     | FILE NAME | FILE CONTENT  |
-      | my commit 2 | file.txt  | my content 02 |
+      | MESSAGE          | FILE NAME | FILE CONTENT |
+      | my second commit | file.txt  | my content 2 |
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -94,9 +94,9 @@ Feature: collaborative feature branch syncing
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE         |
-      | main    | local, coworker, origin | config file     |
-      | feature | local, coworker, origin | config file     |
-      |         |                         | my commit 1     |
-      |         |                         | coworker commit |
-      |         | local, origin           | my commit 2     |
+      | BRANCH  | LOCATION                | MESSAGE               |
+      | main    | local, coworker, origin | config file           |
+      | feature | local, coworker, origin | config file           |
+      |         |                         | my first commit       |
+      |         |                         | coworker first commit |
+      |         | local, origin           | my second commit      |
