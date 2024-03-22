@@ -86,16 +86,6 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args featureBranchArgs) {
 	}
 }
 
-// pullTrackingBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch gitdomain.RemoteBranchName, strategy configdomain.SyncFeatureStrategy) {
-	switch strategy {
-	case configdomain.SyncFeatureStrategyMerge:
-		list.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
-	case configdomain.SyncFeatureStrategyRebase:
-		list.Add(&opcodes.RebaseBranch{Branch: trackingBranch.BranchName()})
-	}
-}
-
 func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
