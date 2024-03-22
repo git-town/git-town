@@ -16,5 +16,5 @@ func HasAcceptableGitVersion(majorVersion, minorVersion int) error {
 
 // IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
 func IsAcceptableGitVersion(major, minor int) bool {
-	return major > 2 || (major == 2 && minor >= 7)
+	return major > 2 || (major == 2 && minor >= 30)
 }
