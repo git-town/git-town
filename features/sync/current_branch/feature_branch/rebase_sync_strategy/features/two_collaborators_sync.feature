@@ -18,8 +18,7 @@ Feature: collaborative feature branch syncing
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase origin/feature                       |
-      |         | git rebase main                                 |
+      | feature | git rebase main                                 |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
@@ -35,8 +34,9 @@ Feature: collaborative feature branch syncing
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase origin/feature                       |
-      |         | git rebase main                                 |
+      | feature | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -47,13 +47,15 @@ Feature: collaborative feature branch syncing
     Given the current branch is "feature"
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | feature | git fetch --prune --tags  |
-      |         | git checkout main         |
-      | main    | git rebase origin/main    |
-      |         | git checkout feature      |
-      | feature | git rebase origin/feature |
-      |         | git rebase main           |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git checkout main                               |
+      | main    | git rebase origin/main                          |
+      |         | git checkout feature                            |
+      | feature | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
