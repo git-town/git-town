@@ -638,6 +638,8 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-5      55555555 Commit message 5
   remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
+	remotes/upstream/HEAD        -> upstream/main
+
 `[1:]
 			want := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
