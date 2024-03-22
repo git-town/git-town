@@ -67,10 +67,17 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then it runs the commands
-      | BRANCH  | COMMAND                                          |
-      | feature | git rebase --continue                            |
-      |         | git push --force-with-lease  --force-if-includes |
-      |         | git stash pop                                    |
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and enter "resolved commit again" for the commit message
+    Then it runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | git rebase --continue                           |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is in progress
