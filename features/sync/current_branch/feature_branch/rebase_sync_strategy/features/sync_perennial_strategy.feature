@@ -20,8 +20,9 @@ Feature: with sync-perennial-strategy set to "merge"
       | main    | git merge --no-edit origin/main                 |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase origin/feature                       |
-      |         | git rebase main                                 |
+      | feature | git rebase main                                 |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
@@ -30,10 +31,9 @@ Feature: with sync-perennial-strategy set to "merge"
       | main    | local, origin | local main commit                          |
       |         |               | origin main commit                         |
       |         |               | Merge remote-tracking branch 'origin/main' |
-      | feature | local, origin | local main commit                          |
+      | feature | local, origin | origin feature commit                      |
+      |         |               | local main commit                          |
       |         |               | origin main commit                         |
-      |         |               | Merge remote-tracking branch 'origin/main' |
-      |         |               | origin feature commit                      |
       |         |               | local feature commit                       |
 
   Scenario: undo
