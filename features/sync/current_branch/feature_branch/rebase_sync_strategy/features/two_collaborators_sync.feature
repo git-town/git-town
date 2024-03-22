@@ -1,4 +1,4 @@
-Feature: collaborative feature branch syncing
+Feature: two people with rebase strategy sync changes made by them
 
   Scenario: I and my coworker work together on a branch
     Given the committed configuration file:
