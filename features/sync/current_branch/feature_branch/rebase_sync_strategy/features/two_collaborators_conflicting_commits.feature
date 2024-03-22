@@ -86,7 +86,7 @@ Feature: collaborative feature branch syncing
       """
       To continue after having resolved conflicts, run "git town continue".
       """
-    When I resolve the conflict in "file.txt" with "my new and coworker content"
+    When I resolve the conflict in "file.txt" with "coworker and my new content"
     And I run "git town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
