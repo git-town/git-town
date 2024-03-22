@@ -166,6 +166,20 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
+## triangulate a hanging end-to-end test
+
+End-to-end tests sometimes hang due to Git Town waiting for input that the test
+doesn't define. To find the hanging test:
+
+- open `main_test.go`
+- find the call to `godog.RunWithOptions` and adjust its arguments:
+  - Make the `Paths` field more specific, for example by changing it from
+    "features" to "features/sync/current_branch". Now it runs only the tests in
+    that subfolder.
+  - To see the executed steps in the output, change `Format` to `pretty` and
+    `Concurrency` to 1. This reduces the speed at which the end-to-end tests
+    execute.
+
 ## run linters
 
 Format all code, auto-fix all fixable issues, and run all linters:
