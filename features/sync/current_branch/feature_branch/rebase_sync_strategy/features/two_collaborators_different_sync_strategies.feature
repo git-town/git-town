@@ -1,4 +1,4 @@
-Feature: collaborative feature branch syncing
+Feature: compatibility between different sync-feature-strategy settings
 
   Scenario: I sync via "rebase" and my coworker sync via "merge"
     Given Git Town setting "sync-feature-strategy" is "rebase"
