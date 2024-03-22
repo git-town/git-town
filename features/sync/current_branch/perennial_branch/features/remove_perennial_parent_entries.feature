@@ -10,6 +10,10 @@ Feature: remove parent entries for perennial branches
       perennials = [ "feature-2" ]
       """
     When I run "git town sync"
-    Then this branch lineage exists now
+    Then it prints:
+      """
+      Removed parent entry for perennial branch "feature-2"
+      """
+    And this branch lineage exists now
       | BRANCH    | PARENT |
       | feature-1 | main   |

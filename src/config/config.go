@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/git/giturl"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v12/src/messages"
 )
 
@@ -302,7 +303,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-func NewConfig(args NewConfigArgs) (*Config, error) {
+func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
 	config := configdomain.DefaultConfig()
 	if args.ConfigFile != nil {
 		config.Merge(*args.ConfigFile)
@@ -310,7 +311,8 @@ func NewConfig(args NewConfigArgs) (*Config, error) {
 	config.Merge(args.GlobalConfig)
 	config.Merge(args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
-	cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess)
+	finalMessages := stringslice.Collector{}
+	err := cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess, &finalMessages)
 	return &Config{
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
@@ -319,7 +321,7 @@ func NewConfig(args NewConfigArgs) (*Config, error) {
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
-	}, nil
+	}, &finalMessages, err
 }
 
 type NewConfigArgs struct {
@@ -331,14 +333,14 @@ type NewConfigArgs struct {
 }
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access) error {
+func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
 	for _, perennialBranch := range perennialBranches {
 		if !lineage.Parent(perennialBranch).IsEmpty() {
 			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
 				return err
 			}
 			lineage.RemoveBranch(perennialBranch)
-			fmt.Printf(messages.PerennialBranchRemovedParentEntry, perennialBranch)
+			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
 	return nil

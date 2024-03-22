@@ -77,7 +77,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	config, err := config.NewConfig(config.NewConfigArgs{
+	config, _, err := config.NewConfig(config.NewConfigArgs{
 		ConfigFile:   nil,
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),

@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/gohacks"
 	"github.com/git-town/git-town/v12/src/gohacks/cache"
-	"github.com/git-town/git-town/v12/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/subshell"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
@@ -58,7 +57,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	config, err := config.NewConfig(config.NewConfigArgs{
+	config, finalMessages, err := config.NewConfig(config.NewConfigArgs{
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
@@ -83,7 +82,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
-		FinalMessages:   &stringslice.Collector{},
+		FinalMessages:   finalMessages,
 	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
