@@ -18,11 +18,11 @@ func FeatureBranchProgram(args featureBranchArgs) {
 }
 
 type featureBranchArgs struct {
-	branch              gitdomain.BranchInfo             // the branch to sync
+	branch              gitdomain.BranchInfo // the branch to sync
+	offline             configdomain.Offline
 	parentOtherWorktree bool                             // whether the parent of this branch exists on another worktre
 	program             *program.Program                 // the program to update
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
-	offline             configdomain.Offline
 }
 
 func syncFeatureBranchMergeProgram(args featureBranchArgs) {

@@ -54,6 +54,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
 			branch:              branch,
+			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
 			syncStrategy:        args.Config.SyncFeatureStrategy,

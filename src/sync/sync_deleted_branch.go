@@ -28,6 +28,7 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch gitdomain.Bra
 	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchOpcode(featureBranchArgs{
 		branch:              branch,
+		offline:             args.Config.Offline,
 		parentOtherWorktree: parentOtherWorktree,
 		program:             list,
 		syncStrategy:        args.Config.SyncFeatureStrategy,
