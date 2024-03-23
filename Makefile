@@ -106,7 +106,7 @@ unit-race: build  # runs all the unit tests with race detector
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
 	go mod tidy
-	go mod vendor
+	go work vendor
 	(cd tools && yarn upgrade --latest)
 	tools/rta --update
 
