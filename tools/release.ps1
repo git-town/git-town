@@ -61,8 +61,8 @@ function Install-Tools() {
   # verify that go-msi works
   go-msi -v
   # verify WiX
-  candle -?
-  light -?
+  # candle -?
+  # light -?
   $env:PATH
   # add the WiX installation that already exists on CI to the PATH
   $env:PATH = "$env:PATH;C:\Program Files (x86)\WiX Toolset v3.11\bin"
