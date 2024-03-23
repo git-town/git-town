@@ -560,17 +560,25 @@ func (s *GroupsService) UploadAvatar(gid interface{}, avatar io.Reader, filename
 	return g, resp, nil
 }
 
+// DeleteGroupOptions represents the available DeleteGroup() options.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/groups.html#update-group
+type DeleteGroupOptions struct {
+	PermanentlyRemove *bool   `url:"permanently_remove,omitempty" json:"permanently_remove,omitempty"`
+	FullPath          *string `url:"full_path,omitempty" json:"full_path,omitempty"`
+}
+
 // DeleteGroup removes group with all projects inside.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/groups.html#remove-group
-func (s *GroupsService) DeleteGroup(gid interface{}, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupsService) DeleteGroup(gid interface{}, opt *DeleteGroupOptions, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
 	}
 	u := fmt.Sprintf("groups/%s", PathEscape(group))
 
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
+	req, err := s.client.NewRequest(http.MethodDelete, u, opt, options)
 	if err != nil {
 		return nil, err
 	}

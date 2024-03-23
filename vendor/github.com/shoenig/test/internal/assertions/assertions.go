@@ -943,6 +943,38 @@ func MapNotContainsValuesEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[
 	})
 }
 
+func MapContainsValue[M ~map[K]V, K comparable, V any](m M, val V, opts cmp.Options) (s string) {
+	return mapContains(m, []V{val}, func(a, b V) bool {
+		return equal(a, b, opts)
+	})
+}
+
+func MapNotContainsValue[M ~map[K]V, K comparable, V any](m M, val V, opts cmp.Options) (s string) {
+	return mapNotContains(m, []V{val}, func(a, b V) bool {
+		return equal(a, b, opts)
+	})
+}
+
+func MapContainsValueFunc[M ~map[K]V, K comparable, V any](m M, val V, eq func(V, V) bool) (s string) {
+	return mapContains(m, []V{val}, eq)
+}
+
+func MapNotContainsValueFunc[M ~map[K]V, K comparable, V any](m M, val V, eq func(V, V) bool) (s string) {
+	return mapNotContains(m, []V{val}, eq)
+}
+
+func MapContainsValueEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[V]](m M, val V) (s string) {
+	return mapContains(m, []V{val}, func(a, b V) bool {
+		return a.Equal(b)
+	})
+}
+
+func MapNotContainsValueEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[V]](m M, val V) (s string) {
+	return mapNotContains(m, []V{val}, func(a, b V) bool {
+		return a.Equal(b)
+	})
+}
+
 func FileExistsFS(system fs.FS, file string) (s string) {
 	info, err := fs.Stat(system, file)
 	if errors.Is(err, fs.ErrNotExist) {

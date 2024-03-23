@@ -498,6 +498,42 @@ func MapNotContainsValuesEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[
 	invoke(t, assertions.MapNotContainsValuesEqual(m, vals), settings...)
 }
 
+// MapContainsValue asserts m contains val.
+func MapContainsValue[M ~map[K]V, K comparable, V any](t T, m M, val V, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapContainsValue(m, val, options(settings...)), settings...)
+}
+
+// MapNotContainsValue asserts m does not contain val.
+func MapNotContainsValue[M ~map[K]V, K comparable, V any](t T, m M, val V, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapNotContainsValue(m, val, options(settings...)), settings...)
+}
+
+// MapContainsValueFunc asserts m contains val using the eq function.
+func MapContainsValueFunc[M ~map[K]V, K comparable, V any](t T, m M, val V, eq func(V, V) bool, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapContainsValueFunc(m, val, eq), settings...)
+}
+
+// MapNotContainsValueFunc asserts m does not contain val using the eq function.
+func MapNotContainsValueFunc[M ~map[K]V, K comparable, V any](t T, m M, val V, eq func(V, V) bool, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapNotContainsValueFunc(m, val, eq), settings...)
+}
+
+// MapContainsValueEqual asserts m contains val using the V.Equal method.
+func MapContainsValueEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[V]](t T, m M, val V, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapContainsValueEqual(m, val), settings...)
+}
+
+// MapNotContainsValueEqual asserts m does not contain val using the V.Equal method.
+func MapNotContainsValueEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[V]](t T, m M, val V, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapNotContainsValueEqual(m, val), settings...)
+}
+
 // FileExistsFS asserts file exists on the fs.FS filesystem.
 //
 // Example,
@@ -510,8 +546,9 @@ func FileExistsFS(t T, system fs.FS, file string, settings ...Setting) {
 // FileExists asserts file exists on the OS filesystem.
 func FileExists(t T, file string, settings ...Setting) {
 	t.Helper()
-	file = strings.TrimPrefix(file, "/")
-	invoke(t, assertions.FileExistsFS(os.DirFS(brokenfs.Root), file), settings...)
+	dir := filepath.Dir(file)
+	file = filepath.Base(file)
+	invoke(t, assertions.FileExistsFS(os.DirFS(dir), file), settings...)
 }
 
 // FileNotExistsFS asserts file does not exist on the fs.FS filesystem.

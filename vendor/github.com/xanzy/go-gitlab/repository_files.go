@@ -174,7 +174,9 @@ func (b FileBlameRange) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/repository_files.html#get-file-blame-from-repository
 type GetFileBlameOptions struct {
-	Ref *string `url:"ref,omitempty" json:"ref,omitempty"`
+	Ref        *string `url:"ref,omitempty" json:"ref,omitempty"`
+	RangeStart *int    `url:"range[start],omitempty" json:"range[start],omitempty"`
+	RangeEnd   *int    `url:"range[end],omitempty" json:"range[end],omitempty"`
 }
 
 // GetFileBlame allows you to receive blame information. Each blame range
