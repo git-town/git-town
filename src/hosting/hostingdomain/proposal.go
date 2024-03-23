@@ -1,6 +1,6 @@
 package hostingdomain
 
-import "github.com/git-town/git-town/v12/src/git/gitdomain"
+import "github.com/git-town/git-town/v13/src/git/gitdomain"
 
 // Proposal contains information about a change request on a code hosting platform.
 // Alternative names are "pull request" or "merge request".

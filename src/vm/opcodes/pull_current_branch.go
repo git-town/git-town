@@ -1,6 +1,6 @@
 package opcodes
 
-import "github.com/git-town/git-town/v12/src/vm/shared"
+import "github.com/git-town/git-town/v13/src/vm/shared"
 
 // PullCurrentBranch updates the branch with the given name with commits from its remote.
 type PullCurrentBranch struct {

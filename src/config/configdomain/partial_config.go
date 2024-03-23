@@ -1,7 +1,7 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.

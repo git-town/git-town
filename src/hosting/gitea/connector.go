@@ -7,13 +7,13 @@ import (
 	"net/url"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v12/src/cli/print"
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/commitmessage"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/git/giturl"
-	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v13/src/cli/print"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/commitmessage"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/git/giturl"
+	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v13/src/messages"
 	"golang.org/x/oauth2"
 )
 

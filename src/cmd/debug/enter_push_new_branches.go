@@ -3,8 +3,8 @@ package debug
 import (
 	"os"
 
-	"github.com/git-town/git-town/v12/src/cli/dialog"
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
+	"github.com/git-town/git-town/v13/src/cli/dialog"
+	"github.com/git-town/git-town/v13/src/cli/dialog/components"
 	"github.com/spf13/cobra"
 )
 

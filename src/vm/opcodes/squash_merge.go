@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v12/src/cli/dialog"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/cli/dialog"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // SquashMerge squash merges the branch with the given name into the current branch.

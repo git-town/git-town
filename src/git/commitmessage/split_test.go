@@ -3,7 +3,7 @@ package commitmessage_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/git/commitmessage"
+	"github.com/git-town/git-town/v13/src/git/commitmessage"
 	"github.com/shoenig/test/must"
 )
 

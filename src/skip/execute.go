@@ -1,16 +1,16 @@
 package skip
 
 import (
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
-	"github.com/git-town/git-town/v12/src/git"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v12/src/undo/undobranches"
-	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
-	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
-	"github.com/git-town/git-town/v12/src/vm/program"
-	"github.com/git-town/git-town/v12/src/vm/runstate"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/cli/dialog/components"
+	"github.com/git-town/git-town/v13/src/git"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v13/src/undo/undobranches"
+	fullInterpreter "github.com/git-town/git-town/v13/src/vm/interpreter/full"
+	lightInterpreter "github.com/git-town/git-town/v13/src/vm/interpreter/light"
+	"github.com/git-town/git-town/v13/src/vm/program"
+	"github.com/git-town/git-town/v13/src/vm/runstate"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // executes the "skip" command at the given runstate

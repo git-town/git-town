@@ -3,8 +3,8 @@ package shared_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/vm/opcodes"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
 

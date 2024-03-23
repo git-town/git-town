@@ -5,12 +5,12 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/git-town/git-town/v12/src/cli/dialog"
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
-	"github.com/git-town/git-town/v12/src/cli/flags"
-	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v12/src/execute"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/cli/dialog"
+	"github.com/git-town/git-town/v13/src/cli/dialog/components"
+	"github.com/git-town/git-town/v13/src/cli/flags"
+	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v13/src/execute"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 

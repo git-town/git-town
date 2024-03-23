@@ -3,7 +3,7 @@ package format_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/cli/format"
+	"github.com/git-town/git-town/v13/src/cli/format"
 	"github.com/shoenig/test/must"
 )
 

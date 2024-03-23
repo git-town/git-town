@@ -3,7 +3,7 @@ package gitconfig_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v13/src/config/gitconfig"
 	"github.com/shoenig/test/must"
 )
 

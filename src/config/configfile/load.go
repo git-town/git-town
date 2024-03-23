@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/BurntSushi/toml"
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
 )
 
 // Decode converts the given config file TOML source into Go data.

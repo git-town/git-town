@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
 )
 
 type Config struct {

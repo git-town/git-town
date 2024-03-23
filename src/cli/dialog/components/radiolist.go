@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v13/src/gohacks/slice"
 )
 
 // how many elements to display in the dialog
