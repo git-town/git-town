@@ -8,5 +8,5 @@ gofumpt 0.6.0
 golangci-lint 1.57.1
 goreleaser 1.24.0
 scc 3.2.0
-shellcheck system@*, 0.10.0
+shellcheck system@* 0.10.0
 shfmt 3.8.0
