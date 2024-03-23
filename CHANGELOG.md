@@ -2,7 +2,7 @@
 
 ## 13.0.0 (2024-03-22)
 
-Git Town 13.0 adds better support for syncing feature branches via rebase and bumps the required Git version.
+Git Town 13.0 adds better support for syncing feature branches after rebasing your commits and bumps the required Git version.
 
 #### BREAKING CHANGES
 
@@ -11,12 +11,15 @@ When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-featu
 #### New Features
 
 - Git Town now automatically removes lineage entries for branches that were converted from feature branches to perennial branches ([#3218](https://github.com/git-town/git-town/issues/3218)).
-- Git Town documentation and error messages now guide the user to call Git Town as `git town` instead of `git-town` ([#3208](https://github.com/git-town/git-town/issues/3208)).
+- Git Town documentation and error messages now guide the user to call Git Town as `git town` instead of `git-town` on the CLI ([#3208](https://github.com/git-town/git-town/issues/3208)).
 
 #### Bug Fixes
 
 - Fixes a crash when an ustream HEAD is set ([#2660](https://github.com/git-town/git-town/issues/2660)).
 - Fixes the error message when trying to set the parent of a perennial branch ([#3217](https://github.com/git-town/git-town/issues/3217)).
+
+Many thanks to @100rab-S, @dgentry, @kevgo, @koppor, @nicksieger, @ruudk, @srstevenson, and @tranhl for contributing code, ideas, and feedback to 18 shipped PRs and 13 resolved issues!
+
 
 ## 12.1.0 (2024-02-29)
 
