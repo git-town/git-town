@@ -56,7 +56,7 @@ function Install-Tools() {
   # install go-msi
   choco install go-msi --version=$GoMsiVersion --no-progress
   # refresh the PATH in this shell instance
-  # Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+  Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
   refreshenv
   # verify that go-msi works
   go-msi -v
