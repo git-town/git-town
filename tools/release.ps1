@@ -20,12 +20,12 @@ function Main() {
   if ($ci) {
     Install-Tools
   }
-  Add-MSI
+  Create-MSI
   .\rta goreleaser@$GoReleaserVersion --clean
 }
 
 # generates the .msi file
-function Add-MSI() {
+function Create-MSI() {
   # build the executable that will be inside the .msi file
   go build
   # copy the files needed to build the .msi file on the C: drive to bypass this bug: https://github.com/mh-cbon/go-msi/issues/51
