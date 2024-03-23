@@ -18,7 +18,7 @@ When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-featu
 - Fixes a crash when an ustream HEAD is set ([#2660](https://github.com/git-town/git-town/issues/2660)).
 - Fixes the error message when trying to set the parent of a perennial branch ([#3217](https://github.com/git-town/git-town/issues/3217)).
 
-Many thanks to @100rab-S, @dgentry, @kevgo, @koppor, @nicksieger, @ruudk, @srstevenson, and @tranhl for contributing code, ideas, and feedback to 18 shipped PRs and 13 resolved issues!
+Kudos to @100rab-S, @dgentry, @kevgo, @koppor, @nicksieger, @ruudk, @srstevenson, and @tranhl for contributing code, ideas, and feedback to 18 shipped PRs and 13 resolved issues!
 
 
 ## 12.1.0 (2024-02-29)

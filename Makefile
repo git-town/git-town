@@ -2,7 +2,7 @@ RTA_VERSION = 0.5.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "12.1.0"
+RELEASE_VERSION := "13.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
