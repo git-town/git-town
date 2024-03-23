@@ -135,6 +135,7 @@ type Project struct {
 	ImportError                              string             `json:"import_error"`
 	CIDefaultGitDepth                        int                `json:"ci_default_git_depth"`
 	CIForwardDeploymentEnabled               bool               `json:"ci_forward_deployment_enabled"`
+	CIForwardDeploymentRollbackAllowed       bool               `json:"ci_forward_deployment_rollback_allowed"`
 	CISeperateCache                          bool               `json:"ci_separated_caches"`
 	CIJobTokenScopeEnabled                   bool               `json:"ci_job_token_scope_enabled"`
 	CIOptInJWT                               bool               `json:"ci_opt_in_jwt"`
@@ -842,6 +843,7 @@ type EditProjectOptions struct {
 	CIConfigPath                              *string                              `url:"ci_config_path,omitempty" json:"ci_config_path,omitempty"`
 	CIDefaultGitDepth                         *int                                 `url:"ci_default_git_depth,omitempty" json:"ci_default_git_depth,omitempty"`
 	CIForwardDeploymentEnabled                *bool                                `url:"ci_forward_deployment_enabled,omitempty" json:"ci_forward_deployment_enabled,omitempty"`
+	CIForwardDeploymentRollbackAllowed        *bool                                `url:"ci_forward_deployment_rollback_allowed,omitempty" json:"ci_forward_deployment_rollback_allowed,omitempty"`
 	CISeperateCache                           *bool                                `url:"ci_separated_caches,omitempty" json:"ci_separated_caches,omitempty"`
 	CIRestrictPipelineCancellationRole        *AccessControlValue                  `url:"ci_restrict_pipeline_cancellation_role,omitempty" json:"ci_restrict_pipeline_cancellation_role,omitempty"`
 	ContainerExpirationPolicyAttributes       *ContainerExpirationPolicyAttributes `url:"container_expiration_policy_attributes,omitempty" json:"container_expiration_policy_attributes,omitempty"`
@@ -1215,6 +1217,7 @@ type ProjectHook struct {
 	ReleasesEvents           bool       `json:"releases_events"`
 	EnableSSLVerification    bool       `json:"enable_ssl_verification"`
 	CreatedAt                *time.Time `json:"created_at"`
+	CustomWebhookTemplate    string     `json:"custom_webhook_template"`
 }
 
 // ListProjectHooksOptions represents the available ListProjectHooks() options.
@@ -1293,6 +1296,7 @@ type AddProjectHookOptions struct {
 	Token                    *string `url:"token,omitempty" json:"token,omitempty"`
 	URL                      *string `url:"url,omitempty" json:"url,omitempty"`
 	WikiPageEvents           *bool   `url:"wiki_page_events,omitempty" json:"wiki_page_events,omitempty"`
+	CustomWebhookTemplate    *string `url:"custom_webhook_template,omitempty" json:"custom_webhook_template,omitempty"`
 }
 
 // AddProjectHook adds a hook to a specified project.
@@ -1341,6 +1345,7 @@ type EditProjectHookOptions struct {
 	Token                    *string `url:"token,omitempty" json:"token,omitempty"`
 	URL                      *string `url:"url,omitempty" json:"url,omitempty"`
 	WikiPageEvents           *bool   `url:"wiki_page_events,omitempty" json:"wiki_page_events,omitempty"`
+	CustomWebhookTemplate    *string `url:"custom_webhook_template,omitempty" json:"custom_webhook_template,omitempty"`
 }
 
 // EditProjectHook edits a hook for a specified project.

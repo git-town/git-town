@@ -186,6 +186,7 @@ func (m MergeRequestDiffVersion) String() string {
 // https://docs.gitlab.com/ee/api/merge_requests.html#list-merge-requests
 type ListMergeRequestsOptions struct {
 	ListOptions
+	Approved               *string           `url:"approved,omitempty" json:"approved,omitempty"`
 	State                  *string           `url:"state,omitempty" json:"state,omitempty"`
 	OrderBy                *string           `url:"order_by,omitempty" json:"order_by,omitempty"`
 	Sort                   *string           `url:"sort,omitempty" json:"sort,omitempty"`

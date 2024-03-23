@@ -52,6 +52,7 @@ type EnvironmentAccessDescription struct {
 	AccessLevelDescription string           `json:"access_level_description"`
 	UserID                 int              `json:"user_id"`
 	GroupID                int              `json:"group_id"`
+	GroupInheritanceType   int              `json:"group_inheritance_type"`
 }
 
 // EnvironmentApprovalRule represents the approval rules for a protected
@@ -146,9 +147,10 @@ type ProtectRepositoryEnvironmentsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/protected_environments.html#protect-a-single-environment
 type EnvironmentAccessOptions struct {
-	AccessLevel *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
-	UserID      *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID     *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
+	AccessLevel          *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
+	UserID               *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID              *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
+	GroupInheritanceType *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
 }
 
 // EnvironmentApprovalRuleOptions represents the approval rules for a protected
@@ -209,11 +211,12 @@ type UpdateProtectedEnvironmentsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/protected_environments.html#update-a-protected-environment
 type UpdateEnvironmentAccessOptions struct {
-	AccessLevel *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
-	ID          *int              `url:"id,omitempty" json:"id,omitempty"`
-	UserID      *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID     *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
-	Destroy     *bool             `url:"_destroy,omitempty" json:"_destroy,omitempty"`
+	AccessLevel          *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
+	ID                   *int              `url:"id,omitempty" json:"id,omitempty"`
+	UserID               *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID              *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
+	GroupInheritanceType *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
+	Destroy              *bool             `url:"_destroy,omitempty" json:"_destroy,omitempty"`
 }
 
 // UpdateEnvironmentApprovalRuleOptions represents the updates to the approval
