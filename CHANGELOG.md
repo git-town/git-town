@@ -20,7 +20,6 @@ When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-featu
 
 Kudos to @100rab-S, @dgentry, @kevgo, @koppor, @nicksieger, @ruudk, @srstevenson, and @tranhl for contributing code, ideas, and feedback to 18 shipped PRs and 13 resolved issues!
 
-
 ## 12.1.0 (2024-02-29)
 
 Git Town 12.1 implements some of the most requested features by the Git Town community. It also continues the modernization of Git Town's internals. This time we made Git Town's undo engine simpler, more robust, and more reliable by removing all remaining mutable state.
