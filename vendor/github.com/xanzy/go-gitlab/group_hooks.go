@@ -46,6 +46,7 @@ type GroupHook struct {
 	EnableSSLVerification    bool       `json:"enable_ssl_verification"`
 	AlertStatus              string     `json:"alert_status"`
 	CreatedAt                *time.Time `json:"created_at"`
+	CustomWebhookTemplate    string     `json:"custom_webhook_template"`
 }
 
 // ListGroupHooksOptions represents the available ListGroupHooks() options.
@@ -122,6 +123,7 @@ type AddGroupHookOptions struct {
 	SubGroupEvents           *bool   `url:"subgroup_events,omitempty" json:"subgroup_events,omitempty"`
 	EnableSSLVerification    *bool   `url:"enable_ssl_verification,omitempty"  json:"enable_ssl_verification,omitempty"`
 	Token                    *string `url:"token,omitempty" json:"token,omitempty"`
+	CustomWebhookTemplate    *string `url:"custom_webhook_template,omitempty" json:"custom_webhook_template,omitempty"`
 }
 
 // AddGroupHook create a new group scoped webhook.
@@ -170,6 +172,7 @@ type EditGroupHookOptions struct {
 	SubGroupEvents           *bool   `url:"subgroup_events,omitempty" json:"subgroup_events,omitempty"`
 	EnableSSLVerification    *bool   `url:"enable_ssl_verification,omitempty" json:"enable_ssl_verification,omitempty"`
 	Token                    *string `url:"token,omitempty" json:"token,omitempty"`
+	CustomWebhookTemplate    *string `url:"custom_webhook_template,omitempty" json:"custom_webhook_template,omitempty"`
 }
 
 // EditGroupHook edits a hook for a specified group.

@@ -28,7 +28,7 @@ import (
 	"time"
 )
 
-// Ptr is a helper returns a pointer to v.
+// Ptr is a helper that returns a pointer to v.
 func Ptr[T any](v T) *T {
 	return &v
 }
@@ -255,6 +255,15 @@ const (
 func BuildState(v BuildStateValue) *BuildStateValue {
 	return Ptr(v)
 }
+
+// DeploymentApprovalStatus represents a Gitlab deployment approval status.
+type DeploymentApprovalStatus string
+
+// These constants represent all valid deployment approval statuses.
+const (
+	DeploymentApprovalStatusApproved DeploymentApprovalStatus = "approved"
+	DeploymentApprovalStatusRejected DeploymentApprovalStatus = "rejected"
+)
 
 // DeploymentStatusValue represents a Gitlab deployment status.
 type DeploymentStatusValue string
