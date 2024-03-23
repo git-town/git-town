@@ -1,15 +1,15 @@
 package interpreter
 
 import (
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/gohacks"
-	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/runstate"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/cli/dialog/components"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/gohacks"
+	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v13/src/undo/undoconfig"
+	"github.com/git-town/git-town/v13/src/vm/runstate"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // Execute runs the commands in the given runstate.

@@ -1,14 +1,24 @@
 # Git Town Changelog
 
-## Unreleased
+## 13.0.0 (2024-03-22)
 
-Git Town v13 supports syncing feature branches via rebase better.
+Git Town 13.0 adds better support for syncing feature branches after rebasing your commits and bumps the required Git version.
 
 #### BREAKING CHANGES
 
-When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) is set to `rebase`, Git Town now force-pushes your locally rebased commits to the tracking branch. This avoids mixing locally rebased commits with outdated commits on the tracking branch during branch syncing. To not accidentally override new commits on the tracking branch that haven't been integrated into your local commits, Git Town now uses the [--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes) feature of Git. This requires raising the minimally required Git version from 2.7 to 2.30. Git 2.30 has been released over 2 years ago and should be widely available at this point.
+When the [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) is set to `rebase`, Git Town now force-pushes your locally rebased commits to the tracking branch ([#3182](https://github.com/git-town/git-town/issues/3182)). This avoids mixing locally rebased commits with outdated commits on the tracking branch. To not accidentally override new commits on the tracking branch that haven't been integrated into your local commits, Git Town now force-pushes using the [--force-if-includes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-force-if-includes) Git flag. This requires raising the minimally required Git version from 2.7 to 2.30. Git 2.30 was released over 2 years ago and should be widely available at this point.
 
-While Git Town's new behavior removes the chance of mixing old and new commits in over 95% of cases, it can still happen when encountering conflicting changes. If you have ideas on how to further improve Git Town's behavior in those edge cases, please reach out to the Git Town team by opening a ticket on https://github.com/git-town/git-town/pull/3216.
+#### New Features
+
+- Git Town now automatically removes lineage entries for branches that were converted from feature branches to perennial branches ([#3218](https://github.com/git-town/git-town/issues/3218)).
+- Git Town documentation and error messages now guide the user to call Git Town as `git town` instead of `git-town` on the CLI ([#3208](https://github.com/git-town/git-town/issues/3208)).
+
+#### Bug Fixes
+
+- Fixes a crash when an ustream HEAD is set ([#2660](https://github.com/git-town/git-town/issues/2660)).
+- Fixes the error message when trying to set the parent of a perennial branch ([#3217](https://github.com/git-town/git-town/issues/3217)).
+
+Kudos to @100rab-S, @dgentry, @kevgo, @koppor, @nicksieger, @ruudk, @srstevenson, and @tranhl for contributing code, ideas, and feedback to 18 shipped PRs and 13 resolved issues!
 
 ## 12.1.0 (2024-02-29)
 

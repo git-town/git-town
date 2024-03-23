@@ -1,9 +1,9 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
+	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/vm/opcodes"
 )
 
 // BranchesProgram syncs all given branches.

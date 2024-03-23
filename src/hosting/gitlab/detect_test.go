@@ -3,9 +3,9 @@ package gitlab_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/giturl"
-	"github.com/git-town/git-town/v12/src/hosting/gitlab"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/giturl"
+	"github.com/git-town/git-town/v13/src/hosting/gitlab"
 	"github.com/shoenig/test/must"
 )
 

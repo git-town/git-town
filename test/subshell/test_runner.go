@@ -11,9 +11,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v12/src/subshell"
-	"github.com/git-town/git-town/v12/test/asserts"
-	"github.com/git-town/git-town/v12/test/envvars"
+	"github.com/git-town/git-town/v13/src/subshell"
+	"github.com/git-town/git-town/v13/test/asserts"
+	"github.com/git-town/git-town/v13/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 

@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.

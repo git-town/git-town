@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/runstate"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v13/src/vm/runstate"
 )
 
 // Save stores the given run state for the given Git repo to disk.

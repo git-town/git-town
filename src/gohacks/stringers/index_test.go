@@ -3,7 +3,7 @@ package stringers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/gohacks/stringers"
+	"github.com/git-town/git-town/v13/src/gohacks/stringers"
 	"github.com/shoenig/test/must"
 )
 

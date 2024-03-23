@@ -3,11 +3,11 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v12/src/cli/print"
-	"github.com/git-town/git-town/v12/src/config/gitconfig"
-	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/statefile"
+	"github.com/git-town/git-town/v13/src/cli/print"
+	"github.com/git-town/git-town/v13/src/config/gitconfig"
+	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v13/src/undo/undoconfig"
+	"github.com/git-town/git-town/v13/src/vm/statefile"
 )
 
 // finished is called when executing all steps has successfully finished.

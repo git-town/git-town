@@ -2,7 +2,7 @@ RTA_VERSION = 0.5.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "12.1.0"
+RELEASE_VERSION := "13.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
@@ -18,7 +18,7 @@ cukethis: build  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v13/src/cmd.version=-dev -X github.com/git-town/git-town/v13/src/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: build  # creates a flamegraph for the end-to-end tests
@@ -117,7 +117,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode -test github.com/git-town/git-town/v12 | grep -v BranchExists \
+	@tools/rta deadcode -test github.com/git-town/git-town/v13 | grep -v BranchExists \
 	                                                           | grep -v Paniced \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \

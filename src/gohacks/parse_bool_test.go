@@ -3,7 +3,7 @@ package gohacks_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/gohacks"
+	"github.com/git-town/git-town/v13/src/gohacks"
 	"github.com/shoenig/test/must"
 )
 

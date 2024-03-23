@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v12/src/cli/flags"
-	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v13/src/cli/flags"
+	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +48,7 @@ func rootCmd() cobra.Command {
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
 	if showVersion {
-		fmt.Println("Git Town 12.1.0")
+		fmt.Println("Git Town 13.0.0")
 		return nil
 	}
 	return cmd.Help()

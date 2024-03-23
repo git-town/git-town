@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v12/test/cucumber"
+	"github.com/git-town/git-town/v13/test/cucumber"
 )
 
 func FeatureContext(suite *godog.Suite) {

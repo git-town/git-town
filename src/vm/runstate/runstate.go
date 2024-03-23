@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v12/src/git"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
-	"github.com/git-town/git-town/v12/src/vm/program"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/git"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/undo/undoconfig"
+	"github.com/git-town/git-town/v13/src/vm/opcodes"
+	"github.com/git-town/git-town/v13/src/vm/program"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // RunState represents the current state of a Git Town command,

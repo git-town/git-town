@@ -1,9 +1,9 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/program"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/vm/program"
 )
 
 func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig *configdomain.FullConfig) program.Program {

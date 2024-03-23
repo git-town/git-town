@@ -3,9 +3,9 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 // DeleteBranchIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.

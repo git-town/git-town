@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v12/src/config/gitconfig"
-	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v13/src/config/gitconfig"
+	"github.com/git-town/git-town/v13/src/vm/shared"
 )
 
 type RemoveLocalConfig struct {

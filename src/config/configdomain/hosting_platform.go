@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v13/src/messages"
 )
 
 // HostingPlatform defines legal values for the "git-town.hosting-platform" config setting.

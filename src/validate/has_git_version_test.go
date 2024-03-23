@@ -3,7 +3,7 @@ package validate_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/validate"
+	"github.com/git-town/git-town/v13/src/validate"
 	"github.com/shoenig/test/must"
 )
 

@@ -1,10 +1,10 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/validate"
+	"github.com/git-town/git-town/v13/src/cli/dialog/components"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/validate"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.

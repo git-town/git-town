@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
 )

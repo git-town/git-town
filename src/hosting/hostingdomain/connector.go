@@ -1,6 +1,6 @@
 package hostingdomain
 
-import "github.com/git-town/git-town/v12/src/git/gitdomain"
+import "github.com/git-town/git-town/v13/src/git/gitdomain"
 
 // Connector describes the activities that Git Town can perform on code hosting platforms.
 // Individual implementations exist to talk to specific hosting platforms.

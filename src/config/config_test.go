@@ -4,10 +4,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v12/src/config/configdomain"
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/git/giturl"
-	"github.com/git-town/git-town/v12/test/testruntime"
+	"github.com/git-town/git-town/v13/src/config/configdomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/git/giturl"
+	"github.com/git-town/git-town/v13/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

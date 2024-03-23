@@ -1,8 +1,8 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/undo/undodomain"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/undo/undodomain"
 )
 
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.

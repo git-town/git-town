@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
 )
 
 // Delete removes the stored run state from disk.
