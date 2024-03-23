@@ -66,7 +66,7 @@ function Install-Tools() {
   $env:PATH
   Get-ChildItem -Path "C:\Program Files (x86)"
   # add the WiX installation that already exists on CI to the PATH
-  $env:PATH = "$env:PATH;C:\Program Files (x86)\WiX Toolset v3.11\bin"
+  $env:PATH = "$env:PATH;C:\Program Files (x86)\WiX Toolset v3.14\bin"
   # add the Go installation from the actions/setup-go step to the PATH
   $latestGoDir = Get-ChildItem -Path "C:\hostedtoolcache\windows\go" -Directory | Sort-Object Name | Select-Object -Last 1
   $env:PATH = "$latestGoDir\x64\bin; $env:PATH"
