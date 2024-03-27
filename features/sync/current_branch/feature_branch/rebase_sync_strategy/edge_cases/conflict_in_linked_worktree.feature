@@ -47,5 +47,5 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message
     And I run "git-town continue" in the other worktree
     Then it runs the commands
-      | BRANCH  | COMMAND       |
-      | feature | git stash pop |
+      | BRANCH  | COMMAND                                         |
+      | feature | git push --force-with-lease --force-if-includes |
