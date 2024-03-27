@@ -444,7 +444,7 @@ func (self *BackendCommands) Version() (major int, minor int, err error) {
 }
 
 func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchName, error) {
-	rootDir := self.RootDirectory()
+	rootDir := self.RootOfMainWorkTree()
 	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
 	if err != nil {
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt

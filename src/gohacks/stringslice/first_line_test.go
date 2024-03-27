@@ -16,4 +16,20 @@ func TestFirstLine(t *testing.T) {
 		want := "one"
 		must.EqOp(t, want, have)
 	})
+
+	t.Run("single-line string", func(t *testing.T) {
+		t.Parallel()
+		give := "one"
+		have := stringslice.FirstLine(give)
+		want := "one"
+		must.EqOp(t, want, have)
+	})
+
+	t.Run("empty string", func(t *testing.T) {
+		t.Parallel()
+		give := ""
+		have := stringslice.FirstLine(give)
+		want := ""
+		must.EqOp(t, want, have)
+	})
 }
