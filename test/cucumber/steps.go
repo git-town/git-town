@@ -639,6 +639,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
+		updateInitialSHAs(state)
+		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
+		// state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Printf("\nThe workspace is at %s\n", state.fixture.DevRepo.WorkingDir)
 		time.Sleep(1 * time.Hour)

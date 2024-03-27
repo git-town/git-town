@@ -1,31 +1,17 @@
-Feature: sync a branch whose parent is active in another worktree
+Feature: sync a branch in a "linked worktree" that has a merge conflict
 
+  @this
   Scenario:
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+    And a feature branch "feature"
     And the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | main   | local    | local main commit    |
-      |        | origin   | origin main commit   |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
+      | BRANCH  | LOCATION | MESSAGE             | FILE NAME        | FILE CONTENT    |
+      | main    | local    | local main commit   | conflicting_file | main content    |
+      | feature | local    | local parent commit | conflicting_file | feature content |
     And branch "parent" is active in another worktree
-    And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH | COMMAND                                         |
-      | child  | git fetch --prune --tags                        |
-      |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
-      |        | git push                                        |
-      |        | git checkout child                              |
-      | child  | git rebase origin/parent                        |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/child                         |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |

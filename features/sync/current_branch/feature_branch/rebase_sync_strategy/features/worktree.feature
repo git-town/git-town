@@ -14,7 +14,7 @@ Feature: sync a branch whose parent is active in another worktree
       |        | origin   | origin child commit  |
     And branch "parent" is active in another worktree
     And the current branch is "child"
-    When I run "git-town sync"
+    When I run "git-town sync" in the other worktree
     Then it runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
