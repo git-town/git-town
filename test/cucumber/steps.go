@@ -655,9 +655,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
-		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
-		// state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
