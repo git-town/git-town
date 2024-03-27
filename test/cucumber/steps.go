@@ -571,6 +571,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(filename string) error {
+		content := "resolved content"
+		state.fixture.SecondWorktree.CreateFile(filename, content)
+		state.fixture.SecondWorktree.StageFiles(filename)
+		return nil
+	})
+
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
@@ -599,6 +606,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		state.fixture.SecondWorktree.MockCommitMessage(message)
+		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
+		state.fixture.SecondWorktree.Config.Reload()
 		return nil
 	})
 
@@ -636,6 +650,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
+		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
+		state.fixture.SecondWorktree.Config.Reload()
 		return nil
 	})
 
@@ -1296,6 +1316,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		actual, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
+		}
+		if actual.String() != expected {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		}
+		return nil
+	})
+
+	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
+		state.fixture.SecondWorktree.CurrentBranchCache.Invalidate()
+		actual, err := state.fixture.SecondWorktree.CurrentBranch()
+		if err != nil {
+			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
 		if actual.String() != expected {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
