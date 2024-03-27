@@ -227,15 +227,24 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch name is one word", func(t *testing.T) {
+			t.Parallel()
 			give := "* (no branch, rebasing feature)"
 			have := git.ParseActiveBranchDuringRebase(give)
 			want := gitdomain.NewLocalBranchName("feature")
 			must.Eq(t, want, have)
 		})
 		t.Run("branch name is two words", func(t *testing.T) {
+			t.Parallel()
 			give := "* (no branch, rebasing feature branch)"
 			have := git.ParseActiveBranchDuringRebase(give)
 			want := gitdomain.NewLocalBranchName("feature branch")
+			must.Eq(t, want, have)
+		})
+		t.Run("branch name is three words", func(t *testing.T) {
+			t.Parallel()
+			give := "* (no branch, rebasing the feature branch)"
+			have := git.ParseActiveBranchDuringRebase(give)
+			want := gitdomain.NewLocalBranchName("the feature branch")
 			must.Eq(t, want, have)
 		})
 	})
