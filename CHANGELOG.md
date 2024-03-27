@@ -1,5 +1,16 @@
 # Git Town Changelog
 
+## 13.0.1 (2024-03-27)
+
+#### Bug Fixes
+
+- Allows syncing branches with merge conflicts in linked worktrees ([#3230](https://github.com/git-town/git-town/issues/3230)).
+- Fixes the Bash-based installer ([#3234](https://github.com/git-town/git-town/pull/3234)).
+
+#### Statistics
+
+Many thanks to @alexus37, @breml, @bryanlarsen, @kevgo, @tranhl, @vectro, @wederbrand for contributing feedback, ideas, and solutions to 8 shipped PRs and 6 resolved issues!
+
 ## 13.0.0 (2024-03-22)
 
 Git Town 13.0 adds better support for syncing feature branches after rebasing your commits and bumps the required Git version.
