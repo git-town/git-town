@@ -22,9 +22,8 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       To continue by skipping the current branch, run "git town skip".
       """
 
-  @debug @this
   Scenario: undo
-    When I run "git-town undo" in the other worktree
+    When I run "git-town undo -v" in the other worktree
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
@@ -35,34 +34,18 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And the initial commits exist
 
   Scenario: continue with unresolved conflict
-    When I run "git-town continue"
+    When I run "git-town continue" in the other worktree
     Then it runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
-    And the uncommitted file is stashed
-    And a rebase is now in progress
 
-
-
-
-    And the current branch is still "child"
-    And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE              |
-      | main   | local, origin, worktree | origin main commit   |
-      |        |                         | local main commit    |
-      | child  | local, origin           | origin child commit  |
-      |        |                         | origin parent commit |
-      |        |                         | local child commit   |
-      | parent | origin                  | origin parent commit |
-      |        | worktree                | local parent commit  |
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then it prints:
-      """
-      nothing to undo
-      """
-    And it runs no commands
+  @debug @this
+  Scenario: resolve, commit, and continue
+    When I resolve the conflict in "conflicting_file" in the other worktree
+    And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message
+    And I run "git-town continue" in the other worktree
+    Then it runs the commands
+      | BRANCH  | COMMAND       |
+      | feature | git stash pop |

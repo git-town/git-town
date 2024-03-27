@@ -571,6 +571,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(filename string) error {
+		content := "resolved content"
+		state.fixture.SecondWorktree.CreateFile(filename, content)
+		state.fixture.SecondWorktree.StageFiles(filename)
+		return nil
+	})
+
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
@@ -599,6 +606,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		updateInitialSHAs(state)
+		state.fixture.SecondWorktree.MockCommitMessage(message)
+		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
+		state.fixture.SecondWorktree.Config.Reload()
 		return nil
 	})
 
