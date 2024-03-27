@@ -378,24 +378,6 @@ func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 	return gitdomain.NewRepoRootDir(filepath.FromSlash(output))
 }
 
-// RootOfMainWorkTree provides the path of the root directory of the main worktree,
-// i.e. the directory that contains the ".git" folder.
-func (self *BackendCommands) RootOfMainWorkTree() gitdomain.MainWorkTreeDir {
-	output, err := self.Runner.QueryTrim("git", "worktree", "list", "--porcelain")
-	if err != nil {
-		return gitdomain.EmptyMainWorkTreeDir()
-	}
-	firstLine := stringslice.FirstLine(output)
-	key, value, found := strings.Cut(firstLine, " ")
-	if !found {
-		return gitdomain.EmptyMainWorkTreeDir()
-	}
-	if key != "worktree" {
-		panic(fmt.Sprintf("expected key \"worktree\", got: %q", key))
-	}
-	return gitdomain.NewMainWorkTreeDir(value)
-}
-
 // SHAForBranch provides the SHA for the local branch with the given name.
 func (self *BackendCommands) SHAForBranch(name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--short", name.String())
@@ -454,7 +436,7 @@ func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchN
 		return gitdomain.EmptyLocalBranchName(), err
 	}
 	if len(linesWithStar) > 1 {
-		panic(fmt.Sprintf("multiple lines with star found:\n%s", output))
+		panic("multiple lines with star found:\n " + output)
 	}
 	lineWithStar := linesWithStar[0]
 	return ParseActiveBranchDuringRebase(lineWithStar), nil
