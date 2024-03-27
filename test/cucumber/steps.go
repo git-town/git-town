@@ -1325,6 +1325,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
+		state.fixture.DevRepo.CurrentBranchCache.Invalidate()
+		actual, err := state.fixture.SecondWorktree.CurrentBranch()
+		if err != nil {
+			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
+		}
+		if actual.String() != expected {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		}
+		return nil
+	})
+
 	suite.Step(`^the initial lineage exists$`, func() error {
 		have := state.fixture.DevRepo.LineageTable()
 		state.initialLineage.Sort()
