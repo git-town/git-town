@@ -83,7 +83,7 @@ download_url() {
 		CPU=intel_64
 		EXT=zip
 	fi
-	echo "https://github.com/git-town/git-town/releases/download/v${VERSION}/git-town_${VERSION}_${OS}_${CPU}.${EXT}"
+	echo "https://github.com/git-town/git-town/releases/download/v${VERSION}/git-town_${OS}_${CPU}.${EXT}"
 }
 
 download_and_extract() {
