@@ -368,7 +368,7 @@ func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 	}, nil
 }
 
-// RootDirectory provides the path of the rood directory of the current repository,
+// RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--show-toplevel")
