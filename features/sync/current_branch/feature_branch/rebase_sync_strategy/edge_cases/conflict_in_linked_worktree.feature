@@ -4,9 +4,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And a feature branch "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
-      | main    | origin   | conflicting main commit   | conflicting_file | main content    |
-      | feature | local    | conflicting parent commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | origin   | conflicting main commit    | conflicting_file | main content    |
+      | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And branch "feature" is active in another worktree
     When I run "git-town sync" in the other worktree
 
@@ -29,9 +29,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | feature | git rebase --abort |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
-      | main    | origin   | conflicting main commit   | conflicting_file | main content    |
-      | feature | worktree | conflicting parent commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | origin   | conflicting main commit    | conflicting_file | main content    |
+      | feature | worktree | conflicting feature commit | conflicting_file | feature content |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the other worktree
