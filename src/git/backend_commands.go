@@ -368,7 +368,7 @@ func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 	}, nil
 }
 
-// RootDirectory provides the path of the rood directory of the current repository,
+// RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--show-toplevel")
@@ -376,6 +376,24 @@ func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 		return gitdomain.EmptyRepoRootDir()
 	}
 	return gitdomain.NewRepoRootDir(filepath.FromSlash(output))
+}
+
+// RootOfMainWorkTree provides the path of the root directory of the main worktree,
+// i.e. the directory that contains the ".git" folder.
+func (self *BackendCommands) RootOfMainWorkTree() gitdomain.MainWorkTreeDir {
+	output, err := self.Runner.QueryTrim("git", "worktree", "list", "--porcelain")
+	if err != nil {
+		return gitdomain.EmptyMainWorkTreeDir()
+	}
+	firstLine := stringslice.FirstLine(output)
+	key, value, found := strings.Cut(firstLine, " ")
+	if !found {
+		return gitdomain.EmptyMainWorkTreeDir()
+	}
+	if key != "worktree" {
+		panic(fmt.Sprintf("expected key \"worktree\", got: %q", key))
+	}
+	return gitdomain.NewMainWorkTreeDir(value)
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.
