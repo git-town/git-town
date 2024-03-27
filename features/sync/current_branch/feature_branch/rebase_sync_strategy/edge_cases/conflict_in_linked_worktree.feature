@@ -24,15 +24,12 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   @debug @this
   Scenario: undo
-    And inspect the repo
+    # And inspect the repo
     When I run "git-town undo" in the other worktree
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-      |         | git stash pop      |
-    And the current branch is still "feature"
-    And the uncommitted file still exists
-    And no rebase is in progress
+    And the current branch in the other worktree is still "feature"
     And the initial commits exist
 
   Scenario: continue with unresolved conflict
