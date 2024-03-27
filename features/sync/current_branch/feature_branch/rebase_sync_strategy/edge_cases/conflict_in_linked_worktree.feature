@@ -22,8 +22,10 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       To continue by skipping the current branch, run "git town skip".
       """
 
+  @debug @this
   Scenario: undo
-    When I run "git-town undo -v" in the other worktree
+    And inspect the repo
+    When I run "git-town undo" in the other worktree
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
@@ -41,7 +43,6 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       you must resolve the conflicts before continuing
       """
 
-  @debug @this
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file" in the other worktree
     And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message

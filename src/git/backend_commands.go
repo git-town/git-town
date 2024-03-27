@@ -444,17 +444,27 @@ func (self *BackendCommands) Version() (major int, minor int, err error) {
 }
 
 func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchName, error) {
-	rootDir := self.RootOfMainWorkTree()
-	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
+	output, err := self.Runner.QueryTrim("git", "branch", "--list")
 	if err != nil {
-		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
-		rawContent, err = os.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
-		if err != nil {
-			return gitdomain.EmptyLocalBranchName(), err
-		}
+		return gitdomain.EmptyLocalBranchName(), err
 	}
-	content := strings.TrimSpace(string(rawContent))
-	return gitdomain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
+	lines := stringslice.Lines(output)
+	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
+	if len(linesWithStar) == 0 {
+		return gitdomain.EmptyLocalBranchName(), err
+	}
+	if len(linesWithStar) > 1 {
+		panic(fmt.Sprintf("multiple lines with star found:\n%s", output))
+	}
+	lineWithStar := linesWithStar[0]
+	return ParseActiveBranchDuringRebase(lineWithStar), nil
+}
+
+func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
+	parts := strings.Split(lineWithStar, " ")
+	partsWithBranchName := parts[4:]
+	branchNameWithClosingParen := strings.Join(partsWithBranchName, " ")
+	return gitdomain.NewLocalBranchName(branchNameWithClosingParen[:len(branchNameWithClosingParen)-1])
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
