@@ -37,6 +37,10 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --global                            |
       |         | git config -lz --local                             |
       |         | git stash list                                     |
+    And it prints:
+      """
+      Ran 24 shell commands
+      """
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
