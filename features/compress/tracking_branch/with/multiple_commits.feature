@@ -9,7 +9,6 @@ Feature: compress the commits on a feature branch
       |         |               | commit 3 | file_3    | content 3    |
     When I run "git-town compress" and enter "compressed commit" for the commit message
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -30,14 +29,9 @@ Feature: compress the commits on a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | git reset --hard {{ sha 'local feature commit' }}                            |
-      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
+      | BRANCH  | COMMAND                                         |
+      | feature | git reset --hard {{ sha 'commit 3' }}           |
+      |         | git push --force-with-lease --force-if-includes |
     And the current branch is still "feature"
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | origin main commit    |
-      |         |               | local main commit     |
-      | feature | local         | local feature commit  |
-      |         | origin        | origin feature commit |
+    And the initial commits exist
     And the initial branches and lineage exist
