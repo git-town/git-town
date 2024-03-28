@@ -4,8 +4,7 @@ labels: ["bug"]
 body:
   - type: markdown
     attributes:
-      value: |
-        Apologies for the malfunction and thanks for taking the time to report this bug!
+      value: Apologies for the malfunction and thanks for taking the time to report this bug!
   - type: textarea
     id: reproduce
     attributes:
