@@ -90,10 +90,12 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHA
 					sha, found := initialDevSHAs[commitName]
 					if !found {
 						fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
-						fmt.Println("I have these commits:")
+						fmt.Printf("I have records about %d commits:\n", len(initialDevSHAs))
 						for _, key := range maps.Keys(initialDevSHAs) {
 							fmt.Println("  -", key)
 						}
+						fmt.Println("END OF RECORDS")
+						panic("see error above")
 					}
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
