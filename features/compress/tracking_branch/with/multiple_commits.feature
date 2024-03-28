@@ -3,10 +3,10 @@ Feature: compress the commits on a feature branch
   Background:
     Given the current branch is a feature branch "feature"
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE  |
-      | feature | local, origin | commit 1 |
-      |         |               | commit 2 |
-      |         |               | commit 3 |
+      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature | local, origin | commit 1 | file_1    | content 1    |
+      |         |               | commit 2 | file_2    | content 2    |
+      |         |               | commit 3 | file_3    | content 3    |
     When I run "git-town compress" and enter "compressed commit" for the commit message
 
   @debug @this
@@ -23,6 +23,9 @@ Feature: compress the commits on a feature branch
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE           |
       | feature | local, origin | compressed commit |
+    And file "file_1" still has content "content 1"
+    And file "file_2" still has content "content 2"
+    And file "file_3" still has content "content 3"
 
   Scenario: undo
     When I run "git-town undo"
