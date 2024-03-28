@@ -49,7 +49,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
     When I run "git-town sync" and enter into the dialog:
       | DIALOG            | KEYS    |
       | choose what to do | 3 enter |
-    Then it runs the commands
+    Then it prints:
+      """
+      Handle unfinished command: undo
+      """
+    And it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
