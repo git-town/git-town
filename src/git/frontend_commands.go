@@ -205,6 +205,11 @@ func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.Alias
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *FrontendCommands) RemoteCommitsInCurrentBranch(parent gitdomain.LocalBranchName) error {
+	return self.Runner.Run("git", "reset", parent.String())
+}
+
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
 func (self *FrontendCommands) ResetCurrentBranchToSHA(sha gitdomain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
