@@ -4,7 +4,7 @@ labels: ["bug"]
 body:
   - type: markdown
     attributes:
-      value: :pray: Thanks for taking the time to report this bug!
+      value: Thanks for taking the time to report this bug!
   - type: textarea
     attributes:
       label: Steps to reproduce
