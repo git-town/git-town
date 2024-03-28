@@ -12,5 +12,9 @@ type CommitSquashedChanges struct {
 }
 
 func (self *CommitSquashedChanges) Run(args shared.RunArgs) error {
+	err := args.Runner.Frontend.StageFiles("-A")
+	if err != nil {
+		return err
+	}
 	return args.Runner.Frontend.Commit("", "")
 }
