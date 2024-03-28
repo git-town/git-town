@@ -89,6 +89,7 @@ type compressConfig struct {
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
+	parentBranch     gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 }
 
@@ -107,19 +108,22 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	initialBranch := branchesSnapshot.Active
+	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(initialBranch)
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &compressConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
-	prog.Add(&opcodes.ResetCurrentBranchToSHA{})
+	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
