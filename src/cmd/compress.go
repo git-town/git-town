@@ -94,6 +94,7 @@ type compressConfig struct {
 }
 
 func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*compressConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
@@ -110,7 +111,6 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 	}
 	initialBranch := branchesSnapshot.Active
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(initialBranch)
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &compressConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
