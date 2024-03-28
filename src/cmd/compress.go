@@ -131,6 +131,5 @@ func compressProgram(config *compressConfig) program.Program {
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
-	prog.Add(&opcodes.CreateProposal{Branch: config.previousBranch})
 	return prog
 }

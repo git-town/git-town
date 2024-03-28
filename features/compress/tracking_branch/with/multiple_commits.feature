@@ -15,6 +15,7 @@ Feature: compress the commits on a feature branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git reset main                                  |
+      |         | git add -A                                      |
       |         | git commit                                      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
