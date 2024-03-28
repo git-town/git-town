@@ -1,7 +1,8 @@
 Feature: sync a branch whose parent is active in another worktree
 
   Background:
-    Given a feature branch "parent"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
@@ -17,27 +18,26 @@ Feature: sync a branch whose parent is active in another worktree
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | child  | git fetch --prune --tags          |
-      |        | git checkout main                 |
-      | main   | git rebase origin/main            |
-      |        | git push                          |
-      |        | git checkout child                |
-      | child  | git merge --no-edit origin/child  |
-      |        | git merge --no-edit origin/parent |
-      |        | git push                          |
+      | BRANCH | COMMAND                                         |
+      | child  | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main                          |
+      |        | git push                                        |
+      |        | git checkout child                              |
+      | child  | git rebase origin/parent                        |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase origin/child                         |
+      |        | git push --force-with-lease --force-if-includes |
     And the current branch is still "child"
     And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE                                                 |
-      | main   | local, origin, worktree | origin main commit                                      |
-      |        |                         | local main commit                                       |
-      | child  | local, origin           | local child commit                                      |
-      |        |                         | origin child commit                                     |
-      |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        |                         | origin parent commit                                    |
-      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
-      | parent | origin                  | origin parent commit                                    |
-      |        | worktree                | local parent commit                                     |
+      | BRANCH | LOCATION                | MESSAGE              |
+      | main   | local, origin, worktree | origin main commit   |
+      |        |                         | local main commit    |
+      | child  | local, origin           | origin child commit  |
+      |        |                         | origin parent commit |
+      |        |                         | local child commit   |
+      | parent | origin                  | origin parent commit |
+      |        | worktree                | local parent commit  |
 
   Scenario: undo
     When I run "git-town undo"
