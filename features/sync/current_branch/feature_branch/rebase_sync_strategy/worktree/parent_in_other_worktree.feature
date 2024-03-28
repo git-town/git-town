@@ -1,4 +1,3 @@
-@this
 Feature: sync a branch whose parent is active in another worktree
 
   Background:
