@@ -124,6 +124,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
+	prog.Add(&opcodes.CommitSquashedChanges{})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,

@@ -20,13 +20,8 @@ Feature: compress the commits on a feature branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | feature | local, origin | local feature commit                                       |
-      |         |               | origin feature commit                                      |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | origin main commit                                         |
-      |         |               | local main commit                                          |
-      |         |               | Merge branch 'main' into feature                           |
+      | BRANCH  | LOCATION      | MESSAGE           |
+      | feature | local, origin | compressed commit |
 
   Scenario: undo
     When I run "git-town undo"
