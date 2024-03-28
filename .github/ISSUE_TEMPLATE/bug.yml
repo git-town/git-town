@@ -18,5 +18,5 @@ body:
       render: shell
   - type: textarea
     attributes:
-      label: Comments
-      description: Any other observations, comments, or insights you want to share
+      label: Additional info
+      description: Additional observations, comments, or suggestions you want to share
