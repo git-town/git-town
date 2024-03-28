@@ -1,0 +1,21 @@
+name: Bug Report
+description: Report a bug
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Apologies for the malfunction and thanks for taking the time to report this bug!
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide detailed steps to reproduce the problem
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Command output
+      description: Output of the failing Git Town command with the `--verbose` option enabled
+      render: shell
