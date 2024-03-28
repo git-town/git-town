@@ -17,13 +17,13 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --global                            |
       |         | git config -lz --local                             |
       |         | git rev-parse --show-toplevel                      |
+      |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git stash list                                     |
       |         | git status --long --ignore-submodules              |
       |         | git branch -vva                                    |
       |         | git remote                                         |
       | feature | git fetch --prune --tags                           |
       | <none>  | git branch -vva                                    |
-      |         | git rev-parse --verify --abbrev-ref @{-1}          |
       | feature | git add -A                                         |
       |         | git stash                                          |
       |         | git reset main                                     |
@@ -37,6 +37,10 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --global                            |
       |         | git config -lz --local                             |
       |         | git stash list                                     |
+    And it prints:
+      """
+      Ran 24 shell commands
+      """
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now

@@ -42,9 +42,9 @@ Feature: sync a branch whose parent is active in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                                  |
-      | child  | git reset --hard {{ sha 'local child commit' }}                          |
-      |        | git push --force-with-lease origin {{ sha 'origin child commit' }}:child |
+      | BRANCH | COMMAND                                                                            |
+      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                         |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |
