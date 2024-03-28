@@ -45,6 +45,19 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the initial commits exist
     And the initial branches and lineage exist
 
+  Scenario: undo through another sync invocation
+    When I run "git-town sync" and enter into the dialog:
+      | DIALOG            | KEYS    |
+      | choose what to do | 3 enter |
+    Then it prints:
+      """
+      Handle unfinished command: undo
+      """
+    And it runs the commands
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+      |         | git stash pop     |
+
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands

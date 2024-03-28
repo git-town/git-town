@@ -41,6 +41,24 @@ Feature: handle conflicts between the main branch and its tracking branch
     And no rebase is in progress
     And the initial commits exist
 
+  Scenario: undo through another sync invocation
+    When I run "git-town sync" and enter into the dialog:
+      | DIALOG            | KEYS    |
+      | choose what to do | 2 enter |
+    Then it prints:
+      """
+      Handle unfinished command: undo
+      """
+    And it runs the commands
+      | BRANCH  | COMMAND              |
+      | main    | git rebase --abort   |
+      |         | git checkout feature |
+      | feature | git stash pop        |
+    And the current branch is still "feature"
+    And the uncommitted file still exists
+    And no rebase is in progress
+    And the initial commits exist
+
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
