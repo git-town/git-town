@@ -20,8 +20,8 @@ import (
 const compressDesc = "Squashes all commits on a feature branch down to a single commit"
 
 const compressHelp = `
-Compress is a more convenient way of running "git rebase -i" and squashing all commits down to one.
-The branches must be synced before you compress them.
+Compress is a more convenient way of running "git rebase --interactive" and choosing to squash or fixup all commits.
+Branches must be synced before you compress them.
 `
 
 func compressCmd() *cobra.Command {
