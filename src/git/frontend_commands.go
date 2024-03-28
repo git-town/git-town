@@ -198,6 +198,11 @@ func (self *FrontendCommands) Rebase(target gitdomain.BranchName) error {
 	return self.Runner.Run("git", "rebase", target.String())
 }
 
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *FrontendCommands) RemoveCommitsInCurrentBranch(parent gitdomain.LocalBranchName) error {
+	return self.Runner.Run("git", "reset", parent.String())
+}
+
 // RemoveGitAlias removes the given Git alias.
 func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.AliasableCommand) error {
 	aliasKey := gitconfig.KeyForAliasableCommand(aliasableCommand)
