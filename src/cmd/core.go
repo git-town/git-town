@@ -11,7 +11,6 @@ func Execute() error {
 	rootCmd := rootCmd()
 	rootCmd.AddCommand(appendCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(compressCmd())
 	rootCmd.AddCommand(config.RootCmd())
 	rootCmd.AddCommand(continueCmd())
 	rootCmd.AddCommand(contributeCmd())
