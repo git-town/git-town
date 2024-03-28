@@ -1,4 +1,4 @@
-Feature: multiple shipped parent branches in a lineage
+Feature: multiple shipped parent branches in a stacked change
 
   Background:
     Given a feature branch "feature-1"
