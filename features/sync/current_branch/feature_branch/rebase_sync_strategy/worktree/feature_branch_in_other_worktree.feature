@@ -3,7 +3,6 @@ Feature: Sync a feature branch that is in another worktree than the main branch
   Background:
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And a feature branch "feature"
-    And the perennial branches are "main"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
@@ -30,12 +29,11 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         |                  | origin main commit    |
       |         |                  | local feature commit  |
 
-  @this
   Scenario: undo
     When I run "git-town undo" in the other worktree
     Then it runs the commands
       | BRANCH  | COMMAND                                                                                |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                           |
+      | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
