@@ -49,7 +49,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
       Handle unfinished command: undo
       """
-    Then it runs the commands
+    And it runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
       |         | git checkout feature |

@@ -57,7 +57,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       Handle unfinished command: undo
       """
-    Then it runs the commands
+    And it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
