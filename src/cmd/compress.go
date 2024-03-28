@@ -107,16 +107,19 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &compressConfig{
+		FullConfig:       &repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
-		FullConfig:       &repo.Runner.Config.FullConfig,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
+	prog.Add(&opcodes.ResetCurrentBranchToSHA{})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
