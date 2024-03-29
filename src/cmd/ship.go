@@ -107,7 +107,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            shipProgram(config, message),
+		RunProgram:            shipProgram(config, gitdomain.CommitMessage(message)),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
@@ -265,7 +265,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName,
 	return nil
 }
 
-func shipProgram(config *shipConfig, commitMessage string) program.Program {
+func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
 	if config.SyncBeforeShip {
 		// sync the parent branch

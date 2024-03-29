@@ -46,10 +46,10 @@ func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName) err
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *FrontendCommands) Commit(message, author string) error {
+func (self *FrontendCommands) Commit(message gitdomain.CommitMessage, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
-		gitArgs = append(gitArgs, "-m", message)
+		gitArgs = append(gitArgs, "-m", message.String())
 	}
 	if author != "" {
 		gitArgs = append(gitArgs, "--author", author)

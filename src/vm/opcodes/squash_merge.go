@@ -13,7 +13,7 @@ import (
 // SquashMerge squash merges the branch with the given name into the current branch.
 type SquashMerge struct {
 	Branch        gitdomain.LocalBranchName
-	CommitMessage string
+	CommitMessage gitdomain.CommitMessage
 	Parent        gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
