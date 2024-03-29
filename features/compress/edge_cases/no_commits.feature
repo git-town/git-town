@@ -1,10 +1,9 @@
-Feature: does not compress already compressed branches
+Feature: does not compress empty branches
 
   Background:
     Given the current branch is a feature branch "feature"
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | feature | local, origin | commit 1 | file_1    | content 1    |
+      | BRANCH | LOCATION | MESSAGE | FILE NAME | FILE CONTENT |
     When I run "git-town compress"
 
   Scenario: result
@@ -13,7 +12,7 @@ Feature: does not compress already compressed branches
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      this branch has already just one commit
+      this branch has no commits
       """
     And the current branch is still "feature"
     And the initial commits exist
