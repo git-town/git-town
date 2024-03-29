@@ -11,7 +11,7 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel         |
       |         | backend  | git stash list                        |
       |         | backend  | git status --long --ignore-submodules |
-      |         | backend  | git branch -vva                       |
+      |         | backend  | git branch -vva --sort=refname        |
       | feature | frontend | git diff main..feature                |
     And it prints:
       """

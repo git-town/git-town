@@ -654,7 +654,7 @@ func TestBackendCommands(t *testing.T) {
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
-  main                         024df944 [origin/main] Commit message on main (#1234)
+  main                         41c3f128 [origin/main: behind 2] Commit message on main (#1234)
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
 + branch-5                     55555555 (/path/to/other/worktree) [origin/branch-5] Commit message 5
   remotes/origin/branch-1      307a7bf4 Commit message 1b
@@ -662,7 +662,7 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-3      bc39378a Commit message 3b
   remotes/origin/branch-5      55555555 Commit message 5
   remotes/origin/HEAD          -> origin/initial
-  remotes/origin/main          024df944 Commit message on main (#1234)
+  remotes/origin/main          02c192178 Commit message on main (#1234)
   remotes/upstream/HEAD        -> upstream/main
 
 `[1:]
@@ -690,10 +690,10 @@ func TestBackendCommands(t *testing.T) {
 				},
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
-					LocalSHA:   gitdomain.NewSHA("024df944"),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
+					LocalSHA:   gitdomain.NewSHA("41c3f128"),
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/main"),
-					RemoteSHA:  gitdomain.NewSHA("024df944"),
+					RemoteSHA:  gitdomain.NewSHA("02c192178"),
 				},
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-4"),
