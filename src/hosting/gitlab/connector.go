@@ -42,14 +42,14 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) error {
+func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
-		SquashCommitMessage: gitlab.Ptr(message),
+		SquashCommitMessage: gitlab.Ptr(message.String()),
 		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: gitlab.Ptr(false),

@@ -294,12 +294,12 @@ func (self *BackendCommands) HasShippableChanges(branch, mainBranch gitdomain.Lo
 }
 
 // LastCommitMessage provides the commit message for the last commit.
-func (self *BackendCommands) LastCommitMessage() (string, error) {
+func (self *BackendCommands) LastCommitMessage() (gitdomain.CommitMessage, error) {
 	out, err := self.Runner.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
-	return out, nil
+	return gitdomain.CommitMessage(out), nil
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
