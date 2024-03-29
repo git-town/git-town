@@ -1,3 +1,4 @@
+@this
 Feature: compress the commits on a feature branch
 
   Background:
@@ -16,8 +17,7 @@ Feature: compress the commits on a feature branch
       | feature | git fetch --prune --tags                        |
       |         | git add -A                                      |
       |         | git stash                                       |
-      |         | git reset main                                  |
-      |         | git add -A                                      |
+      |         | git reset --soft main                           |
       |         | git commit                                      |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
