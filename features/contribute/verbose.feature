@@ -5,6 +5,7 @@ Feature: make a branch contribution verbosely
     And an uncommitted file
     When I run "git-town contribute --verbose"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                          |
