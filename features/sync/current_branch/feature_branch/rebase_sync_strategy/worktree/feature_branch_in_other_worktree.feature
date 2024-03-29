@@ -1,3 +1,4 @@
+@this
 Feature: Sync a feature branch that is in another worktree than the main branch
 
   Background:
