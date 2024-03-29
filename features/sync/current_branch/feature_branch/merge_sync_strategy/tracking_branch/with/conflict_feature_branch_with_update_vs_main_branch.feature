@@ -53,6 +53,29 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | origin        | feature commit             | feature_file     | feature content |
     And the initial branches and lineage exist
 
+  Scenario: undo through another sync invocation
+    When I run "git-town sync" and enter into the dialog:
+      | DIALOG            | KEYS    |
+      | choose what to do | 3 enter |
+    Then it prints:
+      """
+      Handle unfinished command: undo
+      """
+    And it runs the commands
+      | BRANCH  | COMMAND                                                 |
+      | feature | git merge --abort                                       |
+      |         | git reset --hard {{ sha 'conflicting feature commit' }} |
+      |         | git stash pop                                           |
+    And the current branch is still "feature"
+    And the uncommitted file still exists
+    And no merge is in progress
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
+      | feature | local         | conflicting feature commit | conflicting_file | feature content |
+      |         | origin        | feature commit             | feature_file     | feature content |
+    And the initial branches and lineage exist
+
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands

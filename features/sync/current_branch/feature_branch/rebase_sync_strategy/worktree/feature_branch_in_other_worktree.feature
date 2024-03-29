@@ -3,7 +3,6 @@ Feature: Sync a feature branch that is in another worktree than the main branch
   Background:
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And a feature branch "feature"
-    And the perennial branches are "main"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
