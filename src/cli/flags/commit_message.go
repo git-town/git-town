@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Bool provides mistake-safe access to string Cobra command-line flags.
+// CommitMessage provides type-safe access to the CLI arguments of type gitdomain.CommitMessage.
 func CommitMessage(name, short, defaultValue, desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
@@ -22,5 +22,5 @@ func CommitMessage(name, short, defaultValue, desc string) (AddFunc, ReadCommitM
 	return addFlag, readFlag
 }
 
-// ReadStringFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
+// ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
 type ReadCommitMessageFlagFunc func(*cobra.Command) gitdomain.CommitMessage
