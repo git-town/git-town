@@ -28,10 +28,11 @@ func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
-		Use:   "compress",
-		Args:  cobra.NoArgs,
-		Short: compressDesc,
-		Long:  cmdhelpers.Long(compressDesc, compressHelp),
+		Use:    "compress",
+		Args:   cobra.NoArgs,
+		Hidden: true,
+		Short:  compressDesc,
+		Long:   cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeCompress(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},

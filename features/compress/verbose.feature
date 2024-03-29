@@ -20,10 +20,10 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git stash list                                     |
       |         | git status --long --ignore-submodules              |
-      |         | git branch -vva                                    |
+      |         | git branch -vva --sort=refname                     |
       |         | git remote                                         |
       | feature | git fetch --prune --tags                           |
-      | <none>  | git branch -vva                                    |
+      | <none>  | git branch -vva --sort=refname                     |
       | feature | git add -A                                         |
       |         | git stash                                          |
       |         | git reset --soft main                              |
@@ -32,7 +32,7 @@ Feature: compress the commits on a feature branch verbosely
       | feature | git push --force-with-lease --force-if-includes    |
       | <none>  | git stash list                                     |
       | feature | git stash pop                                      |
-      | <none>  | git branch -vva                                    |
+      | <none>  | git branch -vva --sort=refname                     |
       |         | git config -lz --global                            |
       |         | git config -lz --local                             |
       |         | git stash list                                     |
@@ -60,7 +60,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --show-toplevel                      |
       |         | git stash list                                     |
       |         | git status --long --ignore-submodules              |
-      |         | git branch -vva                                    |
+      |         | git branch -vva --sort=refname                     |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |
       | feature | git add -A                                         |

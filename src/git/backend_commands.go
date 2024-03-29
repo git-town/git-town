@@ -80,7 +80,7 @@ func (self *BackendCommands) BranchHasUnmergedChanges(branch, parent gitdomain.L
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
 func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
-	output, err := self.Runner.Query("git", "branch", "-vva")
+	output, err := self.Runner.Query("git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
