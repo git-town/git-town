@@ -68,9 +68,9 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
 	commitMessageParts := message.Parts()
-	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
+	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Title,
+		CommitTitle: commitMessageParts.Subject,
 	})
 	self.log.Success()
 	return err

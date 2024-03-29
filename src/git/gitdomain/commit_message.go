@@ -6,8 +6,8 @@ type CommitMessage string
 
 // CommitMessageParts describes the parts of a Git commit message.
 type CommitMessageParts struct {
-	Title string
-	Body  string
+	Subject string
+	Text    string
 }
 
 // Parts separates the parts of the given commit message.
@@ -22,8 +22,8 @@ func (self CommitMessage) Parts() CommitMessageParts {
 		body = body[1:]
 	}
 	return CommitMessageParts{
-		Title: title,
-		Body:  body,
+		Subject: title,
+		Text:    body,
 	}
 }
 

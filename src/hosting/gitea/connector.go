@@ -69,8 +69,8 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	commitMessageParts := message.Parts()
 	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Title,
-		Message: commitMessageParts.Body,
+		Title:   commitMessageParts.Subject,
+		Message: commitMessageParts.Text,
 	})
 	if err != nil {
 		return err
