@@ -1670,6 +1670,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 }
 
+func logCommitSHAs(repo string, commitSHAs map[string]gitdomain.SHA) {
+	fmt.Println(repo)
+	for text, sha := range commitSHAs {
+		fmt.Printf("%s: %s\n", sha, text)
+	}
+}
+
 func updateInitialSHAs(state *ScenarioState) {
 	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
 		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
@@ -1679,12 +1686,5 @@ func updateInitialSHAs(state *ScenarioState) {
 	}
 	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
 		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
-	}
-}
-
-func logCommitSHAs(repo string, commitSHAs map[string]gitdomain.SHA) {
-	fmt.Println(repo)
-	for text, sha := range commitSHAs {
-		fmt.Printf("%s: %s\n", sha, text)
 	}
 }
