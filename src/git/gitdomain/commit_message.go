@@ -28,6 +28,7 @@ func (self CommitMessage) Parts() CommitMessageParts {
 	}
 }
 
+// String implements the fmt.Stringer interface.
 func (self CommitMessage) String() string {
 	return string(self)
 }
