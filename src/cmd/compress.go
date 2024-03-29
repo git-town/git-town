@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v13/src/cli/dialog/components"
@@ -9,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/messages"
 	"github.com/git-town/git-town/v13/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v13/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v13/src/vm/opcodes"
@@ -58,6 +60,10 @@ func executeCompress(_ []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	err = validateCompressConfig(config)
+	if err != nil {
+		return err
+	}
 	steps := compressProgram(config)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
@@ -91,6 +97,7 @@ type compressConfig struct {
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
+	initialBranch    gitdomain.BranchInfo
 	parentBranch     gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 }
@@ -113,11 +120,13 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 	}
 	initialBranch := branchesSnapshot.Active
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(initialBranch)
+	initialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch)
 	return &compressConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    *initialBranchInfo,
 		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
@@ -135,4 +144,11 @@ func compressProgram(config *compressConfig) program.Program {
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	return prog
+}
+
+func validateCompressConfig(config *compressConfig) error {
+	if config.initialBranch.SyncStatus != gitdomain.SyncStatusUpToDate && config.initialBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
+		return fmt.Errorf(messages.CompressUnsynced, config.initialBranch.LocalName)
+	}
+	return nil
 }
