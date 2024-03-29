@@ -610,6 +610,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		updateInitialSHAs(state)
 		state.fixture.SecondWorktree.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
 		state.fixture.SecondWorktree.Config.Reload()
@@ -654,6 +655,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
+		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
 		state.fixture.SecondWorktree.Config.Reload()
 		return nil
@@ -744,8 +746,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,
+			state.fixture.SecondWorktree,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
+			state.initialWorktreeSHAs,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
@@ -1665,5 +1669,8 @@ func updateInitialSHAs(state *ScenarioState) {
 	}
 	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
 		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
+	}
+	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
+		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
 	}
 }
