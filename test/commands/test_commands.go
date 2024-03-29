@@ -399,7 +399,7 @@ func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}
-	shasWithMessage := gitdomain.SHAs{}
+	shasWithMessage := make(gitdomain.SHAs, 0, 1)
 	for _, text := range strings.Split(output, "\n") {
 		shaText, commitMessage, found := strings.Cut(text, " ")
 		if found && commitMessage == name {
