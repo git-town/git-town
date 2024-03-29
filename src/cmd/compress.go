@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -148,6 +149,9 @@ func compressProgram(config *compressConfig) program.Program {
 func validateCompressConfig(config *compressConfig) error {
 	if config.initialBranch.SyncStatus != gitdomain.SyncStatusUpToDate && config.initialBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
 		return fmt.Errorf(messages.CompressUnsynced, config.initialBranch.LocalName)
+	}
+	if config.FullConfig.IsMainOrPerennialBranch(config.initialBranch.LocalName) {
+		return errors.New(messages.CompressIsPerennial)
 	}
 	return nil
 }

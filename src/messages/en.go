@@ -27,6 +27,7 @@ const (
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CompressUnsynced                   = "please sync branch %q before compressing it"
+	CompressIsPerennial                = "better not compress perennial branches"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
