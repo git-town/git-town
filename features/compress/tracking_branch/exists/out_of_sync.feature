@@ -1,8 +1,10 @@
 Feature: cannot compress branches that are out of sync
 
-  Scenario: local branch is behind
+  Background:
     Given the current branch is a feature branch "feature"
-    And the commits
+
+  Scenario: local branch is behind
+    Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | origin        | commit 2 | file_2    | content 2    |
@@ -15,8 +17,7 @@ Feature: cannot compress branches that are out of sync
     And the initial branches and lineage exist
 
   Scenario: local branch is ahead
-    Given the current branch is a feature branch "feature"
-    And the commits
+    Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | local         | commit 2 | file_2    | content 2    |
@@ -29,8 +30,7 @@ Feature: cannot compress branches that are out of sync
     And the initial branches and lineage exist
 
   Scenario: branch is ahead and behind
-    Given the current branch is a feature branch "feature"
-    And the commits
+    Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | local         | commit 2 | file_2    | content 2    |
@@ -44,8 +44,7 @@ Feature: cannot compress branches that are out of sync
     And the initial branches and lineage exist
 
   Scenario: branch is deleted at remote
-    Given the current branch is a feature branch "feature"
-    And the commits
+    Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
