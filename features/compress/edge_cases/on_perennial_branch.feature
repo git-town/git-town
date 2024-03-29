@@ -1,4 +1,3 @@
-@this
 Feature: does not compress perennial branches
 
   Background:
