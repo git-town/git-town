@@ -50,6 +50,24 @@ func TestSHAs(t *testing.T) {
 		})
 	})
 
+	t.Run("Last", func(t *testing.T) {
+		t.Parallel()
+		t.Run("multiple elements", func(t *testing.T) {
+			t.Parallel()
+			shas := gitdomain.NewSHAs("111111", "222222")
+			have := shas.Last()
+			want := shas[1]
+			must.Eq(t, want, have)
+		})
+		t.Run("one element", func(t *testing.T) {
+			t.Parallel()
+			shas := gitdomain.NewSHAs("111111")
+			have := shas.Last()
+			want := shas[0]
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {

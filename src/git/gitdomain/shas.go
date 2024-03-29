@@ -21,7 +21,7 @@ func (self SHAs) Join(sep string) string {
 }
 
 func (self SHAs) Last() SHA {
-	return self[len(self)]
+	return self[len(self)-1]
 }
 
 func (self SHAs) Strings() []string {
