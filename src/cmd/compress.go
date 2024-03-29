@@ -161,10 +161,10 @@ func validateCompressConfig(config *compressConfig) error {
 		return errors.New(messages.CompressIsPerennial)
 	}
 	switch len(config.commitMessages) {
-	case 1:
-		return errors.New(messages.CompressAlreadyOneCommit)
 	case 0:
 		return errors.New(messages.CompressNoCommits)
+	case 1:
+		return errors.New(messages.CompressAlreadyOneCommit)
 	}
 	return nil
 }
