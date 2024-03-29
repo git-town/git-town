@@ -1669,7 +1669,13 @@ func updateInitialSHAs(state *ScenarioState) {
 	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
 		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
 	}
+	fmt.Println("111111111111111")
 	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
+		fmt.Println("222222222222222222")
 		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
+		fmt.Printf("worktree: %#v\n", state.initialWorktreeSHAs)
+		fmt.Printf("dev: %#v\n", state.initialDevSHAs)
+		fmt.Printf("origin: %#v\n", state.initialOriginSHAs)
+		fmt.Printf("initial commits: %#v\n", state.initialCommits.String())
 	}
 }
