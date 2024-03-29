@@ -9,6 +9,7 @@ import (
 
 func TestCommitMessage(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Parts()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[gitdomain.CommitMessage]gitdomain.CommitMessageParts{
