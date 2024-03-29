@@ -25,9 +25,9 @@ Feature: sync the current contribution branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH       | COMMAND                                                                   |
-      | contribution | git reset --hard {{ sha-before-run 'local commit' }}                      |
-      |              | git push --force-with-lease origin {{ sha 'origin commit' }}:contribution |
+      | BRANCH       | COMMAND                                                                             |
+      | contribution | git reset --hard {{ sha-before-run 'local commit' }}                                |
+      |              | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:contribution |
     And the current branch is still "contribution"
     And the initial commits exist
     And the initial branches and lineage exist

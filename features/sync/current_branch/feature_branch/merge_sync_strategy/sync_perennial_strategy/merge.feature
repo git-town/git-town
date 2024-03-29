@@ -40,9 +40,9 @@ Feature: with sync-perennial-strategy set to "merge"
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | git reset --hard {{ sha 'local feature commit' }}                            |
-      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
+      | BRANCH  | COMMAND                                                                                |
+      | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
+      |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                    |

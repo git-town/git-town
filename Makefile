@@ -124,6 +124,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
 	                                                           | grep -v IsGitRepo \
+	                                                           | grep -v NewSHAs \
 	                                                           | grep -v Paniced \
 	                                                           || true
 
