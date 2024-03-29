@@ -43,3 +43,21 @@ Feature: cannot compress branches that are out of sync
       """
     And the initial commits exist
     And the initial branches and lineage exist
+
+  Scenario: branch is deleted at remote
+    Given the current branch is a feature branch "feature"
+    And the commits
+      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature | local, origin | commit 1 | file_1    | content 1    |
+      |         |               | commit 2 | file_2    | content 2    |
+    And origin deletes the "feature" branch
+    When I run "git-town compress"
+    Then it prints the error:
+      """
+      Please sync branch "feature" before compressing it
+      """
+    And these commits exist now
+      | BRANCH  | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature | local    | commit 1 | file_1    | content 1    |
+      |         |          | commit 2 | file_2    | content 2    |
+    And the initial branches and lineage exist
