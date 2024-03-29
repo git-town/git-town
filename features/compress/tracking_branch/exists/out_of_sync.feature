@@ -1,4 +1,3 @@
-@this
 Feature: cannot compress branches that are out of sync
 
   Scenario: local branch is behind
