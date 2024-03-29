@@ -39,6 +39,9 @@ type ScenarioState struct {
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs map[string]gitdomain.SHA
 
+	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
+	initialWorktreeSHAs map[string]gitdomain.SHA
+
 	// initialRemoteBranches contains the remote branches before the WHEN steps run
 	initialRemoteBranches gitdomain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
