@@ -399,12 +399,7 @@ func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}
-	parts := strings.Split(output, "\n")
-	result := make(gitdomain.SHAs, len(parts))
-	for p, part := range parts {
-		result[p] = gitdomain.NewSHA(part)
-	}
-	return result
+	return gitdomain.NewSHAs(strings.Split(output, "\n")...)
 }
 
 // SetColorUI configures whether Git output contains color codes.

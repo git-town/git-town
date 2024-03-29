@@ -4,6 +4,14 @@ import "strings"
 
 type SHAs []SHA
 
+func NewSHAs(ids ...string) SHAs {
+	result := make(SHAs, len(ids))
+	for i, id := range ids {
+		result[i] = NewSHA(id)
+	}
+	return result
+}
+
 func (self SHAs) First() SHA {
 	return self[0]
 }
@@ -13,7 +21,7 @@ func (self SHAs) Join(sep string) string {
 }
 
 func (self SHAs) Last() SHA {
-	return self[len(self)]
+	return self[len(self)-1]
 }
 
 func (self SHAs) Strings() []string {

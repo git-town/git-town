@@ -389,7 +389,7 @@ func TestTestCommands(t *testing.T) {
 		})
 		shas := repo.SHAsForCommit("commit")
 		must.EqOp(t, 1, len(shas))
-		sha := shas[0]
+		sha := shas.First()
 		must.EqOp(t, 7, len(sha))
 	})
 
