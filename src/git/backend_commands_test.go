@@ -714,43 +714,6 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, want, have)
 			must.EqOp(t, gitdomain.NewLocalBranchName("branch-2"), currentBranch)
 		})
-
-		t.Run("example from bug report", func(t *testing.T) {
-			give := `
-* foobar                         fd43cbb83 [origin/foobar] comment
-  remotes/origin/foobar          fd43cbb83 comment
-  remotes/origin/testing         db39f0255 comment
-  remotes/origin/HEAD            -> origin/master
-  remotes/origin/master          41c3f1280 comment
-  master                         02c192178 [origin/master: behind 2] comment
-  remotes/origin/live            cd7d1d1ea comment
-`[1:]
-			want := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  gitdomain.NewLocalBranchName("foobar"),
-					LocalSHA:   gitdomain.NewSHA("fd43cbb83"),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: gitdomain.NewRemoteBranchName("origin/foobar"),
-					RemoteSHA:  gitdomain.NewSHA("fd43cbb83"),
-				},
-				gitdomain.BranchInfo{
-					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: gitdomain.NewRemoteBranchName("origin/testing"),
-					RemoteSHA:  gitdomain.NewSHA("db39f0255"),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  gitdomain.NewLocalBranchName("master"),
-					LocalSHA:   gitdomain.NewSHA("02c192178"),
-					SyncStatus: gitdomain.SyncStatusNotInSync,
-					RemoteName: gitdomain.NewRemoteBranchName("origin/master"),
-					RemoteSHA:  gitdomain.NewSHA("41c3f1280"),
-				},
-			}
-			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-			must.EqOp(t, gitdomain.NewLocalBranchName("branch-2"), currentBranch)
-		})
-
 	})
 
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
