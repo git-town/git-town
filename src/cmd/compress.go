@@ -93,7 +93,6 @@ func executeCompress(_ []string, dryRun, verbose bool) error {
 
 type compressConfig struct {
 	*configdomain.FullConfig
-	commitMessages   gitdomain.CommitMessages
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
