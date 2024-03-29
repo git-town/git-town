@@ -401,9 +401,9 @@ func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	}
 	shasWithMessage := gitdomain.SHAs{}
 	for _, text := range strings.Split(output, "\n") {
-		sha, commitMessage, _ := strings.Cut(text, " ")
+		shaText, commitMessage, _ := strings.Cut(text, " ")
 		if commitMessage == name {
-			shasWithMessage = append(shasWithMessage, gitdomain.NewSHA(sha))
+			shasWithMessage = append(shasWithMessage, gitdomain.NewSHA(shaText))
 		}
 	}
 	return shasWithMessage
