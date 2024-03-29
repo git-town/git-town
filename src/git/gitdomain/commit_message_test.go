@@ -9,34 +9,35 @@ import (
 
 func TestCommitMessage(t *testing.T) {
 	t.Parallel()
-	t.Run("Split()", func(t *testing.T) {
+
+	t.Run("Parts()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[gitdomain.CommitMessage]gitdomain.CommitMessageParts{
 			"title": {
-				Title: "title",
-				Body:  "",
+				Subject: "title",
+				Text:    "",
 			},
 			"title\nbody": {
-				Title: "title",
-				Body:  "body",
+				Subject: "title",
+				Text:    "body",
 			},
 			"title\n\nbody": {
-				Title: "title",
-				Body:  "body",
+				Subject: "title",
+				Text:    "body",
 			},
 			"title\n\n\nbody": {
-				Title: "title",
-				Body:  "body",
+				Subject: "title",
+				Text:    "body",
 			},
 			"title\nbody1\nbody2\n": {
-				Title: "title",
-				Body:  "body1\nbody2\n",
+				Subject: "title",
+				Text:    "body1\nbody2\n",
 			},
 		}
 		for give, want := range tests {
-			have := give.Split()
-			must.EqOp(t, want.Title, have.Title)
-			must.EqOp(t, want.Body, have.Body)
+			have := give.Parts()
+			must.EqOp(t, want.Subject, have.Subject)
+			must.EqOp(t, want.Text, have.Text)
 		}
 	})
 }

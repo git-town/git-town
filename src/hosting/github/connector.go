@@ -67,10 +67,10 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
-	commitMessageParts := message.Split()
-	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
+	commitMessageParts := message.Parts()
+	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Title,
+		CommitTitle: commitMessageParts.Subject,
 	})
 	self.log.Success()
 	return err

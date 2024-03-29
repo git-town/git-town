@@ -16,8 +16,7 @@ Feature: dry-run compressing the commits on a feature branch
       | feature | git fetch --prune --tags |
       |         | git add -A               |
       |         | git stash                |
-      |         | git reset main           |
-      |         | git add -A               |
+      |         | git reset --soft main    |
       |         | git commit               |
       |         | git stash pop            |
     And all branches are now synchronized
