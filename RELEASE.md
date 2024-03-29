@@ -10,14 +10,14 @@ This guide is for maintainers who make releases of Git Town.
     during development are not hidden anymore
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `13.0.1`
+    - triple-digits: `13.0.2`
     - double-digits: `13.0`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
     - update `github.com/git-town/git-town/v13/` everywhere in this repo
     - update `github.com/git-town/git-town/v13` (without trailing slash)
 - ship the branch
-- `git tag v13.0.1 && git push --tags`
+- `git tag v13.0.2 && git push --tags`
 - open the new release in the browser
 - copy the changelog into the release notes
 - publish the release
