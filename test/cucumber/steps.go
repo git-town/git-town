@@ -177,7 +177,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^all branches are now synchronized$`, func() error {
+	suite.Step(`^all branches are (?:now|still) synchronized$`, func() error {
 		branchesOutOfSync, output := state.fixture.DevRepo.HasBranchesOutOfSync()
 		if branchesOutOfSync {
 			return errors.New("unexpected out of sync:\n" + output)
