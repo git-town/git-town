@@ -54,7 +54,7 @@ If your origin server deletes shipped branches, for example GitHub's feature to 
 
 func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
+	addMessageFlag, readMessageFlag := flags.CommitMessage("message", "m", "", "Specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "ship",
@@ -72,7 +72,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, message string, dryRun, verbose bool) error {
+func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -265,7 +265,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName,
 	return nil
 }
 
-func shipProgram(config *shipConfig, commitMessage string) program.Program {
+func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
 	if config.SyncBeforeShip {
 		// sync the parent branch

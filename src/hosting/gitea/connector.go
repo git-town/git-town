@@ -9,7 +9,6 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v13/src/cli/print"
 	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/commitmessage"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/git/giturl"
 	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
@@ -63,15 +62,15 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) error {
+func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	commitMessageParts := commitmessage.Split(message)
+	commitMessageParts := message.Parts()
 	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Title,
-		Message: commitMessageParts.Body,
+		Title:   commitMessageParts.Subject,
+		Message: commitMessageParts.Text,
 	})
 	if err != nil {
 		return err

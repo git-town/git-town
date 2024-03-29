@@ -26,8 +26,7 @@ Feature: compress the commits on a feature branch verbosely
       | <none>  | git branch -vva                                    |
       | feature | git add -A                                         |
       |         | git stash                                          |
-      |         | git reset main                                     |
-      |         | git add -A                                         |
+      |         | git reset --soft main                              |
       |         | git commit                                         |
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
@@ -39,7 +38,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git stash list                                     |
     And it prints:
       """
-      Ran 24 shell commands
+      Ran 23 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
