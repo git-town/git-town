@@ -28,6 +28,8 @@ const (
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CompressUnsynced                   = "please sync branch %q before compressing it"
 	CompressIsPerennial                = "better not compress perennial branches"
+	CompressAlreadyOneCommit           = "this branch has already just one commit"
+	CompressNoCommits                  = "this branch has no commits"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"

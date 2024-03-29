@@ -160,5 +160,11 @@ func validateCompressConfig(config *compressConfig) error {
 	if config.FullConfig.IsMainOrPerennialBranch(config.initialBranch.LocalName) {
 		return errors.New(messages.CompressIsPerennial)
 	}
+	switch len(config.commitMessages) {
+	case 1:
+		return errors.New(messages.CompressAlreadyOneCommit)
+	case 0:
+		return errors.New(messages.CompressNoCommits)
+	}
 	return nil
 }

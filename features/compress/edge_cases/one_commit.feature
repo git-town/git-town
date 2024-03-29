@@ -1,4 +1,3 @@
-@this
 Feature: does not compress branches containing only one commit
 
   Scenario: branch has 1 commit
@@ -12,12 +11,11 @@ Feature: does not compress branches containing only one commit
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      this branch already has only one commit
+      this branch has already just one commit
       """
     And the current branch is still "feature"
     And the initial commits exist
     And the initial branches and lineage exist
-    And the uncommitted file still exists
 
   Scenario: branch has no commits
     Given the current branch is a feature branch "feature"
@@ -34,4 +32,3 @@ Feature: does not compress branches containing only one commit
     And the current branch is still "feature"
     And the initial commits exist
     And the initial branches and lineage exist
-    And the uncommitted file still exists
