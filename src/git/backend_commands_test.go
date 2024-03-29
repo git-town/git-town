@@ -85,11 +85,12 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("branch1"), initial)
-		must.NoError(t, runtime.Backend.CheckoutBranch(gitdomain.NewLocalBranchName("branch1")))
+		branch := gitdomain.NewLocalBranchName("branch1")
+		runtime.CreateBranch(branch, initial)
+		must.NoError(t, runtime.Backend.CheckoutBranch(branch))
 		currentBranch, err := runtime.CurrentBranch()
 		must.NoError(t, err)
-		must.EqOp(t, gitdomain.NewLocalBranchName("branch1"), currentBranch)
+		must.EqOp(t, branch, currentBranch)
 		runtime.CheckoutBranch(initial)
 		currentBranch, err = runtime.CurrentBranch()
 		must.NoError(t, err)
@@ -101,18 +102,19 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch(gitdomain.NewLocalBranchName("branch1"), initial)
+			branch := gitdomain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch, initial)
 			runtime.CreateCommit(testgit.Commit{
-				Branch:   gitdomain.NewLocalBranchName("branch1"),
+				Branch:   branch,
 				FileName: "file1",
 				Message:  "commit 1",
 			})
 			runtime.CreateCommit(testgit.Commit{
-				Branch:   gitdomain.NewLocalBranchName("branch1"),
+				Branch:   branch,
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("initial"))
+			commits, err := runtime.BackendCommands.CommitsInBranch(branch, gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
 			haveMessages := commits.Messages()
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
@@ -121,8 +123,9 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch(gitdomain.NewLocalBranchName("branch1"), initial)
-			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("initial"))
+			branch := gitdomain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch, initial)
+			commits, err := runtime.BackendCommands.CommitsInBranch(branch, gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
 			must.EqOp(t, 0, len(commits))
 		})
@@ -139,14 +142,14 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), gitdomain.EmptyLocalBranchName())
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, gitdomain.EmptyLocalBranchName())
 			must.NoError(t, err)
 			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), gitdomain.EmptyLocalBranchName())
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, gitdomain.EmptyLocalBranchName())
 			must.NoError(t, err)
 			must.EqOp(t, 1, len(commits)) // the initial commit
 		})
@@ -156,11 +159,12 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CheckoutBranch(initial)
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("b1"), initial)
-		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("b1"))
+		branch := gitdomain.NewLocalBranchName("branch1")
+		runtime.CreateBranch(branch, initial)
+		runtime.CheckoutBranch(branch)
 		branch, err := runtime.Backend.CurrentBranch()
 		must.NoError(t, err)
-		must.EqOp(t, gitdomain.NewLocalBranchName("b1"), branch)
+		must.EqOp(t, branch, branch)
 		runtime.CheckoutBranch(initial)
 		branch, err = runtime.Backend.CurrentBranch()
 		must.NoError(t, err)
