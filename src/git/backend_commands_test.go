@@ -114,7 +114,9 @@ func TestBackendCommands(t *testing.T) {
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
-			must.EqOp(t, 2, len(commits))
+			haveMessages := commits.Messages()
+			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
+			must.Eq(t, wantMessages, haveMessages)
 		})
 		t.Run("feature branch contains no commits", func(t *testing.T) {
 			t.Parallel()
