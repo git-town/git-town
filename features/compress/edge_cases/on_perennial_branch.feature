@@ -9,13 +9,13 @@ Feature: does not compress perennial branches
     When I run "git-town compress"
 
   Scenario: result
-    Then it prints the error:
+    Then it runs the commands
+      | BRANCH    | COMMAND                  |
+      | perennial | git fetch --prune --tags |
+    And it prints the error:
       """
       better not compress perennial branches
       """
-    And it runs the commands
-      | BRANCH    | COMMAND                  |
-      | perennial | git fetch --prune --tags |
     And all branches are still synchronized
     And the current branch is still "perennial"
     And the initial commits exist
