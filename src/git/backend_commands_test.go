@@ -1,6 +1,7 @@
 package git_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v13/src/git"
@@ -116,7 +117,9 @@ func TestBackendCommands(t *testing.T) {
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(branch, gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
+			fmt.Println("222222222222222222", commits)
 			haveMessages := commits.Messages()
+			fmt.Println("111111111111111111", haveMessages)
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
 			must.Eq(t, wantMessages, haveMessages)
 		})

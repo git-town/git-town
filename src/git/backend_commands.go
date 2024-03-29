@@ -194,7 +194,7 @@ func (self *BackendCommands) CommitsInBranch(branch, parent gitdomain.LocalBranc
 }
 
 func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
-	output, err := self.Runner.QueryTrim("git", "cherry", parent.String(), branch.String())
+	output, err := self.Runner.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
