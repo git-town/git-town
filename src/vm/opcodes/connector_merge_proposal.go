@@ -12,7 +12,7 @@ import (
 // ConnectorMergeProposal squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposal struct {
 	Branch                    gitdomain.LocalBranchName
-	CommitMessage             string
+	CommitMessage             gitdomain.CommitMessage
 	ProposalMessage           string
 	ProposalNumber            int
 	enteredEmptyCommitMessage bool
