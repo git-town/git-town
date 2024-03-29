@@ -2,8 +2,6 @@ Feature: does not compress empty branches
 
   Background:
     Given the current branch is a feature branch "feature"
-    And the commits
-      | BRANCH | LOCATION | MESSAGE | FILE NAME | FILE CONTENT |
     When I run "git-town compress"
 
   Scenario: result
