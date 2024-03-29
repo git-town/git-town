@@ -1676,6 +1676,5 @@ func updateInitialSHAs(state *ScenarioState) {
 		fmt.Printf("worktree: %#v\n", state.initialWorktreeSHAs)
 		fmt.Printf("dev: %#v\n", state.initialDevSHAs)
 		fmt.Printf("origin: %#v\n", state.initialOriginSHAs)
-		fmt.Printf("initial commits: %#v\n", state.initialCommits.String())
 	}
 }
