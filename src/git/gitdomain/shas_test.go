@@ -21,6 +21,14 @@ func TestSHAs(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("First", func(t *testing.T) {
+		t.Parallel()
+		shas := gitdomain.NewSHAs("111111", "222222")
+		have := shas.First()
+		want := shas[0]
+		must.Eq(t, want, have)
+	})
+
 	t.Run("Join", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
