@@ -1,4 +1,3 @@
-@this
 Feature: compress the commits on a feature branch
 
   Background:
