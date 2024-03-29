@@ -15,8 +15,8 @@
 
 Git Town reduces merge conflicts by keeping Git branches better in sync.
 Compatible with all major Git workflows including Git Flow, GitHub Flow, GitLab
-Flow, and trunk-based development. Check out
-[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
+Flow, and trunk-based development. Supports mono-repos and stacked changes.
+Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
 
