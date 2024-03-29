@@ -118,13 +118,13 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode -test github.com/git-town/git-town/v13 | grep -v BranchExists \
-	                                                           | grep -v Paniced \
+	                                                           | grep -v 'Create$$' \
+	                                                           | grep -v CreateFile \
+	                                                           | grep -v CreateGitTown \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
 	                                                           | grep -v IsGitRepo \
-	                                                           | grep -v CreateFile \
-	                                                           | grep -v CreateGitTown \
-	                                                           | grep -v 'Create$$' \
+	                                                           | grep -v Paniced \
 	                                                           || true
 
 golangci-lint: tools/rta@${RTA_VERSION}
