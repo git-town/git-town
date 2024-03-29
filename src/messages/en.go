@@ -26,7 +26,7 @@ const (
 	CodeHosting                        = "Code hosting: %s\n"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
-	CompressUnsynced                   = "Please sync branch %q before compressing it"
+	CompressUnsynced                   = "please sync branch %q before compressing it"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"

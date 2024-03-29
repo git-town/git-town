@@ -107,7 +107,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            shipProgram(config, gitdomain.CommitMessage(message)),
+		RunProgram:            shipProgram(config, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,

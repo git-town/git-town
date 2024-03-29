@@ -11,7 +11,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then it prints the error:
       """
-      Please sync branch "feature" before compressing it
+      please sync branch "feature" before compressing it
       """
     And the initial commits exist
     And the initial branches and lineage exist
@@ -24,7 +24,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then it prints the error:
       """
-      Please sync branch "feature" before compressing it
+      please sync branch "feature" before compressing it
       """
     And the initial commits exist
     And the initial branches and lineage exist
@@ -38,7 +38,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then it prints the error:
       """
-      Please sync branch "feature" before compressing it
+      please sync branch "feature" before compressing it
       """
     And the initial commits exist
     And the initial branches and lineage exist
@@ -52,7 +52,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then it prints the error:
       """
-      Please sync branch "feature" before compressing it
+      please sync branch "feature" before compressing it
       """
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
