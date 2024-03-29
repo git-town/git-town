@@ -33,7 +33,6 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     When I run "git-town undo" in the other worktree
     Then it runs the commands
       | BRANCH  | COMMAND                                                                                |
-      # TODO: use the oldest SHA here?
       | feature | git reset --hard {{ sha-in-worktree 'local feature commit' }}                          |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
     And the current branch in the other worktree is still "feature"
