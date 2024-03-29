@@ -79,11 +79,13 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 				switch {
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
-					sha := localRepo.SHAForCommit(commitName)
+					shas := localRepo.SHAsForCommit(commitName)
+					sha := shas.First()
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
-					sha := remoteRepo.SHAForCommit(commitName)
+					shas := remoteRepo.SHAsForCommit(commitName)
+					sha := shas.First()
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-before-run "):
 					commitName := match[19 : len(match)-4]
@@ -110,7 +112,8 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-worktree "):
 					commitName := match[20 : len(match)-4]
-					sha := worktreeRepo.SHAForCommit(commitName)
+					shas := worktreeRepo.SHAsForCommit(commitName)
+					sha := shas.First()
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-worktree-before-run "):
 					commitName := match[31 : len(match)-4]
