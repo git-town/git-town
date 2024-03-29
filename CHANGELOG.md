@@ -6,6 +6,8 @@
 
 - Fixes a serious bug where users who have [branch.sort](https://git-scm.com/docs/git-branch#Documentation/git-branch.txt-branchsort) set might get tracking branches removed ([#3241](https://github.com/git-town/git-town/issues/3241)).
 
+Heartfelt thanks to @breml and @kevgo for going the extra mile to investigate a tricky bug and contributing to 25 shipped PRs and 4 resolved issues!
+
 ## 13.0.1 (2024-03-27)
 
 #### Bug Fixes
