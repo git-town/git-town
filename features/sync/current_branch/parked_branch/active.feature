@@ -37,9 +37,9 @@ Feature: active parked branches get synced like normal feature branches
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                                    |
-      | parked | git reset --hard {{ sha 'local parked commit' }}                           |
-      |        | git push --force-with-lease origin {{ sha 'origin parked commit' }}:parked |
+      | BRANCH | COMMAND                                                                              |
+      | parked | git reset --hard {{ sha 'local parked commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'origin parked commit' }}:parked |
     And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
