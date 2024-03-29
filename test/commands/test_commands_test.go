@@ -387,7 +387,9 @@ func TestTestCommands(t *testing.T) {
 			FileName:    "foo",
 			Message:     "commit",
 		})
-		sha := repo.SHAForCommit("commit")
+		shas := repo.SHAsForCommit("commit")
+		must.EqOp(t, 1, len(shas))
+		sha := shas[0]
 		must.EqOp(t, 7, len(sha))
 	})
 
