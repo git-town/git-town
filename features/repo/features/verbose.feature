@@ -11,7 +11,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                   |
       |        | backend  | git config -lz --local                    |
       |        | backend  | git rev-parse --show-toplevel             |
-      |        | backend  | git branch -vva                           |
+      |        | backend  | git branch -vva --sort=refname            |
       |        | backend  | which wsl-open                            |
       |        | backend  | which garcon-url-handler                  |
       |        | backend  | which xdg-open                            |

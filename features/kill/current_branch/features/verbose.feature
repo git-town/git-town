@@ -23,14 +23,14 @@ Feature: display all executed Git commands
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | current | frontend | git fetch --prune --tags                          |
-      |         | backend  | git branch -vva                                   |
+      |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout other                                |
       | other   | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/current  |
-      |         | backend  | git branch -vva                                   |
+      |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git stash list                                    |

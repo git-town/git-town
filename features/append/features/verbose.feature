@@ -16,10 +16,10 @@ Feature: display all executed Git commands
       |          | backend  | git rev-parse --show-toplevel                        |
       |          | backend  | git stash list                                       |
       |          | backend  | git status --long --ignore-submodules                |
-      |          | backend  | git branch -vva                                      |
+      |          | backend  | git branch -vva --sort=refname                       |
       |          | backend  | git remote                                           |
       | existing | frontend | git fetch --prune --tags                             |
-      |          | backend  | git branch -vva                                      |
+      |          | backend  | git branch -vva --sort=refname                       |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       | existing | frontend | git checkout main                                    |
       | main     | frontend | git rebase origin/main                               |
@@ -34,7 +34,7 @@ Feature: display all executed Git commands
       |          | backend  | git config git-town-branch.new.parent existing       |
       | existing | frontend | git checkout new                                     |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
-      |          | backend  | git branch -vva                                      |
+      |          | backend  | git branch -vva --sort=refname                       |
       |          | backend  | git config -lz --global                              |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git stash list                                       |
@@ -55,7 +55,7 @@ Feature: display all executed Git commands
       |          | backend  | git rev-parse --show-toplevel                 |
       |          | backend  | git stash list                                |
       |          | backend  | git status --long --ignore-submodules         |
-      |          | backend  | git branch -vva                               |
+      |          | backend  | git branch -vva --sort=refname                |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |          | backend  | git remote get-url origin                     |
       | new      | frontend | git checkout existing                         |

@@ -14,10 +14,10 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git stash list                                                     |
       |         | backend  | git status --long --ignore-submodules                              |
-      |         | backend  | git branch -vva                                                    |
+      |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
-      |         | backend  | git branch -vva                                                    |
+      |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       |         | backend  | which xdg-open                                                     |
       |         | backend  | which open                                                         |
       | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-      |         | backend  | git branch -vva                                                    |
+      |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git config -lz --global                                            |
       |         | backend  | git config -lz --local                                             |
       |         | backend  | git stash list                                                     |
