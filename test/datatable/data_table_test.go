@@ -91,10 +91,10 @@ func TestDataTable(t *testing.T) {
 |        | backend  | git config -lz --local                    |
 |        | backend  | git rev-parse --show-toplevel             |
 |        | backend  | git stash list                            |
-|        | backend  | git branch -vva                           |
+|        | backend  | git branch -vva --sort=refname                              |
 |        | backend  | git remote                                |
 | old    | frontend | git fetch --prune --tags                  |
-|        | backend  | git branch -vva                           |
+|        | backend  | git branch -vva --sort=refname                              |
 |        | backend  | git status --long --ignore-submodules     |
 |        | backend  | git rev-parse --verify --abbrev-ref @{-1} |
 | old    | frontend | git merge --no-edit main                  |
@@ -109,7 +109,7 @@ func TestDataTable(t *testing.T) {
 |        | backend  | git checkout main                         |
 |        | backend  | git config -lz --global                   |
 |        | backend  | git config -lz --local                    |
-|        | backend  | git branch -vva                           |
+|        | backend  | git branch -vva --sort=refname                              |
 |        | backend  | git stash list                            |
 `[1:]
 		must.Eq(t, want, have)

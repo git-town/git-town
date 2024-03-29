@@ -12,7 +12,7 @@ Feature: observe a branch verbosely
       |        | git config -lz --global                      |
       |        | git config -lz --local                       |
       |        | git rev-parse --show-toplevel                |
-      |        | git branch -vva                              |
+      |        | git branch -vva --sort=refname               |
       |        | git config git-town.observed-branches branch |
       |        | git config -lz --global                      |
       |        | git config -lz --local                       |
@@ -38,7 +38,7 @@ Feature: observe a branch verbosely
       |        | git rev-parse --show-toplevel                 |
       |        | git stash list                                |
       |        | git status --long --ignore-submodules         |
-      |        | git branch -vva                               |
+      |        | git branch -vva --sort=refname                |
       |        | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | git remote get-url origin                     |
       | branch | git add -A                                    |
