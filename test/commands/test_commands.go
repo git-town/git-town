@@ -403,7 +403,8 @@ func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	for _, text := range strings.Split(output, "\n") {
 		shaText, commitMessage, _ := strings.Cut(text, " ")
 		if commitMessage == name {
-			shasWithMessage = append(shasWithMessage, gitdomain.NewSHA(shaText))
+			sha := gitdomain.NewSHA(shaText)
+			shasWithMessage = append(shasWithMessage, sha)
 		}
 	}
 	return shasWithMessage
