@@ -78,12 +78,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
-			logCommitSHAs("DEV REPO COMMITS", state.fixture.DevRepo.TestCommands.CommitSHAs())
 			if state.fixture.OriginRepo != nil {
-				logCommitSHAs("ORIGIN REPO COMMITS", state.fixture.OriginRepo.TestCommands.CommitSHAs())
 			}
 			if state.fixture.SecondWorktree != nil {
-				logCommitSHAs("SECOND WORKTREE COMMITS", state.fixture.SecondWorktree.TestCommands.CommitSHAs())
 			}
 		}
 		if state.runExitCode != 0 && !state.runExitCodeChecked {
@@ -1668,13 +1665,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.MockCommand(tool)
 		return nil
 	})
-}
-
-func logCommitSHAs(repo string, commitSHAs map[string]gitdomain.SHA) {
-	fmt.Println(repo)
-	for text, sha := range commitSHAs {
-		fmt.Printf("%s: %s\n", sha, text)
-	}
 }
 
 func updateInitialSHAs(state *ScenarioState) {
