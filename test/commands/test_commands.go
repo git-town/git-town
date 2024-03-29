@@ -394,12 +394,12 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
-func (self *TestCommands) SHAForCommit(name string) gitdomain.SHA {
+func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	output := self.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}
-	return gitdomain.NewSHA(strings.Split(output, "\n")[0])
+	return gitdomain.NewSHAs(strings.Split(output, "\n")...)
 }
 
 // SetColorUI configures whether Git output contains color codes.
