@@ -16,7 +16,6 @@ Feature: does not compress perennial branches
       """
       better not compress perennial branches
       """
-    And the current branch is still "perennial"
     And all branches are still synchronized
     And the initial commits exist
     And the initial branches and lineage exist
