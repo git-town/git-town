@@ -46,10 +46,10 @@ func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName) err
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *FrontendCommands) Commit(message, author string) error {
+func (self *FrontendCommands) Commit(message gitdomain.CommitMessage, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
-		gitArgs = append(gitArgs, "-m", message)
+		gitArgs = append(gitArgs, "-m", message.String())
 	}
 	if author != "" {
 		gitArgs = append(gitArgs, "--author", author)
@@ -200,7 +200,7 @@ func (self *FrontendCommands) Rebase(target gitdomain.BranchName) error {
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
 func (self *FrontendCommands) RemoveCommitsInCurrentBranch(parent gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "reset", parent.String())
+	return self.Runner.Run("git", "reset", "--soft", parent.String())
 }
 
 // RemoveGitAlias removes the given Git alias.

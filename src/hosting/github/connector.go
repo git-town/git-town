@@ -9,7 +9,6 @@ import (
 
 	"github.com/git-town/git-town/v13/src/cli/print"
 	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/commitmessage"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/git/giturl"
 	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
@@ -63,15 +62,15 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) (err error) {
+func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
-	commitMessageParts := commitmessage.Split(message)
-	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
+	commitMessageParts := message.Parts()
+	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Title,
+		CommitTitle: commitMessageParts.Subject,
 	})
 	self.log.Success()
 	return err
