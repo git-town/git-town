@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
 	"github.com/git-town/git-town/v13/src/vm/shared"
 )
@@ -26,8 +25,8 @@ func (self *RevertCommit) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !slice.Contains(commitsInCurrentBranch, self.SHA) {
-		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.Join("|"))
+	if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
+		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
 	}
 	return args.Runner.Frontend.RevertCommit(self.SHA)
 }

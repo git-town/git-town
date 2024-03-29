@@ -186,37 +186,55 @@ func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error 
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (self *BackendCommands) CommitsInBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.SHAs, error) {
+func (self *BackendCommands) CommitsInBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
 	if parent.IsEmpty() {
 		return self.CommitsInPerennialBranch()
 	}
 	return self.CommitsInFeatureBranch(branch, parent)
 }
 
-func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.SHAs, error) {
+func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
 	output, err := self.Runner.QueryTrim("git", "cherry", parent.String(), branch.String())
 	if err != nil {
-		return gitdomain.SHAs{}, err
+		return gitdomain.Commits{}, err
 	}
 	lines := strings.Split(output, "\n")
-	result := make([]gitdomain.SHA, 0, len(lines))
+	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
-		if len(line) > 0 {
-			result = append(result, gitdomain.NewSHA(line[2:9]))
+		if len(line) == 0 {
+			continue
 		}
+		sha, message, ok := strings.Cut(line[2:], " ")
+		if !ok {
+			continue
+		}
+		result = append(result, gitdomain.Commit{
+			Message: gitdomain.CommitMessage(message),
+			SHA:     gitdomain.NewSHA(sha),
+		})
 	}
 	return result, nil
 }
 
-func (self *BackendCommands) CommitsInPerennialBranch() (gitdomain.SHAs, error) {
-	output, err := self.Runner.QueryTrim("git", "log", "--pretty=format:%h", "-10")
+func (self *BackendCommands) CommitsInPerennialBranch() (gitdomain.Commits, error) {
+	output, err := self.Runner.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
 	if err != nil {
-		return gitdomain.SHAs{}, err
+		return gitdomain.Commits{}, err
 	}
-	lines := strings.Split(output, "\n")
-	result := make([]gitdomain.SHA, 0, len(lines))
+	lines := stringslice.Lines(output)
+	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
-		result = append(result, gitdomain.NewSHA(line))
+		if len(line) == 0 {
+			continue
+		}
+		sha, message, ok := strings.Cut(line, " ")
+		if !ok {
+			continue
+		}
+		result = append(result, gitdomain.Commit{
+			Message: gitdomain.CommitMessage(message),
+			SHA:     gitdomain.NewSHA(sha),
+		})
 	}
 	return result, nil
 }
