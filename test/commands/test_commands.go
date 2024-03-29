@@ -395,7 +395,6 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 
 // SHAForCommit provides the SHA for the commit with the given name.
 func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
-	// TODO: how do we get reliable ordering here?
 	output := self.MustQuery("git", "reflog", "--format=%h %s")
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
