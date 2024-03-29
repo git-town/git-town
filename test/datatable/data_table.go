@@ -65,7 +65,7 @@ func (self *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTab
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAs map[string]gitdomain.SHA, initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAs map[string]gitdomain.SHA, initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -107,6 +107,10 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHA
 							fmt.Println("  -", key)
 						}
 					}
+					cell = strings.Replace(cell, match, sha.String(), 1)
+				case strings.HasPrefix(match, "{{ sha-in-worktree "):
+					commitName := match[20 : len(match)-4]
+					sha := worktreeRepo.SHAForCommit(commitName)
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-worktree-before-run "):
 					commitName := match[31 : len(match)-4]

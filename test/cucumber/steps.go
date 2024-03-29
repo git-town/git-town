@@ -746,6 +746,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,
+			state.fixture.SecondWorktree,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
 			state.initialWorktreeSHAs,
