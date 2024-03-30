@@ -66,7 +66,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                 |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git remote get-url origin                      |
-      |        | backend  | git log --pretty=format:%h -10                 |
+      |        | backend  | git log --pretty=format:%h %s -10              |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |

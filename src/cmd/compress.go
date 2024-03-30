@@ -94,6 +94,7 @@ func executeCompress(_ []string, dryRun, verbose bool) error {
 
 type compressConfig struct {
 	*configdomain.FullConfig
+	commitMessages   gitdomain.CommitMessages
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -121,8 +122,14 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 	initialBranch := branchesSnapshot.Active
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(initialBranch)
 	initialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch)
+	commits, err := repo.Runner.Backend.CommitsInBranch(initialBranch, parentBranch)
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	commitMessages := commits.Messages()
 	return &compressConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
+		commitMessages:   commitMessages,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -152,6 +159,12 @@ func validateCompressConfig(config *compressConfig) error {
 	}
 	if config.FullConfig.IsMainOrPerennialBranch(config.initialBranch.LocalName) {
 		return errors.New(messages.CompressIsPerennial)
+	}
+	switch len(config.commitMessages) {
+	case 0:
+		return errors.New(messages.CompressNoCommits)
+	case 1:
+		return errors.New(messages.CompressAlreadyOneCommit)
 	}
 	return nil
 }
