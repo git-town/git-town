@@ -117,7 +117,7 @@ func TestLineage(t *testing.T) {
 			beta:    main,
 		}
 		have := lineage.BranchLineage(alpha)
-		want := gitdomain.LocalBranchNames{alpha, alpha1, alpha1A, alpha1B, alpha2}
+		want := gitdomain.LocalBranchNames{main, alpha, alpha1, alpha1A, alpha1B, alpha2}
 		must.Eq(t, want, have)
 	})
 
