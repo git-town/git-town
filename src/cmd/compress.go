@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
 	"github.com/git-town/git-town/v13/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v13/src/vm/interpreter/full"
@@ -30,22 +31,24 @@ Branches must be synced before you compress them.
 func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	cmd := cobra.Command{
 		Use:    "compress",
 		Args:   cobra.NoArgs,
 		Hidden: true,
 		Short:  compressDesc,
 		Long:   cmdhelpers.Long(compressDesc, compressHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeCompress(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addMessageFlag(&cmd)
 	return &cmd
 }
 
-func executeCompress(_ []string, dryRun, verbose bool) error {
+func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -57,7 +60,7 @@ func executeCompress(_ []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressConfig(repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressConfig(repo, dryRun, verbose, message)
 	if err != nil || exit {
 		return err
 	}
@@ -94,16 +97,17 @@ func executeCompress(_ []string, dryRun, verbose bool) error {
 
 type compressConfig struct {
 	*configdomain.FullConfig
-	commitMessages   gitdomain.CommitMessages
-	dialogTestInputs components.TestInputs
-	dryRun           bool
-	hasOpenChanges   bool
-	initialBranch    gitdomain.BranchInfo
-	parentBranch     gitdomain.LocalBranchName
-	previousBranch   gitdomain.LocalBranchName
+	dialogTestInputs       components.TestInputs
+	dryRun                 bool
+	existingCommitMessages gitdomain.CommitMessages // commit messages of the existing commits
+	hasOpenChanges         bool
+	initialBranch          gitdomain.BranchInfo
+	newCommitMessage       gitdomain.CommitMessage // commit message to use for the new commit
+	parentBranch           gitdomain.LocalBranchName
+	previousBranch         gitdomain.LocalBranchName
 }
 
-func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*compressConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage) (*compressConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
@@ -127,22 +131,24 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	commitMessages := commits.Messages()
+	newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
 	return &compressConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
-		commitMessages:   commitMessages,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    *initialBranchInfo,
-		parentBranch:     parentBranch,
-		previousBranch:   previousBranch,
+		FullConfig:             &repo.Runner.Config.FullConfig,
+		dialogTestInputs:       dialogTestInputs,
+		dryRun:                 dryRun,
+		existingCommitMessages: commitMessages,
+		hasOpenChanges:         repoStatus.OpenChanges,
+		initialBranch:          *initialBranchInfo,
+		newCommitMessage:       newCommitMessage,
+		parentBranch:           parentBranch,
+		previousBranch:         previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: config.commitMessages[0]})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: config.newCommitMessage})
 	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
@@ -162,7 +168,7 @@ func validateCompressConfig(config *compressConfig) error {
 	if config.FullConfig.IsMainOrPerennialBranch(config.initialBranch.LocalName) {
 		return errors.New(messages.CompressIsPerennial)
 	}
-	switch len(config.commitMessages) {
+	switch len(config.existingCommitMessages) {
 	case 0:
 		return errors.New(messages.CompressNoCommits)
 	case 1:
