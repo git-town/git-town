@@ -54,7 +54,7 @@ If your origin server deletes shipped branches, for example GitHub's feature to 
 
 func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addMessageFlag, readMessageFlag := flags.CommitMessage("message", "m", "", "Specify the commit message for the squash commit")
+	addMessageFlag, readMessageFlag := flags.CommitMessage("Specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "ship",
