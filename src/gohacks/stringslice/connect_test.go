@@ -9,43 +9,33 @@ import (
 
 func TestConnect(t *testing.T) {
 	t.Parallel()
-	t.Run("no element", func(t *testing.T) {
-		t.Parallel()
-		give := []string{}
-		have := stringslice.Connect(give)
-		want := ""
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("single element", func(t *testing.T) {
-		t.Parallel()
-		give := []string{"one"}
-		have := stringslice.Connect(give)
-		want := "\"one\""
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("two elements", func(t *testing.T) {
-		t.Parallel()
-		give := []string{"one", "two"}
-		have := stringslice.Connect(give)
-		want := "\"one\" and \"two\""
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("three elements", func(t *testing.T) {
-		t.Parallel()
-		give := []string{"one", "two", "three"}
-		have := stringslice.Connect(give)
-		want := "\"one\", \"two\", and \"three\""
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("four elements", func(t *testing.T) {
-		t.Parallel()
-		give := []string{"one", "two", "three", "four"}
-		have := stringslice.Connect(give)
-		want := "\"one\", \"two\", \"three\", and \"four\""
-		must.EqOp(t, want, have)
-	})
+	tests := []struct {
+		give []string
+		want string
+	}{
+		{
+			give: []string{},
+			want: "",
+		},
+		{
+			give: []string{"one"},
+			want: `"one"`,
+		},
+		{
+			give: []string{"one", "two"},
+			want: `"one" and "two"`,
+		},
+		{
+			give: []string{"one", "two", "three"},
+			want: `"one", "two", and "three"`,
+		},
+		{
+			give: []string{"one", "two", "three", "four"},
+			want: `"one", "two", "three", and "four"`,
+		},
+	}
+	for _, test := range tests {
+		have := stringslice.Connect(test.give)
+		must.EqOp(t, test.want, have)
+	}
 }
