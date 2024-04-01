@@ -131,7 +131,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	commitMessages := commits.Messages()
-	newCommitMessage := slice.FirstNonEmpty(message, commitMessages[0])
+	newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
 	return &compressConfig{
 		FullConfig:             &repo.Runner.Config.FullConfig,
 		dialogTestInputs:       dialogTestInputs,
