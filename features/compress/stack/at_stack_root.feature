@@ -21,10 +21,22 @@ Feature: compress the commits on an entire stack when at the stack root
   @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
+      | BRANCH | COMMAND                                         |
+      | alpha  | git fetch --prune --tags                        |
+      |        | git add -A                                      |
+      |        | git stash                                       |
+      |        | git reset --soft main                           |
+      |        | git commit -m "alpha 1"                         |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout beta                               |
+      | beta   | git reset --soft alpha                          |
+      |        | git commit -m "beta 1"                          |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout gamma                              |
+      | gamma  | git reset --soft beta                           |
+      |        | git commit -m "gamma 1"                         |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And these commits exist now
