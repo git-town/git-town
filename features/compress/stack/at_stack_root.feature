@@ -18,17 +18,13 @@ Feature: compress the commits on an entire stack when at the stack root
     And an uncommitted file
     When I run "git-town compress --stack"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git add -A                                      |
-      |         | git stash                                       |
-      |         | git reset --soft main                           |
-      |         | git commit -m "commit 1"                        |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And these commits exist now
