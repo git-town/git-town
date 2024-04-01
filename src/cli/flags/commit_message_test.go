@@ -14,9 +14,9 @@ func TestCommitMessage(t *testing.T) {
 	t.Run("long version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.CommitMessage("myflag", "m", "default", "desc")
+		addFlag, readFlag := flags.CommitMessage("desc")
 		addFlag(&cmd)
-		err := cmd.ParseFlags([]string{"--myflag", "my-value"})
+		err := cmd.ParseFlags([]string{"--message", "my-value"})
 		must.NoError(t, err)
 		must.EqOp(t, "my-value", readFlag(&cmd))
 	})
@@ -24,7 +24,7 @@ func TestCommitMessage(t *testing.T) {
 	t.Run("short version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.CommitMessage("myflag", "m", "default", "desc")
+		addFlag, readFlag := flags.CommitMessage("desc")
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m", "my-value"})
 		must.NoError(t, err)
