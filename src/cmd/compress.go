@@ -166,9 +166,23 @@ func compressCurrentBranchProgram(config *compressConfig) program.Program {
 	return prog
 }
 
+func compressStackProgram(config *compressConfig) program.Program {
+	prog := program.Program{}
+	for _, branch := range config.Lineage.BranchLineage(config.initialBranch.LocalName) {
+		compressBranchProgram(&prog, branch, config)
+	}
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+	})
+	return prog
+}
+
 func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchName, config *compressConfig) {
 	prog.Add(&opcodes.Checkout{Branch: branch})
-	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
+	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.Lineage.Parent(branch)})
 	prog.Add(&opcodes.CommitSquashedChanges{Message: config.newCommitMessage})
 	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
