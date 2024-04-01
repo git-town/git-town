@@ -66,7 +66,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressConfig(config)
+	err = validateCompressConfig(config, repo.Runner)
 	if err != nil {
 		return err
 	}
