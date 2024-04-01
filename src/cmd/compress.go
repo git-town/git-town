@@ -38,7 +38,7 @@ func compressCmd() *cobra.Command {
 		Hidden: true,
 		Short:  compressDesc,
 		Long:   cmdhelpers.Long(compressDesc, compressHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd))
 		},
 	}
