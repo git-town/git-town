@@ -33,11 +33,10 @@ func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	cmd := cobra.Command{
-		Use:    "compress",
-		Args:   cobra.NoArgs,
-		Hidden: true,
-		Short:  compressDesc,
-		Long:   cmdhelpers.Long(compressDesc, compressHelp),
+		Use:   "compress",
+		Args:  cobra.NoArgs,
+		Short: compressDesc,
+		Long:  cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd))
 		},
