@@ -143,7 +143,7 @@ func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
 	prog.Add(&opcodes.CommitSquashedChanges{})
-	if config.initialBranch.HasRemoteBranch() {
+	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
