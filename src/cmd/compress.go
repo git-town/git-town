@@ -199,15 +199,19 @@ func validateCompressConfig(config *compressConfig) error {
 	case 1:
 		return errors.New(messages.CompressAlreadyOneCommit)
 	}
-	switch config.branchType {
+	return canCompressBranchType(config.initialBranch.LocalName, config.branchType)
+}
+
+func canCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
+	switch branchType {
 	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
-		// ok
+		return nil
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.CompressIsPerennial)
 	case configdomain.BranchTypeObservedBranch:
-		return fmt.Errorf(messages.CompressObservedBranch, config.initialBranch.LocalName)
+		return fmt.Errorf(messages.CompressObservedBranch, branchName)
 	case configdomain.BranchTypeContributionBranch:
-		return fmt.Errorf(messages.CompressContributionBranch, config.initialBranch.LocalName)
+		return fmt.Errorf(messages.CompressContributionBranch, branchName)
 	}
 	return nil
 }
