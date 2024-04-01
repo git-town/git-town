@@ -32,22 +32,24 @@ func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
+	addStackFlag, readStackFlag := flags.Bool("stack", "s", "Compress the entire stack", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:   "compress",
 		Args:  cobra.NoArgs,
 		Short: compressDesc,
 		Long:  cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd))
+			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd), readStackFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
+	addStackFlag(&cmd)
 	return &cmd
 }
 
-func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) error {
+func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stack bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -67,7 +69,12 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 	if err != nil {
 		return err
 	}
-	steps := compressProgram(config)
+	var program program.Program
+	if stack {
+		program = compressStackProgram(config)
+	} else {
+		program = compressCurrentBranchProgram(config)
+	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -77,7 +84,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            steps,
+		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
@@ -147,7 +154,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func compressProgram(config *compressConfig) program.Program {
+func compressCurrentBranchProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	compressBranchProgram(&prog, config.initialBranch.LocalName, config)
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
