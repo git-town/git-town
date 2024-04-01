@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
 	"github.com/git-town/git-town/v13/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v13/src/vm/interpreter/full"
@@ -130,11 +131,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	commitMessages := commits.Messages()
-	newCommitMessage := message
-	stringslice.new()
-	if newCommitMessage == "" {
-		newCommitMessage = commitMessages[0]
-	}
+	newCommitMessage := slice.FirstNonEmpty(message, commitMessages[0])
 	return &compressConfig{
 		FullConfig:             &repo.Runner.Config.FullConfig,
 		dialogTestInputs:       dialogTestInputs,
@@ -142,7 +139,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		existingCommitMessages: commitMessages,
 		hasOpenChanges:         repoStatus.OpenChanges,
 		initialBranch:          *initialBranchInfo,
-		newCommitMessage:       commitMessage,
+		newCommitMessage:       newCommitMessage,
 		parentBranch:           parentBranch,
 		previousBranch:         previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
