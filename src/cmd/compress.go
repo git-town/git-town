@@ -149,11 +149,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
-	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: config.newCommitMessage})
-	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
-		prog.Add(&opcodes.ForcePushCurrentBranch{})
-	}
+	compressBranchProgram(&prog, config.initialBranch.LocalName, config)
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
@@ -161,6 +157,15 @@ func compressProgram(config *compressConfig) program.Program {
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	return prog
+}
+
+func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchName, config *compressConfig) {
+	prog.Add(&opcodes.Checkout{Branch: branch})
+	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: config.newCommitMessage})
+	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
+		prog.Add(&opcodes.ForcePushCurrentBranch{})
+	}
 }
 
 func validateCompressConfig(config *compressConfig) error {
