@@ -8,22 +8,22 @@ Feature: compress the commits in offline mode
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
     And an uncommitted file
-    When I run "git-town compress" and enter "compressed commit" for the commit message
+    When I run "git-town compress"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git add -A            |
-      |         | git stash             |
-      |         | git reset --soft main |
-      |         | git commit            |
-      |         | git stash pop         |
+      | BRANCH  | COMMAND                  |
+      | feature | git add -A               |
+      |         | git stash                |
+      |         | git reset --soft main    |
+      |         | git commit -m "commit 1" |
+      |         | git stash pop            |
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE           |
-      | feature | local    | compressed commit |
-      |         | origin   | commit 1          |
-      |         |          | commit 2          |
+      | BRANCH  | LOCATION | MESSAGE  |
+      | feature | local    | commit 1 |
+      |         | origin   | commit 1 |
+      |         |          | commit 2 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And the uncommitted file still exists

@@ -17,7 +17,7 @@ Feature: dry-run compressing the commits on a feature branch
       |         | git add -A               |
       |         | git stash                |
       |         | git reset --soft main    |
-      |         | git commit               |
+      |         | git commit -m "commit 1" |
       |         | git stash pop            |
     And all branches are now synchronized
     And the current branch is still "feature"
