@@ -33,6 +33,13 @@ func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) git
 	return append(self.Ancestors(branchName), branchName)
 }
 
+// BranchLineage provides all branches in the lineage of the given branch,
+// from oldest to youngest, including the given branch.
+func (self Lineage) BranchLineage(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	result := append(self.Ancestors(branch), branch)
+	return append(result, self.Descendants(branch)...)
+}
+
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
 func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames(maps.Keys(self))
@@ -49,13 +56,6 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames)
 	}
 	self.OrderHierarchically(result)
 	return result
-}
-
-// BranchLineage provides all branches in the lineage of the given branch,
-// from oldest to youngest, including the given branch.
-func (self Lineage) BranchLineage(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
-	result := append(self.Ancestors(branch), branch)
-	return append(result, self.Descendants(branch)...)
 }
 
 // Children provides the names of all branches that have the given branch as their parent.

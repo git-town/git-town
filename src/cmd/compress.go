@@ -106,6 +106,7 @@ type compressConfig struct {
 	*configdomain.FullConfig
 	branchesToCompress     gitdomain.LocalBranchNames
 	commitMessage          gitdomain.CommitMessage
+	compressEntireStack    bool
 	dialogTestInputs       components.TestInputs
 	dryRun                 bool
 	existingCommitMessages gitdomain.CommitMessages // commit messages of the existing commits
@@ -114,7 +115,6 @@ type compressConfig struct {
 	newCommitMessage       gitdomain.CommitMessage // commit message to use for the new commit
 	parentBranch           gitdomain.LocalBranchName
 	previousBranch         gitdomain.LocalBranchName
-	compressEntireStack    bool
 }
 
 func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
@@ -154,6 +154,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		FullConfig:             &repo.Runner.Config.FullConfig,
 		branchesToCompress:     branchesToCompress,
 		commitMessage:          message,
+		compressEntireStack:    compressEntireStack,
 		dialogTestInputs:       dialogTestInputs,
 		dryRun:                 dryRun,
 		existingCommitMessages: commitMessages,
