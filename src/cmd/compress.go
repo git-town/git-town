@@ -106,7 +106,6 @@ type compressConfig struct {
 	dryRun              bool
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
-	newCommitMessage    gitdomain.CommitMessage // commit message to use for the new commit
 	previousBranch      gitdomain.LocalBranchName
 }
 
@@ -161,18 +160,18 @@ func compressProgram(config *compressConfig, branchInfos gitdomain.BranchInfos, 
 	return prog
 }
 
-func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchName, config *compressConfig, branchInfos gitdomain.BranchInfos, runner *git.ProdRunner) error {
+func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchName, config *compressConfig, branchInfos gitdomain.BranchInfos, runner *git.ProdRunner) {
 	branchType := config.BranchType(branch)
 	if err := canCompressBranchType(branch, branchType); err != nil {
-		return nil
+		return
 	}
 	parent := config.Lineage.Parent(branch)
 	commits, err := runner.Backend.CommitsInBranch(branch, parent)
 	if err != nil {
-		return err
+		panic(err.Error())
 	}
 	if len(commits) < 2 {
-		return nil
+		return
 	}
 	branchCommitMessages := commits.Messages()
 	commitMessage := slice.FirstNonEmpty(config.commitMessage, branchCommitMessages...)
@@ -183,7 +182,6 @@ func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchNa
 	if branchInfo.HasRemoteBranch() && config.IsOnline() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
-	return nil
 }
 
 func validateCompressConfig(config *compressConfig, run *git.ProdRunner) error {
