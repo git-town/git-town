@@ -30,6 +30,7 @@ Branches must be synced before you compress them.
 func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addMessageFlag, readMessageFlag := flags.CommitMessage("message", "m", "", "Specify the commit message for the compressed commit")
 	cmd := cobra.Command{
 		Use:    "compress",
 		Args:   cobra.NoArgs,
