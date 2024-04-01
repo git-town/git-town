@@ -1,20 +1,22 @@
 Feature: compress the commits on an entire stack when at the stack root
 
   Background:
-    Given the current branch is a feature branch "alpha"
-    And a feature branch "beta" as a child of "alpha"
-    And a feature branch "gamma" as a child of "beta"
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
-      |        |               | alpha 2 | alpha_2   | alpha 2      |
-      |        |               | alpha 3 | alpha_3   | alpha 3      |
-      | beta   | local, origin | beta 1  | beta_1    | beta 1       |
-      |        |               | beta 2  | beta_2    | beta 2       |
-      |        |               | beta 3  | beta_3    | beta 3       |
-      | gamma  | local, origin | gamma 1 | gamma_1   | gamma 1      |
-      |        |               | gamma 2 | gamma_2   | gamma 2      |
-      |        |               | gamma 3 | gamma_3   | gamma 3      |
+    Given feature branch "alpha" with these commits
+      | MESSAGE | FILE NAME | FILE CONTENT |
+      | alpha 1 | alpha_1   | alpha 1      |
+      | alpha 2 | alpha_2   | alpha 2      |
+      | alpha 3 | alpha_3   | alpha 3      |
+    And feature branch "beta" with these commits is a child of "alpha"
+      | MESSAGE | FILE NAME | FILE CONTENT |
+      | beta 1  | beta_1    | beta 1       |
+      | beta 2  | beta_2    | beta 2       |
+      | beta 3  | beta_3    | beta 3       |
+    And feature branch "gamma" with these commits is a child of "beta"
+      | MESSAGE | FILE NAME | FILE CONTENT |
+      | gamma 1 | gamma_1   | gamma 1      |
+      | gamma 2 | gamma_2   | gamma 2      |
+      | gamma 3 | gamma_3   | gamma 3      |
+    And the current branch is "alpha"
     And an uncommitted file
     When I run "git-town compress --stack"
 
