@@ -130,17 +130,19 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	commitMessages := commits.Messages()
-	commitMessage := message
-	if commitMessage == "" {
-		commitMessage = commitMessages[0]
+	newCommitMessage := message
+	stringslice.new()
+	if newCommitMessage == "" {
+		newCommitMessage = commitMessages[0]
 	}
 	return &compressConfig{
 		FullConfig:             &repo.Runner.Config.FullConfig,
-		existingCommitMessages: commitMessages,
 		dialogTestInputs:       dialogTestInputs,
 		dryRun:                 dryRun,
+		existingCommitMessages: commitMessages,
 		hasOpenChanges:         repoStatus.OpenChanges,
 		initialBranch:          *initialBranchInfo,
+		newCommitMessage:       commitMessage,
 		parentBranch:           parentBranch,
 		previousBranch:         previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
@@ -149,7 +151,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: config.existingCommitMessages[0]})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: config.newCommitMessage})
 	if config.initialBranch.HasRemoteBranch() && config.IsOnline() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
