@@ -28,7 +28,7 @@ Feature: compress the commits on a feature branch verbosely
       | feature | git add -A                                         |
       |         | git stash                                          |
       |         | git reset --soft main                              |
-      |         | git commit                                         |
+      |         | git commit -m "commit 1"                           |
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
       | <none>  | git stash list                                     |
@@ -44,8 +44,8 @@ Feature: compress the commits on a feature branch verbosely
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE           |
-      | feature | local, origin | compressed commit |
+      | BRANCH  | LOCATION      | MESSAGE  |
+      | feature | local, origin | commit 1 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
