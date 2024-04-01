@@ -97,12 +97,12 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 
 type compressConfig struct {
 	*configdomain.FullConfig
-	existingCommitMessages gitdomain.CommitMessages // commit messages of the existing commits
-	newCommitMessage       gitdomain.CommitMessage  // commit message to use for the new commit
 	dialogTestInputs       components.TestInputs
 	dryRun                 bool
+	existingCommitMessages gitdomain.CommitMessages // commit messages of the existing commits
 	hasOpenChanges         bool
 	initialBranch          gitdomain.BranchInfo
+	newCommitMessage       gitdomain.CommitMessage // commit message to use for the new commit
 	parentBranch           gitdomain.LocalBranchName
 	previousBranch         gitdomain.LocalBranchName
 }
