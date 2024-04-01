@@ -10,7 +10,6 @@ Feature: compress the commits on a feature branch
     And an uncommitted file
     When I run "git-town compress -m compressed"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
@@ -18,7 +17,7 @@ Feature: compress the commits on a feature branch
       |         | git add -A                                      |
       |         | git stash                                       |
       |         | git reset --soft main                           |
-      |         | git commit -m "compressed"                      |
+      |         | git commit -m compressed                        |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
