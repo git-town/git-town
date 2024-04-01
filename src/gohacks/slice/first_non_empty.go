@@ -14,5 +14,5 @@ func FirstNonEmpty[T emptyable](first T, others ...T) T {
 			return other
 		}
 	}
-	panic("only empty elements")
+	return first
 }

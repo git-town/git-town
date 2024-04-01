@@ -41,4 +41,11 @@ func TestFirstNonEmpty(t *testing.T) {
 		want := three
 		must.EqOp(t, want, have)
 	})
+	t.Run("only empty elements", func(t *testing.T) {
+		t.Parallel()
+		empty := gitdomain.CommitMessage("")
+		have := slice.FirstNonEmpty(empty, empty)
+		want := empty
+		must.EqOp(t, want, have)
+	})
 }
