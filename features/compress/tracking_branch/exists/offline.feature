@@ -1,4 +1,3 @@
-@this
 Feature: compress the commits in offline mode
 
   Background:
