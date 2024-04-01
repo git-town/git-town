@@ -142,7 +142,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool)
 func compressProgram(config *compressConfig) program.Program {
 	prog := program.Program{}
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: config.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: config.commitMessages[0]})
 	if config.initialBranch.HasRemoteBranch() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}

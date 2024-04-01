@@ -1,3 +1,4 @@
+@this
 Feature: compress the commits on a feature branch
 
   Background:
@@ -8,7 +9,7 @@ Feature: compress the commits on a feature branch
       |         |               | commit 2 | file_2    | content 2    |
       |         |               | commit 3 | file_3    | content 3    |
     And an uncommitted file
-    When I run "git-town compress" and close the editor
+    When I run "git-town compress"
 
   Scenario: result
     Then it runs the commands
@@ -17,14 +18,14 @@ Feature: compress the commits on a feature branch
       |         | git add -A                                      |
       |         | git stash                                       |
       |         | git reset --soft main                           |
-      |         | git commit                                      |
+      |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE                      |
-      | feature | local, origin | commit 1\ncommit 2\ncommit 3 |
+      | BRANCH  | LOCATION      | MESSAGE  |
+      | feature | local, origin | commit 1 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
