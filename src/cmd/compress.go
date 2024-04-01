@@ -150,6 +150,7 @@ func compressProgram(config *compressConfig, branchInfos gitdomain.BranchInfos, 
 	for _, branch := range config.Lineage.BranchLineage(config.initialBranch) {
 		compressBranchProgram(&prog, branch, config, branchInfos, runner)
 	}
+	prog.Add(&opcodes.Checkout{Branch: config.initialBranch})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
