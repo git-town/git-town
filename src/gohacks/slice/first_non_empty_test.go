@@ -10,6 +10,7 @@ import (
 
 func TestFirstNonEmpty(t *testing.T) {
 	t.Parallel()
+
 	t.Run("one element", func(t *testing.T) {
 		t.Parallel()
 		one := gitdomain.CommitMessage("one")
@@ -17,6 +18,7 @@ func TestFirstNonEmpty(t *testing.T) {
 		want := one
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("first element is non-empty", func(t *testing.T) {
 		t.Parallel()
 		one := gitdomain.CommitMessage("one")
@@ -25,6 +27,7 @@ func TestFirstNonEmpty(t *testing.T) {
 		want := one
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("second element is non-empty", func(t *testing.T) {
 		t.Parallel()
 		empty := gitdomain.CommitMessage("")
@@ -33,6 +36,7 @@ func TestFirstNonEmpty(t *testing.T) {
 		want := two
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("third element is non-empty", func(t *testing.T) {
 		t.Parallel()
 		empty := gitdomain.CommitMessage("")
@@ -41,6 +45,7 @@ func TestFirstNonEmpty(t *testing.T) {
 		want := three
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("only empty elements", func(t *testing.T) {
 		t.Parallel()
 		empty := gitdomain.CommitMessage("")
