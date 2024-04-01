@@ -1327,17 +1327,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !slice.Contains(state.initialLocalBranches, branch) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
 		return nil
 	})
 
 	suite.Step(`^feature branch "([^"]*)" with these commits is a child of "([^"]*)"$`, func(name, parent string, table *messages.PickleStepArgument_PickleTable) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.initialLineage.AddRow(name, "main")
 		parentBranch := gitdomain.NewLocalBranchName(parent)
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
+		state.initialLineage.AddRow(name, "main")
 		state.fixture.DevRepo.CheckoutBranch(branch)
 		for _, commit := range git.FromGherkinTable(table) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
@@ -1346,7 +1344,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !slice.Contains(state.initialLocalBranches, branch) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
 		return nil
 	})
