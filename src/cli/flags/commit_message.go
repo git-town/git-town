@@ -7,15 +7,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	commitMessageLong  = "message" // long form of the "commit message" CLI flag
+	commitMessageShort = "m"       // short form of the "commit message" CLI flag
+)
+
 // CommitMessage provides type-safe access to the CLI arguments of type gitdomain.CommitMessage.
-func CommitMessage(name, short, defaultValue, desc string) (AddFunc, ReadCommitMessageFlagFunc) {
+func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
+		cmd.PersistentFlags().StringP(commitMessageLong, commitMessageShort, "", desc)
 	}
 	readFlag := func(cmd *cobra.Command) gitdomain.CommitMessage {
-		value, err := cmd.Flags().GetString(name)
+		value, err := cmd.Flags().GetString(commitMessageLong)
 		if err != nil {
-			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), name))
+			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), commitMessageLong))
 		}
 		return gitdomain.CommitMessage(value)
 	}
