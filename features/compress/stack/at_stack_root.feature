@@ -36,20 +36,18 @@ Feature: compress the commits on an entire stack when at the stack root
       | gamma  | git reset --soft beta                           |
       |        | git commit -m "gamma 1"                         |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
+      |        | git checkout alpha                              |
+      | alpha  | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
       | alpha  | local, origin | alpha 1 |
-      |        |               | alpha 2 |
-      |        |               | alpha 3 |
-      | beta   | local, origin | beta 1  |
-      |        |               | beta 2  |
-      |        |               | beta 3  |
-      | gamma  | local, origin | gamma 1 |
-      |        |               | gamma 2 |
-      |        |               | gamma 3 |
+      | beta   | local, origin | alpha 1 |
+      |        |               | beta 1  |
+      | gamma  | local, origin | alpha 1 |
+      |        |               | beta 1  |
+      |        |               | gamma 1 |
     And file "alpha_1" still has content "alpha 1"
     And file "alpha_2" still has content "alpha 2"
     And file "alpha_3" still has content "alpha 3"
