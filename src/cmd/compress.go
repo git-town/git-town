@@ -96,6 +96,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 
 type compressConfig struct {
 	*configdomain.FullConfig
+	branchType             configdomain.BranchType
 	dialogTestInputs       components.TestInputs
 	dryRun                 bool
 	existingCommitMessages gitdomain.CommitMessages // commit messages of the existing commits
@@ -131,8 +132,10 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 	}
 	commitMessages := commits.Messages()
 	newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
+	branchType := repo.Runner.Config.FullConfig.BranchType(initialBranch)
 	return &compressConfig{
 		FullConfig:             &repo.Runner.Config.FullConfig,
+		branchType:             branchType,
 		dialogTestInputs:       dialogTestInputs,
 		dryRun:                 dryRun,
 		existingCommitMessages: commitMessages,
@@ -165,13 +168,22 @@ func validateCompressConfig(config *compressConfig) error {
 		return fmt.Errorf(messages.CompressUnsynced, config.initialBranch.LocalName)
 	}
 	if config.FullConfig.IsMainOrPerennialBranch(config.initialBranch.LocalName) {
-		return errors.New(messages.CompressIsPerennial)
 	}
 	switch len(config.existingCommitMessages) {
 	case 0:
 		return errors.New(messages.CompressNoCommits)
 	case 1:
 		return errors.New(messages.CompressAlreadyOneCommit)
+	}
+	switch config.branchType {
+	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
+		// ok
+	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.CompressIsPerennial)
+	case configdomain.BranchTypeObservedBranch:
+		return fmt.Errorf(messages.CompressObservedBranch, config.initialBranch.LocalName)
+	case configdomain.BranchTypeContributionBranch:
+		return fmt.Errorf(messages.CompressContributionBranch, config.initialBranch.LocalName)
 	}
 	return nil
 }
