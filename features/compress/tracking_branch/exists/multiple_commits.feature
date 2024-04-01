@@ -8,7 +8,7 @@ Feature: compress the commits on a feature branch
       |         |               | commit 2 | file_2    | content 2    |
       |         |               | commit 3 | file_3    | content 3    |
     And an uncommitted file
-    When I run "git-town compress" and enter "compressed commit" for the commit message
+    When I run "git-town compress" and close the editor
 
   Scenario: result
     Then it runs the commands
@@ -23,8 +23,8 @@ Feature: compress the commits on a feature branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE           |
-      | feature | local, origin | compressed commit |
+      | BRANCH  | LOCATION      | MESSAGE                      |
+      | feature | local, origin | commit 1\ncommit 2\ncommit 3 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
