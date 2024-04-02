@@ -18,7 +18,7 @@ type ScenarioState struct {
 	fixture fixture.Fixture
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
-	initialCommits *messages.PickleStepArgument_PickleTable
+	initialCommits *datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch gitdomain.LocalBranchName
@@ -104,7 +104,7 @@ func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
+func (self *ScenarioState) compareGherkinTable(table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
