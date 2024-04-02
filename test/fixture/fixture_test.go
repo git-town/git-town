@@ -87,24 +87,25 @@ func TestFixture(t *testing.T) {
 		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the commits
+		mainBranch := gitdomain.NewLocalBranchName("main")
 		cloned.CreateCommits([]git.Commit{
 			{
-				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "lc",
+				Branch:      mainBranch,
+				FileContent: "local content",
 				FileName:    "local-file",
 				Locations:   []string{"local"},
 				Message:     "local commit",
 			},
 			{
-				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "rc",
+				Branch:      mainBranch,
+				FileContent: "origin content",
 				FileName:    "origin-file",
 				Locations:   []string{"origin"},
 				Message:     "origin commit",
 			},
 			{
-				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "lrc",
+				Branch:      mainBranch,
+				FileContent: "local and origin content",
 				FileName:    "loc-rem-file",
 				Locations:   []string{"local", "origin"},
 				Message:     "local and origin commit",
@@ -115,19 +116,19 @@ func TestFixture(t *testing.T) {
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local commit", commits[0].Message)
 		must.EqOp(t, "local-file", commits[0].FileName)
-		must.EqOp(t, "lc", commits[0].FileContent)
+		must.EqOp(t, "local content", commits[0].FileContent)
 		must.EqOp(t, "local and origin commit", commits[1].Message)
 		must.EqOp(t, "loc-rem-file", commits[1].FileName)
-		must.EqOp(t, "lrc", commits[1].FileContent)
+		must.EqOp(t, "local and origin content", commits[1].FileContent)
 		// verify origin commits
 		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
 		must.EqOp(t, "origin commit", commits[0].Message)
 		must.EqOp(t, "origin-file", commits[0].FileName)
-		must.EqOp(t, "rc", commits[0].FileContent)
+		must.EqOp(t, "origin content", commits[0].FileContent)
 		must.EqOp(t, "local and origin commit", commits[1].Message)
 		must.EqOp(t, "loc-rem-file", commits[1].FileName)
-		must.EqOp(t, "lrc", commits[1].FileContent)
+		must.EqOp(t, "local and origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
 		must.NoError(t, err)
