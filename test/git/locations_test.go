@@ -9,6 +9,7 @@ import (
 
 func TestLocations(t *testing.T) {
 	t.Parallel()
+
 	t.Run("NewLocations", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]testgit.Locations{
