@@ -10,7 +10,6 @@ Feature: compress the commits in offline mode
     And an uncommitted file
     When I run "git-town compress"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
