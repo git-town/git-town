@@ -19,6 +19,7 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git checkout existing               |
       | existing | git merge --no-edit origin/existing |
       |          | git merge --no-edit main            |
+      |          | git push                            |
       |          | git branch new existing             |
       |          | git checkout new                    |
       | new      | git stash pop                       |
