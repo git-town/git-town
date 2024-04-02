@@ -19,11 +19,13 @@ func (self Location) String() string {
 }
 
 const (
-	LocationLocal  = Location("local")
-	LocationOrigin = Location("origin")
+	LocationLocal    = Location("local")
+	LocationOrigin   = Location("origin")
+	LocationCoworker = Location("coworker")
+	LocationUpstream = Location("upstream")
 )
 
-var allLocations = Locations{
+var allLocations = Locations{ //nolint:gochecknoglobals
 	LocationLocal,
 	LocationOrigin,
 }

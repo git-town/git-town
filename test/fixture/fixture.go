@@ -218,16 +218,13 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
 		for _, location := range commit.Locations {
 			switch location {
-			case "coworker":
+			case testgit.LocationCoworker:
 				self.CoworkerRepo.CreateCommit(commit)
-			case "local":
+			case testgit.LocationLocal:
 				self.DevRepo.CreateCommit(commit)
-			case "local, origin":
-				self.DevRepo.CreateCommit(commit)
-				self.DevRepo.PushBranch()
-			case "origin":
+			case testgit.LocationOrigin:
 				self.OriginRepo.CreateCommit(commit)
-			case "upstream":
+			case testgit.LocationUpstream:
 				self.UpstreamRepo.CreateCommit(commit)
 			default:
 				log.Fatalf("unknown commit location %q", commit.Locations)

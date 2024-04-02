@@ -29,7 +29,7 @@ const (
 	RemoteUpstream = Remote("upstream")
 )
 
-var AllRemotes = []Remote{
+var AllRemotes = []Remote{ //nolint:gochecknoglobals
 	RemoteNone,
 	RemoteOrigin,
 	RemoteUpstream,
