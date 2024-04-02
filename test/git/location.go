@@ -28,4 +28,6 @@ const (
 var allLocations = Locations{ //nolint:gochecknoglobals
 	LocationLocal,
 	LocationOrigin,
+	LocationCoworker,
+	LocationUpstream,
 }
