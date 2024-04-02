@@ -10,9 +10,9 @@ import (
 type Commit struct {
 	Author      string `exhaustruct:"optional"`
 	Branch      gitdomain.LocalBranchName
-	FileContent string   `exhaustruct:"optional"`
-	FileName    string   `exhaustruct:"optional"`
-	Locations   []string `exhaustruct:"optional"`
+	FileContent string    `exhaustruct:"optional"`
+	FileName    string    `exhaustruct:"optional"`
+	Locations   Locations `exhaustruct:"optional"`
 	Message     string
 	SHA         gitdomain.SHA `exhaustruct:"optional"`
 }
@@ -23,7 +23,7 @@ func (self *Commit) Set(name, value string) {
 	case "BRANCH":
 		self.Branch = gitdomain.NewLocalBranchName(value)
 	case "LOCATION":
-		self.Locations = []string{value}
+		self.Locations = NewLocations(value)
 	case "MESSAGE":
 		self.Message = value
 	case "FILE NAME":

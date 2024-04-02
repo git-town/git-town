@@ -216,22 +216,20 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
-		for _, location := range commit.Locations {
-			switch location {
-			case "coworker":
-				self.CoworkerRepo.CreateCommit(commit)
-			case "local":
-				self.DevRepo.CreateCommit(commit)
-			case "local, origin":
-				self.DevRepo.CreateCommit(commit)
-				self.DevRepo.PushBranch()
-			case "origin":
-				self.OriginRepo.CreateCommit(commit)
-			case "upstream":
-				self.UpstreamRepo.CreateCommit(commit)
-			default:
-				log.Fatalf("unknown commit location %q", commit.Locations)
-			}
+		switch {
+		case commit.Locations.Matches(testgit.LocationCoworker):
+			self.CoworkerRepo.CreateCommit(commit)
+		case commit.Locations.Matches(testgit.LocationLocal):
+			self.DevRepo.CreateCommit(commit)
+		case commit.Locations.Matches(testgit.LocationLocal, testgit.LocationOrigin):
+			self.DevRepo.CreateCommit(commit)
+			self.DevRepo.PushBranch()
+		case commit.Locations.Matches(testgit.LocationOrigin):
+			self.OriginRepo.CreateCommit(commit)
+		case commit.Locations.Matches(testgit.LocationUpstream):
+			self.UpstreamRepo.CreateCommit(commit)
+		default:
+			log.Fatalf("unknown commit locations %q", commit.Locations)
 		}
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
