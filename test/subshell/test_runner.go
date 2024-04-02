@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/git-town/git-town/v13/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v13/src/subshell"
 	"github.com/git-town/git-town/v13/test/asserts"
 	"github.com/git-town/git-town/v13/test/envvars"
@@ -230,7 +231,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		}
 	}
 	if self.Verbose {
-		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, strings.Join(args, " "))
+		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, stringslice.JoinArgs(args))
 		os.Stdout.Write(output.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
