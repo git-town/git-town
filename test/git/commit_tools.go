@@ -12,7 +12,7 @@ func DefaultCommit(filenameSuffix string) Commit {
 		Branch:      gitdomain.NewLocalBranchName("main"),
 		FileContent: "default file content",
 		FileName:    "default_file_name_" + filenameSuffix,
-		Locations:   []string{"local", gitdomain.RemoteOrigin.String()},
+		Locations:   Locations{LocationLocal, LocationOrigin},
 		Message:     "default commit message",
 	}
 }

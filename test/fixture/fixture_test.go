@@ -91,44 +91,44 @@ func TestFixture(t *testing.T) {
 		cloned.CreateCommits([]git.Commit{
 			{
 				Branch:      mainBranch,
+				FileContent: "local and origin content",
+				FileName:    "loc-rem-file",
+				Locations:   git.Locations{git.LocationLocal, git.LocationOrigin},
+				Message:     "local and origin commit",
+			},
+			{
+				Branch:      mainBranch,
 				FileContent: "local content",
 				FileName:    "local-file",
-				Locations:   []string{"local"},
+				Locations:   git.Locations{git.LocationLocal},
 				Message:     "local commit",
 			},
 			{
 				Branch:      mainBranch,
 				FileContent: "origin content",
 				FileName:    "origin-file",
-				Locations:   []string{"origin"},
+				Locations:   git.Locations{git.LocationOrigin},
 				Message:     "origin commit",
-			},
-			{
-				Branch:      mainBranch,
-				FileContent: "local and origin content",
-				FileName:    "loc-rem-file",
-				Locations:   []string{"local", "origin"},
-				Message:     "local and origin commit",
 			},
 		})
 		// verify local commits
 		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
-		must.EqOp(t, "local commit", commits[0].Message)
-		must.EqOp(t, "local-file", commits[0].FileName)
-		must.EqOp(t, "local content", commits[0].FileContent)
-		must.EqOp(t, "local and origin commit", commits[1].Message)
-		must.EqOp(t, "loc-rem-file", commits[1].FileName)
-		must.EqOp(t, "local and origin content", commits[1].FileContent)
+		must.EqOp(t, "local and origin commit", commits[0].Message)
+		must.EqOp(t, "loc-rem-file", commits[0].FileName)
+		must.EqOp(t, "local and origin content", commits[0].FileContent)
+		must.EqOp(t, "local commit", commits[1].Message)
+		must.EqOp(t, "local-file", commits[1].FileName)
+		must.EqOp(t, "local content", commits[1].FileContent)
 		// verify origin commits
 		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
-		must.EqOp(t, "origin commit", commits[0].Message)
-		must.EqOp(t, "origin-file", commits[0].FileName)
-		must.EqOp(t, "origin content", commits[0].FileContent)
-		must.EqOp(t, "local and origin commit", commits[1].Message)
-		must.EqOp(t, "loc-rem-file", commits[1].FileName)
-		must.EqOp(t, "local and origin content", commits[1].FileContent)
+		must.EqOp(t, "local and origin commit", commits[0].Message)
+		must.EqOp(t, "loc-rem-file", commits[0].FileName)
+		must.EqOp(t, "local and origin content", commits[0].FileContent)
+		must.EqOp(t, "origin commit", commits[1].Message)
+		must.EqOp(t, "origin-file", commits[1].FileName)
+		must.EqOp(t, "origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
 		must.NoError(t, err)
