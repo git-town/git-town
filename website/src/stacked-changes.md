@@ -151,6 +151,10 @@ main
     3-rename-bar
 ```
 
+If you ship feature branches via the code hosting API or web UI, run 
+`git sync --all` or `git sync` on the youngest child branch to update the
+lineage.
+
 ## Synchronizing our work with the rest of the world
 
 We have been at it for a while. Other developers on the team have made changes
