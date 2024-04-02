@@ -1346,9 +1346,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
-			fmt.Printf("1111111111 %#v\n", commit.Locations)
 			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
-				fmt.Println("22222222222222222222222")
 				state.fixture.DevRepo.PushBranch()
 			}
 		}
