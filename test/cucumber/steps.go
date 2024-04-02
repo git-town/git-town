@@ -584,11 +584,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialCommits = &currentCommits
 		}
 		var err error
-		if state.initialLocalBranches == nil {
-			state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranches()
-			if err != nil {
-				return err
-			}
+		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranches()
+		if err != nil {
+			return err
+		}
+		state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranches()
+		if err != nil {
+			return err
 		}
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
