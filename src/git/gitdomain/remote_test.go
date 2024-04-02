@@ -12,6 +12,7 @@ func TestNewRemote(t *testing.T) {
 	tests := map[string]gitdomain.Remote{
 		"origin":   gitdomain.RemoteOrigin,
 		"upstream": gitdomain.RemoteUpstream,
+		"":         gitdomain.RemoteNone,
 	}
 	for give, want := range tests {
 		have := gitdomain.NewRemote(give)
