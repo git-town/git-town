@@ -1153,7 +1153,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		state.initialCommits = table
+		initialTable := datatable.FromGherkin(table)
+		state.initialCommits = &initialTable
 		// create the commits
 		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
@@ -1393,7 +1394,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial commits exist$`, func() error {
-		return state.compareTable(state.initialCommits)
+		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
+		errDiff, errCount := state.initialCommits.EqualDataTable(currentCommits)
+		if errCount == 0 {
+			return nil
+		}
+		fmt.Println(errDiff)
+		return errors.New("current commits are not the same as the initial commits")
 	})
 
 	suite.Step(`^the local feature branch "([^"]+)"$`, func(branch string) error {
@@ -1597,7 +1604,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these commits exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return state.compareTable(table)
+		return state.compareGherkinTable(table)
 	})
 
 	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
