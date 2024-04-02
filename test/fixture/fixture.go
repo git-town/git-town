@@ -156,9 +156,9 @@ func (self *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (self *Fixture) AddUpstream() {
-	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteOrigin.String()))
+	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
 	self.UpstreamRepo = &repo
-	self.DevRepo.AddRemote(gitdomain.RemoteOrigin, self.UpstreamRepo.WorkingDir)
+	self.DevRepo.AddRemote(gitdomain.RemoteUpstream, self.UpstreamRepo.WorkingDir)
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
