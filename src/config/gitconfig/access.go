@@ -130,7 +130,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 }
 
 func (self *Access) OriginRemote() string {
-	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
+	output, _ := self.Query("git", "remote", "get-url", gitdomain.RemoteOrigin.String())
 	return strings.TrimSpace(output)
 }
 

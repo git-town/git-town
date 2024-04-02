@@ -2,20 +2,8 @@ package git
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/test/helpers"
 )
-
-// DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit(filenameSuffix string) Commit {
-	return Commit{
-		Branch:      gitdomain.NewLocalBranchName("main"),
-		FileContent: "default file content",
-		FileName:    "default_file_name_" + filenameSuffix,
-		Locations:   []string{"local", gitdomain.OriginRemote.String()},
-		Message:     "default commit message",
-	}
-}
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
 func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {

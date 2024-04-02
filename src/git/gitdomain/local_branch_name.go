@@ -57,5 +57,5 @@ func (self LocalBranchName) String() string { return string(self) }
 
 // TrackingBranch provides the name of the tracking branch for this local branch.
 func (self LocalBranchName) TrackingBranch() RemoteBranchName {
-	return self.AtRemote(OriginRemote)
+	return self.AtRemote(RemoteOrigin)
 }

@@ -737,10 +737,10 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		runtime.AddRemote(gitdomain.OriginRemote, origin.WorkingDir)
+		runtime.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
 		must.NoError(t, err)
-		must.Eq(t, gitdomain.Remotes{gitdomain.OriginRemote}, remotes)
+		must.Eq(t, gitdomain.Remotes{gitdomain.RemoteOrigin}, remotes)
 	})
 
 	t.Run("RootDirectory", func(t *testing.T) {

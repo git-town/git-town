@@ -1,10 +1,17 @@
 package gitdomain
 
+import "fmt"
+
 // Remote represents a Git remote.
 type Remote string
 
 func NewRemote(id string) Remote {
-	return Remote(id)
+	for _, remote := range AllRemotes {
+		if id == remote.String() {
+			return remote
+		}
+	}
+	panic(fmt.Sprintf("unknown remote: %q", id))
 }
 
 func (self Remote) IsEmpty() bool {
@@ -16,8 +23,14 @@ func (self Remote) String() string {
 	return string(self)
 }
 
-var (
-	NoRemote       = NewRemote("")         //nolint:gochecknoglobals
-	OriginRemote   = NewRemote("origin")   //nolint:gochecknoglobals
-	UpstreamRemote = NewRemote("upstream") //nolint:gochecknoglobals
+const (
+	RemoteNone     = Remote("")
+	RemoteOrigin   = Remote("origin")
+	RemoteUpstream = Remote("upstream")
 )
+
+var AllRemotes = []Remote{
+	RemoteNone,
+	RemoteOrigin,
+	RemoteUpstream,
+}
