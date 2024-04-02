@@ -36,14 +36,3 @@ func (self *Commit) Set(name, value string) {
 		log.Fatalf("unknown Commit property: %s", name)
 	}
 }
-
-// DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit(filenameSuffix string) Commit {
-	return Commit{
-		Branch:      gitdomain.NewLocalBranchName("main"),
-		FileContent: "default file content",
-		FileName:    "default_file_name_" + filenameSuffix,
-		Locations:   Locations{LocationLocal, LocationOrigin},
-		Message:     "default commit message",
-	}
-}
