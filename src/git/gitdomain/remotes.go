@@ -16,9 +16,9 @@ func NewRemotes(remotes ...string) Remotes {
 }
 
 func (self Remotes) HasOrigin() bool {
-	return slice.Contains(self, OriginRemote)
+	return slice.Contains(self, RemoteOrigin)
 }
 
 func (self Remotes) HasUpstream() bool {
-	return slice.Contains(self, UpstreamRemote)
+	return slice.Contains(self, RemoteUpstream)
 }

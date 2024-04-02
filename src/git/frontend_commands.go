@@ -88,7 +88,7 @@ func (self *FrontendCommands) CreateRemoteBranch(localSHA gitdomain.SHA, branch 
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, gitdomain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
+	args = append(args, gitdomain.RemoteOrigin.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return self.Runner.Run("git", args...)
 }
 
@@ -146,7 +146,7 @@ func (self *FrontendCommands) Fetch() error {
 
 // FetchUpstream fetches updates from the upstream remote.
 func (self *FrontendCommands) FetchUpstream(branch gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "fetch", gitdomain.UpstreamRemote.String(), branch.String())
+	return self.Runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -221,7 +221,7 @@ func (self *FrontendCommands) ResetCurrentBranchToSHA(sha gitdomain.SHA, hard bo
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
 func (self *FrontendCommands) ResetRemoteBranchToSHA(branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
-	return self.Runner.Run("git", "push", "--force-with-lease", gitdomain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
+	return self.Runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
