@@ -102,7 +102,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialLineage.AddRow(branchText, parentBranch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
 
@@ -130,7 +130,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLineage.AddRow(branchText, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			return nil
 		}
 		return nil
@@ -142,7 +142,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialLineage.AddRow(branchText, "main")
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
 
@@ -151,7 +151,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
 
@@ -1034,7 +1034,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		state.fixture.DevRepo.RemoveRemote(gitdomain.OriginRemote)
+		state.fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		state.initialRemoteBranches = gitdomain.LocalBranchNames{}
 		state.fixture.OriginRepo = nil
 		return nil
@@ -1296,7 +1296,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		}
 		state.initialCurrentBranch = branch
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -1409,7 +1409,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -1424,7 +1424,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -1446,8 +1446,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			state.fixture.DevRepo.PushBranchToRemote(branch1, gitdomain.OriginRemote)
-			state.fixture.DevRepo.PushBranchToRemote(branch2, gitdomain.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch1, gitdomain.RemoteOrigin)
+			state.fixture.DevRepo.PushBranchToRemote(branch2, gitdomain.RemoteOrigin)
 		}
 		return nil
 	})
@@ -1459,7 +1459,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -1490,7 +1490,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.fixture.DevRepo.CreateBranch(branch, "main")
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(name))
 	})

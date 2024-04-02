@@ -72,7 +72,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		remoteBranch := gitdomain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
-		must.EqOp(t, gitdomain.OriginRemote, remote)
+		must.EqOp(t, gitdomain.RemoteOrigin, remote)
 		must.EqOp(t, gitdomain.NewLocalBranchName("branch"), localBranch)
 	})
 
