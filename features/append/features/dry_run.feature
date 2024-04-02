@@ -8,6 +8,7 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And an uncommitted file
     When I run "git-town append new --dry-run"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                             |
@@ -19,7 +20,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git checkout existing               |
       | existing | git merge --no-edit origin/existing |
       |          | git merge --no-edit main            |
-      |          | git push                            |
       |          | git branch new existing             |
       |          | git checkout new                    |
       | new      | git stash pop                       |
