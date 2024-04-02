@@ -572,11 +572,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialCommits = &currentCommits
 		}
 		var err error
-		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranches()
+		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranchesWithoutInitial()
 		if err != nil {
 			return err
 		}
-		state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranches()
+		state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranchesWithoutInitial()
 		if err != nil {
 			return err
 		}

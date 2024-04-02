@@ -340,6 +340,15 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	return branches, nil
 }
 
+func (self *TestCommands) LocalBranchesWithoutInitial() (gitdomain.LocalBranchNames, error) {
+	branches, err := self.LocalBranches()
+	if err != nil {
+		return gitdomain.LocalBranchNames{}, err
+	}
+	branches = slice.Remove(branches, "initial")
+	return branches, nil
+}
+
 func (self *TestCommands) LocalGitConfig(name gitconfig.Key) *string {
 	output, err := self.Query("git", "config", "--local", "--get", name.String())
 	if err != nil {
