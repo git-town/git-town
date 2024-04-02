@@ -1,7 +1,6 @@
 package stringslice
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -10,11 +9,12 @@ import (
 func JoinArgs(args []string) string {
 	quoted := make([]string, len(args))
 	for a, arg := range args {
-		if arg == "" {
+		switch {
+		case arg == "":
 			quoted[a] = `""`
-		} else if strings.ContainsRune(arg, ' ') {
-			quoted[a] = fmt.Sprintf("%q", arg)
-		} else {
+		case strings.ContainsRune(arg, ' '):
+			quoted[a] = `"` + arg + `"`
+		default:
 			quoted[a] = arg
 		}
 	}
