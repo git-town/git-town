@@ -579,7 +579,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		if state.initialCommits == nil {
+		if state.initialCommits == nil && state.insideGitRepo {
 			currentCommits := state.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 			state.initialCommits = &currentCommits
 		}
