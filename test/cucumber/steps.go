@@ -1320,12 +1320,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreateFeatureBranch(branch)
 		state.initialLineage.AddRow(name, "main")
 		state.fixture.DevRepo.CheckoutBranch(branch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
 			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+				state.fixture.DevRepo.PushBranch()
 			}
 		}
 		if !slice.Contains(state.initialLocalBranches, branch) {
