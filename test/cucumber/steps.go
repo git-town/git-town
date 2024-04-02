@@ -1324,8 +1324,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
-			if strings.Contains(commit.Locations[0], gitdomain.OriginRemote.String()) {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
 		}
 		if !slice.Contains(state.initialLocalBranches, branch) {
@@ -1345,8 +1345,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
 			fmt.Printf("1111111111 %#v\n", commit.Locations)
-			if strings.Contains(commit.Locations[0], gitdomain.OriginRemote.String()) {
-				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
 		}
 		if !slice.Contains(state.initialLocalBranches, branch) {
