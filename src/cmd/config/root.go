@@ -75,7 +75,6 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))
 	fmt.Println()
 	if !config.MainBranch.IsEmpty() {
-		fmt.Printf("1111111111111 %#v\n", config.Lineage)
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
 	}
 }

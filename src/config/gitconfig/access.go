@@ -22,13 +22,13 @@ type Access struct {
 }
 
 // LoadLocal reads the global Git Town configuration that applies to the entire machine.
-func (self *Access) LoadGlobal() (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(true)
+func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(true, updateOutdated)
 }
 
 // LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
-func (self *Access) LoadLocal() (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(false)
+func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(false, updateOutdated)
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
@@ -123,8 +123,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		KeyDeprecatedPushVerify,
 		KeyDeprecatedShipDeleteRemoteBranch,
 		KeyDeprecatedSyncStrategy:
-		// deprecated keys were handled before this is reached, here we simply do a check that the switch statement contains all keys
-		panic(fmt.Sprintf("unhandled deprecated config key %q", key))
+		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
 	}
 	return err
 }
@@ -209,7 +208,7 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey Key, value string, gl
 	}
 }
 
-func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := SingleSnapshot{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
@@ -235,14 +234,16 @@ func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfi
 		if configKey == nil {
 			continue
 		}
-		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
-		if keyIsDeprecated {
-			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
-			configKey = &newKey
-		}
-		if key != KeyPerennialBranches.String() && value == "" {
-			_ = self.RemoveLocalConfigValue(*configKey)
-			continue
+		if updateOutdated {
+			newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
+			if keyIsDeprecated {
+				self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
+				configKey = &newKey
+			}
+			if key != KeyPerennialBranches.String() && value == "" {
+				_ = self.RemoveLocalConfigValue(*configKey)
+				continue
+			}
 		}
 		snapshot[*configKey] = value
 		err := AddKeyToPartialConfig(*configKey, value, &config)

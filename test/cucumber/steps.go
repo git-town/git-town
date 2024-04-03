@@ -791,7 +791,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if configKey == nil {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
+		err := state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
+		return err
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
