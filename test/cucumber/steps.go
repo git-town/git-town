@@ -572,13 +572,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialCommits = &currentCommits
 		}
 		var err error
-		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranchesWithoutInitial()
+		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranchesWithoutInitialMainFirst()
 		if err != nil {
 			return err
 		}
-		state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranchesWithoutInitial()
-		if err != nil {
-			return err
+		if state.fixture.OriginRepo != nil {
+			state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranchesWithoutInitialMainFirst()
+			if err != nil {
+				return err
+			}
 		}
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
@@ -1352,7 +1354,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		have := state.fixture.Branches()
+		fmt.Println("11111111111111111", have)
 		want := state.InitialBranches()
+		fmt.Println("22222222222222222222", want)
 		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)

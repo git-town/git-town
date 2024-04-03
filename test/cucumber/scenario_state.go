@@ -6,7 +6,6 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/test/datatable"
 	"github.com/git-town/git-town/v13/test/fixture"
 	"github.com/git-town/git-town/v13/test/helpers"
@@ -68,10 +67,6 @@ type ScenarioState struct {
 func (self *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	self.initialLocalBranches.Sort()
-	self.initialLocalBranches = slice.Hoist(self.initialLocalBranches, gitdomain.NewLocalBranchName("main"))
-	self.initialRemoteBranches.Sort()
-	self.initialRemoteBranches = slice.Hoist(self.initialRemoteBranches, gitdomain.NewLocalBranchName("main"))
 	localBranchesJoined := self.initialLocalBranches.Join(", ")
 	remoteBranchesJoined := self.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
