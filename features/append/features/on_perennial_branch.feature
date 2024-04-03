@@ -20,7 +20,7 @@ Feature: append to a perennial branch
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
       | production | local, origin | production commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT     |
       | new    | production |
 

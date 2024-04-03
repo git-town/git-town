@@ -28,7 +28,7 @@ Feature: delete the current parked branch
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
 

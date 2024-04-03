@@ -26,7 +26,7 @@ Feature: display all executed Git commands
       """
       Ran 13 shell commands.
       """
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |

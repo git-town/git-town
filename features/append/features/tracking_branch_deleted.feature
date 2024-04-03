@@ -35,7 +35,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | REPOSITORY | BRANCHES  |
       | local      | main, new |
       | origin     | main      |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 

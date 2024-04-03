@@ -25,7 +25,7 @@ Feature: in a local repo
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

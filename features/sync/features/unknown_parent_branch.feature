@@ -8,7 +8,7 @@ Feature: enter a parent branch name when prompted
     When I run "git-town sync" and enter into the dialog:
       | DIALOG                | KEYS  |
       | parent branch of beta | enter |
-    Then this branch lineage exists now
+    Then this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
 
@@ -17,7 +17,7 @@ Feature: enter a parent branch name when prompted
       | DIALOG                 | KEYS       |
       | parent branch of beta  | down enter |
       | parent branch of alpha | enter      |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
       | beta   | alpha  |
@@ -33,7 +33,7 @@ Feature: enter a parent branch name when prompted
       | DIALOG                 | KEYS  |
       | parent branch of alpha | enter |
       | parent branch of beta  | enter |
-    Then this branch lineage exists now
+    Then this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
       | beta   | main   |

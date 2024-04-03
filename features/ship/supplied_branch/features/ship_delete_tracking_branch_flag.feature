@@ -29,7 +29,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
       | other  | local         | other commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

@@ -28,7 +28,7 @@ Feature: local repository
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | good   | local    | good commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
 

@@ -23,7 +23,7 @@ Feature: local repo
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | new    | local    | main commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
@@ -40,6 +40,6 @@ Feature: local repo
     And the current branch is now "existing"
     And the uncommitted file still exists
     And the initial commits exist
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
