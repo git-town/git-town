@@ -28,7 +28,7 @@ Feature: ship a parent branch
       | main   | local, origin | parent done   |
       | child  | local, origin | child commit  |
       | parent | origin        | parent commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
 

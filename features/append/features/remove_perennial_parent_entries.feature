@@ -13,7 +13,7 @@ Feature: remove parent entries for perennial branches
       """
       Removed parent entry for perennial branch "feature-1"
       """
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
       | feature-3 | main   |

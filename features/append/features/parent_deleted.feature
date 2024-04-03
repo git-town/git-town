@@ -36,7 +36,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | REPOSITORY | BRANCHES         |
       | local      | main, child, new |
       | origin     | main, child      |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
       | new    | child  |

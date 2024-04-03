@@ -15,7 +15,7 @@ Feature: ask for missing parent information
       |        | git push -u origin old   |
       |        | git branch new main      |
       |        | git checkout new         |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

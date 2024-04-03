@@ -70,7 +70,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

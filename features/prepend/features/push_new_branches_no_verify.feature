@@ -25,7 +25,7 @@ Feature: auto-push new branches
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |
@@ -48,7 +48,7 @@ Feature: auto-push new branches
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

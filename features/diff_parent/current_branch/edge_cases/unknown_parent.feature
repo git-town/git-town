@@ -8,6 +8,6 @@ Feature: ask for missing parent
     Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git diff main..feature |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |

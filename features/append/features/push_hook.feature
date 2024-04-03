@@ -22,7 +22,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | main commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 
@@ -41,6 +41,6 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | main commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

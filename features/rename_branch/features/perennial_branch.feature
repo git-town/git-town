@@ -34,7 +34,7 @@ Feature: rename a perennial branch
       | BRANCH | LOCATION      | MESSAGE           |
       | hotfix | local, origin | hotfix commit     |
       | new    | local, origin | production commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | hotfix | new    |
 

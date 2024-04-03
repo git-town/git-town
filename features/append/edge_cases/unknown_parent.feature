@@ -5,7 +5,7 @@ Feature: ask for missing parent branch information
     When I run "git-town append new" and enter into the dialog:
       | DIALOG             | KEYS  |
       | select main branch | enter |
-    Then this branch lineage exists now
+    Then this lineage exists now
       | BRANCH  | PARENT  |
       | feature | main    |
       | new     | feature |

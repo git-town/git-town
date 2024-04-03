@@ -25,7 +25,7 @@ Feature: sync perennial branch that was deleted at the remote
       | REPOSITORY    | BRANCHES                                            |
       | local, origin | main, feature-1a, feature-1b, feature-2, feature-2a |
     And the perennial branches are now "feature-2"
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH     | PARENT    |
       | feature-1a | main      |
       | feature-1b | main      |

@@ -44,7 +44,7 @@ Feature: multiple shipped parent branches in a stacked change
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH    | PARENT |
       | feature-3 | main   |
 

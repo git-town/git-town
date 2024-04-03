@@ -29,7 +29,7 @@ Feature: delete the current contribution branch
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | origin        | contribution commit |
       | feature      | local, origin | feature commit      |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
 

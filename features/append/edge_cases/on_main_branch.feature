@@ -24,7 +24,7 @@ Feature: on the main branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local         | main commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 

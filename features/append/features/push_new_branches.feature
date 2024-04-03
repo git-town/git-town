@@ -21,7 +21,7 @@ Feature: auto-push the new branch to origin
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | main commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 
