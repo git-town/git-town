@@ -571,16 +571,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			currentCommits := state.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 			state.initialCommits = &currentCommits
 		}
-		var err error
-		state.initialLocalBranches, err = state.fixture.DevRepo.LocalBranchesWithoutInitialMainFirst()
-		if err != nil {
-			return err
-		}
-		if state.fixture.OriginRepo != nil {
-			state.initialRemoteBranches, err = state.fixture.OriginRepo.LocalBranchesWithoutInitialMainFirst()
-			if err != nil {
-				return err
-			}
+		if state.initialBranches == nil {
+			branches := state.fixture.Branches()
+			state.initialBranches = &branches
 		}
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
@@ -1038,7 +1031,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		state.initialRemoteBranches = gitdomain.LocalBranchNames{}
 		state.fixture.OriginRepo = nil
 		return nil
 	})
@@ -1354,10 +1346,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		have := state.fixture.Branches()
-		fmt.Println("11111111111111111", have)
-		want := state.InitialBranches()
-		fmt.Println("22222222222222222222", want)
-		diff, errorCount := have.EqualDataTable(want)
+		want := state.initialBranches
+		// fmt.Printf("\nINITIAL:\n%s\n", want.String())
+		// fmt.Printf("\nNOW:\n%s\n", have.String())
+		diff, errorCount := have.EqualDataTable(*want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1377,10 +1369,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches exist$`, func() error {
 		have := state.fixture.Branches()
-		want := state.InitialBranches()
+		want := state.initialBranches
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
-		diff, errorCount := have.EqualDataTable(want)
+		diff, errorCount := have.EqualDataTable(*want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)

@@ -16,6 +16,9 @@ type ScenarioState struct {
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
+	// initialBranches contains the local and remote branches before the WHEN steps run
+	initialBranches *datatable.DataTable
+
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *datatable.DataTable
 
@@ -32,14 +35,8 @@ type ScenarioState struct {
 	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage datatable.DataTable
 
-	// initialLocalBranches contains the local branches before the WHEN steps run
-	initialLocalBranches gitdomain.LocalBranchNames
-
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs map[string]gitdomain.SHA
-
-	// initialRemoteBranches contains the remote branches before the WHEN steps run
-	initialRemoteBranches gitdomain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
 	initialWorktreeSHAs map[string]gitdomain.SHA
@@ -63,28 +60,10 @@ type ScenarioState struct {
 	uncommittedFileName string
 }
 
-// InitialBranches provides the branches in this Scenario before the WHEN steps ran.
-func (self *ScenarioState) InitialBranches() datatable.DataTable {
-	result := datatable.DataTable{}
-	result.AddRow("REPOSITORY", "BRANCHES")
-	localBranchesJoined := self.initialLocalBranches.Join(", ")
-	remoteBranchesJoined := self.initialRemoteBranches.Join(", ")
-	if localBranchesJoined == remoteBranchesJoined {
-		result.AddRow("local, origin", localBranchesJoined)
-	} else {
-		result.AddRow("local", localBranchesJoined)
-		if remoteBranchesJoined != "" {
-			result.AddRow("origin", remoteBranchesJoined)
-		}
-	}
-	return result
-}
-
 // Reset restores the null value of this ScenarioState.
 func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.fixture = gitEnv
-	self.initialLocalBranches = gitdomain.NewLocalBranchNames("main")
-	self.initialRemoteBranches = gitdomain.NewLocalBranchNames("main")
+	self.initialBranches = nil
 	self.initialDevSHAs = map[string]gitdomain.SHA{}
 	self.initialOriginSHAs = map[string]gitdomain.SHA{}
 	self.initialLineage = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
