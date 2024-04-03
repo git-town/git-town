@@ -567,14 +567,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		if state.initialCommits == nil && state.insideGitRepo && state.fixture.SubmoduleRepo == nil {
-			currentCommits := state.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
-			state.initialCommits = &currentCommits
-		}
-		if state.initialBranches == nil && state.insideGitRepo {
-			branches := state.fixture.Branches()
-			state.initialBranches = &branches
-		}
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
 		state.fixture.DevRepo.Config.Reload()
@@ -582,6 +575,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
@@ -590,6 +584,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
@@ -598,6 +593,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
@@ -606,6 +602,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.SecondWorktree.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
@@ -614,6 +611,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
 		answers, err := helpers.TableToInputEnv(input)
@@ -629,6 +627,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		answers, err := helpers.TableToInputEnv(input)
@@ -644,6 +643,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.fixture.DevRepo.Config.Reload()
@@ -651,6 +651,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
 		state.fixture.SecondWorktree.Config.Reload()
@@ -1347,8 +1348,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
 		initialBranches := state.initialBranches
-		fmt.Printf("\nINITIAL:\n%s\n", initialBranches.String())
-		fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
 		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)

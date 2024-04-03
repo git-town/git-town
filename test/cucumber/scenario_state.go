@@ -60,6 +60,17 @@ type ScenarioState struct {
 	uncommittedFileName string
 }
 
+func (self *ScenarioState) CaptureState() {
+	if self.initialCommits == nil && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
+		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
+		self.initialCommits = &currentCommits
+	}
+	if self.initialBranches == nil && self.insideGitRepo {
+		branches := self.fixture.Branches()
+		self.initialBranches = &branches
+	}
+}
+
 // Reset restores the null value of this ScenarioState.
 func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.fixture = gitEnv
