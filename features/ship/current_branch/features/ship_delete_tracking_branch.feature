@@ -27,7 +27,6 @@ Feature: ship-delete-tracking-branch disabled
       | main   | local, origin | feature done |
     And no lineage exists now
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -46,3 +45,4 @@ Feature: ship-delete-tracking-branch disabled
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |
+    And the initial lineage exists

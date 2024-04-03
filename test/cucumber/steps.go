@@ -1389,8 +1389,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
 		initialBranches := state.initialBranches
-		fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
-		fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
 		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
