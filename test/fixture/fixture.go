@@ -168,7 +168,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 	mainBranch := self.DevRepo.Config.FullConfig.MainBranch
 	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	localBranches = localBranches.RemoveWorkspaceMarkers().Hoist(self.DevRepo.Config.FullConfig.MainBranch)
+	localBranches = localBranches.RemoveWorktreeMarkers().Hoist(self.DevRepo.Config.FullConfig.MainBranch)
 	initialBranch := gitdomain.NewLocalBranchName("initial")
 	localBranches = slice.Remove(localBranches, initialBranch)
 	localBranchesJoined := localBranches.Join(", ")
