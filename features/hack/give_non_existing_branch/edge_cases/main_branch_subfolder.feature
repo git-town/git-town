@@ -25,7 +25,7 @@ Feature: in a subfolder on the main branch
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
       | new    | local         | folder commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 

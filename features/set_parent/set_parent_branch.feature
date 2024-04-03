@@ -15,7 +15,7 @@ Feature: update the parent of a feature branch
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                 | KEYS       |
       | parent branch of child | down enter |
-    Then this branch lineage exists now
+    Then this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |
@@ -25,6 +25,6 @@ Feature: update the parent of a feature branch
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
     Then the perennial branches are now "child"
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | parent | main   |

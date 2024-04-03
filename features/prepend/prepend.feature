@@ -28,7 +28,7 @@ Feature: prepend a branch to a feature branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |

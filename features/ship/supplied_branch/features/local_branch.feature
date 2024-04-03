@@ -31,7 +31,7 @@ Feature: ship the supplied feature branch without a tracking branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

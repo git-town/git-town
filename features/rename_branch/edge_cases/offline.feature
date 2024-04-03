@@ -21,7 +21,7 @@ Feature: offline mode
       | main   | local, origin | main commit |
       | new    | local         | old commit  |
       | old    | origin        | old commit  |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
 

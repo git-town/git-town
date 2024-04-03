@@ -35,7 +35,7 @@ Feature: delete a branch within a branch chain
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | gamma  | local, origin | gamma commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
       | gamma  | alpha  |

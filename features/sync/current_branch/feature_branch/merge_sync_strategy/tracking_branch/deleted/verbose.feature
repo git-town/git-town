@@ -45,7 +45,7 @@ Feature: display all executed Git commands
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | active | main   |
 

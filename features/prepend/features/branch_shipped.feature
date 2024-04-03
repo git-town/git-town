@@ -36,7 +36,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | REPOSITORY | BRANCHES          |
       | local      | main, new, parent |
       | origin     | main, parent      |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | new    | parent |
       | parent | main   |

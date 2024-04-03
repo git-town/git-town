@@ -28,7 +28,7 @@ Feature: on the main branch
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
       | new      | local         | main commit     |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |

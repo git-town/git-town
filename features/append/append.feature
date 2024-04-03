@@ -29,7 +29,7 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
       | new      | local         | existing commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
