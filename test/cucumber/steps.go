@@ -1348,8 +1348,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
 		initialBranches := state.initialBranches
-		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
-		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
+		fmt.Printf("NOW:\n%s\n", currentBranches.String())
 		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
@@ -1624,6 +1624,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 		if hasFile != "" {
 			return errors.New(hasFile)
+		}
+		return nil
+	})
+
+	suite.Step(`^these branches exist now$`, func(input *messages.PickleStepArgument_PickleTable) error {
+		currentBranches := state.fixture.Branches()
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		diff, errorCount := currentBranches.EqualGherkin(input)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
+			fmt.Println(diff)
+			return errors.New("mismatching branches found, see diff above")
 		}
 		return nil
 	})

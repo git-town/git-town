@@ -33,6 +33,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | BRANCH | PARENT |
       | other  | main   |
 
+  #@this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
