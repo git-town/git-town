@@ -49,4 +49,8 @@ Feature: skip deleting the remote branch when shipping another branch
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
       | other   | local         | other commit          |
-    And the initial branches and lineage exist
+    And these branches exist now
+      | REPOSITORY | BRANCHES             |
+      | local      | main, feature, other |
+      | origin     | main, other          |
+    And the initial lineage exists

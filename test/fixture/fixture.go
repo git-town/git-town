@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v13/src/git"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/gohacks/cache"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/test/asserts"
 	"github.com/git-town/git-town/v13/test/commands"
 	"github.com/git-town/git-town/v13/test/datatable"
@@ -165,21 +164,18 @@ func (self *Fixture) AddUpstream() {
 func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	mainBranch := self.DevRepo.Config.FullConfig.MainBranch
-	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
-	asserts.NoError(err)
-	localBranches = localBranches.RemoveWorktreeMarkers().Hoist(self.DevRepo.Config.FullConfig.MainBranch)
+	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches = slice.Remove(localBranches, initialBranch)
-	localBranchesJoined := localBranches.Join(", ")
+	localBranches, err := self.DevRepo.LocalBranches()
+	asserts.NoError(err)
+	localBranchesJoined := localBranches.RemoveWorktreeMarkers().Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	if self.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, err := self.OriginRepo.LocalBranchesMainFirst(mainBranch)
+	originBranches, err := self.OriginRepo.LocalBranches()
 	asserts.NoError(err)
-	originBranches = slice.Remove(originBranches, initialBranch)
-	originBranchesJoined := originBranches.Join(", ")
+	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {

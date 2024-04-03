@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v13/src/config/gitconfig"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/gohacks"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/test/asserts"
 	"github.com/git-town/git-town/v13/test/commands"
 	"github.com/git-town/git-town/v13/test/datatable"
@@ -86,7 +85,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
-		state.initialLocalBranches = append(state.initialLocalBranches, gitdomain.NewLocalBranchName(branch))
 		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), gitdomain.NewLocalBranchName("main"))
 		return nil
 	})
@@ -99,8 +97,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branchText, parentBranch string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, gitdomain.NewLocalBranchName(parentBranch))
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialLineage.AddRow(branchText, parentBranch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
@@ -108,7 +104,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
 		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		state.fixture.DevRepo.TestCommands.Fetch()
@@ -126,10 +121,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		isLocal := localStr != ""
 		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialLineage.AddRow(branchText, "main")
 		if !isLocal {
-			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			return nil
 		}
@@ -139,8 +132,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a parked branch "([^"]+)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreateParkedBranches(branch)
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialLineage.AddRow(branchText, "main")
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
@@ -149,8 +140,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
@@ -166,7 +155,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
 		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		return nil
@@ -579,10 +567,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		if state.initialCommits == nil && state.insideGitRepo && state.fixture.SubmoduleRepo == nil {
-			currentCommits := state.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
-			state.initialCommits = &currentCommits
-		}
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
 		state.fixture.DevRepo.Config.Reload()
@@ -590,6 +575,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
@@ -598,6 +584,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
@@ -606,6 +593,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
@@ -614,6 +602,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.fixture.SecondWorktree.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
@@ -622,6 +611,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
 		answers, err := helpers.TableToInputEnv(input)
@@ -637,6 +627,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		answers, err := helpers.TableToInputEnv(input)
@@ -652,6 +643,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.fixture.DevRepo.Config.Reload()
@@ -659,6 +651,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
+		state.CaptureState()
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
 		state.fixture.SecondWorktree.Config.Reload()
@@ -1039,7 +1032,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		state.initialRemoteBranches = gitdomain.LocalBranchNames{}
 		state.fixture.OriginRepo = nil
 		return nil
 	})
@@ -1117,7 +1109,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, gitdomain.NewLocalBranchName(branch))
 		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
@@ -1129,7 +1120,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -1137,7 +1127,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchName := range []string{branch1, branch2} {
 			branch := gitdomain.NewLocalBranchName(branchName)
 			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
 	})
@@ -1271,8 +1260,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = branch
-		if !slice.Contains(state.initialLocalBranches, branch) {
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		if !state.fixture.DevRepo.BranchExists(branch) {
 			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
 		state.fixture.DevRepo.CheckoutBranch(branch)
@@ -1298,9 +1286,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if !isLocal {
-			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		}
 		state.initialCurrentBranch = branch
@@ -1360,9 +1346,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
-		have := state.fixture.Branches()
-		want := state.InitialBranches()
-		diff, errorCount := have.EqualDataTable(want)
+		currentBranches := state.fixture.Branches()
+		initialBranches := state.initialBranches
+		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1370,8 +1358,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial lineage
 		state.initialLineage.Sort()
-		have = state.fixture.DevRepo.LineageTable()
-		diff, errCnt := have.EqualDataTable(state.initialLineage)
+		currentLineage := state.fixture.DevRepo.LineageTable()
+		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
@@ -1382,10 +1370,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches exist$`, func() error {
 		have := state.fixture.Branches()
-		want := state.InitialBranches()
+		want := state.initialBranches
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
-		diff, errorCount := have.EqualDataTable(want)
+		diff, errorCount := have.EqualDataTable(*want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1407,7 +1395,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the local feature branch "([^"]+)"$`, func(branch string) error {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		state.fixture.DevRepo.CreateFeatureBranch(branchName)
-		state.initialLocalBranches = append(state.initialLocalBranches, branchName)
 		state.initialLineage.AddRow(branch, "main")
 		return nil
 	})
@@ -1417,11 +1404,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchText := range []string{branch1, branch2} {
 			branch := gitdomain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
@@ -1432,11 +1417,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchText := range []string{branch1, branch2, branch3} {
 			branch := gitdomain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
@@ -1445,7 +1428,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the local observed branch "([^"]+)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.fixture.DevRepo.CreateObservedBranches(branch)
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		return nil
 	})
 
@@ -1454,9 +1436,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch2 := gitdomain.NewLocalBranchName(branch2Text)
 		isLocal := localStr != ""
 		state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
-		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
-			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
 			state.fixture.DevRepo.PushBranchToRemote(branch1, gitdomain.RemoteOrigin)
 			state.fixture.DevRepo.PushBranchToRemote(branch2, gitdomain.RemoteOrigin)
 		}
@@ -1468,10 +1448,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchText := range []string{branch1, branch2, branch3} {
 			branch := gitdomain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
@@ -1500,9 +1478,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an observed branch "([^"]+)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.fixture.DevRepo.CreateBranch(branch, "main")
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(name))
 	})
 
@@ -1648,6 +1624,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 		if hasFile != "" {
 			return errors.New(hasFile)
+		}
+		return nil
+	})
+
+	suite.Step(`^these branches exist now$`, func(input *messages.PickleStepArgument_PickleTable) error {
+		currentBranches := state.fixture.Branches()
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		diff, errorCount := currentBranches.EqualGherkin(input)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
+			fmt.Println(diff)
+			return errors.New("mismatching branches found, see diff above")
 		}
 		return nil
 	})

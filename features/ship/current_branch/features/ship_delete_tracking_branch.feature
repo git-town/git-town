@@ -41,4 +41,8 @@ Feature: ship-delete-tracking-branch disabled
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and lineage exist
+    And these branches exist now
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | origin     | main          |
+    And the initial lineage exists
