@@ -123,7 +123,7 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 	})
 
-	t.Run("RemoveMarkers", func(t *testing.T) {
+	t.Run("RemoveWorktreeMarkers", func(t *testing.T) {
 		t.Parallel()
 		branches := gitdomain.NewLocalBranchNames("one", "+ two")
 		have := branches.RemoveWorktreeMarkers()
