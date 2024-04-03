@@ -8,6 +8,7 @@ Feature: abort the ship by empty commit message
       | feature | local    | feature commit |
     When I run "git-town ship" and enter an empty commit message
 
+  #@this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |

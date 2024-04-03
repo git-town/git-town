@@ -26,6 +26,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
       | main   | local, origin | feature done |
     And no lineage exists now
 
+  #@this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
