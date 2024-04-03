@@ -1,5 +1,6 @@
 Feature: automatically upgrade outdated configuration
 
+  @debug @this
   Scenario Outline:
     Given <LOCATION> Git Town setting "code-hosting-driver" is "github"
     When I run "git-town config"
