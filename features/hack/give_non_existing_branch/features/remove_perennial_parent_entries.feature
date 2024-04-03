@@ -9,7 +9,7 @@ Feature: remove parent entries for perennial branches
       perennials = [ "feature-1" ]
       """
     When I run "git town hack feature-3"
-    Then this branch lineage exists now
+    Then this lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
       | feature-3 | main   |

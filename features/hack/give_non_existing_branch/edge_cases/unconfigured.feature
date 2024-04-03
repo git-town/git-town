@@ -15,7 +15,7 @@ Feature: missing configuration
       |        | git checkout feature     |
     And the main branch is now "main"
     And the current branch is now "feature"
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
 

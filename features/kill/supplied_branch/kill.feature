@@ -30,7 +30,7 @@ Feature: delete another than the current branch
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
 

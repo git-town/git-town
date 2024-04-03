@@ -17,7 +17,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |          | git checkout new         |
     And the current branch is now "new"
     And the initial commits exist
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |

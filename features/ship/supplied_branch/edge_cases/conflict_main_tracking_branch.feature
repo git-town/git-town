@@ -73,7 +73,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

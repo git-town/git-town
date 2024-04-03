@@ -34,7 +34,7 @@ Feature: sync a branch whose tracking branch was shipped
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
 

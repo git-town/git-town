@@ -23,7 +23,7 @@ Feature: rename a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | new    | local, origin | parent commit |
-    And this branch lineage exists now
+    And this lineage exists now
       | BRANCH | PARENT |
       | child  | new    |
       | new    | main   |
