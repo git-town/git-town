@@ -1320,9 +1320,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				state.fixture.DevRepo.PushBranch()
 			}
 		}
-		if !slice.Contains(state.initialLocalBranches, branch) {
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		}
 		return nil
 	})
 
@@ -1340,9 +1337,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
 				state.fixture.DevRepo.PushBranch()
 			}
-		}
-		if !slice.Contains(state.initialLocalBranches, branch) {
-			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
 	})
