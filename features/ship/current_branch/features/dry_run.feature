@@ -8,7 +8,6 @@ Feature: enter the commit message interactively via the editor
       | feature | local, origin | feature commit |
     When I run "git-town ship --dry-run" and enter "feature done" for the commit message
 
-  #@this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |
