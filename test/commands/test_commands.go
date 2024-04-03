@@ -311,6 +311,7 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())
 	}
+	result.Sort()
 	return result
 }
 
