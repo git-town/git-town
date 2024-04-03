@@ -571,7 +571,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			currentCommits := state.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 			state.initialCommits = &currentCommits
 		}
-		if state.initialBranches == nil {
+		if state.initialBranches == nil && state.insideGitRepo {
 			branches := state.fixture.Branches()
 			state.initialBranches = &branches
 		}
