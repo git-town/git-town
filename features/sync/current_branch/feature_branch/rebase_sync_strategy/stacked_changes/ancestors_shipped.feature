@@ -1,7 +1,8 @@
-Feature: multiple shipped parent branches in a stacked change
+Feature: shipped parent branches in a stacked change
 
   Background:
-    Given a feature branch "feature-1"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And a feature branch "feature-1"
     And a feature branch "feature-2" as a child of "feature-1"
     And a feature branch "feature-3" as a child of "feature-2"
     And the commits
@@ -16,22 +17,21 @@ Feature: multiple shipped parent branches in a stacked change
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                              |
-      | feature-3 | git fetch --prune --tags             |
-      |           | git checkout main                    |
-      | main      | git rebase origin/main               |
-      |           | git checkout feature-1               |
-      | feature-1 | git merge --no-edit main             |
-      |           | git checkout main                    |
-      | main      | git branch -D feature-1              |
-      |           | git checkout feature-2               |
-      | feature-2 | git merge --no-edit main             |
-      |           | git checkout main                    |
-      | main      | git branch -D feature-2              |
-      |           | git checkout feature-3               |
-      | feature-3 | git merge --no-edit origin/feature-3 |
-      |           | git merge --no-edit main             |
-      |           | git push                             |
+      | BRANCH    | COMMAND                                         |
+      | feature-3 | git fetch --prune --tags                        |
+      |           | git checkout main                               |
+      | main      | git rebase origin/main                          |
+      |           | git checkout feature-1                          |
+      | feature-1 | git rebase main                                 |
+      |           | git checkout main                               |
+      | main      | git branch -D feature-1                         |
+      |           | git checkout feature-2                          |
+      | feature-2 | git rebase main                                 |
+      |           | git checkout main                               |
+      | main      | git branch -D feature-2                         |
+      |           | git checkout feature-3                          |
+      | feature-3 | git rebase main                                 |
+      |           | git push --force-with-lease --force-if-includes |
     And it prints:
       """
       deleted branch "feature-1"
