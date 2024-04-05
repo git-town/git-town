@@ -33,7 +33,7 @@ type ScenarioState struct {
 	initialDevSHAs map[string]gitdomain.SHA
 
 	// initialLineage describes the lineage before the WHEN steps ran.
-	initialLineage datatable.DataTable
+	initialLineage *datatable.DataTable
 
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs map[string]gitdomain.SHA
@@ -69,6 +69,10 @@ func (self *ScenarioState) CaptureState() {
 		branches := self.fixture.Branches()
 		self.initialBranches = &branches
 	}
+	if self.initialLineage == nil && self.insideGitRepo {
+		lineage := self.fixture.DevRepo.LineageTable()
+		self.initialLineage = &lineage
+	}
 }
 
 // Reset restores the null value of this ScenarioState.
@@ -77,7 +81,7 @@ func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.initialBranches = nil
 	self.initialDevSHAs = map[string]gitdomain.SHA{}
 	self.initialOriginSHAs = map[string]gitdomain.SHA{}
-	self.initialLineage = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	self.initialLineage = nil
 	self.initialCurrentBranch = gitdomain.EmptyLocalBranchName()
 	self.insideGitRepo = true
 	self.runOutput = ""
