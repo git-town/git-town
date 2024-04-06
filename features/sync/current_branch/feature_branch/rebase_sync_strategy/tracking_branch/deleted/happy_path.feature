@@ -3,7 +3,7 @@ Feature: sync a branch whose tracking branch was shipped
 
   Background:
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    Given the feature branches "feature-1" and "feature-2"
+    And the feature branches "feature-1" and "feature-2"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
