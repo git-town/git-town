@@ -1,7 +1,8 @@
 Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Background:
-    Given the feature branches "branch-1" and "branch-2"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And the feature branches "branch-1" and "branch-2"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
@@ -20,7 +21,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |          | git checkout main        |
       | main     | git rebase origin/main   |
       |          | git checkout branch-2    |
-      | branch-2 | git merge --no-edit main |
+      | branch-2 | git rebase main          |
       |          | git stash pop            |
     And it prints:
       """
