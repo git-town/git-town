@@ -33,7 +33,7 @@
     - [completions](commands/completions.md)
     - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)
-    - [display](commands/config.md)
+    - [config](commands/config.md)
     - [setup](commands/config-setup.md)
     - [offline](commands/offline.md)
 - [Preferences](preferences.md)
