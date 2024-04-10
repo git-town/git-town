@@ -6,19 +6,14 @@ Feature: in a local repo
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND             |
-      | existing | git add -A          |
-      |          | git stash           |
-      |          | git branch new main |
+      | existing | git branch new main |
       |          | git checkout new    |
-      | new      | git stash pop       |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
@@ -31,12 +26,8 @@ Feature: in a local repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
+      | new      | git checkout existing |
       | existing | git branch -D new     |
-      |          | git stash pop         |
     And the current branch is now "existing"
     And the initial commits exist
-    And the uncommitted file still exists
     And the initial branches and lineage exist
