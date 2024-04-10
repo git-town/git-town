@@ -7,17 +7,22 @@ Feature: on the main branch
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
+      |          | git add -A               |
+      |          | git stash                |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
       |          | git branch new main      |
       |          | git checkout new         |
+      | new      | git stash pop            |
     And the current branch is now "new"
+    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
@@ -28,7 +33,6 @@ Feature: on the main branch
       | existing | main   |
       | new      | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
