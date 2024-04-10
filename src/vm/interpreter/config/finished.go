@@ -16,11 +16,11 @@ func Finished(args FinishedArgs) error {
 	// TODO: extract the code to load a config snapshot into a reusable function
 	//       since it exists in multiple places
 	configGitAccess := gitconfig.Access{Runner: args.Runner.Backend.Runner}
-	globalSnapshot, _, err := configGitAccess.LoadGlobal(true)
+	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, _, err := configGitAccess.LoadLocal(true)
+	localSnapshot, _, err := configGitAccess.LoadLocal(false)
 	if err != nil {
 		return err
 	}
