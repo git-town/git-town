@@ -10,15 +10,12 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git branch new main      |
-      |          | git checkout new         |
-      | new      | git stash pop            |
+      | BRANCH   | COMMAND             |
+      | existing | git add -A          |
+      |          | git stash           |
+      |          | git branch new main |
+      |          | git checkout new    |
+      | new      | git stash pop       |
     And it prints the error:
       """
       conflicts between your uncommmitted changes and the main branch

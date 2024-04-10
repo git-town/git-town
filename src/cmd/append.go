@@ -190,7 +190,7 @@ func appendProgram(config *appendConfig) program.Program {
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         false,
+		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.initialBranch, config.previousBranch},
 	})
 	return prog
