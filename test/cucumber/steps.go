@@ -102,6 +102,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a folder "([^"]*)"$`, func(name string) error {
+		state.fixture.DevRepo.CreateFolder(name)
+		return nil
+	})
+
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there

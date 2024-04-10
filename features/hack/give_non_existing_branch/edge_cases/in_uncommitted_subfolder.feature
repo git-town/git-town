@@ -5,22 +5,18 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And an uncommitted file in folder "new_folder"
+    And a folder "new_folder"
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
       |          | git branch new main      |
       |          | git checkout new         |
-      | new      | git stash pop            |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -34,11 +30,8 @@ Feature: inside an uncommitted subfolder on the current feature branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
+      | new      | git checkout existing |
       | existing | git branch -D new     |
-      |          | git stash pop         |
     And the current branch is now "existing"
     And the initial commits exist
     And the initial lineage exists
