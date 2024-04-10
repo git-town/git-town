@@ -1,3 +1,4 @@
+@this
 Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
@@ -5,8 +6,8 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And a folder "new_folder"
-    When I run "git-town hack new" in the "new_folder" folder
+    And a folder "uncommitted_folder"
+    When I run "git-town hack new" in the "uncommitted_folder" folder
 
   Scenario: result
     Then it runs the commands
