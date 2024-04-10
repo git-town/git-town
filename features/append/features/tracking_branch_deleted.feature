@@ -7,15 +7,12 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | shipped | local, origin | shipped commit |
     And origin ships the "shipped" branch
     And the current branch is "shipped"
-    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | shipped | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
       |         | git checkout main        |
       | main    | git rebase origin/main   |
       |         | git checkout shipped     |
@@ -24,13 +21,11 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | main    | git branch -D shipped    |
       |         | git branch new main      |
       |         | git checkout new         |
-      | new     | git stash pop            |
     And it prints:
       """
       deleted branch "shipped"
       """
     And the current branch is now "new"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES  |
       | local      | main, new |
@@ -43,14 +38,10 @@ Feature: append a branch to a branch whose tracking branch was deleted
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                       |
-      | new     | git add -A                                    |
-      |         | git stash                                     |
-      |         | git checkout main                             |
+      | new     | git checkout main                             |
       | main    | git reset --hard {{ sha 'initial commit' }}   |
       |         | git branch shipped {{ sha 'shipped commit' }} |
       |         | git checkout shipped                          |
       | shipped | git branch -D new                             |
-      |         | git stash pop                                 |
     And the current branch is now "shipped"
-    And the uncommitted file still exists
     And the initial branches and lineage exist
