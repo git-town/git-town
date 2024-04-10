@@ -33,13 +33,10 @@ Feature: on the main branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND                                     |
-      | new      | git add -A                                  |
-      |          | git stash                                   |
-      |          | git checkout main                           |
+      | new      | git checkout main                           |
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
-      |          | git stash pop                               |
     And the current branch is now "existing"
     And the initial commits exist
     And the initial branches and lineage exist
