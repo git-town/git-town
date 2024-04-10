@@ -1,4 +1,3 @@
-@this
 @smoke
 Feature: append a new feature branch to an existing feature branch with uncommitted changes
 
