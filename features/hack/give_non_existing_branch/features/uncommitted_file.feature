@@ -10,17 +10,12 @@ Feature: on the main branch
     And an uncommitted file
     When I run "git-town hack new"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git branch new main      |
-      |          | git checkout new         |
-      | new      | git stash pop            |
+      | BRANCH   | COMMAND             |
+      | existing | git branch new main |
+      |          | git checkout new    |
     And the current branch is now "new"
     And the uncommitted file still exists
     And these commits exist now
