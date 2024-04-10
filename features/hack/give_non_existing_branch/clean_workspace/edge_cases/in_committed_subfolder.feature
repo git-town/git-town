@@ -3,9 +3,9 @@ Feature: inside a committed subfolder that exists only on the current feature br
   Background:
     Given the current branch is a feature branch "existing"
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE       | FILE NAME        |
-      | existing | local, origin | folder commit | new_folder/file1 |
-    When I run "git-town hack new" in the "new_folder" folder
+      | BRANCH   | LOCATION      | MESSAGE       | FILE NAME              |
+      | existing | local, origin | folder commit | committed_folder/file1 |
+    When I run "git-town hack new" in the "committed_folder" folder
 
   Scenario: result
     Then it runs the commands
