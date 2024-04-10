@@ -6,15 +6,12 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
     And it prints the error:
@@ -27,17 +24,14 @@ Feature: conflicts between the main branch and its tracking branch
       To go back to where you started, run "git town undo".
       """
     And a rebase is now in progress
-    And the uncommitted file is stashed
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND               |
-      | main     | git rebase --abort    |
-      |          | git checkout existing |
-      | existing | git stash pop         |
+      | BRANCH | COMMAND               |
+      | main   | git rebase --abort    |
+      |        | git checkout existing |
     And the current branch is now "existing"
-    And the uncommitted file still exists
     And no rebase is in progress
     And the initial commits exist
 
@@ -47,7 +41,6 @@ Feature: conflicts between the main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -59,9 +52,7 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git push              |
       |        | git branch new main   |
       |        | git checkout new      |
-      | new    | git stash pop         |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
@@ -82,6 +73,4 @@ Feature: conflicts between the main branch and its tracking branch
       | main   | git push            |
       |        | git branch new main |
       |        | git checkout new    |
-      | new    | git stash pop       |
     And the current branch is now "new"
-    And the uncommitted file still exists
