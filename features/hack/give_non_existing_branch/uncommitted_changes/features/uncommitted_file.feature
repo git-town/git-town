@@ -38,3 +38,4 @@ Feature: on the main branch
     And the current branch is now "existing"
     And the initial commits exist
     And the initial branches and lineage exist
+    And the uncommitted file still exists

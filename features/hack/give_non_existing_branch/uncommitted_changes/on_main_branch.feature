@@ -1,4 +1,4 @@
-Feature: on a feature branch
+Feature: on the main branch with uncommitted changes
 
   Background:
     Given the commits
@@ -35,3 +35,4 @@ Feature: on a feature branch
     And the current branch is now "main"
     And the initial commits exist
     And the initial branches and lineage exist
+    And the uncommitted file still exists

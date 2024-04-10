@@ -43,3 +43,4 @@ Feature: on a forked repo
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
     And no lineage exists now
+    And the uncommitted file still exists

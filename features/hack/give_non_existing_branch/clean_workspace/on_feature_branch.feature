@@ -1,5 +1,5 @@
 @smoke
-Feature: on the main branch
+Feature: on a feature branch with a clean workspace
 
   Background:
     Given the current branch is a feature branch "existing"

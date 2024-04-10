@@ -28,3 +28,4 @@ Feature: dry-run hacking a new feature branch
     And the current branch is still "existing"
     And the initial commits exist
     And the initial branches and lineage exist
+    And the uncommitted file still exists
