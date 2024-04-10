@@ -10,13 +10,12 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                |
-      | main   | git add -A             |
-      |        | git stash              |
-      |        | git rebase origin/main |
-      |        | git branch new main    |
-      |        | git checkout new       |
-      | new    | git stash pop          |
+      | BRANCH | COMMAND             |
+      | main   | git add -A          |
+      |        | git stash           |
+      |        | git branch new main |
+      |        | git checkout new    |
+      | new    | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
     And these commits exist now
