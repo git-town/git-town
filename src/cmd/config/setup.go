@@ -60,7 +60,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.Runner, &config)
+	aborted, err := enterData(repo.Runner, config)
 	if err != nil || aborted {
 		return err
 	}
@@ -185,19 +185,24 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	return false, nil
 }
 
-func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
+func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, false, err
+	}
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
+		RepoStatus:            repoStatus,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	return setupConfig{
+	return &setupConfig{
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Runner.Config.ConfigFile != nil,
 		localBranches: branchesSnapshot.Branches,
