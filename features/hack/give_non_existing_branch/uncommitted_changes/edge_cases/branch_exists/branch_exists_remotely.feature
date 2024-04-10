@@ -5,7 +5,6 @@ Feature: already existing remote branch
     And an uncommitted file
     When I run "git-town hack existing"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
@@ -20,3 +19,16 @@ Feature: already existing remote branch
       | BRANCH   | PARENT |
       | existing | main   |
     And the uncommitted file still exists
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH   | COMMAND                |
+      | existing | git add -A             |
+      |          | git stash              |
+      |          | git checkout main      |
+      | main     | git branch -D existing |
+      |          | git stash pop          |
+    And the current branch is now "main"
+    And the initial commits exist
+    And the initial branches and lineage exist
