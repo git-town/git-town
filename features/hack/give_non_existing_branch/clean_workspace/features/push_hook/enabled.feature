@@ -1,4 +1,3 @@
-@this
 Feature: auto-push the new branch without running Git push hooks
 
   Background:

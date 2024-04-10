@@ -1062,6 +1062,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^no commits exist now$`, func() error {
+		noCommits := datatable.DataTable{}
+		noCommits.AddRow(state.initialCommits.Cells[0]...)
+		errDiff, errCount := state.initialCommits.EqualDataTable(noCommits)
+		if errCount == 0 {
+			return nil
+		}
+		fmt.Println(errDiff)
+		return errors.New("current commits are not the same as the initial commits")
+	})
+
 	suite.Step(`^no lineage exists now$`, func() error {
 		if state.fixture.DevRepo.Config.FullConfig.ContainsLineage() {
 			lineage := state.fixture.DevRepo.Config.FullConfig.Lineage
