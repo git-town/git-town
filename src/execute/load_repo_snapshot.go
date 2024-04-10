@@ -56,6 +56,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 				return branchesSnapshot, stashSize, false, err
 			}
 		}
+		// must always reload the snapshot here because we fetched updates from the remote
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err

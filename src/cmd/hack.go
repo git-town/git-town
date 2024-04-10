@@ -89,8 +89,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 }
 
 type hackConfig struct {
-	appendConfig      *appendConfig
-	makeFeatureConfig *makeFeatureConfig
+	appendConfig      *appendConfig      // if set, the user wants to append a new branch to an existing branch
+	makeFeatureConfig *makeFeatureConfig // if set, the user wants to make an existing branch a feature branch
 }
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
