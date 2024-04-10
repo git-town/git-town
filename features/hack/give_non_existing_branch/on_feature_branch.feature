@@ -9,6 +9,7 @@ Feature: on the main branch
       | existing | local    | existing commit |
     When I run "git-town hack new"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND             |
@@ -24,7 +25,6 @@ Feature: on the main branch
       | existing | main   |
       | new      | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
