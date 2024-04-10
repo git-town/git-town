@@ -1,17 +1,20 @@
 @smoke
-Feature: append a new feature branch to an existing feature branch
+Feature: append a new feature branch to an existing feature branch with uncommitted changes
 
   Background:
     Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
+    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                             |
       | existing | git fetch --prune --tags            |
+      |          | git add -A                          |
+      |          | git stash                           |
       |          | git checkout main                   |
       | main     | git rebase origin/main              |
       |          | git checkout existing               |
@@ -19,7 +22,9 @@ Feature: append a new feature branch to an existing feature branch
       |          | git merge --no-edit main            |
       |          | git branch new existing             |
       |          | git checkout new                    |
+      | new      | git stash pop                       |
     And the current branch is now "new"
+    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
@@ -33,8 +38,12 @@ Feature: append a new feature branch to an existing feature branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
       | existing | git branch -D new     |
+      |          | git stash pop         |
     And the current branch is now "existing"
+    And the uncommitted file still exists
     And the initial commits exist
     And the initial lineage exists

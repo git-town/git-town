@@ -1,3 +1,4 @@
+@this
 @smoke
 Feature: on the main branch
 
