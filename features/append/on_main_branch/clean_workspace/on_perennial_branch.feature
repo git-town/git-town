@@ -10,11 +10,10 @@ Feature: append to a perennial branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                      |
-      | production | git fetch --prune --tags     |
-      |            | git rebase origin/production |
-      |            | git branch new production    |
-      |            | git checkout new             |
+      | BRANCH     | COMMAND                        |
+      | production | git fetch --prune --tags       |
+      |            | git rebase origin/production   |
+      |            | git checkout -b new production |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |

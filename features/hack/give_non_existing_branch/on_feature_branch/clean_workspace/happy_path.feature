@@ -15,8 +15,7 @@ Feature: on a feature branch with a clean workspace
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
-      |          | git branch new main      |
-      |          | git checkout new         |
+      |          | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |

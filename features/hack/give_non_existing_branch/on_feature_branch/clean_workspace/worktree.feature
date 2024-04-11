@@ -14,8 +14,7 @@ Feature: hack a new branch while the main branch is active in another worktree
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
-      |          | git branch new main      |
-      |          | git checkout new         |
+      |          | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION        | MESSAGE            |

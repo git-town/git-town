@@ -10,10 +10,9 @@ Feature: in a local repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git merge --no-edit main |
-      |          | git branch new existing  |
-      |          | git checkout new         |
+      | BRANCH   | COMMAND                      |
+      | existing | git merge --no-edit main     |
+      |          | git checkout -b new existing |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |

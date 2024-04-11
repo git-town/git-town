@@ -29,8 +29,7 @@ Feature: display all executed Git commands
       |          | frontend | git merge --no-edit main                             |
       |          | backend  | git rev-list --left-right existing...origin/existing |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
-      | existing | frontend | git branch new existing                              |
-      |          | frontend | git checkout new                                     |
+      | existing | frontend | git checkout -b new existing                         |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       |          | backend  | git config git-town-branch.new.parent existing       |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
@@ -40,7 +39,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                       |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "new"
 

@@ -14,8 +14,7 @@ Feature: auto-push the new branch without running Git push hooks
       | BRANCH | COMMAND                            |
       | main   | git fetch --prune --tags           |
       |        | git rebase origin/main             |
-      |        | git branch new main                |
-      |        | git checkout new                   |
+      |        | git checkout -b new main           |
       | new    | git push --no-verify -u origin new |
     And the current branch is now "new"
     And these commits exist now
