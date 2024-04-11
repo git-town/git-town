@@ -23,7 +23,6 @@ func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) erro
 	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
 	if self.Branch == currentBranch {
 		return args.Runner.Frontend.CreateAndCheckoutBranch(self.Branch)
-	} else {
-		return args.Runner.Frontend.CreateAndCheckoutBranchWithParent(self.Branch, nearestAncestor.Location())
 	}
+	return args.Runner.Frontend.CreateAndCheckoutBranchWithParent(self.Branch, nearestAncestor.Location())
 }
