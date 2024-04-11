@@ -1,4 +1,4 @@
-Feature: already existing remote branch
+Feature: already existing unfetched remote branch
 
   Background:
     Given a remote feature branch "existing"
