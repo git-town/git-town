@@ -8,7 +8,6 @@ Feature: does not compress contribution branches
       |              |               | commit 2 | file_2    | content 2    |
     When I run "git-town compress"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                  |
