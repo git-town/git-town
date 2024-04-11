@@ -57,6 +57,7 @@ func Types() []shared.Opcode {
 		&ConnectorMergeProposal{},
 		&ContinueMerge{},
 		&ContinueRebase{},
+		&CreateAndCheckoutBranchExistingParent{},
 		&CreateBranch{},
 		&CreateBranchExistingParent{},
 		&CreateProposal{},

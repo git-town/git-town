@@ -35,7 +35,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "new"
     And the uncommitted file still exists
