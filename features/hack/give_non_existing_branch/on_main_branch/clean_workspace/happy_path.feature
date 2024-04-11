@@ -12,7 +12,7 @@ Feature: on the main branch with a clean workspace
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git rebase origin/main   |
-      |        | git checkout -b new main |
+      |        | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

@@ -15,7 +15,7 @@ Feature: auto-push the new branch without running Git push hooks
       | BRANCH | COMMAND                            |
       | main   | git add -A                         |
       |        | git stash                          |
-      |        | git checkout -b new main           |
+      |        | git checkout -b new                |
       | new    | git push --no-verify -u origin new |
       |        | git stash pop                      |
     And the current branch is now "new"

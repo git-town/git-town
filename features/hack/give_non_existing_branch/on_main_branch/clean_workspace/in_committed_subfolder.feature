@@ -13,7 +13,7 @@ Feature: in a subfolder on the main branch
       | main   | git fetch --prune --tags |
       |        | git rebase origin/main   |
       |        | git push                 |
-      |        | git checkout -b new main |
+      |        | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

@@ -10,11 +10,11 @@ Feature: dry run appending a new feature branch to an existing feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                      |
-      | existing | git add -A                   |
-      |          | git stash                    |
-      |          | git checkout -b new existing |
-      | new      | git stash pop                |
+      | BRANCH   | COMMAND             |
+      | existing | git add -A          |
+      |          | git stash           |
+      |          | git checkout -b new |
+      | new      | git stash pop       |
     And the current branch is still "existing"
     And the initial commits exist
     And the initial branches and lineage exist

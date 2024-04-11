@@ -17,7 +17,7 @@ Feature: append a new feature branch to an existing feature branch
       |          | git checkout existing               |
       | existing | git merge --no-edit origin/existing |
       |          | git merge --no-edit main            |
-      |          | git checkout -b new existing        |
+      |          | git checkout -b new                 |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |

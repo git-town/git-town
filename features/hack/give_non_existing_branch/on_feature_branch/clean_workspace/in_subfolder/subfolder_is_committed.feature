@@ -13,7 +13,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
-      |          | git checkout -b new main |
+      |          | git checkout -b new      |
     And the current branch is now "new"
     And the initial commits exist
     And this lineage exists now

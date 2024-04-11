@@ -25,7 +25,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | child  | git merge --no-edit origin/child |
       |        | git merge --no-edit main         |
       |        | git push                         |
-      |        | git checkout -b new child        |
+      |        | git checkout -b new              |
     And it prints:
       """
       deleted branch "parent"

@@ -14,7 +14,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
-      |          | git checkout -b new main |
+      |          | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

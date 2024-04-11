@@ -16,7 +16,7 @@ Feature: on a forked repo
       |        | git fetch upstream main  |
       |        | git rebase upstream/main |
       |        | git push                 |
-      |        | git checkout -b new main |
+      |        | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |

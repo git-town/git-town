@@ -29,7 +29,7 @@ Feature: display all executed Git commands
       |          | frontend | git merge --no-edit main                             |
       |          | backend  | git rev-list --left-right existing...origin/existing |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
-      | existing | frontend | git checkout -b new existing                         |
+      | existing | frontend | git checkout -b new                                  |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       |          | backend  | git config git-town-branch.new.parent existing       |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
