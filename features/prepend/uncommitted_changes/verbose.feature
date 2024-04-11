@@ -30,8 +30,7 @@ Feature: display all executed Git commands
       |        | frontend | git merge --no-edit main                      |
       |        | backend  | git rev-list --left-right old...origin/old    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      | old    | frontend | git branch parent main                        |
-      |        | frontend | git checkout parent                           |
+      | old    | frontend | git checkout -b parent main                   |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
