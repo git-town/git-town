@@ -41,7 +41,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 30 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "parent"
 
