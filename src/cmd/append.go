@@ -111,7 +111,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 !repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,

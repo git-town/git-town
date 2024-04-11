@@ -6,7 +6,7 @@ Feature: in a local repo
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    When I run "git-town hack new"
+    When I run "git-town append new"
 
   Scenario: result
     Then it runs the commands
