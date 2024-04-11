@@ -45,7 +45,6 @@ Feature: remove existing configuration in Git metadata
       | sync-before-ship                        | down enter                                    |
       | save config to Git metadata             | down enter                                    |
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | COMMAND                                             |
@@ -81,7 +80,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
-    And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git Town setting "perennial-regex" is now ""
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
