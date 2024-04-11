@@ -45,6 +45,7 @@ Feature: remove existing configuration in Git metadata
       | sync-before-ship                        | down enter                                    |
       | save config to Git metadata             | down enter                                    |
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | COMMAND                                             |
