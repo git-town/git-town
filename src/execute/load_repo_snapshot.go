@@ -13,7 +13,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	var err error
 	stashSize, err := args.Repo.Runner.Backend.StashSize()
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+		return branchesSnapshot, stashSize, false, err
 	}
 	if args.HandleUnfinishedState {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
