@@ -24,8 +24,7 @@ Feature: display all executed Git commands
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      | main   | frontend | git branch new main                           |
-      |        | frontend | git checkout new                              |
+      | main   | frontend | git checkout -b new main                      |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.new.parent main    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
@@ -35,7 +34,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "new"
 

@@ -47,11 +47,10 @@ Feature: conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH | COMMAND               |
-      | main   | git rebase --continue |
-      |        | git push              |
-      |        | git branch new main   |
-      |        | git checkout new      |
+      | BRANCH | COMMAND                  |
+      | main   | git rebase --continue    |
+      |        | git push                 |
+      |        | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
@@ -69,8 +68,7 @@ Feature: conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git push            |
-      |        | git branch new main |
-      |        | git checkout new    |
+      | BRANCH | COMMAND                  |
+      | main   | git push                 |
+      |        | git checkout -b new main |
     And the current branch is now "new"

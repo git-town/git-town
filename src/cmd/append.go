@@ -175,11 +175,10 @@ func appendProgram(config *appendConfig) program.Program {
 			})
 		}
 	}
-	prog.Add(&opcodes.CreateBranchExistingParent{
+	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
-	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
