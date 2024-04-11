@@ -105,13 +105,18 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+	}
 	fc := execute.FailureCollector{}
-	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 !repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
+		RepoStatus:            repoStatus,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -174,7 +179,7 @@ func prependProgram(config *prependConfig) program.Program {
 			Remotes:       config.remotes,
 		})
 	}
-	prog.Add(&opcodes.CreateBranchExistingParent{
+	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
@@ -188,7 +193,6 @@ func prependProgram(config *prependConfig) program.Program {
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}

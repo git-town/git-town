@@ -101,6 +101,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a folder "([^"]*)"$`, func(name string) error {
+		state.fixture.DevRepo.CreateFolder(name)
+		return nil
+	})
+
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
@@ -1054,6 +1059,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^no commits exist now$`, func() error {
+		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
+		noCommits := datatable.DataTable{}
+		noCommits.AddRow(state.initialCommits.Cells[0]...)
+		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
+		if errCount == 0 {
+			return nil
+		}
+		fmt.Println(errDiff)
+		return errors.New("found unexpected commits")
+	})
+
 	suite.Step(`^no lineage exists now$`, func() error {
 		if state.fixture.DevRepo.Config.FullConfig.ContainsLineage() {
 			lineage := state.fixture.DevRepo.Config.FullConfig.Lineage
@@ -1387,7 +1404,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial lineage
 		currentLineage := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := currentLineage.EqualDataTable(*state.initialLineage)
+		fmt.Println("CURRENT LINEAGE", currentLineage)
+		initialLineage := *state.initialLineage
+		if len(initialLineage.Cells) == 0 {
+			initialLineage = datatable.DataTable{}
+			initialLineage.AddRow("ONE", "TWO")
+			fmt.Println("88888888888888", initialLineage)
+		} else {
+		}
+		fmt.Println("77777777777777", initialLineage)
+		diff, errCnt := currentLineage.EqualDataTable(initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)

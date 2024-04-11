@@ -18,8 +18,8 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --local                             |
       |         | git rev-parse --show-toplevel                      |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
-      |         | git stash list                                     |
       |         | git status --long --ignore-submodules              |
+      |         | git stash list                                     |
       |         | git branch -vva --sort=refname                     |
       |         | git remote                                         |
       | feature | git fetch --prune --tags                           |
@@ -59,8 +59,8 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --global                            |
       |         | git config -lz --local                             |
       |         | git rev-parse --show-toplevel                      |
-      |         | git stash list                                     |
       |         | git status --long --ignore-submodules              |
+      |         | git stash list                                     |
       |         | git branch -vva --sort=refname                     |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |

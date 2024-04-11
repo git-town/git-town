@@ -36,8 +36,8 @@ Feature: park a branch verbosely
       |        | git config -lz --global                     |
       |        | git config -lz --local                      |
       |        | git rev-parse --show-toplevel               |
-      |        | git stash list                              |
       |        | git status --long --ignore-submodules       |
+      |        | git stash list                              |
       |        | git branch -vva --sort=refname              |
       |        | git rev-parse --verify --abbrev-ref @{-1}   |
       |        | git remote get-url origin                   |

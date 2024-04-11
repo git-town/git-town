@@ -163,6 +163,12 @@ func (self *TestCommands) CreateFile(name, content string) {
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
 }
 
+// CreateFolder creates a folder with the given name in this repository.
+func (self *TestCommands) CreateFolder(name string) {
+	folderPath := filepath.Join(self.WorkingDir, name)
+	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
+}
+
 // CreateObservedBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchName) {
 	main := gitdomain.NewLocalBranchName("main")
@@ -305,10 +311,12 @@ func (self *TestCommands) HasFile(name, content string) string {
 // LineageTable provides the currently configured lineage information as a DataTable.
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
-	_, localGitConfig, _ := self.Config.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	snapshot, localGitConfig, _ := self.Config.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	// PROBLEM: it reloads the config here, which updates outdated config
 	// SOLUTION: load the lineage manually here
+	fmt.Println("SNAPSHOT:", snapshot)
 	if localGitConfig.Lineage == nil {
+		fmt.Println("33333333333333333333")
 		return result
 	}
 	lineage := *localGitConfig.Lineage

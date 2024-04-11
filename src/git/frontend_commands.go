@@ -75,6 +75,24 @@ func (self *FrontendCommands) ContinueRebase() error {
 	return self.Runner.Run("git", "rebase", "--continue")
 }
 
+// CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *FrontendCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName) error {
+	err := self.Runner.Run("git", "checkout", "-b", name.String())
+	self.SetCachedCurrentBranch(name)
+	return err
+}
+
+// CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *FrontendCommands) CreateAndCheckoutBranchWithParent(name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+	err := self.Runner.Run("git", "checkout", "-b", name.String(), parent.String())
+	self.SetCachedCurrentBranch(name)
+	return err
+}
+
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.

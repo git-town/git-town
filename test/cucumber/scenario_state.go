@@ -71,6 +71,7 @@ func (self *ScenarioState) CaptureState() {
 	}
 	if self.initialLineage == nil && self.insideGitRepo {
 		lineage := self.fixture.DevRepo.LineageTable()
+		fmt.Println("222222222222222222222222", lineage)
 		self.initialLineage = &lineage
 	}
 }
