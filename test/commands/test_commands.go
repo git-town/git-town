@@ -312,8 +312,6 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	_, localGitConfig, _ := self.Config.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	// PROBLEM: it reloads the config here, which updates outdated config
-	// SOLUTION: load the lineage manually here
 	if localGitConfig.Lineage == nil {
 		return result
 	}
