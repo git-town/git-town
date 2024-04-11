@@ -1321,7 +1321,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^feature branch "([^"]*)" with these commits$`, func(name string, table *messages.PickleStepArgument_PickleTable) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.initialLineage.AddRow(name, "main")
 		state.fixture.DevRepo.CheckoutBranch(branch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table) {
@@ -1339,7 +1338,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch := gitdomain.NewLocalBranchName(name)
 		parentBranch := gitdomain.NewLocalBranchName(parent)
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
-		state.initialLineage.AddRow(name, "main")
 		state.fixture.DevRepo.CheckoutBranch(branch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table) {
