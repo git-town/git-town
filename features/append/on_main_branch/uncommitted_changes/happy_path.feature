@@ -8,13 +8,13 @@ Feature: on the main branch
     And an uncommitted file
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |
       | main   | git add -A          |
       |        | git stash           |
-      |        | git branch new main |
-      |        | git checkout new    |
+      |        | git checkout -b new |
       | new    | git stash pop       |
     And the current branch is now "new"
     And the initial commits exist
