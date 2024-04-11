@@ -34,13 +34,9 @@ func TestDataTable(t *testing.T) {
 		t.Run("empty table", func(t *testing.T) {
 			t.Parallel()
 			table := datatable.DataTable{}
-			expected := ""
-			dmp := diffmatchpatch.New()
-			diffs := dmp.DiffMain(expected, table.String(), false)
-			if !(len(diffs) == 1 && diffs[0].Type == 0) {
-				fmt.Println(dmp.DiffPrettyText(diffs))
-				t.Fail()
-			}
+			want := ""
+			have := table.String()
+			must.EqOp(t, want, have)
 		})
 	})
 
