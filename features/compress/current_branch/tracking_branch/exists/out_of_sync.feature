@@ -3,6 +3,7 @@ Feature: cannot compress branches that are out of sync
   Background:
     Given the current branch is a feature branch "feature"
 
+  @this
   Scenario: local branch is behind
     Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
