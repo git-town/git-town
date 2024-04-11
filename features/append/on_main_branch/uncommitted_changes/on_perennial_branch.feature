@@ -11,11 +11,11 @@ Feature: append to a perennial branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                        |
-      | production | git add -A                     |
-      |            | git stash                      |
-      |            | git checkout -b new production |
-      | new        | git stash pop                  |
+      | BRANCH     | COMMAND             |
+      | production | git add -A          |
+      |            | git stash           |
+      |            | git checkout -b new |
+      | new        | git stash pop       |
     And the current branch is now "new"
     And the initial commits exist
     And this lineage exists now

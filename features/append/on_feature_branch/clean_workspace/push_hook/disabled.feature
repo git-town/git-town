@@ -11,11 +11,11 @@ Feature: auto-push the new branch to origin without running Git push hooks
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                            |
-      | main   | git fetch --prune --tags           |
-      |        | git rebase origin/main             |
-      |        | git checkout -b new main           |
-      | new    | git push --no-verify -u origin new |
+      | BRANCH | COMMAND                        |
+      | main   | git fetch --prune --tags       |
+      |        | git rebase origin/main         |
+      |        | git checkout -b new main       |
+      | new    | git push --no-verify -u origin |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
