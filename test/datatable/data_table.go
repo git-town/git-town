@@ -155,6 +155,9 @@ func (self *DataTable) Sort() {
 
 // String provides the data in this DataTable instance formatted in Gherkin self format.
 func (self *DataTable) String() string {
+	if len(self.Cells) == 0 {
+		return ""
+	}
 	// determine how to format each column
 	formatStrings := []string{}
 	for _, width := range self.widths() {

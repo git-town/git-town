@@ -14,20 +14,30 @@ func TestDataTable(t *testing.T) {
 
 	t.Run("String serialization", func(t *testing.T) {
 		t.Parallel()
-		table := datatable.DataTable{}
-		table.AddRow("ALPHA", "BETA")
-		table.AddRow("1", "2")
-		table.AddRow("longer text", "even longer text")
-		expected := `| ALPHA       | BETA             |
+		t.Run("normal table", func(t *testing.T) {
+			t.Parallel()
+			table := datatable.DataTable{}
+			table.AddRow("ALPHA", "BETA")
+			table.AddRow("1", "2")
+			table.AddRow("longer text", "even longer text")
+			expected := `| ALPHA       | BETA             |
 | 1           | 2                |
 | longer text | even longer text |
 `
-		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(expected, table.String(), false)
-		if !(len(diffs) == 1 && diffs[0].Type == 0) {
-			fmt.Println(dmp.DiffPrettyText(diffs))
-			t.Fail()
-		}
+			dmp := diffmatchpatch.New()
+			diffs := dmp.DiffMain(expected, table.String(), false)
+			if !(len(diffs) == 1 && diffs[0].Type == 0) {
+				fmt.Println(dmp.DiffPrettyText(diffs))
+				t.Fail()
+			}
+		})
+		t.Run("empty table", func(t *testing.T) {
+			t.Parallel()
+			table := datatable.DataTable{}
+			want := ""
+			have := table.String()
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("RemoveText", func(t *testing.T) {
