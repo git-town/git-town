@@ -1063,14 +1063,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no commits exist now$`, func() error {
+		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
 		noCommits := datatable.DataTable{}
 		noCommits.AddRow(state.initialCommits.Cells[0]...)
-		errDiff, errCount := state.initialCommits.EqualDataTable(noCommits)
+		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
 		if errCount == 0 {
 			return nil
 		}
 		fmt.Println(errDiff)
-		return errors.New("current commits are not the same as the initial commits")
+		return errors.New("found unexpected commits")
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
