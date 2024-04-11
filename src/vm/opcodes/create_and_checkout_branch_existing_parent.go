@@ -20,7 +20,10 @@ func (self *CreateAndCheckoutBranchExistingParent) CreateContinueProgram() []sha
 
 func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) error {
 	nearestAncestor := args.Runner.Backend.FirstExistingBranch(self.Ancestors, args.Runner.Config.FullConfig.MainBranch)
-	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
+	currentBranch, err := args.Runner.Backend.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	if nearestAncestor == currentBranch {
 		return args.Runner.Frontend.CreateAndCheckoutBranch(self.Branch)
 	}
