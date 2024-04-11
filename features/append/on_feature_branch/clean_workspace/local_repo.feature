@@ -10,17 +10,19 @@ Feature: in a local repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git branch new main |
-      |          | git checkout new    |
+      | BRANCH   | COMMAND                  |
+      | existing | git merge --no-edit main |
+      |          | git branch new existing  |
+      |          | git checkout new         |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
+      | new      | local    | existing commit |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
+      | BRANCH   | PARENT   |
+      | existing | main     |
+      | new      | existing |
 
   Scenario: undo
     When I run "git-town undo"
