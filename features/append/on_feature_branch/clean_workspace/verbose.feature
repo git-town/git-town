@@ -30,9 +30,9 @@ Feature: display all executed Git commands
       |          | backend  | git rev-list --left-right existing...origin/existing |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       | existing | frontend | git branch new existing                              |
+      |          | frontend | git checkout new                                     |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       |          | backend  | git config git-town-branch.new.parent existing       |
-      | existing | frontend | git checkout new                                     |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       |          | backend  | git branch -vva --sort=refname                       |
       |          | backend  | git config -lz --global                              |

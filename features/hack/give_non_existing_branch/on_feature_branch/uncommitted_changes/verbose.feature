@@ -24,9 +24,9 @@ Feature: display all executed Git commands with uncommitted changes
       |        | frontend | git stash                                     |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | main   | frontend | git branch new main                           |
+      |        | frontend | git checkout new                              |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.new.parent main    |
-      | main   | frontend | git checkout new                              |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git stash list                                |
       | new    | frontend | git stash pop                                 |
