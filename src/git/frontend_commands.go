@@ -78,6 +78,15 @@ func (self *FrontendCommands) ContinueRebase() error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
+func (self *FrontendCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+	err := self.Runner.Run("git", "checkout", "-b", name.String(), parent.String())
+	self.SetCachedCurrentBranch(name)
+	return err
+}
+
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
 func (self *FrontendCommands) CreateBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	return self.Runner.Run("git", "branch", name.String(), parent.String())
 }

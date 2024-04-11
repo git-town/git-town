@@ -11,11 +11,11 @@ Feature: on the main branch
   @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git add -A          |
-      |        | git stash           |
-      |        | git checkout -b new |
-      | new    | git stash pop       |
+      | BRANCH | COMMAND                  |
+      | main   | git add -A               |
+      |        | git stash                |
+      |        | git checkout -b new main |
+      | new    | git stash pop            |
     And the current branch is now "new"
     And the initial commits exist
     And this lineage exists now
