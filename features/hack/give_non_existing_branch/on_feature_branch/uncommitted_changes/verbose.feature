@@ -23,8 +23,7 @@ Feature: display all executed Git commands with uncommitted changes
       | main   | frontend | git add -A                                    |
       |        | frontend | git stash                                     |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      | main   | frontend | git branch new main                           |
-      |        | frontend | git checkout new                              |
+      | main   | frontend | git checkout -b new main                      |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.new.parent main    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
