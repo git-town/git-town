@@ -183,6 +183,7 @@ func prependProgram(config *prependConfig) program.Program {
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
+	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	// set the parent of the newly created branch
 	prog.Add(&opcodes.SetExistingParent{
 		Branch:    config.targetBranch,
@@ -193,7 +194,6 @@ func prependProgram(config *prependConfig) program.Program {
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
