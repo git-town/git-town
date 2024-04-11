@@ -316,7 +316,6 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	// SOLUTION: load the lineage manually here
 	fmt.Println("SNAPSHOT:", snapshot)
 	if localGitConfig.Lineage == nil {
-		fmt.Println("33333333333333333333")
 		return result
 	}
 	lineage := *localGitConfig.Lineage

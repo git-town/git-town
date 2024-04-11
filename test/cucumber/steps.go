@@ -1373,11 +1373,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		initialLineage := *state.initialLineage
 		if len(initialLineage.Cells) == 0 {
 			initialLineage = datatable.DataTable{}
-			initialLineage.AddRow("ONE", "TWO")
-			fmt.Println("88888888888888", initialLineage)
 		} else {
 		}
-		fmt.Println("77777777777777", initialLineage)
 		diff, errCnt := currentLineage.EqualDataTable(initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
