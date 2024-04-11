@@ -75,7 +75,7 @@ func (self *FrontendCommands) ContinueRebase() error {
 	return self.Runner.Run("git", "rebase", "--continue")
 }
 
-// CreateBranch creates a new branch with the given name.
+// CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *FrontendCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName) error {
@@ -84,7 +84,7 @@ func (self *FrontendCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranch
 	return err
 }
 
-// CreateBranch creates a new branch with the given name.
+// CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *FrontendCommands) CreateAndCheckoutBranchWithParent(name gitdomain.LocalBranchName, parent gitdomain.Location) error {
