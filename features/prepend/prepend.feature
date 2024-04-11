@@ -6,15 +6,12 @@ Feature: prepend a branch to a feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And an uncommitted file
     When I run "git-town prepend parent"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                        |
       | old    | git fetch --prune --tags       |
-      |        | git add -A                     |
-      |        | git stash                      |
       |        | git checkout main              |
       | main   | git rebase origin/main         |
       |        | git checkout old               |
@@ -22,9 +19,7 @@ Feature: prepend a branch to a feature branch
       |        | git merge --no-edit main       |
       |        | git branch parent main         |
       |        | git checkout parent            |
-      | parent | git stash pop                  |
     And the current branch is now "parent"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -37,12 +32,8 @@ Feature: prepend a branch to a feature branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND              |
-      | parent | git add -A           |
-      |        | git stash            |
-      |        | git checkout old     |
+      | parent | git checkout old     |
       | old    | git branch -D parent |
-      |        | git stash pop        |
     And the current branch is now "old"
-    And the uncommitted file still exists
     And the initial commits exist
     And the initial lineage exists

@@ -74,12 +74,17 @@ type switchConfig struct {
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, false, err
+	}
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
+		RepoStatus:            repoStatus,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

@@ -105,13 +105,18 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+	}
 	fc := execute.FailureCollector{}
-	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
+		RepoStatus:            repoStatus,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

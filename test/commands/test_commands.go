@@ -163,6 +163,12 @@ func (self *TestCommands) CreateFile(name, content string) {
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
 }
 
+// CreateFolder creates a folder with the given name in this repository.
+func (self *TestCommands) CreateFolder(name string) {
+	folderPath := filepath.Join(self.WorkingDir, name)
+	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
+}
+
 // CreateObservedBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchName) {
 	main := gitdomain.NewLocalBranchName("main")

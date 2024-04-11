@@ -139,12 +139,17 @@ type createBranchArgs struct {
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*hackConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+	}
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 len(args) == 1,
+		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
+		RepoStatus:            repoStatus,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
