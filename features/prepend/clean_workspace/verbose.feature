@@ -30,11 +30,11 @@ Feature: display all executed Git commands
       |        | backend  | git rev-list --left-right old...origin/old    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | old    | frontend | git branch parent main                        |
+      |        | frontend | git checkout parent                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git config git-town-branch.old.parent parent  |
-      | old    | frontend | git checkout parent                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git config -lz --global                       |
