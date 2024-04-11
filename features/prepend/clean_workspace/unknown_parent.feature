@@ -13,8 +13,7 @@ Feature: ask for missing parent information
       |        | git checkout old         |
       | old    | git merge --no-edit main |
       |        | git push -u origin old   |
-      |        | git branch new main      |
-      |        | git checkout new         |
+      |        | git checkout -b new main |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

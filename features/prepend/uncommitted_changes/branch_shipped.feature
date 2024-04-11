@@ -26,8 +26,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | git merge --no-edit origin/child  |
       |        | git merge --no-edit parent        |
       |        | git push                          |
-      |        | git branch new parent             |
-      |        | git checkout new                  |
+      |        | git checkout -b new parent        |
       | new    | git stash pop                     |
     And the current branch is now "new"
     And the branches are now

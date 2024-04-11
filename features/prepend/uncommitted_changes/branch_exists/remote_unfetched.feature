@@ -16,8 +16,7 @@ Feature: already existing remote branch
       |          | git checkout old               |
       | old      | git merge --no-edit origin/old |
       |          | git merge --no-edit main       |
-      |          | git branch existing main       |
-      |          | git checkout existing          |
+      |          | git checkout -b existing main  |
       | existing | git stash pop                  |
     And the current branch is now "existing"
     And the uncommitted file still exists
