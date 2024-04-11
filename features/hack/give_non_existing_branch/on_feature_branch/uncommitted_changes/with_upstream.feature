@@ -11,23 +11,15 @@ Feature: on a forked repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git rebase origin/main   |
-      |        | git fetch upstream main  |
-      |        | git rebase upstream/main |
-      |        | git push                 |
-      |        | git branch new main      |
-      |        | git checkout new         |
-      | new    | git stash pop            |
+      | BRANCH | COMMAND             |
+      | main   | git add -A          |
+      |        | git stash           |
+      |        | git branch new main |
+      |        | git checkout new    |
+      | new    | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, origin, upstream | upstream commit |
-      | new    | local                   | upstream commit |
+    And the initial commits exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,8 +31,6 @@ Feature: on a forked repo
       | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
-    And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, origin, upstream | upstream commit |
+    And the initial commits exist
     And no lineage exists now
     And the uncommitted file still exists
