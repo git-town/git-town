@@ -54,7 +54,6 @@ Feature: compress the commits on an entire stack when at the stack root
     And file "alpha_3" still has content "alpha 3"
     And the uncommitted file still exists
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
