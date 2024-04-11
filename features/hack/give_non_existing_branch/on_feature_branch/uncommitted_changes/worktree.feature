@@ -13,12 +13,11 @@ Feature: hack a new branch while the main branch is active in another worktree
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git add -A          |
-      |          | git stash           |
-      |          | git branch new main |
-      |          | git checkout new    |
-      | new      | git stash pop       |
+      | BRANCH   | COMMAND                  |
+      | existing | git add -A               |
+      |          | git stash                |
+      |          | git checkout -b new main |
+      | new      | git stash pop            |
     And the current branch is now "new"
     And the uncommitted file still exists
     And these commits exist now
