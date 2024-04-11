@@ -24,7 +24,7 @@ Feature: display all executed Git commands
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      | main   | frontend | git checkout -b new main                      |
+      | main   | frontend | git checkout -b new                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.new.parent main    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |

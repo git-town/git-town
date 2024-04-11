@@ -8,10 +8,10 @@ Feature: missing configuration
 
   Scenario: result
     And it runs the commands
-      | BRANCH | COMMAND                      |
-      | main   | git fetch --prune --tags     |
-      |        | git rebase origin/main       |
-      |        | git checkout -b feature main |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git rebase origin/main   |
+      |        | git checkout -b feature  |
     And the main branch is now "main"
     And the current branch is now "feature"
     And this lineage exists now

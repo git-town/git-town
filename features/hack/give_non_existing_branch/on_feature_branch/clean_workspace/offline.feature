@@ -9,9 +9,9 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git rebase origin/main   |
-      |        | git checkout -b new main |
+      | BRANCH | COMMAND                |
+      | main   | git rebase origin/main |
+      |        | git checkout -b new    |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
