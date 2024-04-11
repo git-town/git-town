@@ -1,4 +1,3 @@
-@this
 Feature: dry run appending a new feature branch to an existing feature branch
 
   Background:
