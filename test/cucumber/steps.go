@@ -102,6 +102,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a folder "([^"]*)"$`, func(name string) error {
+		state.fixture.DevRepo.CreateFolder(name)
+		return nil
+	})
+
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
@@ -1055,6 +1060,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return errors.New("expected no configuration file but found one")
 		}
 		return nil
+	})
+
+	suite.Step(`^no commits exist now$`, func() error {
+		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
+		noCommits := datatable.DataTable{}
+		noCommits.AddRow(state.initialCommits.Cells[0]...)
+		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
+		if errCount == 0 {
+			return nil
+		}
+		fmt.Println(errDiff)
+		return errors.New("found unexpected commits")
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
