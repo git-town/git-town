@@ -1,5 +1,5 @@
 @smoke
-Feature: on a feature branch with a clean workspace
+Feature: on a feature branch with uncommitted changes
 
   Background:
     Given the current branch is a feature branch "existing"
