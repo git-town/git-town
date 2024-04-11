@@ -16,8 +16,7 @@ Feature: dry-run prepending a branch to a feature branch
       |        | git checkout old               |
       | old    | git merge --no-edit origin/old |
       |        | git merge --no-edit main       |
-      |        | git branch parent main         |
-      |        | git checkout parent            |
+      |        | git checkout -b parent main    |
     And the current branch is still "old"
     And the initial commits exist
     And the initial branches and lineage exist

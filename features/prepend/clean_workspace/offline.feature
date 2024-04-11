@@ -16,8 +16,7 @@ Feature: offline mode
       |        | git checkout old               |
       | old    | git merge --no-edit origin/old |
       |        | git merge --no-edit main       |
-      |        | git branch new main            |
-      |        | git checkout new               |
+      |        | git checkout -b new main       |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |

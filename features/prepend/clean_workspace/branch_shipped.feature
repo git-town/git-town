@@ -25,8 +25,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | git merge --no-edit parent        |
       |        | git checkout parent               |
       | parent | git branch -D child               |
-      |        | git branch new parent             |
-      |        | git checkout new                  |
+      |        | git checkout -b new parent        |
     And it prints:
       """
       deleted branch "child"

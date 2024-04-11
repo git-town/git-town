@@ -30,8 +30,7 @@ Feature: display all executed Git commands
       |        | frontend | git merge --no-edit main                      |
       |        | backend  | git rev-list --left-right old...origin/old    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      | old    | frontend | git branch parent main                        |
-      |        | frontend | git checkout parent                           |
+      | old    | frontend | git checkout -b parent main                   |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
@@ -45,7 +44,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 32 shell commands.
+      Ran 31 shell commands.
       """
     And the current branch is now "parent"
 

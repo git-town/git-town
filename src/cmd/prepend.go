@@ -179,11 +179,10 @@ func prependProgram(config *prependConfig) program.Program {
 			Remotes:       config.remotes,
 		})
 	}
-	prog.Add(&opcodes.CreateBranchExistingParent{
+	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
-	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	// set the parent of the newly created branch
 	prog.Add(&opcodes.SetExistingParent{
 		Branch:    config.targetBranch,
