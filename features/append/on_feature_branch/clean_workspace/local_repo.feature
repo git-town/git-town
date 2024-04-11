@@ -12,8 +12,7 @@ Feature: in a local repo
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git merge --no-edit main |
-      |          | git branch new existing  |
-      |          | git checkout new         |
+      |          | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |

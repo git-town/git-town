@@ -14,8 +14,7 @@ Feature: on a forked repo
       | BRANCH | COMMAND             |
       | main   | git add -A          |
       |        | git stash           |
-      |        | git branch new main |
-      |        | git checkout new    |
+      |        | git checkout -b new |
       | new    | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists

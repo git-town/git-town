@@ -11,8 +11,7 @@ Feature: offline mode
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git rebase origin/main |
-      |        | git branch new main    |
-      |        | git checkout new       |
+      |        | git checkout -b new    |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

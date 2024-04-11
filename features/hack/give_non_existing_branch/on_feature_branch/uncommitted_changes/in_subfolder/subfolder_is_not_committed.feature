@@ -10,12 +10,11 @@ Feature: inside an uncommitted subfolder on the current feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git add -A          |
-      |          | git stash           |
-      |          | git branch new main |
-      |          | git checkout new    |
-      | new      | git stash pop       |
+      | BRANCH   | COMMAND                  |
+      | existing | git add -A               |
+      |          | git stash                |
+      |          | git checkout -b new main |
+      | new      | git stash pop            |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

@@ -50,8 +50,7 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
       |        | git push              |
-      |        | git branch new main   |
-      |        | git checkout new      |
+      |        | git checkout -b new   |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
@@ -71,6 +70,5 @@ Feature: conflicts between the main branch and its tracking branch
     Then it runs the commands
       | BRANCH | COMMAND             |
       | main   | git push            |
-      |        | git branch new main |
-      |        | git checkout new    |
+      |        | git checkout -b new |
     And the current branch is now "new"

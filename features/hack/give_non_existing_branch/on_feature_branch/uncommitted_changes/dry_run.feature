@@ -11,12 +11,11 @@ Feature: dry-run hacking a new feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git add -A          |
-      |          | git stash           |
-      |          | git branch new main |
-      |          | git checkout new    |
-      | new      | git stash pop       |
+      | BRANCH   | COMMAND                  |
+      | existing | git add -A               |
+      |          | git stash                |
+      |          | git checkout -b new main |
+      | new      | git stash pop            |
     And the current branch is still "existing"
     And the uncommitted file still exists
     And the initial commits exist

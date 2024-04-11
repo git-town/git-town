@@ -11,12 +11,11 @@ Feature: append a new feature branch to an existing feature branch with uncommit
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                 |
-      | existing | git add -A              |
-      |          | git stash               |
-      |          | git branch new existing |
-      |          | git checkout new        |
-      | new      | git stash pop           |
+      | BRANCH   | COMMAND             |
+      | existing | git add -A          |
+      |          | git stash           |
+      |          | git checkout -b new |
+      | new      | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
     And these commits exist now

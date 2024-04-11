@@ -13,8 +13,7 @@ Feature: append to a perennial branch
       | BRANCH     | COMMAND                      |
       | production | git fetch --prune --tags     |
       |            | git rebase origin/production |
-      |            | git branch new production    |
-      |            | git checkout new             |
+      |            | git checkout -b new          |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |

@@ -1,39 +1,46 @@
-@smoke
-Feature: prepend a branch to a feature branch
+Feature: offline mode
 
   Background:
-    Given the current branch is a feature branch "old"
+    Given offline mode is enabled
+    And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    When I run "git-town prepend parent"
+    And an uncommitted file
+    When I run "git-town prepend new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                        |
-      | old    | git fetch --prune --tags       |
+      | old    | git add -A                     |
+      |        | git stash                      |
       |        | git checkout main              |
       | main   | git rebase origin/main         |
       |        | git checkout old               |
       | old    | git merge --no-edit origin/old |
       |        | git merge --no-edit main       |
-      |        | git branch parent main         |
-      |        | git checkout parent            |
-    And the current branch is now "parent"
+      |        | git checkout -b new main       |
+      | new    | git stash pop                  |
+    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And this lineage exists now
       | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
+      | new    | main   |
+      | old    | new    |
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND           |
+      | new    | git add -A        |
+      |        | git stash         |
+      |        | git checkout old  |
+      | old    | git branch -D new |
+      |        | git stash pop     |
     And the current branch is now "old"
     And the initial commits exist
     And the initial lineage exists
+    And the uncommitted file still exists

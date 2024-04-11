@@ -11,8 +11,7 @@ Feature: missing configuration
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git rebase origin/main   |
-      |        | git branch feature main  |
-      |        | git checkout feature     |
+      |        | git checkout -b feature  |
     And the main branch is now "main"
     And the current branch is now "feature"
     And this lineage exists now

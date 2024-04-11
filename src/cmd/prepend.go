@@ -112,7 +112,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 !repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
@@ -179,7 +179,7 @@ func prependProgram(config *prependConfig) program.Program {
 			Remotes:       config.remotes,
 		})
 	}
-	prog.Add(&opcodes.CreateBranchExistingParent{
+	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
@@ -193,7 +193,6 @@ func prependProgram(config *prependConfig) program.Program {
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}

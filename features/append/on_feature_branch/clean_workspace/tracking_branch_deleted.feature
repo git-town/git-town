@@ -19,8 +19,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | shipped | git merge --no-edit main |
       |         | git checkout main        |
       | main    | git branch -D shipped    |
-      |         | git branch new main      |
-      |         | git checkout new         |
+      |         | git checkout -b new      |
     And it prints:
       """
       deleted branch "shipped"

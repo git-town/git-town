@@ -10,8 +10,7 @@ Feature: already existing remote branch
       | BRANCH   | COMMAND                  |
       | main     | git add -A               |
       |          | git stash                |
-      |          | git branch existing main |
-      |          | git checkout existing    |
+      |          | git checkout -b existing |
       | existing | git stash pop            |
     And the current branch is now "existing"
     And no commits exist now

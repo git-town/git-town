@@ -12,8 +12,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH | COMMAND             |
       | main   | git add -A          |
       |        | git stash           |
-      |        | git branch new main |
-      |        | git checkout new    |
+      |        | git checkout -b new |
       | new    | git stash pop       |
     And the current branch is now "new"
     And these commits exist now

@@ -14,8 +14,7 @@ Feature: dry-run hacking a new feature branch
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
-      |          | git branch new main      |
-      |          | git checkout new         |
+      |          | git checkout -b new      |
     And the current branch is still "existing"
     And the initial commits exist
     And the initial branches and lineage exist
