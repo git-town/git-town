@@ -97,7 +97,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branchText, parentBranch string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, gitdomain.NewLocalBranchName(parentBranch))
-		state.initialLineage.AddRow(branchText, parentBranch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
@@ -126,7 +125,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		isLocal := localStr != ""
 		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.initialLineage.AddRow(branchText, "main")
 		if !isLocal {
 			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			return nil
@@ -137,7 +135,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a parked branch "([^"]+)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreateParkedBranches(branch)
-		state.initialLineage.AddRow(branchText, "main")
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		return nil
 	})
@@ -1290,12 +1287,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		switch branchType {
 		case "feature":
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-			state.initialLineage.AddRow(branchName, "main")
 		case "perennial":
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 		case "parked":
 			state.fixture.DevRepo.CreateParkedBranches(branch)
-			state.initialLineage.AddRow(branchName, "main")
 		case "contribution":
 			state.fixture.DevRepo.CreateContributionBranches(branch)
 		case "observed":
@@ -1349,8 +1344,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial lineage exists$`, func() error {
 		have := state.fixture.DevRepo.LineageTable()
-		state.initialLineage.Sort()
-		diff, errCnt := have.EqualDataTable(state.initialLineage)
+		diff, errCnt := have.EqualDataTable(*state.initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
@@ -1374,9 +1368,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
-		state.initialLineage.Sort()
 		currentLineage := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage)
+		diff, errCnt := currentLineage.EqualDataTable(*state.initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
@@ -1412,7 +1405,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the local feature branch "([^"]+)"$`, func(branch string) error {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		state.fixture.DevRepo.CreateFeatureBranch(branchName)
-		state.initialLineage.AddRow(branch, "main")
 		return nil
 	})
 
@@ -1421,7 +1413,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchText := range []string{branch1, branch2} {
 			branch := gitdomain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
@@ -1434,7 +1425,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		for _, branchText := range []string{branch1, branch2, branch3} {
 			branch := gitdomain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
