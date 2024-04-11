@@ -12,8 +12,7 @@ Feature: prepend a branch to a feature branch
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                        |
-      | old    | git fetch --prune --tags       |
-      |        | git add -A                     |
+      | old    | git add -A                     |
       |        | git stash                      |
       |        | git checkout main              |
       | main   | git rebase origin/main         |
