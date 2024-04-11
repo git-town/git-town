@@ -1,4 +1,3 @@
-@this
 Feature: already existing remote branch
 
   Background:
