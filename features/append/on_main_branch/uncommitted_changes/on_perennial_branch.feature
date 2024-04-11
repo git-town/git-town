@@ -15,7 +15,7 @@ Feature: append to a perennial branch
       | production | git add -A                |
       |            | git stash                 |
       |            | git branch new production |
-      |            | git checkout new          |
+      |            | git checkout -b new       |
       | new        | git stash pop             |
     And the current branch is now "new"
     And the initial commits exist
