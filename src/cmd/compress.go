@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
-	"github.com/git-town/git-town/v13/src/git"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
@@ -62,11 +61,11 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressConfig(repo, dryRun, verbose, message, stack)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesConfig(repo, dryRun, verbose, message)
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressConfig(config, repo.Runner)
+	err = validateCompressBranchesConfig(config)
 	if err != nil {
 		return err
 	}
@@ -97,10 +96,9 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	})
 }
 
-type compressConfig struct {
+type compressBranchesConfig struct {
 	*configdomain.FullConfig
-	branchesToCompress  gitdomain.LocalBranchNames
-	commitMessage       gitdomain.CommitMessage
+	branchesToCompress  []compressBranchConfig
 	compressEntireStack bool
 	dialogTestInputs    components.TestInputs
 	dryRun              bool
@@ -109,7 +107,15 @@ type compressConfig struct {
 	previousBranch      gitdomain.LocalBranchName
 }
 
-func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+type compressBranchConfig struct {
+	branchInfo       gitdomain.BranchInfo
+	branchType       configdomain.BranchType
+	commitCount      int                     // number of commits in this branch
+	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
+	parentBranch     gitdomain.LocalBranchName
+}
+
+func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage) (*compressBranchesConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
@@ -130,32 +136,44 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	initialBranch := branchesSnapshot.Active
-	var branchesToCompress gitdomain.LocalBranchNames
-	if compressEntireStack {
-		branchesToCompress = repo.Runner.Config.FullConfig.Lineage.BranchLineage(initialBranch)
-	} else {
-		branchesToCompress = gitdomain.LocalBranchNames{initialBranch}
+	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
+	branchNamesToCompress := gitdomain.LocalBranchNames{initialBranch}
+	branchesToCompress := make([]compressBranchConfig, len(branchNamesToCompress))
+	for b, branchNameToCompress := range branchNamesToCompress {
+		parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress)
+		branchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress)
+		branchType := repo.Runner.Config.FullConfig.BranchType(initialBranch)
+		commits, err := repo.Runner.Backend.CommitsInBranch(initialBranch, parentBranch)
+		if err != nil {
+			return nil, branchesSnapshot, stashSize, exit, err
+		}
+		commitMessages := commits.Messages()
+		newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
+		commitCount := len(commitMessages)
+		branchesToCompress[b] = compressBranchConfig{
+			branchInfo:       *branchInfo,
+			branchType:       branchType,
+			commitCount:      commitCount,
+			newCommitMessage: newCommitMessage,
+			parentBranch:     parentBranch,
+		}
 	}
-	return &compressConfig{
-		FullConfig:          &repo.Runner.Config.FullConfig,
-		branchesToCompress:  branchesToCompress,
-		commitMessage:       message,
-		compressEntireStack: compressEntireStack,
-		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       branchesSnapshot.Active,
-		previousBranch:      previousBranch,
+	return &compressBranchesConfig{
+		FullConfig:         &repo.Runner.Config.FullConfig,
+		branchesToCompress: branchesToCompress,
+		dialogTestInputs:   dialogTestInputs,
+		dryRun:             dryRun,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		previousBranch:     previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func compressProgram(config *compressConfig, branchInfos gitdomain.BranchInfos, runner *git.ProdRunner) program.Program {
+func compressProgram(config *compressBranchesConfig) program.Program {
 	prog := program.Program{}
-	for _, branch := range config.Lineage.BranchLineage(config.initialBranch) {
-		compressBranchProgram(&prog, branch, config, branchInfos, runner)
+	for _, branchToCompress := range config.branchesToCompress {
+		compressBranchProgram(&prog, branchToCompress, config.Online())
 	}
-	prog.Add(&opcodes.Checkout{Branch: config.initialBranch})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
@@ -165,55 +183,26 @@ func compressProgram(config *compressConfig, branchInfos gitdomain.BranchInfos, 
 	return prog
 }
 
-func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchName, config *compressConfig, branchInfos gitdomain.BranchInfos, runner *git.ProdRunner) {
-	branchType := config.BranchType(branch)
-	if err := canCompressBranchType(branch, branchType); err != nil {
-		return
-	}
-	parent := config.Lineage.Parent(branch)
-	commits, err := runner.Backend.CommitsInBranch(branch, parent)
-	if err != nil {
-		panic(err.Error())
-	}
-	if len(commits) < 2 {
-		return
-	}
-	branchCommitMessages := commits.Messages()
-	commitMessage := slice.FirstNonEmpty(config.commitMessage, branchCommitMessages...)
-	prog.Add(&opcodes.Checkout{Branch: branch})
-	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: parent})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: commitMessage})
-	branchInfo := branchInfos.FindByLocalName(branch)
-	if branchInfo.HasRemoteBranch() && config.IsOnline() {
+func compressBranchProgram(prog *program.Program, branch compressBranchConfig, online configdomain.Online) {
+	prog.Add(&opcodes.Checkout{Branch: branch.branchInfo.LocalName})
+	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: branch.parentBranch})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: branch.newCommitMessage})
+	if branch.branchInfo.HasRemoteBranch() && online.Bool() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
 
-func validateCompressConfig(config *compressConfig, run *git.ProdRunner) error {
-	if !config.compressEntireStack {
-		for _, branchToCompress := range config.branchesToCompress {
-			branchType := config.BranchType(branchToCompress)
-			if err := canCompressBranchType(branchToCompress, branchType); err != nil {
-				return err
-			}
-			parentBranch := config.Lineage.Parent(branchToCompress)
-			commits, err := run.Backend.CommitsInBranch(branchToCompress, parentBranch)
-			if err != nil {
-				return err
-			}
-			commitMessages := commits.Messages()
-			switch len(commitMessages) {
-			case 0:
-				return errors.New(messages.CompressNoCommits)
-			case 1:
-				return errors.New(messages.CompressAlreadyOneCommit)
-			}
-		}
+func validateCompressBranchesConfig(config *compressBranchesConfig) error {
+	ec := execute.FailureCollector{}
+	for _, compressBranchConfig := range config.branchesToCompress {
+		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
+		ec.Check(validateCanCompressBranchType(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchType))
+		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.commitCount))
 	}
-	return nil
+	return ec.Err
 }
 
-func canCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
+func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
 	switch branchType {
 	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
 		return nil
@@ -225,4 +214,24 @@ func canCompressBranchType(branchName gitdomain.LocalBranchName, branchType conf
 		return fmt.Errorf(messages.CompressContributionBranch, branchName)
 	}
 	return nil
+}
+
+func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, commitCount int) error {
+	switch commitCount {
+	case 0:
+		return fmt.Errorf(messages.CompressNoCommits, branch)
+	case 1:
+		return fmt.Errorf(messages.CompressAlreadyOneCommit, branch)
+	}
+	return nil
+}
+
+func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
+	switch syncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
+		return nil
+	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.CompressUnsynced, branchName)
+	}
+	panic("unhandled syncstatus" + syncStatus.String())
 }
