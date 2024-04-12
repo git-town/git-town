@@ -2,7 +2,7 @@
 
 ## 14.0.0
 
-#### BREKING CHANGES
+#### BREAKING CHANGES
 
 To alias `git town compress` to `git compress`, please run `git town config setup` again and follow the prompts.
 
