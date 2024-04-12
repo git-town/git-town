@@ -20,7 +20,6 @@ Feature: compress the commits on an entire stack when at the stack root
     And an uncommitted file
     When I run "git-town compress --stack"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                         |
