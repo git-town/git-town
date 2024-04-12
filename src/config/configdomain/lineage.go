@@ -70,6 +70,7 @@ func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBr
 	return result
 }
 
+// Descendants provides all branches that depend on the given branch in its lineage.
 func (self Lineage) Descendants(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for _, child := range self.Children(branch) {
