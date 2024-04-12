@@ -36,34 +36,29 @@ docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
-	git diff --check
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
-	make --no-print-directory lint-structs-sorted
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
-	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/rta actionlint
-	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
-	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	@make --no-print-directory deadcode
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	@make --no-print-directory lint-structs-sorted
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	@make --no-print-directory deadcode &
+	@make --no-print-directory lint-structs-sorted &
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta actionlint &
 	@tools/ensure_no_files_with_dashes.sh &
+	@tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck &
+	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@make --no-print-directory deadcode &
 	@tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters

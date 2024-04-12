@@ -182,7 +182,19 @@ doesn't define. To find the hanging test:
 
 ## run linters
 
-Format all code, auto-fix all fixable issues, and run all linters:
+Lint the main codebase efficiently:
+
+```
+make lint
+```
+
+Lint all codebases in this monorepo:
+
+```
+make lint-all
+```
+
+Format all code, auto-fix all fixable issues:
 
 <a type="make/command">
 
