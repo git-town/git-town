@@ -64,7 +64,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressConfig(config, initialBranchesSnapshot.Branches, repo.Runner)
+	err = validateCompressBranchesConfig(config, initialBranchesSnapshot.Branches, repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -187,13 +187,12 @@ func compressBranchProgram(prog *program.Program, branch *compressBranchConfig, 
 	}
 }
 
-func validateCompressConfig(config *compressBranchesConfig, branchInfos gitdomain.BranchInfos, run *git.ProdRunner) error {
+func validateCompressBranchesConfig(config *compressBranchesConfig, branchInfos gitdomain.BranchInfos, run *git.ProdRunner) error {
 	ec := execute.FailureCollector{}
-	for _, branchToCompress := range config.branchesToCompress {
-		branchType := config.BranchType(branchToCompress)
-		ec.Check(validateBranchIsSynced(branchToCompress, branchInfos))
-		ec.Check(validateCanCompressBranchType(branchToCompress, branchType))
-		ec.Check(validateBranchHasMultipleCommits(branchToCompress, config, run))
+	for _, compressBranchConfig := range config.branchesToCompress {
+		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
+		ec.Check(validateCanCompressBranchType(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchType))
+		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig, config, run))
 	}
 	return ec.Err
 }
@@ -228,13 +227,12 @@ func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, config *
 	return nil
 }
 
-func validateBranchIsSynced(branchName gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos) error {
-	branchInfo := branchInfos.FindByLocalName(branchName)
-	switch branchInfo.SyncStatus {
+func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
+	switch syncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
 		return nil
 	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
-	panic("unhandled syncstatus" + branchInfo.SyncStatus.String())
+	panic("unhandled syncstatus" + syncStatus.String())
 }
