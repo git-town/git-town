@@ -56,7 +56,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: tools/rta@${RTA_VERSION}  # lints only the main codebase concurrently
+lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	@make --no-print-directory lint-structs-sorted
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
