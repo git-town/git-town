@@ -27,7 +27,7 @@ func (self Lineage) Ancestors(branch gitdomain.LocalBranchName) gitdomain.LocalB
 	}
 }
 
-// BranchAndAncestors provides the full lineage for the branch with the given name,
+// BranchAndAncestors provides the full ancestry for the branch with the given name,
 // including the branch.
 func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	return append(self.Ancestors(branchName), branchName)
