@@ -1,8 +1,14 @@
 # Git Town Changelog
 
+## 14.0.0
+
+#### BREAKING CHANGES
+
+To alias `git town compress` to `git compress`, please run `git town config setup` again and follow the prompts.
+
 ## 13.0.2 (2024-03-29)
 
-###### Bug Fixes
+#### Bug Fixes
 
 - Fixes a serious bug where users who have [branch.sort](https://git-scm.com/docs/git-branch#Documentation/git-branch.txt-branchsort) set might get tracking branches removed ([#3241](https://github.com/git-town/git-town/issues/3241)).
 

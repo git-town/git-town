@@ -17,6 +17,7 @@ func (self AliasableCommands) Strings() []string {
 
 const (
 	AliasableCommandAppend       = AliasableCommand("append")
+	AliasableCommandCompress     = AliasableCommand("compress")
 	AliasableCommandContribute   = AliasableCommand("contribute")
 	AliasableCommandDiffParent   = AliasableCommand("diff-parent")
 	AliasableCommandHack         = AliasableCommand("hack")
@@ -36,6 +37,7 @@ const (
 func AllAliasableCommands() AliasableCommands {
 	return []AliasableCommand{
 		AliasableCommandAppend,
+		AliasableCommandCompress,
 		AliasableCommandContribute,
 		AliasableCommandDiffParent,
 		AliasableCommandHack,
