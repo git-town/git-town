@@ -45,6 +45,8 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	switch key {
 	case KeyAliasAppend:
 		config.Aliases[configdomain.AliasableCommandAppend] = value
+	case KeyAliasCompress:
+		config.Aliases[configdomain.AliasableCommandCompress] = value
 	case KeyAliasContribute:
 		config.Aliases[configdomain.AliasableCommandContribute] = value
 	case KeyAliasDiffParent:
