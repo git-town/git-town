@@ -137,7 +137,12 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
-	branchNamesToCompress := gitdomain.LocalBranchNames{initialBranch}
+	var branchNamesToCompress gitdomain.LocalBranchNames
+	if compressEntireStack {
+		branchNamesToCompress = repo.Runner.Config.FullConfig.Lineage.BranchLineage(initialBranch)
+	} else {
+		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
+	}
 	branchesToCompress := make([]compressBranchConfig, len(branchNamesToCompress))
 	for b, branchNameToCompress := range branchNamesToCompress {
 		parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress)
