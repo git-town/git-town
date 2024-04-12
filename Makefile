@@ -48,7 +48,6 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-	@make --no-print-directory golangci-lint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
@@ -57,7 +56,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
+lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	@make --no-print-directory lint-structs-sorted
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
@@ -65,7 +64,17 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@make --no-print-directory deadcode &
-	@make --no-print-directory golangci-lint
+	@tools/rta golangci-lint run
+
+lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
+	@echo lint tools/format_self
+	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/format_unittests
+	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/stats_release
+	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/structs_sorted
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -82,14 +91,14 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
-test: fix docs unit cuke  # runs all the tests
+test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
 test-go:  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@make --no-print-directory unit &
 	@make --no-print-directory deadcode &
-	@make --no-print-directory golangci-lint
+	@make --no-print-directory lint
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
@@ -128,18 +137,6 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v Paniced \
 	                                                           || true
-
-golangci-lint: tools/rta@${RTA_VERSION}
-	@echo lint main codebase
-	@tools/rta golangci-lint run
-	@echo lint tools/format_self
-	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/format_unittests
-	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/stats_release
-	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
