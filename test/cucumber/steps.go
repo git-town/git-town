@@ -1317,9 +1317,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^(feature|observed) branch "([^"]*)" with these commits$`, func(branchTypeName, name string, table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^(contribution|feature|observed) branch "([^"]*)" with these commits$`, func(branchTypeName, name string, table *messages.PickleStepArgument_PickleTable) error {
 		branchName := gitdomain.NewLocalBranchName(name)
 		switch configdomain.NewBranchType(branchTypeName) {
+		case configdomain.BranchTypeContributionBranch:
+			state.fixture.DevRepo.CreateContributionBranches(branchName)
 		case configdomain.BranchTypeFeatureBranch:
 			state.fixture.DevRepo.CreateFeatureBranch(branchName)
 		case configdomain.BranchTypeObservedBranch:

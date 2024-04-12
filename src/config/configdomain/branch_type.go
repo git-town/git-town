@@ -15,6 +15,8 @@ const (
 
 func NewBranchType(name string) BranchType {
 	switch name {
+	case "contribution":
+		return BranchTypeContributionBranch
 	case "main":
 		return BranchTypeMainBranch
 	case "observed":
