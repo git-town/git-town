@@ -56,8 +56,7 @@ func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName) g
 	if self.Parent(branch).IsEmpty() {
 		return gitdomain.LocalBranchNames{}
 	}
-	result := self.AncestorsWithoutRoot(branch)
-	result = append(result, branch)
+	result := append(self.AncestorsWithoutRoot(branch), branch)
 	return append(result, self.Descendants(branch)...)
 }
 
