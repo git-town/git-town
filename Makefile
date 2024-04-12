@@ -85,7 +85,7 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
-test: fix docs unit lint cuke  # runs all the tests
+test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
 test-go:  # smoke tests while working on the Go code
