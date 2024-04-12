@@ -1283,17 +1283,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
-		switch branchType {
-		case "feature":
+		switch configdomain.NewBranchType(branchType) {
+		case configdomain.BranchTypeFeatureBranch:
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-		case "perennial":
+		case configdomain.BranchTypePerennialBranch:
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
-		case "parked":
+		case configdomain.BranchTypeParkedBranch:
 			state.fixture.DevRepo.CreateParkedBranches(branch)
-		case "contribution":
+		case configdomain.BranchTypeContributionBranch:
 			state.fixture.DevRepo.CreateContributionBranches(branch)
-		case "observed":
+		case configdomain.BranchTypeObservedBranch:
 			state.fixture.DevRepo.CreateObservedBranches(branch)
+		case configdomain.BranchTypeMainBranch:
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -1317,11 +1318,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^feature branch "([^"]*)" with these commits$`, func(name string, table *messages.PickleStepArgument_PickleTable) error {
-		branch := gitdomain.NewLocalBranchName(name)
-		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.fixture.DevRepo.CheckoutBranch(branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+	suite.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(branchTypeName, name string, table *messages.PickleStepArgument_PickleTable) error {
+		branchName := gitdomain.NewLocalBranchName(name)
+		switch configdomain.NewBranchType(branchTypeName) {
+		case configdomain.BranchTypeContributionBranch:
+			state.fixture.DevRepo.CreateContributionBranches(branchName)
+		case configdomain.BranchTypeFeatureBranch:
+			state.fixture.DevRepo.CreateFeatureBranch(branchName)
+		case configdomain.BranchTypeObservedBranch:
+			state.fixture.DevRepo.CreateObservedBranches(branchName)
+		case configdomain.BranchTypeParkedBranch:
+			state.fixture.DevRepo.CreateParkedBranches(branchName)
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		}
+		state.fixture.DevRepo.CheckoutBranch(branchName)
+		state.fixture.DevRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
