@@ -61,7 +61,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesConfig(repo, dryRun, verbose, message)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesConfig(repo, dryRun, verbose, message, stack)
 	if err != nil || exit {
 		return err
 	}
@@ -115,7 +115,7 @@ type compressBranchConfig struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage) (*compressBranchesConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressBranchesConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
@@ -159,13 +159,14 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		FullConfig:         &repo.Runner.Config.FullConfig,
-		branchesToCompress: branchesToCompress,
-		dialogTestInputs:   dialogTestInputs,
-		dryRun:             dryRun,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		previousBranch:     previousBranch,
+		FullConfig:          &repo.Runner.Config.FullConfig,
+		branchesToCompress:  branchesToCompress,
+		compressEntireStack: compressEntireStack,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		previousBranch:      previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
