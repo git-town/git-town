@@ -1283,17 +1283,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
-		switch branchType {
-		case "feature":
+		switch configdomain.NewBranchType(branchType) {
+		case configdomain.BranchTypeFeatureBranch:
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
-		case "perennial":
+		case configdomain.BranchTypePerennialBranch:
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
-		case "parked":
+		case configdomain.BranchTypeParkedBranch:
 			state.fixture.DevRepo.CreateParkedBranches(branch)
-		case "contribution":
+		case configdomain.BranchTypeContributionBranch:
 			state.fixture.DevRepo.CreateContributionBranches(branch)
-		case "observed":
+		case configdomain.BranchTypeObservedBranch:
 			state.fixture.DevRepo.CreateObservedBranches(branch)
+		case configdomain.BranchTypeMainBranch:
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -1328,6 +1329,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreateObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
 			state.fixture.DevRepo.CreateParkedBranches(branchName)
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 		state.fixture.DevRepo.CheckoutBranch(branchName)
 		state.fixture.DevRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
