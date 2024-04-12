@@ -17,6 +17,8 @@ func NewBranchType(name string) BranchType {
 	switch name {
 	case "contribution":
 		return BranchTypeContributionBranch
+	case "feature":
+		return BranchTypeFeatureBranch
 	case "observed":
 		return BranchTypeObservedBranch
 	case "parked":
