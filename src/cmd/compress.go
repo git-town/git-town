@@ -107,8 +107,8 @@ type compressBranchesConfig struct {
 type compressBranchConfig struct {
 	branchInfo       gitdomain.BranchInfo
 	branchType       configdomain.BranchType
-	commitCount      int
-	newCommitMessage gitdomain.CommitMessage
+	commitCount      int                     // number of commits in this branch
+	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
 }
 
