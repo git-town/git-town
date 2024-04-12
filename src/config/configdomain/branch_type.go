@@ -17,10 +17,10 @@ func NewBranchType(name string) BranchType {
 	switch name {
 	case "contribution":
 		return BranchTypeContributionBranch
-	case "main":
-		return BranchTypeMainBranch
 	case "observed":
 		return BranchTypeObservedBranch
+	case "parked":
+		return BranchTypeParkedBranch
 	}
 	panic("unhandled branch type: " + name)
 }
