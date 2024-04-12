@@ -64,7 +64,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressBranchesConfig(config, initialBranchesSnapshot.Branches, repo.Runner)
+	err = validateCompressBranchesConfig(config, repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -167,7 +167,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 func compressProgram(config *compressBranchesConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, &branchToCompress, config.Online())
+		compressBranchProgram(&prog, branchToCompress, config.Online())
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
@@ -178,7 +178,7 @@ func compressProgram(config *compressBranchesConfig) program.Program {
 	return prog
 }
 
-func compressBranchProgram(prog *program.Program, branch *compressBranchConfig, online configdomain.Online) {
+func compressBranchProgram(prog *program.Program, branch compressBranchConfig, online configdomain.Online) {
 	prog.Add(&opcodes.Checkout{Branch: branch.branchInfo.LocalName})
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: branch.parentBranch})
 	prog.Add(&opcodes.CommitSquashedChanges{Message: branch.newCommitMessage})
@@ -187,7 +187,7 @@ func compressBranchProgram(prog *program.Program, branch *compressBranchConfig, 
 	}
 }
 
-func validateCompressBranchesConfig(config *compressBranchesConfig, branchInfos gitdomain.BranchInfos, run *git.ProdRunner) error {
+func validateCompressBranchesConfig(config *compressBranchesConfig, run *git.ProdRunner) error {
 	ec := execute.FailureCollector{}
 	for _, compressBranchConfig := range config.branchesToCompress {
 		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
