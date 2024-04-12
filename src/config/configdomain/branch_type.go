@@ -13,6 +13,16 @@ const (
 	BranchTypeObservedBranch
 )
 
+func NewBranchType(name string) BranchType {
+	switch name {
+	case "main":
+		return BranchTypeMainBranch
+	case "observed":
+		return BranchTypeObservedBranch
+	}
+	panic("unhandled branch type: " + name)
+}
+
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush(currentBranch, initialBranch gitdomain.LocalBranchName) bool {
 	switch self {

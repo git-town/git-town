@@ -1317,11 +1317,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^feature branch "([^"]*)" with these commits$`, func(name string, table *messages.PickleStepArgument_PickleTable) error {
-		branch := gitdomain.NewLocalBranchName(name)
-		state.fixture.DevRepo.CreateFeatureBranch(branch)
-		state.fixture.DevRepo.CheckoutBranch(branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+	suite.Step(`^(feature|observed) branch "([^"]*)" with these commits$`, func(branchTypeName, name string, table *messages.PickleStepArgument_PickleTable) error {
+		branchName := gitdomain.NewLocalBranchName(name)
+		switch configdomain.NewBranchType(branchTypeName) {
+		case configdomain.BranchTypeFeatureBranch:
+			state.fixture.DevRepo.CreateFeatureBranch(branchName)
+		case configdomain.BranchTypeObservedBranch:
+			state.fixture.DevRepo.CreateObservedBranches(branchName)
+		}
+		state.fixture.DevRepo.CheckoutBranch(branchName)
+		state.fixture.DevRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
