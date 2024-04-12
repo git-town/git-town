@@ -147,7 +147,7 @@ func TestLineage(t *testing.T) {
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
-		t.Run("only branch and root exist", func(t *testing.T) {
+		t.Run("one branch and root exist", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{
 				one: main,
