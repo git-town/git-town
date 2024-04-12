@@ -21,11 +21,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const compressDesc = "Squashes all commits on a feature branch down to a single commit"
+const compressDesc = "Squashes all commits on feature branches down to a single commit"
 
 const compressHelp = `
-Compress is a more convenient way of running "git rebase --interactive" and choosing to squash or fixup all commits.
+Compress is a more convenient way of running "git rebase --interactive"
+and choosing to squash or fixup all commits.
 Branches must be synced before you compress them.
+
+By default, this command compresses only the branch you are on.
+The --stack switch makes it compress all branches in your stack.
+
+The compressed commit uses the commit message of the first commit in the branch.
+You can provide a custom commit message with the --message switch.
 `
 
 func compressCmd() *cobra.Command {
