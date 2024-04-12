@@ -185,7 +185,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 func compressProgram(config *compressBranchesConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, config.Online())
+		compressBranchProgram(&prog, branchToCompress, config.Online(), config.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: config.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
@@ -197,13 +197,24 @@ func compressProgram(config *compressBranchesConfig) program.Program {
 	return prog
 }
 
-func compressBranchProgram(prog *program.Program, branch compressBranchConfig, online configdomain.Online) {
+func compressBranchProgram(prog *program.Program, branch compressBranchConfig, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
+	if !shouldCompressBranch(branch.branchInfo.LocalName, branch.branchType, initialBranch) {
+		return
+	}
 	prog.Add(&opcodes.Checkout{Branch: branch.branchInfo.LocalName})
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: branch.parentBranch})
 	prog.Add(&opcodes.CommitSquashedChanges{Message: branch.newCommitMessage})
 	if branch.branchInfo.HasRemoteBranch() && online.Bool() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
+}
+
+func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {
+	isInitialBranch := branchName == initialBranchName
+	if branchType == configdomain.BranchTypeParkedBranch && !isInitialBranch {
+		return false
+	}
+	return true
 }
 
 func validateCompressBranchesConfig(config *compressBranchesConfig) error {
