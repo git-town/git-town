@@ -50,12 +50,6 @@ func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) git
 	return append(self.Ancestors(branchName), branchName)
 }
 
-// BranchAndAncestors provides the full ancestry for the branch with the given name,
-// including the branch.
-func (self Lineage) BranchAndAncestorsWithoutRoot(branchName gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
-	return append(self.AncestorsWithoutRoot(branchName), branchName)
-}
-
 // BranchLineageWithoutRoot provides all branches in the lineage of the given branch,
 // from oldest to youngest, including the given branch.
 func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
