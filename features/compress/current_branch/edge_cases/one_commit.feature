@@ -13,7 +13,7 @@ Feature: does not compress already compressed branches
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      this branch has already just one commit
+      branch "feature" has already just one commit
       """
     And the current branch is still "feature"
     And the initial commits exist
