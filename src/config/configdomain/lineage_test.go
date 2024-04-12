@@ -48,6 +48,36 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("AncestorsWithoutRoot", func(t *testing.T) {
+		t.Parallel()
+		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[three] = two
+			lineage[two] = one
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(three)
+			want := gitdomain.LocalBranchNames{one, two}
+			must.Eq(t, want, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(one)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("no ancestors", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(two)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("BranchAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.Lineage{
@@ -108,6 +138,49 @@ func TestLineage(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("BranchLineageWithoutRoot", func(t *testing.T) {
+		t.Parallel()
+		t.Run("only root exists", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			have := lineage.BranchLineageWithoutRoot(main)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("one branch and root exist", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{
+				one: main,
+			}
+			have := lineage.BranchLineageWithoutRoot(one)
+			want := gitdomain.LocalBranchNames{one}
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple branches", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{
+				one: main,
+				two: one,
+			}
+			want := gitdomain.LocalBranchNames{one, two}
+			t.Run("given root", func(t *testing.T) {
+				t.Parallel()
+				have := lineage.BranchLineageWithoutRoot(main)
+				must.Eq(t, want, have)
+			})
+			t.Run("given middle branch", func(t *testing.T) {
+				t.Parallel()
+				have := lineage.BranchLineageWithoutRoot(one)
+				must.Eq(t, want, have)
+			})
+			t.Run("given leaf branch", func(t *testing.T) {
+				t.Parallel()
+				have := lineage.BranchLineageWithoutRoot(two)
+				must.Eq(t, want, have)
+			})
+		})
+	})
+
 	t.Run("BranchNames", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.Lineage{
@@ -166,6 +239,62 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
 			must.False(t, lineage.HasParents(main))
+		})
+	})
+
+	t.Run("Descendants", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch has no children", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			other := gitdomain.NewLocalBranchName("other")
+			lineage := configdomain.Lineage{
+				branch: main,
+				other:  main,
+			}
+			have := lineage.Descendants(branch)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("branch has only direct children", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			child1 := gitdomain.NewLocalBranchName("child1")
+			child2 := gitdomain.NewLocalBranchName("child2")
+			other := gitdomain.NewLocalBranchName("other")
+			lineage := configdomain.Lineage{
+				branch: main,
+				child1: branch,
+				child2: branch,
+				other:  main,
+			}
+			have := lineage.Descendants(branch)
+			want := gitdomain.LocalBranchNames{child1, child2}
+			must.Eq(t, want, have)
+		})
+		t.Run("branch has grandchildren", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			child1 := gitdomain.NewLocalBranchName("child1")
+			child1a := gitdomain.NewLocalBranchName("child1a")
+			child1b := gitdomain.NewLocalBranchName("child1b")
+			child2 := gitdomain.NewLocalBranchName("child2")
+			child2a := gitdomain.NewLocalBranchName("child2a")
+			child2b := gitdomain.NewLocalBranchName("child2b")
+			other := gitdomain.NewLocalBranchName("other")
+			lineage := configdomain.Lineage{
+				branch:  main,
+				child1:  branch,
+				child1a: child1,
+				child1b: child1,
+				child2:  branch,
+				child2a: child2,
+				child2b: child2,
+				other:   main,
+			}
+			have := lineage.Descendants(branch)
+			want := gitdomain.LocalBranchNames{child1, child1a, child1b, child2, child2a, child2b}
+			must.Eq(t, want, have)
 		})
 	})
 

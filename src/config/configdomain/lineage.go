@@ -27,10 +27,36 @@ func (self Lineage) Ancestors(branch gitdomain.LocalBranchName) gitdomain.LocalB
 	}
 }
 
+// AncestorsWithoutRoot provides the names of all parent branches of the branch with the given name, excluding the root perennial branch.
+func (self Lineage) AncestorsWithoutRoot(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	current := branch
+	result := gitdomain.LocalBranchNames{}
+	for {
+		parent, found := self[current]
+		if !found {
+			if len(result) == 0 {
+				return result
+			}
+			return result[1:]
+		}
+		result.Prepend(parent)
+		current = parent
+	}
+}
+
 // BranchAndAncestors provides the full ancestry for the branch with the given name,
 // including the branch.
 func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	return append(self.Ancestors(branchName), branchName)
+}
+
+// BranchLineageWithoutRoot provides all branches in the lineage of the given branch,
+// from oldest to youngest, including the given branch.
+func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	if self.Parent(branch).IsEmpty() {
+		return self.Descendants(branch)
+	}
+	return append(append(self.AncestorsWithoutRoot(branch), branch), self.Descendants(branch)...)
 }
 
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
@@ -60,6 +86,16 @@ func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBr
 		}
 	}
 	result.Sort()
+	return result
+}
+
+// Descendants provides all branches that depend on the given branch in its lineage.
+func (self Lineage) Descendants(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
+	for _, child := range self.Children(branch) {
+		result = append(result, child)
+		result = append(result, self.Descendants(child)...)
+	}
 	return result
 }
 

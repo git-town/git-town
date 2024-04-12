@@ -530,8 +530,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		commits := git.FromGherkinTable(table)
-		commit := commits[0]
+		commit := git.FromGherkinTable(table)[0]
 		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 		state.fixture.DevRepo.StageFiles(commit.FileName)
 		state.fixture.DevRepo.CommitStagedChanges(commit.Message)
@@ -1315,6 +1314,39 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = current
 		state.fixture.DevRepo.CheckoutBranch(previous)
 		state.fixture.DevRepo.CheckoutBranch(current)
+		return nil
+	})
+
+	suite.Step(`^feature branch "([^"]*)" with these commits$`, func(name string, table *messages.PickleStepArgument_PickleTable) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		state.fixture.DevRepo.CreateFeatureBranch(branch)
+		state.fixture.DevRepo.CheckoutBranch(branch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+		for _, commit := range git.FromGherkinTable(table) {
+			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
+			state.fixture.DevRepo.StageFiles(commit.FileName)
+			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
+			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+				state.fixture.DevRepo.PushBranch()
+			}
+		}
+		return nil
+	})
+
+	suite.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(name, parent string, table *messages.PickleStepArgument_PickleTable) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		parentBranch := gitdomain.NewLocalBranchName(parent)
+		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
+		state.fixture.DevRepo.CheckoutBranch(branch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+		for _, commit := range git.FromGherkinTable(table) {
+			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
+			state.fixture.DevRepo.StageFiles(commit.FileName)
+			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
+			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+				state.fixture.DevRepo.PushBranch()
+			}
+		}
 		return nil
 	})
 
