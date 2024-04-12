@@ -529,12 +529,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I add (?:this commit|these commits) to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		for _, commit := range git.FromGherkinTable(table) {
-			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
-			state.fixture.DevRepo.StageFiles(commit.FileName)
-			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
-		}
+	suite.Step(`^I add this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		commit := git.FromGherkinTable(table)[0]
+		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
+		state.fixture.DevRepo.StageFiles(commit.FileName)
+		state.fixture.DevRepo.CommitStagedChanges(commit.Message)
 		return nil
 	})
 
