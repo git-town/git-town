@@ -10,7 +10,7 @@ Feature: does not compress empty branches
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      this branch has no commits
+      branch "feature" has no commits
       """
     And the current branch is still "feature"
     And the initial branches and lineage exist
