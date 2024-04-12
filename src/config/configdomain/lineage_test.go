@@ -45,6 +45,36 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("AncestorsWithoutRoot", func(t *testing.T) {
+		t.Parallel()
+		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[three] = two
+			lineage[two] = one
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(three)
+			want := gitdomain.LocalBranchNames{one, two}
+			must.Eq(t, want, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(one)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("no ancestors", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage[one] = main
+			have := lineage.AncestorsWithoutRoot(two)
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("BranchAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.Lineage{}
