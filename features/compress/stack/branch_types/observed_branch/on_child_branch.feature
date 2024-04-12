@@ -1,4 +1,4 @@
-Feature: does not compress observed branches
+Feature: does not compress observed branches in the stack
 
   Background:
     Given observed branch "observed" with these commits
@@ -40,7 +40,7 @@ Feature: does not compress observed branches
     And file "observed_2" still has content "observed 2"
     And file "observed_3" still has content "observed 3"
     And file "child_1" still has content "child 1"
-    And file "child_2" still has content "child 2"
+    And file "child_2" still has content "child 2" i
     And file "child_3" still has content "child 3"
     And the uncommitted file still exists
 

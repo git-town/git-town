@@ -1,4 +1,4 @@
-Feature: does not compress non-active parked branches
+Feature: compresses active parked branches
 
   Background:
     Given parked branch "parked" with these commits

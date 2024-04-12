@@ -1,4 +1,4 @@
-Feature: does not compress observed branches
+Feature: does not compress an active observed branch
 
   Background:
     Given observed branch "observed" with these commits

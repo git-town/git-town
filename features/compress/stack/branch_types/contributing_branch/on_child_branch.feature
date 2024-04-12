@@ -1,4 +1,4 @@
-Feature: does not compress contribution branches
+Feature: does not compress contribution branches in the stack
 
   Background:
     Given contribution branch "contribution" with these commits
