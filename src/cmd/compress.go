@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
-	"github.com/git-town/git-town/v13/src/git"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
@@ -64,7 +63,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressBranchesConfig(config, repo.Runner)
+	err = validateCompressBranchesConfig(config)
 	if err != nil {
 		return err
 	}
@@ -108,6 +107,7 @@ type compressBranchesConfig struct {
 type compressBranchConfig struct {
 	branchInfo       gitdomain.BranchInfo
 	branchType       configdomain.BranchType
+	commitMessages   gitdomain.CommitMessages
 	newCommitMessage gitdomain.CommitMessage
 	parentBranch     gitdomain.LocalBranchName
 }
@@ -149,6 +149,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		branchesToCompress[b] = compressBranchConfig{
 			branchInfo:       *branchInfo,
 			branchType:       branchType,
+			commitMessages:   commitMessages,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
 		}
@@ -187,12 +188,12 @@ func compressBranchProgram(prog *program.Program, branch compressBranchConfig, o
 	}
 }
 
-func validateCompressBranchesConfig(config *compressBranchesConfig, run *git.ProdRunner) error {
+func validateCompressBranchesConfig(config *compressBranchesConfig) error {
 	ec := execute.FailureCollector{}
 	for _, compressBranchConfig := range config.branchesToCompress {
 		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
 		ec.Check(validateCanCompressBranchType(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchType))
-		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, config.Lineage, run))
+		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.commitMessages))
 	}
 	return ec.Err
 }
@@ -211,18 +212,12 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 	return nil
 }
 
-func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, run *git.ProdRunner) error {
-	parentBranch := lineage.Parent(branch)
-	commits, err := run.Backend.CommitsInBranch(branch, parentBranch)
-	if err != nil {
-		return err
-	}
-	commitMessages := commits.Messages()
+func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, commitMessages gitdomain.CommitMessages) error {
 	switch len(commitMessages) {
 	case 0:
-		return errors.New(messages.CompressNoCommits)
+		return fmt.Errorf(messages.CompressNoCommits, branch)
 	case 1:
-		return errors.New(messages.CompressAlreadyOneCommit)
+		return fmt.Errorf(messages.CompressAlreadyOneCommit, branch)
 	}
 	return nil
 }
