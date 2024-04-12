@@ -100,27 +100,6 @@ func TestLineage(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("BranchLineage", func(t *testing.T) {
-		t.Parallel()
-		alpha := gitdomain.NewLocalBranchName("alpha")
-		alpha1 := gitdomain.NewLocalBranchName("alpha1")
-		alpha1A := gitdomain.NewLocalBranchName("alpha1A")
-		alpha1B := gitdomain.NewLocalBranchName("alpha1B")
-		alpha2 := gitdomain.NewLocalBranchName("alpha2")
-		beta := gitdomain.NewLocalBranchName("beta")
-		lineage := configdomain.Lineage{
-			alpha:   main,
-			alpha1:  alpha,
-			alpha1A: alpha1,
-			alpha1B: alpha1,
-			alpha2:  alpha,
-			beta:    main,
-		}
-		have := lineage.BranchLineage(alpha)
-		want := gitdomain.LocalBranchNames{main, alpha, alpha1, alpha1A, alpha1B, alpha2}
-		must.Eq(t, want, have)
-	})
-
 	t.Run("BranchNames", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.Lineage{}

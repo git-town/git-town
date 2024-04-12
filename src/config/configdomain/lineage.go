@@ -36,9 +36,8 @@ func (self Lineage) AncestorsWithoutRoot(branch gitdomain.LocalBranchName) gitdo
 		if !found {
 			if len(result) == 0 {
 				return result
-			} else {
-				return result[1:]
 			}
+			return result[1:]
 		}
 		result = append(gitdomain.LocalBranchNames{parent}, result...)
 		current = parent
@@ -55,13 +54,6 @@ func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) git
 // including the branch.
 func (self Lineage) BranchAndAncestorsWithoutRoot(branchName gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	return append(self.AncestorsWithoutRoot(branchName), branchName)
-}
-
-// BranchLineage provides all branches in the lineage of the given branch,
-// from oldest to youngest, including the given branch.
-func (self Lineage) BranchLineage(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
-	result := append(self.Ancestors(branch), branch)
-	return append(result, self.Descendants(branch)...)
 }
 
 // BranchLineageWithoutRoot provides all branches in the lineage of the given branch,
