@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v13/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v13/src/config/configdomain"
 	"github.com/git-town/git-town/v13/src/execute"
+	"github.com/git-town/git-town/v13/src/git"
 	"github.com/git-town/git-town/v13/src/git/gitdomain"
 	"github.com/git-town/git-town/v13/src/gohacks/slice"
 	"github.com/git-town/git-town/v13/src/messages"
@@ -96,6 +97,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage) erro
 
 type compressConfig struct {
 	*configdomain.FullConfig
+	branchesToCompress     gitdomain.LocalBranchNames
 	branchType             configdomain.BranchType
 	dialogTestInputs       components.TestInputs
 	dryRun                 bool
@@ -129,6 +131,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	initialBranch := branchesSnapshot.Active
+	branchesToCompress := gitdomain.LocalBranchNames{initialBranch}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(initialBranch)
 	initialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch)
 	commits, err := repo.Runner.Backend.CommitsInBranch(initialBranch, parentBranch)
@@ -140,6 +143,7 @@ func determineCompressConfig(repo *execute.OpenRepoResult, dryRun, verbose bool,
 	branchType := repo.Runner.Config.FullConfig.BranchType(initialBranch)
 	return &compressConfig{
 		FullConfig:             &repo.Runner.Config.FullConfig,
+		branchesToCompress:     branchesToCompress,
 		branchType:             branchType,
 		dialogTestInputs:       dialogTestInputs,
 		dryRun:                 dryRun,
@@ -173,25 +177,46 @@ func compressBranchProgram(prog *program.Program, branch gitdomain.LocalBranchNa
 	}
 }
 
-func validateCompressConfig(config *compressConfig) error {
+func validateCompressConfig(config *compressConfig, run *git.ProdRunner) error {
+	for _, branchToCompress := range config.branchesToCompress {
+		branchType := config.BranchType(branchToCompress)
+		if err := validateCanCompressBranchType(branchToCompress, branchType); err != nil {
+			return err
+		}
+		validateBranchHasMultipleCommits(branchToCompress, config, run)
+	}
 	if config.initialBranch.SyncStatus != gitdomain.SyncStatusUpToDate && config.initialBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
 		return fmt.Errorf(messages.CompressUnsynced, config.initialBranch.LocalName)
 	}
-	switch len(config.existingCommitMessages) {
+	return nil
+}
+
+func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
+	switch branchType {
+	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
+		return nil
+	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.CompressIsPerennial)
+	case configdomain.BranchTypeObservedBranch:
+		return fmt.Errorf(messages.CompressObservedBranch, branchName)
+	case configdomain.BranchTypeContributionBranch:
+		return fmt.Errorf(messages.CompressContributionBranch, branchName)
+	}
+	return nil
+}
+
+func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, config *compressConfig, run *git.ProdRunner) error {
+	parentBranch := config.Lineage.Parent(branch)
+	commits, err := run.Backend.CommitsInBranch(branch, parentBranch)
+	if err != nil {
+		return err
+	}
+	commitMessages := commits.Messages()
+	switch len(commitMessages) {
 	case 0:
 		return errors.New(messages.CompressNoCommits)
 	case 1:
 		return errors.New(messages.CompressAlreadyOneCommit)
-	}
-	switch config.branchType {
-	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
-		// ok
-	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-		return errors.New(messages.CompressIsPerennial)
-	case configdomain.BranchTypeObservedBranch:
-		return fmt.Errorf(messages.CompressObservedBranch, config.initialBranch.LocalName)
-	case configdomain.BranchTypeContributionBranch:
-		return fmt.Errorf(messages.CompressContributionBranch, config.initialBranch.LocalName)
 	}
 	return nil
 }
