@@ -1334,7 +1334,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^feature branch "([^"]*)" with these commits is a child of "([^"]*)"$`, func(name, parent string, table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(name, parent string, table *messages.PickleStepArgument_PickleTable) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		parentBranch := gitdomain.NewLocalBranchName(parent)
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
