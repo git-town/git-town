@@ -68,13 +68,13 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self
-	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/format_self && ../rta golangci-lint run)
 	@echo lint tools/format_unittests
-	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/format_unittests && ../rta golangci-lint run)
 	@echo lint tools/stats_release
-	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/structs_sorted && ../rta golangci-lint run)
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
