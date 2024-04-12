@@ -223,11 +223,12 @@ func TestLineage(t *testing.T) {
 			two := gitdomain.NewLocalBranchName("two")
 			three := gitdomain.NewLocalBranchName("three")
 			four := gitdomain.NewLocalBranchName("four")
-			lineage := configdomain.Lineage{}
-			lineage[one] = main
-			lineage[two] = one
-			lineage[three] = two
-			lineage[four] = three
+			lineage := configdomain.Lineage{
+				one:   main,
+				two:   one,
+				three: two,
+				four:  three,
+			}
 			have := gitdomain.LocalBranchNames{four, one}
 			want := gitdomain.LocalBranchNames{one, four}
 			lineage.OrderHierarchically(have)
@@ -238,10 +239,11 @@ func TestLineage(t *testing.T) {
 			one := gitdomain.NewLocalBranchName("one")
 			two := gitdomain.NewLocalBranchName("two")
 			three := gitdomain.NewLocalBranchName("three")
-			lineage := configdomain.Lineage{}
-			lineage[one] = main
-			lineage[two] = one
-			lineage[three] = two
+			lineage := configdomain.Lineage{
+				one:   main,
+				two:   one,
+				three: two,
+			}
 			have := gitdomain.LocalBranchNames{one, two, main, three}
 			want := gitdomain.LocalBranchNames{main, one, two, three}
 			lineage.OrderHierarchically(have)
@@ -316,19 +318,21 @@ func TestLineage(t *testing.T) {
 			prod := gitdomain.NewLocalBranchName("prod")
 			hotfix1 := gitdomain.NewLocalBranchName("hotfix1")
 			hotfix2 := gitdomain.NewLocalBranchName("hotfix2")
-			lineage := configdomain.Lineage{}
-			lineage[two] = one
-			lineage[one] = main
-			lineage[hotfix1] = prod
-			lineage[hotfix2] = prod
+			lineage := configdomain.Lineage{
+				two:     one,
+				one:     main,
+				hotfix1: prod,
+				hotfix2: prod,
+			}
 			have := lineage.Roots()
 			want := gitdomain.LocalBranchNames{main, prod}
 			must.Eq(t, want, have)
 		})
 		t.Run("no stacked changes", func(t *testing.T) {
 			t.Parallel()
-			lineage := configdomain.Lineage{}
-			lineage[one] = main
+			lineage := configdomain.Lineage{
+				one: main,
+			}
 			have := lineage.Roots()
 			want := gitdomain.LocalBranchNames{main}
 			must.Eq(t, want, have)
