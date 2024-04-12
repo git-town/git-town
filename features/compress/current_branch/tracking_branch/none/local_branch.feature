@@ -10,6 +10,7 @@ Feature: compress the commits on a local feature branch
     And an uncommitted file
     When I run "git-town compress"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
