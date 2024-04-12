@@ -66,7 +66,7 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	@make --no-print-directory deadcode &
 	@tools/rta golangci-lint run
 
-lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters concurrently
+lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
 	@echo lint tools/format_unittests
