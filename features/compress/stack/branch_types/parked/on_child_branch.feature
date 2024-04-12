@@ -1,4 +1,3 @@
-@this
 Feature: does not compress non-active parked branches
 
   Background:
@@ -31,8 +30,12 @@ Feature: does not compress non-active parked branches
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | child  | local, origin | parked 1 |
+      |        |               | parked 2 |
+      |        |               | parked 3 |
       |        |               | child 1  |
       | parked | local, origin | parked 1 |
+      |        |               | parked 2 |
+      |        |               | parked 3 |
     And file "parked_1" still has content "parked 1"
     And file "parked_2" still has content "parked 2"
     And file "parked_3" still has content "parked 3"
@@ -42,16 +45,12 @@ Feature: does not compress non-active parked branches
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                         |
-      | parked | git add -A                                      |
+      | child  | git add -A                                      |
       |        | git stash                                       |
-      |        | git checkout child                              |
-      | child  | git reset --hard {{ sha 'child 3' }}            |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout parked                             |
-      | parked | git reset --hard {{ sha 'parked 3' }}           |
+      |        | git reset --hard {{ sha 'child 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
       |        | git stash pop                                   |
-    And the current branch is still "parked"
+    And the current branch is still "child"
     And the initial commits exist
     And the initial branches and lineage exist
     And the uncommitted file still exists
