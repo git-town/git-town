@@ -181,9 +181,9 @@ func validateCompressConfig(config *compressConfig, branchInfos gitdomain.Branch
 	ec := execute.FailureCollector{}
 	for _, branchToCompress := range config.branchesToCompress {
 		branchType := config.BranchType(branchToCompress)
+		ec.Check(validateBranchIsSynced(branchToCompress, branchInfos))
 		ec.Check(validateCanCompressBranchType(branchToCompress, branchType))
 		ec.Check(validateBranchHasMultipleCommits(branchToCompress, config, run))
-		ec.Check(validateBranchIsSynced(branchToCompress, branchInfos))
 	}
 	return ec.Err
 }
@@ -222,9 +222,9 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, branchInfos gi
 	branchInfo := branchInfos.FindByLocalName(branchName)
 	switch branchInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
-		return fmt.Errorf(messages.CompressUnsynced, branchName)
-	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
 		return nil
+	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
 	panic("unhandled syncstatus" + branchInfo.SyncStatus.String())
 }
