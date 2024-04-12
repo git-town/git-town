@@ -192,7 +192,7 @@ func validateCompressBranchesConfig(config *compressBranchesConfig, branchInfos 
 	for _, compressBranchConfig := range config.branchesToCompress {
 		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
 		ec.Check(validateCanCompressBranchType(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchType))
-		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig, config, run))
+		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, config.Lineage, run))
 	}
 	return ec.Err
 }
@@ -211,8 +211,8 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 	return nil
 }
 
-func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, config *compressBranchesConfig, run *git.ProdRunner) error {
-	parentBranch := config.Lineage.Parent(branch)
+func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, run *git.ProdRunner) error {
+	parentBranch := lineage.Parent(branch)
 	commits, err := run.Backend.CommitsInBranch(branch, parentBranch)
 	if err != nil {
 		return err
