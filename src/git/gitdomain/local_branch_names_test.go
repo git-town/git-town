@@ -98,6 +98,26 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 	})
 
+	t.Run("Prepend", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty list", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			have := gitdomain.LocalBranchNames{}
+			have.Prepend(branch)
+			want := gitdomain.LocalBranchNames{branch}
+			must.Eq(t, want, have)
+		})
+		t.Run("populated list", func(t *testing.T) {
+			t.Parallel()
+			newBranch := gitdomain.NewLocalBranchName("new")
+			have := gitdomain.NewLocalBranchNames("one", "two")
+			have.Prepend(newBranch)
+			want := gitdomain.NewLocalBranchNames("new", "one", "two")
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("the element to remove exist in the list", func(t *testing.T) {

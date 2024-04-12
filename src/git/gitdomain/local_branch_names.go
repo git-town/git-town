@@ -66,6 +66,10 @@ func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
 }
 
+func (self *LocalBranchNames) Prepend(branch LocalBranchName) {
+	*self = append(LocalBranchNames{branch}, *self...)
+}
+
 // Remove removes the given branch names from this collection.
 func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self)-1)

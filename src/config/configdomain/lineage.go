@@ -39,7 +39,7 @@ func (self Lineage) AncestorsWithoutRoot(branch gitdomain.LocalBranchName) gitdo
 			}
 			return result[1:]
 		}
-		result = append(gitdomain.LocalBranchNames{parent}, result...)
+		result.Prepend(parent)
 		current = parent
 	}
 }
