@@ -48,7 +48,6 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-	@make --no-print-directory golangci-lint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
@@ -68,7 +67,14 @@ lint: tools/rta@${RTA_VERSION}  # lints only the main codebase concurrently
 	@tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters concurrently
-	@make --no-print-directory golangci-lint-all
+	@echo lint tools/format_self
+	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/format_unittests
+	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/stats_release
+	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/structs_sorted
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -131,16 +137,6 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v Paniced \
 	                                                           || true
-
-golangci-lint-all: tools/rta@${RTA_VERSION}
-	@echo lint tools/format_self
-	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/format_unittests
-	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/stats_release
-	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
-	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
