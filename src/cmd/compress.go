@@ -107,7 +107,7 @@ type compressBranchesConfig struct {
 type compressBranchConfig struct {
 	branchInfo       gitdomain.BranchInfo
 	branchType       configdomain.BranchType
-	commitMessages   gitdomain.CommitMessages
+	commitCount      int
 	newCommitMessage gitdomain.CommitMessage
 	parentBranch     gitdomain.LocalBranchName
 }
@@ -146,10 +146,11 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 		commitMessages := commits.Messages()
 		newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
+		commitCount := len(commitMessages)
 		branchesToCompress[b] = compressBranchConfig{
 			branchInfo:       *branchInfo,
 			branchType:       branchType,
-			commitMessages:   commitMessages,
+			commitCount:      commitCount,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
 		}
@@ -193,7 +194,7 @@ func validateCompressBranchesConfig(config *compressBranchesConfig) error {
 	for _, compressBranchConfig := range config.branchesToCompress {
 		ec.Check(validateBranchIsSynced(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchInfo.SyncStatus))
 		ec.Check(validateCanCompressBranchType(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.branchType))
-		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.commitMessages))
+		ec.Check(validateBranchHasMultipleCommits(compressBranchConfig.branchInfo.LocalName, compressBranchConfig.commitCount))
 	}
 	return ec.Err
 }
@@ -212,8 +213,8 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 	return nil
 }
 
-func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, commitMessages gitdomain.CommitMessages) error {
-	switch len(commitMessages) {
+func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, commitCount int) error {
+	switch commitCount {
 	case 0:
 		return fmt.Errorf(messages.CompressNoCommits, branch)
 	case 1:
