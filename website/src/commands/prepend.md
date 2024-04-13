@@ -2,9 +2,9 @@
 
 The _prepend_ command creates a new feature branch as the parent of the current
 branch. It does that by inserting the new feature branch between the current
-feature branch and it's old parent. Before it does that, it [syncs](sync.md) the
-current feature branch to ensure commits into the new branch are on top of the
-current state of the repository.
+feature branch and it's old parent. When running without uncommitted changes in
+your workspace, it also [syncs](sync.md) the current feature branch to ensure
+commits into the new branch are on top of the current state of the repository.
 
 ### Example
 
