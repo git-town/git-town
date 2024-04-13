@@ -2,9 +2,13 @@
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all
-uncommitted changes over to it. When running without uncommitted changes in your
-workspace, it also [syncs](sync.md) the main branch to ensure you develop on top
-of the current state of the repository.
+uncommitted changes over to it.
+
+When running without uncommitted changes in your workspace, it also
+[syncs](sync.md) the main branch to ensure you develop on top of the current
+state of the repository. If the workspace contains uncommitted changes,
+`git hack` does not perform this sync to let you commit your open changes first
+and then sync manually.
 
 ### Configuration
 
