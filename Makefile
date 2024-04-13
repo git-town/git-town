@@ -121,7 +121,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode -test github.com/git-town/git-town/v13 | grep -v BranchExists \
+	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v BranchExists \
 	                                                           | grep -v 'Create$$' \
 	                                                           | grep -v CreateFile \
 	                                                           | grep -v CreateGitTown \
