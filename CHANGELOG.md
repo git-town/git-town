@@ -1,10 +1,23 @@
 # Git Town Changelog
 
-## 14.0.0
+## 14.0.0 (2024-04-12)
+
+Git Town 14.0 improves the developer experience around uncommitted and stacked changes.
 
 #### BREAKING CHANGES
 
+`git hack`, `git append`, and `git prepend` no longer sync the branch lineage in the presence of uncommitted changes. This allows you to commit your changes first before pulling in more changes from other developers ([#3198](https://github.com/git-town/git-town/issues/3198)).
+
+
 To alias `git town compress` to `git compress`, please run `git town config setup` again and follow the prompts.
+
+#### New Features
+
+`git town compress` (aliasable to `git compress`) squashes all commits in a branch into a single commit. By default the new commit uses the commit message of the first commit in the branch. You can provide a custom commit message using the `-m` switch the same way as in `git commit`. The `--stack` option compresses all branches in a change stack. Git Town does not compress observed, contribution, and non-active parked branches ([#1529](https://github.com/git-town/git-town/issues/1529), [#2086](https://github.com/git-town/git-town/issues/2086)).
+
+`git hack`, `git append`, and `git prepend` are faster now because they now create and check out the new branch using a single Git operation ([#3313](https://github.com/git-town/git-town/pull/3313)).
+
+Big thanks to @blaggacao, @breml, @gabyx, @kevgo, @mball-agathos, @nishchay-manwani-glean, @pjh, @ruudk, @tranhl, @utkinn, and @WhosNickDoglio for contributing code, ideas, and feedback to 68 shipped PRs and 7 resolved issues!
 
 ## 13.0.2 (2024-03-29)
 
