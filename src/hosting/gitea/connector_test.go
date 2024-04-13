@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/hosting/gitea"
-	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/hosting/gitea"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 

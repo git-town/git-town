@@ -40,8 +40,8 @@ linters-settings:
     allow:
       - error
       - stdlib
-      - github.com/git-town/git-town/v13/src/git.FrontendRunner
-      - github.com/git-town/git-town/v13/src/git.BackendRunner
+      - github.com/git-town/git-town/v14/src/git.FrontendRunner
+      - github.com/git-town/git-town/v14/src/git.BackendRunner
   tagliatelle:
     case:
       use-field-name: true
@@ -61,7 +61,7 @@ issues:
       text: "do not define dynamic errors"
     - linters:
         - ireturn
-      text: github.com/git-town/git-town/v13/src/(hosting/hostingdomain.Connector|hosting.Connector)
+      text: github.com/git-town/git-town/v14/src/(hosting/hostingdomain.Connector|hosting.Connector)
     - path: src/gohacks/cache/cache.go
       linters:
         - ireturn

@@ -3,8 +3,8 @@ package commandconfig
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"golang.org/x/exp/maps"
 )
 

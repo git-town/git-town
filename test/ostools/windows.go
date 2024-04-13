@@ -6,7 +6,7 @@ package ostools
 import (
 	"os"
 
-	"github.com/git-town/git-town/v13/test/asserts"
+	"github.com/git-town/git-town/v14/test/asserts"
 )
 
 // This package contains platform-specific testing tool implementations for the Windows platform.

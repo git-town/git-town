@@ -1,8 +1,8 @@
 package confighelpers
 
 import (
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git/giturl"
 )
 
 func DetermineOriginURL(originURL string, originOverride configdomain.HostingOriginHostname, originURLCache configdomain.OriginURLCache) *giturl.Parts {

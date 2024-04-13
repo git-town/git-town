@@ -3,7 +3,7 @@ package configdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.

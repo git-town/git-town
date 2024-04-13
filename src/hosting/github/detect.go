@@ -1,8 +1,8 @@
 package github
 
 import (
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git/giturl"
 )
 
 // Detect indicates whether the current repository is hosted on a GitHub server.

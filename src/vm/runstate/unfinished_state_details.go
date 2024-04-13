@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state.

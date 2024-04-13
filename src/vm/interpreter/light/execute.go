@@ -3,11 +3,11 @@ package light
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v13/src/cli/dialog/components"
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git"
-	"github.com/git-town/git-town/v13/src/vm/program"
-	"github.com/git-town/git-town/v13/src/vm/shared"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git"
+	"github.com/git-town/git-town/v14/src/vm/program"
+	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
 func Execute(prog program.Program, runner *git.ProdRunner, lineage configdomain.Lineage) {

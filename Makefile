@@ -18,7 +18,7 @@ cukethis: build  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v13/src/cmd.version=-dev -X github.com/git-town/git-town/v13/src/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v14/src/cmd.version=-dev -X github.com/git-town/git-town/v14/src/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: build  # creates a flamegraph for the end-to-end tests

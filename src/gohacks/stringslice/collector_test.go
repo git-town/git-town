@@ -3,7 +3,7 @@ package stringslice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/shoenig/test/must"
 )
 

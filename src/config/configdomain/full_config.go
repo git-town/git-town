@@ -1,8 +1,8 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
 // FullConfig is the merged configuration to be used by Git Town commands.

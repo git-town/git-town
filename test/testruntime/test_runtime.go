@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/config"
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/gohacks/cache"
-	"github.com/git-town/git-town/v13/test/commands"
-	testshell "github.com/git-town/git-town/v13/test/subshell"
+	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	"github.com/git-town/git-town/v14/test/commands"
+	testshell "github.com/git-town/git-town/v14/test/subshell"
 	"github.com/shoenig/test/must"
 )
 

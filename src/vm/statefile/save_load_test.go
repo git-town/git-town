@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v13/src/config/gitconfig"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/undo/undoconfig"
-	"github.com/git-town/git-town/v13/src/vm/opcodes"
-	"github.com/git-town/git-town/v13/src/vm/program"
-	"github.com/git-town/git-town/v13/src/vm/runstate"
-	"github.com/git-town/git-town/v13/src/vm/statefile"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/vm/opcodes"
+	"github.com/git-town/git-town/v14/src/vm/program"
+	"github.com/git-town/git-town/v14/src/vm/runstate"
+	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/shoenig/test/must"
 )
 

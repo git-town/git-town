@@ -3,7 +3,7 @@ package dialog_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/cli/dialog"
+	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/shoenig/test/must"
 )
 

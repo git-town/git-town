@@ -3,7 +3,7 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v13/src/cli/format"
+	"github.com/git-town/git-town/v14/src/cli/format"
 )
 
 // LabelAndValue prints the label bolded and underlined

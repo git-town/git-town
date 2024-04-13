@@ -1,8 +1,8 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v13/src/vm/opcodes"
-	"github.com/git-town/git-town/v13/src/vm/program"
+	"github.com/git-town/git-town/v14/src/vm/opcodes"
+	"github.com/git-town/git-town/v14/src/vm/program"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.

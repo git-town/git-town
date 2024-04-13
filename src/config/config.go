@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/config/confighelpers"
-	"github.com/git-town/git-town/v13/src/config/envconfig"
-	"github.com/git-town/git-town/v13/src/config/gitconfig"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/git/giturl"
-	"github.com/git-town/git-town/v13/src/gohacks/slice"
-	"github.com/git-town/git-town/v13/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/confighelpers"
+	"github.com/git-town/git-town/v14/src/config/envconfig"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // Config provides type-safe access to Git Town configuration settings
