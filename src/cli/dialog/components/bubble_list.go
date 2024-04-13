@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v13/src/gohacks"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/muesli/termenv"
 )
 

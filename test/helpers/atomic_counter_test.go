@@ -3,7 +3,7 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v13/test/helpers"
+	"github.com/git-town/git-town/v14/test/helpers"
 	"github.com/shoenig/test/must"
 )
 

@@ -1,7 +1,7 @@
 // Package cache provides infrastructure to cache things in memory.
 package cache
 
-import "github.com/git-town/git-town/v13/src/git/gitdomain"
+import "github.com/git-town/git-town/v14/src/git/gitdomain"
 
 // Bool is a cache for bool variables.
 type Bool = Cache[bool]

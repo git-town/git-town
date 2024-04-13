@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/vm/shared"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
 // CreateBranch creates a new branch but leaves the current branch unchanged.

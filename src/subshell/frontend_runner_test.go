@@ -3,8 +3,8 @@ package subshell_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/subshell"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/shoenig/test/must"
 )
 

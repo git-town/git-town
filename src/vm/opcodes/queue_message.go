@@ -1,6 +1,6 @@
 package opcodes
 
-import "github.com/git-town/git-town/v13/src/vm/shared"
+import "github.com/git-town/git-town/v14/src/vm/shared"
 
 type QueueMessage struct {
 	Message string

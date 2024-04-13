@@ -3,7 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // BranchInfos contains the BranchInfos for all branches in a repo.

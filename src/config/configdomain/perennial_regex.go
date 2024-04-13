@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/git-town/git-town/v13/src/cli/dialog/components"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
 // PerennialRegex contains the "branches.perennial-regex" setting.

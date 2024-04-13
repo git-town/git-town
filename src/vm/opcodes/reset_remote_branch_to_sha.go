@@ -3,9 +3,9 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/messages"
-	"github.com/git-town/git-town/v13/src/vm/shared"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/messages"
+	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA,

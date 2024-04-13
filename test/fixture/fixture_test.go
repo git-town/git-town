@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/test/asserts"
-	"github.com/git-town/git-town/v13/test/fixture"
-	"github.com/git-town/git-town/v13/test/git"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/test/asserts"
+	"github.com/git-town/git-town/v14/test/fixture"
+	"github.com/git-town/git-town/v14/test/git"
 	"github.com/shoenig/test/must"
 )
 

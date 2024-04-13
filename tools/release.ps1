@@ -8,7 +8,7 @@ param (
 $ErrorActionPreference = "Stop"
 
 # the Git Town version to release
-$env:VERSION = "v13.0.2"
+$env:VERSION = "v14.0.0"
 
 # dependencies
 Set-Variable -Name "GoMsiVersion" -Value "1.0.2" -Option Constant

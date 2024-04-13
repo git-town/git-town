@@ -6,18 +6,17 @@ This guide is for maintainers who make releases of Git Town.
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
     CHANGELOG.md
-  - verify that all newly added Git Town commands that might have been hidden
-    during development are not hidden anymore
+  - verify that all newly added Git Town commands are not hidden
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `13.0.2`
-    - double-digits: `13.0`
+    - triple-digits: `14.0.0`
+    - double-digits: `14.0`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v13/` everywhere in this repo
-    - update `github.com/git-town/git-town/v13` (without trailing slash)
+    - update `github.com/git-town/git-town/v14/` everywhere in this repo
+    - update `github.com/git-town/git-town/v14` (without trailing slash)
 - ship the branch
-- `git tag v13.0.2 && git push --tags`
+- `git tag v14.0.0 && git push --tags`
 - open the new release in the browser
 - copy the changelog into the release notes
 - publish the release

@@ -1,12 +1,12 @@
 package hosting
 
 import (
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/giturl"
-	"github.com/git-town/git-town/v13/src/hosting/bitbucket"
-	"github.com/git-town/git-town/v13/src/hosting/gitea"
-	"github.com/git-town/git-town/v13/src/hosting/github"
-	"github.com/git-town/git-town/v13/src/hosting/gitlab"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
+	"github.com/git-town/git-town/v14/src/hosting/gitea"
+	"github.com/git-town/git-town/v14/src/hosting/github"
+	"github.com/git-town/git-town/v14/src/hosting/gitlab"
 )
 
 func Detect(originURL *giturl.Parts, hostingPlatform configdomain.HostingPlatform) configdomain.HostingPlatform {

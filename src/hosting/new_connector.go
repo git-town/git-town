@@ -1,14 +1,14 @@
 package hosting
 
 import (
-	"github.com/git-town/git-town/v13/src/cli/print"
-	"github.com/git-town/git-town/v13/src/config/configdomain"
-	"github.com/git-town/git-town/v13/src/git/giturl"
-	"github.com/git-town/git-town/v13/src/hosting/bitbucket"
-	"github.com/git-town/git-town/v13/src/hosting/gitea"
-	"github.com/git-town/git-town/v13/src/hosting/github"
-	"github.com/git-town/git-town/v13/src/hosting/gitlab"
-	"github.com/git-town/git-town/v13/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v14/src/cli/print"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
+	"github.com/git-town/git-town/v14/src/hosting/gitea"
+	"github.com/git-town/git-town/v14/src/hosting/github"
+	"github.com/git-town/git-town/v14/src/hosting/gitlab"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.

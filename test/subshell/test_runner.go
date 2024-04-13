@@ -11,10 +11,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v13/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v13/src/subshell"
-	"github.com/git-town/git-town/v13/test/asserts"
-	"github.com/git-town/git-town/v13/test/envvars"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/subshell"
+	"github.com/git-town/git-town/v14/test/asserts"
+	"github.com/git-town/git-town/v14/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 

@@ -5,9 +5,9 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
-	"github.com/git-town/git-town/v13/src/cli/dialog/components"
-	"github.com/git-town/git-town/v13/src/git/gitdomain"
-	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 const (

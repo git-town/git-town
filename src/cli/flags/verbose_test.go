@@ -3,7 +3,7 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v13/src/cli/flags"
+	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/v13/src/gohacks"
-	"github.com/git-town/git-town/v13/src/messages"
+	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // Offline is a new-type for the "offline" configuration setting.
