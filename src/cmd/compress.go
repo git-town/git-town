@@ -29,7 +29,7 @@ and choosing to fixup all commits.
 Branches must be synced before you compress them.
 
 By default, this command compresses only the branch you are on.
-The --stack switch makes it compress all branches in your stack.
+With the --stack switch it compresses all branches in your stack.
 
 The compressed commit uses the commit message of the first commit in the branch.
 You can provide a custom commit message with the --message switch.
