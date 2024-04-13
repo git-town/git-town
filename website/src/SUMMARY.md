@@ -12,6 +12,7 @@
     - [propose](commands/propose.md)
     - [ship](commands/ship.md)
   - [Additional commands](additional-commands.md)
+    - [compress](commands/compress.md)
     - [kill](commands/kill.md)
     - [rename-branch](commands/rename-branch.md)
     - [repo](commands/repo.md)
