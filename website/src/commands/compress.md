@@ -5,19 +5,19 @@ Git Town compresses feature branches and
 [parked branches](https://www.git-town.com/advanced-syncing#parked-branches) if
 they are currently checked out. It doesn't compress
 [perennial](https://www.git-town.com/preferences/perennial-branches),
-[observed](https://www.git-town.com/advanced-syncing#observed-branches),
+[observed](https://www.git-town.com/advanced-syncing#observed-branches), and
 [contribution](https://www.git-town.com/advanced-syncing#contribution-branches)
 branches.
 
-Branches to compress must be in sync, so run `git sync` and resolve possible
-merge conflicts before compressing a branch.
+Branches must be in sync to compress them, so run `git sync` and resolve
+possible merge conflicts before running this command.
 
 ### Configuration
 
 By default the compressed commit uses the commit message of the first commit in
 the branch. You can provide a custom commit message for the squashed commit with
-the `-m` branch, which works similar to the
-[-m switch for `git commit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--mltmsggt).
+the `-m <message>` flag, which works similar to the
+[-m flag for `git commit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--mltmsggt).
 
 To compress all branches in a [branch stack](../stacked-changes.md) provide the
 `--stack` switch.
@@ -26,7 +26,7 @@ To compress all branches in a [branch stack](../stacked-changes.md) provide the
 
 Assuming you have a feature branch with these commits:
 
-```fish
+```bash
 $ git log --pretty=format:'%s'
 commit 1
 commit 2
@@ -35,13 +35,13 @@ commit 3
 
 Let's compress these three commits into a single commit:
 
-```fish
+```bash
 git compress
 ```
 
 Now your branch has these commits:
 
-```fish
+```bash
 $ git log --pretty=format:'%s'
 commit 1
 ```
@@ -53,7 +53,7 @@ and `commit 3`.
 
 Assuming you have a feature branch with these commits:
 
-```fish
+```bash
 $ git log --pretty=format:'%s'
 commit 1
 commit 2
@@ -62,13 +62,13 @@ commit 3
 
 Let's compress these three commits into a single commit:
 
-```fish
+```bash
 git compress -m "compressed commit"
 ```
 
 Now your branch has these commits:
 
-```fish
+```bash
 $ git log --pretty=format:'%s'
 compressed commit
 ```
