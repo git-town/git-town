@@ -25,7 +25,7 @@ const compressDesc = "Squashes all commits on feature branches down to a single 
 
 const compressHelp = `
 Compress is a more convenient way of running "git rebase --interactive"
-and choosing to squash or fixup all commits.
+and choosing to fixup all commits.
 Branches must be synced before you compress them.
 
 By default, this command compresses only the branch you are on.
