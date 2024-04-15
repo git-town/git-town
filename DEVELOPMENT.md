@@ -118,6 +118,8 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
+To see all commit SHAs of the repo, add the `And inspect the commits` step.
+
 ## inspecting variables
 
 Inspect basic variables:
