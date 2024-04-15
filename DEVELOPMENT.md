@@ -118,6 +118,10 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
+To inspect a repo during an E2E run, add the `And inspect the repo` step. The
+test runner will pause and print the path of the test workspace. You can cd into
+that path in a separate terminal window and inspect the repo there.
+
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
 
 ## inspecting variables
