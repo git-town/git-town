@@ -127,6 +127,7 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 	for _, root := range self.Roots() {
 		self.addChildrenHierarchically(&result, root, branches)
 	}
+	result = result.AppendAllMissing(branches...)
 	return result
 }
 
@@ -173,4 +174,13 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 	}
 	roots.Sort()
 	return roots
+}
+
+func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames) {
+	if allBranches.Contains(currentBranch) {
+		*result = append(*result, currentBranch)
+	}
+	for _, child := range self.Children(currentBranch) {
+		self.addChildrenHierarchically(result, child, allBranches)
+	}
 }
