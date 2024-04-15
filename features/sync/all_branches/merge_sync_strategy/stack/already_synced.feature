@@ -24,11 +24,10 @@ Feature: sync a stack making independent changes
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
-      | alpha  | git fetch --prune --tags         |
+      | main   | git fetch --prune --tags         |
       |        | git add -A                       |
       |        | git stash                        |
-      |        | git checkout main                |
-      | main   | git rebase origin/main           |
+      |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
       |        | git merge --no-edit main         |
@@ -41,10 +40,10 @@ Feature: sync a stack making independent changes
       |        | git checkout delta               |
       | delta  | git merge --no-edit origin/delta |
       |        | git merge --no-edit gamma        |
-      |        | git checkout alpha               |
-      | alpha  | git push --tags                  |
+      |        | git checkout main                |
+      | main   | git push --tags                  |
       |        | git stash pop                    |
-    And the current branch is still "alpha"
+    And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
@@ -53,10 +52,10 @@ Feature: sync a stack making independent changes
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | alpha  | git add -A    |
+      | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
-    And the current branch is still "alpha"
+    And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
