@@ -359,15 +359,12 @@ func TestLineage(t *testing.T) {
 				third:  second,
 			}
 			give := lineage.BranchNames()
-			want := gitdomain.LocalBranchNames{first, one, second, third, two, three}
+			want := gitdomain.LocalBranchNames{first, second, third, one, two, three}
 			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})
-		t.Run("deep lineage", func(t *testing.T) {
+		t.Run("single lineage", func(t *testing.T) {
 			t.Parallel()
-			one := gitdomain.NewLocalBranchName("one")
-			two := gitdomain.NewLocalBranchName("two")
-			three := gitdomain.NewLocalBranchName("three")
 			four := gitdomain.NewLocalBranchName("four")
 			lineage := configdomain.Lineage{
 				one:   main,
@@ -382,9 +379,6 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("elements out of order", func(t *testing.T) {
 			t.Parallel()
-			one := gitdomain.NewLocalBranchName("one")
-			two := gitdomain.NewLocalBranchName("two")
-			three := gitdomain.NewLocalBranchName("three")
 			lineage := configdomain.Lineage{
 				one:   main,
 				two:   one,

@@ -131,10 +131,10 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 }
 
 func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames) {
+	if allBranches.Contains(currentBranch) {
+		*result = append(*result, currentBranch)
+	}
 	for _, child := range self.Children(currentBranch) {
-		if allBranches.Contains(child) {
-			*result = append(*result, child)
-		}
 		self.addChildrenHierarchically(result, child, allBranches)
 	}
 }
