@@ -12,14 +12,15 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
-	dialogProcess := tea.NewProgram(SwitchModel{
+	dialogProgram := tea.NewProgram(SwitchModel{
 		BubbleList:       components.NewBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
 	})
-	dialogResult, err := dialogProcess.Run()
+	components.SendInputs(inputs, dialogProgram)
+	dialogResult, err := dialogProgram.Run()
 	if err != nil {
 		return "", false, err
 	}
