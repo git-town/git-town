@@ -397,6 +397,13 @@ func TestLineage(t *testing.T) {
 			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			give := gitdomain.LocalBranchNames{}
+			have := lineage.OrderHierarchically(give)
+			must.Eq(t, 0, len(have))
+		})
 	})
 
 	t.Run("Parent", func(t *testing.T) {
