@@ -1,4 +1,3 @@
-@this
 Feature: sync a workspace with two independent stacks
 
   Background:
@@ -37,30 +36,30 @@ Feature: sync a workspace with two independent stacks
       |        | git add -A                        |
       |        | git stash                         |
       |        | git rebase origin/main            |
-      |        | git checkout alpha                |
-      | alpha  | git merge --no-edit origin/alpha  |
-      |        | git merge --no-edit main          |
-      |        | git checkout beta                 |
-      | beta   | git merge --no-edit origin/beta   |
-      |        | git merge --no-edit alpha         |
-      |        | git checkout delta                |
-      | delta  | git merge --no-edit origin/delta  |
-      |        | git merge --no-edit gamma         |
       |        | git checkout first                |
       | first  | git merge --no-edit origin/first  |
       |        | git merge --no-edit main          |
-      |        | git checkout fourth               |
-      | fourth | git merge --no-edit origin/fourth |
-      |        | git merge --no-edit third         |
-      |        | git checkout gamma                |
-      | gamma  | git merge --no-edit origin/gamma  |
-      |        | git merge --no-edit beta          |
       |        | git checkout second               |
       | second | git merge --no-edit origin/second |
       |        | git merge --no-edit first         |
       |        | git checkout third                |
       | third  | git merge --no-edit origin/third  |
       |        | git merge --no-edit second        |
+      |        | git checkout fourth               |
+      | fourth | git merge --no-edit origin/fourth |
+      |        | git merge --no-edit third         |
+      |        | git checkout one                  |
+      | one    | git merge --no-edit origin/one    |
+      |        | git merge --no-edit main          |
+      |        | git checkout two                  |
+      | two    | git merge --no-edit origin/two    |
+      |        | git merge --no-edit one           |
+      |        | git checkout three                |
+      | three  | git merge --no-edit origin/three  |
+      |        | git merge --no-edit two           |
+      |        | git checkout four                 |
+      | four   | git merge --no-edit origin/four   |
+      |        | git merge --no-edit three         |
       |        | git checkout main                 |
       | main   | git push --tags                   |
       |        | git stash pop                     |
