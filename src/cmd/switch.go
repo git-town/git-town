@@ -18,21 +18,23 @@ const switchDesc = "Displays the local branches visually and allows switching be
 
 func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addMergeFlag, readMergeFlag := flags.SwitchMerge()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSwitch(readVerboseFlag(cmd))
+			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd))
 		},
 	}
+	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(verbose bool) error {
+func executeSwitch(verbose, merge bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -55,7 +57,11 @@ func executeSwitch(verbose bool) error {
 	if branchToCheckout == config.initialBranch {
 		return nil
 	}
-	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
+	if merge {
+		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, true)
+	} else {
+		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false)
+	}
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError

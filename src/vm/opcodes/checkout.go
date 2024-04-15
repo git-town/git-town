@@ -22,5 +22,5 @@ func (self *Checkout) Run(args shared.RunArgs) error {
 	if existingBranch == self.Branch {
 		return nil
 	}
-	return args.Runner.Frontend.CheckoutBranch(self.Branch)
+	return args.Runner.Frontend.CheckoutBranch(self.Branch, false)
 }
