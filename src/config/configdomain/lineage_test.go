@@ -389,6 +389,14 @@ func TestLineage(t *testing.T) {
 			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})
+		t.Run("perennial branches", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			give := gitdomain.LocalBranchNames{one, two, main}
+			want := gitdomain.LocalBranchNames{one, two, main}
+			have := lineage.OrderHierarchically(give)
+			must.Eq(t, want, have)
+		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
