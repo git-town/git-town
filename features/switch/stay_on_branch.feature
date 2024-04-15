@@ -1,6 +1,5 @@
 Feature: stay on the same branch
 
-  @this
   Scenario: switching to another branch
     Given the current branch is a feature branch "alpha"
     And a feature branch "beta"
