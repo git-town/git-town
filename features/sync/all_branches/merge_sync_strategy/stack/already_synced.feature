@@ -17,18 +17,17 @@ Feature: sync a stack making independent changes
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | delta 1 | delta_1   | delta 1      |
       |               | delta 2 | delta_2   | delta 2      |
-    And the current branch is "delta"
+    And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
-      | delta  | git fetch --prune --tags         |
+      | main   | git fetch --prune --tags         |
       |        | git add -A                       |
       |        | git stash                        |
-      |        | git checkout main                |
-      | main   | git rebase origin/main           |
+      |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
       |        | git merge --no-edit main         |
@@ -41,19 +40,22 @@ Feature: sync a stack making independent changes
       |        | git checkout delta               |
       | delta  | git merge --no-edit origin/delta |
       |        | git merge --no-edit gamma        |
-      |        | git push --tags                  |
+      |        | git checkout main                |
+      | main   | git push --tags                  |
       |        | git stash pop                    |
-    And the current branch is still "delta"
+    And the current branch is still "main"
+    And the uncommitted file still exists
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | delta  | git add -A    |
+      | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
-    And the current branch is still "delta"
+    And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
