@@ -1,30 +1,31 @@
-Feature: sync a stack making independent changes
+@this
+Feature: sync a workspace with two independent stacks
 
   Background:
-    Given feature branch "alpha" with these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | alpha 1 | alpha_1   | alpha 1      |
-    And feature branch "beta" as a child of "alpha" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | beta 1  | beta_1    | beta 1       |
-    And feature branch "gamma" as a child of "beta" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | gamma 1 | gamma_1   | gamma 1      |
-    And feature branch "delta" as a child of "gamma" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | delta 1 | delta_1   | delta 1      |
+    Given feature branch "one" with these commits
+      | LOCATION      | MESSAGE |
+      | local, origin | one     |
+    And feature branch "two" as a child of "one" has these commits
+      | LOCATION      | MESSAGE |
+      | local, origin | two     |
+    And feature branch "three" as a child of "two" has these commits
+      | LOCATION      | MESSAGE |
+      | local, origin | three   |
+    And feature branch "four" as a child of "three" has these commits
+      | LOCATION      | MESSAGE |
+      | local, origin | four    |
     And feature branch "first" with these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | first 1 | first_1   | first 1      |
+      | LOCATION      | MESSAGE |
+      | local, origin | first 1 |
     And feature branch "second" as a child of "first" has these commits
-      | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | local, origin | second 1 | second_1  | second 1     |
+      | LOCATION      | MESSAGE  |
+      | local, origin | second 1 |
     And feature branch "third" as a child of "second" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | third 1 | third_1   | third 1      |
+      | LOCATION      | MESSAGE |
+      | local, origin | third 1 |
     And feature branch "fourth" as a child of "third" has these commits
-      | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | local, origin | fourth 1 | fourth_1  | fourth 1     |
+      | LOCATION      | MESSAGE  |
+      | local, origin | fourth 1 |
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"

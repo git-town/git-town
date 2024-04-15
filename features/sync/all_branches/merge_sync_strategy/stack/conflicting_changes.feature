@@ -1,4 +1,3 @@
-@this
 Feature: sync a stack that makes conflicting changes
 
   Scenario:
