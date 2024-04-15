@@ -1,6 +1,6 @@
 Feature: sync a stack that makes conflicting changes
 
-  Scenario:
+  Scenario: all branches in the stack change the same file to different values and this hasn't been synced yet
     Given a feature branch "alpha"
     And a feature branch "beta" as a child of "alpha"
     And the commits
