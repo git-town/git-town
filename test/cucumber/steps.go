@@ -530,7 +530,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add this commit to the current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		commit := git.FromGherkinTable(table)[0]
+		commit := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))[0]
 		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 		state.fixture.DevRepo.StageFiles(commit.FileName)
 		state.fixture.DevRepo.CommitStagedChanges(commit.Message)
@@ -1166,7 +1166,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		initialTable := datatable.FromGherkin(table)
 		state.initialCommits = &initialTable
 		// create the commits
-		commits := git.FromGherkinTable(table)
+		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		if state.initialCurrentBranch.IsEmpty() {
@@ -1220,7 +1220,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker adds this commit to their current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		commits := git.FromGherkinTable(table)
+		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
 		state.fixture.CoworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 		state.fixture.CoworkerRepo.StageFiles(commit.FileName)
@@ -1340,7 +1340,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.fixture.DevRepo.CheckoutBranch(branchName)
 		state.fixture.DevRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table) {
+		for _, commit := range git.FromGherkinTable(table, branchName) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)
@@ -1357,7 +1357,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		state.fixture.DevRepo.CheckoutBranch(branch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table) {
+		for _, commit := range git.FromGherkinTable(table, branch) {
 			state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
 			state.fixture.DevRepo.StageFiles(commit.FileName)
 			state.fixture.DevRepo.CommitStagedChanges(commit.Message)

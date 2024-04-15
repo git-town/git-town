@@ -18,14 +18,14 @@ func DefaultCommit(filenameSuffix string) Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable, branchName gitdomain.LocalBranchName) []Commit {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""
 	result := []Commit{}
 	counter := helpers.AtomicCounter{}
 	for _, row := range table.Rows[1:] {
-		commit := DefaultCommit(counter.ToString())
+		commit := DefaultCommit(branchName.String() + counter.ToString())
 		for cellNo, cell := range row.Cells {
 			columnName := columnNames[cellNo]
 			cellValue := cell.Value
