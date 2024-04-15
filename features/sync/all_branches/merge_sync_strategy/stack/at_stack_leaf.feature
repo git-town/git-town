@@ -4,19 +4,15 @@ Feature: sync a stack making independent changes
     Given feature branch "alpha" with these commits
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | alpha 1 | alpha_1   | alpha 1      |
-      |               | alpha 2 | alpha_2   | alpha 2      |
     And feature branch "beta" as a child of "alpha" has these commits
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | beta 1  | beta_1    | beta 1       |
-      |               | beta 2  | beta_2    | beta 2       |
     And feature branch "gamma" as a child of "beta" has these commits
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | gamma 1 | gamma_1   | gamma 1      |
-      |               | gamma 2 | gamma_2   | gamma 2      |
     And feature branch "delta" as a child of "gamma" has these commits
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | delta 1 | delta_1   | delta 1      |
-      |               | delta 2 | delta_2   | delta 2      |
     And the current branch is "delta"
     And an uncommitted file
     When I run "git-town sync --all"

@@ -45,7 +45,9 @@ Feature: sync a stack making independent changes
       | alpha  | git push --tags                  |
       |        | git stash pop                    |
     And the current branch is still "alpha"
+    And the uncommitted file still exists
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
