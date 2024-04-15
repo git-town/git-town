@@ -29,7 +29,6 @@ Feature: sync a stack making independent changes
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                           |
@@ -73,10 +72,10 @@ Feature: sync a stack making independent changes
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | delta  | git add -A    |
+      | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
-    And the current branch is still "delta"
+    And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
