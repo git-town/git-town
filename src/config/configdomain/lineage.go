@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"sort"
-
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"golang.org/x/exp/maps"
@@ -73,8 +71,7 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames)
 	for _, branchName := range branchNames {
 		result = slice.AppendAllMissing(result, self.Ancestors(branchName)...)
 	}
-	self.OrderHierarchically(result)
-	return result
+	return self.OrderHierarchically(result)
 }
 
 // Children provides the names of all branches that have the given branch as their parent.
@@ -124,26 +121,22 @@ func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
 	}
 }
 
-// OrderHierarchically sorts the given branches in place so that ancestor branches come before their descendants
-// and everything is sorted alphabetically.
-func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) {
-	sort.Slice(branches, func(a, b int) bool {
-		first := branches[a]
-		second := branches[b]
-		if first.IsEmpty() {
-			return true
-		}
-		if second.IsEmpty() {
-			return false
-		}
-		if self.IsAncestor(first, second) {
-			return true
-		}
-		if self.IsAncestor(second, first) {
-			return false
-		}
-		return first.String() < second.String()
-	})
+// OrderHierarchically provides the given branches sorted so that ancestor branches come before their descendants.
+func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+	result := make(gitdomain.LocalBranchNames, 0, len(self))
+	for _, root := range self.Roots() {
+		self.addChildrenHierarchically(&result, root, branches)
+	}
+	return result
+}
+
+func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames) {
+	if allBranches.Contains(currentBranch) {
+		*result = append(*result, currentBranch)
+	}
+	for _, child := range self.Children(currentBranch) {
+		self.addChildrenHierarchically(result, child, allBranches)
+	}
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
