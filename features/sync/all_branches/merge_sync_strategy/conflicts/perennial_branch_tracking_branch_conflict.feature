@@ -13,7 +13,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then I am not prompted for any parent branches
     And it runs the commands
