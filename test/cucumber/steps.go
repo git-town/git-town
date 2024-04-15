@@ -659,6 +659,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^inspect the commits$`, func() error {
+		fmt.Println("DEV")
+		output, err := state.fixture.DevRepo.Query("git", "branch", "-vva")
+		fmt.Println(output)
+		return err
+	})
+
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Printf("\nThe workspace is at %s\n", state.fixture.DevRepo.WorkingDir)
 		time.Sleep(1 * time.Hour)

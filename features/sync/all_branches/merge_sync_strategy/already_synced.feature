@@ -17,7 +17,7 @@ Feature: sync a stack making independent changes
       | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | local, origin | delta 1 | delta_1   | delta 1      |
       |               | delta 2 | delta_2   | delta 2      |
-    And the current branch is "alpha"
+    And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
 
