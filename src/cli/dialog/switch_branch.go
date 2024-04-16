@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/muesli/termenv"
 	"golang.org/x/exp/maps"
 )
 
@@ -69,13 +70,28 @@ func (self SwitchModel) View() string {
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
 		branch := self.Entries[i]
+		isSelected := i == self.Cursor
+		isInitial := i == self.InitialBranchPos
+		isEnabled := branch.Enabled
 		switch {
-		case i == self.Cursor:
-			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
-		case i == self.InitialBranchPos:
-			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
+		case isSelected:
+			color := self.Colors.Selection
+			if !isEnabled {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("> " + branch.String()))
+		case isInitial:
+			color := self.Colors.Initial
+			if !isEnabled {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("* " + branch.String()))
 		default:
-			s.WriteString("  " + branch.String())
+			color := termenv.String()
+			if !isEnabled {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("  " + branch.String()))
 		}
 		s.WriteRune('\n')
 	}
@@ -151,7 +167,9 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 // The entries are indented according to their position in the given lineage.
 func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
-		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
+		branchInfo := allBranches.FindByLocalName(branch)
+		inThisWorktree := branchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree
+		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, Enabled: inThisWorktree})
 	}
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
@@ -161,8 +179,13 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 type SwitchBranchEntry struct {
 	Branch      gitdomain.LocalBranchName
 	Indentation string
+	Enabled     bool
 }
 
 func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
+}
+
+func (sbe SwitchBranchEntry) IsEnabled() bool {
+	return sbe.Enabled
 }
