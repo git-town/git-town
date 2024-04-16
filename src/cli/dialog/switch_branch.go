@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -78,7 +77,7 @@ func (self SwitchModel) View() string {
 		case isInitial:
 			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
 		case !branch.ThisWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + branch.String()))
+			s.WriteString("+ " + branch.String())
 		default:
 			s.WriteString("  " + branch.String())
 		}
