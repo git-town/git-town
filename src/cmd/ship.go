@@ -33,6 +33,9 @@ const shipDesc = "Deliver a completed feature branch"
 const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
 
+- syncs the main branch
+- pulls updates for <branch_name>
+- merges the main branch into <branch_name>
 - squash-merges <branch_name> into the main branch
   with commit message specified by the user
 - pushes the main branch to the origin repository
