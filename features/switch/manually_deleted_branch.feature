@@ -1,4 +1,4 @@
-Feature: switch branches with a manually deleted branch still listed in the lineage
+Feature: switch branches while a manually deleted branch is still listed in the lineage
 
   Scenario: repo contains a manually deleted branch
     Given the current branch is a local feature branch "alpha"
