@@ -5,8 +5,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town config"
     Then it prints:
       """
-      I found the deprecated <LOCATION> setting "git-town.code-hosting-origin-hostname".
-      I am upgrading this setting to the new format "git-town.hosting-origin-hostname".
+      Upgrading deprecated <LOCATION> setting "git-town.code-hosting-origin-hostname" to "git-town.hosting-origin-hostname".
       """
     And <LOCATION> Git Town setting "hosting-origin-hostname" is now "git.acme.com"
     And <LOCATION> Git Town setting "code-hosting-origin-hostname" now doesn't exist

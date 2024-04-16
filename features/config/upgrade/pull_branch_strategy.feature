@@ -5,8 +5,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town <COMMAND>"
     Then it prints:
       """
-      I found the deprecated <LOCATION> setting "git-town.pull-branch-strategy".
-      I am upgrading this setting to the new format "git-town.sync-perennial-strategy".
+      Upgrading deprecated <LOCATION> setting "git-town.pull-branch-strategy" to "git-town.sync-perennial-strategy".
       """
     And <LOCATION> Git Town setting "sync-perennial-strategy" is now "rebase"
     And <LOCATION> Git Town setting "pull-branch-strategy" now doesn't exist
