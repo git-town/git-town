@@ -76,6 +76,8 @@ func (self SwitchModel) View() string {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		case isInitial:
 			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
+		case branch.OtherWorktree:
+			s.WriteString("+ " + branch.String())
 		default:
 			s.WriteString("  " + branch.String())
 		}
@@ -144,7 +146,14 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: ""})
+		branchInfo := allBranches.FindByLocalName(localBranch)
+		var otherWorktree bool
+		if branchInfo == nil {
+			otherWorktree = false
+		} else {
+			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		}
+		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: "", OtherWorktree: otherWorktree})
 	}
 	return entries
 }
@@ -153,7 +162,14 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 // The entries are indented according to their position in the given lineage.
 func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
-		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
+		branchInfo := allBranches.FindByLocalName(branch)
+		var otherWorktree bool
+		if branchInfo == nil {
+			otherWorktree = false
+		} else {
+			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		}
+		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 	}
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
@@ -161,8 +177,9 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 }
 
 type SwitchBranchEntry struct {
-	Branch      gitdomain.LocalBranchName
-	Indentation string
+	Branch        gitdomain.LocalBranchName
+	Indentation   string
+	OtherWorktree bool
 }
 
 func (sbe SwitchBranchEntry) String() string {
