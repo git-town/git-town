@@ -4,8 +4,8 @@ Feature: switch branches
     Given the current branch is a feature branch "current"
     And a feature branch "other"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, origin | other commit |
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
     And an uncommitted file
     When I run "git-town switch -m" and enter into the dialogs:
       | KEYS       |
