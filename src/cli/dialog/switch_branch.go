@@ -5,10 +5,12 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/muesli/termenv"
 	"golang.org/x/exp/maps"
 )
 
@@ -73,13 +75,25 @@ func (self SwitchModel) View() string {
 		isInitial := i == self.InitialBranchPos
 		switch {
 		case isSelected:
-			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
+			color := self.Colors.Selection
+			if branch.OtherWorktree {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("> " + branch.String()))
 		case isInitial:
-			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
+			color := self.Colors.Initial
+			if branch.OtherWorktree {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("* " + branch.String()))
 		case branch.OtherWorktree:
-			s.WriteString("+ " + branch.String())
+			s.WriteString(colors.Faint().Styled("+ " + branch.String()))
 		default:
-			s.WriteString("  " + branch.String())
+			color := termenv.String()
+			if branch.OtherWorktree {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("  " + branch.String()))
 		}
 		s.WriteRune('\n')
 	}
