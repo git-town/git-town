@@ -1,13 +1,13 @@
-Feature: killing a branch whose tracking branch is gone
+@this
+Feature: killing a branch without a useful previous branch setting
 
   Background:
-    Given the current branch is a feature branch "current"
-    And a feature branch "other"
+    Given the current branch is a local feature branch "current"
+    And a local feature branch "other"
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local, origin | current commit |
-      | other   | local, origin | other commit   |
-    And origin deletes the "current" branch
+      | BRANCH  | LOCATION | MESSAGE        |
+      | current | local    | current commit |
+      | other   | local    | other commit   |
     And the current branch is "current" and the previous branch is "current"
     And an uncommitted file
     When I run "git-town kill"
@@ -23,11 +23,12 @@ Feature: killing a branch whose tracking branch is gone
     And the current branch is now "main"
     And no uncommitted files exist
     And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, origin | other commit |
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
@@ -42,7 +43,7 @@ Feature: killing a branch whose tracking branch is gone
     And the current branch is now "current"
     And the uncommitted file still exists
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local         | current commit |
-      | other   | local, origin | other commit   |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | current | local    | current commit |
+      | other   | local    | other commit   |
     And the initial branches and lineage exist
