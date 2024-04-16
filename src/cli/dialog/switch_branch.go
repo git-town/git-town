@@ -76,21 +76,21 @@ func (self SwitchModel) View() string {
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
-			if !branch.ThisWorktree {
+			if branch.OtherWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("> " + branch.String()))
 		case isInitial:
 			color := self.Colors.Initial
-			if !branch.ThisWorktree {
+			if branch.OtherWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("* " + branch.String()))
-		case !branch.ThisWorktree:
+		case branch.OtherWorktree:
 			s.WriteString(colors.Faint().Styled("+ " + branch.String()))
 		default:
 			color := termenv.String()
-			if !branch.ThisWorktree {
+			if branch.OtherWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("  " + branch.String()))
