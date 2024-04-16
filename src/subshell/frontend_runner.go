@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -72,7 +74,24 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
 	subProcess.Stdout = os.Stdout
-	return subProcess.Run()
+	err = subProcess.Start()
+	if err != nil {
+		return err
+	}
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
+	go func() {
+		<-interrupt
+		if err := subProcess.Process.Release(); err == nil {
+			// process has already finished, no need to kill
+			return
+		}
+		fmt.Printf("Abort detected, shutting down %q gracefully ...", strings.Join(append([]string{cmd}, args...), " "))
+		if err := subProcess.Process.Kill(); err != nil {
+			fmt.Println("Error killing subprocess:", err)
+		}
+	}()
+	return subProcess.Wait()
 }
 
 // RunMany runs all given commands in current directory.
