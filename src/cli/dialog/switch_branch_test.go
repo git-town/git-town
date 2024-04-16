@@ -54,7 +54,12 @@ func TestSwitchBranch(t *testing.T) {
 				beta:  main,
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-			have := dialog.SwitchBranchEntries(localBranches, lineage)
+			allBranches := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly}, //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
+			}
+			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: "  "},
@@ -73,7 +78,13 @@ func TestSwitchBranch(t *testing.T) {
 				beta:  main,
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
-			have := dialog.SwitchBranchEntries(localBranches, lineage)
+			allBranches := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},      //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},       //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},       //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly}, //nolint:exhaustruct
+			}
+			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: "  "},
@@ -82,7 +93,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("parent is not checked out locally", func(t *testing.T) {
+		t.Run("parent exists remotely but is not checked out locally", func(t *testing.T) {
 			t.Parallel()
 			child := gitdomain.NewLocalBranchName("child")
 			grandchild := gitdomain.NewLocalBranchName("grandchild")
@@ -92,7 +103,12 @@ func TestSwitchBranch(t *testing.T) {
 				grandchild: child,
 			}
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
-			have := dialog.SwitchBranchEntries(localBranches, lineage)
+			allBranches := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly}, //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                     //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                           //nolint:exhaustruct
+			}
+			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "child", Indentation: "  "},
