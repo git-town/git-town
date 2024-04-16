@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
-	"github.com/muesli/termenv"
 	"golang.org/x/exp/maps"
 )
 
@@ -75,25 +74,13 @@ func (self SwitchModel) View() string {
 		isInitial := i == self.InitialBranchPos
 		switch {
 		case isSelected:
-			color := self.Colors.Selection
-			if !branch.ThisWorktree {
-				color = color.Faint()
-			}
-			s.WriteString(color.Styled("> " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		case isInitial:
-			color := self.Colors.Initial
-			if !branch.ThisWorktree {
-				color = color.Faint()
-			}
-			s.WriteString(color.Styled("* " + branch.String()))
+			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
 		case !branch.ThisWorktree:
 			s.WriteString(colors.Faint().Styled("+ " + branch.String()))
 		default:
-			color := termenv.String()
-			if !branch.ThisWorktree {
-				color = color.Faint()
-			}
-			s.WriteString(color.Styled("  " + branch.String()))
+			s.WriteString("  " + branch.String())
 		}
 		s.WriteRune('\n')
 	}
