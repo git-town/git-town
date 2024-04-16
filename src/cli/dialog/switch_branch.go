@@ -69,10 +69,12 @@ func (self SwitchModel) View() string {
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
 		branch := self.Entries[i]
+		isSelected := i == self.Cursor
+		isInitial := i == self.InitialBranchPos
 		switch {
-		case i == self.Cursor:
+		case isSelected:
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
-		case i == self.InitialBranchPos:
+		case isInitial:
 			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
 		default:
 			s.WriteString("  " + branch.String())
