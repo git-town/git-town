@@ -7,10 +7,6 @@ func Bold() termenv.Style {
 	return termenv.String().Bold()
 }
 
-func BoldCyan() termenv.Style {
-	return Cyan().Bold()
-}
-
 func BoldGreen() termenv.Style {
 	return Green().Bold()
 }
