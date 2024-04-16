@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -179,7 +180,7 @@ func (self *Access) SetLocalConfigValue(key Key, value string) error {
 }
 
 func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value string) {
-	fmt.Printf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)
+	fmt.Println(colors.BoldCyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
 	err := self.RemoveGlobalConfigValue(oldKey)
 	if err != nil {
 		fmt.Printf(messages.SettingGlobalCannotRemove, oldKey, err)
@@ -191,7 +192,7 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value stri
 }
 
 func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey Key, value string) {
-	fmt.Printf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)
+	fmt.Println(colors.BoldCyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
 	err := self.RemoveLocalConfigValue(oldKey)
 	if err != nil {
 		fmt.Printf(messages.SettingLocalCannotRemove, oldKey, err)
