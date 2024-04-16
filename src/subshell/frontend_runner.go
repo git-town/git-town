@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -76,6 +78,16 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	if err != nil {
 		return err
 	}
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
+	go func() {
+		<-interrupt
+		fmt.Println("Ctrl-C detecting, shutting down gracefully ...")
+		if err := subProcess.Process.Kill(); err != nil {
+			fmt.Println("Error killing subprocess:", err)
+		}
+	}()
+
 	return subProcess.Wait()
 }
 
