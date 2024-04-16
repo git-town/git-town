@@ -82,7 +82,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
 	go func() {
 		<-interrupt
-		fmt.Println("Ctrl-C detected, shutting down gracefully ...")
+		fmt.Printf("Ctrl-C detected, shutting down %q gracefully ...", cmd+strings.Join(args, " "))
 		if err := subProcess.Process.Kill(); err != nil {
 			fmt.Println("Error killing subprocess:", err)
 		}
