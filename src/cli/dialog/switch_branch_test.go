@@ -178,13 +178,16 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos: 0,
 			}
 			have := model.View()
+			dim := "\x1b[2m"
+			reset := "\x1b[0m"
 			want := `
 > main
   one
-+ two
+` + dim + `+ two` + reset + `
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
+			want = want[1:]
 			must.EqOp(t, want, have)
 		})
 
