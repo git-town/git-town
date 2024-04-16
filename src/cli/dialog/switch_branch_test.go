@@ -18,10 +18,10 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("initialBranch is in the entry list", func(t *testing.T) {
 			t.Parallel()
 			entries := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: ""},
-				{Branch: "alpha", Indentation: ""},
-				{Branch: "alpha1", Indentation: ""},
-				{Branch: "beta", Indentation: ""},
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha1", Indentation: "", OtherWorktree: false},
+				{Branch: "beta", Indentation: "", OtherWorktree: false},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("alpha1")
 			have := dialog.SwitchBranchCursorPos(entries, initialBranch)
@@ -31,9 +31,9 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("initialBranch is not in the entry list", func(t *testing.T) {
 			t.Parallel()
 			entries := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: ""},
-				{Branch: "alpha", Indentation: ""},
-				{Branch: "beta", Indentation: ""},
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "", OtherWorktree: false},
+				{Branch: "beta", Indentation: "", OtherWorktree: false},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("other")
 			have := dialog.SwitchBranchCursorPos(entries, initialBranch)
@@ -61,9 +61,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: ""},
-				{Branch: "alpha", Indentation: "  "},
-				{Branch: "beta", Indentation: "  "},
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+				{Branch: "beta", Indentation: "  ", OtherWorktree: false},
 			}
 			must.Eq(t, want, have)
 		})
@@ -86,10 +86,10 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: ""},
-				{Branch: "alpha", Indentation: "  "},
-				{Branch: "beta", Indentation: "  "},
-				{Branch: "perennial-1", Indentation: ""},
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+				{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+				{Branch: "perennial-1", Indentation: "", OtherWorktree: false},
 			}
 			must.Eq(t, want, have)
 		})
@@ -110,9 +110,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: ""},
-				{Branch: "child", Indentation: "  "},
-				{Branch: "grandchild", Indentation: "    "},
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "child", Indentation: "  ", OtherWorktree: false},
+				{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
 			}
 			must.Eq(t, want, have)
 		})
@@ -124,7 +124,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
-					Entries:      []dialog.SwitchBranchEntry{{Branch: "main", Indentation: ""}},
+					Entries:      []dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}},
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -145,9 +145,9 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", ThisWorktree: true},
-						{Branch: "one", Indentation: "", ThisWorktree: true},
-						{Branch: "two", Indentation: "", ThisWorktree: false},
+						{Branch: "main", Indentation: "", OtherWorktree: false},
+						{Branch: "one", Indentation: "", OtherWorktree: false},
+						{Branch: "two", Indentation: "", OtherWorktree: true},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -171,13 +171,13 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", ThisWorktree: true},
-						{Branch: "alpha", Indentation: "  ", ThisWorktree: true},
-						{Branch: "alpha1", Indentation: "    ", ThisWorktree: true},
-						{Branch: "alpha2", Indentation: "    ", ThisWorktree: false},
-						{Branch: "beta", Indentation: "  ", ThisWorktree: true},
-						{Branch: "beta1", Indentation: "    ", ThisWorktree: true},
-						{Branch: "other", Indentation: "", ThisWorktree: true},
+						{Branch: "main", Indentation: "", OtherWorktree: false},
+						{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
+						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
+						{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+						{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
+						{Branch: "other", Indentation: "", OtherWorktree: false},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",
