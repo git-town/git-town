@@ -35,22 +35,8 @@ func (self *FrontendCommands) AbortRebase() error {
 	return self.Runner.Run("git", "rebase", "--abort")
 }
 
-// CheckoutBranch checks out the given local branch name and optionally performs a merge.
-// It runs the git checkout command with the branch name as well as an optional -m flag if merge is true.
-// After the checkout, it sets the cached current branch to the given name.
-// If any error occurs during the checkout, it returns an error with a formatted error message.
-// Error message format is defined in messages.BranchCheckoutProblem.
-// Args:
-// - name: The local branch name to be checked out.
-// - merge: A boolean flag indicating whether to perform a merge after the checkout.
-// Returns:
-// - error: If the checkout is unsuccessful, it returns an error with formatted error message.
-// Example usage:
-//
-//	err := frontendCommands.checkoutBranch(branchName, true)
-//	if err != nil {
-//	  log.Error(err)
-//	}
+// CheckoutBranch checks out the Git branch with the given name in this repo,
+// optionally using a three-way merge.
 func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName, merge bool) error {
 	args := []string{"checkout", name.String()}
 	if merge {
