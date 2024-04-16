@@ -199,7 +199,3 @@ type SwitchBranchEntry struct {
 func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
-
-func (sbe SwitchBranchEntry) IsEnabled() bool {
-	return !sbe.OtherWorktree
-}
