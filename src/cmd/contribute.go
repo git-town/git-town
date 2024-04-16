@@ -79,7 +79,7 @@ func executeContribute(args []string, verbose bool) error {
 	}
 	printContributeBranches(branchNames)
 	if !config.checkout.IsEmpty() {
-		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
+		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout, false); err != nil {
 			return err
 		}
 	}
