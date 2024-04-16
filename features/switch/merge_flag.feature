@@ -1,6 +1,6 @@
 Feature: switch branches
 
-  Scenario: switching to another branch with conflicting open changes
+  Scenario: switching to another branch while merging open changes
     Given the current branch is a feature branch "current"
     And a feature branch "other"
     And the commits
