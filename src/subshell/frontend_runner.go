@@ -80,7 +80,6 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	}
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
-
 	go func() {
 		<-interrupt
 		fmt.Printf("Ctrl-C detected, shutting down %q gracefully ...", strings.Join(append([]string{cmd}, args...), " "))
