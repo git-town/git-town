@@ -3,6 +3,7 @@ package print
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/muesli/termenv"
 )
 
@@ -16,7 +17,7 @@ func (l Logger) Failed(failure error) {
 
 func (l Logger) Start(template string, data ...interface{}) {
 	fmt.Println()
-	fmt.Print(Bold.Styled(fmt.Sprintf(template, data...)))
+	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
 }
 
 func (l Logger) Success() {

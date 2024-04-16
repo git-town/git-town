@@ -1,6 +1,9 @@
 package components
 
-import "github.com/muesli/termenv"
+import (
+	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/muesli/termenv"
+)
 
 // Typical colors used in BubbleTea dialogs.
 type dialogColors struct {
@@ -14,35 +17,31 @@ type dialogColors struct {
 // FormattedToken provides the given API token in a printable format.
 func FormattedSecret(secret string, aborted bool) string {
 	if aborted {
-		return Red().Styled("(aborted)")
+		return colors.Red().Styled("(aborted)")
 	}
 	if secret == "" {
-		return green().Styled("(not provided)")
+		return colors.Green().Styled("(not provided)")
 	}
-	return green().Styled("(provided)")
+	return colors.Green().Styled("(provided)")
 }
 
 // FormattedSelection provides the given dialog choice in a printable format.
 func FormattedSelection(selection string, aborted bool) string {
 	if aborted {
-		return Red().Styled("(aborted)")
+		return colors.Red().Styled("(aborted)")
 	}
-	return green().Styled(selection)
+	return colors.Green().Styled(selection)
 }
 
 // FormattedToken provides the given API token in a printable format.
 func FormattedToken(token string, aborted bool) string {
 	if aborted {
-		return Red().Styled("(aborted)")
+		return colors.Red().Styled("(aborted)")
 	}
 	if token == "" {
-		return green().Styled("(not provided)")
+		return colors.Green().Styled("(not provided)")
 	}
-	return green().Styled(token)
-}
-
-func Red() termenv.Style {
-	return termenv.String().Foreground(termenv.ANSIRed)
+	return colors.Green().Styled(token)
 }
 
 func createColors() dialogColors {
@@ -53,8 +52,4 @@ func createColors() dialogColors {
 		Selection: termenv.String().Foreground(termenv.ANSICyan),
 		Title:     termenv.String().Bold(),
 	}
-}
-
-func green() termenv.Style {
-	return termenv.String().Foreground(termenv.ANSIGreen)
 }

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v14/src/cli/print"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -87,5 +87,5 @@ OUTPUT END
 func printHeader(cmd string, args ...string) {
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
 	text := "\n(verbose) " + cmd + " " + strings.Join(quoted, " ")
-	fmt.Println(print.Bold.Styled(text))
+	fmt.Println(colors.Bold().Styled(text))
 }
