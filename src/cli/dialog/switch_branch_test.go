@@ -46,14 +46,14 @@ func TestSwitchBranch(t *testing.T) {
 		t.Parallel()
 		t.Run("feature branches only", func(t *testing.T) {
 			t.Parallel()
-			branchA := gitdomain.NewLocalBranchName("alpha")
-			branchB := gitdomain.NewLocalBranchName("beta")
+			alpha := gitdomain.NewLocalBranchName("alpha")
+			beta := gitdomain.NewLocalBranchName("beta")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.Lineage{
-				branchA: main,
-				branchB: main,
+				alpha: main,
+				beta:  main,
 			}
-			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main}
+			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
@@ -64,15 +64,15 @@ func TestSwitchBranch(t *testing.T) {
 		})
 		t.Run("feature and perennial branches", func(t *testing.T) {
 			t.Parallel()
-			branchA := gitdomain.NewLocalBranchName("alpha")
-			branchB := gitdomain.NewLocalBranchName("beta")
+			alpha := gitdomain.NewLocalBranchName("alpha")
+			beta := gitdomain.NewLocalBranchName("beta")
 			perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.Lineage{
-				branchA: main,
-				branchB: main,
+				alpha: main,
+				beta:  main,
 			}
-			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main, perennial1}
+			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
