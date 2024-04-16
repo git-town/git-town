@@ -147,8 +147,10 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 			continue
 		}
 		branchInfo := allBranches.FindByLocalName(localBranch)
-		otherWorktree := false
-		if branchInfo != nil {
+		var otherWorktree bool
+		if branchInfo == nil {
+			otherWorktree = false
+		} else {
 			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 		}
 		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: "", OtherWorktree: otherWorktree})
@@ -161,8 +163,10 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
 		branchInfo := allBranches.FindByLocalName(branch)
-		otherWorktree := false
-		if branchInfo != nil {
+		var otherWorktree bool
+		if branchInfo == nil {
+			otherWorktree = false
+		} else {
 			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 		}
 		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
