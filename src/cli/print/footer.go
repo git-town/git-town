@@ -3,6 +3,7 @@ package print
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -21,6 +22,6 @@ var NoFinalMessages = []string{} //nolint:gochecknoglobals
 // Messages prints the given messages to the user.
 func Messages(messages []string) {
 	for _, message := range messages {
-		fmt.Println("\n" + message)
+		fmt.Println("\n" + colors.Cyan().Styled(message))
 	}
 }
