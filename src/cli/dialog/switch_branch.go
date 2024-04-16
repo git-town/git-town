@@ -12,8 +12,8 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	entries := SwitchBranchEntries(localBranches, lineage)
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		BubbleList:       components.NewBubbleList(entries, cursor),
@@ -126,12 +126,12 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []SwitchBranchEntry {
+func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) []SwitchBranchEntry {
 	entries := make([]SwitchBranchEntry, 0, len(lineage))
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, localBranches)
+		layoutBranches(&entries, root, "", lineage, allBranches)
 	}
 	// add missing local branches
 	branchesInLineage := maps.Keys(lineage)
@@ -149,12 +149,12 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, localBranches gitdomain.LocalBranchNames) {
-	if localBranches.Contains(branch) {
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
+	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
 		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
 	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, localBranches)
+		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
 	}
 }
 

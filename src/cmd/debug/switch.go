@@ -22,12 +22,15 @@ func switchBranch() *cobra.Command {
 				return err
 			}
 			localBranches := gitdomain.LocalBranchNames{}
+			branchInfos := gitdomain.BranchInfos{}
 			for i := 0; i < int(amount); i++ {
-				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
+				branchName := gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i))
+				localBranches = append(localBranches, branchName)
+				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: branchName, SyncStatus: gitdomain.SyncStatusLocalOnly})
 			}
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage, dialogTestInputs.Next())
+			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage, branchInfos, dialogTestInputs.Next())
 			return err
 		},
 	}
