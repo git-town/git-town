@@ -131,7 +131,7 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage)
+		layoutBranches(&entries, root, "", lineage, localBranches)
 	}
 	// add missing local branches
 	branchesInLineage := maps.Keys(lineage)
@@ -149,10 +149,12 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
-	*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, localBranches gitdomain.LocalBranchNames) {
+	if localBranches.Contains(branch) {
+		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
+	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage)
+		layoutBranches(result, child, indentation+"  ", lineage, localBranches)
 	}
 }
 

@@ -1,11 +1,10 @@
 Feature: switch branches with a manually deleted branch still listed in the lineage
 
-  @this
   Scenario: repo contains a manually deleted branch
     Given the current branch is a local feature branch "alpha"
     And a local feature branch "beta"
     And a local feature branch "gamma"
-    And I run "git branch -b beta"
+    And I run "git branch -D beta"
     When I run "git-town switch" and enter into the dialogs:
       | KEYS       |
       | down enter |
