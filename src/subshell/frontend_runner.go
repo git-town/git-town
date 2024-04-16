@@ -72,7 +72,11 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
 	subProcess.Stdout = os.Stdout
-	return subProcess.Run()
+	err = subProcess.Start()
+	if err != nil {
+		return err
+	}
+	return subProcess.Wait()
 }
 
 // RunMany runs all given commands in current directory.
