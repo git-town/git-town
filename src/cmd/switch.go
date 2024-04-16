@@ -57,11 +57,7 @@ func executeSwitch(verbose, merge bool) error {
 	if branchToCheckout == config.initialBranch {
 		return nil
 	}
-	if merge {
-		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, true)
-	} else {
-		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false)
-	}
+	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
