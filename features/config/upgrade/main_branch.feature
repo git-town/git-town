@@ -5,8 +5,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town hack foo"
     Then it prints:
       """
-      I found the deprecated <LOCATION> setting "git-town.main-branch-name".
-      I am upgrading this setting to the new format "git-town.main-branch".
+      Upgrading deprecated <LOCATION> setting "git-town.main-branch-name" to "git-town.main-branch".
       """
     And <LOCATION> Git Town setting "main-branch" is now "main"
     And <LOCATION> Git Town setting "main-branch-name" now doesn't exist

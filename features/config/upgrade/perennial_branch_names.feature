@@ -5,8 +5,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town <COMMAND>"
     Then it prints:
       """
-      I found the deprecated <LOCATION> setting "git-town.perennial-branch-names".
-      I am upgrading this setting to the new format "git-town.perennial-branches".
+      Upgrading deprecated <LOCATION> setting "git-town.perennial-branch-names" to "git-town.perennial-branches".
       """
     And <LOCATION> Git Town setting "perennial-branches" is now "one two"
     And <LOCATION> Git Town setting "perennial-branch-names" now doesn't exist
