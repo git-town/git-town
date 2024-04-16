@@ -3,10 +3,10 @@ package print
 import (
 	"fmt"
 
-	"github.com/muesli/termenv"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 )
 
 func Header(text string) {
-	boldUnderline := termenv.String().Bold().Underline()
+	boldUnderline := colors.BoldUnderline()
 	fmt.Println(boldUnderline.Styled(text + ":"))
 }

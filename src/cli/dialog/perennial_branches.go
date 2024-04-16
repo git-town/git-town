@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -36,7 +37,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	program := tea.NewProgram(PerennialBranchesModel{
 		BubbleList:    components.NewBubbleList(perennialCandidates, 0),
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
-		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
+		selectedColor: colors.Green(),
 	})
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()

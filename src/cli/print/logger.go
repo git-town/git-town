@@ -4,15 +4,13 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
-	"github.com/muesli/termenv"
 )
 
 // The Logger logger logs activities of a particular component on the CLI.
 type Logger struct{}
 
 func (l Logger) Failed(failure error) {
-	boldRed := termenv.String().Bold().Foreground(termenv.ANSIRed)
-	fmt.Println(boldRed.Styled(fmt.Sprintf("FAILED: %v\n", failure)))
+	fmt.Println(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
 }
 
 func (l Logger) Start(template string, data ...interface{}) {
@@ -21,6 +19,5 @@ func (l Logger) Start(template string, data ...interface{}) {
 }
 
 func (l Logger) Success() {
-	boldGreen := termenv.String().Bold().Foreground(termenv.ANSIGreen)
-	fmt.Println(boldGreen.Styled("ok"))
+	fmt.Println(colors.BoldGreen().Styled("ok"))
 }

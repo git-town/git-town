@@ -46,10 +46,10 @@ func FormattedToken(token string, aborted bool) string {
 
 func createColors() dialogColors {
 	return dialogColors{
-		Help:      termenv.String().Faint(),
-		HelpKey:   termenv.String().Faint().Bold(),
-		Initial:   termenv.String().Foreground(termenv.ANSIGreen),
-		Selection: termenv.String().Foreground(termenv.ANSICyan),
-		Title:     termenv.String().Bold(),
+		Help:      colors.Faint(),
+		HelpKey:   colors.FaintBold(),
+		Initial:   colors.Green(),
+		Selection: colors.Cyan(),
+		Title:     colors.Bold(),
 	}
 }
