@@ -22,7 +22,7 @@ func switchCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
-		Args:    cobra.ArbitraryArgs,
+		Args:    cobra.NoArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -57,11 +57,7 @@ func executeSwitch(verbose, merge bool) error {
 	if branchToCheckout == config.initialBranch {
 		return nil
 	}
-	if merge {
-		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, true)
-	} else {
-		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false)
-	}
+	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
