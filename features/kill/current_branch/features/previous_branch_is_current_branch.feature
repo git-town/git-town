@@ -1,4 +1,3 @@
-@this
 Feature: killing a branch without a useful previous branch setting
 
   Background:
@@ -42,8 +41,5 @@ Feature: killing a branch without a useful previous branch setting
       | current | git reset --soft HEAD~1                       |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE        |
-      | current | local    | current commit |
-      | other   | local    | other commit   |
+    And the initial commits exist
     And the initial branches and lineage exist
