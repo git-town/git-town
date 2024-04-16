@@ -55,6 +55,29 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly}, //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
+			}
+			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
+			want := []dialog.SwitchBranchEntry{
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+				{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("feature branch in other worktree", func(t *testing.T) {
+			t.Parallel()
+			alpha := gitdomain.NewLocalBranchName("alpha")
+			beta := gitdomain.NewLocalBranchName("beta")
+			main := gitdomain.NewLocalBranchName("main")
+			lineage := configdomain.Lineage{
+				alpha: main,
+				beta:  main,
+			}
+			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
+			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},    //nolint:exhaustruct
 				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusOtherWorktree}, //nolint:exhaustruct
 				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},     //nolint:exhaustruct
