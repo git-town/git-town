@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/muesli/termenv"
 )
@@ -35,7 +36,7 @@ func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 		Status:       StatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
-		Dim:          termenv.String().Faint(),
+		Dim:          colors.Faint(),
 		Entries:      entries,
 		EntryNumber:  "",
 		MaxDigits:    numberLen,

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -32,7 +33,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		BubbleList:           components.NewBubbleList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
-		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
+		selectedColor:        colors.Green(),
 	})
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()

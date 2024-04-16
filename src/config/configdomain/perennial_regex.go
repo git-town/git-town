@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
@@ -18,7 +18,7 @@ func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool 
 	}
 	re, err := regexp.Compile(string(self))
 	if err != nil {
-		fmt.Println(components.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self, err.Error())))
+		fmt.Println(colors.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self, err.Error())))
 		return false
 	}
 	return re.MatchString(branch.String())
