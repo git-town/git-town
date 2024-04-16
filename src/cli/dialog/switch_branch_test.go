@@ -145,9 +145,9 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: ""},
-						{Branch: "one", Indentation: ""},
-						{Branch: "two", Indentation: ""},
+						{Branch: "main", Indentation: "", ThisWorktree: true},
+						{Branch: "one", Indentation: "", ThisWorktree: true},
+						{Branch: "two", Indentation: "", ThisWorktree: false},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -158,7 +158,7 @@ func TestSwitchBranch(t *testing.T) {
 			want := `
 > main
   one
-  two
++ two
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
@@ -171,13 +171,13 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: ""},
-						{Branch: "alpha", Indentation: "  "},
-						{Branch: "alpha1", Indentation: "    "},
-						{Branch: "alpha2", Indentation: "    "},
-						{Branch: "beta", Indentation: "  "},
-						{Branch: "beta1", Indentation: "    "},
-						{Branch: "other", Indentation: ""},
+						{Branch: "main", Indentation: "", ThisWorktree: true},
+						{Branch: "alpha", Indentation: "  ", ThisWorktree: true},
+						{Branch: "alpha1", Indentation: "    ", ThisWorktree: true},
+						{Branch: "alpha2", Indentation: "    ", ThisWorktree: false},
+						{Branch: "beta", Indentation: "  ", ThisWorktree: true},
+						{Branch: "beta1", Indentation: "    ", ThisWorktree: true},
+						{Branch: "other", Indentation: "", ThisWorktree: true},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -189,7 +189,7 @@ func TestSwitchBranch(t *testing.T) {
 > main
     alpha
       alpha1
-      alpha2
++     alpha2
     beta
       beta1
   other
