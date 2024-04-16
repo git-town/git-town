@@ -55,9 +55,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly}, //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},  //nolint:exhaustruct
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -79,10 +79,10 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},      //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},       //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},       //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly}, //nolint:exhaustruct
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -104,9 +104,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly}, //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                     //nolint:exhaustruct
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                           //nolint:exhaustruct
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
