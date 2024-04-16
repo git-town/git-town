@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -72,23 +73,24 @@ func (self SwitchModel) View() string {
 		branch := self.Entries[i]
 		isSelected := i == self.Cursor
 		isInitial := i == self.InitialBranchPos
-		isEnabled := branch.Enabled
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
-			if !isEnabled {
+			if !branch.ThisWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("> " + branch.String()))
 		case isInitial:
 			color := self.Colors.Initial
-			if !isEnabled {
+			if !branch.ThisWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("* " + branch.String()))
+		case !branch.ThisWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + branch.String()))
 		default:
 			color := termenv.String()
-			if !isEnabled {
+			if !branch.ThisWorktree {
 				color = color.Faint()
 			}
 			s.WriteString(color.Styled("  " + branch.String()))
@@ -169,7 +171,7 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
 		branchInfo := allBranches.FindByLocalName(branch)
 		inThisWorktree := branchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree
-		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, Enabled: inThisWorktree})
+		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, ThisWorktree: inThisWorktree})
 	}
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
@@ -177,9 +179,9 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 }
 
 type SwitchBranchEntry struct {
-	Branch      gitdomain.LocalBranchName
-	Indentation string
-	Enabled     bool
+	Branch       gitdomain.LocalBranchName
+	Indentation  string
+	ThisWorktree bool
 }
 
 func (sbe SwitchBranchEntry) String() string {
@@ -187,5 +189,5 @@ func (sbe SwitchBranchEntry) String() string {
 }
 
 func (sbe SwitchBranchEntry) IsEnabled() bool {
-	return sbe.Enabled
+	return sbe.ThisWorktree
 }
