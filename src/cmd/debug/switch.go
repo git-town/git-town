@@ -2,9 +2,11 @@ package debug
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -24,7 +26,8 @@ func switchBranch() *cobra.Command {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			lineage := configdomain.Lineage{}
-			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage)
+			dialogTestInputs := components.LoadTestInputs(os.Environ())
+			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage, dialogTestInputs.Next())
 			return err
 		},
 	}

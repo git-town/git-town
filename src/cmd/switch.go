@@ -48,7 +48,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage)
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage, config.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
@@ -69,6 +69,7 @@ func executeSwitch(verbose bool) error {
 
 type switchConfig struct {
 	branchNames   gitdomain.LocalBranchNames
+	dialogInputs  components.TestInputs
 	initialBranch gitdomain.LocalBranchName
 }
 
@@ -94,6 +95,7 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 	}
 	return &switchConfig{
 		branchNames:   branchesSnapshot.Branches.Names(),
+		dialogInputs:  dialogTestInputs,
 		initialBranch: branchesSnapshot.Active,
 	}, false, err
 }
