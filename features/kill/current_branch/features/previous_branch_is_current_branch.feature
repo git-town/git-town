@@ -7,6 +7,7 @@ Feature: killing a branch whose tracking branch is gone
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
+    And origin deletes the "current" branch
     And the current branch is "current" and the previous branch is "current"
     And an uncommitted file
     When I run "git-town kill"
