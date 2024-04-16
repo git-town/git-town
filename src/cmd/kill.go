@@ -148,7 +148,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == branchesSnapshot.Active {
-		branchWhenDone = previousBranch
+		if previousBranch == branchesSnapshot.Active {
+			branchWhenDone = repo.Runner.Config.FullConfig.MainBranch
+		} else {
+			branchWhenDone = previousBranch
+		}
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
