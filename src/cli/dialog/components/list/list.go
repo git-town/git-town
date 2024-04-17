@@ -10,11 +10,11 @@ import (
 	"github.com/muesli/termenv"
 )
 
-// List contains common elements of BubbleTea list implementations.
+// List contains elements and operations common to all BubbleTea-based list implementations.
 type List[S fmt.Stringer] struct {
 	Colors       colors.DialogColors // colors to use for help text
 	Cursor       int                 // index of the currently selected row
-	Dim          termenv.Style       // style for dim output
+	Dim          termenv.Style       // style for dim output TODO: merge this into Colors
 	Entries      Entries[S]          // the entries to select from
 	EntryNumber  string              // the manually entered entry number
 	MaxDigits    int                 // how many digits make up an entry number
@@ -22,7 +22,7 @@ type List[S fmt.Stringer] struct {
 	Status       Status
 }
 
-func NewList[S fmt.Stringer](entries []Entry[S], cursor int) List[S] {
+func NewList[S fmt.Stringer](entries Entries[S], cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
@@ -34,19 +34,6 @@ func NewList[S fmt.Stringer](entries []Entry[S], cursor int) List[S] {
 		MaxDigits:    numberLen,
 		NumberFormat: fmt.Sprintf("%%0%dd ", numberLen),
 	}
-}
-
-// NewEnabledListEntries creates enabled BubbleListEntries for the given data types.
-func NewEnabledListEntries[S fmt.Stringer](records []S) []Entry[S] {
-	result := make([]Entry[S], len(records))
-	for r, record := range records {
-		result[r] = Entry[S]{
-			Data:    record,
-			Enabled: true,
-			Text:    record.String(),
-		}
-	}
-	return result
 }
 
 // Aborted indicates whether the user has Aborted this components.
