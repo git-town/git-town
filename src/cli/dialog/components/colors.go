@@ -43,13 +43,3 @@ func FormattedToken(token string, aborted bool) string {
 	}
 	return colors.Green().Styled(token)
 }
-
-func createColors() dialogColors {
-	return dialogColors{
-		Help:      colors.Faint(),
-		HelpKey:   colors.FaintBold(),
-		Initial:   colors.Green(),
-		Selection: colors.Cyan(),
-		Title:     colors.Bold(),
-	}
-}

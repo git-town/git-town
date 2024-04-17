@@ -38,3 +38,13 @@ func Green() termenv.Style {
 func Red() termenv.Style {
 	return termenv.String().Foreground(termenv.ANSIRed)
 }
+
+func createColors() Colors {
+	return dialogColors{
+		Help:      colors.Faint(),
+		HelpKey:   colors.FaintBold(),
+		Initial:   colors.Green(),
+		Selection: colors.Cyan(),
+		Title:     colors.Bold(),
+	}
+}
