@@ -4,7 +4,7 @@ import "testing"
 
 func TestList(t *testing.T) {
 	t.Parallel()
-	t.Run("", func(t *testing.T) {
+	t.Run("move up", func(t *testing.T) {
 		t.Parallel()
 	})
 }

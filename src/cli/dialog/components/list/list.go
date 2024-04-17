@@ -50,16 +50,16 @@ func (self *List[S]) EntryNumberStr(number int) string {
 func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
-		self.moveCursorUp()
+		self.MoveCursorUp()
 		return true, nil
 	case tea.KeyDown, tea.KeyTab:
-		self.moveCursorDown()
+		self.MoveCursorDown()
 		return true, nil
 	case tea.KeyLeft:
-		self.movePageUp()
+		self.MovePageUp()
 		return true, nil
 	case tea.KeyRight:
-		self.movePageDown()
+		self.MovePageDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
 		self.Status = StatusAborted
@@ -77,16 +77,16 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 			self.Cursor = number
 		}
 	case "k":
-		self.moveCursorUp()
+		self.MoveCursorUp()
 		return true, nil
 	case "j":
-		self.moveCursorDown()
+		self.MoveCursorDown()
 		return true, nil
 	case "u":
-		self.movePageUp()
+		self.MovePageUp()
 		return true, nil
 	case "d":
-		self.movePageDown()
+		self.MovePageDown()
 		return true, nil
 	case "q":
 		self.Status = StatusAborted
@@ -103,7 +103,7 @@ func (self List[S]) SelectedData() S { //nolint:ireturn
 	return self.SelectedEntry().Data
 }
 
-func (self *List[S]) moveCursorDown() {
+func (self *List[S]) MoveCursorDown() {
 	if self.Entries.allDisabled() {
 		return
 	}
@@ -119,7 +119,7 @@ func (self *List[S]) moveCursorDown() {
 	}
 }
 
-func (self *List[S]) moveCursorUp() {
+func (self *List[S]) MoveCursorUp() {
 	if self.Entries.allDisabled() {
 		return
 	}
@@ -135,7 +135,7 @@ func (self *List[S]) moveCursorUp() {
 	}
 }
 
-func (self *List[S]) movePageDown() {
+func (self *List[S]) MovePageDown() {
 	if self.Entries.allDisabled() {
 		return
 	}
@@ -154,10 +154,10 @@ func (self *List[S]) movePageDown() {
 		}
 	}
 	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
-	self.moveCursorUp()
+	self.MoveCursorUp()
 }
 
-func (self *List[S]) movePageUp() {
+func (self *List[S]) MovePageUp() {
 	if self.Entries.allDisabled() {
 		return
 	}
@@ -176,5 +176,5 @@ func (self *List[S]) movePageUp() {
 		}
 	}
 	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
-	self.moveCursorDown()
+	self.MoveCursorDown()
 }
