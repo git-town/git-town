@@ -51,6 +51,7 @@ func TestList(t *testing.T) {
 		end := len(entries) - 1
 		tests := map[int]int{
 			start: 10,  // at beginning of list
+			1:     11,  // more than a page before the end of the list
 			10:    end, // less than a page before the end of the list
 			end:   end, // at end of list
 		}
