@@ -128,31 +128,51 @@ func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
 }
 
 func (self *BubbleList[S]) moveCursorDown() {
-	if self.Cursor < len(self.Entries)-1 {
-		self.Cursor++
-	} else {
-		self.Cursor = 0
+	for {
+		if self.Cursor < len(self.Entries)-1 {
+			self.Cursor++
+		} else {
+			self.Cursor = 0
+		}
+		if self.Entries[self.Cursor].Enabled {
+			return
+		}
 	}
 }
 
 func (self *BubbleList[S]) moveCursorUp() {
-	if self.Cursor > 0 {
-		self.Cursor--
-	} else {
-		self.Cursor = len(self.Entries) - 1
+	for {
+		if self.Cursor > 0 {
+			self.Cursor--
+		} else {
+			self.Cursor = len(self.Entries) - 1
+		}
+		if self.Entries[self.Cursor].Enabled {
+			return
+		}
 	}
 }
 
 func (self *BubbleList[S]) movePageDown() {
-	self.Cursor += 10
-	if self.Cursor >= len(self.Entries) {
-		self.Cursor = len(self.Entries) - 1
+	for {
+		self.Cursor += 10
+		if self.Cursor >= len(self.Entries) {
+			self.Cursor = len(self.Entries) - 1
+		}
+		if self.Entries[self.Cursor].Enabled {
+			return
+		}
 	}
 }
 
 func (self *BubbleList[S]) movePageUp() {
-	self.Cursor -= 10
-	if self.Cursor < 0 {
-		self.Cursor = 0
+	for {
+		self.Cursor -= 10
+		if self.Cursor < 0 {
+			self.Cursor = 0
+		}
+		if self.Entries[self.Cursor].Enabled {
+			return
+		}
 	}
 }
