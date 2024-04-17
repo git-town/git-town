@@ -50,16 +50,16 @@ func (self *List[S]) EntryNumberStr(number int) string {
 func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
-		self.moveCursorUp()
+		self.MoveCursorUp()
 		return true, nil
 	case tea.KeyDown, tea.KeyTab:
-		self.moveCursorDown()
+		self.MoveCursorDown()
 		return true, nil
 	case tea.KeyLeft:
-		self.movePageUp()
+		self.MovePageUp()
 		return true, nil
 	case tea.KeyRight:
-		self.movePageDown()
+		self.MovePageDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
 		self.Status = StatusAborted
@@ -77,16 +77,16 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 			self.Cursor = number
 		}
 	case "k":
-		self.moveCursorUp()
+		self.MoveCursorUp()
 		return true, nil
 	case "j":
-		self.moveCursorDown()
+		self.MoveCursorDown()
 		return true, nil
 	case "u":
-		self.movePageUp()
+		self.MovePageUp()
 		return true, nil
 	case "d":
-		self.movePageDown()
+		self.MovePageDown()
 		return true, nil
 	case "q":
 		self.Status = StatusAborted
@@ -99,7 +99,7 @@ func (self List[S]) SelectedEntry() S { //nolint:ireturn
 	return self.Entries[self.Cursor]
 }
 
-func (self *List[S]) moveCursorDown() {
+func (self *List[S]) MoveCursorDown() {
 	if self.Cursor < len(self.Entries)-1 {
 		self.Cursor++
 	} else {
@@ -107,7 +107,7 @@ func (self *List[S]) moveCursorDown() {
 	}
 }
 
-func (self *List[S]) moveCursorUp() {
+func (self *List[S]) MoveCursorUp() {
 	if self.Cursor > 0 {
 		self.Cursor--
 	} else {
@@ -115,14 +115,14 @@ func (self *List[S]) moveCursorUp() {
 	}
 }
 
-func (self *List[S]) movePageDown() {
+func (self *List[S]) MovePageDown() {
 	self.Cursor += 10
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
 	}
 }
 
-func (self *List[S]) movePageUp() {
+func (self *List[S]) MovePageUp() {
 	self.Cursor -= 10
 	if self.Cursor < 0 {
 		self.Cursor = 0
