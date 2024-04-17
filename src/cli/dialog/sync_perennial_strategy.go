@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -26,10 +27,10 @@ const (
 )
 
 func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
-	entries := []syncPerennialStrategyEntry{
+	entries := list.NewEntries(
 		SyncPerennialStrategyEntryMerge,
 		SyncPerennialStrategyEntryRebase,
-	}
+	)
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncPerennialStrategyMerge:

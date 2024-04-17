@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -30,10 +31,10 @@ const (
 )
 
 func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []syncUpstreamEntry{
+	entries := list.NewEntries(
 		SyncUpstreamEntryYes,
 		SyncUpstreamEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

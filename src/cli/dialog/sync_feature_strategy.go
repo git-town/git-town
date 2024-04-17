@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -27,10 +28,10 @@ const (
 )
 
 func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := []syncFeatureStrategyEntry{
+	entries := list.NewEntries(
 		syncFeatureStrategyEntryMerge,
 		syncFeatureStrategyEntryRebase,
-	}
+	)
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncFeatureStrategyMerge:

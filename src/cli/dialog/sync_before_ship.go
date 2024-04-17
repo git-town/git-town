@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -33,10 +34,10 @@ const (
 )
 
 func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []syncBeforeShipEntry{
+	entries := list.NewEntries(
 		SyncBeforeShipEntryYes,
 		SyncBeforeShipEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0
