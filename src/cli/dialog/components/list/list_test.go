@@ -18,6 +18,10 @@ func TestList(t *testing.T) {
 			1: 2, // in middle of list
 			3: 0, // at end of list
 		}
+		// t.Run("entry above is enabled", func(t *testing.T) {
+		// t.Run("first and second entry above are disabled, third entry above is enabled", func(t *testing.T) {
+		// t.Run("already at beginning of the list", func(t *testing.T) {
+		// t.Run("all entries above are disabled", func(t *testing.T) {
 		for give, want := range tests {
 			have := list.NewList(entries, give)
 			have.MoveCursorDown()

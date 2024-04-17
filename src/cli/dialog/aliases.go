@@ -30,9 +30,9 @@ If you are not sure, select all :)
 // This includes asking the user and updating the respective settings based on the user selection.
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
-		AllAliasableCommands: allAliasableCommands, // TODO: remove this field and use the data in BubbleList directly
-		List:                 list.NewList(list.NewEntries(allAliasableCommands...), 0),
+		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
+		List:                 list.NewList(allAliasableCommands, 0),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})

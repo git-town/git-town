@@ -40,8 +40,8 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
-		List:             list.NewList(NewSwitchBranchBubbleListEntries(entries), cursor),
 		InitialBranchPos: cursor,
+		List:             list.NewList(entries, cursor),
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
