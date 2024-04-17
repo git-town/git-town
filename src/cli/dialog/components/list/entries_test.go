@@ -10,6 +10,7 @@ import (
 
 func TestEntries(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IndexWithText", func(t *testing.T) {
 		t.Parallel()
 		t.Run("element is in collection", func(t *testing.T) {
