@@ -13,7 +13,7 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
 		help:  help,
@@ -22,7 +22,7 @@ func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, inpu
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
-		return entries[0], false, err
+		return entries[0].Data, false, err
 	}
 	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
 	return result.SelectedEntry(), result.Aborted(), nil
@@ -75,9 +75,9 @@ func (self radioListModel[S]) View() string {
 		branch := self.Entries[i]
 		s.WriteString(self.EntryNumberStr(i))
 		if i == self.Cursor {
-			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.Text))
 		} else {
-			s.WriteString("  " + branch.String())
+			s.WriteString("  " + branch.Text)
 		}
 		s.WriteRune('\n')
 	}
