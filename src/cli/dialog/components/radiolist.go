@@ -24,7 +24,7 @@ func RadioList[S fmt.Stringer](entries []BubbleListEntry[S], cursor int, title, 
 		return entries[0].Data, false, err
 	}
 	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
-	return result.SelectedEntry(), result.Aborted(), nil
+	return result.SelectedData(), result.Aborted(), nil
 }
 
 type radioListModel[S fmt.Stringer] struct {

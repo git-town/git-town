@@ -49,8 +49,8 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedEntry := result.BubbleList.SelectedEntry()
-	return selectedEntry.Branch, result.Aborted(), nil
+	selectedData := result.BubbleList.SelectedData()
+	return selectedData.Branch, result.Aborted(), nil
 }
 
 type SwitchModel struct {

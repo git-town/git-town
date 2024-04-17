@@ -25,12 +25,23 @@ type BubbleListEntry[S fmt.Stringer] struct {
 	Text    string
 }
 
+type BubbleListEntries[S fmt.Stringer] []BubbleListEntry[S]
+
+func (self BubbleListEntries[S]) allDisabled() bool {
+	for _, entry := range self {
+		if entry.Enabled {
+			return false
+		}
+	}
+	return true
+}
+
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList[S fmt.Stringer] struct {
 	Colors       dialogColors         // colors to use for help text
 	Cursor       int                  // index of the currently selected row
 	Dim          termenv.Style        // style for dim output
-	Entries      []BubbleListEntry[S] // the entries to select from
+	Entries      BubbleListEntries[S] // the entries to select from
 	EntryNumber  string               // the manually entered entry number
 	MaxDigits    int                  // how many digits make up an entry number
 	NumberFormat string               // template for formatting the entry number
@@ -123,56 +134,86 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	return false, nil
 }
 
-func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
-	return self.Entries[self.Cursor].Data
+func (self BubbleList[S]) SelectedEntry() BubbleListEntry[S] { //nolint:ireturn
+	return self.Entries[self.Cursor]
+}
+
+func (self BubbleList[S]) SelectedData() S { //nolint:ireturn
+	return self.SelectedEntry().Data
 }
 
 func (self *BubbleList[S]) moveCursorDown() {
+	if self.Entries.allDisabled() {
+		return
+	}
 	for {
 		if self.Cursor < len(self.Entries)-1 {
 			self.Cursor++
 		} else {
 			self.Cursor = 0
 		}
-		if self.Entries[self.Cursor].Enabled {
+		if self.SelectedEntry().Enabled {
 			return
 		}
 	}
 }
 
 func (self *BubbleList[S]) moveCursorUp() {
+	if self.Entries.allDisabled() {
+		return
+	}
 	for {
 		if self.Cursor > 0 {
 			self.Cursor--
 		} else {
 			self.Cursor = len(self.Entries) - 1
 		}
-		if self.Entries[self.Cursor].Enabled {
+		if self.SelectedEntry().Enabled {
 			return
 		}
 	}
 }
 
 func (self *BubbleList[S]) movePageDown() {
-	for {
-		self.Cursor += 10
-		if self.Cursor >= len(self.Entries) {
-			self.Cursor = len(self.Entries) - 1
-		}
-		if self.Entries[self.Cursor].Enabled {
+	if self.Entries.allDisabled() {
+		return
+	}
+	self.Cursor += 10
+	if self.Cursor >= len(self.Entries) {
+		self.Cursor = len(self.Entries) - 1
+	}
+	if self.SelectedEntry().Enabled {
+		return
+	}
+	// keep moving the cursor down until we hit either an enabled entry or the end of the list
+	for self.Cursor < len(self.Entries)-1 {
+		self.Cursor++
+		if self.SelectedEntry().Enabled {
 			return
 		}
 	}
+	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
+	self.moveCursorUp()
 }
 
 func (self *BubbleList[S]) movePageUp() {
-	for {
-		self.Cursor -= 10
-		if self.Cursor < 0 {
-			self.Cursor = 0
-		}
-		if self.Entries[self.Cursor].Enabled {
+	if self.Entries.allDisabled() {
+		return
+	}
+	self.Cursor -= 10
+	if self.Cursor < 0 {
+		self.Cursor = 0
+	}
+	if self.SelectedEntry().Enabled {
+		return
+	}
+	// keep moving the cursor up until we hit either an enabled entry or the beginning of the list
+	for self.Cursor > 0 {
+		self.Cursor--
+		if self.SelectedEntry().Enabled {
 			return
 		}
 	}
+	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
+	self.moveCursorDown()
 }
