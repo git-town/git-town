@@ -1,13 +1,13 @@
 package dialog
 
 import (
-	"container/list"
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/muesli/termenv"
@@ -109,7 +109,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
+	if handled, cmd := self.List.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
@@ -117,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = components.StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
@@ -133,7 +133,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 }
 
 func (self AliasesModel) View() string {
-	if self.Status != components.StatusActive {
+	if self.Status != list.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

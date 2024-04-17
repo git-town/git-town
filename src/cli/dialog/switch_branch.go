@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -18,7 +19,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
-		BubbleList:       components.NewBubbleList(entries, cursor),
+		List:             list.NewList(entries, cursor),
 		InitialBranchPos: cursor,
 	})
 	components.SendInputs(inputs, dialogProgram)
@@ -27,12 +28,12 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedEntry := result.BubbleList.SelectedEntry()
+	selectedEntry := result.List.SelectedEntry()
 	return selectedEntry.Branch, result.Aborted(), nil
 }
 
 type SwitchModel struct {
-	components.BubbleList[SwitchBranchEntry]
+	list.List[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -45,22 +46,22 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.BubbleList.HandleKey(keyMsg); handled {
+	if handled, code := self.List.HandleKey(keyMsg); handled {
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = components.StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = components.StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != components.StatusActive {
+	if self.Status != list.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}
