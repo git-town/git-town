@@ -10,31 +10,23 @@ import (
 	"github.com/muesli/termenv"
 )
 
-type status int
-
-const (
-	StatusActive  status = iota // the user is currently entering data into the dialog
-	StatusDone                  // the user has made a selection
-	StatusAborted               // the user has aborted the dialog
-)
-
-// BubbleList contains common elements of BubbleTea list implementations.
-type BubbleList[S fmt.Stringer] struct {
-	Colors       dialogColors  // colors to use for help text
-	Cursor       int           // index of the currently selected row
-	Dim          termenv.Style // style for dim output
-	Entries      []S           // the entries to select from
-	EntryNumber  string        // the manually entered entry number
-	MaxDigits    int           // how many digits make up an entry number
-	NumberFormat string        // template for formatting the entry number
+// List contains common elements of BubbleTea list implementations.
+type List[S fmt.Stringer] struct {
+	Colors       colors.DialogColors // colors to use for help text
+	Cursor       int                 // index of the currently selected row
+	Dim          termenv.Style       // style for dim output
+	Entries      []S                 // the entries to select from
+	EntryNumber  string              // the manually entered entry number
+	MaxDigits    int                 // how many digits make up an entry number
+	NumberFormat string              // template for formatting the entry number
 	Status       status
 }
 
-func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
+func NewList[S fmt.Stringer](entries []S, cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
-	return BubbleList[S]{
+	return List[S]{
 		Status:       StatusActive,
-		Colors:       createColors(),
+		Colors:       colors.CreateColors(),
 		Cursor:       cursor,
 		Dim:          colors.Faint(),
 		Entries:      entries,
@@ -45,17 +37,17 @@ func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 }
 
 // Aborted indicates whether the user has Aborted this components.
-func (self *BubbleList[S]) Aborted() bool {
+func (self *List[S]) Aborted() bool {
 	return self.Status == StatusAborted
 }
 
 // EntryNumberStr provides a colorized string to print the given entry number.
-func (self *BubbleList[S]) EntryNumberStr(number int) string {
+func (self *List[S]) EntryNumberStr(number int) string {
 	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // HandleKey handles keypresses that are common for all bubbleLists.
-func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
@@ -103,11 +95,11 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	return false, nil
 }
 
-func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
+func (self List[S]) SelectedEntry() S { //nolint:ireturn
 	return self.Entries[self.Cursor]
 }
 
-func (self *BubbleList[S]) moveCursorDown() {
+func (self *List[S]) moveCursorDown() {
 	if self.Cursor < len(self.Entries)-1 {
 		self.Cursor++
 	} else {
@@ -115,7 +107,7 @@ func (self *BubbleList[S]) moveCursorDown() {
 	}
 }
 
-func (self *BubbleList[S]) moveCursorUp() {
+func (self *List[S]) moveCursorUp() {
 	if self.Cursor > 0 {
 		self.Cursor--
 	} else {
@@ -123,14 +115,14 @@ func (self *BubbleList[S]) moveCursorUp() {
 	}
 }
 
-func (self *BubbleList[S]) movePageDown() {
+func (self *List[S]) movePageDown() {
 	self.Cursor += 10
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
 	}
 }
 
-func (self *BubbleList[S]) movePageUp() {
+func (self *List[S]) movePageUp() {
 	self.Cursor -= 10
 	if self.Cursor < 0 {
 		self.Cursor = 0

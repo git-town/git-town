@@ -14,7 +14,7 @@ const WindowSize = 9
 // RadioList lets the user select a new main branch for this repo.
 func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
-		BubbleList: NewBubbleList(entries, cursor),
+		BubbleList: list.NewBubbleList(entries, cursor),
 		help:       help,
 		title:      title,
 	})
