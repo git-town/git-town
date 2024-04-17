@@ -129,6 +129,6 @@ func (self List[S]) SelectedData() S { //nolint:ireturn
 	return self.SelectedEntry().Data
 }
 
-func (self List[S]) SelectedEntry() Entry[S] { //nolint:ireturn
+func (self List[S]) SelectedEntry() Entry[S] {
 	return self.Entries[self.Cursor]
 }

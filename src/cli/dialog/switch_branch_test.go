@@ -147,7 +147,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
-					Entries:      dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -167,7 +167,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
 						{Branch: "one", Indentation: "", OtherWorktree: false},
 						{Branch: "two", Indentation: "", OtherWorktree: true},
@@ -196,7 +196,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
 						{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
 						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
@@ -228,4 +228,15 @@ func TestSwitchBranch(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 	})
+}
+
+func newSwitchBranchBubbleListEntries(entries []dialog.SwitchBranchEntry) []list.Entry[dialog.SwitchBranchEntry] {
+	result := make([]list.Entry[dialog.SwitchBranchEntry], len(entries))
+	for e, entry := range entries {
+		result[e] = list.Entry[dialog.SwitchBranchEntry]{
+			Data: entry,
+			Text: entry.String(),
+		}
+	}
+	return result
 }
