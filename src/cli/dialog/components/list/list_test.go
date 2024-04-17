@@ -54,4 +54,19 @@ func TestList(t *testing.T) {
 			must.EqOp(t, want, have.Cursor)
 		}
 	})
+
+	t.Run("MovePageUp", func(t *testing.T) {
+		t.Parallel()
+		entries := list.NewEntries[configdomain.HostingOriginHostname]("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+		tests := map[int]int{
+			0:  0, // at beginning of list
+			2:  0, // less than a page before the start of the list
+			12: 2, // at end of list
+		}
+		for give, want := range tests {
+			have := list.NewList(entries, give)
+			have.MovePageUp()
+			must.EqOp(t, want, have.Cursor)
+		}
+	})
 }
