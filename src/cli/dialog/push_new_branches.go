@@ -42,7 +42,7 @@ func PushNewBranches(existing configdomain.PushNewBranches, inputs components.Te
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

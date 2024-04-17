@@ -106,7 +106,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Parallel()
 		model := dialog.PerennialBranchesModel{
 			BubbleList: components.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
-				Entries: gitdomain.NewLocalBranchNames("zero", "one", "two", "three"),
+				Entries: components.NewEnabledBubbleListEntries(gitdomain.NewLocalBranchNames("zero", "one", "two", "three")),
 			},
 			Selections: []int{1, 3},
 		}

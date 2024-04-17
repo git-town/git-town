@@ -216,11 +216,11 @@ func TestAliases(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
 			BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
-				Entries: configdomain.AliasableCommands{
+				Entries: components.NewEnabledBubbleListEntries(configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandSync,
-				},
+				}),
 			},
 			CurrentSelections: []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
@@ -241,11 +241,11 @@ func TestAliases(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
 			BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
-				Entries: configdomain.AliasableCommands{
+				Entries: components.NewEnabledBubbleListEntries(configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandDiffParent,
-				},
+				}),
 			},
 			CurrentSelections: []dialog.AliasSelection{
 				dialog.AliasSelectionGT,

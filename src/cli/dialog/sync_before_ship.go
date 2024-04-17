@@ -43,7 +43,7 @@ func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.Test
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncBeforeShipTitle, SyncBeforeShipHelp, inputs)
+	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, syncBeforeShipTitle, SyncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

@@ -70,7 +70,7 @@ func (self SwitchModel) View() string {
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
-		branch := self.Entries[i]
+		branch := self.Entries[i].Data
 		isSelected := i == self.Cursor
 		isInitial := i == self.InitialBranchPos
 		switch {

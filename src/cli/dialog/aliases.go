@@ -29,8 +29,8 @@ If you are not sure, select all :)
 // This includes asking the user and updating the respective settings based on the user selection.
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
-		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           components.NewBubbleList(allAliasableCommands, 0),
+		AllAliasableCommands: allAliasableCommands, // TODO: remove this field and use the data in BubbleList directly
+		BubbleList:           components.NewBubbleList(components.NewEnabledBubbleListEntries(allAliasableCommands), 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
@@ -146,17 +146,17 @@ func (self AliasesModel) View() string {
 		selection := self.CurrentSelections[i]
 		switch {
 		case highlighted && selection == AliasSelectionNone:
-			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case highlighted && selection == AliasSelectionOther:
-			s.WriteString(self.Colors.Selection.Styled("> [o] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [o] " + branch.Text))
 		case highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.Text))
 		case !highlighted && selection == AliasSelectionNone:
-			s.WriteString("  [ ] " + branch.String())
+			s.WriteString("  [ ] " + branch.Text)
 		case !highlighted && selection == AliasSelectionOther:
-			s.WriteString("  [o] " + branch.String())
+			s.WriteString("  [o] " + branch.Text)
 		case !highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
 		}
 		s.WriteRune('\n')
 	}

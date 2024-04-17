@@ -18,19 +18,39 @@ const (
 	StatusAborted               // the user has aborted the dialog
 )
 
+type BubbleListEntry[S fmt.Stringer] struct {
+	// TODO: Checked bool
+	Data    S
+	Enabled bool
+	Text    string
+}
+
+// NewEnabledBubbleListEntries creates enabled BubbleListEntries for the given data types.
+func NewEnabledBubbleListEntries[S fmt.Stringer](records []S) []BubbleListEntry[S] {
+	result := make([]BubbleListEntry[S], len(records))
+	for r, record := range records {
+		result[r] = BubbleListEntry[S]{
+			Data:    record,
+			Enabled: true,
+			Text:    record.String(),
+		}
+	}
+	return result
+}
+
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList[S fmt.Stringer] struct {
-	Colors       dialogColors  // colors to use for help text
-	Cursor       int           // index of the currently selected row
-	Dim          termenv.Style // style for dim output
-	Entries      []S           // the entries to select from
-	EntryNumber  string        // the manually entered entry number
-	MaxDigits    int           // how many digits make up an entry number
-	NumberFormat string        // template for formatting the entry number
+	Colors       dialogColors         // colors to use for help text
+	Cursor       int                  // index of the currently selected row
+	Dim          termenv.Style        // style for dim output
+	Entries      []BubbleListEntry[S] // the entries to select from
+	EntryNumber  string               // the manually entered entry number
+	MaxDigits    int                  // how many digits make up an entry number
+	NumberFormat string               // template for formatting the entry number
 	Status       status
 }
 
-func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
+func NewBubbleList[S fmt.Stringer](entries []BubbleListEntry[S], cursor int) BubbleList[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList[S]{
 		Status:       StatusActive,
@@ -104,7 +124,7 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
-	return self.Entries[self.Cursor]
+	return self.Entries[self.Cursor].Data
 }
 
 func (self *BubbleList[S]) moveCursorDown() {
