@@ -6,7 +6,7 @@ import "fmt"
 type Entries[S fmt.Stringer] []Entry[S]
 
 // NewEnabledListEntries creates enabled BubbleListEntries for the given data types.
-func NewEntries[S fmt.Stringer](records ...S) []Entry[S] {
+func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
 		result[r] = Entry[S]{
@@ -15,4 +15,14 @@ func NewEntries[S fmt.Stringer](records ...S) []Entry[S] {
 		}
 	}
 	return result
+}
+
+// IndexWithText provides the index of the element with the given text.
+func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
+	for e := range self {
+		if self[e].Text == text {
+			return true, e
+		}
+	}
+	return false, 0
 }
