@@ -14,7 +14,7 @@ func TestList(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
 		start := 0
-		end := len(entries)
+		end := len(entries) - 1
 		tests := map[int]int{
 			start: 1,     // at start of list
 			1:     2,     // in middle of list
