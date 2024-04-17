@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"container/list"
 	"fmt"
 	"strings"
 
@@ -30,7 +31,7 @@ If you are not sure, select all :)
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           components.NewBubbleList(allAliasableCommands, 0),
+		List:                 list.NewList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
@@ -48,7 +49,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 }
 
 type AliasesModel struct {
-	components.BubbleList[configdomain.AliasableCommand]
+	list.List[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk

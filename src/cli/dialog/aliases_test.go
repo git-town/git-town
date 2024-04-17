@@ -1,6 +1,7 @@
 package dialog_test
 
 import (
+	"container/list"
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
@@ -187,7 +188,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}

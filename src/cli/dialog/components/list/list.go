@@ -19,7 +19,7 @@ type List[S fmt.Stringer] struct {
 	EntryNumber  string              // the manually entered entry number
 	MaxDigits    int                 // how many digits make up an entry number
 	NumberFormat string              // template for formatting the entry number
-	Status       status
+	Status       Status
 }
 
 func NewList[S fmt.Stringer](entries []S, cursor int) List[S] {
