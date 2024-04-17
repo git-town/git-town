@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/muesli/termenv"
@@ -30,8 +31,8 @@ If you are not sure, select all :)
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           components.NewBubbleList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
+		List:                 list.NewList(list.NewEntries(allAliasableCommands...), 0),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
@@ -48,7 +49,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 }
 
 type AliasesModel struct {
-	components.BubbleList[configdomain.AliasableCommand]
+	list.List[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
@@ -108,7 +109,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
+	if handled, cmd := self.List.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
@@ -116,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = components.StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
@@ -132,7 +133,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 }
 
 func (self AliasesModel) View() string {
-	if self.Status != components.StatusActive {
+	if self.Status != list.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}
@@ -146,17 +147,17 @@ func (self AliasesModel) View() string {
 		selection := self.CurrentSelections[i]
 		switch {
 		case highlighted && selection == AliasSelectionNone:
-			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case highlighted && selection == AliasSelectionOther:
-			s.WriteString(self.Colors.Selection.Styled("> [o] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [o] " + branch.Text))
 		case highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.Text))
 		case !highlighted && selection == AliasSelectionNone:
-			s.WriteString("  [ ] " + branch.String())
+			s.WriteString("  [ ] " + branch.Text)
 		case !highlighted && selection == AliasSelectionOther:
-			s.WriteString("  [o] " + branch.String())
+			s.WriteString("  [o] " + branch.Text)
 		case !highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
 		}
 		s.WriteRune('\n')
 	}

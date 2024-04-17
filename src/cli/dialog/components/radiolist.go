@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
@@ -12,23 +13,23 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
-		BubbleList: NewBubbleList(entries, cursor),
-		help:       help,
-		title:      title,
+		List:  list.NewList(entries, cursor),
+		help:  help,
+		title: title,
 	})
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
-		return entries[0], false, err
+		return entries[0].Data, false, err
 	}
 	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
 	return result.SelectedEntry(), result.Aborted(), nil
 }
 
 type radioListModel[S fmt.Stringer] struct {
-	BubbleList[S]
+	list.List[S]
 	help  string // help text to display before the radio list
 	title string // title to display before the help text
 }
@@ -42,22 +43,22 @@ func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolin
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
+	if handled, cmd := self.List.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self radioListModel[S]) View() string {
-	if self.Status != StatusActive {
+	if self.Status != list.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}
@@ -74,9 +75,9 @@ func (self radioListModel[S]) View() string {
 		branch := self.Entries[i]
 		s.WriteString(self.EntryNumberStr(i))
 		if i == self.Cursor {
-			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.Text))
 		} else {
-			s.WriteString("  " + branch.String())
+			s.WriteString("  " + branch.Text)
 		}
 		s.WriteRune('\n')
 	}

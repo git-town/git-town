@@ -2,17 +2,7 @@ package components
 
 import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
-	"github.com/muesli/termenv"
 )
-
-// Typical colors used in BubbleTea dialogs.
-type dialogColors struct {
-	Help      termenv.Style // color of help text
-	HelpKey   termenv.Style // color of key names in help text
-	Initial   termenv.Style // color for the row containing the currently checked out branch
-	Selection termenv.Style // color for the currently selected entry
-	Title     termenv.Style // color for the title of the current screen
-}
 
 // FormattedToken provides the given API token in a printable format.
 func FormattedSecret(secret string, aborted bool) string {
@@ -42,14 +32,4 @@ func FormattedToken(token string, aborted bool) string {
 		return colors.Green().Styled("(not provided)")
 	}
 	return colors.Green().Styled(token)
-}
-
-func createColors() dialogColors {
-	return dialogColors{
-		Help:      colors.Faint(),
-		HelpKey:   colors.FaintBold(),
-		Initial:   colors.Green(),
-		Selection: colors.Cyan(),
-		Title:     colors.Bold(),
-	}
 }

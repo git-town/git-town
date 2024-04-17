@@ -5,6 +5,8 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 )
 
 func TextField(args TextFieldArgs) (string, bool, error) {
@@ -13,9 +15,9 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 	textInput.Prompt = args.Prompt
 	textInput.Focus()
 	model := textFieldModel{
-		colors:    createColors(),
+		colors:    colors.NewDialogColors(),
 		help:      args.Help,
-		status:    StatusActive,
+		status:    list.StatusActive,
 		textInput: textInput,
 		title:     args.Title,
 	}
@@ -26,7 +28,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 		return args.ExistingValue, false, err
 	}
 	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
-	return result.textInput.Value(), result.status == StatusAborted, nil
+	return result.textInput.Value(), result.status == list.StatusAborted, nil
 }
 
 type TextFieldArgs struct {
@@ -38,9 +40,9 @@ type TextFieldArgs struct {
 }
 
 type textFieldModel struct {
-	colors    dialogColors // colors to use for help text
+	colors    colors.DialogColors // colors to use for help text
 	help      string
-	status    status
+	status    list.Status
 	textInput textinput.Model
 	title     string
 }
@@ -54,10 +56,10 @@ func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { 
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive
 		case tea.KeyEnter:
-			self.status = StatusDone
+			self.status = list.StatusDone
 			return self, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
-			self.status = StatusAborted
+			self.status = list.StatusAborted
 			return self, tea.Quit
 		}
 	case error:
@@ -68,7 +70,7 @@ func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { 
 }
 
 func (self textFieldModel) View() string {
-	if self.status != StatusActive {
+	if self.status != list.StatusActive {
 		return ""
 	}
 	result := strings.Builder{}

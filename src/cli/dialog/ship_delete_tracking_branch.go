@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -26,10 +27,10 @@ const (
 )
 
 func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []shipDeleteTrackingBranchEntry{
+	entries := list.NewEntries(
 		ShipDeleteTrackingBranchEntryYes,
 		ShipDeleteTrackingBranchEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

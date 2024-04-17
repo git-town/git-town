@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -145,9 +145,9 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
-					Entries:      []dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}},
+					Entries:      list.NewEntries(dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -165,13 +165,13 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "one", Indentation: "", OtherWorktree: false},
-						{Branch: "two", Indentation: "", OtherWorktree: true},
-					},
+					Entries: list.NewEntries(
+						dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "one", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "two", Indentation: "", OtherWorktree: true},
+					),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -194,17 +194,17 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("stacked changes", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
-						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
-						{Branch: "beta", Indentation: "  ", OtherWorktree: false},
-						{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "other", Indentation: "", OtherWorktree: false},
-					},
+					Entries: list.NewEntries(
+						dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
+						dialog.SwitchBranchEntry{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "other", Indentation: "", OtherWorktree: false},
+					),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},

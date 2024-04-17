@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -32,10 +33,10 @@ const (
 )
 
 func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
-	entries := []pushNewBranchesEntry{
+	entries := list.NewEntries(
 		PushNewBranchesEntryYes,
 		PushNewBranchesEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0
