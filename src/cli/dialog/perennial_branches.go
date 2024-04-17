@@ -35,8 +35,9 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
+	entries := list.NewEntries(perennialCandidates...)
 	program := tea.NewProgram(PerennialBranchesModel{
-		List:          list.NewList(perennialCandidates, 0),
+		List:          list.NewList(entries, 0),
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: colors.Green(),
 	})
@@ -66,7 +67,7 @@ func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames 
 	result := gitdomain.LocalBranchNames{}
 	for e, entry := range self.Entries {
 		if self.IsRowChecked(e) {
-			result = append(result, entry)
+			result = append(result, entry.Data)
 		}
 	}
 	return result
@@ -150,13 +151,13 @@ func (self PerennialBranchesModel) View() string {
 		s.WriteString(self.EntryNumberStr(i))
 		switch {
 		case selected && checked:
-			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.Text))
 		case selected && !checked:
-			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
-			s.WriteString("  [ ] " + branch.String())
+			s.WriteString("  [ ] " + branch.Text)
 		}
 		s.WriteRune('\n')
 	}
