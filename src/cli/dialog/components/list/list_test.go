@@ -10,6 +10,7 @@ import (
 
 func TestList(t *testing.T) {
 	t.Parallel()
+
 	t.Run("MoveCursorDown", func(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
