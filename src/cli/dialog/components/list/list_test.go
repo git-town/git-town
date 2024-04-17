@@ -12,26 +12,31 @@ func TestList(t *testing.T) {
 	t.Parallel()
 	t.Run("MoveCursorDown", func(t *testing.T) {
 		t.Parallel()
-		t.Run("at beginning of list", func(t *testing.T) {
-			t.Parallel()
-			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three")
-			have := list.NewList(entries, 0)
+		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
+		tests := map[int]int{
+			0: 1, // at beginning of list
+			1: 2, // in middle of list
+			3: 0, // at end of list
+		}
+		for give, want := range tests {
+			have := list.NewList(entries, give)
 			have.MoveCursorDown()
-			must.EqOp(t, 1, have.Cursor)
-		})
-		t.Run("in middle of list", func(t *testing.T) {
-			t.Parallel()
-			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
-			have := list.NewList(entries, 1)
-			have.MoveCursorDown()
-			must.EqOp(t, 2, have.Cursor)
-		})
-		t.Run("at end of list", func(t *testing.T) {
-			t.Parallel()
-			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three")
-			have := list.NewList(entries, 2)
-			have.MoveCursorDown()
-			must.EqOp(t, 0, have.Cursor)
-		})
+			must.EqOp(t, want, have.Cursor)
+		}
+	})
+
+	t.Run("MoveCursorUp", func(t *testing.T) {
+		t.Parallel()
+		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
+		tests := map[int]int{
+			0: 3, // at beginning of list
+			2: 1, // in middle of list
+			3: 2, // at end of list
+		}
+		for give, want := range tests {
+			have := list.NewList(entries, give)
+			have.MoveCursorUp()
+			must.EqOp(t, want, have.Cursor)
+		}
 	})
 }
