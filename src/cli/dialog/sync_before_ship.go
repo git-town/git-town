@@ -48,8 +48,8 @@ func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.Test
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.SyncBeforeShip, components.FormattedSelection(selection.Short(), aborted))
-	return selection.SyncBeforeShip(), aborted, err
+	fmt.Printf(messages.SyncBeforeShip, components.FormattedSelection(selection.Data.Short(), aborted))
+	return selection.Data.SyncBeforeShip(), aborted, err
 }
 
 type syncBeforeShipEntry string

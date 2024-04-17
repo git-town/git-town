@@ -47,7 +47,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
 	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(cutSelection, aborted))
-	return selection.SyncFeatureStrategy(), aborted, err
+	return selection.Data.SyncFeatureStrategy(), aborted, err
 }
 
 type syncFeatureStrategyEntry string

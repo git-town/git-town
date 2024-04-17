@@ -45,8 +45,8 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(selection.Short(), aborted))
-	return selection.SyncUpstream(), aborted, err
+	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(selection.Data.Short(), aborted))
+	return selection.Data.SyncUpstream(), aborted, err
 }
 
 type syncUpstreamEntry string
