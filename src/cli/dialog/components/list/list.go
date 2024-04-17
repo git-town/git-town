@@ -15,7 +15,7 @@ type List[S fmt.Stringer] struct {
 	Colors       colors.DialogColors // colors to use for help text
 	Cursor       int                 // index of the currently selected row
 	Dim          termenv.Style       // style for dim output
-	Entries      []S                 // the entries to select from
+	Entries      Entries[S]          // the entries to select from
 	EntryNumber  string              // the manually entered entry number
 	MaxDigits    int                 // how many digits make up an entry number
 	NumberFormat string              // template for formatting the entry number
