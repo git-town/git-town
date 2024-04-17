@@ -7,3 +7,7 @@ type Entry[S fmt.Stringer] struct {
 	Data S
 	Text string
 }
+
+func (self Entry[S]) String() string {
+	return self.Text
+}

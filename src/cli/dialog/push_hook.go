@@ -44,7 +44,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 		return true, aborted, err
 	}
 	fmt.Printf(messages.PushHook, components.FormattedSelection(selection.String(), aborted))
-	return selection.PushHook(), aborted, err
+	return selection.Data.PushHook(), aborted, err
 }
 
 type pushHookEntry string

@@ -41,7 +41,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos: cursor,
-		List:             list.NewList(entries, cursor),
+		List:             list.NewList(list.NewEntries(entries...), cursor),
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -92,30 +92,30 @@ func (self SwitchModel) View() string {
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
-		branch := self.Entries[i].Data
+		entry := self.Entries[i]
 		isSelected := i == self.Cursor
 		isInitial := i == self.InitialBranchPos
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("> " + branch.Text))
+			s.WriteString(color.Styled("> " + entry.Text))
 		case isInitial:
 			color := self.Colors.Initial
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("* " + branch.Text))
-		case branch.Data.OtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + branch.Text))
+			s.WriteString(color.Styled("* " + entry.Text))
+		case entry.Data.OtherWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + entry.Text))
 		default:
 			color := termenv.String()
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("  " + branch.Text))
+			s.WriteString(color.Styled("  " + entry.Text))
 		}
 		s.WriteRune('\n')
 	}

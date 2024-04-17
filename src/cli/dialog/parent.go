@@ -32,7 +32,7 @@ func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	return selection.Data, aborted, err
 }
 
 type ParentArgs struct {
