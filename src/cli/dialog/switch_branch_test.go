@@ -147,7 +147,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
-					Entries:      []dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}},
+					Entries:      list.NewEntries(dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -167,11 +167,11 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "one", Indentation: "", OtherWorktree: false},
-						{Branch: "two", Indentation: "", OtherWorktree: true},
-					},
+					Entries: list.NewEntries(
+						dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "one", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "two", Indentation: "", OtherWorktree: true},
+					),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -196,15 +196,15 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
-						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
-						{Branch: "beta", Indentation: "  ", OtherWorktree: false},
-						{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "other", Indentation: "", OtherWorktree: false},
-					},
+					Entries: list.NewEntries(
+						dialog.SwitchBranchEntry{Branch: "main", Indentation: "", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
+						dialog.SwitchBranchEntry{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
+						dialog.SwitchBranchEntry{Branch: "other", Indentation: "", OtherWorktree: false},
+					),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
