@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/stringers"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -21,8 +21,9 @@ This branch is often called "main", "master", or "development".
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntry gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	cursor := stringers.IndexOrStart(localBranches, defaultEntry)
-	selection, aborted, err := components.RadioList(localBranches, cursor, mainBranchTitle, MainBranchHelp, inputs)
+	entries := list.NewEntries(localBranches...)
+	cursor := entries.IndexWithTextOr(defaultEntry.String(), 0)
+	selection, aborted, err := components.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, inputs)
 	fmt.Printf(messages.MainBranch, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

@@ -29,10 +29,7 @@ func HostingPlatform(existingValue configdomain.HostingPlatform, inputs componen
 		hostingPlatformGitHub,
 		hostingPlatformGitLab,
 	)
-	found, cursor := entries.IndexWithText(existingValue.String())
-	if !found {
-		cursor = 0
-	}
+	cursor := entries.IndexWithTextOr(existingValue.String(), 0)
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
