@@ -18,7 +18,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
-		BubbleList:       components.NewBubbleList(entries, cursor),
+		BubbleList:       components.NewBubbleList(NewSwitchBranchBubbleListEntries(entries), cursor),
 		InitialBranchPos: cursor,
 	})
 	components.SendInputs(inputs, dialogProgram)
@@ -172,6 +172,28 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 	return entries
 }
 
+type SwitchBranchEntry struct {
+	Branch        gitdomain.LocalBranchName
+	Indentation   string
+	OtherWorktree bool
+}
+
+func (sbe SwitchBranchEntry) String() string {
+	return sbe.Indentation + sbe.Branch.String()
+}
+
+func NewSwitchBranchBubbleListEntries(entries []SwitchBranchEntry) []components.BubbleListEntry[SwitchBranchEntry] {
+	result := make([]components.BubbleListEntry[SwitchBranchEntry], len(entries))
+	for e, entry := range entries {
+		result[e] = components.BubbleListEntry[SwitchBranchEntry]{
+			Data:    entry,
+			Enabled: !entry.OtherWorktree,
+			Text:    entry.String(),
+		}
+	}
+	return result
+}
+
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
 func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
@@ -188,14 +210,4 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
 	}
-}
-
-type SwitchBranchEntry struct {
-	Branch        gitdomain.LocalBranchName
-	Indentation   string
-	OtherWorktree bool
-}
-
-func (sbe SwitchBranchEntry) String() string {
-	return sbe.Indentation + sbe.Branch.String()
 }

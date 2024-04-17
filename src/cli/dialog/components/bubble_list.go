@@ -25,19 +25,6 @@ type BubbleListEntry[S fmt.Stringer] struct {
 	Text    string
 }
 
-// NewEnabledBubbleListEntries creates enabled BubbleListEntries for the given data types.
-func NewEnabledBubbleListEntries[S fmt.Stringer](records []S) []BubbleListEntry[S] {
-	result := make([]BubbleListEntry[S], len(records))
-	for r, record := range records {
-		result[r] = BubbleListEntry[S]{
-			Data:    record,
-			Enabled: true,
-			Text:    record.String(),
-		}
-	}
-	return result
-}
-
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList[S fmt.Stringer] struct {
 	Colors       dialogColors         // colors to use for help text
@@ -62,6 +49,19 @@ func NewBubbleList[S fmt.Stringer](entries []BubbleListEntry[S], cursor int) Bub
 		MaxDigits:    numberLen,
 		NumberFormat: fmt.Sprintf("%%0%dd ", numberLen),
 	}
+}
+
+// NewEnabledBubbleListEntries creates enabled BubbleListEntries for the given data types.
+func NewEnabledBubbleListEntries[S fmt.Stringer](records []S) []BubbleListEntry[S] {
+	result := make([]BubbleListEntry[S], len(records))
+	for r, record := range records {
+		result[r] = BubbleListEntry[S]{
+			Data:    record,
+			Enabled: true,
+			Text:    record.String(),
+		}
+	}
+	return result
 }
 
 // Aborted indicates whether the user has Aborted this components.
