@@ -7,14 +7,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/gohacks"
-	"github.com/muesli/termenv"
 )
 
 // List contains elements and operations common to all BubbleTea-based list implementations.
 type List[S fmt.Stringer] struct {
 	Colors       colors.DialogColors // colors to use for help text
 	Cursor       int                 // index of the currently selected row
-	Dim          termenv.Style       // style for dim output TODO: merge this into Colors
 	Entries      Entries[S]          // the entries to select from
 	EntryNumber  string              // the manually entered entry number
 	MaxDigits    int                 // how many digits make up an entry number
@@ -28,7 +26,6 @@ func NewList[S fmt.Stringer](entries Entries[S], cursor int) List[S] {
 		Status:       StatusActive,
 		Colors:       colors.NewDialogColors(),
 		Cursor:       cursor,
-		Dim:          colors.Faint(),
 		Entries:      entries,
 		EntryNumber:  "",
 		MaxDigits:    numberLen,
@@ -43,7 +40,7 @@ func (self *List[S]) Aborted() bool {
 
 // EntryNumberStr provides a colorized string to print the given entry number.
 func (self *List[S]) EntryNumberStr(number int) string {
-	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
+	return self.Colors.EntryNumber.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // HandleKey handles keypresses that are common for all bubbleLists.
