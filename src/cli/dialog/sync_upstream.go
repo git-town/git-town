@@ -41,7 +41,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

@@ -39,7 +39,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, pushHookTitle, PushHookHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, pushHookTitle, PushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

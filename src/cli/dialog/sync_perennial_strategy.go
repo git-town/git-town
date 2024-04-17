@@ -40,7 +40,7 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 	default:
 		panic("unknown sync-perennial-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}

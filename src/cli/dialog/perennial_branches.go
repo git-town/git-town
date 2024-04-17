@@ -36,7 +36,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	program := tea.NewProgram(PerennialBranchesModel{
-		List:          list.NewList(list.NewEnabledListEntries(perennialCandidates), 0),
+		List:          list.NewList(list.NewEntries(perennialCandidates...), 0),
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: colors.Green(),
 	})

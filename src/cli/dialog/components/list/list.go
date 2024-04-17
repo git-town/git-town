@@ -104,77 +104,31 @@ func (self List[S]) SelectedData() S { //nolint:ireturn
 }
 
 func (self *List[S]) MoveCursorDown() {
-	if self.Entries.allDisabled() {
-		return
-	}
-	for {
-		if self.Cursor < len(self.Entries)-1 {
-			self.Cursor++
-		} else {
-			self.Cursor = 0
-		}
-		if self.SelectedEntry().Enabled {
-			return
-		}
+	if self.Cursor < len(self.Entries)-1 {
+		self.Cursor++
+	} else {
+		self.Cursor = 0
 	}
 }
 
 func (self *List[S]) MoveCursorUp() {
-	if self.Entries.allDisabled() {
-		return
-	}
-	for {
-		if self.Cursor > 0 {
-			self.Cursor--
-		} else {
-			self.Cursor = len(self.Entries) - 1
-		}
-		if self.SelectedEntry().Enabled {
-			return
-		}
+	if self.Cursor > 0 {
+		self.Cursor--
+	} else {
+		self.Cursor = len(self.Entries) - 1
 	}
 }
 
 func (self *List[S]) MovePageDown() {
-	if self.Entries.allDisabled() {
-		return
-	}
 	self.Cursor += 10
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
 	}
-	if self.SelectedEntry().Enabled {
-		return
-	}
-	// keep moving the cursor down until we hit either an enabled entry or the end of the list
-	for self.Cursor < len(self.Entries)-1 {
-		self.Cursor++
-		if self.SelectedEntry().Enabled {
-			return
-		}
-	}
-	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
-	self.MoveCursorUp()
 }
 
 func (self *List[S]) MovePageUp() {
-	if self.Entries.allDisabled() {
-		return
-	}
 	self.Cursor -= 10
 	if self.Cursor < 0 {
 		self.Cursor = 0
 	}
-	if self.SelectedEntry().Enabled {
-		return
-	}
-	// keep moving the cursor up until we hit either an enabled entry or the beginning of the list
-	for self.Cursor > 0 {
-		self.Cursor--
-		if self.SelectedEntry().Enabled {
-			return
-		}
-	}
-	// here we have reached the end of the list and haven't found an enabled entry --> go backwards until we find one
-	self.MoveCursorDown()
 }

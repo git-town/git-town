@@ -29,9 +29,8 @@ func NewSwitchBranchBubbleListEntries(entries []SwitchBranchEntry) []list.Entry[
 	result := make([]list.Entry[SwitchBranchEntry], len(entries))
 	for e, entry := range entries {
 		result[e] = list.Entry[SwitchBranchEntry]{
-			Data:    entry,
-			Enabled: !entry.OtherWorktree,
-			Text:    entry.String(),
+			Data: entry,
+			Text: entry.String(),
 		}
 	}
 	return result
