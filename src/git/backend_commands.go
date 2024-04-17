@@ -35,7 +35,7 @@ type BackendCommands struct {
 }
 
 // Author provides the locally Git configured user.
-func (self *BackendCommands) Author() (string, error) {
+func (self *BackendCommands) Author() (gitdomain.Author, error) {
 	email := self.Config.FullConfig.GitUserEmail
 	if email == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
@@ -44,21 +44,21 @@ func (self *BackendCommands) Author() (string, error) {
 	if name == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}
-	return name + " <" + email + ">", nil
+	return gitdomain.Author(name + " <" + email + ">"), nil
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
-func (self *BackendCommands) BranchAuthors(branch, parent gitdomain.LocalBranchName) ([]string, error) {
+func (self *BackendCommands) BranchAuthors(branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
 	output, err := self.Runner.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
-		return []string{}, err
+		return []gitdomain.Author{}, err
 	}
-	result := []string{}
+	result := []gitdomain.Author{}
 	for _, line := range stringslice.Lines(output) {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
-		result = append(result, parts[1])
+		result = append(result, gitdomain.Author(parts[1]))
 	}
 	return result, nil
 }
