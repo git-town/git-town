@@ -38,8 +38,8 @@ func TestEntries(t *testing.T) {
 		t.Run("element is not in collection", func(t *testing.T) {
 			t.Parallel()
 			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two")
-			have := entries.IndexWithTextOr("zonk", 0)
-			must.EqOp(t, 0, have)
+			have := entries.IndexWithTextOr("zonk", 5)
+			must.EqOp(t, 5, have)
 		})
 	})
 }

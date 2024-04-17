@@ -27,10 +27,10 @@ const (
 )
 
 func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []shipDeleteTrackingBranchEntry{
+	entries := list.NewEntries(
 		ShipDeleteTrackingBranchEntryYes,
 		ShipDeleteTrackingBranchEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

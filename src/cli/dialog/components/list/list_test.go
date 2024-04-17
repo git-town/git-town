@@ -13,10 +13,12 @@ func TestList(t *testing.T) {
 	t.Run("MoveCursorDown", func(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
+		start := 0
+		end := len(entries) - 1
 		tests := map[int]int{
-			0: 1, // at beginning of list
-			1: 2, // in middle of list
-			3: 0, // at end of list
+			start: 1,     // at start of list
+			1:     2,     // in middle of list
+			end:   start, // at end of list
 		}
 		// t.Run("entry above is enabled", func(t *testing.T) {
 		// t.Run("first and second entry above are disabled, third entry above is enabled", func(t *testing.T) {
@@ -32,10 +34,12 @@ func TestList(t *testing.T) {
 	t.Run("MoveCursorUp", func(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
+		start := 0
+		end := len(entries) - 1
 		tests := map[int]int{
-			0: 3, // at beginning of list
-			2: 1, // in middle of list
-			3: 2, // at end of list
+			start: end, // at beginning of list
+			2:     1,   // in middle of list
+			end:   2,   // at end of list
 		}
 		for give, want := range tests {
 			have := list.NewList(entries, give)
@@ -47,10 +51,13 @@ func TestList(t *testing.T) {
 	t.Run("MovePageDown", func(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+		start := 0
+		end := len(entries) - 1
 		tests := map[int]int{
-			0:  10, // at beginning of list
-			10: 12, // less than a page before the end of the list
-			11: 12, // at end of list
+			start: 10,  // at beginning of list
+			1:     11,  // more than a page before the end of the list
+			10:    end, // less than a page before the end of the list
+			end:   end, // at end of list
 		}
 		for give, want := range tests {
 			have := list.NewList(entries, give)
@@ -62,10 +69,13 @@ func TestList(t *testing.T) {
 	t.Run("MovePageUp", func(t *testing.T) {
 		t.Parallel()
 		entries := list.NewEntries[configdomain.HostingOriginHostname]("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+		start := 0
+		end := len(entries) - 1
 		tests := map[int]int{
-			0:  0, // at beginning of list
-			2:  0, // less than a page before the start of the list
-			12: 2, // at end of list
+			start: start, // at beginning of list
+			2:     start, // less than a page before the start of the list
+			11:    1,     // more than a page before the start of the list
+			end:   2,     // at end of list
 		}
 		for give, want := range tests {
 			have := list.NewList(entries, give)

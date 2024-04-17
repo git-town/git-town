@@ -5,7 +5,7 @@ import "fmt"
 // Entries provides methods for a collection of Entry instances.
 type Entries[S fmt.Stringer] []Entry[S]
 
-// NewEnabledListEntries creates enabled BubbleListEntries for the given data types.
+// NewEnabledListEntries creates Entries for the given data types.
 func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
@@ -27,7 +27,8 @@ func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
 	return false, 0
 }
 
-// IndexWithText provides the index of the element with the given text.
+// IndexWithTextOr provides the index of the element with the given text
+// or the given default index if the element isn't in this collection.
 func (self Entries[S]) IndexWithTextOr(text string, defaultIndex int) int {
 	found, index := self.IndexWithText(text)
 	if found {

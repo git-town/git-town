@@ -96,7 +96,7 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self List[S]) SelectedEntry() Entry[S] { //nolint:ireturn
-	return self.Entries[self.Cursor].Data
+	return self.Entries[self.Cursor]
 }
 
 func (self List[S]) SelectedData() S { //nolint:ireturn
@@ -131,4 +131,8 @@ func (self *List[S]) MovePageUp() {
 	if self.Cursor < 0 {
 		self.Cursor = 0
 	}
+}
+
+func (self List[S]) SelectedEntry() S { //nolint:ireturn
+	return self.Entries[self.Cursor].Data
 }

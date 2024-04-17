@@ -34,10 +34,10 @@ const (
 )
 
 func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []syncBeforeShipEntry{
+	entries := list.NewEntries(
 		SyncBeforeShipEntryYes,
 		SyncBeforeShipEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

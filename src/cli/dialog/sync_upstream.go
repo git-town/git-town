@@ -31,10 +31,10 @@ const (
 )
 
 func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []syncUpstreamEntry{
+	entries := list.NewEntries(
 		SyncUpstreamEntryYes,
 		SyncUpstreamEntryNo,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

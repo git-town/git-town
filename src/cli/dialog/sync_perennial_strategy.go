@@ -27,10 +27,10 @@ const (
 )
 
 func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
-	entries := []syncPerennialStrategyEntry{
+	entries := list.NewEntries(
 		SyncPerennialStrategyEntryMerge,
 		SyncPerennialStrategyEntryRebase,
-	}
+	)
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncPerennialStrategyMerge:
