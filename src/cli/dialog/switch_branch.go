@@ -14,6 +14,28 @@ import (
 	"golang.org/x/exp/maps"
 )
 
+type SwitchBranchEntry struct {
+	Branch        gitdomain.LocalBranchName
+	Indentation   string
+	OtherWorktree bool
+}
+
+func (sbe SwitchBranchEntry) String() string {
+	return sbe.Indentation + sbe.Branch.String()
+}
+
+func NewSwitchBranchBubbleListEntries(entries []SwitchBranchEntry) []components.BubbleListEntry[SwitchBranchEntry] {
+	result := make([]components.BubbleListEntry[SwitchBranchEntry], len(entries))
+	for e, entry := range entries {
+		result[e] = components.BubbleListEntry[SwitchBranchEntry]{
+			Data:    entry,
+			Enabled: !entry.OtherWorktree,
+			Text:    entry.String(),
+		}
+	}
+	return result
+}
+
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
@@ -170,28 +192,6 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: "", OtherWorktree: otherWorktree})
 	}
 	return entries
-}
-
-type SwitchBranchEntry struct {
-	Branch        gitdomain.LocalBranchName
-	Indentation   string
-	OtherWorktree bool
-}
-
-func (sbe SwitchBranchEntry) String() string {
-	return sbe.Indentation + sbe.Branch.String()
-}
-
-func NewSwitchBranchBubbleListEntries(entries []SwitchBranchEntry) []components.BubbleListEntry[SwitchBranchEntry] {
-	result := make([]components.BubbleListEntry[SwitchBranchEntry], len(entries))
-	for e, entry := range entries {
-		result[e] = components.BubbleListEntry[SwitchBranchEntry]{
-			Data:    entry,
-			Enabled: !entry.OtherWorktree,
-			Text:    entry.String(),
-		}
-	}
-	return result
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
