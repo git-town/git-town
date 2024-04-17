@@ -31,8 +31,8 @@ If you are not sure, select all :)
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		List:                 list.NewList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
+		List:                 list.NewList(allAliasableCommands, 0),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
