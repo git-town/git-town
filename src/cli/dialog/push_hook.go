@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -28,10 +29,10 @@ const (
 )
 
 func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
-	entries := []pushHookEntry{
+	entries := list.NewEntries(
 		pushHookEntryEnabled,
 		pushHookEntryDisabled,
-	}
+	)
 	var defaultPos int
 	if existing {
 		defaultPos = 0

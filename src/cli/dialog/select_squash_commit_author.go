@@ -21,6 +21,7 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 	return selection.String(), aborted, err
 }
 
+// TODO: extract this to gitdomain?
 type squashCommitAuthor string
 
 func (self squashCommitAuthor) String() string {
