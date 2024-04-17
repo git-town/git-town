@@ -26,7 +26,7 @@ func NewList[S fmt.Stringer](entries Entries[S], cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
-		Colors:       colors.CreateColors(),
+		Colors:       colors.NewDialogColors(),
 		Cursor:       cursor,
 		Dim:          colors.Faint(),
 		Entries:      entries,
@@ -96,7 +96,7 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self List[S]) SelectedEntry() Entry[S] { //nolint:ireturn
-	return self.Entries[self.Cursor]
+	return self.Entries[self.Cursor].Data
 }
 
 func (self List[S]) SelectedData() S { //nolint:ireturn

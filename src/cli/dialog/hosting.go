@@ -22,15 +22,15 @@ Only change this if your code hosting server uses as custom URL.
 )
 
 func HostingPlatform(existingValue configdomain.HostingPlatform, inputs components.TestInput) (configdomain.HostingPlatform, bool, error) {
-	entries := []hostingPlatformEntry{
+	entries := list.NewEntries(
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
 		hostingPlatformGitea,
 		hostingPlatformGitHub,
 		hostingPlatformGitLab,
-	}
-	cursor := indexOfHostingPlatform(existingValue, entries)
-	newValue, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
+	)
+	cursor := entries.IndexWithTextOr(existingValue.String(), 0)
+	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
-	"github.com/git-town/git-town/v14/src/gohacks/stringers"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -26,8 +25,9 @@ Most of the time this is the main development branch (%v).
 
 // Parent lets the user select the parent branch for the given branch.
 func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
-	entries := ParentEntries(args)
-	cursor := stringers.IndexOrStart(entries, args.MainBranch)
+	parentCandidateNames := ParentCandidateNames(args)
+	entries := list.NewEntries(parentCandidateNames...)
+	cursor := entries.IndexWithTextOr(args.MainBranch.String(), 0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
@@ -43,7 +43,7 @@ type ParentArgs struct {
 	MainBranch      gitdomain.LocalBranchName
 }
 
-func ParentEntries(args ParentArgs) gitdomain.LocalBranchNames {
+func ParentCandidateNames(args ParentArgs) gitdomain.LocalBranchNames {
 	parentCandidateBranches := args.LocalBranches.Remove(args.Branch).Remove(args.Lineage.Children(args.Branch)...)
 	parentCandidateBranches = slice.NaturalSort(parentCandidateBranches)
 	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch)

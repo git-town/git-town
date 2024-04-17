@@ -36,7 +36,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		authors, err := runtime.Backend.BranchAuthors(branch, initial)
 		must.NoError(t, err)
-		must.Eq(t, []string{"user <email@example.com>"}, authors)
+		must.Eq(t, []gitdomain.Author{"user <email@example.com>"}, authors)
 	})
 
 	t.Run("BranchHasUnmergedChanges", func(t *testing.T) {

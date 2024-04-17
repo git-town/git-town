@@ -11,8 +11,7 @@ type DialogColors struct {
 	Title     termenv.Style // color for the title of the current screen
 }
 
-// TODO: rename to NewDialogColors
-func CreateColors() DialogColors {
+func NewDialogColors() DialogColors {
 	return DialogColors{
 		Help:      Faint(),
 		HelpKey:   FaintBold(),

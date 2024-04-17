@@ -35,7 +35,11 @@ func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStora
 	if hasConfigFile {
 		return ConfigStorageOptionFile, false, nil
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(ConfigStorageOptionFile, ConfigStorageOptionGit), 0, configStorageTitle, configStorageHelp, inputs)
+	entries := list.NewEntries(
+		ConfigStorageOptionFile,
+		ConfigStorageOptionGit,
+	)
+	selection, aborted, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
 	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), aborted))
 	return selection, aborted, err
 }

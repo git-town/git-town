@@ -27,7 +27,7 @@ func TestParent(t *testing.T) {
 				branch2: main,
 				branch3: main,
 			}
-			have := dialog.ParentEntries(dialog.ParentArgs{
+			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
 				Lineage:         lineage,
@@ -53,7 +53,7 @@ func TestParent(t *testing.T) {
 				branch2a: branch2,
 				branch3:  main,
 			}
-			have := dialog.ParentEntries(dialog.ParentArgs{
+			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
 				Lineage:         lineage,

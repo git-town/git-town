@@ -32,7 +32,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
-		List:                 list.NewList(allAliasableCommands, 0),
+		List:                 list.NewList(list.NewEntries(allAliasableCommands...), 0),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})

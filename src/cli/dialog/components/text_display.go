@@ -10,7 +10,7 @@ import (
 
 func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	model := textDisplayModel{
-		colors: colors.CreateColors(),
+		colors: colors.NewDialogColors(),
 		status: list.StatusActive,
 		text:   text,
 		title:  title,
