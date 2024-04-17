@@ -125,10 +125,10 @@ func (self *List[S]) MovePageUp() {
 	}
 }
 
-func (self List[S]) SelectedEntry() Entry[S] { //nolint:ireturn
-	return self.Entries[self.Cursor]
-}
-
 func (self List[S]) SelectedData() S { //nolint:ireturn
 	return self.SelectedEntry().Data
+}
+
+func (self List[S]) SelectedEntry() Entry[S] { //nolint:ireturn
+	return self.Entries[self.Cursor]
 }
