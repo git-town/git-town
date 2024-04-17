@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/stringers"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -29,7 +30,7 @@ func HostingPlatform(existingValue configdomain.HostingPlatform, inputs componen
 		hostingPlatformGitLab,
 	}
 	cursor := indexOfHostingPlatform(existingValue, entries)
-	newValue, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
+	newValue, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }

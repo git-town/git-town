@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -40,7 +41,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

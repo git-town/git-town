@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -38,7 +39,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, pushHookTitle, PushHookHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, pushHookTitle, PushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

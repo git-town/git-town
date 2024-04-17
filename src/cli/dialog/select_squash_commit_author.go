@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -16,7 +17,7 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 		return authors[0], false, nil
 	}
 	authorsList := squashCommitAuthorList(authors)
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(authorsList), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(authorsList), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
 	fmt.Printf(messages.SquashCommitAuthorSelection, components.FormattedSelection(selection.String(), aborted))
 	return selection.String(), aborted, err
 }

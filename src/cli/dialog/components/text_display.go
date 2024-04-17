@@ -4,12 +4,14 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 )
 
 func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	model := textDisplayModel{
-		colors: createColors(),
-		status: StatusActive,
+		colors: colors.CreateColors(),
+		status: list.StatusActive,
 		text:   text,
 		title:  title,
 	}
@@ -20,12 +22,12 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 		return false, err
 	}
 	result := dialogResult.(textDisplayModel) //nolint:forcetypeassert
-	return result.status == StatusAborted, nil
+	return result.status == list.StatusAborted, nil
 }
 
 type textDisplayModel struct {
-	colors dialogColors
-	status status
+	colors colors.DialogColors
+	status list.Status
 	text   string
 	title  string
 }
@@ -39,18 +41,18 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive
 		case tea.KeyEnter:
-			self.status = StatusDone
+			self.status = list.StatusDone
 			return self, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
-			self.status = StatusAborted
+			self.status = list.StatusAborted
 			return self, tea.Quit
 		}
 		switch msg.String() {
 		case "o":
-			self.status = StatusDone
+			self.status = list.StatusDone
 			return self, tea.Quit
 		case "q":
-			self.status = StatusAborted
+			self.status = list.StatusAborted
 			return self, tea.Quit
 		}
 	case error:
@@ -60,7 +62,7 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 }
 
 func (self textDisplayModel) View() string {
-	if self.status != StatusActive {
+	if self.status != list.StatusActive {
 		return ""
 	}
 	result := strings.Builder{}

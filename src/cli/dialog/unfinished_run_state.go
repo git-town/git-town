@@ -6,6 +6,7 @@ import (
 
 	humanize "github.com/dustin/go-humanize"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -55,7 +56,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		unfinishedRunstateDialogEntry{response: ResponseUndo, text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command)},
 		unfinishedRunstateDialogEntry{response: ResponseDiscard, text: messages.UnfinishedRunStateDiscard},
 	)
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(options), 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(options), 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
 	fmt.Printf(messages.UnfinishedCommandHandle, components.FormattedSelection(selection.response.String(), aborted))
 	return selection.response, aborted, err
 }

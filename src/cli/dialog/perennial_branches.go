@@ -8,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -35,7 +36,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	program := tea.NewProgram(PerennialBranchesModel{
-		BubbleList:    components.NewBubbleList(components.NewEnabledBubbleListEntries(perennialCandidates), 0),
+		List:          list.NewList(list.NewEnabledListEntries(perennialCandidates), 0),
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: colors.Green(),
 	})
@@ -55,7 +56,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 }
 
 type PerennialBranchesModel struct {
-	components.BubbleList[gitdomain.LocalBranchName]
+	list.List[gitdomain.LocalBranchName]
 	Selections    []int
 	selectedColor termenv.Style
 }
@@ -110,7 +111,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
+	if handled, cmd := self.List.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
@@ -118,7 +119,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = components.StatusDone
+		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
@@ -129,7 +130,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self PerennialBranchesModel) View() string {
-	if self.Status != components.StatusActive {
+	if self.Status != list.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

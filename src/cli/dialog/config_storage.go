@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -38,7 +39,7 @@ func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStora
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
 	}
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), 0, configStorageTitle, configStorageHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), 0, configStorageTitle, configStorageHelp, inputs)
 	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), aborted))
 	return selection, aborted, err
 }

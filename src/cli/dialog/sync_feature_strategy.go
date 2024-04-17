@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -40,7 +41,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}

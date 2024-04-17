@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/shoenig/test/must"
 )
@@ -129,7 +129,7 @@ func TestAliases(t *testing.T) {
 					dialog.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				List: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -158,7 +158,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
-				BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				List: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -187,7 +187,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				List: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -215,8 +215,8 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
-				Entries: components.NewEnabledBubbleListEntries(configdomain.AliasableCommands{
+			List: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				Entries: list.NewEnabledListEntries(configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandSync,
@@ -240,8 +240,8 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: components.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
-				Entries: components.NewEnabledBubbleListEntries(configdomain.AliasableCommands{
+			List: list.List[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				Entries: list.NewEnabledListEntries(configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandDiffParent,

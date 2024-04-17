@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -39,7 +40,7 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 	default:
 		panic("unknown sync-perennial-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(components.NewEnabledBubbleListEntries(entries), defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEnabledListEntries(entries), defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}

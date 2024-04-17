@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -145,7 +145,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
 					Entries:      dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
 					MaxDigits:    1,
@@ -165,7 +165,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
@@ -194,7 +194,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("stacked changes", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: dialog.NewSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
