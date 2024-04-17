@@ -15,7 +15,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 	textInput.Prompt = args.Prompt
 	textInput.Focus()
 	model := textFieldModel{
-		colors:    colors.CreateColors(),
+		colors:    colors.NewDialogColors(),
 		help:      args.Help,
 		status:    list.StatusActive,
 		textInput: textInput,

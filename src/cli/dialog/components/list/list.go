@@ -26,7 +26,7 @@ func NewList[S fmt.Stringer](entries []S, cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
-		Colors:       colors.CreateColors(),
+		Colors:       colors.NewDialogColors(),
 		Cursor:       cursor,
 		Dim:          colors.Faint(),
 		Entries:      entries,
