@@ -26,4 +26,20 @@ func TestEntries(t *testing.T) {
 			must.False(t, found)
 		})
 	})
+
+	t.Run("IndexWithTextOr", func(t *testing.T) {
+		t.Parallel()
+		t.Run("element is in collection", func(t *testing.T) {
+			t.Parallel()
+			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three")
+			have := entries.IndexWithTextOr("two", 0)
+			must.EqOp(t, 1, have)
+		})
+		t.Run("element is not in collection", func(t *testing.T) {
+			t.Parallel()
+			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two")
+			have := entries.IndexWithTextOr("zonk", 0)
+			must.EqOp(t, 0, have)
+		})
+	})
 }

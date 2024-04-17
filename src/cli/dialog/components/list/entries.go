@@ -26,3 +26,12 @@ func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
 	}
 	return false, 0
 }
+
+// IndexWithText provides the index of the element with the given text.
+func (self Entries[S]) IndexWithTextOr(text string, defaultIndex int) int {
+	found, index := self.IndexWithText(text)
+	if found {
+		return index
+	}
+	return defaultIndex
+}
