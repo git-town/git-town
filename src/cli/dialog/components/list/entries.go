@@ -18,6 +18,7 @@ func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	return result
 }
 
+// AllDisabled indicates whether all entries in this list are disabled.
 func (self Entries[S]) AllDisabled() bool {
 	for _, entry := range self {
 		if entry.Enabled {
