@@ -207,3 +207,13 @@ func DefaultConfig() FullConfig {
 		SyncUpstream:             true,
 	}
 }
+
+func NewFullConfig(configFile *PartialConfig, globalGitConfig, localGitConfig PartialConfig) FullConfig {
+	result := DefaultConfig()
+	if configFile != nil {
+		result.Merge(*configFile)
+	}
+	result.Merge(globalGitConfig)
+	result.Merge(localGitConfig)
+	return result
+}
