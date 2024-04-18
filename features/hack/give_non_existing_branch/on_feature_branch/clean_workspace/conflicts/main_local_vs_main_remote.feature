@@ -8,6 +8,7 @@ Feature: conflicts between the main branch and its tracking branch
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
     When I run "git-town hack new"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
