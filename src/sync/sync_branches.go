@@ -11,7 +11,10 @@ func BranchesProgram(args BranchesProgramArgs) {
 	for _, branch := range args.BranchesToSync {
 		BranchProgram(branch, args.BranchProgramArgs)
 	}
-	args.Program.Add(&opcodes.CheckoutIfExists{Branch: args.InitialBranch})
+	args.Program.Add(&opcodes.CheckoutFirstExisting{
+		Branches:   gitdomain.LocalBranchNames{args.InitialBranch, args.PreviousBranch},
+		MainBranch: args.Config.MainBranch,
+	})
 	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.Config.IsOnline() {
 		args.Program.Add(&opcodes.PushTags{})
 	}
