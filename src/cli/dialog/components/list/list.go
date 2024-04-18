@@ -125,6 +125,9 @@ func (self *List[S]) MoveCursorUp() {
 }
 
 func (self *List[S]) MovePageDown() {
+	if self.Entries.AllDisabled() {
+		return
+	}
 	self.Cursor += 10
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
