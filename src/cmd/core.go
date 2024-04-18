@@ -4,6 +4,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v14/src/cmd/config"
 	"github.com/git-town/git-town/v14/src/cmd/debug"
+	"github.com/git-town/git-town/v14/src/cmd/status"
 )
 
 // Execute runs the Cobra stack.
@@ -27,7 +28,7 @@ func Execute() error {
 	rootCmd.AddCommand(prependCommand())
 	rootCmd.AddCommand(renameBranchCommand())
 	rootCmd.AddCommand(repoCommand())
-	rootCmd.AddCommand(statusCommand())
+	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())
 	rootCmd.AddCommand(shipCmd())
 	rootCmd.AddCommand(skipCmd())
