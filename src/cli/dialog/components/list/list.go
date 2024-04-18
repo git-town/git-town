@@ -96,7 +96,7 @@ func (self *List[S]) MoveCursorDown() {
 	if self.Entries.AllDisabled() {
 		return
 	}
-	for self.Cursor < len(self.Entries) {
+	for {
 		if self.Cursor < len(self.Entries)-1 {
 			self.Cursor++
 		} else {
