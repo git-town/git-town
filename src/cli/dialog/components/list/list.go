@@ -93,6 +93,9 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self *List[S]) MoveCursorDown() {
+	if self.Entries.AllDisabled() {
+		return
+	}
 	for self.Cursor < len(self.Entries) {
 		if self.Cursor < len(self.Entries)-1 {
 			self.Cursor++

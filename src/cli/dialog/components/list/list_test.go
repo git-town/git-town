@@ -61,6 +61,16 @@ func TestList(t *testing.T) {
 				l.MoveCursorDown()
 				must.EqOp(t, 0, l.Cursor)
 			})
+			t.Run("no enabled entries", func(t *testing.T) {
+				entries := list.Entries[configdomain.HostingOriginHostname]{
+					{Data: "one", Enabled: false},
+					{Data: "two", Enabled: false},
+					{Data: "three", Enabled: false},
+				}
+				l := list.NewList(entries, 0)
+				l.MoveCursorDown()
+				must.EqOp(t, 0, l.Cursor)
+			})
 		})
 	})
 
