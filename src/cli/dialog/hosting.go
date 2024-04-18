@@ -21,15 +21,15 @@ Only change this if your code hosting server uses as custom URL.
 )
 
 func HostingPlatform(existingValue configdomain.HostingPlatform, inputs components.TestInput) (configdomain.HostingPlatform, bool, error) {
-	entries := list.NewEntries(
+	entries := hostingPlatformEntries{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
 		hostingPlatformGitea,
 		hostingPlatformGitHub,
 		hostingPlatformGitLab,
-	)
-	cursor := entries.IndexWithTextOr(existingValue.String(), 0)
-	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
+	}
+	cursor := entries.IndexOfHostingPlatformOrStart(existingValue)
+	newValue, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }
@@ -40,7 +40,7 @@ const (
 	hostingPlatformAutoDetect hostingPlatformEntry = "auto-detect"
 	hostingPlatformBitBucket  hostingPlatformEntry = "BitBucket"
 	hostingPlatformGitea      hostingPlatformEntry = "Gitea"
-	hostingPlatformGitHub     hostingPlatformEntry = "Github"
+	hostingPlatformGitHub     hostingPlatformEntry = "Github" // TODO: rename to GitHub
 	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
 )
 
@@ -62,4 +62,15 @@ func (self hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform 
 
 func (self hostingPlatformEntry) String() string {
 	return string(self)
+}
+
+type hostingPlatformEntries []hostingPlatformEntry
+
+func (self hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
+	for h, hostingPlatformEntry := range self {
+		if hostingPlatformEntry.HostingPlatform() == needle {
+			return h
+		}
+	}
+	return 0
 }

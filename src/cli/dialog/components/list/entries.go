@@ -30,8 +30,8 @@ func (self Entries[S]) AllDisabled() bool {
 
 // IndexWithText provides the index of the element with the given text.
 func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
-	for e := range self {
-		if self[e].Text == text {
+	for e, entry := range self {
+		if entry.Data.String() == text {
 			return true, e
 		}
 	}
