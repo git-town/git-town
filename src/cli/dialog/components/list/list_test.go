@@ -299,19 +299,154 @@ func TestList(t *testing.T) {
 
 	t.Run("MovePageUp", func(t *testing.T) {
 		t.Parallel()
-		entries := list.NewEntries[configdomain.HostingOriginHostname]("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
-		start := 0
-		end := len(entries) - 1
-		tests := map[int]int{
-			start: start, // at beginning of list
-			2:     start, // less than a page before the start of the list
-			11:    1,     // more than a page before the start of the list
-			end:   2,     // at end of list
-		}
-		for give, want := range tests {
-			have := list.NewList(entries, give)
-			have.MovePageUp()
-			must.EqOp(t, want, have.Cursor)
-		}
+		t.Run("more than a page before the start of the list", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+			}
+			l := list.NewList(entries, 12)
+			l.MovePageUp()
+			must.EqOp(t, 2, l.Cursor)
+		})
+		t.Run("less than a page before the start of the list", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+			}
+			l := list.NewList(entries, 3)
+			l.MovePageUp()
+			must.EqOp(t, 0, l.Cursor)
+		})
+		t.Run("at the start of the list", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+			}
+			l := list.NewList(entries, 0)
+			l.MovePageUp()
+			must.EqOp(t, 0, l.Cursor)
+		})
+		t.Run("first and second entry above are disabled, the next ones are enabled", func(t *testing.T) {
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: true},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: true},
+			}
+			l := list.NewList(entries, 12)
+			l.MovePageUp()
+			must.EqOp(t, 2, l.Cursor)
+		})
+		t.Run("all entries above are disabled except the first one", func(t *testing.T) {
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: true},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: true},
+			}
+			end := len(entries) - 1
+			l := list.NewList(entries, end)
+			l.MovePageUp()
+			must.EqOp(t, 0, l.Cursor)
+		})
+		t.Run("all entries above are disabled", func(t *testing.T) {
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: true},
+				{Enabled: true},
+			}
+			end := len(entries) - 1
+			l := list.NewList(entries, end)
+			l.MovePageUp()
+			must.EqOp(t, end-1, l.Cursor)
+		})
+		t.Run("only one enabled entry in list", func(t *testing.T) {
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: true},
+			}
+			end := len(entries) - 1
+			l := list.NewList(entries, end)
+			l.MovePageUp()
+			must.EqOp(t, end, l.Cursor)
+		})
+		t.Run("no enabled entries in list", func(t *testing.T) {
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: false},
+			}
+			l := list.NewList(entries, 0)
+			l.MovePageUp()
+			must.EqOp(t, 0, l.Cursor)
+		})
 	})
 }
