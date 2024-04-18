@@ -15,8 +15,12 @@ type Parts struct {
 
 func Parse(url string) *Parts {
 	patterns := []string{
+		`^[^:]+://(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*)\.git$`,
+		`^[^:]+://(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*)$`,
 		`^[^:]+://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`,
 		`^[^:]+://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`,
+		`^(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*)\.git$`,
+		`^(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*)$`,
 		`^(?P<user>.*@)?(?P<host>.*?[:/])(?P<org>.*\/)(?P<repo>.*)\.git$`,
 		`^(?P<user>.*@)?(?P<host>.*?[:/])(?P<org>.*\/)(?P<repo>.*)$`,
 	}

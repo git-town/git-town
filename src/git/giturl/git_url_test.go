@@ -18,6 +18,8 @@ func TestParse(t *testing.T) {
 		"git@gitlab.com:gitlab-com/www-gitlab-com":             {User: "git", Host: "gitlab.com", Org: "gitlab-com", Repo: "www-gitlab-com"},
 		"git@gitlab.com:gitlab-org/quality/triage-ops.git":     {User: "git", Host: "gitlab.com", Org: "gitlab-org/quality", Repo: "triage-ops"},
 		"git@gitlab.com:gitlab-org/quality/triage-ops":         {User: "git", Host: "gitlab.com", Org: "gitlab-org/quality", Repo: "triage-ops"},
+		"git@git.example.com:4022/a/b.git":                     {User: "git", Host: "git.example.com", Org: "a", Repo: "b"},
+		"git@git.example.com:4022/a/b":                         {User: "git", Host: "git.example.com", Org: "a", Repo: "b"},
 		"username@bitbucket.org:git-town/git-town.git":         {User: "username", Host: "bitbucket.org", Org: "git-town", Repo: "git-town"},
 		"username@bitbucket.org:git-town/git-town":             {User: "username", Host: "bitbucket.org", Org: "git-town", Repo: "git-town"},
 		"https://github.com/git-town/git-town.git":             {User: "", Host: "github.com", Org: "git-town", Repo: "git-town"},
@@ -34,6 +36,8 @@ func TestParse(t *testing.T) {
 		"http://user:secret@github.com/git-town/git-town":      {User: "user:secret", Host: "github.com", Org: "git-town", Repo: "git-town"},
 		"ssh://git@github.com/git-town/git-town.git":           {User: "git", Host: "github.com", Org: "git-town", Repo: "git-town"},
 		"ssh://git@github.com/git-town/git-town":               {User: "git", Host: "github.com", Org: "git-town", Repo: "git-town"},
+		"ssh://git@git.example.com:4022/a/b.git":               {User: "git", Host: "git.example.com", Org: "a", Repo: "b"},
+		"ssh://git@git.example.com:4022/a/b":                   {User: "git", Host: "git.example.com", Org: "a", Repo: "b"},
 	}
 	for give, want := range tests {
 		have := giturl.Parse(give)
