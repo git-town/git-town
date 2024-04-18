@@ -109,10 +109,18 @@ func (self *List[S]) MoveCursorDown() {
 }
 
 func (self *List[S]) MoveCursorUp() {
-	if self.Cursor > 0 {
-		self.Cursor--
-	} else {
-		self.Cursor = len(self.Entries) - 1
+	if self.Entries.AllDisabled() {
+		return
+	}
+	for {
+		if self.Cursor > 0 {
+			self.Cursor--
+		} else {
+			self.Cursor = len(self.Entries) - 1
+		}
+		if self.SelectedEntry().Enabled {
+			return
+		}
 	}
 }
 
