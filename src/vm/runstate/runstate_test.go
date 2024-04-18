@@ -110,7 +110,6 @@ func TestRunState(t *testing.T) {
   },
   "EndStashSize": 1,
   "FinalUndoProgram": [],
-  "IsUndo": false,
   "RunProgram": [
     {
       "data": {
