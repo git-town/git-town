@@ -13,9 +13,6 @@ import (
 
 const statusResetDesc = "Resets the current suspended Git Town command"
 
-// TODO: extract this and the "status" command into a "status" subfolder,
-//
-//	similar to the "config" subfolder.
 func resetRunstateCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
