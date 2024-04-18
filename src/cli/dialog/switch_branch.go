@@ -30,7 +30,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos: cursor,
-		List:             list.NewList(list.NewEntries(entries...), cursor),
+		List:             list.NewList(newSwitchBranchListEntries(entries), cursor),
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -199,4 +199,16 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
 	}
+}
+
+func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
+	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
+	for e, entry := range switchBranchEntries {
+		result[e] = list.Entry[SwitchBranchEntry]{
+			Data:    entry,
+			Enabled: !entry.OtherWorktree,
+			Text:    entry.String(),
+		}
+	}
+	return result
 }

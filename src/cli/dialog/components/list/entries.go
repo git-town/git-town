@@ -10,8 +10,9 @@ func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
 		result[r] = Entry[S]{
-			Data: record,
-			Text: record.String(),
+			Data:    record,
+			Enabled: true,
+			Text:    record.String(),
 		}
 	}
 	return result

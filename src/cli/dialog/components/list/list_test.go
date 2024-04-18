@@ -13,23 +13,36 @@ func TestList(t *testing.T) {
 
 	t.Run("MoveCursorDown", func(t *testing.T) {
 		t.Parallel()
-		entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
-		start := 0
-		end := len(entries) - 1
-		tests := map[int]int{
-			start: 1,     // at start of list
-			1:     2,     // in middle of list
-			end:   start, // at end of list
-		}
-		// t.Run("entry above is enabled", func(t *testing.T) {
-		// t.Run("first and second entry above are disabled, third entry above is enabled", func(t *testing.T) {
-		// t.Run("already at beginning of the list", func(t *testing.T) {
-		// t.Run("all entries above are disabled", func(t *testing.T) {
-		for give, want := range tests {
-			have := list.NewList(entries, give)
-			have.MoveCursorDown()
-			must.EqOp(t, want, have.Cursor)
-		}
+		t.Run("all entries are enabled", func(t *testing.T) {
+			entries := list.NewEntries[configdomain.HostingOriginHostname]("one", "two", "three", "four")
+			start := 0
+			end := len(entries) - 1
+			tests := map[int]int{
+				start: 1,     // at start of list
+				1:     2,     // in middle of list
+				end:   start, // at end of list
+			}
+			for give, want := range tests {
+				have := list.NewList(entries, give)
+				have.MoveCursorDown()
+				must.EqOp(t, want, have.Cursor)
+			}
+		})
+		t.Run("some entries are disabled", func(t *testing.T) {
+			t.Run("first and second entry below are disabled, the next one is enabled", func(t *testing.T) {
+				entries := list.Entries[configdomain.HostingOriginHostname]{
+					{Data: "one", Enabled: true},
+					{Data: "two", Enabled: false},
+					{Data: "three", Enabled: false},
+					{Data: "four", Enabled: true},
+				}
+				l := list.NewList(entries, 0)
+				l.MoveCursorDown()
+				must.EqOp(t, 3, l.Cursor)
+			})
+			// t.Run("already at beginning of the list", func(t *testing.T) {
+			// t.Run("all entries above are disabled", func(t *testing.T) {
+		})
 	})
 
 	t.Run("MoveCursorUp", func(t *testing.T) {
