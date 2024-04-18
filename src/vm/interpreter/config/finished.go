@@ -13,8 +13,6 @@ import (
 
 // Finished is called when a Git Town command that only changes configuration has finished successfully.
 func Finished(args FinishedArgs) error {
-	// TODO: extract the code to load a config snapshot into a reusable function
-	//       since it exists in multiple places
 	configGitAccess := gitconfig.Access{Runner: args.Runner.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
@@ -39,7 +37,6 @@ func Finished(args FinishedArgs) error {
 		EndConfigSnapshot:        configSnapshot,
 		EndStashSize:             0,
 		FinalUndoProgram:         program.Program{},
-		IsUndo:                   false,
 		RunProgram:               program.Program{},
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UnfinishedDetails:        nil,
