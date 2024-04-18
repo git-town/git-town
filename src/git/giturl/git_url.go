@@ -20,7 +20,9 @@ func Parse(url string) *Parts {
 		// capture "user@"
 		`(?P<user>.*@)?` +
 		// capture "host:" or "host/"
-		`(?P<host>.*?[:/])` +
+		`(?P<host>.*?)` +
+		`(?P<port>:\d+)?` +
+		`/` +
 		// capture "org/"
 		`(?P<org>.*\/)` +
 		// capture "repo"
@@ -31,11 +33,11 @@ func Parse(url string) *Parts {
 	regex := regexp.MustCompile(pattern)
 	matches := regex.FindStringSubmatch(url)
 	if matches == nil {
-		return nil
+		panic("cannot parse: " + url)
 	}
 	return &Parts{
 		User: trimLast(matches[1]),
-		Host: trimLast(matches[2]),
+		Host: matches[2],
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
 	}
