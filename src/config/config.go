@@ -78,13 +78,7 @@ func (self *Config) OriginURLString() string {
 func (self *Config) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	self.FullConfig = configdomain.DefaultConfig()
-	// TODO: merge this code with the similar code in NewConfig.
-	if self.ConfigFile != nil {
-		self.FullConfig.Merge(*self.ConfigFile)
-	}
-	self.FullConfig.Merge(self.GlobalGitConfig)
-	self.FullConfig.Merge(self.LocalGitConfig)
+	self.FullConfig = configdomain.NewFullConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
 }
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
@@ -304,12 +298,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 }
 
 func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
-	config := configdomain.DefaultConfig()
-	if args.ConfigFile != nil {
-		config.Merge(*args.ConfigFile)
-	}
-	config.Merge(args.GlobalConfig)
-	config.Merge(args.LocalConfig)
+	config := configdomain.NewFullConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
 	err := cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess, &finalMessages)

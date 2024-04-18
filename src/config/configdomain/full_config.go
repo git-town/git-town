@@ -32,6 +32,16 @@ type FullConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
+func NewFullConfig(configFile *PartialConfig, globalGitConfig, localGitConfig PartialConfig) FullConfig {
+	result := DefaultConfig()
+	if configFile != nil {
+		result.Merge(*configFile)
+	}
+	result.Merge(globalGitConfig)
+	result.Merge(localGitConfig)
+	return result
+}
+
 func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
 	switch {
 	case self.IsMainBranch(branch):
