@@ -113,8 +113,7 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchSyncStatus elements with the given names.
-// TODO: make argument variadic
-func (self BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
+func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {
 		branch := self.FindByLocalName(bi)

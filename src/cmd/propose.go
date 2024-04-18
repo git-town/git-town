@@ -159,7 +159,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
-	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync)
+	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
