@@ -19,7 +19,7 @@ func Parse(url string) *Parts {
 		`(?:.*?://)?` +
 		// capture "user@"
 		`(?P<user>.*@)?` +
-		// capture "host:" or "hostname/"
+		// capture "host:" or "host/"
 		`(?P<host>.*?[:/])` +
 		// capture "org/"
 		`(?P<org>.*\/)` +
