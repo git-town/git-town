@@ -40,8 +40,27 @@ func TestList(t *testing.T) {
 				l.MoveCursorDown()
 				must.EqOp(t, 3, l.Cursor)
 			})
-			// t.Run("already at beginning of the list", func(t *testing.T) {
-			// t.Run("all entries above are disabled", func(t *testing.T) {
+			t.Run("all entries below are disabled", func(t *testing.T) {
+				entries := list.Entries[configdomain.HostingOriginHostname]{
+					{Data: "one", Enabled: true},
+					{Data: "two", Enabled: true},
+					{Data: "three", Enabled: false},
+					{Data: "four", Enabled: false},
+				}
+				l := list.NewList(entries, 1)
+				l.MoveCursorDown()
+				must.EqOp(t, 0, l.Cursor)
+			})
+			t.Run("only one enabled entry", func(t *testing.T) {
+				entries := list.Entries[configdomain.HostingOriginHostname]{
+					{Data: "one", Enabled: true},
+					{Data: "two", Enabled: false},
+					{Data: "three", Enabled: false},
+				}
+				l := list.NewList(entries, 0)
+				l.MoveCursorDown()
+				must.EqOp(t, 0, l.Cursor)
+			})
 		})
 	})
 
