@@ -31,10 +31,10 @@ func TestList(t *testing.T) {
 		t.Run("some entries are disabled", func(t *testing.T) {
 			t.Run("first and second entry below are disabled, the next one is enabled", func(t *testing.T) {
 				entries := list.Entries[configdomain.HostingOriginHostname]{
-					{Data: "one", Enabled: true},
-					{Data: "two", Enabled: false},
-					{Data: "three", Enabled: false},
-					{Data: "four", Enabled: true},
+					{Enabled: true},
+					{Enabled: false},
+					{Enabled: false},
+					{Enabled: true},
 				}
 				l := list.NewList(entries, 0)
 				l.MoveCursorDown()
@@ -42,10 +42,10 @@ func TestList(t *testing.T) {
 			})
 			t.Run("all entries below are disabled", func(t *testing.T) {
 				entries := list.Entries[configdomain.HostingOriginHostname]{
-					{Data: "one", Enabled: true},
-					{Data: "two", Enabled: true},
-					{Data: "three", Enabled: false},
-					{Data: "four", Enabled: false},
+					{Enabled: true},
+					{Enabled: true},
+					{Enabled: false},
+					{Enabled: false},
 				}
 				l := list.NewList(entries, 1)
 				l.MoveCursorDown()
@@ -53,9 +53,9 @@ func TestList(t *testing.T) {
 			})
 			t.Run("only one enabled entry", func(t *testing.T) {
 				entries := list.Entries[configdomain.HostingOriginHostname]{
-					{Data: "one", Enabled: true},
-					{Data: "two", Enabled: false},
-					{Data: "three", Enabled: false},
+					{Enabled: true},
+					{Enabled: false},
+					{Enabled: false},
 				}
 				l := list.NewList(entries, 0)
 				l.MoveCursorDown()
@@ -63,9 +63,9 @@ func TestList(t *testing.T) {
 			})
 			t.Run("no enabled entries", func(t *testing.T) {
 				entries := list.Entries[configdomain.HostingOriginHostname]{
-					{Data: "one", Enabled: false},
-					{Data: "two", Enabled: false},
-					{Data: "three", Enabled: false},
+					{Enabled: false},
+					{Enabled: false},
+					{Enabled: false},
 				}
 				l := list.NewList(entries, 0)
 				l.MoveCursorDown()
