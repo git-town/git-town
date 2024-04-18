@@ -1,4 +1,4 @@
-package cmd
+package status
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ import (
 
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
-func statusCommand() *cobra.Command {
+func RootCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
