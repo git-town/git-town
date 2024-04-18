@@ -9,6 +9,7 @@ type Entry[S fmt.Stringer] struct {
 	Text    string
 }
 
+// implement fmt.Stringer interface
 func (self Entry[S]) String() string {
 	return self.Text
 }
