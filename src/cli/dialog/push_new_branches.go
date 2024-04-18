@@ -43,12 +43,12 @@ func PushNewBranches(existing configdomain.PushNewBranches, inputs components.Te
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(selection.Short(), aborted))
-	return selection.PushNewBranches(), aborted, err
+	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(selection.Data.Short(), aborted))
+	return selection.Data.PushNewBranches(), aborted, err
 }
 
 type pushNewBranchesEntry string

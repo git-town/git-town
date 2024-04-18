@@ -15,12 +15,22 @@ import (
 	"golang.org/x/exp/maps"
 )
 
+type SwitchBranchEntry struct {
+	Branch        gitdomain.LocalBranchName
+	Indentation   string
+	OtherWorktree bool
+}
+
+func (sbe SwitchBranchEntry) String() string {
+	return sbe.Indentation + sbe.Branch.String()
+}
+
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos: cursor,
-		List:             list.NewList[SwitchBranchEntry](list.NewEntries(entries...), cursor),
+		List:             list.NewList(newSwitchBranchListEntries(entries), cursor),
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -28,8 +38,8 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedEntry := result.List.SelectedEntry()
-	return selectedEntry.Branch, result.Aborted(), nil
+	selectedData := result.List.SelectedData()
+	return selectedData.Branch, result.Aborted(), nil
 }
 
 type SwitchModel struct {
@@ -71,30 +81,30 @@ func (self SwitchModel) View() string {
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
-		branch := self.Entries[i]
+		entry := self.Entries[i]
 		isSelected := i == self.Cursor
 		isInitial := i == self.InitialBranchPos
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("> " + branch.Text))
+			s.WriteString(color.Styled("> " + entry.Text))
 		case isInitial:
 			color := self.Colors.Initial
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("* " + branch.Text))
-		case branch.Data.OtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + branch.Text))
+			s.WriteString(color.Styled("* " + entry.Text))
+		case entry.Data.OtherWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + entry.Text))
 		default:
 			color := termenv.String()
-			if branch.Data.OtherWorktree {
+			if entry.Data.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("  " + branch.Text))
+			s.WriteString(color.Styled("  " + entry.Text))
 		}
 		s.WriteRune('\n')
 	}
@@ -191,12 +201,14 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 	}
 }
 
-type SwitchBranchEntry struct {
-	Branch        gitdomain.LocalBranchName
-	Indentation   string
-	OtherWorktree bool
-}
-
-func (sbe SwitchBranchEntry) String() string {
-	return sbe.Indentation + sbe.Branch.String()
+func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
+	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
+	for e, entry := range switchBranchEntries {
+		result[e] = list.Entry[SwitchBranchEntry]{
+			Data:    entry,
+			Enabled: !entry.OtherWorktree,
+			Text:    entry.String(),
+		}
+	}
+	return result
 }

@@ -37,12 +37,12 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Short(), aborted))
-	return selection.ShipDeleteTrackingBranch(), aborted, err
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Data.Short(), aborted))
+	return selection.Data.ShipDeleteTrackingBranch(), aborted, err
 }
 
 type shipDeleteTrackingBranchEntry string

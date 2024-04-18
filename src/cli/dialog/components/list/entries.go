@@ -10,17 +10,28 @@ func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
 		result[r] = Entry[S]{
-			Data: record,
-			Text: record.String(),
+			Data:    record,
+			Enabled: true,
+			Text:    record.String(),
 		}
 	}
 	return result
 }
 
+// AllDisabled indicates whether all entries in this list are disabled.
+func (self Entries[S]) AllDisabled() bool {
+	for _, entry := range self {
+		if entry.Enabled {
+			return false
+		}
+	}
+	return true
+}
+
 // IndexWithText provides the index of the element with the given text.
 func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
-	for e := range self {
-		if self[e].Text == text {
+	for e, entry := range self {
+		if entry.Data.String() == text {
 			return true, e
 		}
 	}

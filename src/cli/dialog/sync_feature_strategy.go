@@ -41,13 +41,13 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
 	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(cutSelection, aborted))
-	return selection.SyncFeatureStrategy(), aborted, err
+	return selection.Data.SyncFeatureStrategy(), aborted, err
 }
 
 type syncFeatureStrategyEntry string

@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
-// List contains common elements of BubbleTea list implementations.
+// List contains elements and operations common to all BubbleTea-based list implementations.
 type List[S fmt.Stringer] struct {
 	Colors       colors.DialogColors // colors to use for help text
 	Cursor       int                 // index of the currently selected row
@@ -93,35 +93,89 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self *List[S]) MoveCursorDown() {
-	if self.Cursor < len(self.Entries)-1 {
-		self.Cursor++
-	} else {
-		self.Cursor = 0
+	if self.Entries.AllDisabled() {
+		return
+	}
+	for {
+		if self.Cursor < len(self.Entries)-1 {
+			self.Cursor++
+		} else {
+			self.Cursor = 0
+		}
+		if self.SelectedEntry().Enabled {
+			return
+		}
 	}
 }
 
 func (self *List[S]) MoveCursorUp() {
-	if self.Cursor > 0 {
-		self.Cursor--
-	} else {
-		self.Cursor = len(self.Entries) - 1
+	if self.Entries.AllDisabled() {
+		return
+	}
+	for {
+		if self.Cursor > 0 {
+			self.Cursor--
+		} else {
+			self.Cursor = len(self.Entries) - 1
+		}
+		if self.SelectedEntry().Enabled {
+			return
+		}
 	}
 }
 
 func (self *List[S]) MovePageDown() {
+	if self.Entries.AllDisabled() {
+		return
+	}
 	self.Cursor += 10
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
 	}
+	// search for the next selected entry downwards
+	for self.Cursor < len(self.Entries)-1 {
+		if self.SelectedEntry().Enabled {
+			return
+		}
+		self.Cursor += 1
+	}
+	// here there are no selected entries until the end of the list --> go up until we find a selected entry
+	for {
+		if self.SelectedEntry().Enabled {
+			return
+		}
+		self.Cursor -= 1
+	}
 }
 
 func (self *List[S]) MovePageUp() {
+	if self.Entries.AllDisabled() {
+		return
+	}
 	self.Cursor -= 10
 	if self.Cursor < 0 {
 		self.Cursor = 0
 	}
+	// search for the next selected entry upwards
+	for self.Cursor > 0 {
+		if self.SelectedEntry().Enabled {
+			return
+		}
+		self.Cursor -= 1
+	}
+	// here there are no selected entries until the start of the list --> go down until we find a selected entry
+	for {
+		if self.SelectedEntry().Enabled {
+			return
+		}
+		self.Cursor += 1
+	}
 }
 
-func (self List[S]) SelectedEntry() S { //nolint:ireturn
-	return self.Entries[self.Cursor].Data
+func (self List[S]) SelectedData() S { //nolint:ireturn
+	return self.SelectedEntry().Data
+}
+
+func (self List[S]) SelectedEntry() Entry[S] {
+	return self.Entries[self.Cursor]
 }

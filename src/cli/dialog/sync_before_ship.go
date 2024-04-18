@@ -44,12 +44,12 @@ func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.Test
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncBeforeShipTitle, SyncBeforeShipHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncBeforeShipTitle, SyncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.SyncBeforeShip, components.FormattedSelection(selection.Short(), aborted))
-	return selection.SyncBeforeShip(), aborted, err
+	fmt.Printf(messages.SyncBeforeShip, components.FormattedSelection(selection.Data.Short(), aborted))
+	return selection.Data.SyncBeforeShip(), aborted, err
 }
 
 type syncBeforeShipEntry string
