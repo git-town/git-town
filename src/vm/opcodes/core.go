@@ -50,6 +50,7 @@ func Types() []shared.Opcode {
 		&AddToPerennialBranches{},
 		&ChangeParent{},
 		&Checkout{},
+		&CheckoutFirstExisting{},
 		&CheckoutIfExists{},
 		&CheckoutParent{},
 		&ChangeParent{},

@@ -33,14 +33,15 @@ Feature: display all executed Git commands
       | branch-2 | frontend | git checkout main                                  |
       | main     | frontend | git branch -D branch-2                             |
       |          | backend  | git config --unset git-town-branch.branch-2.parent |
-      |          | backend  | git show-ref --quiet refs/heads/branch-2           |
+      |          | backend  | git show-ref --verify --quiet refs/heads/branch-2  |
+      |          | backend  | git show-ref --verify --quiet refs/heads/main      |
       |          | backend  | git branch -vva --sort=refname                     |
       |          | backend  | git config -lz --global                            |
       |          | backend  | git config -lz --local                             |
       |          | backend  | git stash list                                     |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "main"
     And the branches are now

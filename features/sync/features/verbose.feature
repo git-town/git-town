@@ -33,6 +33,7 @@ Feature: display all executed Git commands
       |         | frontend | git merge --no-edit main                           |
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
+      |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
       |         | backend  | git show-ref --verify --quiet refs/heads/main      |
       |         | backend  | git branch -vva --sort=refname                     |
       |         | backend  | git config -lz --global                            |
@@ -40,6 +41,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                     |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And all branches are now synchronized

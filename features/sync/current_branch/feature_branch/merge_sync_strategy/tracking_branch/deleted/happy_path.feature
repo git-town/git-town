@@ -8,7 +8,7 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
     And origin ships the "feature-1" branch
-    And the current branch is "feature-1"
+    And the current branch is "feature-1" and the previous branch is "feature-2"
     And an uncommitted file
     When I run "git-town sync"
 
@@ -24,12 +24,14 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-1 | git merge --no-edit main |
       |           | git checkout main        |
       | main      | git branch -D feature-1  |
-      |           | git stash pop            |
+      |           | git checkout feature-2   |
+      | feature-2 | git stash pop            |
     And it prints:
       """
       deleted branch "feature-1"
       """
-    And the current branch is now "main"
+    And the current branch is now "feature-2"
+    And the previous Git branch is now "main"
     And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES        |
@@ -42,9 +44,10 @@ Feature: sync a branch whose tracking branch was shipped
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                                           |
-      | main      | git add -A                                        |
+      | feature-2 | git add -A                                        |
       |           | git stash                                         |
-      |           | git reset --hard {{ sha 'initial commit' }}       |
+      |           | git checkout main                                 |
+      | main      | git reset --hard {{ sha 'initial commit' }}       |
       |           | git branch feature-1 {{ sha 'feature-1 commit' }} |
       |           | git checkout feature-1                            |
       | feature-1 | git stash pop                                     |
