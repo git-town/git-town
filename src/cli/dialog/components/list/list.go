@@ -132,9 +132,6 @@ func (self *List[S]) MovePageDown() {
 	if self.Cursor >= len(self.Entries) {
 		self.Cursor = len(self.Entries) - 1
 	}
-	if self.SelectedEntry().Enabled {
-		return
-	}
 	// go down until we find a selected entry
 	for self.Cursor < len(self.Entries)-1 {
 		if self.SelectedEntry().Enabled {
