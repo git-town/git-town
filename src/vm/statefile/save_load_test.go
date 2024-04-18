@@ -45,7 +45,6 @@ func TestLoadSave(t *testing.T) {
 			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 			EndStashSize:          1,
-			IsUndo:                true,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
@@ -192,7 +191,6 @@ func TestLoadSave(t *testing.T) {
   },
   "EndStashSize": 1,
   "FinalUndoProgram": [],
-  "IsUndo": true,
   "RunProgram": [
     {
       "data": {},

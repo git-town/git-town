@@ -39,7 +39,6 @@ func Finished(args FinishedArgs) error {
 		EndConfigSnapshot:        configSnapshot,
 		EndStashSize:             0,
 		FinalUndoProgram:         program.Program{},
-		IsUndo:                   false,
 		RunProgram:               program.Program{},
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UnfinishedDetails:        nil,

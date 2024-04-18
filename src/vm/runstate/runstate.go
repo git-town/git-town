@@ -1,7 +1,6 @@
 package runstate
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -27,7 +26,6 @@ type RunState struct {
 	EndConfigSnapshot        undoconfig.ConfigSnapshot
 	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	IsUndo                   bool            `exhaustruct:"optional"` // TODO: remove?
 	RunProgram               program.Program
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
@@ -113,8 +111,6 @@ func (self *RunState) String() string {
 	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
 	result.WriteString(self.Command)
-	result.WriteString("\n  IsUndo: ")
-	result.WriteString(strconv.FormatBool(self.IsUndo))
 	result.WriteString("\n  AbortProgram: ")
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
