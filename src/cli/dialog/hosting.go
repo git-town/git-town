@@ -40,7 +40,7 @@ const (
 	hostingPlatformAutoDetect hostingPlatformEntry = "auto-detect"
 	hostingPlatformBitBucket  hostingPlatformEntry = "BitBucket"
 	hostingPlatformGitea      hostingPlatformEntry = "Gitea"
-	hostingPlatformGitHub     hostingPlatformEntry = "Github" // TODO: rename to GitHub
+	hostingPlatformGitHub     hostingPlatformEntry = "GitHub"
 	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
 )
 
