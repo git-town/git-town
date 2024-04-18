@@ -438,7 +438,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
 		}
-		have, err := bs.Select(gitdomain.LocalBranchNames{gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three")})
+		have, err := bs.Select(gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three"))
 		want := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),

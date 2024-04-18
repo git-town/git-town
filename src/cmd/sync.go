@@ -183,7 +183,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
-	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)
+	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
