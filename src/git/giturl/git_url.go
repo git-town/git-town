@@ -14,7 +14,21 @@ type Parts struct {
 }
 
 func Parse(url string) *Parts {
-	pattern := `^(?:[^:]+://)?(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*?)(\.git)?$`
+	pattern := `^` +
+		// ignore transport protocol
+		`(?:[^:]+://)?` +
+		// capture "user@"
+		`(?P<user>.*@)?` +
+		// capture "host:" or "host/"
+		`(?P<host>.*?[:/])` +
+		// ignore the port
+		`(?:\d+\/)?` +
+		// capture "org/"
+		`(?P<org>.*\/)` +
+		// capture "repo"
+		`(?P<repo>.*?)` +
+		// ignore trailing ".git"
+		`(\.git)?$`
 	regex := regexp.MustCompile(pattern)
 	matches := regex.FindStringSubmatch(url)
 	if matches != nil {
