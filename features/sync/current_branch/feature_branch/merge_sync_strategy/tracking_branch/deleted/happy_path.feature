@@ -38,6 +38,7 @@ Feature: sync a branch whose tracking branch was shipped
     And this lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
+    And the previous Git branch is now "main"
 
   Scenario: undo
     When I run "git-town undo"
