@@ -1,3 +1,4 @@
+@this
 @skipWindows
 Feature: self-hosted service
 
