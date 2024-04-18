@@ -14,19 +14,15 @@ type Parts struct {
 }
 
 func Parse(url string) *Parts {
-	patterns := []string{
-		`^(?:[^:]+://)?(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*?)(\.git)?$`,
-	}
-	for _, pattern := range patterns {
-		regex := regexp.MustCompile(pattern)
-		matches := regex.FindStringSubmatch(url)
-		if matches != nil {
-			return &Parts{
-				User: trimLast(matches[1]),
-				Host: trimLast(matches[2]),
-				Org:  trimLast(matches[3]),
-				Repo: matches[4],
-			}
+	pattern := `^(?:[^:]+://)?(?P<user>.*@)?(?P<host>.*?[:/])(?:\d+\/)?(?P<org>.*\/)(?P<repo>.*?)(\.git)?$`
+	regex := regexp.MustCompile(pattern)
+	matches := regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	return nil
