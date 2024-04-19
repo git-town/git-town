@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v14/src/vm/optimizer"
 	"github.com/git-town/git-town/v14/src/vm/program"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -89,7 +90,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		PreviousBranch: config.previousBranch,
 		ShouldPushTags: config.shouldPushTags,
 	})
-	runProgram.RemoveDuplicateCheckout()
+	runProgram = optimizer.Optimize(runProgram)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,

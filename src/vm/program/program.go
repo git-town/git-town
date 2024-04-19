@@ -86,32 +86,6 @@ func (self Program) RemoveAllButLast(removeType string) Program {
 	return slice.RemoveAt(self, indexesToRemove...)
 }
 
-// RemoveDuplicateCheckout removes checkout opcodes that immediately follow each other from this program.
-func (self *Program) RemoveDuplicateCheckout() {
-	result := make([]shared.Opcode, 0, len(*self))
-	// this one is populated only if the last opcode is a checkout
-	var lastOpcode shared.Opcode
-	for _, opcode := range *self {
-		if shared.IsCheckoutOpcode(opcode) {
-			lastOpcode = opcode
-			continue
-		}
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			result = append(result, opcode)
-			continue
-		}
-		if lastOpcode != nil {
-			result = append(result, lastOpcode)
-		}
-		lastOpcode = nil
-		result = append(result, opcode)
-	}
-	if lastOpcode != nil {
-		result = append(result, lastOpcode)
-	}
-	*self = result
-}
-
 // Implementation of the fmt.Stringer interface.
 func (self Program) String() string {
 	return self.StringIndented("")
