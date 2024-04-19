@@ -8,6 +8,8 @@ with what happened in the rest of the repository.
 - downloads new Git tags
 - deletes the local branch if its tracking branch was deleted at the remote and
   the local branch doesn't contain unshipped changes
+- checks out the previously checked out Git branch in case the current branch
+  got removed as part of the sync
 - local branches checked out in other Git worktrees don't get synced
 
 ### Arguments
