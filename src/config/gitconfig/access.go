@@ -233,23 +233,24 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey := ParseKey(key)
-		if configKey == nil {
+		configKeyPtr := ParseKey(key)
+		if configKeyPtr == nil {
 			continue
 		}
+		configKey := *configKeyPtr
 		if updateOutdated {
-			newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
+			newKey, keyIsDeprecated := DeprecatedKeys[configKey]
 			if keyIsDeprecated {
-				self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
-				configKey = &newKey
+				self.UpdateDeprecatedSetting(configKey, newKey, value, global)
+				configKey = newKey
 			}
-			if *configKey != KeyPerennialBranches && value == "" {
-				_ = self.RemoveLocalConfigValue(*configKey)
+			if configKey != KeyPerennialBranches && value == "" {
+				_ = self.RemoveLocalConfigValue(configKey)
 				continue
 			}
 		}
-		snapshot[*configKey] = value
-		err := AddKeyToPartialConfig(*configKey, value, &config)
+		snapshot[configKey] = value
+		err := AddKeyToPartialConfig(configKey, value, &config)
 		if err != nil {
 			return snapshot, config, err
 		}
