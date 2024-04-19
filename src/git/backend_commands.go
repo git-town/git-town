@@ -277,8 +277,11 @@ func (self *BackendCommands) CurrentSHA() (gitdomain.SHA, error) {
 }
 
 func (self *BackendCommands) DefaultBranch() gitdomain.LocalBranchName {
-	name, _ := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	return gitdomain.LocalBranchName(name)
+	branch, err := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
+	if err == nil {
+		return gitdomain.LocalBranchName(branch)
+	}
+	return gitdomain.EmptyLocalBranchName()
 }
 
 func (self *BackendCommands) FirstExistingBranch(branches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
@@ -318,6 +321,14 @@ func (self *BackendCommands) LastCommitMessage() (gitdomain.CommitMessage, error
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
 	return gitdomain.CommitMessage(out), nil
+}
+
+func (self *BackendCommands) OriginHead() gitdomain.LocalBranchName {
+	output, err := self.Runner.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
+	if err == nil {
+		return gitdomain.LocalBranchName(LastBranchInRef(output))
+	}
+	return gitdomain.EmptyLocalBranchName()
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
@@ -596,4 +607,9 @@ func outputIndicatesRebaseInProgress(output string) bool {
 
 func outputIndicatesUntrackedChanges(output string) bool {
 	return strings.Contains(output, "Untracked files:")
+}
+
+func LastBranchInRef(output string) string {
+	index := strings.LastIndex(output, "/")
+	return output[index+1:]
 }
