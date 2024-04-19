@@ -9,7 +9,7 @@ This guide is for maintainers who make releases of Git Town.
   - verify that all newly added Git Town commands are not hidden
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `14.0.0`
+    - triple-digits: `14.0.1`
     - double-digits: `14.0`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
