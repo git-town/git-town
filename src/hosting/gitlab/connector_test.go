@@ -121,6 +121,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		}
 		must.EqOp(t, wantConfig, have.Config)
 	})
+
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
