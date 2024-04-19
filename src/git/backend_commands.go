@@ -277,11 +277,8 @@ func (self *BackendCommands) CurrentSHA() (gitdomain.SHA, error) {
 }
 
 func (self *BackendCommands) DefaultBranch() gitdomain.LocalBranchName {
-	branch, err := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	if err == nil {
-		return gitdomain.LocalBranchName(branch)
-	}
-	return gitdomain.EmptyLocalBranchName()
+	branch, _ := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
+	return gitdomain.LocalBranchName(branch)
 }
 
 func (self *BackendCommands) FirstExistingBranch(branches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
