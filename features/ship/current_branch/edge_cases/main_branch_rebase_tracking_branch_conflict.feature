@@ -49,7 +49,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
-      | main    | git merge --squash feature         |
+      | main    | git merge --squash --ff feature    |
       |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |
@@ -76,7 +76,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
-      | main    | git merge --squash feature         |
+      | main    | git merge --squash --ff feature    |
       |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |

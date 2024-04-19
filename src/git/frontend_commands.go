@@ -284,7 +284,7 @@ func (self *FrontendCommands) SetOriginHostname(hostname configdomain.HostingOri
 
 // SquashMerge squash-merges the given branch into the current branch.
 func (self *FrontendCommands) SquashMerge(branch gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "merge", "--squash", branch.String())
+	return self.Runner.Run("git", "merge", "--squash", "--ff", branch.String())
 }
 
 // StageFiles adds the file with the given name to the Git index.

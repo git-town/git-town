@@ -10,11 +10,11 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | feature | git checkout main            |
-      | main    | git merge --squash feature   |
-      |         | git commit -m "feature done" |
-      |         | git branch -D feature        |
+      | BRANCH  | COMMAND                         |
+      | feature | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m "feature done"    |
+      |         | git branch -D feature           |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE        |

@@ -10,13 +10,13 @@ Feature: enter the commit message interactively via the editor
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | feature | git fetch --prune --tags   |
-      |         | git checkout main          |
-      | main    | git merge --squash feature |
-      |         | git commit                 |
-      |         | git push origin :feature   |
-      |         | git branch -D feature      |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit                      |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
     And the current branch is still "feature"
     And the initial commits exist
     And the initial branches and lineage exist

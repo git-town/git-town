@@ -10,13 +10,13 @@ Feature: abort the ship by empty commit message
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | feature | git fetch --prune --tags   |
-      |         | git checkout main          |
-      | main    | git merge --squash feature |
-      |         | git commit                 |
-      |         | git reset --hard           |
-      |         | git checkout feature       |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit                      |
+      |         | git reset --hard                |
+      |         | git checkout feature            |
     And it prints the error:
       """
       aborted because commit exited with error
