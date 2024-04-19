@@ -113,6 +113,15 @@ func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubTok
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	githubClient := github.NewClient(httpClient)
+	if args.OriginURL.Host != "github.com" {
+		url := "https://" + args.OriginURL.Host
+		var err error
+		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
+		if err != nil {
+			return nil, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
+		}
+	}
 	return &Connector{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
@@ -121,7 +130,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 			Repository:   args.OriginURL.Repo,
 		},
 		MainBranch: args.MainBranch,
-		client:     github.NewClient(httpClient),
+		client:     githubClient,
 		log:        args.Log,
 	}, nil
 }
