@@ -185,16 +185,16 @@ const (
 	LineageKeySuffix = ".parent"
 )
 
+func createLineageKey(branch gitdomain.LocalBranchName) Key {
+	return Key(LineageKeyPrefix + branch.String() + LineageKeySuffix)
+}
+
 func parseLineageKey(key string) *Key {
 	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
 		result := Key(key)
 		return &result
 	}
 	return nil
-}
-
-func CreateLineageKey(branch gitdomain.LocalBranchName) Key {
-	return Key(LineageKeyPrefix + branch.String() + LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
