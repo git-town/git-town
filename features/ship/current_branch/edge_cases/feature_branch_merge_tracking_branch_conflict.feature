@@ -43,15 +43,15 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | feature | git commit --no-edit         |
-      |         | git merge --no-edit main     |
-      |         | git checkout main            |
-      | main    | git merge --squash feature   |
-      |         | git commit -m "feature done" |
-      |         | git push                     |
-      |         | git push origin :feature     |
-      |         | git branch -D feature        |
+      | BRANCH  | COMMAND                         |
+      | feature | git commit --no-edit            |
+      |         | git merge --no-edit main        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m "feature done"    |
+      |         | git push                        |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
@@ -66,12 +66,12 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | feature | git merge --no-edit main     |
-      |         | git checkout main            |
-      | main    | git merge --squash feature   |
-      |         | git commit -m "feature done" |
-      |         | git push                     |
-      |         | git push origin :feature     |
-      |         | git branch -D feature        |
+      | BRANCH  | COMMAND                         |
+      | feature | git merge --no-edit main        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m "feature done"    |
+      |         | git push                        |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
     And the current branch is now "main"

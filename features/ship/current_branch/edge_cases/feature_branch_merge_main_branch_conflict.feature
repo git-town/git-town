@@ -10,12 +10,12 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | feature | git fetch --prune --tags   |
-      |         | git checkout main          |
-      | main    | git merge --squash feature |
-      |         | git reset --hard           |
-      |         | git checkout feature       |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git reset --hard                |
+      |         | git checkout feature            |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

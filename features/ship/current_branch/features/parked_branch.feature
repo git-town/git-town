@@ -10,14 +10,14 @@ Feature: shipping a parked branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                   |
-      | parked | git fetch --prune --tags  |
-      |        | git checkout main         |
-      | main   | git merge --squash parked |
-      |        | git commit                |
-      |        | git push                  |
-      |        | git push origin :parked   |
-      |        | git branch -D parked      |
+      | BRANCH | COMMAND                        |
+      | parked | git fetch --prune --tags       |
+      |        | git checkout main              |
+      | main   | git merge --squash --ff parked |
+      |        | git commit                     |
+      |        | git push                       |
+      |        | git push origin :parked        |
+      |        | git branch -D parked           |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |

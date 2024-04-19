@@ -12,14 +12,14 @@ Feature: ship a parent branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                     |
-      | child  | git fetch --prune --tags    |
-      |        | git checkout main           |
-      | main   | git merge --squash parent   |
-      |        | git commit -m "parent done" |
-      |        | git push                    |
-      |        | git branch -D parent        |
-      |        | git checkout child          |
+      | BRANCH | COMMAND                        |
+      | child  | git fetch --prune --tags       |
+      |        | git checkout main              |
+      | main   | git merge --squash --ff parent |
+      |        | git commit -m "parent done"    |
+      |        | git push                       |
+      |        | git branch -D parent           |
+      |        | git checkout child             |
     And the current branch is now "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

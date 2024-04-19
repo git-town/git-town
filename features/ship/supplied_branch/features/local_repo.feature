@@ -12,15 +12,15 @@ Feature: ship the supplied feature branch in a local repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                      |
-      | other  | git add -A                   |
-      |        | git stash                    |
-      |        | git checkout main            |
-      | main   | git merge --squash feature   |
-      |        | git commit -m "feature done" |
-      |        | git branch -D feature        |
-      |        | git checkout other           |
-      | other  | git stash pop                |
+      | BRANCH | COMMAND                         |
+      | other  | git add -A                      |
+      |        | git stash                       |
+      |        | git checkout main               |
+      | main   | git merge --squash --ff feature |
+      |        | git commit -m "feature done"    |
+      |        | git branch -D feature           |
+      |        | git checkout other              |
+      | other  | git stash pop                   |
     And the current branch is now "other"
     And the uncommitted file still exists
     And the branches are now

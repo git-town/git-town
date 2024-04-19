@@ -12,18 +12,18 @@ Feature: ship the supplied feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                    |
-      | other  | git fetch --prune --tags   |
-      |        | git add -A                 |
-      |        | git stash                  |
-      |        | git checkout main          |
-      | main   | git merge --squash feature |
-      |        | git commit                 |
-      |        | git push                   |
-      |        | git push origin :feature   |
-      |        | git branch -D feature      |
-      |        | git checkout other         |
-      | other  | git stash pop              |
+      | BRANCH | COMMAND                         |
+      | other  | git fetch --prune --tags        |
+      |        | git add -A                      |
+      |        | git stash                       |
+      |        | git checkout main               |
+      | main   | git merge --squash --ff feature |
+      |        | git commit                      |
+      |        | git push                        |
+      |        | git push origin :feature        |
+      |        | git branch -D feature           |
+      |        | git checkout other              |
+      | other  | git stash pop                   |
     And the current branch is now "other"
     And the uncommitted file still exists
     And the branches are now

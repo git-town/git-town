@@ -12,7 +12,7 @@ Feature: ship a coworker's feature branch
       | BRANCH  | COMMAND                                                                 |
       | feature | git fetch --prune --tags                                                |
       |         | git checkout main                                                       |
-      | main    | git merge --squash feature                                              |
+      | main    | git merge --squash --ff feature                                         |
       |         | git commit -m "feature done" --author "coworker <coworker@example.com>" |
       |         | git push                                                                |
       |         | git push origin :feature                                                |
@@ -29,7 +29,7 @@ Feature: ship a coworker's feature branch
       | BRANCH  | COMMAND                                               |
       | feature | git fetch --prune --tags                              |
       |         | git checkout main                                     |
-      | main    | git merge --squash feature                            |
+      | main    | git merge --squash --ff feature                       |
       |         | git commit --author "coworker <coworker@example.com>" |
       |         | git push                                              |
       |         | git push origin :feature                              |

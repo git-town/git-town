@@ -12,15 +12,15 @@ Feature: handle conflicts between the supplied feature branch and the main branc
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                    |
-      | other  | git fetch --prune --tags   |
-      |        | git add -A                 |
-      |        | git stash                  |
-      |        | git checkout main          |
-      | main   | git merge --squash feature |
-      |        | git reset --hard           |
-      |        | git checkout other         |
-      | other  | git stash pop              |
+      | BRANCH | COMMAND                         |
+      | other  | git fetch --prune --tags        |
+      |        | git add -A                      |
+      |        | git stash                       |
+      |        | git checkout main               |
+      | main   | git merge --squash --ff feature |
+      |        | git reset --hard                |
+      |        | git checkout other              |
+      | other  | git stash pop                   |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

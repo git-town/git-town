@@ -11,14 +11,14 @@ Feature: ship hotfixes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                     |
-      | hotfix     | git fetch --prune --tags    |
-      |            | git checkout production     |
-      | production | git merge --squash hotfix   |
-      |            | git commit -m "hotfix done" |
-      |            | git push                    |
-      |            | git push origin :hotfix     |
-      |            | git branch -D hotfix        |
+      | BRANCH     | COMMAND                        |
+      | hotfix     | git fetch --prune --tags       |
+      |            | git checkout production        |
+      | production | git merge --squash --ff hotfix |
+      |            | git commit -m "hotfix done"    |
+      |            | git push                       |
+      |            | git push origin :hotfix        |
+      |            | git branch -D hotfix           |
     And the current branch is now "production"
     And the branches are now
       | REPOSITORY    | BRANCHES         |

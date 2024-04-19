@@ -18,7 +18,7 @@ Feature: sync-before-ship disabled
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
-      | main    | git merge --squash feature         |
+      | main    | git merge --squash --ff feature    |
       |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |

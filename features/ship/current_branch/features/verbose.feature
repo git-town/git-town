@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       |         | frontend | git merge --no-edit main                          |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
-      | main    | frontend | git merge --squash feature                        |
+      | main    | frontend | git merge --squash --ff feature                   |
       |         | backend  | git shortlog -s -n -e main..feature               |
       | main    | frontend | git commit -m done                                |
       |         | backend  | git rev-parse --short main                        |
