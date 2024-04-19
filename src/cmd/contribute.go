@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const contributeDesc = "Stops syncing some feature branches with their parents"
+const contributeDesc = "Stop syncing some feature branches with their parents"
 
 const contributeHelp = `
 Marks the given local branches as contribution.

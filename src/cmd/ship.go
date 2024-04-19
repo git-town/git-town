@@ -57,11 +57,10 @@ func shipCmd() *cobra.Command {
 	addMessageFlag, readMessageFlag := flags.CommitMessage("Specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
-		Use:     "ship",
-		GroupID: "basic",
-		Args:    cobra.MaximumNArgs(1),
-		Short:   shipDesc,
-		Long:    cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
+		Use:   "ship",
+		Args:  cobra.MaximumNArgs(1),
+		Short: shipDesc,
+		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},

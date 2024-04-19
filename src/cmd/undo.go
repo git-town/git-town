@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const undoDesc = "Undoes the most recent Git Town command"
+const undoDesc = "Undo the most recent Git Town command"
 
 func undoCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

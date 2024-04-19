@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configDesc = "Displays your Git Town configuration"
+const configDesc = "Display your Git Town configuration"
 
 func RootCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

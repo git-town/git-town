@@ -22,7 +22,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const continueDesc = "Restarts the last run Git Town command after having resolved conflicts"
+const continueDesc = "Restart the last run Git Town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

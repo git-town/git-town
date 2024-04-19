@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const skipDesc = "Restarts the last run Git Town command by skipping the current branch"
+const skipDesc = "Restart the last run Git Town command by skipping the current branch"
 
 func skipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
