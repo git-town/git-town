@@ -1,8 +1,6 @@
 package optimizer
 
-import (
-	"github.com/git-town/git-town/v14/src/vm/program"
-)
+import "github.com/git-town/git-town/v14/src/vm/program"
 
 // Optimize improves the performance of the given program by re-arranging its opcodes.
 // It doesn't change the behavior of the program.
