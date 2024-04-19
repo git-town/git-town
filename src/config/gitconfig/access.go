@@ -256,7 +256,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		}
 	}
 	// verify lineage
-	if config.Lineage != nil {
+	if updateOutdated && config.Lineage != nil {
 		for child, parent := range *config.Lineage {
 			if child == parent {
 				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
