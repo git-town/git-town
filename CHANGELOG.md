@@ -23,7 +23,7 @@ This version also de-emphasizes `git ship`. Most people should not run `git ship
 #### Bug Fixes
 
 - `git sync` now ends on the previously checked out branch when pruning branches ([#2784](https://github.com/git-town/git-town/issues/2784)).
-- `git sync --all` now syncs correctly when you have multiple stacks ([#3344](https://github.com/git-town/git-town/pull/3344)).
+- `git sync --all` now syncs in topological order. This ensures all branches in deep stacks get synced ([#3344](https://github.com/git-town/git-town/pull/3344)).
 - `git town switch` no longer displays branches that were deleted manually ([#3361](https://github.com/git-town/git-town/pull/3361)).
 - `git kill` now checks out the main branch when the previous branch also was killed ([#3358](https://github.com/git-town/git-town/pull/3358)).
 
