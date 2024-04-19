@@ -468,6 +468,11 @@ func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchN
 	return ParseActiveBranchDuringRebase(lineWithStar), nil
 }
 
+func LastBranchInRef(output string) string {
+	index := strings.LastIndex(output, "/")
+	return output[index+1:]
+}
+
 func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
 	parts := strings.Split(lineWithStar, " ")
 	partsWithBranchName := parts[4:]
@@ -604,9 +609,4 @@ func outputIndicatesRebaseInProgress(output string) bool {
 
 func outputIndicatesUntrackedChanges(output string) bool {
 	return strings.Contains(output, "Untracked files:")
-}
-
-func LastBranchInRef(output string) string {
-	index := strings.LastIndex(output, "/")
-	return output[index+1:]
 }
