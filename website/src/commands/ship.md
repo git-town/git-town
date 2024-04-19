@@ -1,8 +1,13 @@
 # git ship [branch name] [-m message]
 
-The _ship_ command ("let's ship this feature") merges a completed feature branch
-into the main branch and removes the feature branch. After the merge it pushes
-the main branch to share the new commit on it with the rest of the world.
+_Notice: Most people don't need to use the _ship_ command. The recommended way
+to merge your feature branches is to us the web UI or merge queue of your code
+hosting service, as you already do. `git ship` is for edge cases like developing
+in [offline mode](../preferences/offline.md)._
+
+The _ship_ command ("let's ship this feature") squash-merges a completed feature
+branch into the main branch and removes the feature branch. After the merge it
+pushes the main branch to share the new commit on it with the rest of the world.
 
 Git ship opens the default editor with a prepopulated commit message that you
 can modify. You can submit an empty commit message to abort the shipping
