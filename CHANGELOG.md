@@ -15,9 +15,9 @@ This version also de-emphasizes `git ship`. Most people should not run `git ship
 - Notifications to the user are now highlighted in cyan in the Git Town output, making them easier to spot ([#3353](https://github.com/git-town/git-town/pull/3353)).
 - The setup assistant now also uses `remotes/origin/HEAD` to determine the default main branch if the already used `init.defaultbranch` setting isn't set ([#646](https://github.com/git-town/git-town/issues/646)).
 - Prototypical support for the API of GitHub Enterprise. This is impossible to test for the Git Town team, so please provide bug reports if something doesn't work ([#1179](https://github.com/git-town/git-town/issues/1179)).
-- If a branch is listed as its own parent, Git Town now notifies the user and deletes this invalid lineage entry ([#3393](https://github.com/git-town/git-town/pull/3393)).
-- `git ship` now sqash-merges using the `--ff` option. This removes an incompatibility for users who have the `merge.ff` option set to `false` in their Git configuration ([#1097](https://github.com/git-town/git-town/issues/1097)).
 - Improved support for GitLab instances that use a custom SSH port ([#1891](https://github.com/git-town/git-town/issues/1891)).
+- `git ship` now sqash-merges using the `--ff` option. This removes an incompatibility for users who have the `merge.ff` option set to `false` in their Git configuration ([#1097](https://github.com/git-town/git-town/issues/1097)).
+- If a branch is listed as its own parent, Git Town now notifies the user and deletes this invalid lineage entry ([#3393](https://github.com/git-town/git-town/pull/3393)).
 - Improved error messages ([#2949](https://github.com/git-town/git-town/issues/2949)).
 
 #### Bug Fixes
