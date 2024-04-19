@@ -8,8 +8,8 @@ This version also de-emphasizes `git ship`. Most people should not run `git ship
 
 #### New Features
 
-- `git town switch` now has a `-m` option that checks out the selected branch using [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m) ([#3321](https://github.com/git-town/git-town/issues/3321)).
-- `git town switch` now visualizes branches that are checked out in other Git worktrees and doesn't allow selecting them ([#3295](https://github.com/git-town/git-town/issues/3295)).
+- `git town switch` now has an `-m` option that checks out the selected branch using [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m) ([#3321](https://github.com/git-town/git-town/issues/3321)).
+- `git town switch` now doesn't allow selecting branches that are checked out in other Git worktrees ([#3295](https://github.com/git-town/git-town/issues/3295)).
 - `git town switch` now indicates the existence of uncommitted changes. This helps remember to commit them on the current branch if that was needed ([#3307](https://github.com/git-town/git-town/issues/3307)).
 - Git Town now shuts down gracefully and allows continue and undo when you press `Ctrl-C` to cancel a Git command that runs too long or hangs ([#414](https://github.com/git-town/git-town/issues/414)).
 - Notifications to the user are now highlighted in cyan in the Git Town output, making them easier to spot ([#3353](https://github.com/git-town/git-town/pull/3353)).
