@@ -2,7 +2,7 @@
 
 ## 14.1.0 (2024-04-19)
 
-Git Town 14.1 focuses on stability improvements and bashing bugs. We closed out 50% of all open tickets (70 tickets), including many long-standing bugs.
+Git Town 14.1 focuses on stability improvements and bashing bugs. We closed out 50% of all open tickets (70 tickets), including many long-standing bugs!
 
 This version also de-emphasizes `git ship`. Most people should not run `git ship`. The recommended workflow is to ship feature branches using the web UI or merge queue of your code hosting platform. `git ship` is for edge cases like development in [offline mode](https://www.git-town.com/commands/offline).
 
