@@ -16,7 +16,7 @@ This guide is for maintainers who make releases of Git Town.
     - update `github.com/git-town/git-town/v14/` everywhere in this repo
     - update `github.com/git-town/git-town/v14` (without trailing slash)
 - ship the branch
-- `git tag v14.0.0 && git push --tags`
+- `git tag v14.0.1 && git push --tags`
 - open the new release in the browser
 - copy the changelog into the release notes
 - publish the release
