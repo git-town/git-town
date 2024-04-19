@@ -151,7 +151,8 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos: 0,
+				InitialBranchPos:   0,
+				UncommittedChanges: false,
 			}
 			have := model.View()
 			want := `
@@ -175,7 +176,8 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos: 0,
+				InitialBranchPos:   0,
+				UncommittedChanges: false,
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -208,7 +210,8 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos: 0,
+				InitialBranchPos:   0,
+				UncommittedChanges: false,
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -227,6 +230,35 @@ func TestSwitchBranch(t *testing.T) {
 			want = want[1:]
 			must.EqOp(t, want, have)
 		})
+
+		t.Run("uncommitted changes", func(t *testing.T) {
+			t.Parallel()
+			model := dialog.SwitchModel{
+				List: list.List[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+					Cursor:       0,
+					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					MaxDigits:    1,
+					NumberFormat: "%d",
+				},
+				InitialBranchPos:   0,
+				UncommittedChanges: true,
+			}
+			have := model.View()
+			want := `
+` +
+				"\x1b[36;1m" +
+				`uncommitted changes
+` +
+				"\x1b[0m" +
+				`
+
+> main
+
+
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
+			must.EqOp(t, want, have)
+		})
+
 	})
 }
 
