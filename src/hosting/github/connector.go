@@ -109,7 +109,7 @@ func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubTok
 }
 
 // NewConnector provides a fully configured GithubConnector instance
-// if the current repo is hosted on Github, otherwise nil.
+// if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
