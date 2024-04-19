@@ -121,4 +121,23 @@ func TestNewGitlabConnector(t *testing.T) {
 		}
 		must.EqOp(t, wantConfig, have.Config)
 	})
+	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
+		t.Parallel()
+		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
+			APIToken:        "apiToken",
+			HostingPlatform: configdomain.HostingPlatformGitLab,
+			Log:             print.Logger{},
+			OriginURL:       giturl.Parse("git@gitlab.domain:1234/group/project"),
+		})
+		must.NoError(t, err)
+		wantConfig := gitlab.Config{
+			Config: hostingdomain.Config{
+				Hostname:     "gitlab.domain",
+				Organization: "group",
+				Repository:   "project",
+			},
+			APIToken: "apiToken",
+		}
+		must.EqOp(t, wantConfig, have.Config)
+	})
 }
