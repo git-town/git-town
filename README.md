@@ -13,21 +13,37 @@
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
-Git Town reduces merge conflicts by keeping Git branches better in sync.
-Compatible with all major Git workflows including Git Flow, GitHub Flow, GitLab
-Flow, and trunk-based development. Supports mono-repos and stacked changes.
-Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
+Git Town makes it easy to create and synchronize Git branches. Compatible with
+all major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and
+trunk-based development. Supports mono-repos and stacked changes. Check out
+[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
 
 - [git hack](https://www.git-town.com/commands/hack.html) - create a new
   up-to-date feature branch off the main branch
-- [git sync](https://www.git-town.com/commands/sync.html) - update the current
-  branch with all ongoing changes
-- [git propose](https://www.git-town.com/commands/propose.html) - propose to
-  ship a Git branch
-- [git ship](https://www.git-town.com/commands/ship.html) - merge a completed
-  feature branch and remove it
+- [git sync](https://www.git-town.com/commands/sync.html) - update existing
+  branches, remove shipped branches
+- [git propose](https://www.git-town.com/commands/propose.html) - create a pull
+  or merge request for a feature branch
+
+#### Stacked changes
+
+- [git append](https://www.git-town.com/commands/append.html) - insert a new
+  branch as a child of the current branch
+- [git prepend](https://www.git-town.com/commands/prepend.html) - insert a new
+  branch between the current branch and its parent
+- [git set-parent](https://www.git-town.com/commands/set-parent.html) - update
+  the parent of a branch
+
+#### Branch Types
+
+- [git observe](https://www.git-town.com/commands/observe.html) - track somebody
+  else's feature branch without contributing to it
+- [git contribute](https://www.git-town.com/commands/observe.html) - add commits
+  to somebody else's feature branch
+- [git park](https://www.git-town.com/advanced-syncing#parked-branches) - stop
+  syncing one of your feature branches
 
 #### Advanced development commands
 
@@ -37,15 +53,8 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
   rename a branch
 - [git repo](https://www.git-town.com/commands/repo.html) - view the repository
   homepage
-
-#### Stacked changes
-
-- [git append](https://www.git-town.com/commands/append.html) - insert a new
-  branch as a child of the current branch
-- [git prepend](https://www.git-town.com/commands/prepend.html) - insert a new
-  branch between the current branch and its parent
-- [git set-parent](https://www.git-town.com/commands/set-parent.html) - updates
-  a branch's parent
+- [git ship](https://www.git-town.com/commands/ship.html) - merge a completed
+  feature branch and remove it
 
 #### Configuration
 
