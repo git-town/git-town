@@ -39,10 +39,6 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		}
 		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
 		parent := gitdomain.NewLocalBranchName(value)
-		if parent == child {
-			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, key)))
-			//
-		}
 		(*config.Lineage)[child] = parent
 		return nil
 	}
@@ -257,6 +253,15 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		err := AddKeyToPartialConfig(configKey, value, &config)
 		if err != nil {
 			return snapshot, config, err
+		}
+	}
+	// verify lineage
+	if config.Lineage != nil {
+		for child, parent := range *config.Lineage {
+			if child == parent {
+				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
+				_ = self.RemoveLocalConfigValue(CreateLineageKey(child))
+			}
 		}
 	}
 	return snapshot, config, nil

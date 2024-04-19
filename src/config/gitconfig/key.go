@@ -180,12 +180,19 @@ func ParseKey(name string) *Key {
 	return nil
 }
 
+const LineageKeyPrefix = "git-town-branch."
+const LineageKeySuffix = ".parent"
+
 func parseLineageKey(key string) *Key {
-	if strings.HasPrefix(key, "git-town-branch.") && strings.HasSuffix(key, ".parent") {
+	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
 		result := Key(key)
 		return &result
 	}
 	return nil
+}
+
+func CreateLineageKey(branch gitdomain.LocalBranchName) Key {
+	return Key(LineageKeyPrefix + branch.String() + LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
