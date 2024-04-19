@@ -20,8 +20,8 @@ screencast above demonstrates, typical development activities like creating,
 synchronizing, or shipping a feature branch require running multiple, sometimes
 dozens of Git commands.
 
-Git Town adds a high-level layer of Git commands for these activities. These
-commands are compatible with most common branching models like
+Git Town adds additional Git commands for these activities. These commands are
+compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
@@ -70,16 +70,6 @@ straight into the main branch. See also this
   Similar to <a href="https://twitter.com/github">@github</a>’s “hub” but looks more powerful, and it logs the fit commands it runs under the hood.
   <a href="https://t.co/PxGs76TS5I">pic.twitter.com/PxGs76TS5I</a></p>
   &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504">@gr2m</a>)
-</blockquote>
-
-<blockquote class="twitter-tweet">
-  <p lang="en" dir="ltr">
-    2) if your project uses squash merges,
-    <a href="https://twitter.com/GitTown">@GitTown</a>
-    is a really great tool to automatically handle all the tedious steps to keep up good git hygiene
-    (and the docs are well-organized, informative, and concise)
-  </p>
-  &mdash; Aaron VonderHaar (<a href="https://twitter.com/avh4/status/1484648192230580225">@avh4</a>)
 </blockquote>
 
 <blockquote>
