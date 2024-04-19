@@ -6,8 +6,10 @@ Git Town 14.1 focuses on stability improvements. We closed out XXX tickets (XX% 
 
 #### New Features
 
+- `git town switch` now has a `-m` option that checks out the selected branch using [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m) ([#3321](https://github.com/git-town/git-town/issues/3321)).
+- `git town switch` now visualizes branches that are checked out in other Git worktrees and doesn't allow selecting them ([#3295](https://github.com/git-town/git-town/issues/3295)).
 - `git town switch` now indicates the existence of uncommitted changes. This helps remember to commit them on the current branch if that was needed ([#3307](https://github.com/git-town/git-town/issues/3307)).
-- The setup assistant now also uses `remotes/origin/HEAD` to determine the default main branch, in addition to looking at the `init.defaultbranch` setting ([#646](https://github.com/git-town/git-town/issues/646)).
+-  The setup assistant now also uses `remotes/origin/HEAD` to determine the default main branch, in addition to looking at the `init.defaultbranch` setting ([#646](https://github.com/git-town/git-town/issues/646)).
 - Prototypical support for talking to the API of GitHub Enterprise. This is impossible to test for the Git Town team, so please provide bug reports if something doesn't work ([#1179](https://github.com/git-town/git-town/issues/1179)).
 - If a branch is listed as its own parent, Git Town now notifies the user about this problem and deletes this lineage entry ([#3393](https://github.com/git-town/git-town/pull/3393)).
 - `git ship` now shash-merges using the `--ff` option. This removes an incompatibility for users who have the `merge.ff` option set to `false` in their Git configuration ([#1097](https://github.com/git-town/git-town/issues/1097)).
@@ -16,6 +18,8 @@ Git Town 14.1 focuses on stability improvements. We closed out XXX tickets (XX% 
 #### Bug Fixes
 
 - `git sync` now ends on the previously checked out branch when pruning branches ([#2784](https://github.com/git-town/git-town/issues/2784)).
+- `git town switch` no longer displays branches that were deleted manually ([#3361](https://github.com/git-town/git-town/pull/3361)).
+- `git kill` now checks out the main branch when the previous branch also was killed ([#3358](https://github.com/git-town/git-town/pull/3358)).
 
 ## 14.0.0 (2024-04-12)
 
