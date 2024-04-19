@@ -67,7 +67,7 @@ const (
 	FileStatProblem                    = "cannot check file %q: %w"
 	FileWriteProblem                   = "cannot write file %q: %w"
 	GiteaToken                         = "Gitea token: %s\n"
-	GitHubEnterpriseInitializeError    = "Cannot initialize GitHub Enterprise client: %s"
+	GitHubEnterpriseInitializeError    = "cannot initialize GitHub Enterprise client: %s"
 	GitHubToken                        = "GitHub token: %s\n"
 	GitLabToken                        = "GitLab token: %s\n"
 	GitOutputIrregular                 = `
