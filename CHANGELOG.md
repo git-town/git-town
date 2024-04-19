@@ -13,7 +13,7 @@ This version also de-emphasizes `git ship`. Most people should not run `git ship
 - `git town switch` now indicates the existence of uncommitted changes. This helps remember to commit them on the current branch if that was needed ([#3307](https://github.com/git-town/git-town/issues/3307)).
 - Git Town now shuts down gracefully and allows continue and undo when you press `Ctrl-C` to cancel a Git command that runs too long or hangs ([#414](https://github.com/git-town/git-town/issues/414)).
 - Notifications to the user are now highlighted in cyan in the Git Town output, making them easier to spot ([#3353](https://github.com/git-town/git-town/pull/3353)).
-- The setup assistant now also uses `remotes/origin/HEAD` to determine the default main branch, in addition to looking at the `init.defaultbranch` setting ([#646](https://github.com/git-town/git-town/issues/646)).
+- The setup assistant now also uses `remotes/origin/HEAD` to determine the default main branch if the already used `init.defaultbranch` setting isn't set ([#646](https://github.com/git-town/git-town/issues/646)).
 - Prototypical support for talking to the API of GitHub Enterprise. This is impossible to test for the Git Town team, so please provide bug reports if something doesn't work ([#1179](https://github.com/git-town/git-town/issues/1179)).
 - If a branch is listed as its own parent, Git Town now notifies the user about this problem and deletes this lineage entry ([#3393](https://github.com/git-town/git-town/pull/3393)).
 - `git ship` now shash-merges using the `--ff` option. This removes an incompatibility for users who have the `merge.ff` option set to `false` in their Git configuration ([#1097](https://github.com/git-town/git-town/issues/1097)).
