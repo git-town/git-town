@@ -9,5 +9,3 @@ Feature: remove parent entries for perennial branches
       removing lineage entry for "feature" because the parent is the child
       """
     And no lineage exists now
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
