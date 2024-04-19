@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/muesli/termenv"
 	"golang.org/x/exp/maps"
 )
@@ -25,12 +26,13 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
-		InitialBranchPos: cursor,
-		List:             list.NewList(newSwitchBranchListEntries(entries), cursor),
+		InitialBranchPos:   cursor,
+		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
+		UncommittedChanges: uncommittedChanges,
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -44,7 +46,8 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
-	InitialBranchPos int // position of the currently checked out branch in the list
+	InitialBranchPos   int  // position of the currently checked out branch in the list
+	UncommittedChanges bool // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -75,6 +78,11 @@ func (self SwitchModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
+	if self.UncommittedChanges {
+		s.WriteString("\n")
+		s.WriteString(colors.BoldCyan().Styled(messages.SwitchUncommittedChanges))
+		s.WriteString("\n")
+	}
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
 		ElementCount: len(self.Entries),

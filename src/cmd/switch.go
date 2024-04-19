@@ -50,7 +50,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage, initialBranches.Branches, config.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
@@ -70,9 +70,10 @@ func executeSwitch(verbose, merge bool) error {
 }
 
 type switchConfig struct {
-	branchNames   gitdomain.LocalBranchNames
-	dialogInputs  components.TestInputs
-	initialBranch gitdomain.LocalBranchName
+	branchNames        gitdomain.LocalBranchNames
+	dialogInputs       components.TestInputs
+	initialBranch      gitdomain.LocalBranchName
+	uncommittedChanges bool
 }
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, gitdomain.BranchesSnapshot, bool, error) {
@@ -96,8 +97,9 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 		return nil, branchesSnapshot, exit, err
 	}
 	return &switchConfig{
-		branchNames:   branchesSnapshot.Branches.Names(),
-		dialogInputs:  dialogTestInputs,
-		initialBranch: branchesSnapshot.Active,
+		branchNames:        branchesSnapshot.Branches.Names(),
+		dialogInputs:       dialogTestInputs,
+		initialBranch:      branchesSnapshot.Active,
+		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, branchesSnapshot, false, err
 }
