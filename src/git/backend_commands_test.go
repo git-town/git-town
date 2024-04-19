@@ -230,6 +230,18 @@ func TestBackendCommands(t *testing.T) {
 		must.False(t, runner.Backend.HasLocalBranch(gitdomain.NewLocalBranchName("b3")))
 	})
 
+	t.Run("lastBranchInRef", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]string{
+			"refs/remotes/origin/main": "main",
+			"":                         "",
+		}
+		for give, want := range tests {
+			have := git.LastBranchInRef(give)
+			must.EqOp(t, want, have)
+		}
+	})
+
 	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch name is one word", func(t *testing.T) {

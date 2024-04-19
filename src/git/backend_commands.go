@@ -320,6 +320,14 @@ func (self *BackendCommands) LastCommitMessage() (gitdomain.CommitMessage, error
 	return gitdomain.CommitMessage(out), nil
 }
 
+func (self *BackendCommands) OriginHead() gitdomain.LocalBranchName {
+	output, err := self.Runner.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
+	if err != nil {
+		return gitdomain.EmptyLocalBranchName()
+	}
+	return gitdomain.LocalBranchName(LastBranchInRef(output))
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -458,6 +466,11 @@ func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchN
 	}
 	lineWithStar := linesWithStar[0]
 	return ParseActiveBranchDuringRebase(lineWithStar), nil
+}
+
+func LastBranchInRef(output string) string {
+	index := strings.LastIndex(output, "/")
+	return output[index+1:]
 }
 
 func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
