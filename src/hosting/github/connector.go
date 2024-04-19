@@ -115,11 +115,11 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	githubClient := github.NewClient(httpClient)
 	if args.OriginURL.Host != "github.com" {
-		var err error
 		url := "https://" + args.OriginURL.Host
+		var err error
 		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
 		}
 	}
 	return &Connector{
