@@ -255,5 +255,14 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 			return snapshot, config, err
 		}
 	}
+	// verify lineage
+	if updateOutdated && config.Lineage != nil {
+		for child, parent := range *config.Lineage {
+			if child == parent {
+				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
+				_ = self.RemoveLocalConfigValue(createLineageKey(child))
+			}
+		}
+	}
 	return snapshot, config, nil
 }

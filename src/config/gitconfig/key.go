@@ -180,8 +180,17 @@ func ParseKey(name string) *Key {
 	return nil
 }
 
+const (
+	LineageKeyPrefix = "git-town-branch."
+	LineageKeySuffix = ".parent"
+)
+
+func createLineageKey(branch gitdomain.LocalBranchName) Key {
+	return Key(LineageKeyPrefix + branch.String() + LineageKeySuffix)
+}
+
 func parseLineageKey(key string) *Key {
-	if strings.HasPrefix(key, "git-town-branch.") && strings.HasSuffix(key, ".parent") {
+	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
 		result := Key(key)
 		return &result
 	}
