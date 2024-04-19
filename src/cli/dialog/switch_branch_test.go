@@ -258,7 +258,6 @@ func TestSwitchBranch(t *testing.T) {
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
 			must.EqOp(t, want, have)
 		})
-
 	})
 }
 
