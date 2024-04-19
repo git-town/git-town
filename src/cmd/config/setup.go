@@ -111,7 +111,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		existingMainBranch = runner.Backend.DefaultBranch()
 	}
 	if existingMainBranch.IsEmpty() {
-		existingMainBranch = runner.Backend.DefaultBranch()
+		existingMainBranch = runner.Backend.OriginHead()
 	}
 	config.userInput.MainBranch, aborted, err = dialog.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {

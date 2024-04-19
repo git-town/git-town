@@ -238,6 +238,12 @@ func TestBackendCommands(t *testing.T) {
 			have := git.LastBranchInRef(give)
 			must.EqOp(t, want, have)
 		})
+		t.Run("empty content", func(t *testing.T) {
+			give := ""
+			want := ""
+			have := git.LastBranchInRef(give)
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
