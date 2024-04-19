@@ -2,7 +2,7 @@
 
 ## 14.1.0 (2024-04-19)
 
-Git Town 14.1 focuses on stability improvements. We closed out XXX tickets (XX% of all tickets), including many long-standing bugs. This version also de-emphasizes `git ship`. Most people should not run `git ship`. The recommended workflow is to ship feature branches using the web UI or merge queue of your code hosting platform. `git ship` is for edge cases like development in [offline mode](https://www.git-town.com/commands/offline).
+Git Town 14.1 focuses on stability improvements and bashing bugs. We closed out 50% of all open tickets (70 tickets), including many long-standing bugs. This version also de-emphasizes `git ship`. Most people should not run `git ship`. The recommended workflow is to ship feature branches using the web UI or merge queue of your code hosting platform. `git ship` is for edge cases like development in [offline mode](https://www.git-town.com/commands/offline).
 
 #### New Features
 
@@ -24,6 +24,8 @@ Git Town 14.1 focuses on stability improvements. We closed out XXX tickets (XX% 
 - `git sync --all` now syncs correctly when you have multiple stacks ([#3344](https://github.com/git-town/git-town/pull/3344)).
 - `git town switch` no longer displays branches that were deleted manually ([#3361](https://github.com/git-town/git-town/pull/3361)).
 - `git kill` now checks out the main branch when the previous branch also was killed ([#3358](https://github.com/git-town/git-town/pull/3358)).
+
+Massive thanks to @abhijeetbhagat, @aeneasr, @allewun, @alphatroya, @amarpatel, @avaz, @breml, @bryanlarsen, @charlierudolph, @ChrisMM, @cirego, @ericyliu, @grignaak, @hammenm, @hmbrg, @JCB-K, @kevgo, @koppor, @KORDayDream, @martinjaime, @mball-agathos, @mribichich, @ruudk, @sascha-andres, @sheldonhull, @tranhl, @vectro, @WhosNickDoglio, @WurmD, @zeronacer, @zifeo for contributing code, ideas, and feedback to 74 shipped PRs and 70 resolved issues!
 
 ## 14.0.0 (2024-04-12)
 
