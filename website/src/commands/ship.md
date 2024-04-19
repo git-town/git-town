@@ -1,9 +1,9 @@
 # git ship [branch name] [-m message]
 
 _Notice:_ Most people don't need to use the _ship_ command. The recommended way
-is to merge your feature branches using the web UI or merge queue of your code
-hosting service. `git ship` is for edge cases like developing in
-[offline mode](../preferences/offline.md).
+to merge your feature branches is to us the web UI or merge queue of your code
+hosting service, as you already do. `git ship` is for edge cases like developing
+in [offline mode](../preferences/offline.md).
 
 The _ship_ command ("let's ship this feature") squash-merges a completed feature
 branch into the main branch and removes the feature branch. After the merge it
