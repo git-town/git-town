@@ -322,10 +322,10 @@ func (self *BackendCommands) LastCommitMessage() (gitdomain.CommitMessage, error
 
 func (self *BackendCommands) OriginHead() gitdomain.LocalBranchName {
 	output, err := self.Runner.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
-	if err == nil {
-		return gitdomain.LocalBranchName(LastBranchInRef(output))
+	if err != nil {
+		return gitdomain.EmptyLocalBranchName()
 	}
-	return gitdomain.EmptyLocalBranchName()
+	return gitdomain.LocalBranchName(LastBranchInRef(output))
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
