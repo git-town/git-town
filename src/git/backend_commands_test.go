@@ -232,18 +232,14 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("lastBranchInRef", func(t *testing.T) {
 		t.Parallel()
-		t.Run("valid content", func(t *testing.T) {
-			give := "refs/remotes/origin/main"
-			want := "main"
+		tests := map[string]string{
+			"refs/remotes/origin/main": "main",
+			"":                         "",
+		}
+		for give, want := range tests {
 			have := git.LastBranchInRef(give)
 			must.EqOp(t, want, have)
-		})
-		t.Run("empty content", func(t *testing.T) {
-			give := ""
-			want := ""
-			have := git.LastBranchInRef(give)
-			must.EqOp(t, want, have)
-		})
+		}
 	})
 
 	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
