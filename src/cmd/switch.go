@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const switchDesc = "Displays the local branches visually and allows switching between them"
+const switchDesc = "Display the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

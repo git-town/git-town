@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const repoDesc = "Opens the repository homepage"
+const repoDesc = "Open the repository homepage in the browser"
 
 const repoHelp = `
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket. Derives the Git provider from the "origin" remote. You can override this detection with "git config %s <DRIVER>" where DRIVER is "github", "gitlab", "gitea", or "bitbucket".

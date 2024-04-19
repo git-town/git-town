@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const offlineDesc = "Displays or sets offline mode"
+const offlineDesc = "Display or set offline mode"
 
 const offlineHelp = `
 Git Town avoids network operations in offline mode.`

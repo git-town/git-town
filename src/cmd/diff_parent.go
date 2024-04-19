@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const diffParentDesc = "Shows the changes committed to a feature branch"
+const diffParentDesc = "Show the changes committed to a feature branch"
 
 const diffParentHelp = `
 Works on either the current branch or the branch name provided.

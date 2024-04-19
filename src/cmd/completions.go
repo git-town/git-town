@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const completionsDesc = "Generates auto-completion for bash, zsh, fish, or PowerShell"
+const completionsDesc = "Generate auto-completion for bash, zsh, fish, or PowerShell"
 
 const completionsHelp = `
 When set up, "git town <TAB>" will auto-complete Git Town subcommands.

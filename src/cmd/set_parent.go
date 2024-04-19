@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const setParentDesc = "Prompts to set the parent branch for the current branch"
+const setParentDesc = "Prompt to set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

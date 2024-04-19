@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const compressDesc = "Squashes all commits on feature branches down to a single commit"
+const compressDesc = "Squash all commits on feature branches down to a single commit"
 
 const compressHelp = `
 Compress is a more convenient way of running "git rebase --interactive"

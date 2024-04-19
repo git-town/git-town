@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const proposeDesc = "Creates a proposal to merge a feature branch"
+const proposeDesc = "Create a proposal to merge a feature branch"
 
 const proposeHelp = `
 Syncs the current branch and opens a browser window to the new proposal page of your repository.

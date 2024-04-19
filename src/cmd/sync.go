@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const syncDesc = "Updates the current branch with all relevant changes"
+const syncDesc = "Update the current branch with all relevant changes"
 
 const syncHelp = `
 Synchronizes the current branch with the rest of the world.

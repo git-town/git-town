@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Suspends syncing of some feature branches"
+const parkDesc = "Suspend syncing of some feature branches"
 
 const parkHelp = `
 Parks the given local feature branches.

@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const renameBranchDesc = "Renames a branch both locally and remotely"
+const renameBranchDesc = "Rename a branch both locally and remotely"
 
 const renameBranchHelp = `
 Renames the given branch in the local and origin repository. Aborts if the new branch name already exists or the tracking branch is out of sync.

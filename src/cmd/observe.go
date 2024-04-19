@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const observeDesc = "Stops your contributions to some feature branches"
+const observeDesc = "Stop your contributions to some feature branches"
 
 const observeHelp = `
 Marks the given local branches as observed.
