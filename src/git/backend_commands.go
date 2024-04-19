@@ -328,8 +328,6 @@ func (self *BackendCommands) OriginHead() gitdomain.LocalBranchName {
 	return gitdomain.LocalBranchName(LastBranchInRef(output))
 }
 
-
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
