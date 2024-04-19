@@ -36,7 +36,7 @@ func Parse(url string) *Parts {
 	}
 	return &Parts{
 		User: trimLast(matches[1]),
-		Host: matches[2],
+		Host: trimLast(matches[2]),
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
 	}
