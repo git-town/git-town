@@ -243,7 +243,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 				self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 				configKey = &newKey
 			}
-			if key != KeyPerennialBranches.String() && value == "" {
+			if *configKey != KeyPerennialBranches && value == "" {
 				_ = self.RemoveLocalConfigValue(*configKey)
 				continue
 			}
