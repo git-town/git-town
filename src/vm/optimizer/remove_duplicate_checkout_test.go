@@ -13,7 +13,7 @@ import (
 func TestRemoveDuplicateCheckout(t *testing.T) {
 	t.Parallel()
 
-	t.Run("has duplicate checkout opcodes", func(t *testing.T) {
+	t.Run("duplicate checkout opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.AbortMerge{},
@@ -30,7 +30,7 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("has duplicate checkout opcodes mixed with end-of-branch opcodes", func(t *testing.T) {
+	t.Run("duplicate checkout opcodes mixed with end-of-branch opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.AbortMerge{},
@@ -52,7 +52,7 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("has a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
+	t.Run("a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.AbortMerge{},
@@ -67,7 +67,7 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("has no duplicate checkout opcodes", func(t *testing.T) {
+	t.Run("no duplicate checkout opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.AbortMerge{},
