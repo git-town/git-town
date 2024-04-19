@@ -28,7 +28,7 @@ func Parse(url string) *Parts {
 		// capture "repo"
 		`(?P<repo>.*?)` +
 		// ignore trailing ".git"
-		`(\.git)?$`
+		`(?:\.git)?$`
 	regex := regexp.MustCompile(pattern)
 	matches := regex.FindStringSubmatch(url)
 	if matches == nil {
