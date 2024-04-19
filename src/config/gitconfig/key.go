@@ -181,11 +181,11 @@ func ParseKey(name string) *Key {
 }
 
 func parseLineageKey(key string) *Key {
-	if !strings.HasPrefix(key, "git-town-branch.") || !strings.HasSuffix(key, ".parent") {
-		return nil
+	if strings.HasPrefix(key, "git-town-branch.") && strings.HasSuffix(key, ".parent") {
+		result := Key(key)
+		return &result
 	}
-	result := Key(key)
-	return &result
+	return nil
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
