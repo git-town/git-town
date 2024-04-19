@@ -31,15 +31,15 @@ func Parse(url string) *Parts {
 		`(\.git)?$`
 	regex := regexp.MustCompile(pattern)
 	matches := regex.FindStringSubmatch(url)
-	if matches != nil {
-		return &Parts{
-			User: trimLast(matches[1]),
-			Host: trimLast(matches[2]),
-			Org:  trimLast(matches[3]),
-			Repo: matches[4],
-		}
+	if matches == nil {
+		return nil
 	}
-	return nil
+	return &Parts{
+		User: trimLast(matches[1]),
+		Host: trimLast(matches[2]),
+		Org:  trimLast(matches[3]),
+		Repo: matches[4],
+	}
 }
 
 // trimLast trims the last character of the given text.
