@@ -1,6 +1,3 @@
-// Package optimizer provides functionality to improve the performance of VM programs
-// by re-arranging their opcodes.
-// This is similar to optimizers in compilers.
 package optimizer
 
 import (
