@@ -36,6 +36,7 @@ const (
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
+	ConfigLineageParentIsChild         = "removing config entry %q because the parent is the child"
 	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"
 	ConfigNeeded                       = "Git Town needs to be configured\n\n"
 	ConfigStorage                      = "Config storage: %s\n"
