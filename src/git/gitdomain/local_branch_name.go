@@ -42,11 +42,6 @@ func (self LocalBranchName) BranchName() BranchName {
 	return BranchName(string(self))
 }
 
-// IsEmpty indicates whether this branch name is not set.
-func (self LocalBranchName) IsEmpty() bool {
-	return self == ""
-}
-
 // Location widens the type of this LocalBranchName to a more generic Location.
 func (self LocalBranchName) Location() Location {
 	return NewLocation(string(self))
