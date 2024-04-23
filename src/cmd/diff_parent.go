@@ -101,8 +101,10 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branch},
 		Config:           repo.Runner.Config,
+		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {

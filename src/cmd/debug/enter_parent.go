@@ -30,6 +30,7 @@ func enterParentCmd() *cobra.Command {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          gitdomain.NewLocalBranchName("branch-2"),
+				DefaultChoice:   main,
 				DialogTestInput: dialogTestInputs.Next(),
 				Lineage:         lineage,
 				LocalBranches:   localBranches,

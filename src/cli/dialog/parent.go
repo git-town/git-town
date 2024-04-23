@@ -27,7 +27,7 @@ Most of the time this is the main development branch (%v).
 func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidateNames := ParentCandidateNames(args)
 	entries := list.NewEntries(parentCandidateNames...)
-	cursor := entries.IndexWithTextOr(args.MainBranch.String(), 0)
+	cursor := entries.IndexWithTextOr(args.DefaultChoice.String(), 0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
@@ -37,6 +37,7 @@ func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 
 type ParentArgs struct {
 	Branch          gitdomain.LocalBranchName
+	DefaultChoice   gitdomain.LocalBranchName
 	DialogTestInput components.TestInput
 	Lineage         configdomain.Lineage
 	LocalBranches   gitdomain.LocalBranchNames

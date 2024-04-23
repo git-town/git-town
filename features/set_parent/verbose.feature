@@ -5,8 +5,8 @@ Feature: display all executed Git commands
     And a feature branch "child" as a child of "parent"
     And the current branch is "child"
     When I run "git-town set-parent --verbose" and enter into the dialog:
-      | DIALOG                 | KEYS       |
-      | parent branch of child | down enter |
+      | DIALOG                 | KEYS     |
+      | parent branch of child | up enter |
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                                         |
       |        | backend | git version                                     |

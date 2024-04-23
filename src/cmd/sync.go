@@ -161,6 +161,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: branchesSnapshot.Branches.LocalBranches().Names(),
 			Config:           repo.Runner.Config,
+			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    localBranches,
 			Runner:           repo.Runner,
@@ -174,8 +175,11 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 			Config:           repo.Runner.Config,
+			AllBranches:      branchesSnapshot.Branches,
+			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    branchesSnapshot.Branches,
+			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 			Runner:           repo.Runner,
 		})
 		if err != nil {
