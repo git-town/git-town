@@ -45,7 +45,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, exit, err := determineSetParentConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, exit, err := determineSetParentConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -90,7 +90,7 @@ type setParentConfig struct {
 	existingParent *gitdomain.LocalBranchName
 }
 
-func determineSetParentConfig(repo *execute.OpenRepoResult) (setParentConfig, gitdomain.BranchesSnapshot, error) {
+func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentConfig, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -111,11 +111,11 @@ func determineSetParentConfig(repo *execute.OpenRepoResult) (setParentConfig, gi
 		return nil, branchesSnapshot, exit, err
 	}
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
-	return setParentConfig{
+	return &setParentConfig{
 		currentBranch:  branchesSnapshot.Active,
-		mainBranch:     "",
+		mainBranch:     repo.Runner.Config.FullConfig.MainBranch,
 		existingParent: existingParent,
-	}
+	}, branchesSnapshot, false, nil
 }
 
 func verifySetParentConfig(config *setParentConfig, repo *execute.OpenRepoResult) error {
