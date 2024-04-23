@@ -135,6 +135,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 			BackendCommands: &backendCommands,
 		},
 		Backend: backendCommands,
+		Config:  config,
 	}
 }
 
