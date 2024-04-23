@@ -182,11 +182,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err = validateShippableBranchType(repo.Runner.Config.FullConfig.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
-		AllBranches:      branchesSnapshot.Branches,
+	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
 		Config:           repo.Runner.Config,
-		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		LocalBranches:    branchesSnapshot.Branches,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
