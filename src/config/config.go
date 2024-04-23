@@ -4,6 +4,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -52,6 +53,19 @@ func (self *Config) AddToParkedBranches(branches ...gitdomain.LocalBranchName) e
 // The branches must exist.
 func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetPerennialBranches(append(self.FullConfig.PerennialBranches, branches...))
+}
+
+// Author provides the locally Git configured user.
+func (self *Config) Author() (gitdomain.Author, error) {
+	email := self.FullConfig.GitUserEmail
+	if email == "" {
+		return "", errors.New(messages.GitUserEmailMissing)
+	}
+	name := self.FullConfig.GitUserName
+	if name == "" {
+		return "", errors.New(messages.GitUserEmailMissing)
+	}
+	return gitdomain.Author(name + " <" + email + ">"), nil
 }
 
 // OriginURL provides the URL for the "origin" remote.

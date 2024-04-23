@@ -1,7 +1,6 @@
 package git
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -32,19 +31,6 @@ type BackendCommands struct {
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
 	Runner             BackendRunner  // executes shell commands in the directory of the Git repo
-}
-
-// Author provides the locally Git configured user.
-func (self *BackendCommands) Author() (gitdomain.Author, error) {
-	email := self.Config.FullConfig.GitUserEmail
-	if email == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
-	}
-	name := self.Config.FullConfig.GitUserName
-	if name == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
-	}
-	return gitdomain.Author(name + " <" + email + ">"), nil
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
