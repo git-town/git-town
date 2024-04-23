@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -65,18 +66,20 @@ func executeSetParent(verbose bool) error {
 	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
-	if !existingParent.IsEmpty() {
+	existingParentPtr := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	var defaultBranch gitdomain.LocalBranchName
+	if existingParentPtr != nil {
+		defaultBranch = *existingParentPtr
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
 		repo.Runner.Config.Reload()
 	} else {
-		existingParent = repo.Runner.Config.FullConfig.MainBranch
+		defaultBranch = repo.Runner.Config.FullConfig.MainBranch
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    existingParent,
+		DefaultBranch:    defaultBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
