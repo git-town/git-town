@@ -169,7 +169,8 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func (self killConfig) branchToKillParent() gitdomain.LocalBranchName {
+// TODO: inline this method
+func (self killConfig) branchToKillParent() *gitdomain.LocalBranchName {
 	return self.Lineage.Parent(self.branchNameToKill.LocalName)
 }
 
