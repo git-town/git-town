@@ -17,10 +17,12 @@ import (
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 		Backend:          &args.Runner.Backend,
+		BranchesToVerify: args.BranchesToVerify,
 		Config:           args.Config,
 		DefaultChoice:    args.DefaultChoice,
 		DialogTestInputs: args.DialogTestInputs,
 		LocalBranches:    args.LocalBranches,
+		MainBranch:       args.MainBranch,
 	})
 	if err != nil {
 		return err
@@ -32,9 +34,11 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
+	BranchesToVerify gitdomain.LocalBranchNames
 	Config           *config.Config
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
+	MainBranch       gitdomain.LocalBranchName
 	Runner           *git.ProdRunner
 }

@@ -134,11 +134,12 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	if branchToKill.IsLocal() {
-		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
-			AllBranches:      branchesSnapshot.Branches,
+		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+			BranchesToVerify: gitdomain.LocalBranchNames{branchToKill.LocalName},
 			Config:           repo.Runner.Config,
 			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
+			LocalBranches:    branchesSnapshot.Branches,
 			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 			Runner:           repo.Runner,
 		})
