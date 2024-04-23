@@ -18,6 +18,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 		Backend:          &args.Runner.Backend,
 		Config:           args.Config,
+		DefaultChoice:    args.DefaultChoice,
 		DialogTestInputs: args.DialogTestInputs,
 		LocalBranches:    args.LocalBranches,
 	})
@@ -32,6 +33,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 
 type EnsureKnownBranchesAncestryArgs struct {
 	Config           *config.Config
+	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
 	Runner           *git.ProdRunner

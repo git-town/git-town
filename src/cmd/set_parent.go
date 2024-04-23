@@ -79,8 +79,9 @@ func executeSetParent(verbose bool) error {
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:      branchesSnapshot.Branches,
 		Config:           repo.Runner.Config,
-		DefaultBranch:    defaultBranch,
+		DefaultChoice:    existingParent,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
