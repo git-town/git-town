@@ -84,7 +84,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.Config.FullConfig,
+		Config:                repo.Runner.Config,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,

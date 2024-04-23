@@ -350,18 +350,6 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *BackendCommands) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.Config.FullConfig.Lineage {
-		hasChildBranch := localBranches.Contains(child)
-		hasParentBranch := localBranches.Contains(parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.Config.RemoveParent(child)
-		}
-	}
-	return nil
-}
-
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
 func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 	output, err := self.Runner.QueryTrim("git", "status", "--long", "--ignore-submodules")

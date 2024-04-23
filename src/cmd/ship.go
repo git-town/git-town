@@ -152,7 +152,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.Config.FullConfig,
+		Config:                repo.Runner.Config,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
