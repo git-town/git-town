@@ -101,6 +101,7 @@ type killConfig struct {
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
+	parentBranch     *gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 }
 
@@ -156,6 +157,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
+	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		branchNameToKill: *branchToKill,
@@ -165,13 +167,9 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
+		parentBranch:     &parentBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
-}
-
-// TODO: inline this method
-func (self killConfig) branchToKillParent() *gitdomain.LocalBranchName {
-	return self.Lineage.Parent(self.branchNameToKill.LocalName)
 }
 
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
@@ -215,11 +213,11 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 		prog.Add(&opcodes.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchNameToKill.LocalName})
-	if !config.dryRun {
+	if !config.dryRun && config.parentBranch != nil {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchNameToKill.LocalName,
 			Lineage: config.Lineage,
-			Parent:  config.branchToKillParent(),
+			Parent:  *config.parentBranch,
 			Program: prog,
 		})
 	}
