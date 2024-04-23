@@ -19,6 +19,7 @@ import (
 type TestRuntime struct {
 	commands.TestCommands
 	Backend git.BackendCommands
+	Config  *config.Config
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
@@ -90,7 +91,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	backendCommands := git.BackendCommands{
 		Runner:             &runner,
 		DryRun:             false,
-		Config:             config,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
@@ -100,6 +100,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	return TestRuntime{
 		Backend:      backendCommands,
+		Config:       config,
 		TestCommands: testCommands,
 	}
 }

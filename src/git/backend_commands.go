@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
@@ -26,7 +25,6 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	Config             *config.Config                 // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
