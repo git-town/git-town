@@ -78,6 +78,7 @@ func executeSetParent(verbose bool) error {
 		Config:           repo.Runner.Config,
 		DefaultChoice:    existingParent,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {

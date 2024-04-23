@@ -140,6 +140,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		AllBranches:      branchesSnapshot.Branches,
 		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {

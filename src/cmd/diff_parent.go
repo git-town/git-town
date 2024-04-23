@@ -103,6 +103,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		Config:           repo.Runner.Config,
 		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {

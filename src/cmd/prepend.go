@@ -141,6 +141,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		Config:           repo.Runner.Config,
 		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
