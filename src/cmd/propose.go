@@ -138,7 +138,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           repo.Runner.Config,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
+		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})

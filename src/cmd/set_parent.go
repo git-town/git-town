@@ -76,7 +76,7 @@ func executeSetParent(verbose bool) error {
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:      branchesSnapshot.Branches,
 		Config:           repo.Runner.Config,
-		DefaultBranch:    existingParent,
+		DefaultChoice:    existingParent,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})

@@ -139,7 +139,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:      branchesSnapshot.Branches,
 		Config:           repo.Runner.Config,
-		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
+		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
