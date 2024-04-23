@@ -164,6 +164,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    localBranches,
+			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 			Runner:           repo.Runner,
 		})
 		if err != nil {
