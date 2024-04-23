@@ -50,7 +50,7 @@ func executeSetParent(verbose bool) error {
 		return err
 	}
 	// prompt for the new parent
-	newParent, aborted, err := dialog.Parent(dialog.ParentArgs{
+	_, _, err = dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
 		DialogTestInput: config.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
