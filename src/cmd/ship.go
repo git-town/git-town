@@ -266,7 +266,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
-	parentBranch := lineage.Parent(branch)
+	parentBranchPtr := lineage.Parent(branch)
+	if parentBranchPtr == nil {
+		return errors.New(messages.PerennialBranchCannotShip)
+	}
+	parentBranch := *parentBranchPtr
 	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
