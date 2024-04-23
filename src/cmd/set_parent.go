@@ -49,6 +49,10 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	err = verifySetParentConfig(config, repo)
+	if err != nil {
+		return err
+	}
 	// prompt for the new parent
 	_, _, err = dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
@@ -58,10 +62,6 @@ func executeSetParent(verbose bool) error {
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      config.mainBranch,
 	})
-	if err != nil {
-		return err
-	}
-	err = verifySetParentConfig(config, repo)
 	if err != nil {
 		return err
 	}
