@@ -167,7 +167,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		parentBranch:     &parentBranch,
+		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
