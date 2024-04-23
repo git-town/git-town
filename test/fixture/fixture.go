@@ -133,9 +133,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		TestCommands: commands.TestCommands{
 			TestRunner:      &runner,
 			BackendCommands: &backendCommands,
+			Config:          self.DevRepo.Config,
 		},
 		Backend: backendCommands,
-		Config:  config,
+		Config:  self.DevRepo.Config,
 	}
 }
 
