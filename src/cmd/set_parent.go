@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -73,11 +74,12 @@ func executeSetParent(verbose bool) error {
 	} else {
 		existingParent = repo.Runner.Config.FullConfig.MainBranch
 	}
-	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-		AllBranches:      branchesSnapshot.Branches,
+	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		Config:           repo.Runner.Config,
 		DefaultChoice:    existingParent,
 		DialogTestInputs: &dialogTestInputs,
+		LocalBranches:    branchesSnapshot.Branches,
 		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
