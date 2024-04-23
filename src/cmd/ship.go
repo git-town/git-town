@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/option"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting"
@@ -197,7 +196,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	parent, err := option.Unpack(repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip), errors.New(messages.PerennialBranchCannotShip))
+	parentPtr := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip)
+	if parentPtr == nil {
+		return nil, branchesSnapshot, stashSize, false, errors.New(messages.PerennialBranchCannotShip)
+	}
+	parent := *parentPtr
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -222,7 +225,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	proposalMessage := ""
 	if !repo.IsOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
-			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
+			proposal, err = connector.FindProposal(branchNameToShip, targetBranch.LocalName)
 			if err != nil {
 				return nil, branchesSnapshot, stashSize, false, err
 			}
