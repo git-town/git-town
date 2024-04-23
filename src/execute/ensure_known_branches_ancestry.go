@@ -2,7 +2,7 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -31,7 +31,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
-	Config           *configdomain.FullConfig
+	Config           *config.Config
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
 	Runner           *git.ProdRunner

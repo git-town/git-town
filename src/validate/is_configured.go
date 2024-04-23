@@ -7,17 +7,17 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames, dialogInputs *components.TestInputs) error {
-	mainBranch := config.MainBranch
+func IsConfigured(backend *git.BackendCommands, config *config.Config, localBranches gitdomain.LocalBranchNames, dialogInputs *components.TestInputs) error {
+	mainBranch := config.FullConfig.MainBranch
 	if mainBranch.IsEmpty() {
-		if backend.Config.ConfigFile != nil {
+		if config.ConfigFile != nil {
 			return errors.New(messages.ConfigMainbranchInConfigFile)
 		}
 		fmt.Print(messages.ConfigNeeded)
@@ -26,23 +26,23 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 		if err != nil || aborted {
 			return err
 		}
-		if newMainBranch != config.MainBranch {
-			err := backend.Config.SetMainBranch(newMainBranch)
+		if newMainBranch != config.FullConfig.MainBranch {
+			err := config.SetMainBranch(newMainBranch)
 			if err != nil {
 				return err
 			}
-			config.MainBranch = newMainBranch
+			config.FullConfig.MainBranch = newMainBranch
 		}
-		newPerennialBranches, aborted, err := dialog.PerennialBranches(localBranches, config.PerennialBranches, config.MainBranch, dialogInputs.Next())
+		newPerennialBranches, aborted, err := dialog.PerennialBranches(localBranches, config.FullConfig.PerennialBranches, config.FullConfig.MainBranch, dialogInputs.Next())
 		if err != nil || aborted {
 			return err
 		}
-		if slices.Compare(newPerennialBranches, config.PerennialBranches) != 0 {
-			err := backend.Config.SetPerennialBranches(newPerennialBranches)
+		if slices.Compare(newPerennialBranches, config.FullConfig.PerennialBranches) != 0 {
+			err := config.SetPerennialBranches(newPerennialBranches)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	return backend.RemoveOutdatedConfiguration(localBranches)
+	return config.RemoveOutdatedConfiguration(localBranches)
 }
