@@ -51,29 +51,31 @@ func executeSetParent(verbose bool) error {
 	}
 	// prompt for the new parent
 	newParent, aborted, err := dialog.Parent(dialog.ParentArgs{
-		Branch:          branchesSnapshot.Active,
-		DialogTestInput: dialogTestInputs.Next(),
+		Branch:          config.currentBranch,
+		DialogTestInput: config.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
-		LocalBranches:   branchesSnapshot.Branches.LocalBranches().Names(),
-		MainBranch:      "",
+		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
+		MainBranch:      config.mainBranch,
 	})
 	err = verifySetParentConfig(config, repo)
 	if err != nil {
 		return err
 	}
-	if !existingParent.IsEmpty() {
+	var defaultChoice gitdomain.LocalBranchName
+	if !config.existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
-		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
+		repo.Runner.Config.RemoveParent(initialBranchesSnapshot.Active)
 		repo.Runner.Config.Reload()
+		defaultChoice = *config.existingParent
 	} else {
-		existingParent = repo.Runner.Config.FullConfig.MainBranch
+		defaultChoice = config.mainBranch
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToVerify: gitdomain.LocalBranchNames{config.currentBranch},
 		Config:           repo.Runner.Config,
-		DefaultChoice:    existingParent,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
+		DefaultChoice:    defaultChoice,
+		DialogTestInputs: &config.dialogTestInputs,
+		LocalBranches:    initialBranchesSnapshot.Branches,
 		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
@@ -85,9 +87,10 @@ func executeSetParent(verbose bool) error {
 }
 
 type setParentConfig struct {
-	currentBranch  gitdomain.LocalBranchName
-	mainBranch     gitdomain.LocalBranchName
-	existingParent *gitdomain.LocalBranchName
+	currentBranch    gitdomain.LocalBranchName
+	dialogTestInputs components.TestInputs
+	existingParent   *gitdomain.LocalBranchName
+	mainBranch       gitdomain.LocalBranchName
 }
 
 func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentConfig, gitdomain.BranchesSnapshot, bool, error) {
@@ -112,9 +115,10 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	}
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
 	return &setParentConfig{
-		currentBranch:  branchesSnapshot.Active,
-		mainBranch:     repo.Runner.Config.FullConfig.MainBranch,
-		existingParent: existingParent,
+		currentBranch:    branchesSnapshot.Active,
+		dialogTestInputs: dialogTestInputs,
+		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
+		existingParent:   &existingParent,
 	}, branchesSnapshot, false, nil
 }
 
