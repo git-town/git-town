@@ -12,8 +12,12 @@ type CheckoutParent struct {
 }
 
 func (self *CheckoutParent) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(self.CurrentBranch)
-	if parent.IsEmpty() || parent == self.CurrentBranch {
+	parentPtr := args.Lineage.Parent(self.CurrentBranch)
+	if parentPtr == nil {
+		return nil
+	}
+	parent := *parentPtr
+	if parent == self.CurrentBranch {
 		return nil
 	}
 	return args.Runner.Frontend.CheckoutBranch(parent, false)
