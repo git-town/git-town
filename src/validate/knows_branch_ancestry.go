@@ -25,6 +25,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			var err error
 			parent, aborted, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          currentBranch,
+				DefaultChoice:   args.DefaultChoice,
 				DialogTestInput: args.DialogTestInputs.Next(),
 				Lineage:         args.Config.FullConfig.Lineage,
 				LocalBranches:   args.LocalBranches,
@@ -61,6 +62,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 type KnowsBranchAncestorsArgs struct {
 	Backend          *git.BackendCommands
 	Config           *config.Config
+	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames
 	MainBranch       gitdomain.LocalBranchName
@@ -76,6 +78,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
 			Backend:          args.Backend,
 			Config:           args.Config,
+			DefaultChoice:    args.DefaultChoice,
 			DialogTestInputs: args.DialogTestInputs,
 			LocalBranches:    args.LocalBranches.Names(),
 			MainBranch:       args.Config.FullConfig.MainBranch,
@@ -93,6 +96,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 type KnowsBranchesAncestorsArgs struct {
 	Backend          *git.BackendCommands
 	Config           *config.Config
+	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
 }

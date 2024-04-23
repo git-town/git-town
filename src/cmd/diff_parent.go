@@ -101,8 +101,9 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:      branchesSnapshot.Branches,
 		Config:           repo.Runner.Config,
-		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
+		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
