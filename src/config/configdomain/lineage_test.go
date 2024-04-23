@@ -414,7 +414,7 @@ func TestLineage(t *testing.T) {
 				one: main,
 			}
 			have := lineage.Parent(one)
-			must.Eq(t, main, have)
+			must.Eq(t, &main, have)
 		})
 		t.Run("main branch", func(t *testing.T) {
 			t.Parallel()
