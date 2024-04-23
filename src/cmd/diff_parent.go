@@ -108,8 +108,13 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if err != nil {
 		return nil, false, err
 	}
+	parentBranchPtr := repo.Runner.Config.FullConfig.Lineage.Parent(branch)
+	if parentBranchPtr == nil {
+		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
+	}
+	parentBranch := *parentBranchPtr
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: repo.Runner.Config.FullConfig.Lineage.Parent(branch),
+		parentBranch: parentBranch,
 	}, false, nil
 }
