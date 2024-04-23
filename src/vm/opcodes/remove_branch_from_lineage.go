@@ -14,18 +14,18 @@ func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
 	parentPtr := args.Lineage.Parent(self.Branch)
 	if parentPtr == nil {
 		for _, child := range args.Lineage.Children(self.Branch) {
-			args.Runner.Backend.Config.RemoveParent(child)
+			args.Runner.Config.RemoveParent(child)
 		}
 	} else {
 		parent := *parentPtr
 		for _, child := range args.Lineage.Children(self.Branch) {
-			err := args.Runner.Backend.Config.SetParent(child, parent)
+			err := args.Runner.Config.SetParent(child, parent)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	args.Runner.Backend.Config.RemoveParent(self.Branch)
+	args.Runner.Config.RemoveParent(self.Branch)
 	args.Lineage.RemoveBranch(self.Branch)
 	return nil
 }
