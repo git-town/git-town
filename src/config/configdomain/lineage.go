@@ -132,23 +132,23 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
-func (self Lineage) Parent(branch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
+func (self Lineage) Parent(branch gitdomain.LocalBranchName) *gitdomain.LocalBranchName {
 	for child, parent := range self {
 		if child == branch {
-			return parent
+			return &parent
 		}
 	}
-	return gitdomain.EmptyLocalBranchName()
+	return nil
 }
 
 // RemoveBranch removes the given branch completely from this lineage.
 func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) {
 	parent := self.Parent(branch)
 	for _, childName := range self.Children(branch) {
-		if parent.IsEmpty() {
+		if parent == nil {
 			delete(self, childName)
 		} else {
-			self[childName] = parent
+			self[childName] = *parent
 		}
 	}
 	delete(self, branch)
