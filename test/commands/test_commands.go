@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v14/src/git"
@@ -24,6 +25,7 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.BackendCommands
+	*config.Config
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

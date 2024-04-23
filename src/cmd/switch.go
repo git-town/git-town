@@ -83,9 +83,9 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Config:                repo.Runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,

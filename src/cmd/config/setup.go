@@ -195,9 +195,9 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, 
 		return nil, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Config:                repo.Runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
