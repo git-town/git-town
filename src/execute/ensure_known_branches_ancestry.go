@@ -34,6 +34,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 type EnsureKnownBranchesAncestryArgs struct {
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           *config.Config
+	DefaultParent    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
 	Runner           *git.ProdRunner
