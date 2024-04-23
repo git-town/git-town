@@ -52,11 +52,15 @@ func executeSetParent(verbose bool) error {
 	// prompt for the new parent
 	_, _, err = dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
+		DefaultChoice:   *config.existingParent,
 		DialogTestInput: config.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      config.mainBranch,
 	})
+	if err != nil {
+		return err
+	}
 	err = verifySetParentConfig(config, repo)
 	if err != nil {
 		return err
@@ -100,9 +104,9 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Config:                repo.Runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		Config:                repo.Runner.Config,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -117,8 +121,8 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	return &setParentConfig{
 		currentBranch:    branchesSnapshot.Active,
 		dialogTestInputs: dialogTestInputs,
-		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 		existingParent:   &existingParent,
+		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 	}, branchesSnapshot, false, nil
 }
 
