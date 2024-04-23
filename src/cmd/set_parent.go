@@ -66,9 +66,14 @@ func executeSetParent(verbose bool) error {
 	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	// TODO: delete the old parent only when the user has entered a new parent
-	repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
-	repo.Runner.Config.Reload()
+	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	if !existingParent.IsEmpty() {
+		// TODO: delete the old parent only when the user has entered a new parent
+		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
+		repo.Runner.Config.Reload()
+	} else {
+		existingParent = repo.Runner.Config.FullConfig.MainBranch
+	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		Config:           repo.Runner.Config,
