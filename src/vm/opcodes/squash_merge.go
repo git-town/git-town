@@ -44,7 +44,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	if aborted {
 		return errors.New("aborted by user")
 	}
-	repoAuthor, err := args.Runner.Backend.Author()
+	repoAuthor, err := args.Runner.Config.Author()
 	if err != nil {
 		return err
 	}

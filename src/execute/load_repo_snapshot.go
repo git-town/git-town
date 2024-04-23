@@ -2,7 +2,7 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -28,8 +28,8 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
 			InitialStashSize:        stashSize,
-			Lineage:                 args.Lineage,
-			PushHook:                args.PushHook,
+			Lineage:                 args.Config.FullConfig.Lineage,
+			PushHook:                args.Config.FullConfig.PushHook,
 			RootDir:                 args.Repo.RootDir,
 			Run:                     args.Repo.Runner,
 			Verbose:                 args.Verbose,
@@ -69,13 +69,13 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		}
 	}
 	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
+		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.Config, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
 	}
 	return branchesSnapshot, stashSize, false, err
 }
 
 type LoadRepoSnapshotArgs struct {
-	*configdomain.FullConfig
+	Config                *config.Config
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	HandleUnfinishedState bool

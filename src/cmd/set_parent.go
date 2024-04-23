@@ -49,9 +49,9 @@ func executeSetParent(verbose bool) error {
 		return err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Config:                repo.Runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -74,8 +74,8 @@ func executeSetParent(verbose bool) error {
 		existingParent = repo.Runner.Config.FullConfig.MainBranch
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
+		Config:           repo.Runner.Config,
 		DefaultBranch:    existingParent,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,

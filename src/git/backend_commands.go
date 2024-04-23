@@ -1,7 +1,6 @@
 package git
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
@@ -27,24 +25,10 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	Config             *config.Config                 // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
 	Runner             BackendRunner  // executes shell commands in the directory of the Git repo
-}
-
-// Author provides the locally Git configured user.
-func (self *BackendCommands) Author() (gitdomain.Author, error) {
-	email := self.Config.FullConfig.GitUserEmail
-	if email == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
-	}
-	name := self.Config.FullConfig.GitUserName
-	if name == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
-	}
-	return gitdomain.Author(name + " <" + email + ">"), nil
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
@@ -362,18 +346,6 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 		return gitdomain.Remotes{}, nil
 	}
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
-}
-
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *BackendCommands) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.Config.FullConfig.Lineage {
-		hasChildBranch := localBranches.Contains(child)
-		hasParentBranch := localBranches.Contains(parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.Config.RemoveParent(child)
-		}
-	}
-	return nil
 }
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
