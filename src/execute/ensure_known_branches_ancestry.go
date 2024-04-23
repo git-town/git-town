@@ -22,6 +22,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 		DefaultChoice:    args.DefaultChoice,
 		DialogTestInputs: args.DialogTestInputs,
 		LocalBranches:    args.LocalBranches,
+		MainBranch:       args.MainBranch,
 	})
 	if err != nil {
 		return err
@@ -38,5 +39,6 @@ type EnsureKnownBranchesAncestryArgs struct {
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
+	MainBranch       gitdomain.LocalBranchName
 	Runner           *git.ProdRunner
 }

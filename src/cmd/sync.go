@@ -175,7 +175,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 			Config:           repo.Runner.Config,
-			AllBranches:      branchesSnapshot.Branches,
 			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    branchesSnapshot.Branches,

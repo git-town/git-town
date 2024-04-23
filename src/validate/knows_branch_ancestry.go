@@ -81,7 +81,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 			DefaultChoice:    args.DefaultChoice,
 			DialogTestInputs: args.DialogTestInputs,
 			LocalBranches:    args.LocalBranches.Names(),
-			MainBranch:       args.Config.FullConfig.MainBranch,
+			MainBranch:       args.MainBranch,
 		})
 		if err != nil {
 			return updated, err
@@ -100,4 +100,5 @@ type KnowsBranchesAncestorsArgs struct {
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
+	MainBranch       gitdomain.LocalBranchName
 }
