@@ -19,6 +19,7 @@ func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnow
 		LocalBranches:    args.AllBranches.Names(),
 		Backend:          &args.Runner.Backend,
 		Config:           args.Config,
+		DefaultChoice:    args.DefaultBranch,
 		DialogTestInputs: args.DialogTestInputs,
 		MainBranch:       args.DefaultBranch,
 	})
