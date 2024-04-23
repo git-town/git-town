@@ -72,8 +72,8 @@ type KnowsBranchAncestorsArgs struct {
 // Indicates if the user made any changes to the ancestry.
 func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
-	for _, branch := range args.LocalBranches {
-		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
+	for _, branch := range args.BranchesToVerify {
+		branchUpdated, err := KnowsBranchAncestors(branch, KnowsBranchAncestorsArgs{
 			Backend:          args.Backend,
 			Config:           args.Config,
 			DialogTestInputs: args.DialogTestInputs,
@@ -92,6 +92,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 
 type KnowsBranchesAncestorsArgs struct {
 	Backend          *git.BackendCommands
+	BranchesToVerify gitdomain.LocalBranchNames
 	Config           *config.Config
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos

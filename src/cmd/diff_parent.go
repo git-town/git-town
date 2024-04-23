@@ -98,11 +98,11 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branch) {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
-	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
-		AllBranches:      branchesSnapshot.Branches,
+	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		BranchesToVerify: gitdomain.LocalBranchNames{branch},
 		Config:           repo.Runner.Config,
-		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
+		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
 		Runner:           repo.Runner,
 	})
 	if err != nil {

@@ -17,6 +17,7 @@ import (
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 		Backend:          &args.Runner.Backend,
+		BranchesToVerify: args.BranchesToVerify,
 		Config:           args.Config,
 		DialogTestInputs: args.DialogTestInputs,
 		LocalBranches:    args.LocalBranches,
