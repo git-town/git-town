@@ -9,7 +9,11 @@ Feature: update the parent of a feature branch
       | parent branch of child | up enter |
 
   Scenario: result
-    Then it runs no commands
+    Then it prints:
+      """
+      Selected parent branch for "child": main
+      """
+    And it runs no commands
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |

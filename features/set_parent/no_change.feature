@@ -9,7 +9,11 @@ Feature: update the parent of a feature branch
       | parent branch of child | enter |
 
   Scenario: result
-    Then it runs no commands
+    Then it prints:
+      """
+      Selected parent branch for "child": parent
+      """
+    And it runs no commands
     And the initial lineage exists
     And the current branch is still "child"
 

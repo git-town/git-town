@@ -9,7 +9,11 @@ Feature: make a feature branch perennial
       | parent branch of child | down enter |
 
   Scenario: result
-    Then it runs no commands
+    Then it prints:
+      """
+      Selected parent branch for "child": <none> (perennial branch)
+      """
+    And it runs no commands
     And the perennial branches are now "child"
     And this lineage exists now
       | BRANCH | PARENT |
