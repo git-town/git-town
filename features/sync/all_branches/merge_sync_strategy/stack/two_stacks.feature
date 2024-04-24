@@ -44,10 +44,10 @@ Feature: sync a workspace with two independent stacks
       |        | git merge --no-edit --ff first         |
       |        | git checkout third                     |
       | third  | git merge --no-edit --ff origin/third  |
-      |        | git merge --no-edit second             |
+      |        | git merge --no-edit --ff second        |
       |        | git checkout fourth                    |
       | fourth | git merge --no-edit --ff origin/fourth |
-      |        | git merge --no-edit third              |
+      |        | git merge --no-edit --ff third         |
       |        | git checkout one                       |
       | one    | git merge --no-edit --ff origin/one    |
       |        | git merge --no-edit --ff main          |
@@ -56,10 +56,10 @@ Feature: sync a workspace with two independent stacks
       |        | git merge --no-edit --ff one           |
       |        | git checkout three                     |
       | three  | git merge --no-edit --ff origin/three  |
-      |        | git merge --no-edit two                |
+      |        | git merge --no-edit --ff two           |
       |        | git checkout four                      |
       | four   | git merge --no-edit --ff origin/four   |
-      |        | git merge --no-edit three              |
+      |        | git merge --no-edit --ff three         |
       |        | git checkout main                      |
       | main   | git push --tags                        |
       |        | git stash pop                          |
