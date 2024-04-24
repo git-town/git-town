@@ -24,7 +24,7 @@ Most of the time this is the main development branch (%v).
 )
 
 // Parent lets the user select the parent branch for the given branch.
-func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
+func Parent(args ParentArgs) (ParentOutcome, *gitdomain.LocalBranchName, error) {
 	parentCandidateNames := ParentCandidateNames(args)
 	entries := list.NewEntries(parentCandidateNames...)
 	cursor := entries.IndexWithTextOr(args.DefaultChoice.String(), 0)
@@ -32,7 +32,13 @@ func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
-	return selection.Data, aborted, err
+	if aborted {
+		return ParentUserActionAborted, nil, err
+	}
+	if selection.Data == PerennialBranchOption {
+		return ParentUserActionPerennialBranch, nil, err
+	}
+	return ParentUserActionSelectedParent, &selection.Data, err
 }
 
 type ParentArgs struct {
@@ -50,3 +56,12 @@ func ParentCandidateNames(args ParentArgs) gitdomain.LocalBranchNames {
 	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch)
 	return append(gitdomain.LocalBranchNames{PerennialBranchOption}, parentCandidates...)
 }
+
+// ParentOutcome describes the action that the user took.
+type ParentOutcome int
+
+const (
+	ParentUserActionAborted         ParentOutcome = iota // the user aborted the dialog
+	ParentUserActionPerennialBranch                      // the user chose the "perennial branch" option
+	ParentUserActionSelectedParent                       // the user selected one of the branches
+)

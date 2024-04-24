@@ -53,10 +53,16 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	var defaultChoice gitdomain.LocalBranchName
+	if config.existingParent != nil {
+		defaultChoice = *config.existingParent
+	} else {
+		defaultChoice = config.mainBranch
+	}
 	// prompt for the new parent
-	_, _, err = dialog.Parent(dialog.ParentArgs{
+	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
-		DefaultChoice:   *config.existingParent,
+		DefaultChoice:   defaultChoice,
 		DialogTestInput: config.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
@@ -65,26 +71,19 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var defaultChoice gitdomain.LocalBranchName
-	if !config.existingParent.IsEmpty() {
-		// TODO: delete the old parent only when the user has entered a new parent
-		repo.Runner.Config.RemoveParent(initialBranchesSnapshot.Active)
-		repo.Runner.Config.Reload()
-		defaultChoice = *config.existingParent
-	} else {
-		defaultChoice = config.mainBranch
-	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{config.currentBranch},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    defaultChoice,
-		DialogTestInputs: &config.dialogTestInputs,
-		LocalBranches:    initialBranchesSnapshot.Branches,
-		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-		Runner:           repo.Runner,
-	})
-	if err != nil {
-		return err
+	switch outcome {
+	case dialog.ParentUserActionAborted:
+		return nil
+	case dialog.ParentUserActionPerennialBranch:
+		err = repo.Runner.Config.AddToPerennialBranches(config.currentBranch)
+		if err != nil {
+			return err
+		}
+	case dialog.ParentUserActionSelectedParent:
+		err = repo.Runner.Config.SetParent(*selectedBranch, *selectedBranch)
+		if err != nil {
+			return err
+		}
 	}
 	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil

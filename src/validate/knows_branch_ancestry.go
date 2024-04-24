@@ -17,13 +17,13 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		return false, nil
 	}
 	updated := false
+loop:
 	for {
 		lineage := args.Config.FullConfig.Lineage
 		parent, hasParent := lineage[currentBranch]
 		if !hasParent { //nolint:nestif
-			var aborted bool
 			var err error
-			parent, aborted, err = dialog.Parent(dialog.ParentArgs{
+			outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
 				Branch:          currentBranch,
 				DefaultChoice:   args.DefaultChoice,
 				DialogTestInput: args.DialogTestInputs.Next(),
@@ -34,22 +34,23 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			if err != nil {
 				return false, err
 			}
-			if aborted {
+			switch outcome {
+			case dialog.ParentUserActionAborted:
 				os.Exit(0)
-			}
-			if parent == dialog.PerennialBranchOption {
+			case dialog.ParentUserActionPerennialBranch:
 				err = args.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
 				}
 				updated = true
-				break
+				break loop
+			case dialog.ParentUserActionSelectedParent:
+				err = args.Config.SetParent(*selectedBranch, parent)
+				if err != nil {
+					return false, err
+				}
+				updated = true
 			}
-			err = args.Config.SetParent(currentBranch, parent)
-			if err != nil {
-				return false, err
-			}
-			updated = true
 		}
 		if args.Config.FullConfig.IsMainOrPerennialBranch(parent) {
 			break
