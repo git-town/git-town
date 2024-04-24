@@ -17,7 +17,6 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		return false, nil
 	}
 	updated := false
-loop:
 	for {
 		lineage := args.Config.FullConfig.Lineage
 		parent, hasParent := lineage[currentBranch]
@@ -43,9 +42,10 @@ loop:
 					return false, err
 				}
 				updated = true
-				break loop
+				return updated, nil
 			case dialog.ParentOutcomeSelectedParent:
-				err = args.Config.SetParent(selectedBranch, parent)
+				parent = selectedBranch
+				err = args.Config.SetParent(currentBranch, parent)
 				if err != nil {
 					return false, err
 				}
