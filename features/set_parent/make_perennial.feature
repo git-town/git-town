@@ -8,9 +8,10 @@ Feature: make a feature branch perennial
       | DIALOG                 | KEYS       |
       | parent branch of child | down enter |
 
-  @this
+  @debug @this
   Scenario: result
-    Then the perennial branches are now "child"
+    Then it runs no commands
+    And the perennial branches are now "child"
     And this lineage exists now
       | BRANCH | PARENT |
       | parent | main   |
