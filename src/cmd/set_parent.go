@@ -72,18 +72,15 @@ func executeSetParent(verbose bool) error {
 		return err
 	}
 	switch outcome {
-	case dialog.ParentUserActionAborted:
+	case dialog.ParentOutcomeAborted:
 		return nil
-	case dialog.ParentUserActionPerennialBranch:
+	case dialog.ParentOutcomePerennialBranch:
 		err = repo.Runner.Config.AddToPerennialBranches(config.currentBranch)
-		if err != nil {
-			return err
-		}
-	case dialog.ParentUserActionSelectedParent:
-		err = repo.Runner.Config.SetParent(*selectedBranch, *selectedBranch)
-		if err != nil {
-			return err
-		}
+	case dialog.ParentOutcomeSelectedParent:
+		err = repo.Runner.Config.SetParent(config.currentBranch, *selectedBranch)
+	}
+	if err != nil {
+		return err
 	}
 	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil

@@ -35,16 +35,16 @@ loop:
 				return false, err
 			}
 			switch outcome {
-			case dialog.ParentUserActionAborted:
+			case dialog.ParentOutcomeAborted:
 				os.Exit(0)
-			case dialog.ParentUserActionPerennialBranch:
+			case dialog.ParentOutcomePerennialBranch:
 				err = args.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
 				}
 				updated = true
 				break loop
-			case dialog.ParentUserActionSelectedParent:
+			case dialog.ParentOutcomeSelectedParent:
 				err = args.Config.SetParent(*selectedBranch, parent)
 				if err != nil {
 					return false, err

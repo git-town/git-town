@@ -33,12 +33,12 @@ func Parent(args ParentArgs) (ParentOutcome, *gitdomain.LocalBranchName, error) 
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
 	if aborted {
-		return ParentUserActionAborted, nil, err
+		return ParentOutcomeAborted, nil, err
 	}
 	if selection.Data == PerennialBranchOption {
-		return ParentUserActionPerennialBranch, nil, err
+		return ParentOutcomePerennialBranch, nil, err
 	}
-	return ParentUserActionSelectedParent, &selection.Data, err
+	return ParentOutcomeSelectedParent, &selection.Data, err
 }
 
 type ParentArgs struct {
@@ -57,11 +57,11 @@ func ParentCandidateNames(args ParentArgs) gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{PerennialBranchOption}, parentCandidates...)
 }
 
-// ParentOutcome describes the action that the user took.
+// ParentOutcome describes the selection that the user made in the `Parent` dialog.
 type ParentOutcome int
 
 const (
-	ParentUserActionAborted         ParentOutcome = iota // the user aborted the dialog
-	ParentUserActionPerennialBranch                      // the user chose the "perennial branch" option
-	ParentUserActionSelectedParent                       // the user selected one of the branches
+	ParentOutcomeAborted         ParentOutcome = iota // the user aborted the dialog
+	ParentOutcomePerennialBranch                      // the user chose the "perennial branch" option
+	ParentOutcomeSelectedParent                       // the user selected one of the branches
 )
