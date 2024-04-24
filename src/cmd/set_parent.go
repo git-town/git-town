@@ -13,8 +13,10 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
+	"github.com/git-town/git-town/v14/src/vm/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -74,13 +76,19 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	var opcode shared.Opcode
 	switch outcome {
 	case dialog.ParentOutcomeAborted:
 		return nil
 	case dialog.ParentOutcomePerennialBranch:
-		err = repo.Runner.Config.AddToPerennialBranches(config.currentBranch)
+		opcode = &opcodes.AddToPerennialBranches{
+			Branch: config.currentBranch,
+		}
 	case dialog.ParentOutcomeSelectedParent:
-		err = repo.Runner.Config.SetParent(config.currentBranch, *selectedBranch)
+		opcode = &opcodes.SetParent{
+			Branch: config.currentBranch,
+			Parent: *selectedBranch,
+		}
 	}
 	if err != nil {
 		return err
@@ -94,7 +102,7 @@ func executeSetParent(verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            setParentProgram(config),
+		RunProgram:            setParentProgram(opcode),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
@@ -149,8 +157,9 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func setParentProgram(config *setParentConfig) program.Program {
+func setParentProgram(opcode shared.Opcode) program.Program {
 	prog := program.Program{}
+	prog.Add(opcode)
 	return prog
 }
 
