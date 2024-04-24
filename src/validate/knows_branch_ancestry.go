@@ -10,8 +10,43 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
-// KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
+// KnowsBranchesAncestors asserts that the entire lineage for all given branches
+// is known to Git Town.
+// Prompts missing lineage information from the user.
+// Indicates if the user made any changes to the ancestry.
+func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
+	updated := false
+	for _, branch := range args.BranchesToVerify {
+		branchUpdated, err := knowsBranchAncestors(branch, knowsBranchAncestorsArgs{
+			Backend:          args.Backend,
+			Config:           args.Config,
+			DefaultChoice:    args.DefaultChoice,
+			DialogTestInputs: args.DialogTestInputs,
+			LocalBranches:    args.LocalBranches.Names(),
+			MainBranch:       args.MainBranch,
+		})
+		if err != nil {
+			return updated, err
+		}
+		if branchUpdated {
+			updated = true
+		}
+	}
+	return updated, nil
+}
+
+type KnowsBranchesAncestorsArgs struct {
+	Backend          *git.BackendCommands
+	BranchesToVerify gitdomain.LocalBranchNames
+	Config           *config.Config
+	DefaultChoice    gitdomain.LocalBranchName
+	DialogTestInputs *components.TestInputs
+	LocalBranches    gitdomain.BranchInfos
+	MainBranch       gitdomain.LocalBranchName
+}
+
+// knowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
+func knowsBranchAncestors(branch gitdomain.LocalBranchName, args knowsBranchAncestorsArgs) (bool, error) {
 	currentBranch := branch
 	if args.Config.FullConfig.IsMainOrPerennialBranch(branch) || args.Config.FullConfig.IsObservedBranch(branch) || args.Config.FullConfig.IsContributionBranch(branch) {
 		return false, nil
@@ -60,46 +95,11 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 	return updated, nil
 }
 
-type KnowsBranchAncestorsArgs struct {
+type knowsBranchAncestorsArgs struct {
 	Backend          *git.BackendCommands
 	Config           *config.Config
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames
-	MainBranch       gitdomain.LocalBranchName
-}
-
-// KnowsBranchesAncestors asserts that the entire lineage for all given branches
-// is known to Git Town.
-// Prompts missing lineage information from the user.
-// Indicates if the user made any changes to the ancestry.
-func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
-	updated := false
-	for _, branch := range args.BranchesToVerify {
-		branchUpdated, err := KnowsBranchAncestors(branch, KnowsBranchAncestorsArgs{
-			Backend:          args.Backend,
-			Config:           args.Config,
-			DefaultChoice:    args.DefaultChoice,
-			DialogTestInputs: args.DialogTestInputs,
-			LocalBranches:    args.LocalBranches.Names(),
-			MainBranch:       args.MainBranch,
-		})
-		if err != nil {
-			return updated, err
-		}
-		if branchUpdated {
-			updated = true
-		}
-	}
-	return updated, nil
-}
-
-type KnowsBranchesAncestorsArgs struct {
-	Backend          *git.BackendCommands
-	BranchesToVerify gitdomain.LocalBranchNames
-	Config           *config.Config
-	DefaultChoice    gitdomain.LocalBranchName
-	DialogTestInputs *components.TestInputs
-	LocalBranches    gitdomain.BranchInfos
 	MainBranch       gitdomain.LocalBranchName
 }
