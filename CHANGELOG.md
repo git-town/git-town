@@ -13,7 +13,6 @@
 
 Big thanks to @charlierudolph, @ericyliu, @hammenm, @hmbrg, @kevgo, @KORDayDream, @StevenXL, @vectro, @zifeo for contributing code, ideas, and feedback to 23 shipped PRs and 7 resolved issues!
 
-
 ## 14.1.0 (2024-04-19)
 
 Besides polishing the `git town switch` command, Git Town 14.1 focuses on stability improvements and bashing bugs. We closed out 50% of all open tickets (70 tickets), including many long-standing bugs!
