@@ -3,6 +3,7 @@ package gohacks
 import "reflect"
 
 // IsNil detects nil even when evaluating pointer interface variables.
+// See https://go.dev/tour/methods/12.
 func IsNil(val any) bool {
 	if val == nil {
 		return true
