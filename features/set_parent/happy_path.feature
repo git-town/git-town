@@ -13,3 +13,11 @@ Feature: update the parent of a feature branch
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |
+    And the current branch is still "child"
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And the current branch is still "child"
+    And the initial commits exist
+    And the initial branches and lineage exist

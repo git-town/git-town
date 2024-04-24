@@ -8,7 +8,6 @@ Feature: make a feature branch perennial
       | DIALOG                 | KEYS       |
       | parent branch of child | down enter |
 
-  @debug @this
   Scenario: result
     Then it runs no commands
     And the perennial branches are now "child"
