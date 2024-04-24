@@ -57,7 +57,6 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	// prompt for the new parent
 	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
 		DefaultChoice:   config.defaultChoice,
