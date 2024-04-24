@@ -9,7 +9,7 @@ import (
 type FullConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
-	GitHubToken              GitHubToken
+	GitHubToken              *GitHubToken
 	GitLabToken              GitLabToken
 	GitUserEmail             string
 	GitUserName              string
@@ -115,7 +115,7 @@ func (self *FullConfig) Merge(other PartialConfig) {
 		self.GiteaToken = *other.GiteaToken
 	}
 	if other.GitHubToken != nil {
-		self.GitHubToken = *other.GitHubToken
+		self.GitHubToken = other.GitHubToken
 	}
 	if other.GitLabToken != nil {
 		self.GitLabToken = *other.GitLabToken
@@ -184,7 +184,7 @@ func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		GitHubToken:              "",
+		GitHubToken:              nil,
 		GitLabToken:              "",
 		GitUserEmail:             "",
 		GitUserName:              "",

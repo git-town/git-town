@@ -21,14 +21,15 @@ It's okay to leave this empty.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue configdomain.GitHubToken, inputs components.TestInput) (configdomain.GitHubToken, bool, error) {
-	token, aborted, err := components.TextField(components.TextFieldArgs{
+func GitHubToken(oldValue *configdomain.GitHubToken, inputs components.TestInput) (*configdomain.GitHubToken, bool, error) {
+	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
 		Prompt:        "Your GitHub API token: ",
 		TestInput:     inputs,
 		Title:         githubTokenTitle,
 	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(token, aborted))
-	return configdomain.GitHubToken(token), aborted, err
+	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
+	token := configdomain.GitHubToken(text)
+	return &token, aborted, err
 }

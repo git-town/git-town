@@ -315,11 +315,14 @@ func saveGiteaToken(runner *git.ProdRunner, newToken configdomain.GiteaToken) er
 	return runner.Frontend.SetGiteaToken(newToken)
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken configdomain.GitHubToken) error {
+func saveGitHubToken(runner *git.ProdRunner, newToken *configdomain.GitHubToken) error {
 	if newToken == runner.Config.FullConfig.GitHubToken {
 		return nil
 	}
-	return runner.Frontend.SetGitHubToken(newToken)
+	if newToken == nil {
+		return runner.Frontend.RemoveGitHubToken()
+	}
+	return runner.Frontend.SetGitHubToken(*newToken)
 }
 
 func saveGitLabToken(runner *git.ProdRunner, newToken configdomain.GitLabToken) error {
