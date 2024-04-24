@@ -90,9 +90,6 @@ func executeSetParent(verbose bool) error {
 			Parent: *selectedBranch,
 		}
 	}
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
