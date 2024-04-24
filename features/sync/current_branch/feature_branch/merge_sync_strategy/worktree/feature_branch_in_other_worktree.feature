@@ -14,11 +14,11 @@ Feature: Sync a feature branch that is in another worktree than the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git merge --no-edit origin/feature |
-      |         | git merge --no-edit origin/main    |
-      |         | git push                           |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff origin/main    |
+      |         | git push                                |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                                                    |

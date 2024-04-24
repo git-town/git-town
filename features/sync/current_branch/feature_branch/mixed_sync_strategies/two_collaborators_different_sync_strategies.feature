@@ -33,12 +33,12 @@ Feature: compatibility between different sync-feature-strategy settings
       | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -46,10 +46,10 @@ Feature: compatibility between different sync-feature-strategy settings
     When the coworker resolves the conflict in "file.txt" with "my and coworker content"
     And the coworker runs "git town continue" and closes the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git commit --no-edit     |
-      |         | git merge --no-edit main |
-      |         | git push                 |
+      | BRANCH  | COMMAND                       |
+      | feature | git commit --no-edit          |
+      |         | git merge --no-edit --ff main |
+      |         | git push                      |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT     |

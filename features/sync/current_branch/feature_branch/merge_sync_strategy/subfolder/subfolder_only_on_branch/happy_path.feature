@@ -13,23 +13,23 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | alpha  | git fetch --prune --tags         |
-      |        | git add -A                       |
-      |        | git stash                        |
-      |        | git checkout main                |
-      | main   | git rebase origin/main           |
-      |        | git checkout alpha               |
-      | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout beta                |
-      | beta   | git merge --no-edit origin/beta  |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout alpha               |
-      | alpha  | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                               |
+      | alpha  | git fetch --prune --tags              |
+      |        | git add -A                            |
+      |        | git stash                             |
+      |        | git checkout main                     |
+      | main   | git rebase origin/main                |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout alpha                    |
+      | alpha  | git push --tags                       |
+      |        | git stash pop                         |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And the uncommitted file still exists

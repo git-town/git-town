@@ -49,20 +49,20 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | main    | git rebase --continue              |
-      |         | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash --ff feature    |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
-      |         | git checkout other                 |
-      | other   | git stash pop                      |
+      | BRANCH  | COMMAND                                 |
+      | main    | git rebase --continue                   |
+      |         | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git checkout main                       |
+      | main    | git merge --squash --ff feature         |
+      |         | git commit -m "feature done"            |
+      |         | git push                                |
+      |         | git push origin :feature                |
+      |         | git branch -D feature                   |
+      |         | git checkout other                      |
+      | other   | git stash pop                           |
     And the current branch is now "other"
     And the uncommitted file still exists
     And these commits exist now
@@ -82,19 +82,19 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | main    | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash --ff feature    |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
-      |         | git checkout other                 |
-      | other   | git stash pop                      |
+      | BRANCH  | COMMAND                                 |
+      | main    | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git checkout main                       |
+      | main    | git merge --squash --ff feature         |
+      |         | git commit -m "feature done"            |
+      |         | git push                                |
+      |         | git push origin :feature                |
+      |         | git branch -D feature                   |
+      |         | git checkout other                      |
+      | other   | git stash pop                           |
     And the current branch is now "other"
 
   Scenario: resolve, continue, and undo

@@ -13,12 +13,12 @@ Feature: merge conflict
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git rebase origin/main   |
-      |         | git checkout feature     |
-      | feature | git merge --no-edit main |
+      | BRANCH  | COMMAND                       |
+      | feature | git fetch --prune --tags      |
+      |         | git checkout main             |
+      | main    | git rebase origin/main        |
+      |         | git checkout feature          |
+      | feature | git merge --no-edit --ff main |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

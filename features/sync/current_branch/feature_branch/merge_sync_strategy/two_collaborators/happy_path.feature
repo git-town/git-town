@@ -11,14 +11,14 @@ Feature: collaborative feature branch syncing
       |         | coworker | coworker commit |
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git push                           |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git push                                |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |
@@ -28,14 +28,14 @@ Feature: collaborative feature branch syncing
     Given the coworker is on the "feature" branch
     When the coworker runs "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git push                           |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git push                                |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    |
@@ -46,13 +46,13 @@ Feature: collaborative feature branch syncing
     Given the current branch is "feature"
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    |

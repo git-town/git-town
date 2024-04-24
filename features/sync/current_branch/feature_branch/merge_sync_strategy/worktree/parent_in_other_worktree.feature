@@ -17,15 +17,15 @@ Feature: sync a branch whose parent is active in another worktree
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | child  | git fetch --prune --tags          |
-      |        | git checkout main                 |
-      | main   | git rebase origin/main            |
-      |        | git push                          |
-      |        | git checkout child                |
-      | child  | git merge --no-edit origin/child  |
-      |        | git merge --no-edit origin/parent |
-      |        | git push                          |
+      | BRANCH | COMMAND                                |
+      | child  | git fetch --prune --tags               |
+      |        | git checkout main                      |
+      | main   | git rebase origin/main                 |
+      |        | git push                               |
+      |        | git checkout child                     |
+      | child  | git merge --no-edit --ff origin/child  |
+      |        | git merge --no-edit --ff origin/parent |
+      |        | git push                               |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE                                                 |

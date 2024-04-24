@@ -11,8 +11,8 @@ Feature: sync the current feature branch (in a local repo)
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git merge --no-edit main |
+      | BRANCH  | COMMAND                       |
+      | feature | git merge --no-edit --ff main |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now

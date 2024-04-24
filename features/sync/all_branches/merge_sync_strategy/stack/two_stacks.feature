@@ -31,38 +31,38 @@ Feature: sync a workspace with two independent stacks
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | main   | git fetch --prune --tags          |
-      |        | git add -A                        |
-      |        | git stash                         |
-      |        | git rebase origin/main            |
-      |        | git checkout first                |
-      | first  | git merge --no-edit origin/first  |
-      |        | git merge --no-edit main          |
-      |        | git checkout second               |
-      | second | git merge --no-edit origin/second |
-      |        | git merge --no-edit first         |
-      |        | git checkout third                |
-      | third  | git merge --no-edit origin/third  |
-      |        | git merge --no-edit second        |
-      |        | git checkout fourth               |
-      | fourth | git merge --no-edit origin/fourth |
-      |        | git merge --no-edit third         |
-      |        | git checkout one                  |
-      | one    | git merge --no-edit origin/one    |
-      |        | git merge --no-edit main          |
-      |        | git checkout two                  |
-      | two    | git merge --no-edit origin/two    |
-      |        | git merge --no-edit one           |
-      |        | git checkout three                |
-      | three  | git merge --no-edit origin/three  |
-      |        | git merge --no-edit two           |
-      |        | git checkout four                 |
-      | four   | git merge --no-edit origin/four   |
-      |        | git merge --no-edit three         |
-      |        | git checkout main                 |
-      | main   | git push --tags                   |
-      |        | git stash pop                     |
+      | BRANCH | COMMAND                                |
+      | main   | git fetch --prune --tags               |
+      |        | git add -A                             |
+      |        | git stash                              |
+      |        | git rebase origin/main                 |
+      |        | git checkout first                     |
+      | first  | git merge --no-edit --ff origin/first  |
+      |        | git merge --no-edit --ff main          |
+      |        | git checkout second                    |
+      | second | git merge --no-edit --ff origin/second |
+      |        | git merge --no-edit --ff first         |
+      |        | git checkout third                     |
+      | third  | git merge --no-edit --ff origin/third  |
+      |        | git merge --no-edit --ff second        |
+      |        | git checkout fourth                    |
+      | fourth | git merge --no-edit --ff origin/fourth |
+      |        | git merge --no-edit --ff third         |
+      |        | git checkout one                       |
+      | one    | git merge --no-edit --ff origin/one    |
+      |        | git merge --no-edit --ff main          |
+      |        | git checkout two                       |
+      | two    | git merge --no-edit --ff origin/two    |
+      |        | git merge --no-edit --ff one           |
+      |        | git checkout three                     |
+      | three  | git merge --no-edit --ff origin/three  |
+      |        | git merge --no-edit --ff two           |
+      |        | git checkout four                      |
+      | four   | git merge --no-edit --ff origin/four   |
+      |        | git merge --no-edit --ff three         |
+      |        | git checkout main                      |
+      | main   | git push --tags                        |
+      |        | git stash pop                          |
     And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist
