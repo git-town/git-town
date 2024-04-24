@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v14/src/vm/program"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -146,6 +147,11 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
 	}, branchesSnapshot, stashSize, false, nil
+}
+
+func setParentProgram(config *setParentConfig) program.Program {
+	prog := program.Program{}
+	return prog
 }
 
 func verifySetParentConfig(config *setParentConfig, repo *execute.OpenRepoResult) error {
