@@ -79,7 +79,7 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("", "backend", "git branch -vva")
 		table.AddRow("", "backend", "git status --long --ignore-submodules")
 		table.AddRow("", "backend", "git rev-parse --verify --abbrev-ref @{-1}")
-		table.AddRow("old", "frontend", "git merge --no-edit main")
+		table.AddRow("old", "frontend", "git merge --no-edit --ff main")
 		table.AddRow("", "backend", "git diff main..old")
 		table.AddRow("old", "frontend", "git checkout main")
 		table.AddRow("main", "frontend", "git branch -D old")
@@ -107,7 +107,7 @@ func TestDataTable(t *testing.T) {
 |        | backend  | git branch -vva                           |
 |        | backend  | git status --long --ignore-submodules     |
 |        | backend  | git rev-parse --verify --abbrev-ref @{-1} |
-| old    | frontend | git merge --no-edit --ff main                  |
+| old    | frontend | git merge --no-edit --ff main             |
 |        | backend  | git diff main..old                        |
 | old    | frontend | git checkout main                         |
 | main   | frontend | git branch -D old                         |
