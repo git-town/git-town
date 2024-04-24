@@ -17,7 +17,7 @@ Feature: with sync-perennial-strategy set to "merge"
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git merge --no-edit origin/main                 |
+      | main    | git merge --no-edit --ff origin/main            |
       |         | git push                                        |
       |         | git checkout feature                            |
       | feature | git rebase main                                 |

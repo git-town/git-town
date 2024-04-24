@@ -8,14 +8,14 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit --ff main      |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
     And the current branch is still "feature"
     And the uncommitted file still exists
 

@@ -10,16 +10,16 @@ Feature: dry-run prepending a branch to a feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                        |
-      | old    | git add -A                     |
-      |        | git stash                      |
-      |        | git checkout main              |
-      | main   | git rebase origin/main         |
-      |        | git checkout old               |
-      | old    | git merge --no-edit origin/old |
-      |        | git merge --no-edit --ff main  |
-      |        | git checkout -b parent main    |
-      | parent | git stash pop                  |
+      | BRANCH | COMMAND                             |
+      | old    | git add -A                          |
+      |        | git stash                           |
+      |        | git checkout main                   |
+      | main   | git rebase origin/main              |
+      |        | git checkout old                    |
+      | old    | git merge --no-edit --ff origin/old |
+      |        | git merge --no-edit --ff main       |
+      |        | git checkout -b parent main         |
+      | parent | git stash pop                       |
     And the current branch is still "old"
     And the uncommitted file still exists
     And the initial commits exist

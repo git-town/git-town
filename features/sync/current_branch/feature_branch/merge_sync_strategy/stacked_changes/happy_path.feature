@@ -14,19 +14,19 @@ Feature: stacked changes
     And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | child  | git fetch --prune --tags          |
-      |        | git checkout main                 |
-      | main   | git rebase origin/main            |
-      |        | git push                          |
-      |        | git checkout parent               |
-      | parent | git merge --no-edit origin/parent |
-      |        | git merge --no-edit --ff main     |
-      |        | git push                          |
-      |        | git checkout child                |
-      | child  | git merge --no-edit origin/child  |
-      |        | git merge --no-edit parent        |
-      |        | git push                          |
+      | BRANCH | COMMAND                                |
+      | child  | git fetch --prune --tags               |
+      |        | git checkout main                      |
+      | main   | git rebase origin/main                 |
+      |        | git push                               |
+      |        | git checkout parent                    |
+      | parent | git merge --no-edit --ff origin/parent |
+      |        | git merge --no-edit --ff main          |
+      |        | git push                               |
+      |        | git checkout child                     |
+      | child  | git merge --no-edit --ff origin/child  |
+      |        | git merge --no-edit --ff parent        |
+      |        | git push                               |
     And all branches are now synchronized
     And the current branch is still "child"
     And these commits exist now

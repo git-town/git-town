@@ -28,12 +28,12 @@ Feature: sync before proposing
       | main   | git rebase origin/main                                                    |
       |        | git push                                                                  |
       |        | git checkout parent                                                       |
-      | parent | git merge --no-edit origin/parent                                         |
+      | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git merge --no-edit --ff main                                             |
       |        | git push                                                                  |
       |        | git checkout child                                                        |
-      | child  | git merge --no-edit origin/child                                          |
-      |        | git merge --no-edit parent                                                |
+      | child  | git merge --no-edit --ff origin/child                                     |
+      |        | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
       |        | git stash pop                                                             |
       | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |

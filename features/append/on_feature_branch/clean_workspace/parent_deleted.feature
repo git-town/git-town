@@ -13,19 +13,19 @@ Feature: append a branch to a branch whose parent was shipped on the remote
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | child  | git fetch --prune --tags         |
-      |        | git checkout main                |
-      | main   | git rebase origin/main           |
-      |        | git checkout parent              |
-      | parent | git merge --no-edit --ff main    |
-      |        | git checkout main                |
-      | main   | git branch -D parent             |
-      |        | git checkout child               |
-      | child  | git merge --no-edit origin/child |
-      |        | git merge --no-edit --ff main    |
-      |        | git push                         |
-      |        | git checkout -b new              |
+      | BRANCH | COMMAND                               |
+      | child  | git fetch --prune --tags              |
+      |        | git checkout main                     |
+      | main   | git rebase origin/main                |
+      |        | git checkout parent                   |
+      | parent | git merge --no-edit --ff main         |
+      |        | git checkout main                     |
+      | main   | git branch -D parent                  |
+      |        | git checkout child                    |
+      | child  | git merge --no-edit --ff origin/child |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout -b new                   |
     And it prints:
       """
       deleted branch "parent"

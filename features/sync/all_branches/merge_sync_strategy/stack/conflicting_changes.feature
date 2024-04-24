@@ -12,15 +12,15 @@ Feature: sync a stack that makes conflicting changes
     And an uncommitted file
     When I run "git-town sync --all"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | alpha  | git fetch --prune --tags         |
-      |        | git add -A                       |
-      |        | git stash                        |
-      |        | git checkout main                |
-      | main   | git rebase origin/main           |
-      |        | git checkout alpha               |
-      | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit --ff main    |
+      | BRANCH | COMMAND                               |
+      | alpha  | git fetch --prune --tags              |
+      |        | git add -A                            |
+      |        | git stash                             |
+      |        | git checkout main                     |
+      | main   | git rebase origin/main                |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff main         |
     And the current branch is now "alpha"
     And it prints the error:
       """
@@ -29,12 +29,12 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved alpha content"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                         |
-      | alpha  | git commit --no-edit            |
-      |        | git push                        |
-      |        | git checkout beta               |
-      | beta   | git merge --no-edit origin/beta |
-      |        | git merge --no-edit alpha       |
+      | BRANCH | COMMAND                              |
+      | alpha  | git commit --no-edit                 |
+      |        | git push                             |
+      |        | git checkout beta                    |
+      | beta   | git merge --no-edit --ff origin/beta |
+      |        | git merge --no-edit --ff alpha       |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file

@@ -12,7 +12,7 @@ Feature: dry-run proposing changes
       |         | git checkout main                                                  |
       | main    | git rebase origin/main                                             |
       |         | git checkout feature                                               |
-      | feature | git merge --no-edit origin/feature                                 |
+      | feature | git merge --no-edit --ff origin/feature                            |
       |         | git merge --no-edit --ff main                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And the current branch is still "feature"

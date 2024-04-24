@@ -12,18 +12,18 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                               |
-      | child      | git fetch --prune --tags              |
-      |            | git checkout main                     |
-      | main       | git rebase origin/main                |
-      |            | git push                              |
-      |            | git checkout child                    |
-      | child      | git merge --no-edit --ff main         |
-      |            | git checkout main                     |
-      | main       | git branch -D child                   |
-      |            | git checkout grandchild               |
-      | grandchild | git merge --no-edit origin/grandchild |
-      |            | git merge --no-edit --ff main         |
+      | BRANCH     | COMMAND                                    |
+      | child      | git fetch --prune --tags                   |
+      |            | git checkout main                          |
+      | main       | git rebase origin/main                     |
+      |            | git push                                   |
+      |            | git checkout child                         |
+      | child      | git merge --no-edit --ff main              |
+      |            | git checkout main                          |
+      | main       | git branch -D child                        |
+      |            | git checkout grandchild                    |
+      | grandchild | git merge --no-edit --ff origin/grandchild |
+      |            | git merge --no-edit --ff main              |
     And it prints the error:
       """
       exit status 1

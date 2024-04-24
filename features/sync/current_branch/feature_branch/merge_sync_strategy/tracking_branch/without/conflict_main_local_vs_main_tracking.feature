@@ -73,14 +73,14 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | main    | git rebase --continue              |
-      |         | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit --ff main      |
-      |         | git push                           |
-      |         | git stash pop                      |
+      | BRANCH  | COMMAND                                 |
+      | main    | git rebase --continue                   |
+      |         | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git push                                |
+      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is in progress
@@ -95,13 +95,13 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | main    | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit --ff main      |
-      |         | git push                           |
-      |         | git stash pop                      |
+      | BRANCH  | COMMAND                                 |
+      | main    | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git push                                |
+      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is in progress

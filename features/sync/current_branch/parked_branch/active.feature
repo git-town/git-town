@@ -12,15 +12,15 @@ Feature: active parked branches get synced like normal feature branches
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | parked | git fetch --prune --tags          |
-      |        | git checkout main                 |
-      | main   | git rebase origin/main            |
-      |        | git push                          |
-      |        | git checkout parked               |
-      | parked | git merge --no-edit origin/parked |
-      |        | git merge --no-edit --ff main     |
-      |        | git push                          |
+      | BRANCH | COMMAND                                |
+      | parked | git fetch --prune --tags               |
+      |        | git checkout main                      |
+      | main   | git rebase origin/main                 |
+      |        | git push                               |
+      |        | git checkout parked                    |
+      | parked | git merge --no-edit --ff origin/parked |
+      |        | git merge --no-edit --ff main          |
+      |        | git push                               |
     And all branches are now synchronized
     And the current branch is still "parked"
     And these commits exist now

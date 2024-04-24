@@ -33,12 +33,12 @@ Feature: compatibility between different sync-feature-strategy settings
       | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

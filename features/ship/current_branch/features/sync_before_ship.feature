@@ -10,19 +10,19 @@ Feature: sync-before-ship disabled
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit --ff main      |
-      |         | git checkout main                  |
-      | main    | git merge --squash --ff feature    |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff main           |
+      |         | git checkout main                       |
+      | main    | git merge --squash --ff feature         |
+      |         | git commit -m "feature done"            |
+      |         | git push                                |
+      |         | git push origin :feature                |
+      |         | git branch -D feature                   |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
