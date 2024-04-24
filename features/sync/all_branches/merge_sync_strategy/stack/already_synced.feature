@@ -39,7 +39,7 @@ Feature: sync a stack making independent changes
       |        | git merge --no-edit --ff beta         |
       |        | git checkout delta                    |
       | delta  | git merge --no-edit --ff origin/delta |
-      |        | git merge --no-edit gamma             |
+      |        | git merge --no-edit --ff gamma        |
       |        | git checkout main                     |
       | main   | git push --tags                       |
       |        | git stash pop                         |
