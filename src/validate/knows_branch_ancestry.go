@@ -45,7 +45,7 @@ loop:
 				updated = true
 				break loop
 			case dialog.ParentOutcomeSelectedParent:
-				err = args.Config.SetParent(*selectedBranch, parent)
+				err = args.Config.SetParent(selectedBranch, parent)
 				if err != nil {
 					return false, err
 				}

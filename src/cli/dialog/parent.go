@@ -24,7 +24,7 @@ Most of the time this is the main development branch (%v).
 )
 
 // Parent lets the user select the parent branch for the given branch.
-func Parent(args ParentArgs) (ParentOutcome, *gitdomain.LocalBranchName, error) {
+func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	parentCandidateNames := ParentCandidateNames(args)
 	entries := list.NewEntries(parentCandidateNames...)
 	cursor := entries.IndexWithTextOr(args.DefaultChoice.String(), 0)
@@ -33,12 +33,12 @@ func Parent(args ParentArgs) (ParentOutcome, *gitdomain.LocalBranchName, error) 
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
 	if aborted {
-		return ParentOutcomeAborted, nil, err
+		return ParentOutcomeAborted, selection.Data, err
 	}
 	if selection.Data == PerennialBranchOption {
-		return ParentOutcomePerennialBranch, nil, err
+		return ParentOutcomePerennialBranch, selection.Data, err
 	}
-	return ParentOutcomeSelectedParent, &selection.Data, err
+	return ParentOutcomeSelectedParent, selection.Data, err
 }
 
 type ParentArgs struct {

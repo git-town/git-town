@@ -89,7 +89,7 @@ func executeSetParent(verbose bool) error {
 	case dialog.ParentOutcomeSelectedParent:
 		program.Add(&opcodes.SetParent{
 			Branch: config.currentBranch,
-			Parent: *selectedBranch,
+			Parent: selectedBranch,
 		})
 	}
 	runState := runstate.RunState{
