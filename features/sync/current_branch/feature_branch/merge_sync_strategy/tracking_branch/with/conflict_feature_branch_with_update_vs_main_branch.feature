@@ -21,7 +21,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

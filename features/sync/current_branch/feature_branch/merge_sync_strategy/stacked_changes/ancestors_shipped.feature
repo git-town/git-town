@@ -21,16 +21,16 @@ Feature: shipped parent branches in a stacked change
       |           | git checkout main                    |
       | main      | git rebase origin/main               |
       |           | git checkout feature-1               |
-      | feature-1 | git merge --no-edit main             |
+      | feature-1 | git merge --no-edit --ff main        |
       |           | git checkout main                    |
       | main      | git branch -D feature-1              |
       |           | git checkout feature-2               |
-      | feature-2 | git merge --no-edit main             |
+      | feature-2 | git merge --no-edit --ff main        |
       |           | git checkout main                    |
       | main      | git branch -D feature-2              |
       |           | git checkout feature-3               |
       | feature-3 | git merge --no-edit origin/feature-3 |
-      |           | git merge --no-edit main             |
+      |           | git merge --no-edit --ff main        |
       |           | git push                             |
     And it prints:
       """

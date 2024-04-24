@@ -17,7 +17,7 @@ Feature: collaborative feature branch syncing
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
       |         | git push                           |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
@@ -34,7 +34,7 @@ Feature: collaborative feature branch syncing
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
       |         | git push                           |
     And all branches are now synchronized
     And these commits exist now
@@ -52,7 +52,7 @@ Feature: collaborative feature branch syncing
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    |

@@ -20,7 +20,7 @@ Feature: push-hook setting set to "false"
       |         | git push --no-verify               |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
       |         | git push --no-verify               |
     And all branches are now synchronized
     And the current branch is still "feature"

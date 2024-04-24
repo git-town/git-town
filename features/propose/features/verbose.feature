@@ -24,7 +24,7 @@ Feature: display all executed Git commands
       |         | backend  | git rev-list --left-right main...origin/main                       |
       | main    | frontend | git checkout feature                                               |
       | feature | frontend | git merge --no-edit origin/feature                                 |
-      |         | frontend | git merge --no-edit main                                           |
+      |         | frontend | git merge --no-edit --ff main                                      |
       |         | backend  | git rev-list --left-right feature...origin/feature                 |
       |         | backend  | git show-ref --verify --quiet refs/heads/main                      |
       |         | backend  | which wsl-open                                                     |

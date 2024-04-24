@@ -21,11 +21,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main   | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout beta                |
       | beta   | git merge --no-edit origin/beta  |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout alpha               |
       | alpha  | git push --tags                  |

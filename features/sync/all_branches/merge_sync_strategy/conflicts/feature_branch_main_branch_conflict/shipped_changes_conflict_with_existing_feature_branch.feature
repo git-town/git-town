@@ -19,7 +19,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -40,12 +40,12 @@ Feature: shipped changes conflict with multiple existing feature branches
       | alpha  | git commit --no-edit             |
       |        | git push                         |
       |        | git checkout beta                |
-      | beta   | git merge --no-edit main         |
+      | beta   | git merge --no-edit --ff main    |
       |        | git checkout main                |
       | main   | git branch -D beta               |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
     And it prints something like:
       """
       deleted branch "beta"

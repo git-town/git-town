@@ -38,7 +38,7 @@ Feature: sync a workspace with two independent stacks
       |        | git rebase origin/main            |
       |        | git checkout first                |
       | first  | git merge --no-edit origin/first  |
-      |        | git merge --no-edit main          |
+      |        | git merge --no-edit --ff main     |
       |        | git checkout second               |
       | second | git merge --no-edit origin/second |
       |        | git merge --no-edit first         |
@@ -50,7 +50,7 @@ Feature: sync a workspace with two independent stacks
       |        | git merge --no-edit third         |
       |        | git checkout one                  |
       | one    | git merge --no-edit origin/one    |
-      |        | git merge --no-edit main          |
+      |        | git merge --no-edit --ff main     |
       |        | git checkout two                  |
       | two    | git merge --no-edit origin/two    |
       |        | git merge --no-edit one           |

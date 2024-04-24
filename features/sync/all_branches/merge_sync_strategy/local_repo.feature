@@ -13,10 +13,10 @@ Feature: syncs all feature branches (in a local repo)
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | alpha  | git merge --no-edit main |
-      |        | git checkout beta        |
-      | beta   | git merge --no-edit main |
-      |        | git checkout alpha       |
+      | BRANCH | COMMAND                       |
+      | alpha  | git merge --no-edit --ff main |
+      |        | git checkout beta             |
+      | beta   | git merge --no-edit --ff main |
+      |        | git checkout alpha            |
     And the current branch is still "alpha"
     And all branches are now synchronized

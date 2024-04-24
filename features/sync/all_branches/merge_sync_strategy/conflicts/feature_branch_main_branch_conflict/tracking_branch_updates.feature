@@ -22,11 +22,11 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout beta                |
       | beta   | git merge --no-edit origin/beta  |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -68,7 +68,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git reset --hard {{ sha 'local beta commit' }} |
       |        | git checkout gamma                             |
       | gamma  | git merge --no-edit origin/gamma               |
-      |        | git merge --no-edit main                       |
+      |        | git merge --no-edit --ff main                  |
       |        | git push                                       |
       |        | git checkout main                              |
       | main   | git push --tags                                |
@@ -116,7 +116,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                         |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout main                |
       | main   | git push --tags                  |
@@ -144,7 +144,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | git push                         |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout main                |
       | main   | git push --tags                  |

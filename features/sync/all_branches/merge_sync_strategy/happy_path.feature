@@ -29,11 +29,11 @@ Feature: sync all feature branches
       | main       | git rebase origin/main           |
       |            | git checkout alpha               |
       | alpha      | git merge --no-edit origin/alpha |
-      |            | git merge --no-edit main         |
+      |            | git merge --no-edit --ff main    |
       |            | git push                         |
       |            | git checkout beta                |
       | beta       | git merge --no-edit origin/beta  |
-      |            | git merge --no-edit main         |
+      |            | git merge --no-edit --ff main    |
       |            | git push                         |
       |            | git checkout observed            |
       | observed   | git rebase origin/observed       |

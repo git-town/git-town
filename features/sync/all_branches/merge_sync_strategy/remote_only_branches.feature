@@ -18,7 +18,7 @@ Feature: does not sync branches that exist only on remotes
       |        | git rebase origin/main          |
       |        | git checkout mine               |
       | mine   | git merge --no-edit origin/mine |
-      |        | git merge --no-edit main        |
+      |        | git merge --no-edit --ff main   |
       |        | git push                        |
       |        | git checkout main               |
       | main   | git push --tags                 |

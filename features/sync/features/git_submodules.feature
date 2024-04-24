@@ -15,7 +15,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       |         | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
     And the current branch is still "feature"
     And the uncommitted file still exists
 

@@ -20,7 +20,7 @@ Feature: sync a stack that makes conflicting changes
       | main   | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
     And the current branch is now "alpha"
     And it prints the error:
       """

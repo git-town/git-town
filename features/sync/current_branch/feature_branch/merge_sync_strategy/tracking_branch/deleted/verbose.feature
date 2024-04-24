@@ -27,7 +27,7 @@ Feature: display all executed Git commands
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       | main   | frontend | git checkout old                              |
-      | old    | frontend | git merge --no-edit main                      |
+      | old    | frontend | git merge --no-edit --ff main                 |
       |        | backend  | git diff main..old                            |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git branch -D old                             |

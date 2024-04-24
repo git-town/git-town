@@ -21,7 +21,7 @@ Feature: stacked changes
       |        | git push                          |
       |        | git checkout parent               |
       | parent | git merge --no-edit origin/parent |
-      |        | git merge --no-edit main          |
+      |        | git merge --no-edit --ff main     |
       |        | git push                          |
       |        | git checkout child                |
       | child  | git merge --no-edit origin/child  |

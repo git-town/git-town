@@ -22,7 +22,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout beta                |
       | beta   | git merge --no-edit origin/beta  |
@@ -63,7 +63,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | beta   | git merge --abort                |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout main                |
       | main   | git push --tags                  |
@@ -107,11 +107,11 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     Then it runs the commands
       | BRANCH | COMMAND                          |
       | beta   | git commit --no-edit             |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout main                |
       | main   | git push --tags                  |
@@ -136,11 +136,11 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND                          |
-      | beta   | git merge --no-edit main         |
+      | beta   | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git push                         |
       |        | git checkout main                |
       | main   | git push --tags                  |

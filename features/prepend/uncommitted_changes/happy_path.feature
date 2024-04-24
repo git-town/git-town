@@ -18,7 +18,7 @@ Feature: prepend a branch to a feature branch
       | main   | git rebase origin/main         |
       |        | git checkout old               |
       | old    | git merge --no-edit origin/old |
-      |        | git merge --no-edit main       |
+      |        | git merge --no-edit --ff main  |
       |        | git checkout -b parent main    |
       | parent | git stash pop                  |
     And the current branch is now "parent"

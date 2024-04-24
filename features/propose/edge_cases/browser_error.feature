@@ -15,7 +15,7 @@ Feature: print the URL when the browser crashes
       | main    | git rebase origin/main                                             |
       |         | git checkout feature                                               |
       | feature | git merge --no-edit origin/feature                                 |
-      |         | git merge --no-edit main                                           |
+      |         | git merge --no-edit --ff main                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And it prints:
       """

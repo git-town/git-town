@@ -22,7 +22,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main    | git rebase origin/main             |
       |         | git checkout current               |
       | current | git merge --no-edit origin/current |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
     And the current branch is still "current"
     And the uncommitted file is stashed
     And a merge is now in progress
@@ -63,7 +63,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git push                         |
       |         | git checkout other               |
       | other   | git merge --no-edit origin/other |
-      |         | git merge --no-edit main         |
+      |         | git merge --no-edit --ff main    |
       |         | git push                         |
       |         | git checkout current             |
       | current | git push --tags                  |

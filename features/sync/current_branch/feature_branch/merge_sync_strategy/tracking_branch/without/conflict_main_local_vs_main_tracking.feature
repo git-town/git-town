@@ -78,7 +78,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
@@ -99,7 +99,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      |         | git merge --no-edit --ff main      |
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized

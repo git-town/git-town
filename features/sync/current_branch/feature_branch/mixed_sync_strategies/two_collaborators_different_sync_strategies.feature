@@ -46,10 +46,10 @@ Feature: compatibility between different sync-feature-strategy settings
     When the coworker resolves the conflict in "file.txt" with "my and coworker content"
     And the coworker runs "git town continue" and closes the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git commit --no-edit     |
-      |         | git merge --no-edit main |
-      |         | git push                 |
+      | BRANCH  | COMMAND                       |
+      | feature | git commit --no-edit          |
+      |         | git merge --no-edit --ff main |
+      |         | git push                      |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT     |

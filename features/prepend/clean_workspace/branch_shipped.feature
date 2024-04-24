@@ -19,7 +19,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | main   | git rebase origin/main            |
       |        | git checkout parent               |
       | parent | git merge --no-edit origin/parent |
-      |        | git merge --no-edit main          |
+      |        | git merge --no-edit --ff main     |
       |        | git push                          |
       |        | git checkout child                |
       | child  | git merge --no-edit parent        |

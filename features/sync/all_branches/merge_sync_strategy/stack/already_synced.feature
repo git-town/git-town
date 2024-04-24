@@ -30,7 +30,7 @@ Feature: sync a stack making independent changes
       |        | git rebase origin/main           |
       |        | git checkout alpha               |
       | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
+      |        | git merge --no-edit --ff main    |
       |        | git checkout beta                |
       | beta   | git merge --no-edit origin/beta  |
       |        | git merge --no-edit alpha        |

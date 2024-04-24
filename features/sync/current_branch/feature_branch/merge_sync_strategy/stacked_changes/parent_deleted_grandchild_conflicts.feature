@@ -18,12 +18,12 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | main       | git rebase origin/main                |
       |            | git push                              |
       |            | git checkout child                    |
-      | child      | git merge --no-edit main              |
+      | child      | git merge --no-edit --ff main         |
       |            | git checkout main                     |
       | main       | git branch -D child                   |
       |            | git checkout grandchild               |
       | grandchild | git merge --no-edit origin/grandchild |
-      |            | git merge --no-edit main              |
+      |            | git merge --no-edit --ff main         |
     And it prints the error:
       """
       exit status 1

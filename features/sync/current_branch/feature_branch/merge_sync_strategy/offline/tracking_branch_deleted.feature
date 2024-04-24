@@ -21,7 +21,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
       | main      | git rebase origin/main               |
       |           | git checkout feature-1               |
       | feature-1 | git merge --no-edit origin/feature-1 |
-      |           | git merge --no-edit main             |
+      |           | git merge --no-edit --ff main        |
       |           | git stash pop                        |
     And the current branch is still "feature-1"
     And the uncommitted file still exists

@@ -73,11 +73,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git commit --no-edit     |
-      |         | git merge --no-edit main |
-      |         | git push                 |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                       |
+      | feature | git commit --no-edit          |
+      |         | git merge --no-edit --ff main |
+      |         | git push                      |
+      |         | git stash pop                 |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
@@ -91,7 +91,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git merge --no-edit main |
-      |         | git push                 |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                       |
+      | feature | git merge --no-edit --ff main |
+      |         | git push                      |
+      |         | git stash pop                 |

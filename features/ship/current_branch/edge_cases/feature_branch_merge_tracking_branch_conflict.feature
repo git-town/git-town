@@ -45,7 +45,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     Then it runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
-      |         | git merge --no-edit main        |
+      |         | git merge --no-edit --ff main   |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |
@@ -67,7 +67,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                         |
-      | feature | git merge --no-edit main        |
+      | feature | git merge --no-edit --ff main   |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |

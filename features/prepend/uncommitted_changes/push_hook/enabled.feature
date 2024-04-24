@@ -19,7 +19,7 @@ Feature: auto-push new branches
       | main   | git rebase origin/main         |
       |        | git checkout old               |
       | old    | git merge --no-edit origin/old |
-      |        | git merge --no-edit main       |
+      |        | git merge --no-edit --ff main  |
       |        | git checkout -b new main       |
       | new    | git push -u origin new         |
       |        | git stash pop                  |

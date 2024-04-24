@@ -19,7 +19,7 @@ Feature: active parked branches get synced like normal feature branches
       |        | git push                          |
       |        | git checkout parked               |
       | parked | git merge --no-edit origin/parked |
-      |        | git merge --no-edit main          |
+      |        | git merge --no-edit --ff main     |
       |        | git push                          |
     And all branches are now synchronized
     And the current branch is still "parked"

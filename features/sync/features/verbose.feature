@@ -30,7 +30,7 @@ Feature: display all executed Git commands
       | main    | frontend | git push                                           |
       |         | frontend | git checkout feature                               |
       | feature | frontend | git merge --no-edit origin/feature                 |
-      |         | frontend | git merge --no-edit main                           |
+      |         | frontend | git merge --no-edit --ff main                      |
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
