@@ -33,7 +33,6 @@ Feature: display all executed Git commands
       | parent | main   |
     And the current branch is still "child"
 
-  @this
   Scenario: undo
     When I run "git-town undo --verbose"
     Then it runs the commands
