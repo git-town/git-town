@@ -18,7 +18,6 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.BranchesToVerify {
 		branchUpdated, err := knowsBranchAncestors(branch, knowsBranchAncestorsArgs{
-			Backend:          args.Backend,
 			Config:           args.Config,
 			DefaultChoice:    args.DefaultChoice,
 			DialogTestInputs: args.DialogTestInputs,
@@ -96,7 +95,6 @@ func knowsBranchAncestors(branch gitdomain.LocalBranchName, args knowsBranchAnce
 }
 
 type knowsBranchAncestorsArgs struct {
-	Backend          *git.BackendCommands
 	Config           *config.Config
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
