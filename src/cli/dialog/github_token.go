@@ -30,6 +30,5 @@ func GitHubToken(oldValue *configdomain.GitHubToken, inputs components.TestInput
 		Title:         githubTokenTitle,
 	})
 	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	token := configdomain.GitHubToken(text)
-	return &token, aborted, err
+	return configdomain.NewGitHubTokenRef(text), aborted, err
 }
