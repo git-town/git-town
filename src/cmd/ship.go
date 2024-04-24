@@ -101,7 +101,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
-		Command:               "ship",
+		Command:               "ship", // TODO: extract this and the "Use" string in the cobra.Command definition above into a const and use it in both places.
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
