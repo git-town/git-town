@@ -9,7 +9,11 @@ Feature: display all executed Git commands
       | parent branch of child | up enter |
 
   Scenario: result
-    Then it runs the commands
+    Then it prints:
+      """
+      Selected parent branch for "child": main
+      """
+    And it runs the commands
       | BRANCH | TYPE    | COMMAND                                      |
       |        | backend | git version                                  |
       |        | backend | git config -lz --global                      |
