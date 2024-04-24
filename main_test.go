@@ -40,7 +40,7 @@ func TestGodog(t *testing.T) {
 		Concurrency:   runtime.NumCPU() * concurrency,
 		StopOnFailure: true,
 		Strict:        true,
-		Paths:         []string{"features/set_parent"},
+		Paths:         []string{"features/"},
 		Tags:          tags,
 	})
 	if status > 0 {
