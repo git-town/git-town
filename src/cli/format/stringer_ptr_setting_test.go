@@ -17,9 +17,16 @@ func TestStringerPtrSettingTest(t *testing.T) {
 		want := "token"
 		must.EqOp(t, want, have)
 	})
-	t.Run("nil value", func(t *testing.T) {
+	t.Run("direct nil value", func(t *testing.T) {
 		t.Parallel()
 		have := format.StringerPtrSetting(nil)
+		want := "(not set)"
+		must.EqOp(t, want, have)
+	})
+	t.Run("indirect nil value", func(t *testing.T) {
+		t.Parallel()
+		var give *configdomain.GitHubToken
+		have := format.StringerPtrSetting(give)
 		want := "(not set)"
 		must.EqOp(t, want, have)
 	})
