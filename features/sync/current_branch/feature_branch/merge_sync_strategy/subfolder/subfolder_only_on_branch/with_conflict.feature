@@ -14,15 +14,15 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | current | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout current               |
-      | current | git merge --no-edit origin/current |
-      |         | git merge --no-edit main           |
+      | BRANCH  | COMMAND                                 |
+      | current | git fetch --prune --tags                |
+      |         | git add -A                              |
+      |         | git stash                               |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout current                    |
+      | current | git merge --no-edit --ff origin/current |
+      |         | git merge --no-edit --ff main           |
     And the current branch is still "current"
     And the uncommitted file is stashed
     And a merge is now in progress
@@ -58,16 +58,16 @@ Feature: sync inside a folder that doesn't exist on the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" in the "new_folder" folder
     Then it runs the commands
-      | BRANCH  | COMMAND                          |
-      | current | git commit --no-edit             |
-      |         | git push                         |
-      |         | git checkout other               |
-      | other   | git merge --no-edit origin/other |
-      |         | git merge --no-edit main         |
-      |         | git push                         |
-      |         | git checkout current             |
-      | current | git push --tags                  |
-      |         | git stash pop                    |
+      | BRANCH  | COMMAND                               |
+      | current | git commit --no-edit                  |
+      |         | git push                              |
+      |         | git checkout other                    |
+      | other   | git merge --no-edit --ff origin/other |
+      |         | git merge --no-edit --ff main         |
+      |         | git push                              |
+      |         | git checkout current                  |
+      | current | git push --tags                       |
+      |         | git stash pop                         |
     And all branches are now synchronized
     And the current branch is still "current"
     And the uncommitted file still exists

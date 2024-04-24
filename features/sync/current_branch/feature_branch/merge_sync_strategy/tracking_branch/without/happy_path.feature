@@ -11,14 +11,14 @@ Feature: sync the current feature branch without a tracking branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | feature | git fetch --prune --tags   |
-      |         | git checkout main          |
-      | main    | git rebase origin/main     |
-      |         | git push                   |
-      |         | git checkout feature       |
-      | feature | git merge --no-edit main   |
-      |         | git push -u origin feature |
+      | BRANCH  | COMMAND                       |
+      | feature | git fetch --prune --tags      |
+      |         | git checkout main             |
+      | main    | git rebase origin/main        |
+      |         | git push                      |
+      |         | git checkout feature          |
+      | feature | git merge --no-edit --ff main |
+      |         | git push -u origin feature    |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now

@@ -13,15 +13,15 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | shipped | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
-      |         | git checkout main        |
-      | main    | git rebase origin/main   |
-      |         | git checkout shipped     |
-      | shipped | git merge --no-edit main |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                       |
+      | shipped | git fetch --prune --tags      |
+      |         | git add -A                    |
+      |         | git stash                     |
+      |         | git checkout main             |
+      | main    | git rebase origin/main        |
+      |         | git checkout shipped          |
+      | shipped | git merge --no-edit --ff main |
+      |         | git stash pop                 |
     And it prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.

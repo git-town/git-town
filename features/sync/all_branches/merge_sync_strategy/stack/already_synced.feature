@@ -23,26 +23,26 @@ Feature: sync a stack making independent changes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | main   | git fetch --prune --tags         |
-      |        | git add -A                       |
-      |        | git stash                        |
-      |        | git rebase origin/main           |
-      |        | git checkout alpha               |
-      | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
-      |        | git checkout beta                |
-      | beta   | git merge --no-edit origin/beta  |
-      |        | git merge --no-edit alpha        |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit beta         |
-      |        | git checkout delta               |
-      | delta  | git merge --no-edit origin/delta |
-      |        | git merge --no-edit gamma        |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                               |
+      | main   | git fetch --prune --tags              |
+      |        | git add -A                            |
+      |        | git stash                             |
+      |        | git rebase origin/main                |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff main         |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git merge --no-edit --ff alpha        |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff origin/gamma |
+      |        | git merge --no-edit --ff beta         |
+      |        | git checkout delta                    |
+      | delta  | git merge --no-edit --ff origin/delta |
+      |        | git merge --no-edit --ff gamma        |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |
     And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist

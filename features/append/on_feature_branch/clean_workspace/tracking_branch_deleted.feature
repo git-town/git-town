@@ -11,15 +11,15 @@ Feature: append a branch to a branch whose tracking branch was deleted
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | shipped | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git rebase origin/main   |
-      |         | git checkout shipped     |
-      | shipped | git merge --no-edit main |
-      |         | git checkout main        |
-      | main    | git branch -D shipped    |
-      |         | git checkout -b new      |
+      | BRANCH  | COMMAND                       |
+      | shipped | git fetch --prune --tags      |
+      |         | git checkout main             |
+      | main    | git rebase origin/main        |
+      |         | git checkout shipped          |
+      | shipped | git merge --no-edit --ff main |
+      |         | git checkout main             |
+      | main    | git branch -D shipped         |
+      |         | git checkout -b new           |
     And it prints:
       """
       deleted branch "shipped"
