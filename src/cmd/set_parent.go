@@ -7,11 +7,13 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
-	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
+	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +47,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, exit, err := determineSetParentConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -82,24 +84,47 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
-	return nil
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        initialStashSize,
+		Command:               "set-parent",
+		DryRun:                false,
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
+		RunProgram:            setParentProgram(config),
+	}
+	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Connector:               nil,
+		DialogTestInputs:        &config.dialogTestInputs,
+		FullConfig:              &repo.Runner.Config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
+	})
 }
 
 type setParentConfig struct {
 	currentBranch    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	existingParent   *gitdomain.LocalBranchName
+	hasOpenChanges   bool
 	mainBranch       gitdomain.LocalBranchName
 }
 
-func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentConfig, gitdomain.BranchesSnapshot, bool, error) {
+func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
+		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -111,15 +136,16 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, exit, err
+		return nil, branchesSnapshot, 0, exit, err
 	}
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
 	return &setParentConfig{
 		currentBranch:    branchesSnapshot.Active,
 		dialogTestInputs: dialogTestInputs,
 		existingParent:   &existingParent,
+		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-	}, branchesSnapshot, false, nil
+	}, branchesSnapshot, stashSize, false, nil
 }
 
 func verifySetParentConfig(config *setParentConfig, repo *execute.OpenRepoResult) error {
