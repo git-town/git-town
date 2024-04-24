@@ -13,14 +13,14 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | other   | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
+      | BRANCH  | COMMAND                                 |
+      | other   | git fetch --prune --tags                |
+      |         | git add -A                              |
+      |         | git stash                               |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main                  |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -53,7 +53,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     Then it runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
-      |         | git merge --no-edit main        |
+      |         | git merge --no-edit --ff main   |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |
@@ -80,7 +80,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                         |
-      | feature | git merge --no-edit main        |
+      | feature | git merge --no-edit --ff main   |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |

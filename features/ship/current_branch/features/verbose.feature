@@ -28,8 +28,8 @@ Feature: display all executed Git commands
       | main    | frontend | git rebase origin/main                            |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git checkout feature                              |
-      | feature | frontend | git merge --no-edit origin/feature                |
-      |         | frontend | git merge --no-edit main                          |
+      | feature | frontend | git merge --no-edit --ff origin/feature           |
+      |         | frontend | git merge --no-edit --ff main                     |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash --ff feature                   |

@@ -12,10 +12,10 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git add -A               |
-      |         | git stash                |
-      |         | git merge --no-edit main |
+      | BRANCH  | COMMAND                       |
+      | feature | git add -A                    |
+      |         | git stash                     |
+      |         | git merge --no-edit --ff main |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

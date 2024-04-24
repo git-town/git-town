@@ -14,18 +14,18 @@ Feature: handle merge conflicts between feature branch and main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | main   | git fetch --prune --tags         |
-      |        | git add -A                       |
-      |        | git stash                        |
-      |        | git rebase origin/main           |
-      |        | git checkout alpha               |
-      | alpha  | git merge --no-edit origin/alpha |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout beta                |
-      | beta   | git merge --no-edit origin/beta  |
-      |        | git merge --no-edit main         |
+      | BRANCH | COMMAND                               |
+      | main   | git fetch --prune --tags              |
+      |        | git add -A                            |
+      |        | git stash                             |
+      |        | git rebase origin/main                |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git merge --no-edit --ff main         |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -60,15 +60,15 @@ Feature: handle merge conflicts between feature branch and main branch
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | beta   | git merge --abort                |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                               |
+      | beta   | git merge --abort                     |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff origin/gamma |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
@@ -120,16 +120,16 @@ Feature: handle merge conflicts between feature branch and main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | beta   | git commit --no-edit             |
-      |        | git push                         |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                               |
+      | beta   | git commit --no-edit                  |
+      |        | git push                              |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff origin/gamma |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |
     And the current branch is now "main"
     And the uncommitted file still exists
     And all branches are now synchronized
@@ -148,12 +148,12 @@ Feature: handle merge conflicts between feature branch and main branch
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | beta   | git push                         |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                               |
+      | beta   | git push                              |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff origin/gamma |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |

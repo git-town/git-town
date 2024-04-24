@@ -184,7 +184,7 @@ func (self *FrontendCommands) ForcePushBranchSafely(noPushHook configdomain.NoPu
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
 func (self *FrontendCommands) MergeBranchNoEdit(branch gitdomain.BranchName) error {
-	return self.Runner.Run("git", "merge", "--no-edit", branch.String())
+	return self.Runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
 // NavigateToDir changes into the root directory of the current repository.

@@ -13,15 +13,15 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-2 | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout branch-2    |
-      | branch-2 | git merge --no-edit main |
-      |          | git stash pop            |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git fetch --prune --tags      |
+      |          | git add -A                    |
+      |          | git stash                     |
+      |          | git checkout main             |
+      | main     | git rebase origin/main        |
+      |          | git checkout branch-2         |
+      | branch-2 | git merge --no-edit --ff main |
+      |          | git stash pop                 |
     And it prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
