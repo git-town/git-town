@@ -78,10 +78,10 @@ func executeSkip(verbose bool) error {
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         originURL,
 	})
 	if err != nil {
 		return err

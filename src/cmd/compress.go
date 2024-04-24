@@ -91,7 +91,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -104,7 +104,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 }
 
 type compressBranchesConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	branchesToCompress  []compressBranchConfig
 	compressEntireStack bool
 	dialogTestInputs    components.TestInputs
@@ -171,7 +171,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		FullConfig:          &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:   &repo.Runner.Config.FullConfig,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
 		dialogTestInputs:    dialogTestInputs,

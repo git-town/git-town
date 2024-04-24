@@ -39,8 +39,8 @@ func SetupCommand() *cobra.Command {
 // the config settings to be used if the user accepts all default options
 func defaultUserInput() userInput {
 	return userInput{
-		FullConfig:    configdomain.DefaultConfig(),
-		configStorage: dialog.ConfigStorageOptionFile,
+		UnvalidatedConfig: configdomain.DefaultConfig(),
+		configStorage:     dialog.ConfigStorageOptionFile,
 	}
 }
 
@@ -86,7 +86,7 @@ type setupConfig struct {
 }
 
 type userInput struct {
-	configdomain.FullConfig
+	configdomain.UnvalidatedConfig
 	configStorage dialog.ConfigStorageOption
 }
 
@@ -424,7 +424,7 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBefore
 }
 
 func saveToFile(userInput userInput, runner *git.ProdRunner) error {
-	err := configfile.Save(&userInput.FullConfig)
+	err := configfile.Save(&userInput.UnvalidatedConfig)
 	if err != nil {
 		return err
 	}

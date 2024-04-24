@@ -75,7 +75,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -88,7 +88,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 }
 
 type appendConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	dialogTestInputs          components.TestInputs
@@ -148,7 +148,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		FullConfig:                &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:         &repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,
@@ -168,7 +168,7 @@ func appendProgram(config *appendConfig) program.Program {
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				Config:        config.FullConfig,
+				Config:        config.UnvalidatedConfig,
 				BranchInfos:   config.allBranches,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,

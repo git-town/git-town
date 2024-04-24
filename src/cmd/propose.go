@@ -85,7 +85,7 @@ func executePropose(dryRun, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -98,7 +98,7 @@ func executePropose(dryRun, verbose bool) error {
 }
 
 type proposeConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	connector        hostingdomain.Connector
@@ -149,10 +149,10 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         originURL,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
@@ -163,16 +163,16 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
-		allBranches:      branchesSnapshot.Branches,
-		branchesToSync:   branchesToSync,
-		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    branchesSnapshot.Active,
-		previousBranch:   previousBranch,
-		remotes:          remotes,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		allBranches:       branchesSnapshot.Branches,
+		branchesToSync:    branchesToSync,
+		connector:         connector,
+		dialogTestInputs:  dialogTestInputs,
+		dryRun:            dryRun,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     branchesSnapshot.Active,
+		previousBranch:    previousBranch,
+		remotes:           remotes,
 	}, branchesSnapshot, stashSize, false, err
 }
 
@@ -180,7 +180,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.UnvalidatedConfig,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
@@ -199,7 +199,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 }
 
 func validateProposeConfig(config *proposeConfig) error {
-	initialBranchType := config.FullConfig.BranchType(config.initialBranch)
+	initialBranchType := config.UnvalidatedConfig.BranchType(config.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

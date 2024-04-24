@@ -71,10 +71,10 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       repo.Runner.Config.OriginURL(),
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         repo.Runner.Config.OriginURL(),
 	})
 	if err != nil {
 		return nil, err

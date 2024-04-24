@@ -111,7 +111,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -124,7 +124,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 }
 
 type shipConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
@@ -208,10 +208,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         originURL,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
@@ -240,7 +240,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		FullConfig:               &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:        &repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -260,7 +260,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.UnvalidatedConfig, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
@@ -276,7 +276,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 	if config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.UnvalidatedConfig,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
@@ -285,7 +285,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.UnvalidatedConfig,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,

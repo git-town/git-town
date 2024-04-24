@@ -5,8 +5,8 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
-// FullConfig is the merged configuration to be used by Git Town commands.
-type FullConfig struct {
+// UnvalidatedConfig is the merged configuration to be used by Git Town commands.
+type ValidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              GitHubToken
@@ -32,7 +32,7 @@ type FullConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
-func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
 	switch {
 	case self.IsMainBranch(branch):
 		return BranchTypeMainBranch
@@ -49,51 +49,51 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *FullConfig) ContainsLineage() bool {
+func (self *ValidatedConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
-func (self *FullConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ContributionBranches, branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
-func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
-func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ObservedBranches, branch)
 }
 
-func (self *FullConfig) IsOnline() bool {
+func (self *ValidatedConfig) IsOnline() bool {
 	return self.Online().Bool()
 }
 
-func (self *FullConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ParkedBranches, branch)
 }
 
-func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
 	return self.PerennialRegex.MatchesBranch(branch)
 }
 
-func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
+func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
 }
 
 // Merges the given PartialConfig into this configuration object.
-func (self *FullConfig) Merge(other PartialConfig) {
+func (self *ValidatedConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
 		self.Aliases[key] = value
 	}
@@ -167,53 +167,14 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 }
 
-func (self *FullConfig) NoPushHook() NoPushHook {
+func (self *ValidatedConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 
-func (self *FullConfig) Online() Online {
+func (self *ValidatedConfig) Online() Online {
 	return self.Offline.ToOnline()
 }
 
-func (self *FullConfig) ShouldPushNewBranches() bool {
+func (self *ValidatedConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.Bool()
-}
-
-// DefaultConfig provides the default configuration data to use when nothing is configured.
-func DefaultConfig() FullConfig {
-	return FullConfig{
-		Aliases:                  Aliases{},
-		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		GitHubToken:              "",
-		GitLabToken:              "",
-		GitUserEmail:             "",
-		GitUserName:              "",
-		GiteaToken:               "",
-		HostingOriginHostname:    "",
-		HostingPlatform:          HostingPlatformNone,
-		Lineage:                  Lineage{},
-		MainBranch:               gitdomain.EmptyLocalBranchName(),
-		ObservedBranches:         gitdomain.NewLocalBranchNames(),
-		Offline:                  false,
-		ParkedBranches:           gitdomain.NewLocalBranchNames(),
-		PerennialBranches:        gitdomain.NewLocalBranchNames(),
-		PerennialRegex:           "",
-		PushHook:                 true,
-		PushNewBranches:          false,
-		ShipDeleteTrackingBranch: true,
-		SyncBeforeShip:           false,
-		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
-		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
-		SyncUpstream:             true,
-	}
-}
-
-func NewFullConfig(configFile *PartialConfig, globalGitConfig, localGitConfig PartialConfig) FullConfig {
-	result := DefaultConfig()
-	if configFile != nil {
-		result.Merge(*configFile)
-	}
-	result.Merge(globalGitConfig)
-	result.Merge(localGitConfig)
-	return result
 }

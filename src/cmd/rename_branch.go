@@ -88,7 +88,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -101,7 +101,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -166,14 +166,14 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    branchesSnapshot.Active,
-		newBranch:        newBranchName,
-		oldBranch:        *oldBranch,
-		previousBranch:   previousBranch,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		dialogTestInputs:  dialogTestInputs,
+		dryRun:            dryRun,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     branchesSnapshot.Active,
+		newBranch:         newBranchName,
+		oldBranch:         *oldBranch,
+		previousBranch:    previousBranch,
 	}, branchesSnapshot, stashSize, false, err
 }
 

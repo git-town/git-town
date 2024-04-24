@@ -48,7 +48,7 @@ func executeConfig(verbose bool) error {
 	return nil
 }
 
-func printConfig(config *configdomain.FullConfig) {
+func printConfig(config *configdomain.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))

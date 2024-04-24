@@ -64,7 +64,7 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		FullConfig:       config.FullConfig,
+		FullConfig:       config.UnvalidatedConfig,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.FullConfig.Lineage,
@@ -76,7 +76,7 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -107,16 +107,16 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         originURL,
 	})
 	if err != nil {
 		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 	}
 	return &undoConfig{
-		FullConfig:              &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:       &repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

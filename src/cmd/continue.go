@@ -63,7 +63,7 @@ func executeContinue(verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
+		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -103,22 +103,22 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		HostingPlatform:   repo.Runner.Config.FullConfig.HostingPlatform,
+		Log:               print.Logger{},
+		OriginURL:         originURL,
 	})
 	return &continueConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
-		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
-		hasOpenChanges:   repoStatus.OpenChanges,
+		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		connector:         connector,
+		dialogTestInputs:  dialogTestInputs,
+		hasOpenChanges:    repoStatus.OpenChanges,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
 type continueConfig struct {
 	connector hostingdomain.Connector
-	*configdomain.FullConfig
+	*configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 }
