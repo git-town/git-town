@@ -1,5 +1,18 @@
 # Git Town Changelog
 
+## 14.2.0 (2024-04-24)
+
+#### New Features
+
+- `git town set-parent` is now a proper Git Town command, with continue and undo ([#3407](https://github.com/git-town/git-town/pull/3407)).
+- Git Town now works if you have [merge.ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only) configured ([#3408](https://github.com/git-town/git-town/pull/3408)).
+
+#### Bug Fixes
+
+- `git town set-parent` now properly defaults to the existing parent ([#3406](https://github.com/git-town/git-town/pull/3406)).
+
+Big thanks to @charlierudolph, @ericyliu, @hammenm, @hmbrg, @kevgo, @KORDayDream, @StevenXL, @vectro, @zifeo for contributing code, ideas, and feedback to 23 shipped PRs and 7 resolved issues!
+
 ## 14.1.0 (2024-04-19)
 
 Besides polishing the `git town switch` command, Git Town 14.1 focuses on stability improvements and bashing bugs. We closed out 50% of all open tickets (70 tickets), including many long-standing bugs!
