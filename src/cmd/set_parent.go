@@ -68,22 +68,9 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	program := program.Program{}
-	switch outcome {
-	case dialog.ParentOutcomeAborted:
+	prog, aborted := setParentProgram(outcome, selectedBranch, config.currentBranch)
+	if aborted {
 		return nil
-	case dialog.ParentOutcomePerennialBranch:
-		program.Add(&opcodes.AddToPerennialBranches{
-			Branch: config.currentBranch,
-		})
-		program.Add(&opcodes.DeleteParentBranch{
-			Branch: config.currentBranch,
-		})
-	case dialog.ParentOutcomeSelectedParent:
-		program.Add(&opcodes.SetParent{
-			Branch: config.currentBranch,
-			Parent: selectedBranch,
-		})
 	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
@@ -94,7 +81,7 @@ func executeSetParent(verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            program,
+		RunProgram:            prog,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
@@ -163,4 +150,24 @@ func verifySetParentConfig(config *setParentConfig, repo *execute.OpenRepoResult
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, config.currentBranch)
 	}
 	return nil
+}
+
+func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (result program.Program, aborted bool) {
+	switch outcome {
+	case dialog.ParentOutcomeAborted:
+		return result, true
+	case dialog.ParentOutcomePerennialBranch:
+		result.Add(&opcodes.AddToPerennialBranches{
+			Branch: currentBranch,
+		})
+		result.Add(&opcodes.DeleteParentBranch{
+			Branch: currentBranch,
+		})
+	case dialog.ParentOutcomeSelectedParent:
+		result.Add(&opcodes.SetParent{
+			Branch: currentBranch,
+			Parent: selectedBranch,
+		})
+	}
+	return result, false
 }
