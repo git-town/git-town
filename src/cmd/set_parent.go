@@ -128,18 +128,18 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	mainBranch := repo.Runner.Config.FullConfig.MainBranch
-	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	existingParentPtr := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
 	var defaultChoice gitdomain.LocalBranchName
-	if existingParent.IsEmpty() {
-		defaultChoice = mainBranch
+	if existingParentPtr != nil {
+		defaultChoice = *existingParentPtr
 	} else {
-		defaultChoice = existingParent
+		defaultChoice = mainBranch
 	}
 	return &setParentConfig{
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
-		existingParent:   &existingParent,
+		existingParent:   existingParentPtr,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       mainBranch,
 	}, branchesSnapshot, stashSize, false, nil
