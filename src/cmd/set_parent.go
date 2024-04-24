@@ -57,16 +57,10 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var defaultChoice gitdomain.LocalBranchName
-	if config.existingParent != nil {
-		defaultChoice = *config.existingParent
-	} else {
-		defaultChoice = config.mainBranch
-	}
 	// prompt for the new parent
 	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
 		Branch:          config.currentBranch,
-		DefaultChoice:   defaultChoice,
+		DefaultChoice:   config.defaultChoice,
 		DialogTestInput: config.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
@@ -120,6 +114,7 @@ func executeSetParent(verbose bool) error {
 
 type setParentConfig struct {
 	currentBranch    gitdomain.LocalBranchName
+	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	existingParent   *gitdomain.LocalBranchName
 	hasOpenChanges   bool
@@ -146,13 +141,21 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	if err != nil || exit {
 		return nil, branchesSnapshot, 0, exit, err
 	}
+	mainBranch := repo.Runner.Config.FullConfig.MainBranch
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	var defaultChoice gitdomain.LocalBranchName
+	if existingParent.IsEmpty() {
+		defaultChoice = mainBranch
+	} else {
+		defaultChoice = existingParent
+	}
 	return &setParentConfig{
 		currentBranch:    branchesSnapshot.Active,
+		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		existingParent:   &existingParent,
 		hasOpenChanges:   repoStatus.OpenChanges,
-		mainBranch:       repo.Runner.Config.FullConfig.MainBranch,
+		mainBranch:       mainBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
