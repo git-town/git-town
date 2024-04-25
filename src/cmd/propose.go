@@ -25,6 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const proposeCmd = "propose"
+
 const proposeDesc = "Create a proposal to merge a feature branch"
 
 const proposeHelp = `
@@ -38,7 +40,7 @@ func proposeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
-		Use:     "propose",
+		Use:     proposeCmd,
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
@@ -75,7 +77,7 @@ func executePropose(dryRun, verbose bool) error {
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
-		Command:               "propose",
+		Command:               proposeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
