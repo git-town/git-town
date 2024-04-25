@@ -56,13 +56,13 @@ func (self Option[T]) MustGet() T { //nolint:ireturn
 	panic("value not present")
 }
 
+func (self Option[T]) String() string {
+	return self.StringOr("")
+}
+
 func (self Option[T]) StringOr(other string) string {
 	if value, has := self.Get(); has {
 		return value.String()
 	}
 	return other
-}
-
-func (self Option[T]) StringOrDefault() string {
-	return self.StringOr("")
 }
