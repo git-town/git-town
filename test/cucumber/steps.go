@@ -450,10 +450,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.PushHook(wantBool)
-		if cmp.Equal(*have, want) {
+		if cmp.Equal(have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, *have)
+		return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, have)
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -905,7 +905,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
-		if have == nil {
+		if have.IsNone() {
 			return nil
 		}
 		return fmt.Errorf(`unexpected local setting "push-hook" %v`, have)
@@ -916,7 +916,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.PushHook(wantBool)
-		if cmp.Equal(*have, want) {
+		if cmp.Equal(have, want) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)

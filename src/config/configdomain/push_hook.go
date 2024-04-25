@@ -33,11 +33,6 @@ func NewPushHook(value, source string) (PushHook, error) {
 	return result, nil
 }
 
-func NewPushHookRef(value, source string) (*PushHook, error) {
-	result, err := NewPushHook(value, source)
-	return &result, err
-}
-
 // NoPushHook helps using the type checker to verify correct negation of the push-hook configuration setting.
 type NoPushHook bool
 
