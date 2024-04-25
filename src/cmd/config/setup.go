@@ -143,7 +143,6 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		if err != nil || aborted {
 			return aborted, err
 		}
-
 	case configdomain.HostingPlatformGitLab:
 		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
 		if err != nil || aborted {
