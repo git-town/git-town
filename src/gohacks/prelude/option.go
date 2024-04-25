@@ -2,14 +2,16 @@ package prelude
 
 import "fmt"
 
-// Option implements handling of optional values that is enforced by the type checker.
-// Since all values in Git Town implement the fmt.Stringer interface,
-// we can narrow the allowed types to it.
+// Option provides infrastructure for nullable values that is enforced by the type checker.
+// Since all types used in Git Town implement the fmt.Stringer interface,
+// we can narrow the allowed types to fmt.Stringer.
 //
-// We tried using pointers to express optionality before, but it doesn't work well.
+// We tried using pointers to express optionality before but it doesn't work well.
 // There are too many situation where a pointer expression happily passes the type checker
-// and then fails at runtime with a panic.
+// and then panics at runtime.
+// Go sometimes de-references pointers and sometimes it doesn't.
 // Pointers have too many meanings: reference, mutability, poor-man optionality.
+// Better to have a dedicated facility for optionality and only that.
 type Option[T fmt.Stringer] struct {
 	Value *T
 }
