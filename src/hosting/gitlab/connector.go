@@ -23,7 +23,7 @@ type Connector struct {
 	log print.Logger
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -43,7 +43,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -63,7 +63,7 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	return nil
 }
 
-func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
@@ -78,7 +78,7 @@ func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBr
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) (*Connector, error) {
+func NewConnector(args NewConnectorArgs) (Connector, error) {
 	gitlabConfig := Config{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
@@ -91,14 +91,14 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
 	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken.String(), httpClient, clientOptFunc)
 	if err != nil {
-		return nil, err
+		return Connector{}, err
 	}
 	connector := Connector{
 		Config: gitlabConfig,
 		client: client,
 		log:    args.Log,
 	}
-	return &connector, nil
+	return connector, nil
 }
 
 type NewConnectorArgs struct {
