@@ -183,7 +183,7 @@ func (self *Config) RemoveSyncUpstream() {
 // SetObservedBranches marks the given branches as observed branches.
 func (self *Config) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
 	self.FullConfig.ContributionBranches = branches
-	self.LocalGitConfig.ContributionBranches = &branches
+	self.LocalGitConfig.ContributionBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
 }
 
@@ -198,7 +198,7 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *Config) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
 	self.FullConfig.ObservedBranches = branches
-	self.LocalGitConfig.ObservedBranches = &branches
+	self.LocalGitConfig.ObservedBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
@@ -229,14 +229,14 @@ func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) er
 // SetObservedBranches marks the given branches as perennial branches.
 func (self *Config) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
 	self.FullConfig.ParkedBranches = branches
-	self.LocalGitConfig.ParkedBranches = &branches
+	self.LocalGitConfig.ParkedBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.FullConfig.PerennialBranches = branches
-	self.LocalGitConfig.PerennialBranches = &branches
+	self.LocalGitConfig.PerennialBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 

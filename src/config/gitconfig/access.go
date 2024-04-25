@@ -75,7 +75,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyAliasSync:
 		config.Aliases[configdomain.AliasableCommandSync] = value
 	case KeyContributionBranches:
-		config.ContributionBranches = gitdomain.ParseLocalBranchNamesRef(value)
+		config.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyHostingOriginHostname:
 		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(value)
 	case KeyHostingPlatform:
@@ -93,13 +93,13 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyMainBranch:
 		config.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyObservedBranches:
-		config.ObservedBranches = gitdomain.ParseLocalBranchNamesRef(value)
+		config.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyOffline:
 		config.Offline, err = configdomain.NewOfflineRef(value, KeyOffline.String())
 	case KeyParkedBranches:
-		config.ParkedBranches = gitdomain.ParseLocalBranchNamesRef(value)
+		config.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialBranches:
-		config.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
+		config.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialRegex:
 		config.PerennialRegex = configdomain.NewPerennialRegexOption(value)
 	case KeyPushHook:
