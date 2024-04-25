@@ -319,7 +319,7 @@ func saveGitHubToken(runner *git.ProdRunner, newToken *configdomain.GitHubToken)
 	if newToken == runner.Config.FullConfig.GitHubToken {
 		return nil
 	}
-	if newToken == nil {
+	if newToken == nil || newToken.String() == "" {
 		return runner.Frontend.RemoveGitHubToken()
 	}
 	return runner.Frontend.SetGitHubToken(*newToken)
