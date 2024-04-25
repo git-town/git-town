@@ -15,8 +15,8 @@ func enterGitHubToken() *cobra.Command {
 		Use: "github-token",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
-			githubToken := gohacks.NewEmptyOption[configdomain.GitHubToken]()
-			_, _, err := dialog.GitHubToken(githubToken, dialogInputs.Next())
+			tokenOpt := gohacks.NewEmptyOption[configdomain.GitHubToken]()
+			_, _, err := dialog.GitHubToken(tokenOpt, dialogInputs.Next())
 			return err
 		},
 	}
