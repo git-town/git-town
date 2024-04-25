@@ -28,6 +28,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const shipCommand = "ship"
+
 const shipDesc = "Deliver a completed feature branch"
 
 const shipHelp = `
@@ -57,7 +59,7 @@ func shipCmd() *cobra.Command {
 	addMessageFlag, readMessageFlag := flags.CommitMessage("Specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
-		Use:   "ship",
+		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
@@ -101,7 +103,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
-		Command:               "ship", // TODO: extract this and the "Use" string in the cobra.Command definition above into a const and use it in both places.
+		Command:               shipCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),

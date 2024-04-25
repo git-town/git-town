@@ -19,12 +19,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const setParentCmd = "set-parent"
+
 const setParentDesc = "Prompt to set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "set-parent",
+		Use:     setParentCmd,
 		GroupID: "lineage",
 		Args:    cobra.NoArgs,
 		Short:   setParentDesc,
@@ -76,7 +78,7 @@ func executeSetParent(verbose bool) error {
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
-		Command:               "set-parent",
+		Command:               setParentCmd,
 		DryRun:                false,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
