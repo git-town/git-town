@@ -72,7 +72,7 @@ func printConfig(config *configdomain.UnvalidatedConfig) {
 	print.Entry("hosting platform override", format.StringSetting(config.HostingPlatform.String()))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.GitHubToken))
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.GitLabToken))
-	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))
+	print.Entry("Gitea token", format.OptionalStringerSetting(config.GiteaToken))
 	fmt.Println()
 	if !config.MainBranch.IsEmpty() {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))

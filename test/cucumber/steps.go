@@ -829,10 +829,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.GiteaToken
-		want := configdomain.GiteaToken(wantStr)
-		if *have != want {
+	suite.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GiteaToken.String()
+		if have != want {
 			return fmt.Errorf(`expected local setting "gitea-token" to be %q, but was %q`, want, have)
 		}
 		return nil

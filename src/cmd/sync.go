@@ -20,6 +20,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const syncCommand = "sync"
+
 const syncDesc = "Update the current branch with all relevant changes"
 
 const syncHelp = `
@@ -42,7 +44,7 @@ func syncCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
-		Use:     "sync",
+		Use:     syncCommand,
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
@@ -95,7 +97,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
-		Command:               "sync",
+		Command:               syncCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),

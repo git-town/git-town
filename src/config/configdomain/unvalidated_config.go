@@ -14,7 +14,7 @@ type UnvalidatedConfig struct {
 	GitLabToken              gohacks.Option[GitLabToken]
 	GitUserEmail             string
 	GitUserName              string
-	GiteaToken               GiteaToken
+	GiteaToken               gohacks.Option[GiteaToken]
 	HostingOriginHostname    HostingOriginHostname
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
@@ -112,8 +112,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.HostingPlatform != nil {
 		self.HostingPlatform = *other.HostingPlatform
 	}
-	if other.GiteaToken != nil {
-		self.GiteaToken = *other.GiteaToken
+	if other.GiteaToken.IsSome() {
+		self.GiteaToken = other.GiteaToken
 	}
 	if other.GitHubToken.IsSome() {
 		self.GitHubToken = other.GitHubToken
@@ -189,7 +189,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GitLabToken:              gohacks.NewOptionNone[GitLabToken](),
 		GitUserEmail:             "",
 		GitUserName:              "",
-		GiteaToken:               "",
+		GiteaToken:               gohacks.NewOptionNone[GiteaToken](),
 		HostingOriginHostname:    "",
 		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},

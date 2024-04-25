@@ -81,7 +81,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyHostingPlatform:
 		config.HostingPlatform, err = configdomain.NewHostingPlatformRef(value)
 	case KeyGiteaToken:
-		config.GiteaToken = configdomain.NewGiteaTokenRef(value)
+		config.GiteaToken = configdomain.NewGiteaTokenOption(value)
 	case KeyGithubToken:
 		config.GitHubToken = configdomain.NewGitHubTokenOption(value)
 	case KeyGitlabToken:
