@@ -401,9 +401,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingOriginHostname
-		if have.String() != want {
-			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingOriginHostname.String()
+		if have != want {
+			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, have)
 		}
 		return nil
 	})
@@ -804,10 +804,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have == nil {
+		if have.IsNone() {
 			return nil
 		}
-		return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, *have)
+		return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
 	})
 
 	suite.Step(`^local Git Town setting "hosting-platform" is now "([^"]*)"$`, func(want string) error {
@@ -861,17 +861,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^local Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
 		if have.String() != want {
-			return fmt.Errorf(`expected local setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+			return fmt.Errorf(`expected local setting "hosting-origin-hostname" to be %q, but was %q`, want, have)
 		}
 		return nil
 	})
 
 	suite.Step(`^local Git Town setting "hosting-origin-hostname" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have == nil {
+		if have.IsNone() {
 			return nil
 		}
-		return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, *have)
+		return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, have)
 	})
 
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {

@@ -14,7 +14,7 @@ type PartialConfig struct {
 	GitUserEmail             *string
 	GitUserName              *string
 	GiteaToken               gohacks.Option[GiteaToken]
-	HostingOriginHostname    *HostingOriginHostname
+	HostingOriginHostname    gohacks.Option[HostingOriginHostname]
 	HostingPlatform          *HostingPlatform
 	Lineage                  *Lineage
 	MainBranch               *gitdomain.LocalBranchName

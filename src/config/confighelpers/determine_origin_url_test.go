@@ -16,7 +16,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		t.Parallel()
 		t.Run("SSH URL", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@github.com:git-town/docs.git", "", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@github.com:git-town/docs.git", configdomain.NewHostingOriginHostnameOption(""), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "github.com",
 				Org:  "git-town",
@@ -27,7 +27,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("HTTPS URL", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("https://github.com/git-town/docs.git", "", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("https://github.com/git-town/docs.git", configdomain.NewHostingOriginHostnameOption(""), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "github.com",
 				Org:  "git-town",
@@ -38,7 +38,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@gitlab.com:gitlab-com/www-gitlab-com.git", "", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@gitlab.com:gitlab-com/www-gitlab-com.git", configdomain.NewHostingOriginHostnameOption(""), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "gitlab.com",
 				Org:  "gitlab-com",
@@ -49,7 +49,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("GitLab repository inside a group", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@gitlab.com:gitlab-org/quality/triage-ops.git", "", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@gitlab.com:gitlab-org/quality/triage-ops.git", configdomain.NewHostingOriginHostnameOption(""), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "gitlab.com",
 				Org:  "gitlab-org/quality",
@@ -60,7 +60,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("self-hosted GitLab server without URL override", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", "", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", configdomain.NewHostingOriginHostnameOption(""), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "self-hosted-gitlab.com",
 				Org:  "git-town",
@@ -71,7 +71,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("self-hosted GitLab server with URL override", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", "override.com", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", configdomain.NewHostingOriginHostnameOption("override.com"), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "override.com",
 				Org:  "git-town",
@@ -82,7 +82,7 @@ func TestDetermineOriginURL(t *testing.T) {
 		})
 		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			t.Parallel()
-			have := confighelpers.DetermineOriginURL("git@my-ssh-identity.com:git-town/git-town.git", "gitlab.com", configdomain.OriginURLCache{})
+			have := confighelpers.DetermineOriginURL("git@my-ssh-identity.com:git-town/git-town.git", configdomain.NewHostingOriginHostnameOption("gitlab.com"), configdomain.OriginURLCache{})
 			want := &giturl.Parts{
 				Host: "gitlab.com",
 				Org:  "git-town",
