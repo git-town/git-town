@@ -6,10 +6,11 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
-// StringSetting provides a printable version of the given string configuration value.
-func StringerPtrSetting(token fmt.Stringer) string {
-	if gohacks.IsNil(token) {
-		return "(not set)"
+// OptionalStringerSetting provides a printable version of the given configuration value.
+// The configuration value must conform to the fmt.Stringer interface.
+func OptionalStringerSetting[T fmt.Stringer](option gohacks.Option[T]) string {
+	if value, has := option.Get(); has {
+		return value.String()
 	}
-	return token.String()
+	return "(not set)"
 }

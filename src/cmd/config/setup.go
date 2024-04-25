@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -138,10 +139,12 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 			return aborted, err
 		}
 	case configdomain.HostingPlatformGitHub:
-		config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
+		token, aborted, err := dialog.GitHubToken(runner.Config.FullConfig.GitHubToken.Value, config.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, err
 		}
+		config.userInput.GitHubToken = gohacks.NewOptionFromPtr(token)
+
 	case configdomain.HostingPlatformGitLab:
 		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
 		if err != nil || aborted {
@@ -315,14 +318,14 @@ func saveGiteaToken(runner *git.ProdRunner, newToken configdomain.GiteaToken) er
 	return runner.Frontend.SetGiteaToken(newToken)
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken *configdomain.GitHubToken) error {
+func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitHubToken]) error {
 	if newToken == runner.Config.FullConfig.GitHubToken {
 		return nil
 	}
-	if newToken == nil || newToken.String() == "" {
-		return runner.Frontend.RemoveGitHubToken()
+	if value, has := newToken.Get(); has {
+		return runner.Frontend.SetGitHubToken(value)
 	}
-	return runner.Frontend.SetGitHubToken(*newToken)
+	return runner.Frontend.RemoveGitHubToken()
 }
 
 func saveGitLabToken(runner *git.ProdRunner, newToken configdomain.GitLabToken) error {

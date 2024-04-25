@@ -1,24 +1,22 @@
 package format_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/format"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/shoenig/test/must"
 )
 
-func TestStringerPtrSettingTest(t *testing.T) {
+func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
-	var nilInterface *configdomain.GitHubToken
-	tests := map[fmt.Stringer]string{
-		configdomain.NewGitHubTokenRef("token"): "token",
-		nil:                                     "(not set)",
-		nilInterface:                            "(not set)",
+	tests := map[gohacks.Option[configdomain.GitHubToken]]string{
+		gohacks.NewOption(configdomain.NewGitHubToken("token")): "token",
+		// gohacks.NewEmptyOption[configdomain.GitHubToken]():      "(not set)",
 	}
 	for give, want := range tests {
-		have := format.StringerPtrSetting(give)
+		have := format.OptionalStringerSetting[configdomain.GitHubToken](give)
 		must.EqOp(t, want, have)
 	}
 }

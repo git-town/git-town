@@ -7,7 +7,14 @@ func (self GitHubToken) String() string {
 	return string(self)
 }
 
+func NewGitHubToken(value string) GitHubToken {
+	if len(value) == 0 {
+		panic("received empty GitHub token")
+	}
+	return GitHubToken(value)
+}
+
 func NewGitHubTokenRef(value string) *GitHubToken {
-	token := GitHubToken(value)
+	token := NewGitHubToken(value)
 	return &token
 }

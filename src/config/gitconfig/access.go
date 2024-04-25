@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -83,7 +84,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyGiteaToken:
 		config.GiteaToken = configdomain.NewGiteaTokenRef(value)
 	case KeyGithubToken:
-		config.GitHubToken = configdomain.NewGitHubTokenRef(value)
+		config.GitHubToken = gohacks.NewOption(configdomain.NewGitHubToken(value))
 	case KeyGitlabToken:
 		config.GitLabToken = configdomain.NewGitLabTokenRef(value)
 	case KeyGitUserEmail:
