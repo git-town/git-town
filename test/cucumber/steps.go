@@ -445,11 +445,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, have)
 	})
 
-	suite.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.PushHook
-		wantBool, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.PushHook(wantBool)
+	suite.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.PushHook.String()
 		if cmp.Equal(have, want) {
 			return nil
 		}
