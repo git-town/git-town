@@ -249,14 +249,14 @@ func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) 
 
 // SetPushHook updates the configured push-hook strategy.
 func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
-	self.GlobalGitConfig.PushHook = &value
+	self.GlobalGitConfig.PushHook = gohacks.NewOption(value)
 	self.FullConfig.PushHook = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(value.Bool()))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
-	self.LocalGitConfig.PushHook = &value
+	self.LocalGitConfig.PushHook = gohacks.NewOption(value)
 	self.FullConfig.PushHook = value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
