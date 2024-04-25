@@ -32,7 +32,7 @@ func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 }
 
 // GetOrDefault provides the contained value. If this option contains nothing,
-// it provides the zero value of the contained type.
+// you get the zero value of the contained type.
 func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -42,7 +42,7 @@ func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 }
 
 // GetOrElse provides the contained value. If this option contains nothing,
-// it provides the given alternative value.
+// you get the given alternative value.
 func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -70,13 +70,13 @@ func (self Option[T]) IsSome() bool {
 }
 
 // String provides the string serialization of the contained value.
-// If this option contains nothing, it returns an empty string.
+// If this option contains nothing, you get an empty string.
 func (self Option[T]) String() string {
 	return self.StringOr("")
 }
 
 // StringOr provideds the string serialization of the contained value.
-// If this option contains nothing, it returns the given alternative string representation.
+// If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
 	if value, has := self.Get(); has {
 		return value.String()
