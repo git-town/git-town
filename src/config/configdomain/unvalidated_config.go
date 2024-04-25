@@ -23,7 +23,7 @@ type UnvalidatedConfig struct {
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
-	PerennialRegex           PerennialRegex
+	PerennialRegex           gohacks.Option[PerennialRegex]
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -86,7 +86,10 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
-	return self.PerennialRegex.MatchesBranch(branch)
+	if perennialRegex, has := self.PerennialRegex.Get(); has {
+		return perennialRegex.MatchesBranch(branch)
+	}
+	return false
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
@@ -145,8 +148,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
-	if other.PerennialRegex != nil {
-		self.PerennialRegex = *other.PerennialRegex
+	if other.PerennialRegex.IsSome() {
+		self.PerennialRegex = other.PerennialRegex
 	}
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook
@@ -198,7 +201,7 @@ func DefaultConfig() UnvalidatedConfig {
 		Offline:                  false,
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
-		PerennialRegex:           "",
+		PerennialRegex:           gohacks.NewOptionNone[PerennialRegex](),
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
