@@ -11,14 +11,17 @@ import (
 )
 
 func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+	if userOverride.IsSome() {
+		return userOverride
+	}
 	switch {
-	case bitbucket.Detect(originURL, userOverride):
+	case bitbucket.Detect(originURL):
 		return Some(configdomain.HostingPlatformBitbucket)
-	case gitea.Detect(originURL, userOverride):
+	case gitea.Detect(originURL):
 		return Some(configdomain.HostingPlatformGitea)
-	case github.Detect(originURL, userOverride):
+	case github.Detect(originURL):
 		return Some(configdomain.HostingPlatformGitHub)
-	case gitlab.Detect(originURL, userOverride):
+	case gitlab.Detect(originURL):
 		return Some(configdomain.HostingPlatformGitLab)
 	default:
 		return None[configdomain.HostingPlatform]()

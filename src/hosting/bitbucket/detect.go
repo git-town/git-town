@@ -1,18 +1,8 @@
 package bitbucket
 
-import (
-	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/git/giturl"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-)
+import "github.com/git-town/git-town/v14/src/git/giturl"
 
 // Detect indicates whether the current repository is hosted on a GitHub server.
-func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPlatform]) bool {
-	if originURL != nil && originURL.Host == "bitbucket.org" {
-		return true
-	}
-	if value, has := userOverride.Get(); has {
-		return value == configdomain.HostingPlatformBitbucket
-	}
-	return false
+func Detect(originURL *giturl.Parts) bool {
+	return originURL != nil && originURL.Host == "bitbucket.org"
 }
