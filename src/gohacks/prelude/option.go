@@ -1,4 +1,4 @@
-package gohacks
+package prelude
 
 import "fmt"
 
@@ -11,16 +11,6 @@ import "fmt"
 // Using pointers to indicate optionality results in null-pointer-exceptions at runtime.
 type Option[T fmt.Stringer] struct {
 	Value *T
-}
-
-// NewOption instantiates a new option containing the given value.
-func NewOption[T fmt.Stringer](value T) Option[T] {
-	return Option[T]{&value}
-}
-
-// NewOptionNone instantiates a new option containing nothing.
-func NewOptionNone[T fmt.Stringer]() Option[T] {
-	return Option[T]{nil}
 }
 
 // Get provides the contained value as well as an indicator whether that value exists.

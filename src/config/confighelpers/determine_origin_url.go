@@ -3,10 +3,10 @@ package confighelpers
 import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
-func DetermineOriginURL(originURL string, originOverride gohacks.Option[configdomain.HostingOriginHostname], originURLCache configdomain.OriginURLCache) *giturl.Parts {
+func DetermineOriginURL(originURL string, originOverride Option[configdomain.HostingOriginHostname], originURLCache configdomain.OriginURLCache) *giturl.Parts {
 	cached, has := originURLCache[originURL]
 	if has {
 		return cached

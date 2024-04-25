@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // GitHubToken is a bearer token to use with the GitHub API.
@@ -21,10 +21,10 @@ func NewGitHubToken(value string) GitHubToken {
 	return GitHubToken(value)
 }
 
-func NewGitHubTokenOption(value string) gohacks.Option[GitHubToken] {
+func NewGitHubTokenOption(value string) Option[GitHubToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		return gohacks.NewOptionNone[GitHubToken]()
+		return None[GitHubToken]()
 	}
-	return gohacks.NewOption(NewGitHubToken(value))
+	return Some(NewGitHubToken(value))
 }
