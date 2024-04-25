@@ -5,18 +5,18 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/format"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/shoenig/test/must"
 )
 
 func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
-	tests := map[gohacks.Option[configdomain.GitHubToken]]string{
-		gohacks.NewOption(configdomain.NewGitHubToken("my token")): "my token",
-		gohacks.NewOptionNone[configdomain.GitHubToken]():          "(not set)",
+	tests := map[string]string{
+		"my token": "my token",
+		"":         "(not set)",
 	}
 	for give, want := range tests {
-		have := format.OptionalStringerSetting[configdomain.GitHubToken](give)
+		option := configdomain.NewGitHubTokenOption(give)
+		have := format.OptionalStringerSetting(option)
 		must.EqOp(t, want, have)
 	}
 }

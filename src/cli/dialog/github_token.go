@@ -31,8 +31,5 @@ func GitHubToken(oldValue gohacks.Option[configdomain.GitHubToken], inputs compo
 		Title:         githubTokenTitle,
 	})
 	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	if text == "" {
-		return gohacks.NewOptionNone[configdomain.GitHubToken](), aborted, err
-	}
-	return gohacks.NewOption(configdomain.NewGitHubToken(text)), aborted, err
+	return configdomain.NewGitHubTokenOption(text), aborted, err
 }
