@@ -211,8 +211,8 @@ func (self *Config) SetOffline(value configdomain.Offline) error {
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
-	self.FullConfig.HostingOriginHostname = hostName
-	self.LocalGitConfig.HostingOriginHostname = &hostName
+	self.FullConfig.HostingOriginHostname = gohacks.NewOption(hostName)
+	self.LocalGitConfig.HostingOriginHostname = gohacks.NewOption(hostName)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
