@@ -1,18 +1,20 @@
 package gohacks
 
-type Option[T any] struct {
+import "fmt"
+
+type Option[T fmt.Stringer] struct {
 	Value *T
 }
 
-func NewEmptyOption[T any]() Option[T] {
+func NewEmptyOption[T fmt.Stringer]() Option[T] {
 	return Option[T]{nil}
 }
 
-func NewOption[T any](value T) Option[T] {
+func NewOption[T fmt.Stringer](value T) Option[T] {
 	return Option[T]{&value}
 }
 
-func NewOptionFromPtr[T any](value *T) Option[T] {
+func NewOptionFromPtr[T fmt.Stringer](value *T) Option[T] {
 	return Option[T]{value}
 }
 
@@ -52,4 +54,15 @@ func (self Option[T]) MustGet() T { //nolint:ireturn
 		return *self.Value
 	}
 	panic("value not present")
+}
+
+func (self Option[T]) StringOr(other string) string {
+	if value, has := self.Get(); has {
+		return value.String()
+	}
+	return other
+}
+
+func (self Option[T]) StringOrDefault() string {
+	return self.StringOr("")
 }
