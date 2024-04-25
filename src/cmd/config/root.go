@@ -70,7 +70,7 @@ func printConfig(config *configdomain.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("hosting platform override", format.StringSetting(config.HostingPlatform.String()))
-	print.Entry("GitHub token", format.StringSetting(string(config.GitHubToken)))
+	print.Entry("GitHub token", format.OptionalStringerSetting(config.GitHubToken))
 	print.Entry("GitLab token", format.StringSetting(string(config.GitLabToken)))
 	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))
 	fmt.Println()

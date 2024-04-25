@@ -2,13 +2,14 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     *gitdomain.LocalBranchNames
-	GitHubToken              *GitHubToken
+	GitHubToken              gohacks.Option[GitHubToken]
 	GitLabToken              *GitLabToken
 	GitUserEmail             *string
 	GitUserName              *string

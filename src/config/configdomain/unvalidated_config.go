@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
@@ -9,7 +10,7 @@ import (
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
-	GitHubToken              GitHubToken
+	GitHubToken              gohacks.Option[GitHubToken]
 	GitLabToken              GitLabToken
 	GitUserEmail             string
 	GitUserName              string
@@ -114,8 +115,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
 	}
-	if other.GitHubToken != nil {
-		self.GitHubToken = *other.GitHubToken
+	if other.GitHubToken.IsSome() {
+		self.GitHubToken = other.GitHubToken
 	}
 	if other.GitLabToken != nil {
 		self.GitLabToken = *other.GitLabToken
@@ -184,7 +185,7 @@ func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		GitHubToken:              "",
+		GitHubToken:              gohacks.NewOptionNone[GitHubToken](),
 		GitLabToken:              "",
 		GitUserEmail:             "",
 		GitUserName:              "",
