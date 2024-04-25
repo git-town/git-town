@@ -13,7 +13,7 @@ type PartialConfig struct {
 	GitLabToken              gohacks.Option[GitLabToken]
 	GitUserEmail             *string
 	GitUserName              *string
-	GiteaToken               *GiteaToken
+	GiteaToken               gohacks.Option[GiteaToken]
 	HostingOriginHostname    *HostingOriginHostname
 	HostingPlatform          *HostingPlatform
 	Lineage                  *Lineage
