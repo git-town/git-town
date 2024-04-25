@@ -99,7 +99,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -119,7 +119,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
@@ -139,6 +139,6 @@ func TestNewGitlabConnector(t *testing.T) {
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 }
