@@ -309,11 +309,14 @@ func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err e
 	return nil
 }
 
-func saveGiteaToken(runner *git.ProdRunner, newToken configdomain.GiteaToken) error {
+func saveGiteaToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GiteaToken]) error {
 	if newToken == runner.Config.FullConfig.GiteaToken {
 		return nil
 	}
-	return runner.Frontend.SetGiteaToken(newToken)
+	if value, has := newToken.Get(); has {
+		return runner.Frontend.SetGiteaToken(value)
+	}
+	return runner.Frontend.RemoveGiteaToken()
 }
 
 func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitHubToken]) error {

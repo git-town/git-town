@@ -21,6 +21,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const compressCommand = "compress"
+
 const compressDesc = "Squash all commits on feature branches down to a single commit"
 
 const compressHelp = `
@@ -41,7 +43,7 @@ func compressCmd() *cobra.Command {
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	addStackFlag, readStackFlag := flags.Bool("stack", "s", "Compress the entire stack", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
-		Use:   "compress",
+		Use:   compressCommand,
 		Args:  cobra.NoArgs,
 		Short: compressDesc,
 		Long:  cmdhelpers.Long(compressDesc, compressHelp),
@@ -81,7 +83,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
-		Command:               "compress",
+		Command:               compressCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
