@@ -2,8 +2,12 @@ package gohacks
 
 import "fmt"
 
-// Option provides type-safe handling of optional values.
-// Using pointers to indicate optionality results in too many runtime null-pointer-exceptions.
+// Option implements type-safe handling of optional values.
+// Since all values in Git Town implement the fmt.Stringer interface,
+// we can narrow the allowed types to it.
+//
+// Go doesn't provide good handling of optional values out of the box.
+// Using pointers to indicate optionality results in many null-pointer-exceptions at runtime.
 type Option[T fmt.Stringer] struct {
 	Value *T
 }
