@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -106,7 +106,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyPushHook:
 		var pushHook configdomain.PushHook
 		pushHook, err = configdomain.NewPushHook(value, KeyPushHook.String())
-		config.PushHook = gohacks.NewOption(pushHook)
+		config.PushHook = Some(pushHook)
 	case KeyPushNewBranches:
 		config.PushNewBranches, err = configdomain.ParsePushNewBranchesRef(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:

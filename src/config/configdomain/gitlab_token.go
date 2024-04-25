@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // GitLabToken is a bearer token to use with the GitLab API.
@@ -21,10 +21,10 @@ func NewGitLabToken(value string) GitLabToken {
 	return GitLabToken(value)
 }
 
-func NewGitLabTokenOption(value string) gohacks.Option[GitLabToken] {
+func NewGitLabTokenOption(value string) Option[GitLabToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		return gohacks.NewOptionNone[GitLabToken]()
+		return None[GitLabToken]()
 	}
-	return gohacks.NewOption(NewGitLabToken(value))
+	return Some(NewGitLabToken(value))
 }

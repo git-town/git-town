@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // GiteaToken is a bearer token to use with the Gitea API.
@@ -21,10 +21,10 @@ func NewGiteaToken(value string) GiteaToken {
 	return GiteaToken(value)
 }
 
-func NewGiteaTokenOption(value string) gohacks.Option[GiteaToken] {
+func NewGiteaTokenOption(value string) Option[GiteaToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		return gohacks.NewOptionNone[GiteaToken]()
+		return None[GiteaToken]()
 	}
-	return gohacks.NewOption(NewGiteaToken(value))
+	return Some(NewGiteaToken(value))
 }
