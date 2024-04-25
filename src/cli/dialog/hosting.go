@@ -44,8 +44,8 @@ const (
 	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
 )
 
-func (hpe hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform {
-	switch hpe {
+func (entry hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform {
+	switch entry {
 	case hostingPlatformAutoDetect:
 		return configdomain.HostingPlatformNone
 	case hostingPlatformBitBucket:
@@ -57,17 +57,17 @@ func (hpe hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform {
 	case hostingPlatformGitLab:
 		return configdomain.HostingPlatformGitLab
 	}
-	panic("unknown hosting platform: " + hpe)
+	panic("unknown hosting platform: " + entry)
 }
 
-func (hpe hostingPlatformEntry) String() string {
-	return string(hpe)
+func (entry hostingPlatformEntry) String() string {
+	return string(entry)
 }
 
 type hostingPlatformEntries []hostingPlatformEntry
 
-func (hpes hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
-	for h, hostingPlatformEntry := range hpes {
+func (entries hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
+	for h, hostingPlatformEntry := range entries {
 		if hostingPlatformEntry.HostingPlatform() == needle {
 			return h
 		}
