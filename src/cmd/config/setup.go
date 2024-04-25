@@ -359,14 +359,14 @@ func saveMainBranch(runner *git.ProdRunner, newValue gitdomain.LocalBranchName) 
 	return runner.Config.SetMainBranch(newValue)
 }
 
-func saveOriginHostname(runner *git.ProdRunner, newValue configdomain.HostingOriginHostname) error {
+func saveOriginHostname(runner *git.ProdRunner, newValue gohacks.Option[configdomain.HostingOriginHostname]) error {
 	if newValue == runner.Config.FullConfig.HostingOriginHostname {
 		return nil
 	}
-	if runner.Config.FullConfig.HostingOriginHostname != "" && newValue == "" {
-		return runner.Frontend.DeleteOriginHostname()
+	if value, has := newValue.Get(); has {
+		return runner.Frontend.SetOriginHostname(value)
 	}
-	return runner.Frontend.SetOriginHostname(newValue)
+	return runner.Frontend.DeleteOriginHostname()
 }
 
 func savePerennialBranches(runner *git.ProdRunner, newValue gitdomain.LocalBranchNames) error {

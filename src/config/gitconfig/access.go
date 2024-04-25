@@ -78,7 +78,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyContributionBranches:
 		config.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyHostingOriginHostname:
-		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(value)
+		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameOption(value)
 	case KeyHostingPlatform:
 		config.HostingPlatform, err = configdomain.NewHostingPlatformRef(value)
 	case KeyGiteaToken:
