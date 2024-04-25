@@ -23,7 +23,7 @@ func TestGitlabConnector(t *testing.T) {
 				Organization: "",
 				Repository:   "",
 			},
-			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
+			APIToken: configdomain.NewGitLabTokenOption(""),
 		}
 		give := hostingdomain.Proposal{
 			Number:       1,
