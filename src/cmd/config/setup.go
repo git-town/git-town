@@ -139,11 +139,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 			return aborted, err
 		}
 	case configdomain.HostingPlatformGitHub:
-		token, aborted, err := dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
+		config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, err
 		}
-		config.userInput.GitHubToken = token
 
 	case configdomain.HostingPlatformGitLab:
 		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
