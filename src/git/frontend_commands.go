@@ -234,17 +234,17 @@ func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.Alias
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGitHubToken() error {
-	return self.Runner.Run("git", "config", "--unset", "git-town.github-token")
+	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGithubToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGitLabToken() error {
-	return self.Runner.Run("git", "config", "--unset", "git-town.gitlab-token")
+	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGitlabToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGiteaToken() error {
-	return self.Runner.Run("git", "config", "--unset", "git-town.gitea-token")
+	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGiteaToken.String())
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
@@ -274,17 +274,17 @@ func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.Aliasabl
 
 // SetGitHubToken sets the given API token for the GitHub API.
 func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
-	return self.Runner.Run("git", "config", "git-town.github-token", value.String())
+	return self.Runner.Run("git", "config", gitconfig.KeyGithubToken.String(), value.String())
 }
 
 // SetGitLabToken sets the given API token for the GitHub API.
 func (self *FrontendCommands) SetGitLabToken(value configdomain.GitLabToken) error {
-	return self.Runner.Run("git", "config", "git-town.gitlab-token", value.String())
+	return self.Runner.Run("git", "config", gitconfig.KeyGitlabToken.String(), value.String())
 }
 
 // SetGiteaToken sets the given API token for the Gitea API.
 func (self *FrontendCommands) SetGiteaToken(value configdomain.GiteaToken) error {
-	return self.Runner.Run("git", "config", "git-town.gitea-token", value.String())
+	return self.Runner.Run("git", "config", gitconfig.KeyGiteaToken.String(), value.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
