@@ -143,7 +143,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		if err != nil || aborted {
 			return aborted, err
 		}
-		config.userInput.GitHubToken = gohacks.NewOptionFromPtr(token)
+		config.userInput.GitHubToken = token
 
 	case configdomain.HostingPlatformGitLab:
 		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())

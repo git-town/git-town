@@ -22,7 +22,7 @@ It's okay to leave this empty.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue gohacks.Option[configdomain.GitHubToken], inputs components.TestInput) (*configdomain.GitHubToken, bool, error) {
+func GitHubToken(oldValue gohacks.Option[configdomain.GitHubToken], inputs components.TestInput) (gohacks.Option[configdomain.GitHubToken], bool, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
@@ -31,5 +31,5 @@ func GitHubToken(oldValue gohacks.Option[configdomain.GitHubToken], inputs compo
 		Title:         githubTokenTitle,
 	})
 	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return configdomain.NewGitHubTokenRef(text), aborted, err
+	return gohacks.NewOption(configdomain.NewGitHubToken(text)), aborted, err
 }
