@@ -6,6 +6,6 @@ import (
 )
 
 // Detect indicates whether the current repository is hosted on a GitLab server.
-func Detect(originURL *giturl.Parts, hostingPlatform configdomain.HostingPlatform) bool {
-	return originURL != nil && (originURL.Host == "gitlab.com" || hostingPlatform == configdomain.HostingPlatformGitLab)
+func Detect(originURL *giturl.Parts, userOverride configdomain.HostingPlatform) bool {
+	return originURL != nil && (originURL.Host == "gitlab.com" || userOverride == configdomain.HostingPlatformGitLab)
 }
