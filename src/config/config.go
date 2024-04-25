@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -239,10 +240,10 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
-// SetPushHookLocally updates the locally configured push-hook strategy.
+// SetPerennialRegexLocally updates the locally configured perennial regex.
 func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
-	self.LocalGitConfig.PerennialRegex = &value
-	self.FullConfig.PerennialRegex = value
+	self.LocalGitConfig.PerennialRegex = gohacks.NewOption(value)
+	self.FullConfig.PerennialRegex = gohacks.NewOption(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
 }
 

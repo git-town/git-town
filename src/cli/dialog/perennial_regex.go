@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -20,7 +21,7 @@ If you are not sure, leave this empty.
 )
 
 // PerennialRegex lets the user enter the GitHub API token.
-func PerennialRegex(oldValue configdomain.PerennialRegex, inputs components.TestInput) (configdomain.PerennialRegex, bool, error) {
+func PerennialRegex(oldValue gohacks.Option[configdomain.PerennialRegex], inputs components.TestInput) (gohacks.Option[configdomain.PerennialRegex], bool, error) {
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,
@@ -29,5 +30,5 @@ func PerennialRegex(oldValue configdomain.PerennialRegex, inputs components.Test
 		Title:         perennialRegexTitle,
 	})
 	fmt.Printf(messages.PerennialRegex, components.FormattedSelection(value, aborted))
-	return configdomain.PerennialRegex(value), aborted, err
+	return configdomain.NewPerennialRegexOption(value), aborted, err
 }
