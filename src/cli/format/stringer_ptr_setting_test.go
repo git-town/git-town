@@ -12,8 +12,8 @@ import (
 func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
 	tests := map[gohacks.Option[configdomain.GitHubToken]]string{
-		gohacks.NewOption(configdomain.NewGitHubToken("token")): "token",
-		gohacks.NewOptionNone[configdomain.GitHubToken]():       "(not set)",
+		gohacks.NewOption(configdomain.NewGitHubToken("my token")): "my token",
+		gohacks.NewOptionNone[configdomain.GitHubToken]():          "(not set)",
 	}
 	for give, want := range tests {
 		have := format.OptionalStringerSetting[configdomain.GitHubToken](give)
