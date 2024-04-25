@@ -106,11 +106,11 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) (*Connector, error) {
+func NewConnector(args NewConnectorArgs) (Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP("https://"+args.OriginURL.Host, httpClient)
-	return &Connector{
+	return Connector{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,

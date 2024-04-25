@@ -78,7 +78,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) (*Connector, error) {
+func NewConnector(args NewConnectorArgs) (Connector, error) {
 	gitlabConfig := Config{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
@@ -91,14 +91,14 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
 	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken.String(), httpClient, clientOptFunc)
 	if err != nil {
-		return nil, err
+		return Connector{}, err
 	}
 	connector := Connector{
 		Config: gitlabConfig,
 		client: client,
 		log:    args.Log,
 	}
-	return &connector, nil
+	return connector, nil
 }
 
 type NewConnectorArgs struct {
