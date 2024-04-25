@@ -838,10 +838,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
-		want := configdomain.GitHubToken(wantStr)
-		if *have != want {
+	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken.String()
+		if have != want {
 			return fmt.Errorf(`expected local setting "github-token" to be %q, but was %q`, want, have)
 		}
 		return nil
@@ -849,7 +848,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "github-token" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
-		if have == nil {
+		if have.IsNone() {
 			return nil
 		}
 		return fmt.Errorf(`unexpected local setting "github-token" with value %q`, have)

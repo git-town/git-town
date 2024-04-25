@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/google/go-github/v58/github"
@@ -21,7 +22,7 @@ import (
 // via the GitHub API.
 type Connector struct {
 	hostingdomain.Config
-	APIToken   configdomain.GitHubToken
+	APIToken   gohacks.Option[configdomain.GitHubToken]
 	MainBranch gitdomain.LocalBranchName
 	client     *github.Client
 	log        print.Logger
@@ -96,14 +97,14 @@ func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBr
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubToken {
+func GetAPIToken(gitConfigToken gohacks.Option[configdomain.GitHubToken]) gohacks.Option[configdomain.GitHubToken] {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken != "" {
-		return configdomain.GitHubToken(apiToken)
+		return gohacks.NewOption(configdomain.GitHubToken(apiToken))
 	}
 	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
 	if apiToken != "" {
-		return configdomain.GitHubToken(apiToken)
+		return gohacks.NewOption(configdomain.GitHubToken(apiToken))
 	}
 	return gitConfigToken
 }
@@ -136,7 +137,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken        configdomain.GitHubToken
+	APIToken        gohacks.Option[configdomain.GitHubToken]
 	HostingPlatform configdomain.HostingPlatform
 	Log             print.Logger
 	MainBranch      gitdomain.LocalBranchName

@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -315,11 +316,14 @@ func saveGiteaToken(runner *git.ProdRunner, newToken configdomain.GiteaToken) er
 	return runner.Frontend.SetGiteaToken(newToken)
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken configdomain.GitHubToken) error {
+func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitHubToken]) error {
 	if newToken == runner.Config.FullConfig.GitHubToken {
 		return nil
 	}
-	return runner.Frontend.SetGitHubToken(newToken)
+	if value, has := newToken.Get(); has {
+		return runner.Frontend.SetGitHubToken(value)
+	}
+	return runner.Frontend.RemoveGitHubToken()
 }
 
 func saveGitLabToken(runner *git.ProdRunner, newToken configdomain.GitLabToken) error {

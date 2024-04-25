@@ -58,7 +58,7 @@ func TestConnector(t *testing.T) {
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					APIToken:   "apiToken",
+					APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
 					MainBranch: gitdomain.NewLocalBranchName("main"),
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
@@ -89,7 +89,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:        "apiToken",
+			APIToken:        configdomain.NewGitHubTokenOption("apiToken"),
 			HostingPlatform: configdomain.HostingPlatformNone,
 			Log:             print.Logger{},
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
@@ -107,7 +107,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:        "apiToken",
+			APIToken:        configdomain.NewGitHubTokenOption("apiToken"),
 			HostingPlatform: configdomain.HostingPlatformGitHub,
 			Log:             print.Logger{},
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
