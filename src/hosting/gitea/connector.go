@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"golang.org/x/oauth2"
@@ -18,7 +19,7 @@ import (
 
 type Connector struct {
 	hostingdomain.Config
-	APIToken configdomain.GiteaToken
+	APIToken gohacks.Option[configdomain.GiteaToken]
 	client   *gitea.Client
 	log      print.Logger
 }
@@ -122,7 +123,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken        configdomain.GiteaToken
+	APIToken        gohacks.Option[configdomain.GiteaToken]
 	HostingPlatform configdomain.HostingPlatform
 	Log             print.Logger
 	OriginURL       *giturl.Parts

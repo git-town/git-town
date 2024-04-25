@@ -233,6 +233,11 @@ func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.Alias
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
+func (self *FrontendCommands) RemoveGiteaToken() error {
+	return self.Runner.Run("git", "config", "--unset", "git-town.gitea-token")
+}
+
+// RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGitHubToken() error {
 	return self.Runner.Run("git", "config", "--unset", "git-town.github-token")
 }
