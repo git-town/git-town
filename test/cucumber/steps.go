@@ -911,11 +911,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`unexpected local setting "push-hook" %v`, have)
 	})
 
-	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
-		wantBool, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.PushHook(wantBool)
+	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook.String()
 		if cmp.Equal(have, want) {
 			return nil
 		}
