@@ -6,8 +6,9 @@ import "fmt"
 // Since all values in Git Town implement the fmt.Stringer interface,
 // we can narrow the allowed types to it.
 //
+// Something like this should be part of the Go standard library but isn't.
 // Go doesn't provide good handling of optional values out of the box.
-// Using pointers to indicate optionality results in many null-pointer-exceptions at runtime.
+// Using pointers to indicate optionality results in null-pointer-exceptions at runtime.
 type Option[T fmt.Stringer] struct {
 	Value *T
 }
