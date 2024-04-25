@@ -439,10 +439,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.PerennialBranches
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
-		if cmp.Equal(*have, want) {
+		if cmp.Equal(have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, have)
 	})
 
 	suite.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -887,9 +887,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches.String()
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
-		if cmp.Equal(*have, want) {
+		if cmp.Equal(have, want) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
@@ -1562,21 +1562,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(name string) error {
 		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
-		if len(*actual) != 1 {
+		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
-		if (*actual)[0].String() != name {
-			return fmt.Errorf("expected %q, got %q", name, (*actual)[0])
+		if (actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
 		}
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
-		if len(*actual) != 2 {
+		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
-		if (*actual)[0].String() != branch1 || (*actual)[1].String() != branch2 {
+		if (actual)[0].String() != branch1 || (actual)[1].String() != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
@@ -1592,7 +1592,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no contribution branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ContributionBranches
-		if branches != nil && len(*branches) > 0 {
+		if branches != nil && len(branches) > 0 {
 			return fmt.Errorf("expected no contribution branches, got %q", branches)
 		}
 		return nil
@@ -1600,7 +1600,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no observed branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ObservedBranches
-		if branches != nil && len(*branches) > 0 {
+		if branches != nil && len(branches) > 0 {
 			return fmt.Errorf("expected no observed branches, got %q", branches)
 		}
 		return nil
@@ -1608,7 +1608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no parked branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ParkedBranches
-		if branches != nil && len(*branches) > 0 {
+		if branches != nil && len(branches) > 0 {
 			return fmt.Errorf("expected no parked branches, got %q", branches)
 		}
 		return nil
@@ -1616,7 +1616,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no perennial branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
-		if branches != nil && len(*branches) > 0 {
+		if branches != nil && len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
 		return nil

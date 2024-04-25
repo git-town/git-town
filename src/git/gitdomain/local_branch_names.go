@@ -25,13 +25,12 @@ func NewLocalBranchNamesRef(names ...string) *LocalBranchNames {
 
 // ParseLocalBranchNamesRef constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
-func ParseLocalBranchNamesRef(names string) *LocalBranchNames {
+func ParseLocalBranchNames(names string) LocalBranchNames {
 	var branchNames []string
 	if names != "" {
 		branchNames = strings.Split(names, " ")
 	}
-	result := NewLocalBranchNames(branchNames...)
-	return &result
+	return NewLocalBranchNames(branchNames...)
 }
 
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
