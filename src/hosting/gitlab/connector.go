@@ -44,10 +44,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-// getGitLabApiToken returns the GitLab API token to use.
-// It first checks the GITHUB_TOKEN environment variable.
-// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
-// If that is not set, it checks the git config.
+// GetAPIToken returns the GitLab API token to use.
 func GetAPIToken(gitConfigToken gohacks.Option[configdomain.GitLabToken]) gohacks.Option[configdomain.GitLabToken] {
 	apiToken := os.ExpandEnv("$GITLAB_TOKEN")
 	if apiToken != "" {
