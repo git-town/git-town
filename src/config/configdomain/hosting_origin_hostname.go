@@ -21,6 +21,7 @@ func NewHostingOriginHostname(value string) HostingOriginHostname {
 }
 
 func NewHostingOriginHostnameOption(value string) gohacks.Option[HostingOriginHostname] {
+	value = strings.TrimSpace(value)
 	if value == "" {
 		return gohacks.NewOptionNone[HostingOriginHostname]()
 	}
