@@ -1,26 +1,19 @@
-package gohacks
+package prelude
 
 import "fmt"
 
-// Option implements type-safe handling of optional values.
-// Since all values in Git Town implement the fmt.Stringer interface,
-// we can narrow the allowed types to it.
+// Option provides infrastructure for nullable values that is enforced by the type checker.
+// Since all types used in Git Town implement the fmt.Stringer interface,
+// we can narrow the allowed types to fmt.Stringer.
 //
-// Something like this should be part of the Go standard library but isn't.
-// Go doesn't provide good handling of optional values out of the box.
-// Using pointers to indicate optionality results in null-pointer-exceptions at runtime.
+// We tried using pointers to express optionality before but it doesn't work well.
+// There are too many situation where a pointer expression happily passes the type checker
+// and then panics at runtime.
+// Go sometimes de-references pointers and sometimes it doesn't.
+// Pointers have too many meanings: reference, mutability, poor-man optionality.
+// Better to have a dedicated facility for optionality and only that.
 type Option[T fmt.Stringer] struct {
 	Value *T
-}
-
-// NewOption instantiates a new option containing the given value.
-func NewOption[T fmt.Stringer](value T) Option[T] {
-	return Option[T]{&value}
-}
-
-// NewOptionNone instantiates a new option containing nothing.
-func NewOptionNone[T fmt.Stringer]() Option[T] {
-	return Option[T]{nil}
 }
 
 // Get provides the contained value as well as an indicator whether that value exists.
