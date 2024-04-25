@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -21,14 +22,14 @@ It's okay to leave this empty.
 )
 
 // GitLabToken lets the user enter the GitHub API token.
-func GitLabToken(oldValue configdomain.GitLabToken, inputs components.TestInput) (configdomain.GitLabToken, bool, error) {
-	token, aborted, err := components.TextField(components.TextFieldArgs{
+func GitLabToken(oldValue gohacks.Option[configdomain.GitLabToken], inputs components.TestInput) (gohacks.Option[configdomain.GitLabToken], bool, error) {
+	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitLabTokenHelp,
 		Prompt:        "Your GitLab API token: ",
 		TestInput:     inputs,
 		Title:         gitLabTokenTitle,
 	})
-	fmt.Printf(messages.GitLabToken, components.FormattedSecret(token, aborted))
-	return configdomain.GitLabToken(token), aborted, err
+	fmt.Printf(messages.GitLabToken, components.FormattedSecret(text, aborted))
+	return configdomain.NewGitLabTokenOption(text), aborted, err
 }
