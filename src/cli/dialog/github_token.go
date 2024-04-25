@@ -22,8 +22,12 @@ It's okay to leave this empty.
 
 // GitHubToken lets the user enter the GitHub API token.
 func GitHubToken(oldValue *configdomain.GitHubToken, inputs components.TestInput) (*configdomain.GitHubToken, bool, error) {
+	var tokenText string
+	if oldValue != nil {
+		tokenText = oldValue.String()
+	}
 	text, aborted, err := components.TextField(components.TextFieldArgs{
-		ExistingValue: oldValue.String(),
+		ExistingValue: tokenText,
 		Help:          gitHubTokenHelp,
 		Prompt:        "Your GitHub API token: ",
 		TestInput:     inputs,
