@@ -41,7 +41,7 @@ func Execute(args ExecuteArgs) error {
 
 type ExecuteArgs struct {
 	*configdomain.FullConfig
-	Connector               hostingdomain.Connector
+	Connector               gohacks.Option[hostingdomain.Connector]
 	DialogTestInputs        *components.TestInputs
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot

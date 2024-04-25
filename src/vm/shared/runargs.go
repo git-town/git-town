@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"github.com/git-town/git-town/v14/gohacks"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
@@ -9,7 +10,7 @@ import (
 )
 
 type RunArgs struct {
-	Connector                       hostingdomain.Connector
+	Connector                       gohacks.Option[hostingdomain.Connector]
 	DialogTestInputs                *components.TestInputs
 	Lineage                         configdomain.Lineage
 	PrependOpcodes                  func(...Opcode)

@@ -11,6 +11,8 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -105,7 +107,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Connector:               nil,
+		Connector:               gohacks.NewOptionNone[hostingdomain.Connector](),
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,

@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting"
@@ -131,7 +132,7 @@ type shipConfig struct {
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
-	connector                hostingdomain.Connector
+	connector                gohacks.Option[hostingdomain.Connector]
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
 	hasOpenChanges           bool
@@ -209,7 +210,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.Config.FullConfig,
 		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 		Log:             print.Logger{},
@@ -220,7 +221,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	if !repo.IsOffline && connector != nil {
+	if connector, hasConnector := connectorOpt.Get(); hasConnector && !repo.IsOffline.Bool() {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
@@ -247,7 +248,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		connector:                connector,
+		connector:                connectorOpt,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
