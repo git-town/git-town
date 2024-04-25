@@ -50,10 +50,6 @@ func GetAPIToken(gitConfigToken gohacks.Option[configdomain.GitLabToken]) gohack
 	if apiToken != "" {
 		return gohacks.NewOption(configdomain.GitLabToken(apiToken))
 	}
-	apiToken = os.ExpandEnv("$GITLAB_AUTH_TOKEN")
-	if apiToken != "" {
-		return gohacks.NewOption(configdomain.GitLabToken(apiToken))
-	}
 	return gitConfigToken
 }
 
