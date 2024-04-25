@@ -9,8 +9,5 @@ import (
 // OptionalStringerSetting provides a printable version of the given configuration value.
 // The configuration value must conform to the fmt.Stringer interface.
 func OptionalStringerSetting[T fmt.Stringer](option gohacks.Option[T]) string {
-	if value, has := option.Get(); has {
-		return value.String()
-	}
-	return "(not set)"
+	return option.StringOr("(not set)")
 }
