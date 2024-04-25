@@ -7,11 +7,11 @@ import (
 )
 
 // Detect indicates whether the current repository is hosted on a GitHub server.
-func Detect(originURL *giturl.Parts, hostingPlatform Option[configdomain.HostingPlatform]) bool {
+func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPlatform]) bool {
 	if originURL != nil && originURL.Host == "gitea.com" {
 		return true
 	}
-	if value, has := hostingPlatform.Get(); has {
+	if value, has := userOverride.Get(); has {
 		return value == configdomain.HostingPlatformGitea
 	}
 	return false
