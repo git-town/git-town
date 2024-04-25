@@ -17,7 +17,7 @@ func NewOption[T fmt.Stringer](value T) Option[T] {
 	return Option[T]{&value}
 }
 
-// NewOptionNone instantiates a new option containing nil.
+// NewOptionNone instantiates a new option containing nothing.
 func NewOptionNone[T fmt.Stringer]() Option[T] {
 	return Option[T]{nil}
 }
