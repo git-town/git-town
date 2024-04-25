@@ -23,7 +23,7 @@ type Connector struct {
 	log print.Logger
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -43,7 +43,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -63,7 +63,7 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	return nil
 }
 
-func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),

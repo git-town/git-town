@@ -24,11 +24,11 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
+func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -54,16 +54,16 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	}, nil
 }
 
-func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := parentBranch.String() + "..." + branch.String()
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (self *Connector) RepositoryURL() string {
+func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -80,7 +80,7 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	return err
 }
 
-func (self *Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
 	// TODO: update the client and uncomment
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)

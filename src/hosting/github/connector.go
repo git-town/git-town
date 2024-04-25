@@ -28,11 +28,11 @@ type Connector struct {
 	log        print.Logger
 }
 
-func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
+func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -51,7 +51,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != self.MainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
@@ -59,11 +59,11 @@ func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranch
 	return fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (self *Connector) RepositoryURL() string {
+func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -77,7 +77,7 @@ func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitM
 	return err
 }
 
-func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	self.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	targetName := target.String()
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
