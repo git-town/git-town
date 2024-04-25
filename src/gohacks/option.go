@@ -14,10 +14,6 @@ func NewOption[T fmt.Stringer](value T) Option[T] {
 	return Option[T]{&value}
 }
 
-func NewOptionFromPtr[T fmt.Stringer](value *T) Option[T] {
-	return Option[T]{value}
-}
-
 func (self Option[T]) Get() (T, bool) { //nolint:ireturn
 	if self.Has() {
 		return *self.Value, true

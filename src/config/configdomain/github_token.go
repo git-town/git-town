@@ -13,8 +13,3 @@ func NewGitHubToken(value string) GitHubToken {
 	}
 	return GitHubToken(value)
 }
-
-func NewGitHubTokenRef(value string) *GitHubToken {
-	token := NewGitHubToken(value)
-	return &token
-}
