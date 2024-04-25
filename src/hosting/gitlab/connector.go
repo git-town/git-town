@@ -102,10 +102,10 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken Option[configdomain.GitLabToken]
-	// HostingPlatform gohacks.Option[configdomain.HostingPlatform]
-	Log       print.Logger
-	OriginURL *giturl.Parts
+	APIToken        Option[configdomain.GitLabToken]
+	HostingPlatform Option[configdomain.HostingPlatform]
+	Log             print.Logger
+	OriginURL       *giturl.Parts
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

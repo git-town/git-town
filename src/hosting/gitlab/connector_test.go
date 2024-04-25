@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/gitlab"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -87,7 +87,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: gohacks.NewOptionNone[configdomain.HostingPlatform](),
+			HostingPlatform: None[configdomain.HostingPlatform](),
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
 		})
@@ -107,7 +107,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformGitLab,
+			HostingPlatform: Some(configdomain.HostingPlatformGitLab),
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 		})
@@ -127,7 +127,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformGitLab,
+			HostingPlatform: Some(configdomain.HostingPlatformGitLab),
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@gitlab.domain:1234/group/project"),
 		})

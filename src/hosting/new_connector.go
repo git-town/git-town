@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v14/src/hosting/gitea"
 	"github.com/git-town/git-town/v14/src/hosting/github"
@@ -52,7 +52,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 
 type NewConnectorArgs struct {
 	*configdomain.FullConfig
-	HostingPlatform gohacks.Option[configdomain.HostingPlatform]
+	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	OriginURL       *giturl.Parts
 }
