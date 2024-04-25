@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -211,8 +211,8 @@ func (self *Config) SetOffline(value configdomain.Offline) error {
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
-	self.FullConfig.HostingOriginHostname = gohacks.NewOption(hostName)
-	self.LocalGitConfig.HostingOriginHostname = gohacks.NewOption(hostName)
+	self.FullConfig.HostingOriginHostname = Some(hostName)
+	self.LocalGitConfig.HostingOriginHostname = Some(hostName)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
@@ -242,21 +242,21 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 
 // SetPerennialRegexLocally updates the locally configured perennial regex.
 func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
-	self.LocalGitConfig.PerennialRegex = gohacks.NewOption(value)
-	self.FullConfig.PerennialRegex = gohacks.NewOption(value)
+	self.LocalGitConfig.PerennialRegex = Some(value)
+	self.FullConfig.PerennialRegex = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
 }
 
 // SetPushHook updates the configured push-hook strategy.
 func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
-	self.GlobalGitConfig.PushHook = gohacks.NewOption(value)
+	self.GlobalGitConfig.PushHook = Some(value)
 	self.FullConfig.PushHook = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(value.Bool()))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
-	self.LocalGitConfig.PushHook = gohacks.NewOption(value)
+	self.LocalGitConfig.PushHook = Some(value)
 	self.FullConfig.PushHook = value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
