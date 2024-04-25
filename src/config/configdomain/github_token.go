@@ -9,7 +9,7 @@ func (self GitHubToken) String() string {
 
 func NewGitHubToken(value string) GitHubToken {
 	if len(value) == 0 {
-		panic("received empty GitHub token")
+		panic("empty GitHub token")
 	}
 	return GitHubToken(value)
 }
