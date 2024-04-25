@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/github"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -90,7 +91,7 @@ func TestNewConnector(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:        configdomain.NewGitHubTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformNone,
+			HostingPlatform: gohacks.NewOptionNone[configdomain.HostingPlatform](),
 			Log:             print.Logger{},
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
 			OriginURL:       giturl.Parse("git@github.com:git-town/docs.git"),
@@ -108,7 +109,7 @@ func TestNewConnector(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:        configdomain.NewGitHubTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformGitHub,
+			HostingPlatform: gohacks.NewOption(configdomain.HostingPlatformGitHub),
 			Log:             print.Logger{},
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),

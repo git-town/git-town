@@ -138,7 +138,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 
 type NewConnectorArgs struct {
 	APIToken        gohacks.Option[configdomain.GitHubToken]
-	HostingPlatform configdomain.HostingPlatform
+	HostingPlatform gohacks.Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	MainBranch      gitdomain.LocalBranchName
 	OriginURL       *giturl.Parts
