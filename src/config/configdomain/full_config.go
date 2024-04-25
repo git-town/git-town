@@ -16,7 +16,7 @@ type FullConfig struct {
 	GitUserName              string
 	GiteaToken               gohacks.Option[GiteaToken]
 	HostingOriginHostname    gohacks.Option[HostingOriginHostname]
-	HostingPlatform          gohacks.Option[HostingPlatform]
+	HostingPlatform          gohacks.Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
