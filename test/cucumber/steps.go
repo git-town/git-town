@@ -1592,7 +1592,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no contribution branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ContributionBranches
-		if branches != nil && len(branches) > 0 {
+		if len(branches) > 0 {
 			return fmt.Errorf("expected no contribution branches, got %q", branches)
 		}
 		return nil
@@ -1600,7 +1600,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no observed branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ObservedBranches
-		if branches != nil && len(branches) > 0 {
+		if len(branches) > 0 {
 			return fmt.Errorf("expected no observed branches, got %q", branches)
 		}
 		return nil
@@ -1608,7 +1608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no parked branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ParkedBranches
-		if branches != nil && len(branches) > 0 {
+		if len(branches) > 0 {
 			return fmt.Errorf("expected no parked branches, got %q", branches)
 		}
 		return nil
@@ -1616,7 +1616,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are (?:now|still) no perennial branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
-		if branches != nil && len(branches) > 0 {
+		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
 		return nil

@@ -18,11 +18,6 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-func NewLocalBranchNamesRef(names ...string) *LocalBranchNames {
-	result := NewLocalBranchNames(names...)
-	return &result
-}
-
 // ParseLocalBranchNamesRef constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
 func ParseLocalBranchNames(names string) LocalBranchNames {
