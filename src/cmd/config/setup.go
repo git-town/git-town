@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -311,7 +311,7 @@ func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err e
 	return nil
 }
 
-func saveGiteaToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GiteaToken]) error {
+func saveGiteaToken(runner *git.ProdRunner, newToken Option[configdomain.GiteaToken]) error {
 	if newToken == runner.Config.FullConfig.GiteaToken {
 		return nil
 	}
@@ -321,7 +321,7 @@ func saveGiteaToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain
 	return runner.Frontend.RemoveGiteaToken()
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitHubToken]) error {
+func saveGitHubToken(runner *git.ProdRunner, newToken Option[configdomain.GitHubToken]) error {
 	if newToken == runner.Config.FullConfig.GitHubToken {
 		return nil
 	}
@@ -331,7 +331,7 @@ func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomai
 	return runner.Frontend.RemoveGitHubToken()
 }
 
-func saveGitLabToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitLabToken]) error {
+func saveGitLabToken(runner *git.ProdRunner, newToken Option[configdomain.GitLabToken]) error {
 	if newToken == runner.Config.FullConfig.GitLabToken {
 		return nil
 	}
@@ -363,7 +363,7 @@ func saveMainBranch(runner *git.ProdRunner, newValue gitdomain.LocalBranchName) 
 	return runner.Config.SetMainBranch(newValue)
 }
 
-func saveOriginHostname(runner *git.ProdRunner, newValue gohacks.Option[configdomain.HostingOriginHostname]) error {
+func saveOriginHostname(runner *git.ProdRunner, newValue Option[configdomain.HostingOriginHostname]) error {
 	if newValue == runner.Config.FullConfig.HostingOriginHostname {
 		return nil
 	}
@@ -381,7 +381,7 @@ func savePerennialBranches(runner *git.ProdRunner, newValue gitdomain.LocalBranc
 	return nil
 }
 
-func savePerennialRegex(runner *git.ProdRunner, newValue gohacks.Option[configdomain.PerennialRegex]) error {
+func savePerennialRegex(runner *git.ProdRunner, newValue Option[configdomain.PerennialRegex]) error {
 	if newValue == runner.Config.FullConfig.PerennialRegex {
 		return nil
 	}

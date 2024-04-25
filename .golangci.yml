@@ -57,6 +57,12 @@ issues:
     - Using the variable on range scope `(input|expected)` in function literal
   exclude-rules:
     - linters:
+        - revive
+      text: "dot-imports: should not use dot imports"
+    - linters:
+        - stylecheck
+      text: "ST1001: should not use dot imports"
+    - linters:
         - goerr113
       text: "do not define dynamic errors"
     - linters:

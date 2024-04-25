@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // PerennialRegex contains the "branches.perennial-regex" setting.
@@ -33,9 +33,9 @@ func NewPerennialRegex(value string) PerennialRegex {
 	return PerennialRegex(value)
 }
 
-func NewPerennialRegexOption(value string) gohacks.Option[PerennialRegex] {
+func NewPerennialRegexOption(value string) Option[PerennialRegex] {
 	if value == "" {
-		return gohacks.NewOptionNone[PerennialRegex]()
+		return None[PerennialRegex]()
 	}
-	return gohacks.NewOption(NewPerennialRegex(value))
+	return Some(NewPerennialRegex(value))
 }

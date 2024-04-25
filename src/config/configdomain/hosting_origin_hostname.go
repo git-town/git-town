@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 type HostingOriginHostname string
@@ -20,10 +20,10 @@ func NewHostingOriginHostname(value string) HostingOriginHostname {
 	return HostingOriginHostname(value)
 }
 
-func NewHostingOriginHostnameOption(value string) gohacks.Option[HostingOriginHostname] {
+func NewHostingOriginHostnameOption(value string) Option[HostingOriginHostname] {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		return gohacks.NewOptionNone[HostingOriginHostname]()
+		return None[HostingOriginHostname]()
 	}
-	return gohacks.NewOption(NewHostingOriginHostname(value))
+	return Some(NewHostingOriginHostname(value))
 }

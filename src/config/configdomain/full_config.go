@@ -2,7 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
@@ -10,20 +10,20 @@ import (
 type FullConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
-	GitHubToken              gohacks.Option[GitHubToken]
-	GitLabToken              gohacks.Option[GitLabToken]
+	GitHubToken              Option[GitHubToken]
+	GitLabToken              Option[GitLabToken]
 	GitUserEmail             string
 	GitUserName              string
-	GiteaToken               gohacks.Option[GiteaToken]
-	HostingOriginHostname    gohacks.Option[HostingOriginHostname]
-	HostingPlatform          gohacks.Option[HostingPlatform] // Some = override by user, None = auto-detect
+	GiteaToken               Option[GiteaToken]
+	HostingOriginHostname    Option[HostingOriginHostname]
+	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
-	PerennialRegex           gohacks.Option[PerennialRegex]
+	PerennialRegex           Option[PerennialRegex]
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -180,20 +180,20 @@ func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		GitHubToken:              gohacks.NewOptionNone[GitHubToken](),
-		GitLabToken:              gohacks.NewOptionNone[GitLabToken](),
+		GitHubToken:              None[GitHubToken](),
+		GitLabToken:              None[GitLabToken](),
 		GitUserEmail:             "",
 		GitUserName:              "",
-		GiteaToken:               gohacks.NewOptionNone[GiteaToken](),
-		HostingOriginHostname:    gohacks.NewOptionNone[HostingOriginHostname](),
-		HostingPlatform:          gohacks.NewOptionNone[HostingPlatform](),
+		GiteaToken:               None[GiteaToken](),
+		HostingOriginHostname:    None[HostingOriginHostname](),
+		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
-		PerennialRegex:           gohacks.NewOptionNone[PerennialRegex](),
+		PerennialRegex:           None[PerennialRegex](),
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
