@@ -112,11 +112,7 @@ func GetAPIToken(gitConfigToken gohacks.Option[configdomain.GitHubToken]) gohack
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	var tokenText string
-	if token, has := args.APIToken.Get(); has {
-		tokenText = token.String()
-	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: tokenText})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	githubClient := github.NewClient(httpClient)
 	if args.OriginURL.Host != "github.com" {
