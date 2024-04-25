@@ -70,7 +70,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.Config.FullConfig,
 		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 		Log:             print.Logger{},
@@ -79,8 +79,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
+	if connector == nil {
 		return nil, hostingdomain.UnsupportedServiceError()
 	}
 	return &repoConfig{

@@ -11,8 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -76,7 +74,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,
