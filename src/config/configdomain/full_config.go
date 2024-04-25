@@ -143,8 +143,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.PerennialRegex.IsSome() {
 		self.PerennialRegex = other.PerennialRegex
 	}
-	if other.PushHook != nil {
-		self.PushHook = *other.PushHook
+	if value, has := other.PushHook.Get(); has {
+		self.PushHook = value
 	}
 	if other.ShipDeleteTrackingBranch != nil {
 		self.ShipDeleteTrackingBranch = *other.ShipDeleteTrackingBranch
