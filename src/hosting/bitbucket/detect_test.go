@@ -16,6 +16,7 @@ func TestDetect(t *testing.T) {
 		giturl.Parse("git@custom-url.com:git-town/docs.git"):     false, // custom URL
 		giturl.Parse("git@github.com:git-town/git-town.git"):     false, // other hosting service URL
 		emptyURL: false, // empty URL
+		nil:      false,
 	}
 	for give, want := range tests {
 		have := bitbucket.Detect(give)
