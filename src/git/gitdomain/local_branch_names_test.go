@@ -81,18 +81,18 @@ func TestLocalBranchNames(t *testing.T) {
 		t.Parallel()
 		t.Run("no branches", func(t *testing.T) {
 			t.Parallel()
-			have := gitdomain.ParseLocalBranchNamesRef("")
-			must.EqOp(t, 0, len(*have))
+			have := gitdomain.ParseLocalBranchNames("")
+			must.EqOp(t, 0, len(have))
 		})
 		t.Run("one branch", func(t *testing.T) {
 			t.Parallel()
-			have := gitdomain.ParseLocalBranchNamesRef("one")
+			have := gitdomain.ParseLocalBranchNames("one")
 			want := []string{"one"}
 			must.Eq(t, want, have.Strings())
 		})
 		t.Run("multiple branches", func(t *testing.T) {
 			t.Parallel()
-			have := gitdomain.ParseLocalBranchNamesRef("one two three")
+			have := gitdomain.ParseLocalBranchNames("one two three")
 			want := []string{"one", "two", "three"}
 			must.Eq(t, want, have.Strings())
 		})
