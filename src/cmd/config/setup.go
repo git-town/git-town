@@ -326,11 +326,14 @@ func saveGitHubToken(runner *git.ProdRunner, newToken gohacks.Option[configdomai
 	return runner.Frontend.RemoveGitHubToken()
 }
 
-func saveGitLabToken(runner *git.ProdRunner, newToken configdomain.GitLabToken) error {
+func saveGitLabToken(runner *git.ProdRunner, newToken gohacks.Option[configdomain.GitLabToken]) error {
 	if newToken == runner.Config.FullConfig.GitLabToken {
 		return nil
 	}
-	return runner.Frontend.SetGitLabToken(newToken)
+	if value, has := newToken.Get(); has {
+		return runner.Frontend.SetGitLabToken(value)
+	}
+	return runner.Frontend.RemoveGitLabToken()
 }
 
 func saveHostingPlatform(runner *git.ProdRunner, newValue configdomain.HostingPlatform) (err error) {
