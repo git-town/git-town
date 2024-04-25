@@ -2,19 +2,24 @@ package gohacks
 
 import "fmt"
 
+// Option provides type-safe handling of optional values.
+// Using pointers to indicate optionality results in too many runtime null-pointer-exceptions.
 type Option[T fmt.Stringer] struct {
 	Value *T
 }
 
+// NewOption instantiates a new option containing the given value.
 func NewOption[T fmt.Stringer](value T) Option[T] {
 	return Option[T]{&value}
 }
 
+// NewOptionNone instantiates a new option containing nil.
 func NewOptionNone[T fmt.Stringer]() Option[T] {
 	return Option[T]{nil}
 }
 
-func (self Option[T]) Get() (T, bool) { //nolint:ireturn
+// Get provides the contained value as well as an indicator whether that value exists.
+func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	if self.IsSome() {
 		return *self.Value, true
 	}
@@ -22,6 +27,8 @@ func (self Option[T]) Get() (T, bool) { //nolint:ireturn
 	return empty, false
 }
 
+// GetOrDefault provides the contained value. If this option contains nothing,
+// it provides the zero value of the contained type.
 func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -30,6 +37,8 @@ func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	return empty
 }
 
+// GetOrElse provides the contained value. If this option contains nothing,
+// it provides the given alternative value.
 func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -37,6 +46,8 @@ func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 	return other
 }
 
+// GetOrPanic provides the contained value. If this option nothing,
+// this method panics.
 func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -44,18 +55,24 @@ func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 	panic("value not present")
 }
 
+// IsNone indicates whether this option instance contains nothing.
 func (self Option[T]) IsNone() bool {
 	return self.Value == nil
 }
 
+// IsSome indicates whether this option instance contains a value.
 func (self Option[T]) IsSome() bool {
 	return self.Value != nil
 }
 
+// String provides the string serialization of the contained value.
+// If this option contains nothing, it returns an empty string.
 func (self Option[T]) String() string {
 	return self.StringOr("")
 }
 
+// StringOr provideds the string serialization of the contained value.
+// If this option contains nothing, it returns the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
 	if value, has := self.Get(); has {
 		return value.String()
