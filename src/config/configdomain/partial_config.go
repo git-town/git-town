@@ -22,7 +22,7 @@ type PartialConfig struct {
 	Offline                  *Offline
 	ParkedBranches           *gitdomain.LocalBranchNames
 	PerennialBranches        *gitdomain.LocalBranchNames
-	PerennialRegex           *PerennialRegex
+	PerennialRegex           gohacks.Option[PerennialRegex]
 	PushHook                 *PushHook
 	PushNewBranches          *PushNewBranches
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch

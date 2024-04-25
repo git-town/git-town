@@ -377,11 +377,15 @@ func savePerennialBranches(runner *git.ProdRunner, newValue gitdomain.LocalBranc
 	return nil
 }
 
-func savePerennialRegex(runner *git.ProdRunner, newValue configdomain.PerennialRegex) error {
+func savePerennialRegex(runner *git.ProdRunner, newValue gohacks.Option[configdomain.PerennialRegex]) error {
 	if newValue == runner.Config.FullConfig.PerennialRegex {
 		return nil
 	}
-	return runner.Config.SetPerennialRegexLocally(newValue)
+	if value, has := newValue.Get(); has {
+		return runner.Config.SetPerennialRegexLocally(value)
+	}
+	runner.Config.RemovePerennialRegex()
+	return nil
 }
 
 func savePushHook(runner *git.ProdRunner, newValue configdomain.PushHook) error {
