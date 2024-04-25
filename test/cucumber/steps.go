@@ -838,10 +838,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
-		want := gohacks.NewOption(configdomain.GitHubToken(wantStr))
-		if have.GetOrPanic() != want.GetOrPanic() {
+	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken.String()
+		if have != want {
 			return fmt.Errorf(`expected local setting "github-token" to be %q, but was %q`, want, have)
 		}
 		return nil
