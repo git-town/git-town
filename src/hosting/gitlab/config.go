@@ -6,12 +6,13 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 )
 
 type Config struct {
 	hostingdomain.Config
-	APIToken configdomain.GitLabToken
+	APIToken gohacks.Option[configdomain.GitLabToken]
 }
 
 func (self *Config) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
