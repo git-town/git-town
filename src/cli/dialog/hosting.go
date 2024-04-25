@@ -67,8 +67,8 @@ func (entry hostingPlatformEntry) String() string {
 type hostingPlatformEntries []hostingPlatformEntry
 
 func (entries hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
-	for h, hostingPlatformEntry := range entries {
-		if hostingPlatformEntry.HostingPlatform() == needle {
+	for h, entry := range entries {
+		if entry.HostingPlatform() == needle {
 			return h
 		}
 	}
