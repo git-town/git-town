@@ -2,7 +2,7 @@ package prelude
 
 import "fmt"
 
-// NewOptionNone instantiates a new option containing nothing.
+// None instantiates an Option of the given type containing nothing.
 func None[T fmt.Stringer]() Option[T] {
 	return Option[T]{nil}
 }
