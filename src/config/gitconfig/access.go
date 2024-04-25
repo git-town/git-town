@@ -85,7 +85,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyGithubToken:
 		config.GitHubToken = configdomain.NewGitHubTokenOption(value)
 	case KeyGitlabToken:
-		config.GitLabToken = configdomain.NewGitLabTokenRef(value)
+		config.GitLabToken = configdomain.NewGitLabTokenOption(value)
 	case KeyGitUserEmail:
 		config.GitUserEmail = &value
 	case KeyGitUserName:

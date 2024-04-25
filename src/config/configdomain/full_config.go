@@ -11,7 +11,7 @@ type FullConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              gohacks.Option[GitHubToken]
-	GitLabToken              GitLabToken
+	GitLabToken              gohacks.Option[GitLabToken]
 	GitUserEmail             string
 	GitUserName              string
 	GiteaToken               GiteaToken
@@ -118,8 +118,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.GitHubToken.IsSome() {
 		self.GitHubToken = other.GitHubToken
 	}
-	if other.GitLabToken != nil {
-		self.GitLabToken = *other.GitLabToken
+	if other.GitLabToken.IsSome() {
+		self.GitLabToken = other.GitLabToken
 	}
 	if other.GitUserEmail != nil {
 		self.GitUserEmail = *other.GitUserEmail
@@ -186,7 +186,7 @@ func DefaultConfig() FullConfig {
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		GitHubToken:              gohacks.NewOptionNone[GitHubToken](),
-		GitLabToken:              "",
+		GitLabToken:              gohacks.NewOptionNone[GitLabToken](),
 		GitUserEmail:             "",
 		GitUserName:              "",
 		GiteaToken:               "",

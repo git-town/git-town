@@ -23,7 +23,7 @@ func TestGitlabConnector(t *testing.T) {
 				Organization: "",
 				Repository:   "",
 			},
-			APIToken: "",
+			APIToken: configdomain.NewGitLabTokenOption(""),
 		}
 		give := hostingdomain.Proposal{
 			Number:       1,
@@ -63,7 +63,7 @@ func TestGitlabConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				connector := gitlab.Connector{
 					Config: gitlab.Config{
-						APIToken: "apiToken",
+						APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 						Config: hostingdomain.Config{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
@@ -85,7 +85,7 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        "apiToken",
+			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
 			HostingPlatform: configdomain.HostingPlatformNone,
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
@@ -97,15 +97,15 @@ func TestNewGitlabConnector(t *testing.T) {
 				Organization: "git-town",
 				Repository:   "docs",
 			},
-			APIToken: "apiToken",
+			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        "apiToken",
+			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
 			HostingPlatform: configdomain.HostingPlatformGitLab,
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
@@ -117,15 +117,15 @@ func TestNewGitlabConnector(t *testing.T) {
 				Organization: "git-town",
 				Repository:   "docs",
 			},
-			APIToken: "apiToken",
+			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        "apiToken",
+			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
 			HostingPlatform: configdomain.HostingPlatformGitLab,
 			Log:             print.Logger{},
 			OriginURL:       giturl.Parse("git@gitlab.domain:1234/group/project"),
@@ -137,8 +137,8 @@ func TestNewGitlabConnector(t *testing.T) {
 				Organization: "group",
 				Repository:   "project",
 			},
-			APIToken: "apiToken",
+			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Config)
 	})
 }
