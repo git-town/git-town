@@ -887,12 +887,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches.String()
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
 		if cmp.Equal(have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
+		return fmt.Errorf(`expected local setting "perennial-branches" to be %q, but was %q`, want, have)
 	})
 
 	suite.Step(`^local Git Town setting "perennial-regex" is now "([^"]*)"$`, func(want string) error {
