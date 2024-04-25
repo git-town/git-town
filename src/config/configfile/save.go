@@ -49,7 +49,7 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 		result.WriteString(fmt.Sprintf("platform = %q\n\n", config.HostingPlatform))
 	}
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.OriginHostnameHelp)) + "\n")
-	if config.HostingOriginHostname == "" {
+	if config.HostingOriginHostname.IsNone() {
 		result.WriteString("# origin-hostname = \"\"\n")
 	} else {
 		result.WriteString(fmt.Sprintf("origin-hostname = %q\n", config.HostingOriginHostname))

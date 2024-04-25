@@ -15,7 +15,7 @@ type UnvalidatedConfig struct {
 	GitUserEmail             string
 	GitUserName              string
 	GiteaToken               gohacks.Option[GiteaToken]
-	HostingOriginHostname    HostingOriginHostname
+	HostingOriginHostname    gohacks.Option[HostingOriginHostname]
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
@@ -107,8 +107,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		}
 	}
 	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
-	if other.HostingOriginHostname != nil {
-		self.HostingOriginHostname = *other.HostingOriginHostname
+	if other.HostingOriginHostname.IsSome() {
+		self.HostingOriginHostname = other.HostingOriginHostname
 	}
 	if other.HostingPlatform != nil {
 		self.HostingPlatform = *other.HostingPlatform
@@ -185,7 +185,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GitUserEmail:             "",
 		GitUserName:              "",
 		GiteaToken:               gohacks.NewOptionNone[GiteaToken](),
-		HostingOriginHostname:    "",
+		HostingOriginHostname:    gohacks.NewOptionNone[HostingOriginHostname](),
 		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
