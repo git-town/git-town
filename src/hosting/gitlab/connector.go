@@ -4,11 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/xanzy/go-gitlab"
@@ -40,6 +42,22 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	}
 	proposal := parseMergeRequest(mergeRequests[0])
 	return &proposal, nil
+}
+
+// getGitLabApiToken returns the GitLab API token to use.
+// It first checks the GITHUB_TOKEN environment variable.
+// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
+// If that is not set, it checks the git config.
+func GetAPIToken(gitConfigToken gohacks.Option[configdomain.GitLabToken]) gohacks.Option[configdomain.GitLabToken] {
+	apiToken := os.ExpandEnv("$GITLAB_TOKEN")
+	if apiToken != "" {
+		return gohacks.NewOption(configdomain.GitLabToken(apiToken))
+	}
+	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
+	if apiToken != "" {
+		return gohacks.NewOption(configdomain.GitLabToken(apiToken))
+	}
+	return gitConfigToken
 }
 
 func (self *Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
@@ -101,7 +119,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken        configdomain.GitLabToken
+	APIToken        gohacks.Option[configdomain.GitLabToken]
 	HostingPlatform configdomain.HostingPlatform
 	Log             print.Logger
 	OriginURL       *giturl.Parts

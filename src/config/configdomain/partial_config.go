@@ -10,7 +10,7 @@ type PartialConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     *gitdomain.LocalBranchNames
 	GitHubToken              gohacks.Option[GitHubToken]
-	GitLabToken              *GitLabToken
+	GitLabToken              gohacks.Option[GitLabToken]
 	GitUserEmail             *string
 	GitUserName              *string
 	GiteaToken               *GiteaToken
