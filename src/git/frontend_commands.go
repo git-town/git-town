@@ -233,11 +233,6 @@ func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.Alias
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
-func (self *FrontendCommands) RemoveGiteaToken() error {
-	return self.Runner.Run("git", "config", "--unset", "git-town.gitea-token")
-}
-
-// RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGitHubToken() error {
 	return self.Runner.Run("git", "config", "--unset", "git-town.github-token")
 }
@@ -245,6 +240,11 @@ func (self *FrontendCommands) RemoveGitHubToken() error {
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *FrontendCommands) RemoveGitLabToken() error {
 	return self.Runner.Run("git", "config", "--unset", "git-town.gitlab-token")
+}
+
+// RemoveHubToken removes the stored token for the GitHub API.
+func (self *FrontendCommands) RemoveGiteaToken() error {
+	return self.Runner.Run("git", "config", "--unset", "git-town.gitea-token")
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
