@@ -10,15 +10,15 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting/gitlab"
 )
 
-func Detect(originURL *giturl.Parts, hostingPlatform Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	switch {
-	case bitbucket.Detect(originURL, hostingPlatform):
+	case bitbucket.Detect(originURL, userOverride):
 		return Some(configdomain.HostingPlatformBitbucket)
-	case gitea.Detect(originURL, hostingPlatform):
+	case gitea.Detect(originURL, userOverride):
 		return Some(configdomain.HostingPlatformGitea)
-	case github.Detect(originURL, hostingPlatform):
+	case github.Detect(originURL, userOverride):
 		return Some(configdomain.HostingPlatformGitHub)
-	case gitlab.Detect(originURL, hostingPlatform):
+	case gitlab.Detect(originURL, userOverride):
 		return Some(configdomain.HostingPlatformGitLab)
 	default:
 		return None[configdomain.HostingPlatform]()
