@@ -57,10 +57,6 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) String() string {
-	return fmt.Sprintf("BitBucket connector for %s", self.Hostname)
-}
-
 func (self Connector) SquashMergeProposal(_ int, _ gitdomain.CommitMessage) error {
 	return errors.New(messages.HostingBitBucketNotImplemented)
 }
