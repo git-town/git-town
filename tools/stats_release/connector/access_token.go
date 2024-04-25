@@ -8,7 +8,7 @@ import (
 )
 
 func loadAccessToken() string {
-	process := exec.Command("git", "config", "--get", gitconfig.KeyGithubToken.String())
+	process := exec.Command("git", "config", "--get", gitconfig.KeyGithubToken.String()) //nolint:gosec
 	output, err := process.Output()
 	if err != nil {
 		panic(err.Error())
