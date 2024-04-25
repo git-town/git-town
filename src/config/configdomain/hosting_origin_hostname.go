@@ -1,6 +1,10 @@
 package configdomain
 
-import "github.com/git-town/git-town/v14/src/gohacks"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v14/src/gohacks"
+)
 
 type HostingOriginHostname string
 
@@ -9,6 +13,10 @@ func (self HostingOriginHostname) String() string {
 }
 
 func NewHostingOriginHostname(value string) HostingOriginHostname {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		panic("empty hosting origin hostname")
+	}
 	return HostingOriginHostname(value)
 }
 
