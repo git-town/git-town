@@ -124,7 +124,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 
 type NewConnectorArgs struct {
 	APIToken        gohacks.Option[configdomain.GiteaToken]
-	HostingPlatform configdomain.HostingPlatform
+	HostingPlatform gohacks.Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	OriginURL       *giturl.Parts
 }

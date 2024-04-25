@@ -13,10 +13,10 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (gohacks.Option[hostingdomain.Connector], error) {
+func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
 	if !hasPlatform {
-		return gohacks.NewOptionNone[hostingdomain.Connector](), nil
+		return nil, nil
 	}
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
@@ -46,8 +46,6 @@ func NewConnector(args NewConnectorArgs) (gohacks.Option[hostingdomain.Connector
 			Log:             args.Log,
 			OriginURL:       args.OriginURL,
 		})
-	case configdomain.HostingPlatformNone:
-		return nil, nil
 	}
 	return nil, nil
 }
