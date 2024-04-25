@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -21,10 +22,10 @@ It's okay to leave this empty.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue *configdomain.GitHubToken, inputs components.TestInput) (*configdomain.GitHubToken, bool, error) {
+func GitHubToken(oldValue gohacks.Option[configdomain.GitHubToken], inputs components.TestInput) (*configdomain.GitHubToken, bool, error) {
 	var tokenText string
-	if oldValue != nil {
-		tokenText = oldValue.String()
+	if value, has := oldValue.Get(); has {
+		tokenText = value.String()
 	}
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: tokenText,
