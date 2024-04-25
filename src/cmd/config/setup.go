@@ -91,7 +91,7 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(runner *git.ProdRunner, userChoice gohacks.Option[configdomain.HostingPlatform]) gohacks.Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
@@ -341,7 +341,7 @@ func saveGitLabToken(runner *git.ProdRunner, newToken Option[configdomain.GitLab
 	return runner.Frontend.RemoveGitLabToken()
 }
 
-func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform gohacks.Option[configdomain.HostingPlatform]) (err error) {
+func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform Option[configdomain.HostingPlatform]) (err error) {
 	oldValue, oldHas := runner.Config.FullConfig.HostingPlatform.Get()
 	newValue, newHas := newHostingPlatform.Get()
 	if !oldHas && !newHas {

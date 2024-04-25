@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -21,7 +21,7 @@ Only change this if your code hosting server uses as custom URL.
 `
 )
 
-func HostingPlatform(existingValue gohacks.Option[configdomain.HostingPlatform], inputs components.TestInput) (gohacks.Option[configdomain.HostingPlatform], bool, error) {
+func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs components.TestInput) (Option[configdomain.HostingPlatform], bool, error) {
 	entries := hostingPlatformEntries{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
@@ -45,18 +45,18 @@ const (
 	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
 )
 
-func (hpe hostingPlatformEntry) HostingPlatform() gohacks.Option[configdomain.HostingPlatform] {
+func (hpe hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingPlatform] {
 	switch hpe {
 	case hostingPlatformAutoDetect:
-		return gohacks.NewOptionNone[configdomain.HostingPlatform]()
+		return None[configdomain.HostingPlatform]()
 	case hostingPlatformBitBucket:
-		return gohacks.NewOption(configdomain.HostingPlatformBitbucket)
+		return Some(configdomain.HostingPlatformBitbucket)
 	case hostingPlatformGitea:
-		return gohacks.NewOption(configdomain.HostingPlatformGitea)
+		return Some(configdomain.HostingPlatformGitea)
 	case hostingPlatformGitHub:
-		return gohacks.NewOption(configdomain.HostingPlatformGitHub)
+		return Some(configdomain.HostingPlatformGitHub)
 	case hostingPlatformGitLab:
-		return gohacks.NewOption(configdomain.HostingPlatformGitLab)
+		return Some(configdomain.HostingPlatformGitLab)
 	}
 	panic("unknown hosting platform: " + hpe)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -21,7 +21,7 @@ func TestBitbucketConnector(t *testing.T) {
 		t.Run("Bitbucket SaaS", func(t *testing.T) {
 			t.Parallel()
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingPlatform: gohacks.NewOptionNone[configdomain.HostingPlatform](),
+				HostingPlatform: None[configdomain.HostingPlatform](),
 				OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
 			})
 			must.NoError(t, err)
@@ -36,7 +36,7 @@ func TestBitbucketConnector(t *testing.T) {
 		t.Run("hosted service type provided manually", func(t *testing.T) {
 			t.Parallel()
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingPlatform: gohacks.NewOption(configdomain.HostingPlatformBitbucket),
+				HostingPlatform: Some(configdomain.HostingPlatformBitbucket),
 				OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			})
 			must.NoError(t, err)
@@ -52,7 +52,7 @@ func TestBitbucketConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-			HostingPlatform: gohacks.NewOptionNone[configdomain.HostingPlatform](),
+			HostingPlatform: None[configdomain.HostingPlatform](),
 			OriginURL:       giturl.Parse("username@bitbucket.org:org/repo.git"),
 		})
 		must.NoError(t, err)

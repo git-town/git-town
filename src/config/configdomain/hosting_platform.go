@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -32,12 +32,12 @@ func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 }
 
 // NewHostingPlatformOption provides the HostingPlatform enum matching the given text.
-func NewHostingPlatformOption(platformName string) (gohacks.Option[HostingPlatform], error) {
+func NewHostingPlatformOption(platformName string) (Option[HostingPlatform], error) {
 	platform, err := NewHostingPlatform(platformName)
 	if err != nil {
-		return gohacks.NewOptionNone[HostingPlatform](), err
+		return None[HostingPlatform](), err
 	}
-	return gohacks.NewOption(platform), nil
+	return Some(platform), nil
 }
 
 // hostingPlatforms provides all legal values for HostingPlatform.

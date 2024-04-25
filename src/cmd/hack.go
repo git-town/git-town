@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -113,7 +113,7 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendConfig),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Connector:               gohacks.NewOptionNone[hostingdomain.Connector](),
+		Connector:               None[hostingdomain.Connector](),
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
 		FullConfig:              args.appendConfig.FullConfig,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,
