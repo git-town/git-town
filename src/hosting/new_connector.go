@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v14/src/hosting/gitea"
 	"github.com/git-town/git-town/v14/src/hosting/github"
@@ -12,8 +13,12 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
-	switch Detect(args.OriginURL, args.HostingPlatform) {
+func NewConnector(args NewConnectorArgs) (gohacks.Option[hostingdomain.Connector], error) {
+	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
+	if !hasPlatform {
+		return gohacks.NewOptionNone[hostingdomain.Connector](), nil
+	}
+	switch platform {
 	case configdomain.HostingPlatformBitbucket:
 		return bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
@@ -49,7 +54,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 
 type NewConnectorArgs struct {
 	*configdomain.FullConfig
-	HostingPlatform configdomain.HostingPlatform
+	HostingPlatform gohacks.Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	OriginURL       *giturl.Parts
 }

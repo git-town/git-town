@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -17,7 +18,6 @@ const (
 	HostingPlatformGitHub    = HostingPlatform("github")
 	HostingPlatformGitLab    = HostingPlatform("gitlab")
 	HostingPlatformGitea     = HostingPlatform("gitea")
-	HostingPlatformNone      = HostingPlatform("") // no hosting or auto-detect
 )
 
 // NewHostingPlatform provides the HostingPlatform enum matching the given text.
@@ -28,19 +28,21 @@ func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 			return hostingPlatform, nil
 		}
 	}
-	return HostingPlatformNone, fmt.Errorf(messages.HostingPlatformUnknown, text)
+	return HostingPlatformGitHub, fmt.Errorf(messages.HostingPlatformUnknown, text)
 }
 
-// NewHostingPlatformRef provides the HostingPlatform enum matching the given text.
-func NewHostingPlatformRef(platformName string) (*HostingPlatform, error) {
-	result, err := NewHostingPlatform(platformName)
-	return &result, err
+// NewHostingPlatformOption provides the HostingPlatform enum matching the given text.
+func NewHostingPlatformOption(platformName string) (gohacks.Option[HostingPlatform], error) {
+	platform, err := NewHostingPlatform(platformName)
+	if err != nil {
+		return gohacks.NewOptionNone[HostingPlatform](), err
+	}
+	return gohacks.NewOption(platform), nil
 }
 
 // hostingPlatforms provides all legal values for HostingPlatform.
 func hostingPlatforms() []HostingPlatform {
 	return []HostingPlatform{
-		HostingPlatformNone,
 		HostingPlatformBitbucket,
 		HostingPlatformGitHub,
 		HostingPlatformGitLab,

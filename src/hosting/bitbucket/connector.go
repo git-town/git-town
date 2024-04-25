@@ -19,8 +19,8 @@ type Connector struct {
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	return &Connector{
+func NewConnector(args NewConnectorArgs) (Connector, error) {
+	return Connector{
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,

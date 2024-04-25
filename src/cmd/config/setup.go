@@ -91,8 +91,8 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(runner *git.ProdRunner, userChoice configdomain.HostingPlatform) configdomain.HostingPlatform {
-	if userChoice != configdomain.HostingPlatformNone {
+func determineHostingPlatform(runner *git.ProdRunner, userChoice gohacks.Option[configdomain.HostingPlatform]) gohacks.Option[configdomain.HostingPlatform] {
+	if userChoice.IsSome() {
 		return userChoice
 	}
 	return hosting.Detect(runner.Config.OriginURL(), userChoice)
@@ -130,25 +130,27 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	switch determineHostingPlatform(runner, config.userInput.HostingPlatform) {
-	case configdomain.HostingPlatformBitbucket:
-		// BitBucket API isn't supported yet
-	case configdomain.HostingPlatformGitea:
-		config.userInput.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.FullConfig.GiteaToken, config.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, err
+
+	if platform, has := determineHostingPlatform(runner, config.userInput.HostingPlatform).Get(); has {
+		switch platform {
+		case configdomain.HostingPlatformBitbucket:
+			// BitBucket API isn't supported yet
+		case configdomain.HostingPlatformGitea:
+			config.userInput.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.FullConfig.GiteaToken, config.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
+		case configdomain.HostingPlatformGitHub:
+			config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
+		case configdomain.HostingPlatformGitLab:
+			config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
 		}
-	case configdomain.HostingPlatformGitHub:
-		config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, err
-		}
-	case configdomain.HostingPlatformGitLab:
-		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, err
-		}
-	case configdomain.HostingPlatformNone:
 	}
 	config.userInput.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.Config.FullConfig.HostingOriginHostname, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -339,17 +341,19 @@ func saveGitLabToken(runner *git.ProdRunner, newToken gohacks.Option[configdomai
 	return runner.Frontend.RemoveGitLabToken()
 }
 
-func saveHostingPlatform(runner *git.ProdRunner, newValue configdomain.HostingPlatform) (err error) {
-	oldValue := runner.Config.FullConfig.HostingPlatform
-	switch {
-	case oldValue == "" && newValue == configdomain.HostingPlatformNone:
-		// no changes --> do nothing
-	case oldValue != "" && newValue == configdomain.HostingPlatformNone:
-		return runner.Frontend.DeleteHostingPlatform()
-	case oldValue != newValue:
+func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform gohacks.Option[configdomain.HostingPlatform]) (err error) {
+	oldValue, oldHas := runner.Config.FullConfig.HostingPlatform.Get()
+	newValue, newHas := newHostingPlatform.Get()
+	if !oldHas && !newHas {
+		return nil
+	}
+	if oldValue == newValue {
+		return nil
+	}
+	if newHas {
 		return runner.Frontend.SetHostingPlatform(newValue)
 	}
-	return nil
+	return runner.Frontend.DeleteHostingPlatform()
 }
 
 func saveMainBranch(runner *git.ProdRunner, newValue gitdomain.LocalBranchName) error {
