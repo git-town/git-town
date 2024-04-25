@@ -115,7 +115,7 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
 	}
-	if other.GitHubToken.Has() {
+	if other.GitHubToken.IsSome() {
 		self.GitHubToken = other.GitHubToken
 	}
 	if other.GitLabToken != nil {
@@ -185,7 +185,7 @@ func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		GitHubToken:              gohacks.NewEmptyOption[GitHubToken](),
+		GitHubToken:              gohacks.NewOptionNone[GitHubToken](),
 		GitLabToken:              "",
 		GitUserEmail:             "",
 		GitUserName:              "",
