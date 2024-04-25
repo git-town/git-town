@@ -8,7 +8,7 @@ import (
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
-	ContributionBranches     *gitdomain.LocalBranchNames
+	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              gohacks.Option[GitHubToken]
 	GitLabToken              gohacks.Option[GitLabToken]
 	GitUserEmail             *string
@@ -18,10 +18,10 @@ type PartialConfig struct {
 	HostingPlatform          *HostingPlatform
 	Lineage                  *Lineage
 	MainBranch               *gitdomain.LocalBranchName
-	ObservedBranches         *gitdomain.LocalBranchNames
+	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  *Offline
-	ParkedBranches           *gitdomain.LocalBranchNames
-	PerennialBranches        *gitdomain.LocalBranchNames
+	ParkedBranches           gitdomain.LocalBranchNames
+	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           gohacks.Option[PerennialRegex]
 	PushHook                 *PushHook
 	PushNewBranches          *PushNewBranches
