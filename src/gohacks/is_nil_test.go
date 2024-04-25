@@ -10,15 +10,18 @@ import (
 
 func TestIsNil(t *testing.T) {
 	t.Parallel()
+
 	t.Run("direct nil given", func(t *testing.T) {
 		t.Parallel()
 		must.True(t, gohacks.IsNil(nil))
 	})
+
 	t.Run("pointer to nil interface", func(t *testing.T) {
 		t.Parallel()
 		var give *configdomain.GitHubToken
 		must.True(t, gohacks.IsNil(give))
 	})
+
 	t.Run("non-nil given", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.NewGitHubTokenRef("foo")
