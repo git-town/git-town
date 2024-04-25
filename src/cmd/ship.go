@@ -220,7 +220,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	if !repo.IsOffline.Bool() && connector != nil {
+	if repo.IsOffline.ToOnline().Bool() && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
