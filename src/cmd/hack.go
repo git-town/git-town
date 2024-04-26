@@ -180,9 +180,11 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	targetBranch := targetBranches[0]
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
+		err = fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 		return
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 		return
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
