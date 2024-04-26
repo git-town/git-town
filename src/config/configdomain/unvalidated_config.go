@@ -12,7 +12,7 @@ type UnvalidatedConfig struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
-	GitUserEmail             string
+	GitUserEmail             GitUserEmail
 	GitUserName              string
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
@@ -122,8 +122,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.GitLabToken.IsSome() {
 		self.GitLabToken = other.GitLabToken
 	}
-	if other.GitUserEmail != nil {
-		self.GitUserEmail = *other.GitUserEmail
+	if email, has := other.GitUserEmail.Get(); has {
+		self.GitUserEmail = email
 	}
 	if other.GitUserName != nil {
 		self.GitUserName = *other.GitUserName
