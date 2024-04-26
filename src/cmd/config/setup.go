@@ -95,7 +95,11 @@ func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdo
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	return hosting.Detect(runner.Config.OriginURL(), userChoice)
+	originURL, hasOriginURL := runner.Config.OriginURL().Get()
+	if !hasOriginURL {
+		return None[configdomain.HostingPlatform]()
+	}
+	return hosting.Detect(originURL, userChoice)
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {

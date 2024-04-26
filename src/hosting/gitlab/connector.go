@@ -104,7 +104,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GitLabToken]
 	Log       print.Logger
-	OriginURL *giturl.Parts
+	OriginURL giturl.Parts
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

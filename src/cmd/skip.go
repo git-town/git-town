@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/hosting"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/skip"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
@@ -77,15 +78,18 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
-	})
-	if err != nil {
-		return err
+	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
+	var connector hostingdomain.Connector
+	if hasOriginURL {
+		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			FullConfig:      &repo.Runner.Config.FullConfig,
+			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+		if err != nil {
+			return err
+		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Connector:      connector,

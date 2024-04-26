@@ -101,13 +101,16 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if repoStatus.UntrackedChanges {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
-	})
+	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
+	var connector hostingdomain.Connector
+	if hasOriginURL {
+		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			FullConfig:      &repo.Runner.Config.FullConfig,
+			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+	}
 	return &continueConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		connector:        connector,

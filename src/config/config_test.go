@@ -57,7 +57,7 @@ func TestGitTown(t *testing.T) {
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
 			have := repo.Config.OriginURL()
-			must.EqOp(t, want, *have)
+			must.EqOp(t, want, have.GetOrPanic())
 		}
 	})
 

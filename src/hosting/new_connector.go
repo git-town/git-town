@@ -51,5 +51,5 @@ type NewConnectorArgs struct {
 	*configdomain.FullConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
-	OriginURL       *giturl.Parts
+	OriginURL       giturl.Parts
 }
