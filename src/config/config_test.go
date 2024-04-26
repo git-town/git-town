@@ -17,17 +17,15 @@ func TestGitTown(t *testing.T) {
 
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
-		t.Run("happy path", func(t *testing.T) {
-			conf := config.Config{
-				FullConfig: configdomain.FullConfig{
-					GitUserName:  configdomain.GitUserName("name"),
-					GitUserEmail: configdomain.GitUserEmail("email"),
-				},
-			}
-			have := conf.Author()
-			want := gitdomain.Author("name <email>")
-			must.EqOp(t, want, have)
-		})
+		conf := config.Config{
+			FullConfig: configdomain.FullConfig{
+				GitUserName:  configdomain.GitUserName("name"),
+				GitUserEmail: configdomain.GitUserEmail("email"),
+			},
+		}
+		have := conf.Author()
+		want := gitdomain.Author("name <email>")
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("Lineage", func(t *testing.T) {
