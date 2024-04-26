@@ -146,6 +146,7 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 		}
 	default:
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
+		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeConfig{
 		allBranches:      branchesSnapshot.Branches,
