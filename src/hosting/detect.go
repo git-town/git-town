@@ -14,16 +14,16 @@ func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPla
 	if userOverride.IsSome() {
 		return userOverride
 	}
-	switch {
-	case bitbucket.Detect(originURL):
-		return Some(configdomain.HostingPlatformBitbucket)
-	case gitea.Detect(originURL):
-		return Some(configdomain.HostingPlatformGitea)
-	case github.Detect(originURL):
-		return Some(configdomain.HostingPlatformGitHub)
-	case gitlab.Detect(originURL):
-		return Some(configdomain.HostingPlatformGitLab)
-	default:
-		return None[configdomain.HostingPlatform]()
+	detectors := map[configdomain.HostingPlatform]func(*giturl.Parts) bool{
+		configdomain.HostingPlatformBitbucket: bitbucket.Detect,
+		configdomain.HostingPlatformGitea:     gitea.Detect,
+		configdomain.HostingPlatformGitHub:    github.Detect,
+		configdomain.HostingPlatformGitLab:    gitlab.Detect,
 	}
+	for platform, detector := range detectors {
+		if detector(originURL) {
+			return Some(platform)
+		}
+	}
+	return None[configdomain.HostingPlatform]()
 }
