@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting"
@@ -138,7 +139,7 @@ type shipConfig struct {
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           gitdomain.LocalBranchName
-	proposal                 *hostingdomain.Proposal
+	proposal                 Option[hostingdomain.Proposal]
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
 	remotes                  gitdomain.Remotes
@@ -206,7 +207,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	var proposal *hostingdomain.Proposal
+	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
@@ -223,22 +224,24 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	proposalMessage := ""
 	if !repo.IsOffline.Bool() && connector != nil {
 		if branchToShip.HasTrackingBranch() {
-			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
+			proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
 				return nil, branchesSnapshot, stashSize, false, err
 			}
-			if proposal != nil {
+			proposal, hasProposal := proposalOpt.Get()
+			if hasProposal {
 				canShipViaAPI = true
-				proposalMessage = connector.DefaultProposalMessage(*proposal)
+				proposalMessage = connector.DefaultProposalMessage(proposal)
 			}
 		}
 		for _, childBranch := range childBranches {
-			childProposal, err := connector.FindProposal(childBranch, branchNameToShip)
+			childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
 				return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
-			if childProposal != nil {
-				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
+			childProposal, hasChildProposal := childProposalOpt.Get()
+			if hasChildProposal {
+				proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
 			}
 		}
 	}
@@ -255,7 +258,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		initialBranch:            branchesSnapshot.Active,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
-		proposal:                 proposal,
+		proposal:                 proposalOpt,
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
@@ -297,7 +300,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 	}
 	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})
 	prog.Add(&opcodes.Checkout{Branch: config.targetBranch.LocalName})
-	if config.canShipViaAPI {
+	if proposal, hasProposal := config.proposal.Get(); hasProposal && config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
 			prog.Add(&opcodes.UpdateProposalTarget{
@@ -308,7 +311,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName})
 		prog.Add(&opcodes.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
-			ProposalNumber:  config.proposal.Number,
+			ProposalNumber:  proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})

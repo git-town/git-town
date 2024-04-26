@@ -39,8 +39,8 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
-	return nil, errors.New(messages.HostingBitBucketNotImplemented)
+func (self Connector) FindProposal(_, _ gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	return None[hostingdomain.Proposal](), errors.New(messages.HostingBitBucketNotImplemented)
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {

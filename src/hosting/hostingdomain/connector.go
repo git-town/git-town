@@ -1,6 +1,9 @@
 package hostingdomain
 
-import "github.com/git-town/git-town/v14/src/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+)
 
 // Connector describes the activities that Git Town can perform on code hosting platforms.
 // Individual implementations exist to talk to specific hosting platforms.
@@ -11,7 +14,7 @@ type Connector interface {
 
 	// FindProposal provides details about the proposal for the given branch into the given target branch.
 	// Returns nil if no proposal exists.
-	FindProposal(branch, target gitdomain.LocalBranchName) (*Proposal, error)
+	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
 
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
