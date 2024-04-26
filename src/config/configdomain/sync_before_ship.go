@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -18,15 +19,6 @@ func (self SyncBeforeShip) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewSyncBeforeShip(value bool) SyncBeforeShip {
-	return SyncBeforeShip(value)
-}
-
-func NewSyncBeforeShipRef(value bool) *SyncBeforeShip {
-	result := NewSyncBeforeShip(value)
-	return &result
-}
-
 func ParseSyncBeforeShip(value, source string) (SyncBeforeShip, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
@@ -36,7 +28,10 @@ func ParseSyncBeforeShip(value, source string) (SyncBeforeShip, error) {
 	return result, nil
 }
 
-func ParseSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
+func ParseSyncBeforeShipOption(value, source string) (Option[SyncBeforeShip], error) {
 	result, err := ParseSyncBeforeShip(value, source)
-	return &result, err
+	if err != nil {
+		return None[SyncBeforeShip](), err
+	}
+	return Some(result), nil
 }

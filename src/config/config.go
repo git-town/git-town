@@ -281,10 +281,10 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 func (self *Config) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global bool) error {
 	self.FullConfig.SyncBeforeShip = value
 	if global {
-		self.GlobalGitConfig.SyncBeforeShip = &value
+		self.GlobalGitConfig.SyncBeforeShip = Some(value)
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
 	}
-	self.LocalGitConfig.SyncBeforeShip = &value
+	self.LocalGitConfig.SyncBeforeShip = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
 }
 

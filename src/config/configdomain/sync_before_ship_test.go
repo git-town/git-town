@@ -12,31 +12,17 @@ func TestSyncBeforeShip(t *testing.T) {
 
 	t.Run("Bool", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.NewSyncBeforeShip(true)
+		give := configdomain.SyncBeforeShip(true)
 		have := give.Bool()
 		must.True(t, have)
 	})
 
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.NewSyncBeforeShip(true)
+		give := configdomain.SyncBeforeShip(true)
 		have := give.String()
 		want := "true"
 		must.EqOp(t, want, have)
-	})
-
-	t.Run("NewSyncBeforeShip", func(t *testing.T) {
-		t.Parallel()
-		have := configdomain.NewSyncBeforeShip(true)
-		want := configdomain.SyncBeforeShip(true)
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("NewSyncBeforeShipRef", func(t *testing.T) {
-		t.Parallel()
-		have := configdomain.NewSyncBeforeShipRef(true)
-		want := configdomain.SyncBeforeShip(true)
-		must.EqOp(t, want, *have)
 	})
 
 	t.Run("ParseSyncBeforeShip", func(t *testing.T) {
@@ -45,7 +31,7 @@ func TestSyncBeforeShip(t *testing.T) {
 			t.Parallel()
 			have, err := configdomain.ParseSyncBeforeShip("yes", "test")
 			must.NoError(t, err)
-			want := configdomain.NewSyncBeforeShip(true)
+			want := configdomain.SyncBeforeShip(true)
 			must.EqOp(t, want, have)
 		})
 		t.Run("invalid value", func(t *testing.T) {
