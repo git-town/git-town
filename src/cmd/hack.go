@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/either"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -92,7 +92,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 
 // If set to appendConfig, the user wants to append a new branch to an existing branch.
 // If set to makeFeatureConfig, the user wants to make an existing branch a feature branch.
-type hackConfig = either.Either[appendConfig, makeFeatureConfig]
+type hackConfig = Either[appendConfig, makeFeatureConfig]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureConfig struct {
@@ -162,13 +162,13 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	if len(targetBranches) == 0 {
-		config = either.Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
+		config = Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.FullConfig),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
-		config = either.Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
+		config = Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.FullConfig),
 		})
 		return
@@ -186,7 +186,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	config = either.Left[appendConfig, makeFeatureConfig](appendConfig{
+	config = Left[appendConfig, makeFeatureConfig](appendConfig{
 		FullConfig:                &repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,

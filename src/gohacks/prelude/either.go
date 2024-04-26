@@ -1,4 +1,4 @@
-package either
+package prelude
 
 // Either is a type that contains either of the two types, but never both.
 type Either[LEFT any, RIGHT any] struct {
