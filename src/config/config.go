@@ -311,7 +311,7 @@ func (self *Config) SetSyncPerennialStrategy(strategy configdomain.SyncPerennial
 func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
 	self.FullConfig.SyncUpstream = value
 	if global {
-		self.GlobalGitConfig.SyncUpstream = &value
+		self.GlobalGitConfig.SyncUpstream = Some(value)
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	}
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))

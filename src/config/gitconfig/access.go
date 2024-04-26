@@ -118,7 +118,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeySyncPerennialStrategy:
 		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyOption(value)
 	case KeySyncUpstream:
-		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
+		config.SyncUpstream, err = configdomain.ParseSyncUpstreamOption(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
 		KeyDeprecatedCodeHostingOriginHostname,
 		KeyDeprecatedCodeHostingPlatform,
