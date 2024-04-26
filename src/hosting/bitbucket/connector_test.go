@@ -20,9 +20,11 @@ func TestBitbucketConnector(t *testing.T) {
 
 		t.Run("Bitbucket SaaS", func(t *testing.T) {
 			t.Parallel()
+			url, err := giturl.Parse("username@bitbucket.org:git-town/docs.git")
+			must.NoError(t, err)
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: None[configdomain.HostingPlatform](),
-				OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
+				OriginURL:       url,
 			})
 			must.NoError(t, err)
 			wantConfig := hostingdomain.Config{
@@ -35,9 +37,11 @@ func TestBitbucketConnector(t *testing.T) {
 
 		t.Run("hosted service type provided manually", func(t *testing.T) {
 			t.Parallel()
+			url, err := giturl.Parse("git@custom-url.com:git-town/docs.git")
+			must.NoError(t, err)
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: Some(configdomain.HostingPlatformBitbucket),
-				OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
+				OriginURL:       url,
 			})
 			must.NoError(t, err)
 			wantConfig := hostingdomain.Config{
@@ -51,9 +55,11 @@ func TestBitbucketConnector(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
+		url, err := giturl.Parse("username@bitbucket.org:org/repo.git")
+		must.NoError(t, err)
 		connector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: None[configdomain.HostingPlatform](),
-			OriginURL:       giturl.Parse("username@bitbucket.org:org/repo.git"),
+			OriginURL:       url,
 		})
 		must.NoError(t, err)
 		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"))
