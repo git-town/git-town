@@ -176,10 +176,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
-	if !isShippingInitialBranch { // TODO: merge these two ifs
-		if !hasBranchToShip {
-			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
-		}
+	if !hasBranchToShip {
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	if err = validateShippableBranchType(repo.Runner.Config.FullConfig.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
