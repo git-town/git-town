@@ -95,7 +95,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }

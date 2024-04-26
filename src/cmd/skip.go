@@ -92,7 +92,7 @@ func executeSkip(verbose bool) error {
 		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
-		RunState:       &runState,
+		RunState:       runState,
 		Runner:         repo.Runner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,

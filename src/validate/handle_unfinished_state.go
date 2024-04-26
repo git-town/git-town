@@ -64,7 +64,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			CurrentBranch:  args.CurrentBranch,
 			HasOpenChanges: args.HasOpenChanges,
 			RootDir:        args.RootDir,
-			RunState:       &runState,
+			RunState:       runState,
 			Runner:         args.Run,
 			TestInputs:     args.DialogTestInputs,
 			Verbose:        args.Verbose,
@@ -108,7 +108,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 args.Verbose,
 	})
 }

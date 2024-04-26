@@ -120,7 +120,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }

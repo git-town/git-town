@@ -42,7 +42,7 @@ func Finished(args FinishedArgs) error {
 		UnfinishedDetails:        nil,
 	}
 	print.Footer(args.Verbose, args.Runner.CommandsCounter.Count(), args.Runner.FinalMessages.Result())
-	return statefile.Save(&runState, args.RootDir)
+	return statefile.Save(runState, args.RootDir)
 }
 
 type FinishedArgs struct {
