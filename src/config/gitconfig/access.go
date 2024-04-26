@@ -108,7 +108,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		pushHook, err = configdomain.NewPushHook(value, KeyPushHook.String())
 		config.PushHook = Some(pushHook)
 	case KeyPushNewBranches:
-		config.PushNewBranches, err = configdomain.ParsePushNewBranchesRef(value, KeyPushNewBranches.String())
+		config.PushNewBranches, err = configdomain.ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:
 		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchRef(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
