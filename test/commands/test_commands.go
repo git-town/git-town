@@ -318,7 +318,7 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	if localGitConfig.Lineage == nil {
 		return result
 	}
-	lineage := *localGitConfig.Lineage
+	lineage := localGitConfig.Lineage
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())
 	}

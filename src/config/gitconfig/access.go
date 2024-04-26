@@ -36,11 +36,11 @@ func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), "git-town-branch.") {
 		if config.Lineage == nil {
-			config.Lineage = &configdomain.Lineage{}
+			config.Lineage = configdomain.Lineage{}
 		}
 		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
 		parent := gitdomain.NewLocalBranchName(value)
-		(*config.Lineage)[child] = parent
+		config.Lineage[child] = parent
 		return nil
 	}
 	var err error
@@ -260,7 +260,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 	}
 	// verify lineage
 	if updateOutdated && config.Lineage != nil {
-		for child, parent := range *config.Lineage {
+		for child, parent := range config.Lineage {
 			if child == parent {
 				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
 				_ = self.RemoveLocalConfigValue(createLineageKey(child))
