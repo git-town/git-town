@@ -64,5 +64,5 @@ func (self BranchInfo) IsOmniBranch() bool {
 }
 
 func (self BranchInfo) String() string {
-	return "implement this"
+	return "not used but needed for optionality"
 }
