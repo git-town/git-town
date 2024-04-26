@@ -143,14 +143,14 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(initial, Some(gitdomain.EmptyLocalBranchName()))
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, None[gitdomain.LocalBranchName]())
 			must.NoError(t, err)
 			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			commits, err := runtime.BackendCommands.CommitsInBranch(initial, Some(gitdomain.EmptyLocalBranchName()))
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, None[gitdomain.LocalBranchName]())
 			must.NoError(t, err)
 			must.EqOp(t, 1, len(commits)) // the initial commit
 		})
