@@ -135,8 +135,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		self.PushNewBranches = *other.PushNewBranches
 	}
 	self.ObservedBranches = append(self.ObservedBranches, other.ObservedBranches...)
-	if other.Offline != nil {
-		self.Offline = *other.Offline
+	if offline, has := other.Offline.Get(); has {
+		self.Offline = offline
 	}
 	self.ParkedBranches = append(self.ParkedBranches, other.ParkedBranches...)
 	self.PerennialBranches = append(self.PerennialBranches, other.PerennialBranches...)
