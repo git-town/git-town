@@ -117,11 +117,11 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {
-		branch := self.FindByLocalName(bi)
-		if branch == nil {
+		if branch, hasBranch := self.FindByLocalName(bi).Get(); hasBranch {
+			result[b] = branch
+		} else {
 			return result, fmt.Errorf(messages.BranchDoesntExist, bi)
 		}
-		result[b] = *branch
 	}
 	return result, nil
 }

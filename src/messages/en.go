@@ -31,6 +31,7 @@ const (
 	CompressAlreadyOneCommit           = "branch %q has already just one commit"
 	CompressBranchNoParent             = "cannot compress branch %q because it has no parent"
 	CompressContributionBranch         = "you are merely contributing to branch %q and should leave compressing it to the branch owner"
+	CompressNoBranchInfo               = "no branch info for branch %q"
 	CompressNoCommits                  = "branch %q has no commits"
 	CompressObservedBranch             = "you are merely observing branch %q and should leave compressing it to the branch owner"
 	CompressParkedBranch               = "branch %q and should not compress it"
