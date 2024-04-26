@@ -96,7 +96,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyObservedBranches:
 		config.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyOffline:
-		config.Offline, err = configdomain.NewOfflineRef(value, KeyOffline.String())
+		config.Offline, err = configdomain.NewOfflineOption(value, KeyOffline.String())
 	case KeyParkedBranches:
 		config.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialBranches:

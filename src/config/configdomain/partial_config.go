@@ -19,7 +19,7 @@ type PartialConfig struct {
 	Lineage                  *Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
-	Offline                  *Offline
+	Offline                  Option[Offline]
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
