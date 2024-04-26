@@ -101,7 +101,11 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if repoStatus.UntrackedChanges {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
-	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
+	originURLOpt, err := repo.Runner.Config.OriginURL()
+	if err != nil {
+		return nil, initialBranchesSnapshot, initialStashSize, false, err
+	}
+	originURL, hasOriginURL := originURLOpt.Get()
 	var connector hostingdomain.Connector
 	if hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

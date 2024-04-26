@@ -70,7 +70,11 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
+	originURLOpt, err := repo.Runner.Config.OriginURL()
+	if err != nil {
+		return nil, err
+	}
+	originURL, hasOriginURL := originURLOpt.Get()
 	var connector hostingdomain.Connector
 	if hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

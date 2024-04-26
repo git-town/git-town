@@ -210,7 +210,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
-	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
+	originURLOpt, err := repo.Runner.Config.OriginURL()
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
+	}
+	originURL, hasOriginURL := originURLOpt.Get()
 	var connector hostingdomain.Connector
 	if hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
