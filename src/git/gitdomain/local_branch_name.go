@@ -40,6 +40,7 @@ func (self LocalBranchName) BranchName() BranchName {
 }
 
 // IsEmpty indicates whether this branch name is not set.
+// TODO: remove and replace all usages with Option
 func (self LocalBranchName) IsEmpty() bool {
 	return self == ""
 }

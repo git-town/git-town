@@ -154,7 +154,10 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 	}
 	branchesToCompress := make([]compressBranchConfig, len(branchNamesToCompress))
 	for b, branchNameToCompress := range branchNamesToCompress {
-		parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress)
+		parentBranch, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress).Get()
+		if !hasParent {
+			continue
+		}
 		branchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress)
 		branchType := repo.Runner.Config.FullConfig.BranchType(branchNameToCompress.BranchName().LocalName())
 		commits, err := repo.Runner.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parentBranch)

@@ -169,6 +169,7 @@ nd will be removed in future versions of Git Town.`
 	SettingLocalCannotWrite        = "ERROR: cannot write local Git setting %q: %v"
 	ShipAbortedMergeError          = "aborted because commit exited with error"
 	ShipBranchOtherWorktree        = "branch %q is active in another worktree"
+	ShipBranchHasNoParent          = "branch %q has no parent to ship into"
 	ShipBranchNothingToDo          = "the branch %q has no shippable changes"
 	ShipChildBranch                = "shipping this branch would ship %s as well,\nplease ship %q first"
 	ShipDeletesTrackingBranches    = "Ship deletes tracking branches: %s\n"
