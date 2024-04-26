@@ -81,7 +81,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return makeFeatureBranch(makeFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
 			config:              repo.Runner.Config,
-			makeFeatureConfig:   &makeFeatureBranchConfig,
+			makeFeatureConfig:   makeFeatureBranchConfig,
 			rootDir:             repo.RootDir,
 			runner:              repo.Runner,
 			verbose:             verbose,
@@ -240,13 +240,13 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              *config.Config
-	makeFeatureConfig   *makeFeatureConfig
+	makeFeatureConfig   makeFeatureConfig
 	rootDir             gitdomain.RepoRootDir
 	runner              *git.ProdRunner
 	verbose             bool
 }
 
-func validateMakeFeatureConfig(config *makeFeatureConfig) error {
+func validateMakeFeatureConfig(config makeFeatureConfig) error {
 	for branchName, branchType := range config.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:

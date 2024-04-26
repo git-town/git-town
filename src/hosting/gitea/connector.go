@@ -81,7 +81,6 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
-	// TODO: update the client and uncomment
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
