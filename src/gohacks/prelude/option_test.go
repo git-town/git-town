@@ -11,7 +11,7 @@ import (
 func TestOption(t *testing.T) {
 	t.Parallel()
 
-	t.Run("StringOr", func(t *testing.T) {
+	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {
 			t.Parallel()
