@@ -290,12 +290,12 @@ func (self *Config) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global 
 
 func (self *Config) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.FullConfig.SyncFeatureStrategy = value
-	self.LocalGitConfig.SyncFeatureStrategy = &value
+	self.LocalGitConfig.SyncFeatureStrategy = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
 func (self *Config) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
-	self.GlobalGitConfig.SyncFeatureStrategy = &value
+	self.GlobalGitConfig.SyncFeatureStrategy = Some(value)
 	self.FullConfig.SyncFeatureStrategy = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }

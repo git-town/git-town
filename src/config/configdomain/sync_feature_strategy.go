@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -32,7 +33,10 @@ func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 	}
 }
 
-func NewSyncFeatureStrategyRef(text string) (*SyncFeatureStrategy, error) {
+func NewSyncFeatureStrategyOption(text string) (Option[SyncFeatureStrategy], error) {
 	result, err := NewSyncFeatureStrategy(text)
-	return &result, err
+	if err != nil {
+		return None[SyncFeatureStrategy](), err
+	}
+	return Some(result), err
 }
