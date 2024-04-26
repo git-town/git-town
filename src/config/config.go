@@ -4,7 +4,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -57,15 +56,10 @@ func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName
 }
 
 // Author provides the locally Git configured user.
-func (self *Config) Author() (gitdomain.Author, error) {
+func (self *Config) Author() gitdomain.Author {
 	email := self.FullConfig.GitUserEmail
-	if email == "" {
-	}
 	name := self.FullConfig.GitUserName
-	if name == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
-	}
-	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email)), nil
+	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
 }
 
 // OriginURL provides the URL for the "origin" remote.

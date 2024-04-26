@@ -24,9 +24,8 @@ func TestGitTown(t *testing.T) {
 					GitUserEmail: configdomain.GitUserEmail("email"),
 				},
 			}
-			have, err := conf.Author()
+			have := conf.Author()
 			want := gitdomain.Author("name <email>")
-			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})
 	})
