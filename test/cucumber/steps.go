@@ -521,14 +521,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "sync-upstream" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncUpstream
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.SyncUpstream(wantBool)
-		if cmp.Equal(*have, want) {
-			return nil
+		have, has := state.fixture.DevRepo.Config.GlobalGitConfig.SyncUpstream.Get()
+		if !has {
+			return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but doesn't exist`, want)
 		}
-		return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but was %v`, want, *have)
+		if have != want {
+			return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but was %v`, want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
@@ -1036,19 +1039,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "sync-upstream" is still not set$`, func() error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
-		if have == nil {
-			return nil
+		have, has := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream.Get()
+		if has {
+			return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
 		}
-		return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.SyncUpstream(wantBool)
-		if *have != want {
+		have, has := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream.Get()
+		if !has {
+			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but doesn't exist`, want)
+		}
+		if have != want {
 			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but was %v`, want, have)
 		}
 		return nil

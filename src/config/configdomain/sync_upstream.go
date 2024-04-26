@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -19,11 +20,6 @@ func (self SyncUpstream) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewSyncUpstreamRef(value bool) *SyncUpstream {
-	result := SyncUpstream(value)
-	return &result
-}
-
 func ParseSyncUpstream(value, source string) (SyncUpstream, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
@@ -32,7 +28,10 @@ func ParseSyncUpstream(value, source string) (SyncUpstream, error) {
 	return SyncUpstream(parsed), nil
 }
 
-func ParseSyncUpstreamRef(value, source string) (*SyncUpstream, error) {
+func ParseSyncUpstreamOption(value, source string) (Option[SyncUpstream], error) {
 	result, err := ParseSyncUpstream(value, source)
-	return &result, err
+	if err != nil {
+		return None[SyncUpstream](), err
+	}
+	return Some(result), err
 }
