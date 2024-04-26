@@ -15,7 +15,7 @@ func TestDetect(t *testing.T) {
 		giturl.Parse("git@gitlab.com:git-town/docs.git"):     true,  // SAAS URL
 		giturl.Parse("git@custom-url.com:git-town/docs.git"): false, // custom URL
 		giturl.Parse("git@github.com:git-town/git-town.git"): false, // other hosting URL
-		emptyURL: false, // empty URL
+		emptyURL: false,
 		nil:      false,
 	}
 	for give, want := range tests {
