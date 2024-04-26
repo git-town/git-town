@@ -104,7 +104,7 @@ type setParentConfig struct {
 	currentBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
-	existingParent   *gitdomain.LocalBranchName
+	existingParent   *gitdomain.LocalBranchName // TODO: use Option
 	hasOpenChanges   bool
 	mainBranch       gitdomain.LocalBranchName
 }
