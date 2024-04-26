@@ -129,10 +129,10 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	mainBranch := repo.Runner.Config.FullConfig.MainBranch
-	existingParentBranch, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	existingParent, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
-		defaultChoice = existingParentBranch
+		defaultChoice = existingParent
 	} else {
 		defaultChoice = mainBranch
 	}
