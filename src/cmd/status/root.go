@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
@@ -56,8 +57,8 @@ func executeStatus(verbose bool) error {
 }
 
 type displayStatusConfig struct {
-	filepath string             // filepath of the runstate file
-	state    *runstate.RunState // content of the runstate file
+	filepath string                    // filepath of the runstate file
+	state    Option[runstate.RunState] // content of the runstate file TODO Option
 }
 
 func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfig, error) {
@@ -76,32 +77,33 @@ func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfi
 }
 
 func displayStatus(config displayStatusConfig) {
-	if config.state == nil {
+	state, hasState := config.state.Get()
+	if !hasState {
 		fmt.Println(messages.StatusFileNotFound)
 		return
 	}
-	if config.state.IsFinished() {
-		displayFinishedStatus(config)
+	if state.IsFinished() {
+		displayFinishedStatus(state)
 	} else {
-		displayUnfinishedStatus(config)
+		displayUnfinishedStatus(state)
 	}
 }
 
-func displayUnfinishedStatus(config displayStatusConfig) {
-	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
-	fmt.Printf(messages.PreviousCommandProblem, config.state.Command, timeDiff)
-	if config.state.HasAbortProgram() {
+func displayUnfinishedStatus(state runstate.RunState) {
+	timeDiff := time.Since(state.UnfinishedDetails.EndTime)
+	fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	if state.HasAbortProgram() {
 		fmt.Println(messages.UndoMessage)
 	}
-	if config.state.HasRunProgram() {
+	if state.HasRunProgram() {
 		fmt.Println(messages.ContinueMessage)
 	}
-	if config.state.UnfinishedDetails.CanSkip {
+	if state.UnfinishedDetails.CanSkip {
 		fmt.Println(messages.SkipMessage)
 	}
 }
 
-func displayFinishedStatus(config displayStatusConfig) {
-	fmt.Printf(messages.PreviousCommandFinished, config.state.Command)
+func displayFinishedStatus(state runstate.RunState) {
+	fmt.Printf(messages.PreviousCommandFinished, state.Command)
 	fmt.Println(messages.UndoMessage)
 }

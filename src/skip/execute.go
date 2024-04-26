@@ -44,7 +44,7 @@ type ExecuteArgs struct {
 	CurrentBranch  gitdomain.LocalBranchName
 	HasOpenChanges bool
 	RootDir        gitdomain.RepoRootDir
-	RunState       *runstate.RunState
+	RunState       *runstate.RunState // TODO: Option
 	Runner         *git.ProdRunner
 	TestInputs     components.TestInputs
 	Verbose        bool

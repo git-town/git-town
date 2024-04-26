@@ -66,11 +66,12 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsFinished() {
+	runState, hasRunState := runStateOpt.Get()
+	if hasRunState || runState.IsFinished() {
 		return errors.New(messages.SkipNothingToDo)
 	}
 	if !runState.UnfinishedDetails.CanSkip {
@@ -91,7 +92,7 @@ func executeSkip(verbose bool) error {
 		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
-		RunState:       runState,
+		RunState:       &runState,
 		Runner:         repo.Runner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,
