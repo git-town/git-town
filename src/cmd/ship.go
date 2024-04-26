@@ -205,9 +205,14 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.PerennialBranchCannotShip)
 	}
 	parent := *parentPtr
-	targetBranch := branchesSnapshot.Branches.FindByLocalName(parent)
+	targetBranchName := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip)
+	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.PerennialBranchCannotShip)
+	}
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Runner.Config.FullConfig, repo.Runner.Config.FullConfig.Lineage)
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var proposal *hostingdomain.Proposal
 	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
@@ -266,12 +271,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
-	parentBranchPtr := lineage.Parent(branch)
-	if parentBranchPtr == nil {
-		return errors.New(messages.PerennialBranchCannotShip)
-	}
-	parentBranch := *parentBranchPtr
+func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
 	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
