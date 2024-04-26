@@ -174,6 +174,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return
 	}
 	if len(targetBranches) > 1 {
+		err = errors.New(messages.HackTooManyArguments)
 		return
 	}
 	targetBranch := targetBranches[0]
