@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -32,7 +33,10 @@ func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 	}
 }
 
-func NewSyncPerennialStrategyRef(text string) (*SyncPerennialStrategy, error) {
+func NewSyncPerennialStrategyOption(text string) (Option[SyncPerennialStrategy], error) {
 	result, err := NewSyncPerennialStrategy(text)
-	return &result, err
+	if err != nil {
+		return None[SyncPerennialStrategy](), err
+	}
+	return Some(result), err
 }
