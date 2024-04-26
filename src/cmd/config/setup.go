@@ -138,8 +138,11 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-
-	if platform, has := determineHostingPlatform(runner, config.userInput.HostingPlatform).Get(); has {
+	platformOpt, err := determineHostingPlatform(runner, config.userInput.HostingPlatform)
+	if err != nil {
+		return false, err
+	}
+	if platform, has := platformOpt.Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
