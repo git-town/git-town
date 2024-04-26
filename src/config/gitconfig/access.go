@@ -114,7 +114,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeySyncBeforeShip:
 		config.SyncBeforeShip, err = configdomain.ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
-		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyRef(value)
+		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyOption(value)
 	case KeySyncPerennialStrategy:
 		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(value)
 	case KeySyncUpstream:
