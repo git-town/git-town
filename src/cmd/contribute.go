@@ -97,8 +97,8 @@ func executeContribute(args []string, verbose bool) error {
 
 type contributeConfig struct {
 	allBranches      gitdomain.BranchInfos
-	branchesToMark   commandconfig.BranchesAndTypes
 	branchToCheckout Option[gitdomain.LocalBranchName]
+	branchesToMark   commandconfig.BranchesAndTypes
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
@@ -150,8 +150,8 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 	}
 	return contributeConfig{
 		allBranches:      branchesSnapshot.Branches,
-		branchesToMark:   branchesToMark,
 		branchToCheckout: branchToCheckout,
+		branchesToMark:   branchesToMark,
 	}, nil
 }
 
