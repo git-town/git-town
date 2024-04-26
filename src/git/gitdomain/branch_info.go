@@ -62,3 +62,7 @@ func (self BranchInfo) IsLocal() bool {
 func (self BranchInfo) IsOmniBranch() bool {
 	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
 }
+
+func (self BranchInfo) String() string {
+	return "implement this"
+}
