@@ -936,9 +936,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		have := pushNewBranches.Bool()
 		if have != want {
-			return nil
+			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
 		}
-		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {
