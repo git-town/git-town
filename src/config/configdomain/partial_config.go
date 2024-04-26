@@ -12,7 +12,7 @@ type PartialConfig struct {
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
-	GitUserName              *string
+	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform]

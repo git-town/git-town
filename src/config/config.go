@@ -66,7 +66,7 @@ func (self *Config) Author() (gitdomain.Author, error) {
 	if name == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}
-	return gitdomain.Author(name + " <" + email.String() + ">"), nil
+	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email) + ">"), nil
 }
 
 // OriginURL provides the URL for the "origin" remote.
