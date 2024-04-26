@@ -94,7 +94,7 @@ func TestNewConnector(t *testing.T) {
 			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
 			Log:        print.Logger{},
 			MainBranch: gitdomain.NewLocalBranchName("mainBranch"),
-			OriginURL:  &originURL,
+			OriginURL:  originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
@@ -113,7 +113,7 @@ func TestNewConnector(t *testing.T) {
 			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
 			Log:        print.Logger{},
 			MainBranch: gitdomain.NewLocalBranchName("mainBranch"),
-			OriginURL:  &originURL,
+			OriginURL:  originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
