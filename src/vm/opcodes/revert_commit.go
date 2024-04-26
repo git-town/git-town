@@ -21,15 +21,14 @@ func (self *RevertCommit) Run(args shared.RunArgs) error {
 		return err
 	}
 	parent, hasParent := args.Lineage.Parent(currentBranch).Get()
-	commitsInCurrentBranch, err := args.Runner.Backend.CommitsInBranch(currentBranch, parent)
-	if !hasParent {
-		return nil
-	}
-	if err != nil {
-		return err
-	}
-	if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
-		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
+	if hasParent {
+		commitsInCurrentBranch, err := args.Runner.Backend.CommitsInBranch(currentBranch, parent)
+		if err != nil {
+			return err
+		}
+		if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
+			return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
+		}
 	}
 	return args.Runner.Frontend.RevertCommit(self.SHA)
 }

@@ -8,7 +8,6 @@ Feature: can undo a ship even after additional commits to the main branch
     When I run "git-town ship -m done"
     And I add commit "additional commit" to the "main" branch
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
