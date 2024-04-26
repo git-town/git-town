@@ -1,6 +1,8 @@
 package prelude
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Option provides infrastructure for nullable values that is enforced by the type checker.
 // Since all types used in Git Town implement the fmt.Stringer interface,
@@ -13,7 +15,7 @@ import "fmt"
 // Go sometimes de-references pointers and sometimes it doesn't.
 // Pointers have too many meanings: reference, mutability, poor-man optionality.
 // Better to have a dedicated facility for optionality and only that.
-type Option[T fmt.Stringer] struct {
+type Option[T any] struct {
 	Value *T
 }
 
@@ -73,8 +75,8 @@ func (self Option[T]) String() string {
 // StringOr provideds the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
-	if value, has := self.Get(); has {
-		return value.String()
+	if self.IsNone() {
+		return other
 	}
-	return other
+	return fmt.Sprint(self.Value)
 }
