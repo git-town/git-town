@@ -25,8 +25,8 @@ func (self *MergeParent) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *MergeParent) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(self.CurrentBranch)
-	if parent.IsEmpty() {
+	parent, hasParent := args.Lineage.Parent(self.CurrentBranch).Get()
+	if !hasParent {
 		return nil
 	}
 	var branchToMerge gitdomain.BranchName

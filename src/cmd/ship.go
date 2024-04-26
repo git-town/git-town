@@ -196,7 +196,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip)
+	targetBranchName, hasTargetBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip).Get()
+	if !hasTargetBranch {
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+	}
 	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)

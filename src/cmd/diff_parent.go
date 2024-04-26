@@ -95,9 +95,6 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branch) {
-		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
-	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branch},
 		Config:           repo.Runner.Config,
@@ -110,8 +107,12 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if err != nil {
 		return nil, false, err
 	}
+	parentBranch, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branch).Get()
+	if !hasParent {
+		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
+	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: repo.Runner.Config.FullConfig.Lineage.Parent(branch),
+		parentBranch: parentBranch,
 	}, false, nil
 }

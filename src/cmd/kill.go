@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
@@ -101,7 +102,7 @@ type killConfig struct {
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
-	parentBranch     *gitdomain.LocalBranchName
+	parentBranch     Option[gitdomain.LocalBranchName]
 	previousBranch   gitdomain.LocalBranchName
 }
 
@@ -169,7 +170,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		parentBranch:     &parentBranch,
+		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
@@ -215,11 +216,11 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 		prog.Add(&opcodes.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchNameToKill.LocalName})
-	if !config.dryRun && config.parentBranch != nil {
+	if parentBranch, hasParentBranch := config.parentBranch.Get(); hasParentBranch && !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchNameToKill.LocalName,
 			Lineage: config.Lineage,
-			Parent:  *config.parentBranch,
+			Parent:  parentBranch,
 			Program: prog,
 		})
 	}
