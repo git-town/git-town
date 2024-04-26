@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
 	"github.com/shoenig/test/must"
@@ -79,7 +80,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BinDir:     binDir,
 	}
 	config, _, err := config.NewConfig(config.NewConfigArgs{
-		ConfigFile:   nil,
+		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
