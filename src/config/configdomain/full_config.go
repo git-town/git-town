@@ -128,8 +128,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.GitUserName != nil {
 		self.GitUserName = *other.GitUserName
 	}
-	if other.MainBranch != nil {
-		self.MainBranch = *other.MainBranch
+	if branch, has := other.MainBranch.Get(); has {
+		self.MainBranch = branch
 	}
 	if other.PushNewBranches != nil {
 		self.PushNewBranches = *other.PushNewBranches
