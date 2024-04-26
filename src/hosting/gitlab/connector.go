@@ -23,7 +23,7 @@ type Connector struct {
 	log print.Logger
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -31,16 +31,16 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*h
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
-		return nil, err
+		return None[hostingdomain.Proposal](), err
 	}
 	if len(mergeRequests) == 0 {
-		return nil, nil //nolint:nilnil
+		return None[hostingdomain.Proposal](), nil
 	}
 	if len(mergeRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
 	}
 	proposal := parseMergeRequest(mergeRequests[0])
-	return &proposal, nil
+	return Some(proposal), nil
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
