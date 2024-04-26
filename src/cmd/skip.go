@@ -71,7 +71,7 @@ func executeSkip(verbose bool) error {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	runState, hasRunState := runStateOpt.Get()
-	if hasRunState || runState.IsFinished() {
+	if !hasRunState || runState.IsFinished() {
 		return errors.New(messages.SkipNothingToDo)
 	}
 	if !runState.UnfinishedDetails.CanSkip {
