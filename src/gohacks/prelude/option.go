@@ -2,7 +2,6 @@ package prelude
 
 import (
 	"fmt"
-	"reflect"
 )
 
 // Option provides infrastructure for nullable values that is enforced by the type checker.
@@ -76,10 +75,10 @@ func (self Option[T]) String() string {
 // StringOr provideds the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
-	var a any = self.Value
-	if reflect.ValueOf(a).IsNil() {
-		return ""
+	if self.IsNone() {
+		return other
 	}
+	var a any = self.Value
 	if stringer, isStringer := a.(fmt.Stringer); isStringer {
 		return stringer.String()
 	}
