@@ -91,15 +91,19 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdomain.HostingPlatform]) (Option[configdomain.HostingPlatform], error) {
 	if userChoice.IsSome() {
-		return userChoice
+		return userChoice, nil
 	}
-	originURL, hasOriginURL := runner.Config.OriginURL().Get()
+	originURLOpt, err := runner.Config.OriginURL()
+	if err != nil {
+		return None[configdomain.HostingPlatform](), err
+	}
+	originURL, hasOriginURL := originURLOpt.Get()
 	if !hasOriginURL {
-		return None[configdomain.HostingPlatform]()
+		return None[configdomain.HostingPlatform](), nil
 	}
-	return hosting.Detect(originURL, userChoice)
+	return hosting.Detect(originURL, userChoice), nil
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
