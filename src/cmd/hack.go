@@ -90,9 +90,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// determines what the user wants to do in a type-safe way
-// if set to appendConfig, the user wants to append a new branch to an existing branch
-// if set to makeFeatureConfig, the user wants to make an existing branch a feature branch
+// If set to appendConfig, the user wants to append a new branch to an existing branch.
+// If set to makeFeatureConfig, the user wants to make an existing branch a feature branch.
 type hackConfig = either.Either[appendConfig, makeFeatureConfig]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
