@@ -28,7 +28,7 @@ type PartialConfig struct {
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
 	SyncBeforeShip           Option[SyncBeforeShip]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
-	SyncPerennialStrategy    *SyncPerennialStrategy
+	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncUpstream             *SyncUpstream
 }
 
