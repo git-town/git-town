@@ -42,13 +42,13 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
-	DialogTestInputs        *components.TestInputs
+	DialogTestInputs        *components.TestInputs // TODO Option
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
-	RunState                *runstate.RunState
+	RunState                *runstate.RunState // TODO: Option
 	Verbose                 bool
 }
