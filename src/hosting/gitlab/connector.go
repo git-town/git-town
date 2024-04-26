@@ -34,7 +34,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), err
 	}
 	if len(mergeRequests) == 0 {
-		return None[hostingdomain.Proposal](), nil //nolint:nilnil
+		return None[hostingdomain.Proposal](), nil
 	}
 	if len(mergeRequests) > 1 {
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
