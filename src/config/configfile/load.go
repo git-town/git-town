@@ -42,7 +42,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	var err error
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
-			result.MainBranch = gitdomain.NewLocalBranchNameRef(*data.Branches.Main)
+			result.MainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
 		}
 		result.PerennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {

@@ -40,20 +40,6 @@ func TestLocalBranchName(t *testing.T) {
 		must.EqOp(t, "branch-1", branch.String())
 	})
 
-	t.Run("NewLocalBranchNameRefAllowEmpty", func(t *testing.T) {
-		t.Parallel()
-		t.Run("with name", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.NewLocalBranchNameRefAllowEmpty("branch-1")
-			must.EqOp(t, "branch-1", branch.String())
-		})
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.NewLocalBranchNameRefAllowEmpty("")
-			must.EqOp(t, "", branch.String())
-		})
-	})
-
 	t.Run("TrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
