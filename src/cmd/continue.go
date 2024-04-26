@@ -124,14 +124,15 @@ type continueConfig struct {
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
-	runState, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsFinished() {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState || runState.IsFinished() {
 		fmt.Println(messages.ContinueNothingToDo)
 		return runstate.EmptyRunState(), true, nil
 	}
 	runState.AbortProgram = program.Program{}
-	return *runState, false, nil
+	return runState, false, nil
 }
