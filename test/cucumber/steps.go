@@ -469,14 +469,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.ShipDeleteTrackingBranch
-		wantBool, err := strconv.ParseBool(wantStr)
+		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.ShipDeleteTrackingBranch(wantBool)
-		if cmp.Equal(*have, want) {
-			return nil
+		have, has := state.fixture.DevRepo.Config.GlobalGitConfig.ShipDeleteTrackingBranch.Get()
+		if !has {
+			return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but doesn't exist`, want)
 		}
-		return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but was %v`, want, *have)
+		if have.Bool() != want {
+			return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^global Git Town setting "sync-before-ship" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -942,19 +944,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
-		if have == nil {
-			return nil
+		have, has := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch.Get()
+		if has {
+			return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
 		}
-		return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
-		wantBool, err := strconv.ParseBool(wantStr)
+		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.ShipDeleteTrackingBranch(wantBool)
-		if *have != want {
+		have, has := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch.Get()
+		if !has {
+			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but doesn't exist`, want)
+		}
+		if have.Bool() != want {
 			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
 		}
 		return nil

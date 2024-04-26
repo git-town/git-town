@@ -271,10 +271,10 @@ func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, globa
 func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, global bool) error {
 	self.FullConfig.ShipDeleteTrackingBranch = value
 	if global {
-		self.GlobalGitConfig.ShipDeleteTrackingBranch = &value
+		self.GlobalGitConfig.ShipDeleteTrackingBranch = Some(value)
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
-	self.LocalGitConfig.ShipDeleteTrackingBranch = &value
+	self.LocalGitConfig.ShipDeleteTrackingBranch = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 

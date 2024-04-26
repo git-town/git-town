@@ -144,8 +144,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if value, has := other.PushHook.Get(); has {
 		self.PushHook = value
 	}
-	if other.ShipDeleteTrackingBranch != nil {
-		self.ShipDeleteTrackingBranch = *other.ShipDeleteTrackingBranch
+	if value, has := other.ShipDeleteTrackingBranch.Get(); has {
+		self.ShipDeleteTrackingBranch = value
 	}
 	if other.SyncBeforeShip != nil {
 		self.SyncBeforeShip = *other.SyncBeforeShip

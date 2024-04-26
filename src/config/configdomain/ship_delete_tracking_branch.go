@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -19,15 +20,6 @@ func (self ShipDeleteTrackingBranch) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewShipDeleteTrackingBranch(value bool) ShipDeleteTrackingBranch {
-	return ShipDeleteTrackingBranch(value)
-}
-
-func NewShipDeleteTrackingBranchRef(value bool) *ShipDeleteTrackingBranch {
-	result := NewShipDeleteTrackingBranch(value)
-	return &result
-}
-
 func ParseShipDeleteTrackingBranch(value, source string) (ShipDeleteTrackingBranch, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
@@ -37,7 +29,10 @@ func ParseShipDeleteTrackingBranch(value, source string) (ShipDeleteTrackingBran
 	return result, nil
 }
 
-func ParseShipDeleteTrackingBranchRef(value, source string) (*ShipDeleteTrackingBranch, error) {
+func ParseShipDeleteTrackingBranchOption(value, source string) (Option[ShipDeleteTrackingBranch], error) {
 	result, err := ParseShipDeleteTrackingBranch(value, source)
-	return &result, err
+	if err != nil {
+		return None[ShipDeleteTrackingBranch](), err
+	}
+	return Some(result), err
 }

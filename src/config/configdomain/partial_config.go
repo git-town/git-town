@@ -25,7 +25,7 @@ type PartialConfig struct {
 	PerennialRegex           Option[PerennialRegex]
 	PushHook                 Option[PushHook]
 	PushNewBranches          Option[PushNewBranches]
-	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
+	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
 	SyncBeforeShip           *SyncBeforeShip
 	SyncFeatureStrategy      *SyncFeatureStrategy
 	SyncPerennialStrategy    *SyncPerennialStrategy
