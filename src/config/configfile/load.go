@@ -63,7 +63,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 			result.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyOption(*data.SyncStrategy.FeatureBranches)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			result.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(*data.SyncStrategy.PerennialBranches)
+			result.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyOption(*data.SyncStrategy.PerennialBranches)
 		}
 	}
 	if data.PushNewbranches != nil {

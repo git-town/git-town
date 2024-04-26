@@ -303,7 +303,7 @@ func (self *Config) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureS
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *Config) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
 	self.FullConfig.SyncPerennialStrategy = strategy
-	self.LocalGitConfig.SyncPerennialStrategy = &strategy
+	self.LocalGitConfig.SyncPerennialStrategy = Some(strategy)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncPerennialStrategy, strategy.String())
 }
 

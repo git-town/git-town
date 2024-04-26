@@ -153,8 +153,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if value, has := other.SyncFeatureStrategy.Get(); has {
 		self.SyncFeatureStrategy = value
 	}
-	if other.SyncPerennialStrategy != nil {
-		self.SyncPerennialStrategy = *other.SyncPerennialStrategy
+	if value, has := other.SyncPerennialStrategy.Get(); has {
+		self.SyncPerennialStrategy = value
 	}
 	if other.SyncUpstream != nil {
 		self.SyncUpstream = *other.SyncUpstream

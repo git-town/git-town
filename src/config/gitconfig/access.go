@@ -116,7 +116,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeySyncFeatureStrategy:
 		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyOption(value)
 	case KeySyncPerennialStrategy:
-		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(value)
+		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyOption(value)
 	case KeySyncUpstream:
 		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
