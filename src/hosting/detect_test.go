@@ -40,4 +40,32 @@ func TestDetect(t *testing.T) {
 		want := Some(configdomain.HostingPlatformGitea)
 		must.Eq(t, want, have)
 	})
+	t.Run("GitHub SAAS, no override", func(t *testing.T) {
+		t.Parallel()
+		url := giturl.Parse("username@github.com:git-town/docs.git")
+		have := hosting.Detect(url, None[configdomain.HostingPlatform]())
+		want := Some(configdomain.HostingPlatformGitHub)
+		must.Eq(t, want, have)
+	})
+	t.Run("custom URL, override to GitHub", func(t *testing.T) {
+		t.Parallel()
+		url := giturl.Parse("username@custom.org:git-town/docs.git")
+		have := hosting.Detect(url, Some(configdomain.HostingPlatformGitHub))
+		want := Some(configdomain.HostingPlatformGitHub)
+		must.Eq(t, want, have)
+	})
+	t.Run("GitLab SAAS, no override", func(t *testing.T) {
+		t.Parallel()
+		url := giturl.Parse("username@gitlab.com:git-town/docs.git")
+		have := hosting.Detect(url, None[configdomain.HostingPlatform]())
+		want := Some(configdomain.HostingPlatformGitLab)
+		must.Eq(t, want, have)
+	})
+	t.Run("custom URL, override to GitLab", func(t *testing.T) {
+		t.Parallel()
+		url := giturl.Parse("username@custom.org:git-town/docs.git")
+		have := hosting.Detect(url, Some(configdomain.HostingPlatformGitLab))
+		want := Some(configdomain.HostingPlatformGitLab)
+		must.Eq(t, want, have)
+	})
 }
