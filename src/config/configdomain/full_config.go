@@ -13,7 +13,7 @@ type FullConfig struct {
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             GitUserEmail
-	GitUserName              string
+	GitUserName              GitUserName
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
@@ -125,8 +125,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if email, has := other.GitUserEmail.Get(); has {
 		self.GitUserEmail = email
 	}
-	if other.GitUserName != nil {
-		self.GitUserName = *other.GitUserName
+	if name, has := other.GitUserName.Get(); has {
+		self.GitUserName = name
 	}
 	if branch, has := other.MainBranch.Get(); has {
 		self.MainBranch = branch

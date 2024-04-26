@@ -1,9 +1,11 @@
 package configdomain
 
 import (
+	"errors"
 	"strings"
 
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 type GitUserEmail string
@@ -12,18 +14,19 @@ func (self GitUserEmail) String() string {
 	return string(self)
 }
 
-func NewGitUserEmail(value string) GitUserEmail {
+func NewGitUserEmail(value string) (GitUserEmail, error) {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		panic("empty Git user email")
+		return "", errors.New(messages.GitUserEmailMissing)
 	}
-	return GitUserEmail(value)
+	return GitUserEmail(value), nil
 }
 
-func NewGitUserEmailOption(value string) Option[GitUserEmail] {
+func NewGitUserEmailOption(value string) (Option[GitUserEmail], error) {
 	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[GitUserEmail]()
+	email, err := NewGitUserEmail(value)
+	if err != nil {
+		return None[GitUserEmail](), err
 	}
-	return Some(NewGitUserEmail(value))
+	return Some(email), nil
 }
