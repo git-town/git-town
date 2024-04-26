@@ -78,9 +78,9 @@ func (self Option[T]) StringOr(other string) string {
 	if self.IsNone() {
 		return other
 	}
-	var a any = self.Value
-	if stringer, isStringer := a.(fmt.Stringer); isStringer {
+	var generic any = self.Value
+	if stringer, isStringer := generic.(fmt.Stringer); isStringer {
 		return stringer.String()
 	}
-	return fmt.Sprint(a)
+	return fmt.Sprint(self.Value)
 }
