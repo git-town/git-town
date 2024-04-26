@@ -160,7 +160,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 		parentBranch, hasParentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress).Get()
 		if !hasParentBranch {
-			continue
+			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		commits, err := repo.Runner.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parentBranch)
 		if err != nil {
