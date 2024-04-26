@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -78,8 +79,9 @@ func executeContribute(args []string, verbose bool) error {
 		return err
 	}
 	printContributeBranches(branchNames)
-	if !config.checkout.IsEmpty() {
-		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout, false); err != nil {
+	branchToCheckout, hasBranchToCheckout := config.branchToCheckout.Get()
+	if hasBranchToCheckout {
+		if err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
 			return err
 		}
 	}
@@ -94,9 +96,9 @@ func executeContribute(args []string, verbose bool) error {
 }
 
 type contributeConfig struct {
-	allBranches    gitdomain.BranchInfos
-	branchesToMark commandconfig.BranchesAndTypes
-	checkout       gitdomain.LocalBranchName
+	allBranches      gitdomain.BranchInfos
+	branchesToMark   commandconfig.BranchesAndTypes
+	branchToCheckout Option[gitdomain.LocalBranchName]
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
@@ -128,24 +130,27 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 		return contributeConfig{}, err
 	}
 	branchesToMark := commandconfig.BranchesAndTypes{}
-	checkout := gitdomain.EmptyLocalBranchName()
+	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
 		branchesToMark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
+		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToMark.Add(branch, &repo.Runner.Config.FullConfig)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			checkout = branch
+			branchToCheckout = Some(branch)
+		} else {
+			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
 	return contributeConfig{
-		allBranches:    branchesSnapshot.Branches,
-		branchesToMark: branchesToMark,
-		checkout:       checkout,
+		allBranches:      branchesSnapshot.Branches,
+		branchesToMark:   branchesToMark,
+		branchToCheckout: branchToCheckout,
 	}, nil
 }
 
