@@ -60,7 +60,6 @@ func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName
 func (self *Config) Author() (gitdomain.Author, error) {
 	email := self.FullConfig.GitUserEmail
 	if email == "" {
-		return "", errors.New(messages.GitUserEmailMissing)
 	}
 	name := self.FullConfig.GitUserName
 	if name == "" {

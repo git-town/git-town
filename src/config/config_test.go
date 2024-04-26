@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
@@ -13,6 +14,22 @@ import (
 
 func TestGitTown(t *testing.T) {
 	t.Parallel()
+
+	t.Run("Author", func(t *testing.T) {
+		t.Parallel()
+		t.Run("happy path", func(t *testing.T) {
+			conf := config.Config{
+				FullConfig: configdomain.FullConfig{
+					GitUserName:  configdomain.GitUserName("name"),
+					GitUserEmail: configdomain.GitUserEmail("email"),
+				},
+			}
+			have, err := conf.Author()
+			want := gitdomain.Author("name <email>")
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
+		})
+	})
 
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
