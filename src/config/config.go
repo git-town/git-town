@@ -260,10 +260,10 @@ func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, globa
 	setting := strconv.FormatBool(bool(value))
 	self.FullConfig.PushNewBranches = value
 	if global {
-		self.GlobalGitConfig.PushNewBranches = &value
+		self.GlobalGitConfig.PushNewBranches = Some(value)
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
 	}
-	self.LocalGitConfig.PushNewBranches = &value
+	self.LocalGitConfig.PushNewBranches = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
 }
 
