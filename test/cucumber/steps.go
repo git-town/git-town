@@ -456,14 +456,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.PushNewBranches
-		wantBool, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.PushNewBranches(wantBool)
-		if cmp.Equal(*have, want) {
-			return nil
+		have, has := state.fixture.DevRepo.Config.GlobalGitConfig.PushNewBranches.Get()
+		if !has {
+			return errors.New(`expected global setting "push-new-branches" to exist but it doesn't`)
 		}
-		return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, *have)
+		want, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		if have.Bool() != want {
+			return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -919,21 +921,24 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushNewBranches
-		if have == nil {
-			return nil
+		if value, has := have.Get(); has {
+			return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, value)
 		}
-		return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, have)
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.PushNewBranches
-		wantBool, err := strconv.ParseBool(wantStr)
+		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.PushNewBranches(wantBool)
-		if cmp.Equal(*have, want) {
-			return nil
+		pushNewBranches, has := state.fixture.DevRepo.Config.LocalGitConfig.PushNewBranches.Get()
+		if !has {
+			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but it doesn't exist`, want)
 		}
-		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+		have := pushNewBranches.Bool()
+		if have != want {
+			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {

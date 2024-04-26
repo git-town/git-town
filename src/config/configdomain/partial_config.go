@@ -24,7 +24,7 @@ type PartialConfig struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PushHook                 Option[PushHook]
-	PushNewBranches          *PushNewBranches
+	PushNewBranches          Option[PushNewBranches]
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
 	SyncBeforeShip           *SyncBeforeShip
 	SyncFeatureStrategy      *SyncFeatureStrategy
