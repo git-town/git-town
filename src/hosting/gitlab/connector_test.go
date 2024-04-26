@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/gitlab"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -86,10 +85,9 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: None[configdomain.HostingPlatform](),
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@gitlab.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -103,13 +101,12 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.Eq(t, wantConfig, have.Config)
 	})
 
-	t.Run("hosted service type provided manually", func(t *testing.T) {
+	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: Some(configdomain.HostingPlatformGitLab),
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@custom-url.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -126,10 +123,9 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: Some(configdomain.HostingPlatformGitLab),
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@gitlab.domain:1234/group/project"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@gitlab.domain:1234/group/project"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
