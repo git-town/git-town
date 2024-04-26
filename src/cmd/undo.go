@@ -55,11 +55,12 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
@@ -69,7 +70,7 @@ func executeUndo(verbose bool) error {
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.FullConfig.Lineage,
 		RootDir:          repo.RootDir,
-		RunState:         *runState,
+		RunState:         runState,
 		Runner:           repo.Runner,
 		Verbose:          verbose,
 	})

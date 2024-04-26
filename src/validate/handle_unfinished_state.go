@@ -21,11 +21,12 @@ import (
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
-	runState, err := statefile.Load(args.RootDir)
+	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsFinished() {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState || runState.IsFinished() {
 		return false, nil
 	}
 	response, aborted, err := dialog.AskHowToHandleUnfinishedRunState(
@@ -53,7 +54,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,
 			RootDir:          args.RootDir,
-			RunState:         *runState,
+			RunState:         runState,
 			Runner:           args.Run,
 			Verbose:          args.Verbose,
 		})
@@ -63,7 +64,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			CurrentBranch:  args.CurrentBranch,
 			HasOpenChanges: args.HasOpenChanges,
 			RootDir:        args.RootDir,
-			RunState:       runState,
+			RunState:       &runState,
 			Runner:         args.Run,
 			TestInputs:     args.DialogTestInputs,
 			Verbose:        args.Verbose,
@@ -89,7 +90,7 @@ type UnfinishedStateArgs struct {
 	Verbose                 bool
 }
 
-func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return false, err
@@ -107,7 +108,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
-		RunState:                runState,
+		RunState:                &runState,
 		Verbose:                 args.Verbose,
 	})
 }
