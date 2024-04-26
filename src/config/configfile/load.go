@@ -76,7 +76,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		result.SyncBeforeShip = Some(configdomain.SyncBeforeShip(*data.SyncBeforeShip))
 	}
 	if data.SyncUpstream != nil {
-		result.SyncUpstream = configdomain.NewSyncUpstreamRef(*data.SyncUpstream)
+		result.SyncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
 	return result, err
 }
