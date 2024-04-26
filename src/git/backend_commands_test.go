@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/subshell"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/testruntime"
@@ -114,7 +115,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(branch, gitdomain.NewLocalBranchName("initial"))
+			commits, err := runtime.BackendCommands.CommitsInBranch(branch, Some(gitdomain.NewLocalBranchName("initial")))
 			must.NoError(t, err)
 			haveMessages := commits.Messages()
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
@@ -125,7 +126,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
 			runtime.CreateBranch(branch, initial)
-			commits, err := runtime.BackendCommands.CommitsInBranch(branch, gitdomain.NewLocalBranchName("initial"))
+			commits, err := runtime.BackendCommands.CommitsInBranch(branch, Some(gitdomain.NewLocalBranchName("initial")))
 			must.NoError(t, err)
 			must.EqOp(t, 0, len(commits))
 		})
@@ -142,14 +143,14 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(initial, gitdomain.EmptyLocalBranchName())
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, Some(gitdomain.EmptyLocalBranchName()))
 			must.NoError(t, err)
 			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			commits, err := runtime.BackendCommands.CommitsInBranch(initial, gitdomain.EmptyLocalBranchName())
+			commits, err := runtime.BackendCommands.CommitsInBranch(initial, Some(gitdomain.EmptyLocalBranchName()))
 			must.NoError(t, err)
 			must.EqOp(t, 1, len(commits)) // the initial commit
 		})

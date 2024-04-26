@@ -10,6 +10,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -170,11 +171,11 @@ func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error 
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (self *BackendCommands) CommitsInBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
-	if parent.IsEmpty() {
-		return self.CommitsInPerennialBranch()
+func (self *BackendCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
+	if parent, hasParent := parent.Get(); hasParent {
+		return self.CommitsInFeatureBranch(branch, parent)
 	}
-	return self.CommitsInFeatureBranch(branch, parent)
+	return self.CommitsInPerennialBranch()
 }
 
 func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {

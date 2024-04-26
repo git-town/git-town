@@ -158,11 +158,8 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		if err := validateBranchIsSynced(branchInfo.LocalName, branchInfo.SyncStatus); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
-		parentBranch, hasParentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress).Get()
-		if !hasParentBranch {
-			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
-		}
-		commits, err := repo.Runner.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parentBranch)
+		parent := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress)
+		commits, err := repo.Runner.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
@@ -171,6 +168,10 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		commitCount := len(commitMessages)
 		if err := validateBranchHasMultipleCommits(branchInfo.LocalName, commitCount); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
+		}
+		parentBranch, hasParent := parent.Get()
+		if !hasParent {
+			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		branchesToCompress[b] = compressBranchConfig{
 			branchInfo:       *branchInfo,
