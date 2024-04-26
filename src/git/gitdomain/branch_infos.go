@@ -12,7 +12,7 @@ import (
 type BranchInfos []BranchInfo
 
 // FindByLocalName provides the branch with the given name if one exists.
-func (self BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
+func (self BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo { // TODO: use Option
 	for bi, branch := range self {
 		if branch.LocalName == branchName {
 			return &self[bi]

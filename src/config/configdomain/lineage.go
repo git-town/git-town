@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"golang.org/x/exp/maps"
 )
@@ -51,7 +52,7 @@ func (self Lineage) BranchAndAncestors(branchName gitdomain.LocalBranchName) git
 // BranchLineageWithoutRoot provides all branches in the lineage of the given branch,
 // from oldest to youngest, including the given branch.
 func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
-	if self.Parent(branch).IsEmpty() {
+	if self.Parent(branch).IsNone() {
 		return self.Descendants(branch)
 	}
 	return append(append(self.AncestorsWithoutRoot(branch), branch), self.Descendants(branch)...)
@@ -132,23 +133,23 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
-func (self Lineage) Parent(branch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
+func (self Lineage) Parent(branch gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for child, parent := range self {
 		if child == branch {
-			return parent
+			return Some(parent)
 		}
 	}
-	return gitdomain.EmptyLocalBranchName()
+	return None[gitdomain.LocalBranchName]()
 }
 
 // RemoveBranch removes the given branch completely from this lineage.
 func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) {
-	parent := self.Parent(branch)
+	parent, hasParent := self.Parent(branch).Get()
 	for _, childName := range self.Children(branch) {
-		if parent.IsEmpty() {
-			delete(self, childName)
-		} else {
+		if hasParent {
 			self[childName] = parent
+		} else {
+			delete(self, childName)
 		}
 	}
 	delete(self, branch)

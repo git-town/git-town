@@ -11,9 +11,9 @@ type RemoveBranchFromLineage struct {
 }
 
 func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(self.Branch)
+	parent, hasParent := args.Lineage.Parent(self.Branch).Get()
 	for _, child := range args.Lineage.Children(self.Branch) {
-		if parent.IsEmpty() {
+		if !hasParent {
 			args.Runner.Config.RemoveParent(child)
 		} else {
 			err := args.Runner.Config.SetParent(child, parent)
