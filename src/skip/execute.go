@@ -1,10 +1,13 @@
 package skip
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	lightInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/light"
@@ -16,7 +19,10 @@ import (
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Config.FullConfig.Lineage)
-	revertChangesToCurrentBranch(args)
+	err := revertChangesToCurrentBranch(args)
+	if err != nil {
+		return err
+	}
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
@@ -60,11 +66,19 @@ func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
 	return result
 }
 
-func revertChangesToCurrentBranch(args ExecuteArgs) {
+func revertChangesToCurrentBranch(args ExecuteArgs) error {
+	before, hasBefore := args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch).Get()
+	if !hasBefore {
+		return fmt.Errorf(messages.SkipNoInitialBranchInfo, args.CurrentBranch)
+	}
+	after, hasAfter := args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch).Get()
+	if !hasAfter {
+		return fmt.Errorf(messages.SkipNoFinalBranchInfo, args.CurrentBranch)
+	}
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
-			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			Before: before,
+			After:  after,
 		},
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
@@ -74,4 +88,5 @@ func revertChangesToCurrentBranch(args ExecuteArgs) {
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Config.FullConfig.Lineage)
+	return nil
 }
