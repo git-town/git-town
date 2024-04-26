@@ -210,7 +210,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, 
 	})
 	return &setupConfig{
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.Runner.Config.ConfigFile != nil,
+		hasConfigFile: repo.Runner.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
 		userInput:     defaultUserInput(),
 	}, exit, err

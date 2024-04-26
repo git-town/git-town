@@ -22,7 +22,7 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
-	ConfigFile      *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
+	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
 	FullConfig      configdomain.FullConfig    // the merged configuration data
 	GitConfig       gitconfig.Access           // access to the Git configuration settings
@@ -334,7 +334,7 @@ func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
 }
 
 type NewConfigArgs struct {
-	ConfigFile   *configdomain.PartialConfig
+	ConfigFile   Option[configdomain.PartialConfig]
 	DryRun       bool
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
