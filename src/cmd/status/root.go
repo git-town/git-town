@@ -58,7 +58,7 @@ func executeStatus(verbose bool) error {
 
 type displayStatusConfig struct {
 	filepath string                    // filepath of the runstate file
-	state    Option[runstate.RunState] // content of the runstate file TODO Option
+	state    Option[runstate.RunState] // content of the runstate file
 }
 
 func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfig, error) {
