@@ -416,11 +416,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.MainBranch
-		want := gitdomain.LocalBranchName(wantStr)
-		if *have != want {
-			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, *have)
+	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.MainBranch.String()
+		if have != want {
+			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
 	})
@@ -874,10 +873,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, have)
 	})
 
-	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
-		want := gitdomain.NewLocalBranchName(wantStr)
-		if *have != want {
+	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch.String()
+		if have != want {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
@@ -1516,10 +1514,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the main branch is (?:now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
-		if have == nil {
-			return nil
+		if branch, has := have.Get(); has {
+			return fmt.Errorf("unexpected main branch setting %q", branch)
 		}
-		return fmt.Errorf("unexpected main branch setting %q", have)
+		return nil
 	})
 
 	suite.Step(`^an observed branch "([^"]+)"$`, func(name string) error {

@@ -191,7 +191,7 @@ func (self *Config) SetContributionBranches(branches gitdomain.LocalBranchNames)
 // in the Git Town configuration.
 func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.FullConfig.MainBranch = branch
-	self.LocalGitConfig.MainBranch = &branch
+	self.LocalGitConfig.MainBranch = Some(branch)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
