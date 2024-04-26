@@ -17,8 +17,8 @@ func TestGitTown(t *testing.T) {
 
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
-		conf := config.Config{
-			FullConfig: configdomain.FullConfig{
+		conf := config.Config{ //nolint:exhaustruct
+			FullConfig: configdomain.FullConfig{ //nolint:exhaustruct
 				GitUserName:  configdomain.GitUserName("name"),
 				GitUserEmail: configdomain.GitUserEmail("email"),
 			},
