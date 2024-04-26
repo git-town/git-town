@@ -29,7 +29,7 @@ type PartialConfig struct {
 	SyncBeforeShip           Option[SyncBeforeShip]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
-	SyncUpstream             *SyncUpstream
+	SyncUpstream             Option[SyncUpstream]
 }
 
 func EmptyPartialConfig() PartialConfig {
