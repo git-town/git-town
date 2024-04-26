@@ -250,7 +250,7 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch with matching name", func(t *testing.T) {
 			branchOne := gitdomain.NewLocalBranchName("one")
-			bs := gitdomain.BranchInfos{
+			branchInfos := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  branchOne,
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -259,7 +259,9 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			must.EqOp(t, branchOne, bs.FindByLocalName(branchOne).LocalName)
+			branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branchOne).Get()
+			must.True(t, hasBranchInfo)
+			must.EqOp(t, branchOne, branchInfo.LocalName)
 		})
 		t.Run("remote branch with matching name", func(t *testing.T) {
 			bs := gitdomain.BranchInfos{
