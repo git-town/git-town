@@ -21,7 +21,7 @@ func Load(repoDir gitdomain.RepoRootDir) (Option[runstate.RunState], error) {
 	_, err = os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return None[runstate.RunState](), nil //nolint:nilnil
+			return None[runstate.RunState](), nil
 		}
 		return None[runstate.RunState](), fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
