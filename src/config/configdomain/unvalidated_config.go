@@ -147,8 +147,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if value, has := other.ShipDeleteTrackingBranch.Get(); has {
 		self.ShipDeleteTrackingBranch = value
 	}
-	if other.SyncBeforeShip != nil {
-		self.SyncBeforeShip = *other.SyncBeforeShip
+	if value, has := other.SyncBeforeShip.Get(); has {
+		self.SyncBeforeShip = value
 	}
 	if other.SyncFeatureStrategy != nil {
 		self.SyncFeatureStrategy = *other.SyncFeatureStrategy
