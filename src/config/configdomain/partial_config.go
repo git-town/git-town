@@ -11,7 +11,7 @@ type PartialConfig struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
-	GitUserEmail             *string
+	GitUserEmail             Option[GitUserEmail]
 	GitUserName              *string
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
