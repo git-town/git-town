@@ -208,10 +208,6 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Runner.Config.FullConfig, repo.Runner.Config.FullConfig.Lineage)
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	var proposal *hostingdomain.Proposal
 	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
