@@ -263,5 +263,5 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
-	panic("unhandled syncstatus" + syncStatus.String())
+	panic("unhandled syncstatus: " + syncStatus.String())
 }
