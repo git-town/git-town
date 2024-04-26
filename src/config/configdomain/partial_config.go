@@ -17,7 +17,7 @@ type PartialConfig struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform]
 	Lineage                  *Lineage
-	MainBranch               *gitdomain.LocalBranchName
+	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  *Offline
 	ParkedBranches           gitdomain.LocalBranchNames

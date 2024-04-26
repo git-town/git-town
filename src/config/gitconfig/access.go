@@ -92,7 +92,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyGitUserName:
 		config.GitUserName = &value
 	case KeyMainBranch:
-		config.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
+		config.MainBranch = gitdomain.NewLocalBranchNameOption(value)
 	case KeyObservedBranches:
 		config.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyOffline:
