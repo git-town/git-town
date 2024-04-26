@@ -6,12 +6,14 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 )
 
-// Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repoDir gitdomain.RepoRootDir) (*runstate.RunState, error) {
+// Load loads the run state for the given Git repo from disk.
+// Returns None if there is no saved runstate.
+func Load(repoDir gitdomain.RepoRootDir) (Option[runstate.RunState], error) {
 	filename, err := FilePath(repoDir)
 	if err != nil {
 		return nil, err
