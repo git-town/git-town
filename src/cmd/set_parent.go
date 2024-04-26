@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -104,7 +105,7 @@ type setParentConfig struct {
 	currentBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
-	existingParent   *gitdomain.LocalBranchName // TODO: use Option
+	existingParent   Option[gitdomain.LocalBranchName]
 	hasOpenChanges   bool
 	mainBranch       gitdomain.LocalBranchName
 }
@@ -130,10 +131,11 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	mainBranch := repo.Runner.Config.FullConfig.MainBranch
-	existingParent, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	existingParentBranch, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
-		defaultChoice = existingParent
+		defaultChoice = existingParentBranch
 	} else {
 		defaultChoice = mainBranch
 	}
@@ -141,7 +143,7 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
-		existingParent:   &existingParent,
+		existingParent:   existingParent,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       mainBranch,
 	}, branchesSnapshot, stashSize, false, nil
