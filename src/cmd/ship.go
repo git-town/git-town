@@ -177,7 +177,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
 	if !isShippingInitialBranch { // TODO: merge these two ifs
-		if hasBranchToShip {
+		if !hasBranchToShip {
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
@@ -201,7 +201,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
-	if hasTargetBranch {
+	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Runner.Config.FullConfig, repo.Runner.Config.FullConfig.Lineage)
