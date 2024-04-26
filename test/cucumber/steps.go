@@ -463,9 +463,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		if have.Bool() != want {
-			return nil
+			return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, have)
 		}
-		return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, have)
+		return nil
 	})
 
 	suite.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
