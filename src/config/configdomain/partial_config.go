@@ -15,7 +15,7 @@ type PartialConfig struct {
 	GitUserName              *string
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          *HostingPlatform
+	HostingPlatform          Option[HostingPlatform]
 	Lineage                  *Lineage
 	MainBranch               *gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
