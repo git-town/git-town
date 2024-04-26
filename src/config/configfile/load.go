@@ -8,6 +8,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -66,7 +67,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		}
 	}
 	if data.PushNewbranches != nil {
-		result.PushNewBranches = configdomain.NewPushNewBranchesRef(*data.PushNewbranches)
+		result.PushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
 	}
 	if data.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = configdomain.NewShipDeleteTrackingBranchRef(*data.ShipDeleteTrackingBranch)

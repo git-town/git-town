@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -19,11 +20,6 @@ func (self PushNewBranches) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewPushNewBranchesRef(value bool) *PushNewBranches {
-	result := PushNewBranches(value)
-	return &result
-}
-
 func ParsePushNewBranches(value, source string) (PushNewBranches, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
@@ -32,7 +28,10 @@ func ParsePushNewBranches(value, source string) (PushNewBranches, error) {
 	return PushNewBranches(parsed), nil
 }
 
-func ParsePushNewBranchesRef(value, source string) (*PushNewBranches, error) {
+func ParsePushNewBranchesOption(value, source string) (Option[PushNewBranches], error) {
 	result, err := ParsePushNewBranches(value, source)
-	return &result, err
+	if err != nil {
+		return None[PushNewBranches](), err
+	}
+	return Some(result), err
 }
