@@ -5,6 +5,7 @@ import "fmt"
 // Option provides infrastructure for nullable values that is enforced by the type checker.
 // Since all types used in Git Town implement the fmt.Stringer interface,
 // we can narrow the allowed types to fmt.Stringer.
+// The zero value is the None option.
 //
 // We tried using pointers to express optionality before but it doesn't work well.
 // There are too many situation where a pointer expression happily passes the type checker
