@@ -344,8 +344,7 @@ type NewConfigArgs struct {
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
 func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
 	for _, perennialBranch := range perennialBranches {
-		parent := lineage.Parent(perennialBranch)
-		if parent.IsSome() {
+		if lineage.Parent(perennialBranch).IsSome() {
 			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
 				return err
 			}
