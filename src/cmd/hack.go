@@ -121,7 +121,7 @@ func createBranch(args createBranchArgs) error {
 		InitialStashSize:        args.beginStashSize,
 		RootDir:                 args.rootDir,
 		Run:                     args.runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
 }

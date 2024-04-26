@@ -21,7 +21,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		HasOpenChanges: false,
 		NoPushHook:     args.FullConfig.NoPushHook(),
 		Run:            args.Run,
-		RunState:       *args.RunState,
+		RunState:       args.RunState,
 	})
 	if err != nil {
 		return err

@@ -96,7 +96,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }
