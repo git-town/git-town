@@ -26,10 +26,9 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 		})
 	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:        args.GiteaToken,
-			HostingPlatform: args.HostingPlatform,
-			Log:             args.Log,
-			OriginURL:       args.OriginURL,
+			APIToken:  args.GiteaToken,
+			Log:       args.Log,
+			OriginURL: args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitHub:
 		return github.NewConnector(github.NewConnectorArgs{
