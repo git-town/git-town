@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -23,13 +24,12 @@ func (offline Offline) ToOnline() Online {
 	return Online(!offline.Bool())
 }
 
-func NewOfflineRef(value, source string) (*Offline, error) {
+func NewOfflineOption(value, source string) (Option[Offline], error) {
 	boolValue, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
+		return None[Offline](), fmt.Errorf(messages.ValueInvalid, source, value)
 	}
-	token := Offline(boolValue)
-	return &token, nil
+	return Some(Offline(boolValue)), nil
 }
 
 type Online bool
