@@ -43,10 +43,10 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.PerennialRegex))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
-	if config.HostingPlatform == configdomain.HostingPlatformNone {
-		result.WriteString("# platform = \"\"\n\n")
+	if platform, has := config.HostingPlatform.Get(); has {
+		result.WriteString(fmt.Sprintf("platform = %q\n\n", platform))
 	} else {
-		result.WriteString(fmt.Sprintf("platform = %q\n\n", config.HostingPlatform))
+		result.WriteString("# platform = \"\"\n\n")
 	}
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.OriginHostnameHelp)) + "\n")
 	if config.HostingOriginHostname.IsNone() {

@@ -16,7 +16,7 @@ type UnvalidatedConfig struct {
 	GitUserName              string
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          HostingPlatform
+	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
@@ -110,8 +110,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.HostingOriginHostname.IsSome() {
 		self.HostingOriginHostname = other.HostingOriginHostname
 	}
-	if other.HostingPlatform != nil {
-		self.HostingPlatform = *other.HostingPlatform
+	if other.HostingPlatform.IsSome() {
+		self.HostingPlatform = other.HostingPlatform
 	}
 	if other.GiteaToken.IsSome() {
 		self.GiteaToken = other.GiteaToken
@@ -186,7 +186,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GitUserName:              "",
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
-		HostingPlatform:          HostingPlatformNone,
+		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
