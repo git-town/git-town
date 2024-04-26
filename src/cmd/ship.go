@@ -247,7 +247,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	return &shipConfig{
 		FullConfig:               &repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
-		branchToShip:             *branchToShip,
+		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
 		connector:                connector,
@@ -261,7 +261,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
-		targetBranch:             *targetBranch,
+		targetBranch:             targetBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
