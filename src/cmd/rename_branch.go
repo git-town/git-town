@@ -188,11 +188,10 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
 			result.Add(&opcodes.AddToPerennialBranches{Branch: config.newBranch})
 		} else {
-			parentPtr := config.Lineage.Parent(config.oldBranch.LocalName)
-			if parentPtr != nil {
-				parent := *parentPtr
-				result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-				result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: parent})
+			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+			parentBranch, hasParent := config.Lineage.Parent(config.oldBranch.LocalName).Get()
+			if hasParent {
+				result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: parentBranch})
 			}
 		}
 	}
