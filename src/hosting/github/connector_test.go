@@ -103,7 +103,7 @@ func TestNewConnector(t *testing.T) {
 		must.EqOp(t, wantConfig, have.Config)
 	})
 
-	t.Run("hosted service type provided manually", func(t *testing.T) {
+	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
