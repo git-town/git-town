@@ -75,12 +75,9 @@ func (self Option[T]) String() string {
 // StringOr provideds the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
-	return ToString(self)
-}
-
-func ToString(value interface{}) string {
-	if str, ok := value.(fmt.Stringer); ok {
+	var a any = self.Value
+	if str, ok := a.(fmt.Stringer); ok {
 		return str.String()
 	}
-	return fmt.Sprint(value)
+	return fmt.Sprint(a)
 }
