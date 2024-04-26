@@ -32,11 +32,23 @@ func TestOption(t *testing.T) {
 			want := "&{true}"
 			must.EqOp(t, want, have)
 		})
-		t.Run("None", func(t *testing.T) {
+		t.Run("None[int]", func(t *testing.T) {
 			t.Parallel()
 			option := None[int]()
 			have := option.String()
-			must.EqOp(t, "<nil>", have)
+			must.EqOp(t, "", have)
+		})
+		t.Run("None[*int]", func(t *testing.T) {
+			t.Parallel()
+			option := None[*int]()
+			have := option.String()
+			must.EqOp(t, "", have)
+		})
+		t.Run("None[string newtype]", func(t *testing.T) {
+			t.Parallel()
+			option := None[configdomain.PerennialRegex]()
+			have := option.String()
+			must.EqOp(t, "", have)
 		})
 	})
 }
