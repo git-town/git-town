@@ -42,7 +42,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
-	DialogTestInputs        *components.TestInputs // TODO Option
+	DialogTestInputs        *components.TestInputs
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
