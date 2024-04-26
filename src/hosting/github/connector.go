@@ -137,11 +137,10 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken        Option[configdomain.GitHubToken]
-	HostingPlatform configdomain.HostingPlatform
-	Log             print.Logger
-	MainBranch      gitdomain.LocalBranchName
-	OriginURL       *giturl.Parts
+	APIToken   Option[configdomain.GitHubToken]
+	Log        print.Logger
+	MainBranch gitdomain.LocalBranchName
+	OriginURL  *giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

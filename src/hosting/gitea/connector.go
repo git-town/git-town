@@ -123,8 +123,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken        Option[configdomain.GiteaToken]
-	HostingPlatform configdomain.HostingPlatform
-	Log             print.Logger
-	OriginURL       *giturl.Parts
+	APIToken  Option[configdomain.GiteaToken]
+	Log       print.Logger
+	OriginURL *giturl.Parts
 }

@@ -21,7 +21,6 @@ func TestNewHostingPlatform(t *testing.T) {
 			"GitLab":    configdomain.HostingPlatformGitLab,
 			"gitea":     configdomain.HostingPlatformGitea,
 			"Gitea":     configdomain.HostingPlatformGitea,
-			"":          configdomain.HostingPlatformNone,
 		}
 		for give, want := range tests {
 			have, err := configdomain.NewHostingPlatform(give)

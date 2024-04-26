@@ -85,10 +85,9 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformNone,
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@gitlab.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -102,13 +101,12 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.Eq(t, wantConfig, have.Config)
 	})
 
-	t.Run("hosted service type provided manually", func(t *testing.T) {
+	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformGitLab,
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@custom-url.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -125,10 +123,9 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:        configdomain.NewGitLabTokenOption("apiToken"),
-			HostingPlatform: configdomain.HostingPlatformGitLab,
-			Log:             print.Logger{},
-			OriginURL:       giturl.Parse("git@gitlab.domain:1234/group/project"),
+			APIToken:  configdomain.NewGitLabTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: giturl.Parse("git@gitlab.domain:1234/group/project"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
