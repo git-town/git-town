@@ -70,7 +70,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            appendProgram(config),
+		RunProgram:            appendProgram(*config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
@@ -163,7 +163,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func appendProgram(config *appendConfig) program.Program {
+func appendProgram(config appendConfig) program.Program {
 	prog := program.Program{}
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {

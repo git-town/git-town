@@ -67,7 +67,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	appendConfig, doAppend, makeFeatureBranchConfig, doMakeFeatureBranch := config.Get()
 	if doAppend {
 		return createBranch(createBranchArgs{
-			appendConfig:          &appendConfig,
+			appendConfig:          appendConfig,
 			beginBranchesSnapshot: initialBranchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        initialStashSize,
@@ -127,7 +127,7 @@ func createBranch(args createBranchArgs) error {
 }
 
 type createBranchArgs struct {
-	appendConfig          *appendConfig
+	appendConfig          appendConfig
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
