@@ -9,8 +9,12 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
-	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Config.Lineage.Parent(branch.LocalName))
-	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+	parent, hasParent := args.Config.Lineage.Parent(branch.LocalName).Get()
+	var parentOtherWorktree bool
+	if hasParent {
+		parentBranchInfo := args.BranchInfos.FindByLocalName(parent)
+		parentOtherWorktree = parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		syncDeletedBranchProgram(args.Program, branch, parentOtherWorktree, args)

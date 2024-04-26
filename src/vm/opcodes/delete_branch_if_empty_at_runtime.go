@@ -15,7 +15,10 @@ type DeleteBranchIfEmptyAtRuntime struct {
 }
 
 func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(self.Branch)
+	parent, hasParent := args.Lineage.Parent(self.Branch).Get()
+	if !hasParent {
+		return nil
+	}
 	hasUnmergedChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(self.Branch, parent)
 	if err != nil {
 		return err

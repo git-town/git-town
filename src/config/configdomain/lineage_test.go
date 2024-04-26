@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -414,19 +415,22 @@ func TestLineage(t *testing.T) {
 				one: main,
 			}
 			have := lineage.Parent(one)
-			must.Eq(t, main, have)
+			want := Some(main)
+			must.Eq(t, want, have)
 		})
 		t.Run("main branch", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
 			have := lineage.Parent(main)
-			must.True(t, have.IsEmpty())
+			want := None[gitdomain.LocalBranchName]()
+			must.EqOp(t, want, have)
 		})
 		t.Run("perennial branch", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
 			have := lineage.Parent(one)
-			must.True(t, have.IsEmpty())
+			want := None[gitdomain.LocalBranchName]()
+			must.EqOp(t, want, have)
 		})
 	})
 
