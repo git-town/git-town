@@ -80,7 +80,7 @@ func executeSkip(verbose bool) error {
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+		connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
 			FullConfig:      &repo.Runner.Config.FullConfig,
 			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
@@ -89,6 +89,7 @@ func executeSkip(verbose bool) error {
 		if err != nil {
 			return err
 		}
+		connector = connectorOpt.GetOrDefault()
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Connector:      connector,
