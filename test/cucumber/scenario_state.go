@@ -62,7 +62,7 @@ type ScenarioState struct {
 }
 
 func (self *ScenarioState) CaptureState() {
-	if self.initialCommits.IsSome() && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
+	if self.initialCommits.IsNone() && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
 		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 		self.initialCommits = Some(currentCommits)
 	}
