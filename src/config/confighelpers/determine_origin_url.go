@@ -12,8 +12,8 @@ func DetermineOriginURL(originURL string, originOverride Option[configdomain.Hos
 		return Some(cached)
 	}
 
-	url, hasUrl := giturl.Parse(originURL).Get()
-	if !hasUrl {
+	url, hasURL := giturl.Parse(originURL).Get()
+	if !hasURL {
 		return None[giturl.Parts]()
 	}
 	if value, has := originOverride.Get(); has {

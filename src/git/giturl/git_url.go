@@ -40,10 +40,10 @@ func Parse(url string) Option[Parts] {
 		return None[Parts]()
 	}
 	return Some(Parts{
-		User: trimLast(matches[1]),
 		Host: trimLast(matches[2]),
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
+		User: trimLast(matches[1]),
 	})
 }
 
