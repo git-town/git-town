@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Reaction {
+func (gh Connector) CommentReactions(comment github.IssueComment) []*github.Reaction {
 	result := []*github.Reaction{}
 	if *comment.Reactions.TotalCount == 0 {
 		return result
