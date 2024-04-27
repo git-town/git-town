@@ -10,11 +10,11 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting/gitlab"
 )
 
-func Detect(originURL *giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func Detect(originURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userOverride.IsSome() {
 		return userOverride
 	}
-	detectors := map[configdomain.HostingPlatform]func(*giturl.Parts) bool{
+	detectors := map[configdomain.HostingPlatform]func(giturl.Parts) bool{
 		configdomain.HostingPlatformBitbucket: bitbucket.Detect,
 		configdomain.HostingPlatformGitea:     gitea.Detect,
 		configdomain.HostingPlatformGitHub:    github.Detect,

@@ -135,7 +135,12 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 }
 
 func (self *Access) OriginRemote() string {
-	output, _ := self.Query("git", "remote", "get-url", gitdomain.RemoteOrigin.String())
+	output, err := self.Query("git", "remote", "get-url", gitdomain.RemoteOrigin.String())
+	if err != nil {
+		// NOTE: it's okay to ignore the error here.
+		// If we get an error here, we simply don't use the origin remote.
+		return ""
+	}
 	return strings.TrimSpace(output)
 }
 

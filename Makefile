@@ -127,6 +127,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v CreateGitTown \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
+	                                                           | grep -v FilterErr \
 	                                                           | grep -v IsGitRepo \
 	                                                           | grep -v NewCommitMessages \
 	                                                           | grep -v NewSHAs \

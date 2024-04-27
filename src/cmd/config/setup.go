@@ -95,7 +95,10 @@ func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdo
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	return hosting.Detect(runner.Config.OriginURL(), userChoice)
+	if originURL, hasOriginURL := runner.Config.OriginURL().Get(); hasOriginURL {
+		return hosting.Detect(originURL, userChoice)
+	}
+	return None[configdomain.HostingPlatform]()
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
@@ -130,7 +133,6 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-
 	if platform, has := determineHostingPlatform(runner, config.userInput.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:

@@ -65,10 +65,10 @@ func (self *Config) Author() gitdomain.Author {
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
-func (self *Config) OriginURL() *giturl.Parts {
+func (self *Config) OriginURL() Option[giturl.Parts] {
 	text := self.OriginURLString()
 	if text == "" {
-		return nil
+		return None[giturl.Parts]()
 	}
 	return confighelpers.DetermineOriginURL(text, self.FullConfig.HostingOriginHostname, self.originURLCache)
 }
