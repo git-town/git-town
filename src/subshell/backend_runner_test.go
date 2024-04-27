@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/shoenig/test/must"
 )
@@ -19,7 +20,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			output, err := runner.Query("echo", "hello", "world  ")
 			must.NoError(t, err)
 			must.EqOp(t, "hello world  \n", output)
@@ -28,7 +29,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			err := runner.Run("zonk")
 			must.Error(t, err)
 			var execError *exec.Error
@@ -38,7 +39,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
@@ -59,7 +60,7 @@ OUTPUT END
 		t.Parallel()
 		t.Run("trims whitespace", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
 			must.NoError(t, err)
 			must.EqOp(t, "hello world", output)
@@ -69,7 +70,7 @@ OUTPUT END
 	t.Run("RunMany", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: &gohacks.Counter{}}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
