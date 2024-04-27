@@ -59,10 +59,9 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	result := Fixture{
-		CoworkerRepo: NoneP[testruntime.TestRuntime](),
-		DevRepo:      devRepo,
-		Dir:          dir,
-		OriginRepo:   &originRepo,
+		DevRepo:    devRepo,
+		Dir:        dir,
+		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
