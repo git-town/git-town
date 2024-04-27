@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -1088,9 +1089,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no commits exist now$`, func() error {
-		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
+		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		noCommits := datatable.DataTable{}
-		noCommits.AddRow(state.initialCommits.Cells[0]...)
+		noCommits.AddRow(state.initialCommits.GetOrPanic().Cells[0]...)
 		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
 		if errCount == 0 {
 			return nil
@@ -1186,7 +1187,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		initialTable := datatable.FromGherkin(table)
-		state.initialCommits = &initialTable
+		state.initialCommits = Some(initialTable)
 		// create the commits
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		state.fixture.CreateCommits(commits)
@@ -1471,8 +1472,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial commits exist$`, func() error {
-		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
-		errDiff, errCount := state.initialCommits.EqualDataTable(currentCommits)
+		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
+		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
 		if errCount == 0 {
 			return nil
 		}

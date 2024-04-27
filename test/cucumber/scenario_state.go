@@ -21,7 +21,7 @@ type ScenarioState struct {
 	initialBranches Option[datatable.DataTable]
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
-	initialCommits *datatable.DataTable
+	initialCommits Option[datatable.DataTable]
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch gitdomain.LocalBranchName
@@ -62,9 +62,9 @@ type ScenarioState struct {
 }
 
 func (self *ScenarioState) CaptureState() {
-	if self.initialCommits == nil && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
+	if self.initialCommits.IsSome() && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
 		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
-		self.initialCommits = &currentCommits
+		self.initialCommits = Some(currentCommits)
 	}
 	if self.initialBranches.IsNone() && self.insideGitRepo {
 		branches := self.fixture.Branches()
