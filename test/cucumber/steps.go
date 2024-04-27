@@ -1430,10 +1430,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
-		initialBranches := state.initialBranches
+		initialBranches, hasInitialBranches := state.initialBranches.Get()
 		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
+		if !hasInitialBranches {
+			panic("initialBranches are not initialized")
+		}
+		diff, errorCount := currentBranches.EqualDataTable(initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1452,10 +1455,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches exist$`, func() error {
 		have := state.fixture.Branches()
-		want := state.initialBranches
+		want, hasInitialBranches := state.initialBranches.Get()
+		if !hasInitialBranches {
+			panic("initial branches are not initialized")
+		}
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
-		diff, errorCount := have.EqualDataTable(*want)
+		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)

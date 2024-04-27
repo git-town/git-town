@@ -6,6 +6,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/helpers"
@@ -17,7 +18,7 @@ type ScenarioState struct {
 	fixture fixture.Fixture
 
 	// initialBranches contains the local and remote branches before the WHEN steps run
-	initialBranches *datatable.DataTable
+	initialBranches Option[datatable.DataTable]
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *datatable.DataTable
@@ -65,9 +66,9 @@ func (self *ScenarioState) CaptureState() {
 		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 		self.initialCommits = &currentCommits
 	}
-	if self.initialBranches == nil && self.insideGitRepo {
+	if self.initialBranches.IsNone() && self.insideGitRepo {
 		branches := self.fixture.Branches()
-		self.initialBranches = &branches
+		self.initialBranches = Some(branches)
 	}
 	if self.initialLineage == nil && self.insideGitRepo {
 		lineage := self.fixture.DevRepo.LineageTable()
@@ -78,7 +79,7 @@ func (self *ScenarioState) CaptureState() {
 // Reset restores the null value of this ScenarioState.
 func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.fixture = gitEnv
-	self.initialBranches = nil
+	self.initialBranches = None[datatable.DataTable]()
 	self.initialDevSHAs = map[string]gitdomain.SHA{}
 	self.initialOriginSHAs = map[string]gitdomain.SHA{}
 	self.initialLineage = nil
