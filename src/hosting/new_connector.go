@@ -1,8 +1,6 @@
 package hosting
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
@@ -17,7 +15,6 @@ import (
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
-	fmt.Println("4444444444444", platform, hasPlatform)
 	if !hasPlatform {
 		return nil, nil
 	}
@@ -26,7 +23,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 		return bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
 			OriginURL:       args.OriginURL,
-		})
+		}), nil
 	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.GiteaToken,

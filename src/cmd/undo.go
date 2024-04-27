@@ -106,13 +106,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	originURLOpt, err := repo.Runner.Config.OriginURL()
-	fmt.Println("222222222222", originURLOpt, err)
-	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
-	}
-	originURL, hasOriginURL := originURLOpt.Get()
-	fmt.Println("33333333333333", originURL, hasOriginURL)
+	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
 	var connector hostingdomain.Connector
 	if hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

@@ -40,8 +40,8 @@ func TestParse(t *testing.T) {
 		"ssh://git@git.example.com:4022/a/b":                   {User: "git", Host: "git.example.com", Org: "a", Repo: "b"},
 	}
 	for give, want := range tests {
-		have, err := giturl.Parse(give)
-		must.NoError(t, err)
+		have, has := giturl.Parse(give).Get()
+		must.True(t, has)
 		must.EqOp(t, want, have)
 	}
 }

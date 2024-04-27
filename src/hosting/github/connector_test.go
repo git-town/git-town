@@ -88,8 +88,8 @@ func TestNewConnector(t *testing.T) {
 
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
-		originURL, err := giturl.Parse("git@github.com:git-town/docs.git")
-		must.NoError(t, err)
+		originURL, has := giturl.Parse("git@github.com:git-town/docs.git").Get()
+		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
 			Log:        print.Logger{},
@@ -107,8 +107,8 @@ func TestNewConnector(t *testing.T) {
 
 	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
-		originURL, err := giturl.Parse("git@custom-url.com:git-town/docs.git")
-		must.NoError(t, err)
+		originURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
+		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
 			Log:        print.Logger{},

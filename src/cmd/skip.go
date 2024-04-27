@@ -78,11 +78,7 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	originURLOpt, err := repo.Runner.Config.OriginURL()
-	if err != nil {
-		return err
-	}
-	originURL, hasOriginURL := originURLOpt.Get()
+	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
 	var connector hostingdomain.Connector
 	if hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

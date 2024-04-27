@@ -2,10 +2,9 @@
 package giturl
 
 import (
-	"fmt"
 	"regexp"
 
-	"github.com/git-town/git-town/v14/src/messages"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // Parts contains recognized parts of a Git URL.
@@ -16,7 +15,7 @@ type Parts struct {
 	Repo string // name of the repository
 }
 
-func Parse(url string) (Parts, error) {
+func Parse(url string) Option[Parts] {
 	pattern := `^` +
 		// ignore transport protocol
 		`(?:[^:]+://)?` +
@@ -35,15 +34,17 @@ func Parse(url string) (Parts, error) {
 	regex := regexp.MustCompile(pattern)
 	matches := regex.FindStringSubmatch(url)
 	if matches == nil {
-		var p Parts
-		return p, fmt.Errorf(messages.GitURLCannotParse, url)
+		// NOTE: if we can't parse a Git URL, we simply ignore it.
+		// This is because the URLs might be on the filesystem.
+		// Remotes on the filesystem are not an error condition.
+		return None[Parts]()
 	}
-	return Parts{
+	return Some(Parts{
 		User: trimLast(matches[1]),
 		Host: trimLast(matches[2]),
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
-	}, nil
+	})
 }
 
 // trimLast trims the last character of the given text.

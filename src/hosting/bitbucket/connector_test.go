@@ -20,13 +20,12 @@ func TestBitbucketConnector(t *testing.T) {
 
 		t.Run("Bitbucket SaaS", func(t *testing.T) {
 			t.Parallel()
-			url, err := giturl.Parse("username@bitbucket.org:git-town/docs.git")
-			must.NoError(t, err)
-			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+			url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
+			must.True(t, has)
+			have := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: None[configdomain.HostingPlatform](),
 				OriginURL:       url,
 			})
-			must.NoError(t, err)
 			wantConfig := hostingdomain.Config{
 				Hostname:     "bitbucket.org",
 				Organization: "git-town",
@@ -37,13 +36,12 @@ func TestBitbucketConnector(t *testing.T) {
 
 		t.Run("hosted service type provided manually", func(t *testing.T) {
 			t.Parallel()
-			url, err := giturl.Parse("git@custom-url.com:git-town/docs.git")
-			must.NoError(t, err)
-			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+			url, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
+			must.True(t, has)
+			have := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: Some(configdomain.HostingPlatformBitbucket),
 				OriginURL:       url,
 			})
-			must.NoError(t, err)
 			wantConfig := hostingdomain.Config{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
@@ -55,13 +53,12 @@ func TestBitbucketConnector(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		url, err := giturl.Parse("username@bitbucket.org:org/repo.git")
-		must.NoError(t, err)
-		connector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+		url, has := giturl.Parse("username@bitbucket.org:org/repo.git").Get()
+		must.True(t, has)
+		connector := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: None[configdomain.HostingPlatform](),
 			OriginURL:       url,
 		})
-		must.NoError(t, err)
 		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"))
 		must.NoError(t, err)
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
