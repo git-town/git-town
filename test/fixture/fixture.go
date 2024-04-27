@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -22,7 +23,7 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	CoworkerRepo Option[testruntime.TestRuntime]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
