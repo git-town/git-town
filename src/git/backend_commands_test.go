@@ -768,7 +768,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			dir := t.TempDir()
 			runner := subshell.BackendRunner{
-				Dir:             &dir,
+				Dir:             Some(dir),
 				Verbose:         false,
 				CommandsCounter: &gohacks.Counter{},
 			}
