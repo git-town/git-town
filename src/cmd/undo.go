@@ -77,7 +77,7 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -119,7 +119,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		}
 	}
 	return &undoConfig{
-		FullConfig:              &repo.Runner.Config.FullConfig,
+		FullConfig:              repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
