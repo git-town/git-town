@@ -17,14 +17,14 @@ import (
 // and then panics at runtime.
 // Better to have a dedicated facility just for optionality.
 type Option[T any] struct {
-	Value *T
+	value *T
 }
 
 // Get provides a copy of the contained value
 // as well as an indicator whether that value exists.
 func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	if self.IsSome() {
-		return *self.Value, true
+		return *self.value, true
 	}
 	var empty T
 	return empty, false
@@ -60,12 +60,12 @@ func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 
 // IsNone indicates whether this option instance contains nothing.
 func (self Option[T]) IsNone() bool {
-	return self.Value == nil
+	return self.value == nil
 }
 
 // IsSome indicates whether this option instance contains a value.
 func (self Option[T]) IsSome() bool {
-	return self.Value != nil
+	return self.value != nil
 }
 
 // String provides the string serialization of the contained value.
@@ -80,5 +80,5 @@ func (self Option[T]) StringOr(other string) string {
 	if self.IsNone() {
 		return other
 	}
-	return fmt.Sprint(self.Value)
+	return fmt.Sprint(self.value)
 }

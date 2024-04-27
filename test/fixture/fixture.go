@@ -23,7 +23,7 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo Option[testruntime.TestRuntime]
+	CoworkerRepo OptionP[testruntime.TestRuntime]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
@@ -110,7 +110,7 @@ func NewStandardFixture(dir string) Fixture {
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = Some(coworkerRepo)
+	self.CoworkerRepo = SomeP(coworkerRepo)
 	self.initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.Verbose
 }
@@ -192,7 +192,7 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	localCommits := self.DevRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
-	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.GetP(); hasCoworkerRepo {
+	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
 		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
