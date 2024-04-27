@@ -1417,7 +1417,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial lineage exists$`, func() error {
 		have := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := have.EqualDataTable(*state.initialLineage)
+		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
@@ -1441,7 +1441,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial lineage
 		currentLineage := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := currentLineage.EqualDataTable(*state.initialLineage)
+		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
