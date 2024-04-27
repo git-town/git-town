@@ -28,7 +28,6 @@ Feature: append a new feature branch to an existing feature branch
       | existing | main     |
       | new      | existing |
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
