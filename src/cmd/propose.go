@@ -149,9 +149,8 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get()
 	var connector hostingdomain.Connector
-	if hasOriginURL {
+	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			FullConfig:      &repo.Runner.Config.FullConfig,
 			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
