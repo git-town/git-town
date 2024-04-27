@@ -15,7 +15,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
-	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.RunState.UndoablePerennialCommits, &args.Run.Config.FullConfig))
+	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Run.Config.FullConfig))
 	finalStashSize, err := args.Run.Backend.StashSize()
 	if err != nil {
 		return program.Program{}, err
