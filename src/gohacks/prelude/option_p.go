@@ -39,7 +39,7 @@ func (self OptionP[T]) GetOrElse(other *T) *T {
 }
 
 // GetOrPanic provides a copy of the contained value.
-// If this option nothing, this method panics.
+// Panics if this option contains nothing.
 func (self OptionP[T]) GetOrPanic() *T {
 	if value, has := self.Get(); has {
 		return value
