@@ -28,6 +28,15 @@ func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	return empty, false
 }
 
+// Get provides the contained value as well as an indicator whether that value exists.
+func (self Option[T]) GetP() (value *T, hasValue bool) { //nolint:ireturn
+	if self.IsSome() {
+		return self.Value, true
+	}
+	var empty T
+	return &empty, false
+}
+
 // GetOrDefault provides the contained value. If this option contains nothing,
 // you get the zero value of the contained type.
 func (self Option[T]) GetOrDefault() T { //nolint:ireturn
@@ -52,6 +61,15 @@ func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
+	}
+	panic("value not present")
+}
+
+// GetOrPanic provides the contained value. If this option nothing,
+// this method panics.
+func (self Option[T]) GetPOrPanic() *T { //nolint:ireturn
+	if self.IsSome() {
+		return self.Value
 	}
 	panic("value not present")
 }

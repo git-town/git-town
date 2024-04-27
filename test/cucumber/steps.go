@@ -1245,41 +1245,43 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the coworker adds this commit to their current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
-		state.fixture.CoworkerRepo.CreateFile(commit.FileName, commit.FileContent)
-		state.fixture.CoworkerRepo.StageFiles(commit.FileName)
-		state.fixture.CoworkerRepo.CommitStagedChanges(commit.Message)
+		coworkerRepo := state.fixture.CoworkerRepo.GetPOrPanic()
+		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
+		coworkerRepo.StageFiles(commit.FileName)
+		coworkerRepo.CommitStagedChanges(commit.Message)
 		return nil
 	})
 
 	suite.Step(`^the coworker fetches updates$`, func() error {
-		state.fixture.CoworkerRepo.Fetch()
+		state.fixture.CoworkerRepo.GetPOrPanic().Fetch()
 		return nil
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.CoworkerRepo.CheckoutBranch(gitdomain.NewLocalBranchName(branch))
+		state.fixture.CoworkerRepo.GetPOrPanic().CheckoutBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
 	suite.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(filename, content string) error {
-		state.fixture.CoworkerRepo.CreateFile(filename, content)
-		state.fixture.CoworkerRepo.StageFiles(filename)
+		coworkerRepo := state.fixture.CoworkerRepo.GetPOrPanic()
+		coworkerRepo.CreateFile(filename, content)
+		coworkerRepo.StageFiles(filename)
 		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCode(command)
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.GetPOrPanic().MustQueryStringCode(command)
 		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.GetPOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.fixture.CoworkerRepo.Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+		_ = state.fixture.CoworkerRepo.GetPOrPanic().Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 		return nil
 	})
 
@@ -1288,12 +1290,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		_ = state.fixture.CoworkerRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
+		_ = state.fixture.CoworkerRepo.GetPOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 		return nil
 	})
 
 	suite.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent := state.fixture.CoworkerRepo.FileContent(file)
+		actualContent := state.fixture.CoworkerRepo.GetPOrPanic().FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
