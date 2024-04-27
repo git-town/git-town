@@ -23,7 +23,7 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo OptionP[testruntime.TestRuntime]
+	CoworkerRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
