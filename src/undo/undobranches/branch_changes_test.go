@@ -77,7 +77,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -131,7 +131,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -220,7 +220,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -310,7 +310,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -394,7 +394,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -462,7 +462,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -555,7 +555,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -651,7 +651,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -760,7 +760,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch: before.Active,
-			Config:      &config,
+			Config:      config,
 			EndBranch:   after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
@@ -860,7 +860,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch: before.Active,
-			Config:      &config,
+			Config:      config,
 			EndBranch:   after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
@@ -978,7 +978,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1074,7 +1074,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1170,7 +1170,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1254,7 +1254,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1340,7 +1340,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1421,7 +1421,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
-			Config:                   &config,
+			Config:                   config,
 			EndBranch:                after.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
