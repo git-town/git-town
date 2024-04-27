@@ -19,7 +19,8 @@ type Option[T any] struct {
 	Value *T
 }
 
-// Get provides the contained value as well as an indicator whether that value exists.
+// Get provides a copy of the contained value
+// as well as an indicator whether that value exists.
 func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	if self.IsSome() {
 		return *self.Value, true
@@ -28,7 +29,8 @@ func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	return empty, false
 }
 
-// Get provides the contained value as well as an indicator whether that value exists.
+// Get provides direct access to the contained value via a pointer
+// as well as an indicator whether that value exists.
 func (self Option[T]) GetP() (value *T, hasValue bool) { //nolint:ireturn
 	if self.IsSome() {
 		return self.Value, true
@@ -37,8 +39,8 @@ func (self Option[T]) GetP() (value *T, hasValue bool) { //nolint:ireturn
 	return &empty, false
 }
 
-// GetOrDefault provides the contained value. If this option contains nothing,
-// you get the zero value of the contained type.
+// GetOrDefault provides a copy of the contained value.
+// If this option contains nothing, you get the zero value of the contained type.
 func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -47,8 +49,8 @@ func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	return empty
 }
 
-// GetOrElse provides the contained value. If this option contains nothing,
-// you get the given alternative value.
+// GetOrElse provides a copy of the contained value.
+// If this option contains nothing, you get a copy of the given alternative value.
 func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -56,8 +58,8 @@ func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 	return other
 }
 
-// GetOrPanic provides the contained value. If this option nothing,
-// this method panics.
+// GetOrPanic provides a copy of the contained value.
+// If this option nothing, this method panics.
 func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
@@ -65,8 +67,8 @@ func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 	panic("value not present")
 }
 
-// GetOrPanic provides the contained value. If this option nothing,
-// this method panics.
+// GetOrPanic provides direct access to the contained value via a pointer.
+// If this option nothing, this method panics.
 func (self Option[T]) GetPOrPanic() *T { //nolint:ireturn
 	if self.IsSome() {
 		return self.Value
