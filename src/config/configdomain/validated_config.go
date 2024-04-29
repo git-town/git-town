@@ -33,6 +33,10 @@ type ValidatedConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
+func NewValidatedConfig(unvalidated UnvalidatedConfig) ValidatedConfig {
+	//
+}
+
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
 	switch {
 	case self.IsMainBranch(branch):
