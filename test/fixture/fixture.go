@@ -201,8 +201,8 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 		originCommits := originRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
 	}
-	if self.UpstreamRepo != nil {
-		upstreamCommits := self.UpstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
+		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
@@ -226,7 +226,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 		case commit.Locations.Matches(testgit.LocationOrigin):
 			self.OriginRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationUpstream):
-			self.UpstreamRepo.CreateCommit(commit)
+			self.UpstreamRepo.GetOrPanic().CreateCommit(commit)
 		default:
 			log.Fatalf("unknown commit locations %q", commit.Locations)
 		}
