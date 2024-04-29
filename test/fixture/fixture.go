@@ -35,7 +35,7 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	OriginRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
@@ -61,7 +61,7 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	result := Fixture{
 		DevRepo:    devRepo,
 		Dir:        dir,
-		OriginRepo: &originRepo,
+		OriginRepo: SomeP(&originRepo),
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -98,18 +98,18 @@ func NewStandardFixture(dir string) Fixture {
 	if err != nil {
 		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
 	}
-	gitEnv.OriginRepo = &originRepo
+	gitEnv.OriginRepo = SomeP(&originRepo)
 	// clone the "developer" repo
 	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
 	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
 	gitEnv.DevRepo.RemoveUnnecessaryFiles()
-	gitEnv.OriginRepo.RemoveUnnecessaryFiles()
+	originRepo.RemoveUnnecessaryFiles()
 	return gitEnv
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
+	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
 	self.CoworkerRepo = SomeP(&coworkerRepo)
 	self.initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.Verbose
@@ -171,11 +171,12 @@ func (self *Fixture) Branches() datatable.DataTable {
 	localBranches, err := self.DevRepo.LocalBranches()
 	asserts.NoError(err)
 	localBranchesJoined := localBranches.RemoveWorktreeMarkers().Remove(initialBranch).Hoist(mainBranch).Join(", ")
-	if self.OriginRepo == nil {
+	originRepo, hasOriginRepo := self.OriginRepo.Get()
+	if !hasOriginRepo {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, err := self.OriginRepo.LocalBranches()
+	originBranches, err := originRepo.LocalBranches()
 	asserts.NoError(err)
 	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	if localBranchesJoined == originBranchesJoined {
@@ -196,8 +197,8 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
-	if self.OriginRepo != nil {
-		originCommits := self.OriginRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
+		originCommits := originRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
 	}
 	if self.UpstreamRepo != nil {
@@ -223,7 +224,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 			self.DevRepo.CreateCommit(commit)
 			self.DevRepo.PushBranch()
 		case commit.Locations.Matches(testgit.LocationOrigin):
-			self.OriginRepo.CreateCommit(commit)
+			self.OriginRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationUpstream):
 			self.UpstreamRepo.CreateCommit(commit)
 		default:
@@ -231,8 +232,8 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 		}
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
-	if self.OriginRepo != nil {
-		self.OriginRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
+	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
+		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
 	}
 }
 
@@ -249,7 +250,7 @@ func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 		case "local":
 			self.DevRepo.CreateTag(name)
 		case "origin":
-			self.OriginRepo.CreateTag(name)
+			self.OriginRepo.GetOrPanic().CreateTag(name)
 		default:
 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
@@ -261,8 +262,8 @@ func (self Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
 	localTags := self.DevRepo.Tags()
 	builder.AddMany(localTags, "local")
-	if self.OriginRepo != nil {
-		originTags := self.OriginRepo.Tags()
+	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
+		originTags := originRepo.Tags()
 		builder.AddMany(originTags, gitdomain.RemoteOrigin.String())
 	}
 	return builder.Table()
