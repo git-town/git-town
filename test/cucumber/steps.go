@@ -578,8 +578,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(filename string) error {
 		content := "resolved content"
-		state.fixture.SecondWorktree.CreateFile(filename, content)
-		state.fixture.SecondWorktree.StageFiles(filename)
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CreateFile(filename, content)
+		secondWorkTree.StageFiles(filename)
 		return nil
 	})
 
@@ -621,9 +622,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
 		state.CaptureState()
 		updateInitialSHAs(state)
-		state.fixture.SecondWorktree.MockCommitMessage(message)
-		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
-		state.fixture.SecondWorktree.Config.Reload()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.MockCommitMessage(message)
+		state.runOutput, state.runExitCode = secondWorkTree.MustQueryStringCode(cmd)
+		secondWorkTree.Config.Reload()
 		return nil
 	})
 
@@ -670,8 +672,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
 		state.CaptureState()
 		updateInitialSHAs(state)
-		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
-		state.fixture.SecondWorktree.Config.Reload()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		state.runOutput, state.runExitCode = secondWorkTree.MustQueryStringCode(cmd)
+		secondWorkTree.Config.Reload()
 		return nil
 	})
 
@@ -767,7 +770,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo.Value,
-			state.fixture.SecondWorktree,
+			state.fixture.SecondWorktree.Value,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
 			state.initialWorktreeSHAs,
@@ -1408,8 +1411,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.fixture.SecondWorktree.CurrentBranchCache.Invalidate()
-		actual, err := state.fixture.SecondWorktree.CurrentBranch()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CurrentBranchCache.Invalidate()
+		actual, err := secondWorkTree.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
@@ -1752,7 +1756,7 @@ func updateInitialSHAs(state *ScenarioState) {
 	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); len(state.initialOriginSHAs) == 0 && state.insideGitRepo && hasOriginrepo {
 		state.initialOriginSHAs = originRepo.TestCommands.CommitSHAs()
 	}
-	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
-		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && hasSecondWorkTree {
+		state.initialWorktreeSHAs = secondWorkTree.TestCommands.CommitSHAs()
 	}
 }

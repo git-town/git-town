@@ -39,7 +39,7 @@ type Fixture struct {
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
-	SecondWorktree *testruntime.TestRuntime `exhaustruct:"optional"`
+	SecondWorktree OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
@@ -130,7 +130,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	self.SecondWorktree = &testruntime.TestRuntime{
+	self.SecondWorktree = SomeP(&testruntime.TestRuntime{
 		TestCommands: commands.TestCommands{
 			TestRunner:      &runner,
 			BackendCommands: &backendCommands,
@@ -138,7 +138,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		},
 		Backend: backendCommands,
 		Config:  self.DevRepo.Config,
-	}
+	})
 }
 
 // AddSubmodule adds a submodule repository.
@@ -205,8 +205,8 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 		upstreamCommits := self.UpstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(upstreamCommits, "upstream")
 	}
-	if self.SecondWorktree != nil {
-		secondWorktreeCommits := self.SecondWorktree.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
+		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)
