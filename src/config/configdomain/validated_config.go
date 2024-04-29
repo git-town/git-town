@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/git-town/git-town/v14/src/validate"
 )
 
 // ValidatedConfig is validated UnvalidatedConfig
@@ -34,11 +35,11 @@ type ValidatedConfig struct {
 }
 
 func NewValidatedConfig(unvalidated UnvalidatedConfig) ValidatedConfig {
+	validatedMainBranch, validatedPerennialBranches, err := validate.MainAndPerennials(unvalidated.MainBranch, unvalidated.PerennialBranches)
+
 	validatedGitUserEmail := validateGitUserEmail(unvalidated.GitUserEmail)
 	validatedGitUserName := validateGitUserName(unvalidated.GitUserName)
 	validatedLineage := validateLineage(unvalidated.Lineage)
-	validatedMainBranch := validateMainBranch(unvalidated.MainBranch)
-	validatedPerennialBranches := validatePerennialBranches(unvalidated.PerennialBranches)
 	return ValidatedConfig{
 		Aliases:                  unvalidated.Aliases,
 		ContributionBranches:     unvalidated.ContributionBranches,
