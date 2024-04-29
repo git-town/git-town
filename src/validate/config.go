@@ -1,7 +1,10 @@
 package validate
 
 func ValidateConfig(unvalidated UnvalidatedConfig) ValidatedConfig {
-	validatedMainBranch, validatedPerennialBranches, err := validate.MainAndPerennials(unvalidated.MainBranch, unvalidated.PerennialBranches)
+	validateResult := MainAndPerennials(MainAndPerennialsArgs{
+		UnvalidatedMain:       unvalidated.MainBranch,
+		UnvalidatedPerennials: unvalidated.PerennialBranches,
+	})
 	validatedGitUserEmail := validateGitUserEmail(unvalidated.GitUserEmail)
 	validatedGitUserName := validateGitUserName(unvalidated.GitUserName)
 	validatedLineage := validateLineage(unvalidated.Lineage)
