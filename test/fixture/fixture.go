@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -22,7 +23,7 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	CoworkerRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
@@ -109,9 +110,9 @@ func NewStandardFixture(dir string) Fixture {
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = &coworkerRepo
-	self.initializeWorkspace(self.CoworkerRepo)
-	self.CoworkerRepo.Verbose = self.DevRepo.Verbose
+	self.CoworkerRepo = SomeP(&coworkerRepo)
+	self.initializeWorkspace(&coworkerRepo)
+	coworkerRepo.Verbose = self.DevRepo.Verbose
 }
 
 func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
@@ -191,8 +192,8 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	localCommits := self.DevRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
-	if self.CoworkerRepo != nil {
-		coworkerCommits := self.CoworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
+		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if self.OriginRepo != nil {
@@ -215,7 +216,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
 		switch {
 		case commit.Locations.Matches(testgit.LocationCoworker):
-			self.CoworkerRepo.CreateCommit(commit)
+			self.CoworkerRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal):
 			self.DevRepo.CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal, testgit.LocationOrigin):
