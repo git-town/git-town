@@ -9,6 +9,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 )
@@ -18,7 +19,7 @@ type BackendRunner struct {
 	CommandsCounter *gohacks.Counter
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir *string
+	Dir Option[string]
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }
@@ -57,8 +58,8 @@ func (self BackendRunner) execute(executable string, args ...string) ([]byte, er
 		printHeader(executable, args...)
 	}
 	subProcess := exec.Command(executable, args...) // #nosec
-	if self.Dir != nil {
-		subProcess.Dir = *self.Dir
+	if dir, has := self.Dir.Get(); has {
+		subProcess.Dir = dir
 	}
 	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 	outputBytes, err := subProcess.CombinedOutput()

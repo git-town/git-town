@@ -19,7 +19,7 @@ func IsConfigured(unvalidatedConfig configdomain.UnvalidatedConfig, backend *git
 	var mainBranch gitdomain.LocalBranchName
 	var perennialBranches gitdomain.LocalBranchNames
 	if unvalidatedConfig.MainBranch.IsEmpty() {
-		if config.ConfigFile != nil {
+		if config.ConfigFile.IsSome() {
 			return nil, errors.New(messages.ConfigMainbranchInConfigFile)
 		}
 		fmt.Print(messages.ConfigNeeded)

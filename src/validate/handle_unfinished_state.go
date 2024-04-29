@@ -21,11 +21,12 @@ import (
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
-	runState, err := statefile.Load(args.RootDir)
+	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsFinished() {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState || runState.IsFinished() {
 		return false, nil
 	}
 	response, aborted, err := dialog.AskHowToHandleUnfinishedRunState(
@@ -48,12 +49,12 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
 		return true, undo.Execute(undo.ExecuteArgs{
-			FullConfig:       &args.Run.Config.FullConfig,
+			FullConfig:       args.Run.Config.FullConfig,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,
 			RootDir:          args.RootDir,
-			RunState:         *runState,
+			RunState:         runState,
 			Runner:           args.Run,
 			Verbose:          args.Verbose,
 		})
@@ -89,7 +90,7 @@ type UnfinishedStateArgs struct {
 	Verbose                 bool
 }
 
-func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return false, err

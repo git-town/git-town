@@ -28,7 +28,7 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -36,22 +36,22 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*h
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		return nil, err
+		return None[hostingdomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
 	if len(pullRequests) == 0 {
-		return nil, nil //nolint:nilnil
+		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
-	return &hostingdomain.Proposal{
+	return Some(hostingdomain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
-	}, nil
+	}), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
@@ -81,7 +81,6 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
-	// TODO: update the client and uncomment
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
@@ -125,5 +124,5 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GiteaToken]
 	Log       print.Logger
-	OriginURL *giturl.Parts
+	OriginURL giturl.Parts
 }

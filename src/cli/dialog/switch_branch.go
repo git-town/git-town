@@ -179,12 +179,11 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		branchInfo := allBranches.FindByLocalName(localBranch)
 		var otherWorktree bool
-		if branchInfo == nil {
-			otherWorktree = false
-		} else {
+		if branchInfo, hasBranchInfo := allBranches.FindByLocalName(localBranch).Get(); hasBranchInfo {
 			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		} else {
+			otherWorktree = false
 		}
 		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: "", OtherWorktree: otherWorktree})
 	}
@@ -195,12 +194,11 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 // The entries are indented according to their position in the given lineage.
 func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
-		branchInfo := allBranches.FindByLocalName(branch)
 		var otherWorktree bool
-		if branchInfo == nil {
-			otherWorktree = false
-		} else {
+		if branchInfo, hasBranchInfo := allBranches.FindByLocalName(branch).Get(); hasBranchInfo {
 			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		} else {
+			otherWorktree = false
 		}
 		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 	}

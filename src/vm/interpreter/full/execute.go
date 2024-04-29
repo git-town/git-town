@@ -49,6 +49,6 @@ type ExecuteArgs struct {
 	InitialStashSize        gitdomain.StashSize
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
-	RunState                *runstate.RunState
+	RunState                runstate.RunState
 	Verbose                 bool
 }

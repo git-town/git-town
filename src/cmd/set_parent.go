@@ -95,7 +95,7 @@ func executeSetParent(verbose bool) error {
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }
@@ -104,7 +104,6 @@ type setParentConfig struct {
 	currentBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
-	existingParent   *gitdomain.LocalBranchName // TODO: use Option
 	hasOpenChanges   bool
 	mainBranch       gitdomain.LocalBranchName
 }
@@ -141,7 +140,6 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
-		existingParent:   &existingParent,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       mainBranch,
 	}, branchesSnapshot, stashSize, false, nil

@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -30,6 +31,7 @@ import (
 	"github.com/git-town/git-town/v14/test/helpers"
 	"github.com/git-town/git-town/v14/test/output"
 	"github.com/git-town/git-town/v14/test/subshell"
+	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -109,7 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		state.fixture.DevRepo.TestCommands.Fetch()
 		return nil
 	})
@@ -158,12 +160,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		return nil
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		state.fixture.OriginRepo.CreateStandaloneTag(name)
+		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 		return nil
 	})
 
@@ -576,8 +578,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(filename string) error {
 		content := "resolved content"
-		state.fixture.SecondWorktree.CreateFile(filename, content)
-		state.fixture.SecondWorktree.StageFiles(filename)
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CreateFile(filename, content)
+		secondWorkTree.StageFiles(filename)
 		return nil
 	})
 
@@ -619,9 +622,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
 		state.CaptureState()
 		updateInitialSHAs(state)
-		state.fixture.SecondWorktree.MockCommitMessage(message)
-		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
-		state.fixture.SecondWorktree.Config.Reload()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.MockCommitMessage(message)
+		state.runOutput, state.runExitCode = secondWorkTree.MustQueryStringCode(cmd)
+		secondWorkTree.Config.Reload()
 		return nil
 	})
 
@@ -668,8 +672,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I run "([^"]+)" in the other worktree$`, func(cmd string) error {
 		state.CaptureState()
 		updateInitialSHAs(state)
-		state.runOutput, state.runExitCode = state.fixture.SecondWorktree.MustQueryStringCode(cmd)
-		state.fixture.SecondWorktree.Config.Reload()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		state.runOutput, state.runExitCode = secondWorkTree.MustQueryStringCode(cmd)
+		secondWorkTree.Config.Reload()
 		return nil
 	})
 
@@ -764,8 +769,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
-			state.fixture.OriginRepo,
-			state.fixture.SecondWorktree,
+			state.fixture.OriginRepo.Value,
+			state.fixture.SecondWorktree.Value,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
 			state.initialWorktreeSHAs,
@@ -1062,13 +1067,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		state.fixture.OriginRepo = nil
+		state.fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
 		return nil
 	})
 
 	suite.Step(`^my repo has a Git submodule$`, func() error {
 		state.fixture.AddSubmoduleRepo()
-		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.GetOrPanic().WorkingDir)
 		return nil
 	})
 
@@ -1088,9 +1093,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no commits exist now$`, func() error {
-		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
+		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		noCommits := datatable.DataTable{}
-		noCommits.AddRow(state.initialCommits.Cells[0]...)
+		noCommits.AddRow(state.initialCommits.GetOrPanic().Cells[0]...)
 		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
 		if errCount == 0 {
 			return nil
@@ -1151,17 +1156,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
 	suite.Step(`^origin ships the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.OriginRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
-		err := state.fixture.OriginRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
+		originRepo := state.fixture.OriginRepo.GetOrPanic()
+		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
+		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
 		if err != nil {
 			return err
 		}
-		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -1186,7 +1192,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		initialTable := datatable.FromGherkin(table)
-		state.initialCommits = &initialTable
+		state.initialCommits = Some(initialTable)
 		// create the commits
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		state.fixture.CreateCommits(commits)
@@ -1244,41 +1250,43 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the coworker adds this commit to their current branch:$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
-		state.fixture.CoworkerRepo.CreateFile(commit.FileName, commit.FileContent)
-		state.fixture.CoworkerRepo.StageFiles(commit.FileName)
-		state.fixture.CoworkerRepo.CommitStagedChanges(commit.Message)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
+		coworkerRepo.StageFiles(commit.FileName)
+		coworkerRepo.CommitStagedChanges(commit.Message)
 		return nil
 	})
 
 	suite.Step(`^the coworker fetches updates$`, func() error {
-		state.fixture.CoworkerRepo.Fetch()
+		state.fixture.CoworkerRepo.GetOrPanic().Fetch()
 		return nil
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.CoworkerRepo.CheckoutBranch(gitdomain.NewLocalBranchName(branch))
+		state.fixture.CoworkerRepo.GetOrPanic().CheckoutBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
 	suite.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(filename, content string) error {
-		state.fixture.CoworkerRepo.CreateFile(filename, content)
-		state.fixture.CoworkerRepo.StageFiles(filename)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CreateFile(filename, content)
+		coworkerRepo.StageFiles(filename)
 		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCode(command)
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
 		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.fixture.CoworkerRepo.Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 		return nil
 	})
 
@@ -1287,12 +1295,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		_ = state.fixture.CoworkerRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
+		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 		return nil
 	})
 
 	suite.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent := state.fixture.CoworkerRepo.FileContent(file)
+		actualContent := state.fixture.CoworkerRepo.GetOrPanic().FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
@@ -1403,8 +1411,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.fixture.SecondWorktree.CurrentBranchCache.Invalidate()
-		actual, err := state.fixture.SecondWorktree.CurrentBranch()
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CurrentBranchCache.Invalidate()
+		actual, err := secondWorkTree.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
@@ -1416,7 +1425,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial lineage exists$`, func() error {
 		have := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := have.EqualDataTable(*state.initialLineage)
+		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
@@ -1430,10 +1439,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
-		initialBranches := state.initialBranches
 		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualDataTable(*initialBranches)
+		diff, errorCount := currentBranches.EqualDataTable(state.initialBranches.GetOrPanic())
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1441,7 +1449,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial lineage
 		currentLineage := state.fixture.DevRepo.LineageTable()
-		diff, errCnt := currentLineage.EqualDataTable(*state.initialLineage)
+		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
@@ -1452,10 +1460,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches exist$`, func() error {
 		have := state.fixture.Branches()
-		want := state.initialBranches
+		want := state.initialBranches.GetOrPanic()
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
-		diff, errorCount := have.EqualDataTable(*want)
+		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -1465,8 +1473,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial commits exist$`, func() error {
-		currentCommits := state.fixture.CommitTable(state.initialCommits.Cells[0])
-		errDiff, errCount := state.initialCommits.EqualDataTable(currentCommits)
+		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
+		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
 		if errCount == 0 {
 			return nil
 		}
@@ -1745,10 +1753,10 @@ func updateInitialSHAs(state *ScenarioState) {
 	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
 		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
 	}
-	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
-		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
+	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); len(state.initialOriginSHAs) == 0 && state.insideGitRepo && hasOriginrepo {
+		state.initialOriginSHAs = originRepo.TestCommands.CommitSHAs()
 	}
-	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
-		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && hasSecondWorkTree {
+		state.initialWorktreeSHAs = secondWorkTree.TestCommands.CommitSHAs()
 	}
 }
