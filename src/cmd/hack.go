@@ -190,7 +190,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	config = Left[appendConfig, makeFeatureConfig](appendConfig{
-		FullConfig:                &repo.Runner.Config.FullConfig,
+		FullConfig:                repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,

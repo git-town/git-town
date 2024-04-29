@@ -111,7 +111,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		})
 	}
 	return &continueConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
+		FullConfig:       repo.Runner.Config.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -120,7 +120,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 
 type continueConfig struct {
 	connector hostingdomain.Connector
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 }

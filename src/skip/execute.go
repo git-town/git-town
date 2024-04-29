@@ -27,7 +27,7 @@ func Execute(args ExecuteArgs) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
-		FullConfig:              &args.Runner.Config.FullConfig,
+		FullConfig:              args.Runner.Config.FullConfig,
 		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,

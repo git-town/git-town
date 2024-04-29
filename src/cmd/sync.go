@@ -120,7 +120,7 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	dialogTestInputs components.TestInputs
@@ -193,7 +193,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
+		FullConfig:       repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		dialogTestInputs: dialogTestInputs,

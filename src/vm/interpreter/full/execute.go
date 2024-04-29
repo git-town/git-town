@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
 	HasOpenChanges          bool

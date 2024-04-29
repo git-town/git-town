@@ -102,7 +102,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 }
 
 type compressBranchesConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	branchesToCompress  []compressBranchConfig
 	compressEntireStack bool
 	dialogTestInputs    components.TestInputs
@@ -185,7 +185,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		FullConfig:          &repo.Runner.Config.FullConfig,
+		FullConfig:          repo.Runner.Config.FullConfig,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
 		dialogTestInputs:    dialogTestInputs,

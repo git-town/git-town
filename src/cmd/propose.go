@@ -100,7 +100,7 @@ func executePropose(dryRun, verbose bool) error {
 }
 
 type proposeConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	connector        hostingdomain.Connector
@@ -167,7 +167,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
+		FullConfig:       repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		connector:        connector,
