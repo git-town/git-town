@@ -7,7 +7,8 @@ import (
 // OptionP ("option for a pointer value") is an Option
 // that provides direct access to the encapsulated value
 // by storing and providing a pointer to the value.
-// This is useful for mutable or singleton values, or values that are too large to copy around a lot.
+// This is useful for mutable or singleton values,
+// or values that are too large to copy around a lot.
 type OptionP[T any] struct {
 	value *T
 }
