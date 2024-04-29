@@ -1073,7 +1073,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo has a Git submodule$`, func() error {
 		state.fixture.AddSubmoduleRepo()
-		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.GetOrPanic().WorkingDir)
 		return nil
 	})
 
