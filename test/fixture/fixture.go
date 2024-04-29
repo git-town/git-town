@@ -35,7 +35,7 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	OriginRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
