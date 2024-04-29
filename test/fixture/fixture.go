@@ -46,7 +46,7 @@ type Fixture struct {
 	SubmoduleRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	UpstreamRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -157,9 +157,9 @@ func (self *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (self *Fixture) AddUpstream() {
-	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
-	self.UpstreamRepo = &repo
-	self.DevRepo.AddRemote(gitdomain.RemoteUpstream, self.UpstreamRepo.WorkingDir)
+	upstreamRepo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
+	self.UpstreamRepo = SomeP(&upstreamRepo)
+	self.DevRepo.AddRemote(gitdomain.RemoteUpstream, upstreamRepo.WorkingDir)
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
