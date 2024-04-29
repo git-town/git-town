@@ -3,6 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -12,13 +13,13 @@ import (
 type BranchInfos []BranchInfo
 
 // FindByLocalName provides the branch with the given name if one exists.
-func (self BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo { // TODO: use Option
+func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[BranchInfo] {
 	for bi, branch := range self {
 		if branch.LocalName == branchName {
-			return &self[bi]
+			return Some(self[bi])
 		}
 	}
-	return nil
+	return None[BranchInfo]()
 }
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
@@ -116,11 +117,11 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {
-		branch := self.FindByLocalName(bi)
-		if branch == nil {
+		if branch, hasBranch := self.FindByLocalName(bi).Get(); hasBranch {
+			result[b] = branch
+		} else {
 			return result, fmt.Errorf(messages.BranchDoesntExist, bi)
 		}
-		result[b] = *branch
 	}
 	return result, nil
 }

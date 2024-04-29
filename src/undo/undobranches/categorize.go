@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
 		if config.IsMainOrPerennialBranch(change.Before.LocalName) {
 			perennials = append(perennials, change)
@@ -16,7 +16,7 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 	return
 }
 
-func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.FullConfig) (changedPerennials, changedFeatures LocalBranchChange) {
+func CategorizeLocalBranchChange(change LocalBranchChange, config configdomain.FullConfig) (changedPerennials, changedFeatures LocalBranchChange) {
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
@@ -29,7 +29,7 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.
 	return
 }
 
-func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomain.FullConfig) (perennialChanges, featureChanges RemoteBranchChange) {
+func CategorizeRemoteBranchChange(change RemoteBranchChange, config configdomain.FullConfig) (perennialChanges, featureChanges RemoteBranchChange) {
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
@@ -42,7 +42,7 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomai
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.FullConfig) (perennials, features RemoteBranchesSHAs) {
+func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config configdomain.FullConfig) (perennials, features RemoteBranchesSHAs) {
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {

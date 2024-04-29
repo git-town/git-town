@@ -1,8 +1,6 @@
 package prelude
 
-import "fmt"
-
 // None instantiates an Option of the given type containing nothing.
-func None[T fmt.Stringer]() Option[T] {
+func None[T any]() Option[T] {
 	return Option[T]{nil}
 }

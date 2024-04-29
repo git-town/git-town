@@ -70,7 +70,7 @@ func executeContinue(verbose bool) error {
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }
@@ -101,13 +101,15 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if repoStatus.UntrackedChanges {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
-	})
+	var connector hostingdomain.Connector
+	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			FullConfig:      &repo.Runner.Config.FullConfig,
+			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+	}
 	return &continueConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
 		connector:        connector,
@@ -124,14 +126,15 @@ type continueConfig struct {
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
-	runState, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsFinished() {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState || runState.IsFinished() {
 		fmt.Println(messages.ContinueNothingToDo)
 		return runstate.EmptyRunState(), true, nil
 	}
 	runState.AbortProgram = program.Program{}
-	return *runState, false, nil
+	return runState, false, nil
 }

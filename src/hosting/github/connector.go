@@ -32,23 +32,23 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
 		State: "open",
 	})
 	if err != nil {
-		return nil, err
+		return None[hostingdomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
-		return nil, nil //nolint:nilnil
+		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	return &proposal, nil
+	return Some(proposal), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
@@ -140,7 +140,7 @@ type NewConnectorArgs struct {
 	APIToken   Option[configdomain.GitHubToken]
 	Log        print.Logger
 	MainBranch gitdomain.LocalBranchName
-	OriginURL  *giturl.Parts
+	OriginURL  giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

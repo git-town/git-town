@@ -42,7 +42,7 @@ func (self *DataTable) AddRow(elements ...string) {
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
+func (self DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(other.String(), self.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {

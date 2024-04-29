@@ -28,7 +28,7 @@ type RunState struct {
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
+	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"` // NOTE: cannot be an Option because of JSON serialization
 }
 
 func EmptyRunState() RunState {

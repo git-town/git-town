@@ -31,6 +31,7 @@ const (
 	CompressAlreadyOneCommit           = "branch %q has already just one commit"
 	CompressBranchNoParent             = "cannot compress branch %q because it has no parent"
 	CompressContributionBranch         = "you are merely contributing to branch %q and should leave compressing it to the branch owner"
+	CompressNoBranchInfo               = "no branch info for branch %q"
 	CompressNoCommits                  = "branch %q has no commits"
 	CompressObservedBranch             = "you are merely observing branch %q and should leave compressing it to the branch owner"
 	CompressParkedBranch               = "branch %q and should not compress it"
@@ -84,6 +85,7 @@ END OUTPUT FROM 'git branch -vva'
 `
 	GitUserEmailMissing                   = `please set the Git user email by running: git config --global user.email "<your email>"`
 	GitUserNameMissing                    = `please set the Git user name by running: git config --global user.name "<your name>"`
+	GitURLCannotParse                     = "cannot parse Git URL %q"
 	GitVersionMajorNotNumber              = "cannot convert major version %q to int: %w"
 	GitVersionMinorNotNumber              = "cannot convert minor version %q to int: %w"
 	GitVersionProblem                     = "cannot determine Git version: %w"
@@ -179,6 +181,8 @@ nd will be removed in future versions of Git Town.`
 	SkipBranchHasConflicts         = "cannot skip branch that resulted in conflicts"
 	SkipMessage                    = `You can run "git town skip" to skip the currently failing operation.`
 	SkipNothingToDo                = "nothing to skip"
+	SkipNoInitialBranchInfo        = "found no information about branch %q in the initial snapshot"
+	SkipNoFinalBranchInfo          = "found no information about branch %q in the final snapshot"
 	SquashCannotReadFile           = "cannot read squash message file %q: %w"
 	SquashCommitAuthorQuery        = "Please choose an author for the squash commit:"
 	SquashCommitAuthorProblem      = "error getting squash commit author: %w"

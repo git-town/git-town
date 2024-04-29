@@ -17,7 +17,7 @@ import (
 func IsConfigured(backend *git.BackendCommands, config *config.Config, localBranches gitdomain.LocalBranchNames, dialogInputs *components.TestInputs) error {
 	mainBranch := config.FullConfig.MainBranch
 	if mainBranch.IsEmpty() {
-		if config.ConfigFile != nil {
+		if config.ConfigFile.IsSome() {
 			return errors.New(messages.ConfigMainbranchInConfigFile)
 		}
 		fmt.Print(messages.ConfigNeeded)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/helpers"
@@ -17,10 +18,10 @@ type ScenarioState struct {
 	fixture fixture.Fixture
 
 	// initialBranches contains the local and remote branches before the WHEN steps run
-	initialBranches *datatable.DataTable
+	initialBranches Option[datatable.DataTable]
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
-	initialCommits *datatable.DataTable
+	initialCommits Option[datatable.DataTable]
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch gitdomain.LocalBranchName
@@ -33,7 +34,7 @@ type ScenarioState struct {
 	initialDevSHAs map[string]gitdomain.SHA
 
 	// initialLineage describes the lineage before the WHEN steps ran.
-	initialLineage *datatable.DataTable
+	initialLineage Option[datatable.DataTable]
 
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs map[string]gitdomain.SHA
@@ -61,27 +62,27 @@ type ScenarioState struct {
 }
 
 func (self *ScenarioState) CaptureState() {
-	if self.initialCommits == nil && self.insideGitRepo && self.fixture.SubmoduleRepo == nil {
+	if self.initialCommits.IsNone() && self.insideGitRepo && self.fixture.SubmoduleRepo.IsNone() {
 		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
-		self.initialCommits = &currentCommits
+		self.initialCommits = Some(currentCommits)
 	}
-	if self.initialBranches == nil && self.insideGitRepo {
+	if self.initialBranches.IsNone() && self.insideGitRepo {
 		branches := self.fixture.Branches()
-		self.initialBranches = &branches
+		self.initialBranches = Some(branches)
 	}
-	if self.initialLineage == nil && self.insideGitRepo {
+	if self.initialLineage.IsNone() && self.insideGitRepo {
 		lineage := self.fixture.DevRepo.LineageTable()
-		self.initialLineage = &lineage
+		self.initialLineage = Some(lineage)
 	}
 }
 
 // Reset restores the null value of this ScenarioState.
 func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.fixture = gitEnv
-	self.initialBranches = nil
+	self.initialBranches = None[datatable.DataTable]()
 	self.initialDevSHAs = map[string]gitdomain.SHA{}
 	self.initialOriginSHAs = map[string]gitdomain.SHA{}
-	self.initialLineage = nil
+	self.initialLineage = None[datatable.DataTable]()
 	self.initialCurrentBranch = gitdomain.EmptyLocalBranchName()
 	self.insideGitRepo = true
 	self.runOutput = ""

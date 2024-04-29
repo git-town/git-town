@@ -460,7 +460,7 @@ func TestLoadSave(t *testing.T) {
 }`[1:]
 
 		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
-		err := statefile.Save(&runState, repoRoot)
+		err := statefile.Save(runState, repoRoot)
 		must.NoError(t, err)
 		filepath, err := statefile.FilePath(repoRoot)
 		must.NoError(t, err)

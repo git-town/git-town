@@ -19,22 +19,22 @@ func Decode(text string) (*Data, error) {
 	return &result, err
 }
 
-func Load() (*configdomain.PartialConfig, error) {
+func Load() (Option[configdomain.PartialConfig], error) {
 	file, err := os.Open(FileName)
 	if err != nil {
-		return nil, nil //nolint:nilerr,nilnil
+		return None[configdomain.PartialConfig](), nil //nolint:nilerr
 	}
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
 	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return nil, fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	result, err := Validate(*configFileData)
-	return &result, err
+	return Some(result), err
 }
 
 // Validate converts the given low-level configfile data into high-level config data.

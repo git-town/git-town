@@ -95,7 +95,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
-		RunState:                &runState,
+		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }
@@ -152,8 +152,8 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if oldBranchName == newBranchName {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameToSameName)
 	}
-	oldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName)
-	if oldBranch == nil {
+	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
+	if !hasOldBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
@@ -172,7 +172,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
 		newBranch:        newBranchName,
-		oldBranch:        *oldBranch,
+		oldBranch:        oldBranch,
 		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, err
 }

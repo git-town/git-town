@@ -55,11 +55,12 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil {
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
@@ -69,14 +70,14 @@ func executeUndo(verbose bool) error {
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.FullConfig.Lineage,
 		RootDir:          repo.RootDir,
-		RunState:         *runState,
+		RunState:         runState,
 		Runner:           repo.Runner,
 		Verbose:          verbose,
 	})
 }
 
 type undoConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -105,18 +106,20 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	originURL := repo.Runner.Config.OriginURL()
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       originURL,
-	})
-	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
+	var connector hostingdomain.Connector
+	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			FullConfig:      &repo.Runner.Config.FullConfig,
+			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+		if err != nil {
+			return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
+		}
 	}
 	return &undoConfig{
-		FullConfig:              &repo.Runner.Config.FullConfig,
+		FullConfig:              repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

@@ -35,7 +35,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	FullConfig       *configdomain.FullConfig
+	FullConfig       configdomain.FullConfig
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	Lineage          configdomain.Lineage

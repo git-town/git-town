@@ -6,15 +6,19 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
-func DetermineOriginURL(originURL string, originOverride Option[configdomain.HostingOriginHostname], originURLCache configdomain.OriginURLCache) *giturl.Parts {
+func DetermineOriginURL(originURL string, originOverride Option[configdomain.HostingOriginHostname], originURLCache configdomain.OriginURLCache) Option[giturl.Parts] {
 	cached, has := originURLCache[originURL]
 	if has {
-		return cached
+		return Some(cached)
 	}
-	url := giturl.Parse(originURL)
+
+	url, hasURL := giturl.Parse(originURL).Get()
+	if !hasURL {
+		return None[giturl.Parts]()
+	}
 	if value, has := originOverride.Get(); has {
 		url.Host = value.String()
 	}
 	originURLCache[originURL] = url
-	return url
+	return Some(url)
 }

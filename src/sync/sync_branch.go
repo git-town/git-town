@@ -12,8 +12,8 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parent, hasParent := args.Config.Lineage.Parent(branch.LocalName).Get()
 	var parentOtherWorktree bool
 	if hasParent {
-		parentBranchInfo := args.BranchInfos.FindByLocalName(parent)
-		parentOtherWorktree = parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
+		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
