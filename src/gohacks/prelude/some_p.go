@@ -4,7 +4,7 @@ package prelude
 // The value must exist, i.e. the pointer must not be nil.
 func SomeP[T any](value *T) OptionP[T] {
 	if value == nil {
-		panic("You gave nil to SomeP")
+		panic("Cannot create a SomeP out of a nil pointer")
 	}
 	return OptionP[T]{value}
 }
