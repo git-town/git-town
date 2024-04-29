@@ -9,14 +9,14 @@ func (gh Connector) IssuesParticipants(issues []*github.Issue, issueType string)
 	result := data.NewUsers()
 	total := len(issues)
 	for i, issue := range issues {
-		result.AddUser(issueAuthor(issue))
+		result.AddUser(issueAuthor(*issue))
 		for _, reaction := range gh.IssueReactions(issue, issueType, i+1, total) {
-			result.AddUser(reactionAuthor(reaction))
+			result.AddUser(reactionAuthor(*reaction))
 		}
 		for _, comment := range gh.IssueComments(issue) {
-			result.AddUser(commentAuthor(comment))
-			for _, reaction := range gh.CommentReactions(comment) {
-				result.AddUser(reactionAuthor(reaction))
+			result.AddUser(commentAuthor(*comment))
+			for _, reaction := range gh.CommentReactions(*comment) {
+				result.AddUser(reactionAuthor(*reaction))
 			}
 		}
 	}

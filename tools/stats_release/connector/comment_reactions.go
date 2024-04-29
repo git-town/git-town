@@ -32,7 +32,7 @@ func (gh Connector) CommentReactions(comment github.IssueComment) []*github.Reac
 	} else {
 		texts := make([]string, len(result))
 		for r, reaction := range result {
-			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, reactionAuthor(reaction))
+			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, reactionAuthor(*reaction))
 		}
 		fmt.Printf(" %s\n  %s\n", console.Green.Styled("ok"), strings.Join(texts, ", "))
 	}
