@@ -24,7 +24,7 @@ func (self OptionP[T]) Get() (value *T, hasValue bool) {
 
 // GetOrPanic provides a copy of the contained value.
 // Panics if this option contains nothing.
-func (self OptionP[T]) GetOrPanic() *T { //nolint:ireturn
+func (self OptionP[T]) GetOrPanic() *T {
 	if value, has := self.Get(); has {
 		return value
 	}
