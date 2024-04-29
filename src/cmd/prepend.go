@@ -89,7 +89,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 }
 
 type prependConfig struct {
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	dialogTestInputs          components.TestInputs
@@ -154,7 +154,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
-		UnvalidatedConfig:         &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:         repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,

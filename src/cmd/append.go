@@ -88,7 +88,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 }
 
 type appendConfig struct {
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	dialogTestInputs          components.TestInputs
@@ -148,7 +148,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		UnvalidatedConfig:         &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:         repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,

@@ -104,14 +104,14 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.FullConfig,
+			FullConfig:      repo.Runner.Config.FullConfig,
 			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 	}
 	return &continueConfig{
-		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig: repo.Runner.Config.FullConfig,
 		connector:         connector,
 		dialogTestInputs:  dialogTestInputs,
 		hasOpenChanges:    repoStatus.OpenChanges,
@@ -120,7 +120,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 
 type continueConfig struct {
 	connector hostingdomain.Connector
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 }

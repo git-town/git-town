@@ -100,7 +100,7 @@ func executePropose(dryRun, verbose bool) error {
 }
 
 type proposeConfig struct {
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	connector        hostingdomain.Connector
@@ -167,7 +167,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
-		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig: repo.Runner.Config.FullConfig,
 		allBranches:       branchesSnapshot.Branches,
 		branchesToSync:    branchesToSync,
 		connector:         connector,

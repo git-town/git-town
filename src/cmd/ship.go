@@ -127,7 +127,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 }
 
 type shipConfig struct {
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
@@ -248,7 +248,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		UnvalidatedConfig:        &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig:        repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,

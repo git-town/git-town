@@ -94,7 +94,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killConfig struct {
-	*configdomain.UnvalidatedConfig
+	configdomain.UnvalidatedConfig
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
@@ -162,7 +162,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
-		UnvalidatedConfig: &repo.Runner.Config.FullConfig,
+		UnvalidatedConfig: repo.Runner.Config.FullConfig,
 		branchNameToKill:  *branchToKill,
 		branchTypeToKill:  branchTypeToKill,
 		branchWhenDone:    branchWhenDone,
