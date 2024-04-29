@@ -201,7 +201,7 @@ func TestFixture(t *testing.T) {
 				FileName:    "local.md",
 				Message:     "local",
 			})
-			cloned.UpstreamRepo.CreateCommit(git.Commit{
+			cloned.UpstreamRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
 				FileContent: "two",
 				FileName:    "upstream.md",
