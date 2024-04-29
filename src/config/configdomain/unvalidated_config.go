@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
-// UnvalidatedConfig is the merged configuration to be used by Git Town commands.
+// UnvalidatedConfig is Git Town configuration from merging the Git-based and the configfile-based configuration.
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
@@ -18,7 +18,7 @@ type UnvalidatedConfig struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
-	MainBranch               gitdomain.LocalBranchName
+	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
@@ -61,7 +61,10 @@ func (self *UnvalidatedConfig) IsContributionBranch(branch gitdomain.LocalBranch
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
-	return branch == self.MainBranch
+	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
+		return branch == mainBranch
+	}
+	return false
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
@@ -93,7 +96,10 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
-	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
+	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
+		return append(gitdomain.LocalBranchNames{mainBranch}, self.PerennialBranches...)
+	}
+	return self.PerennialBranches
 }
 
 // Merges the given PartialConfig into this configuration object.
@@ -127,7 +133,7 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		self.GitUserName = name
 	}
 	if branch, has := other.MainBranch.Get(); has {
-		self.MainBranch = branch
+		self.MainBranch = Some(branch)
 	}
 	if pushNewBranches, has := other.PushNewBranches.Get(); has {
 		self.PushNewBranches = pushNewBranches
@@ -186,7 +192,7 @@ func DefaultConfig() UnvalidatedConfig {
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  Lineage{},
-		MainBranch:               gitdomain.EmptyLocalBranchName(),
+		MainBranch:               None[gitdomain.LocalBranchName](),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
@@ -204,7 +210,7 @@ func DefaultConfig() UnvalidatedConfig {
 
 func NewFullConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
 	result := DefaultConfig()
-	if configFile, hasConfigFile := configFileOpt.Get(); hasConfigFile {
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result.Merge(configFile)
 	}
 	result.Merge(globalGitConfig)

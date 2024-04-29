@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestFullConfig(t *testing.T) {
+func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
