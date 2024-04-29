@@ -10,14 +10,14 @@ import (
 // This is useful for mutable or singleton values,
 // or values that are too large to copy around all the time.
 type OptionP[T any] struct {
-	value *T
+	Value *T
 }
 
 // Get provides a copy of the contained value
 // as well as an indicator whether that value exists.
 func (self OptionP[T]) Get() (value *T, hasValue bool) {
 	if self.IsSome() {
-		return self.value, true
+		return self.Value, true
 	}
 	return nil, false
 }
@@ -33,12 +33,12 @@ func (self OptionP[T]) GetOrPanic() *T {
 
 // IsNone indicates whether this option instance contains nothing.
 func (self OptionP[T]) IsNone() bool {
-	return self.value == nil
+	return self.Value == nil
 }
 
 // IsSome indicates whether this option instance contains a value.
 func (self OptionP[T]) IsSome() bool {
-	return self.value != nil
+	return self.Value != nil
 }
 
 // String provides the string serialization of the contained value.
@@ -51,7 +51,7 @@ func (self OptionP[T]) String() string {
 // If this option contains nothing, you get the given alternative string representation.
 func (self OptionP[T]) StringOr(other string) string {
 	if self.IsSome() {
-		return fmt.Sprint(self.value)
+		return fmt.Sprint(self.Value)
 	}
 	return other
 }

@@ -766,7 +766,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
-			state.fixture.OriginRepo.GetOrPanic(),
+			state.fixture.OriginRepo.Value,
 			state.fixture.SecondWorktree,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
