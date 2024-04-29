@@ -31,6 +31,7 @@ import (
 	"github.com/git-town/git-town/v14/test/helpers"
 	"github.com/git-town/git-town/v14/test/output"
 	"github.com/git-town/git-town/v14/test/subshell"
+	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -110,7 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		state.fixture.DevRepo.TestCommands.Fetch()
 		return nil
 	})
@@ -159,12 +160,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		return nil
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		state.fixture.OriginRepo.CreateStandaloneTag(name)
+		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 		return nil
 	})
 
@@ -765,7 +766,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
-			state.fixture.OriginRepo,
+			state.fixture.OriginRepo.GetOrPanic(),
 			state.fixture.SecondWorktree,
 			state.initialDevSHAs,
 			state.initialOriginSHAs,
@@ -1063,7 +1064,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		state.fixture.OriginRepo = nil
+		state.fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
 		return nil
 	})
 
@@ -1152,17 +1153,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
 	suite.Step(`^origin ships the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.OriginRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
-		err := state.fixture.OriginRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
+		originRepo := state.fixture.OriginRepo.GetOrPanic()
+		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
+		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
 		if err != nil {
 			return err
 		}
-		state.fixture.OriginRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -1747,8 +1749,8 @@ func updateInitialSHAs(state *ScenarioState) {
 	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
 		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
 	}
-	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
-		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
+	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); len(state.initialOriginSHAs) == 0 && state.insideGitRepo && hasOriginrepo {
+		state.initialOriginSHAs = originRepo.TestCommands.CommitSHAs()
 	}
 	if len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && state.fixture.SecondWorktree != nil {
 		state.initialWorktreeSHAs = state.fixture.SecondWorktree.TestCommands.CommitSHAs()
