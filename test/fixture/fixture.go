@@ -43,7 +43,7 @@ type Fixture struct {
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+	SubmoduleRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
 	UpstreamRepo *testruntime.TestRuntime `exhaustruct:"optional"`
@@ -152,7 +152,7 @@ func (self *Fixture) AddSubmoduleRepo() {
 		{"git", "config", "--global", "protocol.file.allow", "always"},
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
-	self.SubmoduleRepo = &submoduleRepo
+	self.SubmoduleRepo = SomeP(&submoduleRepo)
 }
 
 // AddUpstream adds an upstream repository.
