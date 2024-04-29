@@ -101,7 +101,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	*configdomain.FullConfig
+	configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -166,7 +166,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:       &repo.Runner.Config.FullConfig,
+		FullConfig:       repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
