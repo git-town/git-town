@@ -16,43 +16,14 @@ func (self OptionP[T]) Get() (value *T, hasValue bool) {
 	if self.IsSome() {
 		return self.value, true
 	}
-	var empty T
-	return &empty, false
-}
-
-// GetOrDefault provides a copy of the contained value.
-// If this option contains nothing, you get the zero value of the contained type.
-func (self OptionP[T]) GetOrDefault() *T {
-	if value, has := self.Get(); has {
-		return value
-	}
-	var empty T
-	return &empty
-}
-
-// GetOrElse provides a copy of the contained value.
-// If this option contains nothing, you get a copy of the given alternative value.
-func (self OptionP[T]) GetOrElse(other *T) *T {
-	if value, has := self.Get(); has {
-		return value
-	}
-	return other
+	return nil, false
 }
 
 // GetOrPanic provides a copy of the contained value.
 // Panics if this option contains nothing.
-func (self OptionP[T]) GetOrPanic() *T {
+func (self OptionP[T]) GetOrPanic() *T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
-	}
-	panic("value not present")
-}
-
-// GetOrPanic provides direct access to the contained value via a pointer.
-// If this option nothing, this method panics.
-func (self OptionP[T]) GetPOrPanic() *T {
-	if self.IsSome() {
-		return self.value
 	}
 	panic("value not present")
 }
@@ -76,8 +47,8 @@ func (self OptionP[T]) String() string {
 // StringOr provideds the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self OptionP[T]) StringOr(other string) string {
-	if self.IsNone() {
-		return other
+	if self.IsSome() {
+		return fmt.Sprint(self.value)
 	}
-	return fmt.Sprint(self.value)
+	return other
 }

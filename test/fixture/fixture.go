@@ -110,7 +110,7 @@ func NewStandardFixture(dir string) Fixture {
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = SomeP(coworkerRepo)
+	self.CoworkerRepo = SomeP(&coworkerRepo)
 	self.initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.Verbose
 }
@@ -216,7 +216,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
 		switch {
 		case commit.Locations.Matches(testgit.LocationCoworker):
-			self.CoworkerRepo.GetPOrPanic().CreateCommit(commit)
+			self.CoworkerRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal):
 			self.DevRepo.CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal, testgit.LocationOrigin):

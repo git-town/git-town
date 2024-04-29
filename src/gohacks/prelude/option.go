@@ -77,8 +77,8 @@ func (self Option[T]) String() string {
 // StringOr provideds the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
-	if self.IsNone() {
-		return other
+	if self.IsSome() {
+		return fmt.Sprint(self.value)
 	}
-	return fmt.Sprint(self.value)
+	return other
 }
