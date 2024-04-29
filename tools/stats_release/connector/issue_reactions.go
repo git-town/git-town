@@ -28,7 +28,7 @@ func (gh Connector) IssueReactions(issue *github.Issue, issueType string, curren
 	if len(result) > 0 {
 		texts := make([]string, len(result))
 		for r, reaction := range result {
-			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, reactionAuthor(reaction))
+			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, reactionAuthor(*reaction))
 		}
 		fmt.Printf("  %s\n", strings.Join(texts, ", "))
 	}
