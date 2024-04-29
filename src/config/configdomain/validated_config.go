@@ -86,86 +86,14 @@ func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName)
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
-	return self.PerennialRegex.MatchesBranch(branch)
+	if perennialRegex, hasPerennialRegex := self.PerennialRegex.Get(); hasPerennialRegex {
+		return perennialRegex.MatchesBranch(branch)
+	}
+	return false
 }
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
-}
-
-// Merges the given PartialConfig into this configuration object.
-func (self *ValidatedConfig) Merge(other PartialConfig) {
-	for key, value := range other.Aliases {
-		self.Aliases[key] = value
-	}
-	if other.Lineage != nil {
-		for child, parent := range *other.Lineage {
-			self.Lineage[child] = parent
-		}
-	}
-	if other.ContributionBranches != nil {
-		self.ContributionBranches = append(self.ContributionBranches, *other.ContributionBranches...)
-	}
-	if other.HostingOriginHostname != nil {
-		self.HostingOriginHostname = *other.HostingOriginHostname
-	}
-	if other.HostingPlatform != nil {
-		self.HostingPlatform = *other.HostingPlatform
-	}
-	if other.GiteaToken != nil {
-		self.GiteaToken = *other.GiteaToken
-	}
-	if other.GitHubToken != nil {
-		self.GitHubToken = *other.GitHubToken
-	}
-	if other.GitLabToken != nil {
-		self.GitLabToken = *other.GitLabToken
-	}
-	if other.GitUserEmail != nil {
-		self.GitUserEmail = *other.GitUserEmail
-	}
-	if other.GitUserName != nil {
-		self.GitUserName = *other.GitUserName
-	}
-	if other.MainBranch != nil {
-		self.MainBranch = *other.MainBranch
-	}
-	if other.PushNewBranches != nil {
-		self.PushNewBranches = *other.PushNewBranches
-	}
-	if other.ObservedBranches != nil {
-		self.ObservedBranches = append(self.ObservedBranches, *other.ObservedBranches...)
-	}
-	if other.Offline != nil {
-		self.Offline = *other.Offline
-	}
-	if other.ParkedBranches != nil {
-		self.ParkedBranches = append(self.ParkedBranches, *other.ParkedBranches...)
-	}
-	if other.PerennialBranches != nil {
-		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
-	}
-	if other.PerennialRegex != nil {
-		self.PerennialRegex = *other.PerennialRegex
-	}
-	if other.PushHook != nil {
-		self.PushHook = *other.PushHook
-	}
-	if other.ShipDeleteTrackingBranch != nil {
-		self.ShipDeleteTrackingBranch = *other.ShipDeleteTrackingBranch
-	}
-	if other.SyncBeforeShip != nil {
-		self.SyncBeforeShip = *other.SyncBeforeShip
-	}
-	if other.SyncFeatureStrategy != nil {
-		self.SyncFeatureStrategy = *other.SyncFeatureStrategy
-	}
-	if other.SyncPerennialStrategy != nil {
-		self.SyncPerennialStrategy = *other.SyncPerennialStrategy
-	}
-	if other.SyncUpstream != nil {
-		self.SyncUpstream = *other.SyncUpstream
-	}
 }
 
 func (self *ValidatedConfig) NoPushHook() NoPushHook {
