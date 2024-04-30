@@ -3,7 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
@@ -13,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +47,7 @@ func parkCmd() *cobra.Command {
 }
 
 func executePark(args []string, verbose bool) error {
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -62,6 +66,10 @@ func executePark(args []string, verbose bool) error {
 	err = validateParkData(data)
 	if err != nil {
 		return err
+	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, data.branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	branchNames := data.branchesToPark.Keys()
 	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
