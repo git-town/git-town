@@ -15,7 +15,7 @@ import (
 // The purpose of this function is to implement proper cache invalidation.
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
-	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+	updated, err := validate.Lineage(validate.KnowsBranchesAncestorsArgs{
 		Backend:          &args.Runner.Backend,
 		BranchesToVerify: args.BranchesToVerify,
 		Config:           args.Config,

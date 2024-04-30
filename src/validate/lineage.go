@@ -6,15 +6,20 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
-// KnowsBranchesAncestors asserts that the entire lineage for all given branches
-// is known to Git Town.
-// Prompts missing lineage information from the user.
-// Indicates if the user made any changes to the ancestry.
-func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
+// Lineage validates that the given lineage contains the ancestry for all given branches.
+// Prompts missing lineage information from the user and updates persisted lineage as needed.
+// Returns the validated Lineage.
+func Lineage(args KnowsBranchesAncestorsArgs) (configdomain.Lineage, error) {
+	// step 1: determine all branches for which the parent must be known
+	// step 2: for each branch: check the ancestor
+	// step 3: if missing: ask user and add the ancestry info to the validated lineage
+	// step 4: add the parent to the list of branches that need to be verified
+
 	updated := false
 	for _, branch := range args.BranchesToVerify {
 		branchUpdated, err := knowsBranchAncestors(branch, knowsBranchAncestorsArgs{
@@ -37,7 +42,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 type KnowsBranchesAncestorsArgs struct {
 	Backend          *git.BackendCommands
 	BranchesToVerify gitdomain.LocalBranchNames
-	Config           *config.Config
+	Config           *config.UnvalidatedConfig
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.BranchInfos
