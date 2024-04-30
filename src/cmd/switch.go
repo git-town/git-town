@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -47,12 +48,11 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
 	config, initialBranches, exit, err := determineSwitchConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, validatedConfig.FullConfig.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, config.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
@@ -75,6 +75,7 @@ type switchConfig struct {
 	branchNames        gitdomain.LocalBranchNames
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
+	Lineage            configdomain.Lineage
 	uncommittedChanges bool
 }
 
@@ -98,6 +99,7 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err
 	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesSnapshot.Branches.LocalBranches().Names())
 	return &switchConfig{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		dialogInputs:       dialogTestInputs,

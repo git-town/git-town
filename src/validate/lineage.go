@@ -14,7 +14,7 @@ import (
 // Lineage validates that the given lineage contains the ancestry for all given branches.
 // Prompts missing lineage information from the user and updates persisted lineage as needed.
 // Returns the validated Lineage.
-func Lineage(args KnowsBranchesAncestorsArgs) (configdomain.Lineage, error) {
+func Lineage(args LineageArgs) (configdomain.Lineage, error) {
 	// step 1: determine all branches for which the parent must be known
 	// step 2: for each branch: check the ancestor
 	// step 3: if missing: ask user and add the ancestry info to the validated lineage
@@ -39,7 +39,7 @@ func Lineage(args KnowsBranchesAncestorsArgs) (configdomain.Lineage, error) {
 	return updated, nil
 }
 
-type KnowsBranchesAncestorsArgs struct {
+type LineageArgs struct {
 	Backend          *git.BackendCommands
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           *config.UnvalidatedConfig

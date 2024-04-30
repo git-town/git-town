@@ -135,7 +135,7 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
 	runner := git.ProdRunner{
 		Config:          validatedConfig,
 		Backend:         repo.BackendCommands,

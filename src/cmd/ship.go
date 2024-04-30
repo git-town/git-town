@@ -88,7 +88,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
 	if err != nil {
 		return err
 	}

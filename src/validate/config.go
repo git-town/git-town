@@ -3,12 +3,15 @@ package validate
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func ValidateConfig(unvalidated config.UnvalidatedConfig) (*config.ValidatedConfig, error) {
+func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.LocalBranchNames, localBranches gitdomain.BranchInfos, backend *git.BackendCommands, testInputs *components.TestInputs) (*config.ValidatedConfig, error) {
 	validateResult, err := MainAndPerennials(MainAndPerennialsArgs{
 		UnvalidatedMain:       unvalidated.Config.MainBranch,
 		UnvalidatedPerennials: unvalidated.Config.PerennialBranches,
@@ -24,7 +27,15 @@ func ValidateConfig(unvalidated config.UnvalidatedConfig) (*config.ValidatedConf
 	if !hasGitUserName {
 		return nil, errors.New(messages.GitUserNameMissing)
 	}
-	validatedLineage := validateLineage(unvalidated.Config.Lineage)
+	validatedLineage, err := Lineage(LineageArgs{
+		Backend:          backend,
+		BranchesToVerify: branchesToValidate,
+		Config:           &unvalidated,
+		DefaultChoice:    validateResult.ValidatedMain,
+		DialogTestInputs: testInputs,
+		LocalBranches:    localBranches,
+		MainBranch:       validateResult.ValidatedMain,
+	})
 	validatedConfig := configdomain.ValidatedConfig{
 		Aliases:                  unvalidated.Config.Aliases,
 		ContributionBranches:     unvalidated.Config.ContributionBranches,
@@ -58,5 +69,5 @@ func ValidateConfig(unvalidated config.UnvalidatedConfig) (*config.ValidatedConf
 		GlobalGitConfig: unvalidated.GlobalGitConfig,
 		LocalGitConfig:  unvalidated.LocalGitConfig,
 	}
-	return vConfig, nil
+	return &vConfig, nil
 }
