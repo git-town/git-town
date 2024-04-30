@@ -192,7 +192,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
-	Config                   configdomain.FullConfig
+	Config                   configdomain.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
 	UndoablePerennialCommits []gitdomain.SHA
 }
