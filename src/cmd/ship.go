@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -91,6 +92,14 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
+	vConfig := config.ValidatedConfig{
+		ConfigFile:      repo.UnvalidatedConfig.ConfigFile,
+		DryRun:          dryRun,
+		FullConfig:      *validatedConfig,
+		GitConfig:       repo.UnvalidatedConfig.GitConfig,
+		GlobalGitConfig: repo.UnvalidatedConfig.GlobalGitConfig,
+		LocalGitConfig:  repo.UnvalidatedConfig.LocalGitConfig,
+	}
 	prodRunner := git.ProdRunner{
 		Config:          validatedConfig,
 		Backend:         repo.BackendCommands,
@@ -98,7 +107,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, vConfig, &prodRunner, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -132,7 +141,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     prodRunner,
+		Run:                     &prodRunner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -158,7 +167,7 @@ type shipConfig struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipConfig(args []string, config configdomain.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipConfig(args []string, config config.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
@@ -192,22 +201,22 @@ func determineShipConfig(args []string, config configdomain.ValidatedConfig, run
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(config.BranchType(branchNameToShip)); err != nil {
+	if err = validateShippableBranchType(config.FullConfig.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
 		Config:           runner.Config,
-		DefaultChoice:    config.MainBranch,
+		DefaultChoice:    config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       config.MainBranch,
+		MainBranch:       config.FullConfig.MainBranch,
 		Runner:           runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName, hasTargetBranch := config.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := config.FullConfig.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
@@ -215,18 +224,18 @@ func determineShipConfig(args []string, config configdomain.ValidatedConfig, run
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &config, config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &config.FullConfig, config.FullConfig.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := config.Lineage.Children(branchNameToShip)
+	childBranches := config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &config,
-			HostingPlatform: config.HostingPlatform,
+			Config:          &config.FullConfig,
+			HostingPlatform: config.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -264,7 +273,7 @@ func determineShipConfig(args []string, config configdomain.ValidatedConfig, run
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		config:                   repo.Runner.Config.FullConfig,
+		config:                   config.FullConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
