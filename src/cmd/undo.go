@@ -65,7 +65,7 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		FullConfig:       config.FullConfig,
+		Config:           config.config,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.FullConfig.Lineage,
@@ -77,7 +77,7 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
-	configdomain.FullConfig
+	config                  configdomain.FullConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -119,7 +119,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		}
 	}
 	return &undoConfig{
-		FullConfig:              repo.Runner.Config.FullConfig,
+		config:                  repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

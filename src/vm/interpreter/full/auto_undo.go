@@ -19,13 +19,13 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		DryRun:         args.Run.Config.DryRun,
 		HasOpenChanges: false,
-		NoPushHook:     args.FullConfig.NoPushHook(),
+		NoPushHook:     args.Config.NoPushHook(),
 		Run:            args.Run,
 		RunState:       args.RunState,
 	})
 	if err != nil {
 		return err
 	}
-	lightInterpreter.Execute(undoProgram, args.Run, args.Lineage)
+	lightInterpreter.Execute(undoProgram, args.Run, args.Config.Lineage)
 	return opcode.CreateAutomaticUndoError()
 }

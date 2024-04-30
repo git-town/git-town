@@ -40,7 +40,7 @@ func SetupCommand() *cobra.Command {
 // the config settings to be used if the user accepts all default options
 func defaultUserInput() userInput {
 	return userInput{
-		FullConfig:    configdomain.DefaultConfig(),
+		config:        configdomain.DefaultConfig(),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }
@@ -87,7 +87,7 @@ type setupConfig struct {
 }
 
 type userInput struct {
-	configdomain.FullConfig
+	config        configdomain.FullConfig
 	configStorage dialog.ConfigStorageOption
 }
 
@@ -106,7 +106,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Config.FullConfig.Aliases, config.dialogInputs.Next())
+	config.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Config.FullConfig.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -117,72 +117,72 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if existingMainBranch.IsEmpty() {
 		existingMainBranch = runner.Backend.OriginHead()
 	}
-	config.userInput.MainBranch, aborted, err = dialog.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
+	config.userInput.config.MainBranch, aborted, err = dialog.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PerennialBranches, aborted, err = dialog.PerennialBranches(config.localBranches.Names(), runner.Config.FullConfig.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
+	config.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(config.localBranches.Names(), runner.Config.FullConfig.PerennialBranches, config.userInput.config.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PerennialRegex, aborted, err = dialog.PerennialRegex(runner.Config.FullConfig.PerennialRegex, config.dialogInputs.Next())
+	config.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(runner.Config.FullConfig.PerennialRegex, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.Config.FullConfig.HostingPlatform, config.dialogInputs.Next())
+	config.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.Config.FullConfig.HostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if platform, has := determineHostingPlatform(runner, config.userInput.HostingPlatform).Get(); has {
+	if platform, has := determineHostingPlatform(runner, config.userInput.config.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
 		case configdomain.HostingPlatformGitea:
-			config.userInput.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.FullConfig.GiteaToken, config.dialogInputs.Next())
+			config.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.FullConfig.GiteaToken, config.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
+			config.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.FullConfig.GitHubToken, config.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
+			config.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.FullConfig.GitLabToken, config.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	config.userInput.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.Config.FullConfig.HostingOriginHostname, config.dialogInputs.Next())
+	config.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.Config.FullConfig.HostingOriginHostname, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.Config.FullConfig.SyncFeatureStrategy, config.dialogInputs.Next())
+	config.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.Config.FullConfig.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.Config.FullConfig.SyncPerennialStrategy, config.dialogInputs.Next())
+	config.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.Config.FullConfig.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.Config.FullConfig.SyncUpstream, config.dialogInputs.Next())
+	config.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.Config.FullConfig.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PushNewBranches, aborted, err = dialog.PushNewBranches(runner.Config.FullConfig.PushNewBranches, config.dialogInputs.Next())
+	config.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(runner.Config.FullConfig.PushNewBranches, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PushHook, aborted, err = dialog.PushHook(runner.Config.FullConfig.PushHook, config.dialogInputs.Next())
+	config.userInput.config.PushHook, aborted, err = dialog.PushHook(runner.Config.FullConfig.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.Config.FullConfig.SyncBeforeShip, config.dialogInputs.Next())
+	config.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.Config.FullConfig.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.Config.FullConfig.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	config.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.Config.FullConfig.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -219,19 +219,19 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, 
 }
 
 func saveAll(runner *git.ProdRunner, userInput userInput) error {
-	err := saveAliases(runner, userInput.Aliases)
+	err := saveAliases(runner, userInput.config.Aliases)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(runner, userInput.GiteaToken)
+	err = saveGiteaToken(runner, userInput.config.GiteaToken)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(runner, userInput.GitHubToken)
+	err = saveGitHubToken(runner, userInput.config.GitHubToken)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(runner, userInput.GitLabToken)
+	err = saveGitLabToken(runner, userInput.config.GitLabToken)
 	if err != nil {
 		return err
 	}
@@ -245,51 +245,51 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 }
 
 func saveToGit(runner *git.ProdRunner, userInput userInput) error {
-	err := saveHostingPlatform(runner, userInput.HostingPlatform)
+	err := saveHostingPlatform(runner, userInput.config.HostingPlatform)
 	if err != nil {
 		return err
 	}
-	err = saveOriginHostname(runner, userInput.HostingOriginHostname)
+	err = saveOriginHostname(runner, userInput.config.HostingOriginHostname)
 	if err != nil {
 		return err
 	}
-	err = saveMainBranch(runner, userInput.MainBranch)
+	err = saveMainBranch(runner, userInput.config.MainBranch)
 	if err != nil {
 		return err
 	}
-	err = savePerennialBranches(runner, userInput.PerennialBranches)
+	err = savePerennialBranches(runner, userInput.config.PerennialBranches)
 	if err != nil {
 		return err
 	}
-	err = savePerennialRegex(runner, userInput.PerennialRegex)
+	err = savePerennialRegex(runner, userInput.config.PerennialRegex)
 	if err != nil {
 		return err
 	}
-	err = savePushHook(runner, userInput.PushHook)
+	err = savePushHook(runner, userInput.config.PushHook)
 	if err != nil {
 		return err
 	}
-	err = savePushNewBranches(runner, userInput.PushNewBranches)
+	err = savePushNewBranches(runner, userInput.config.PushNewBranches)
 	if err != nil {
 		return err
 	}
-	err = saveShipDeleteTrackingBranch(runner, userInput.ShipDeleteTrackingBranch)
+	err = saveShipDeleteTrackingBranch(runner, userInput.config.ShipDeleteTrackingBranch)
 	if err != nil {
 		return err
 	}
-	err = saveSyncFeatureStrategy(runner, userInput.SyncFeatureStrategy)
+	err = saveSyncFeatureStrategy(runner, userInput.config.SyncFeatureStrategy)
 	if err != nil {
 		return err
 	}
-	err = saveSyncPerennialStrategy(runner, userInput.SyncPerennialStrategy)
+	err = saveSyncPerennialStrategy(runner, userInput.config.SyncPerennialStrategy)
 	if err != nil {
 		return err
 	}
-	err = saveSyncUpstream(runner, userInput.SyncUpstream)
+	err = saveSyncUpstream(runner, userInput.config.SyncUpstream)
 	if err != nil {
 		return err
 	}
-	err = saveSyncBeforeShip(runner, userInput.SyncBeforeShip)
+	err = saveSyncBeforeShip(runner, userInput.config.SyncBeforeShip)
 	if err != nil {
 		return err
 	}
@@ -444,7 +444,7 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBefore
 }
 
 func saveToFile(userInput userInput, runner *git.ProdRunner) error {
-	err := configfile.Save(&userInput.FullConfig)
+	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
 	}

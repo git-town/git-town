@@ -87,9 +87,9 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -102,9 +102,9 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 }
 
 type compressBranchesConfig struct {
-	configdomain.FullConfig
 	branchesToCompress  []compressBranchConfig
 	compressEntireStack bool
+	config              configdomain.FullConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              bool
 	hasOpenChanges      bool
@@ -185,9 +185,9 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		FullConfig:          repo.Runner.Config.FullConfig,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
+		config:              repo.Runner.Config.FullConfig,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
@@ -199,7 +199,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 func compressProgram(config *compressBranchesConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, config.Online(), config.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, config.config.Online(), config.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: config.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

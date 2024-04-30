@@ -61,9 +61,9 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -111,7 +111,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		})
 	}
 	return &continueConfig{
-		FullConfig:       repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -119,8 +119,8 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 }
 
 type continueConfig struct {
-	connector hostingdomain.Connector
-	configdomain.FullConfig
+	config           configdomain.FullConfig
+	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 }

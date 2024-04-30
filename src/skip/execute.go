@@ -25,9 +25,9 @@ func Execute(args ExecuteArgs) error {
 	}
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  args.Runner.Config.FullConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
-		FullConfig:              args.Runner.Config.FullConfig,
 		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,

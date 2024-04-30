@@ -112,9 +112,9 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendConfig),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  args.appendConfig.config,
 		Connector:               nil,
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
-		FullConfig:              args.appendConfig.FullConfig,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
@@ -190,9 +190,9 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	config = Left[appendConfig, makeFeatureConfig](appendConfig{
-		FullConfig:                repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		config:                    repo.Runner.Config.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
