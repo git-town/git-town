@@ -170,37 +170,25 @@ func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.Unvalidate
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
+	localBranches := branchesSnapshot.Branches.LocalBranches()
 	if allFlag {
-		localBranches := branchesSnapshot.Branches.LocalBranches()
-		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-			BranchesToVerify: branchesSnapshot.Branches.LocalBranches().Names(),
-			Config:           runner.Config,
-			DefaultChoice:    validatedConfig.FullConfig.MainBranch,
-			DialogTestInputs: &dialogTestInputs,
-			LocalBranches:    localBranches,
-			MainBranch:       validatedConfig.FullConfig.MainBranch,
-			Runner:           &runner,
-		})
-		if err != nil {
-			return nil, branchesSnapshot, stashSize, false, err
-		}
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-			BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-			Config:           validatedConfig,
-			DefaultChoice:    validatedConfig.FullConfig.MainBranch,
-			DialogTestInputs: &dialogTestInputs,
-			LocalBranches:    branchesSnapshot.Branches,
-			MainBranch:       validatedConfig.FullConfig.MainBranch,
-			Runner:           &runner,
-		})
-		if err != nil {
-			return nil, branchesSnapshot, stashSize, false, err
-		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 		shouldPushTags = validatedConfig.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
+	}
+	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		BranchesToVerify: branchNamesToSync,
+		Config:           repo.Runner.Config,
+		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+		DialogTestInputs: &dialogTestInputs,
+		LocalBranches:    localBranches,
+		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
+		Runner:           repo.Runner,
+	})
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	allBranchNamesToSync := validatedConfig.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
