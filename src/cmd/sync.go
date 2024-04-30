@@ -73,7 +73,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig.Config)
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
 	prodRunner := git.ProdRunner{
 		Config:          validatedConfig,
 		Backend:         repo.BackendCommands,
@@ -81,7 +81,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, &prodRunner, *validatedConfig, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, &prodRunner, validatedConfig.FullConfig, repo, verbose)
 	if err != nil || exit {
 		return err
 	}

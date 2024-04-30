@@ -88,17 +88,9 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig.Config)
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
 	if err != nil {
 		return err
-	}
-	vConfig := config.ValidatedConfig{
-		ConfigFile:      repo.UnvalidatedConfig.ConfigFile,
-		DryRun:          dryRun,
-		FullConfig:      *validatedConfig,
-		GitConfig:       repo.UnvalidatedConfig.GitConfig,
-		GlobalGitConfig: repo.UnvalidatedConfig.GlobalGitConfig,
-		LocalGitConfig:  repo.UnvalidatedConfig.LocalGitConfig,
 	}
 	prodRunner := git.ProdRunner{
 		Config:          validatedConfig,
@@ -107,7 +99,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, vConfig, &prodRunner, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
