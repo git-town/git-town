@@ -86,7 +86,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunProgram:            renameBranchProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.UnvalidatedConfig,
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		HasOpenChanges:          config.hasOpenChanges,
@@ -101,7 +101,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	config           configdomain.UnvalidatedConfig
+	config           configdomain.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
