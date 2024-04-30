@@ -9,10 +9,10 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -115,7 +115,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.prodRunner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -138,6 +138,7 @@ type shipData struct {
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
 	remotes                  gitdomain.Remotes
+	runner                   *git.ProdRunner
 	targetBranch             gitdomain.BranchInfo
 }
 
@@ -196,13 +197,13 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := config.FullConfig.Lineage.Children(branchNameToShip)
+	childBranches := validatedConfig.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &config.FullConfig,
-			HostingPlatform: config.FullConfig.HostingPlatform,
+			Config:          &validatedConfig.FullConfig,
+			HostingPlatform: validatedConfig.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -235,12 +236,19 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 			}
 		}
 	}
+	runner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
+	}
 	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		config:                   config.FullConfig,
+		config:                   validatedConfig.FullConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
@@ -252,6 +260,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
+		runner:                   &runner,
 		targetBranch:             targetBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
