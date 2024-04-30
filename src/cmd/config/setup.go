@@ -87,7 +87,7 @@ type setupConfig struct {
 }
 
 type userInput struct {
-	config        configdomain.UnvalidatedConfig
+	config        configdomain.ValidatedConfig
 	configStorage dialog.ConfigStorageOption
 }
 
@@ -195,12 +195,12 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -212,7 +212,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, 
 	})
 	return &setupConfig{
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.Runner.Config.ConfigFile.IsSome(),
+		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
 		userInput:     defaultUserInput(),
 	}, exit, err
