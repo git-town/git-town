@@ -133,9 +133,9 @@ type syncConfig struct {
 	shouldPushTags   bool
 }
 
-func determineSyncConfig(allFlag bool, runner *git.ProdRunner, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
-	prodRunner := git.ProdRunner{
+	runner := git.ProdRunner{
 		Config:          validatedConfig,
 		Backend:         repo.BackendCommands,
 		Frontend:        repo.Frontend,
@@ -173,10 +173,10 @@ func determineSyncConfig(allFlag bool, runner *git.ProdRunner, unvalidatedConfig
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: branchesSnapshot.Branches.LocalBranches().Names(),
 			Config:           runner.Config,
-			DefaultChoice:    validatedConfig.MainBranch,
+			DefaultChoice:    validatedConfig.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    localBranches,
-			MainBranch:       validatedConfig.MainBranch,
+			MainBranch:       validatedConfig.FullConfig.MainBranch,
 			Runner:           runner,
 		})
 		if err != nil {
