@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
@@ -49,25 +48,18 @@ func executeSwitch(verbose, merge bool) error {
 		return err
 	}
 	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
-	prodRunner := git.ProdRunner{
-		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	config, initialBranches, exit, err := determineSwitchConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, validatedConfig.FullConfig.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
 	if branchToCheckout == config.initialBranch {
 		return nil
 	}
-	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, merge)
+	err = repo.Frontend.CheckoutBranch(branchToCheckout, merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
@@ -88,12 +80,12 @@ type switchConfig struct {
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
