@@ -14,7 +14,7 @@ type UnvalidatedConfig struct {
 	GitConfig       gitconfig.Access               // access to the Git configuration settings
 	GlobalGitConfig configdomain.PartialConfig     // content of the global Git configuration
 	LocalGitConfig  configdomain.PartialConfig     // content of the local Git configuration
-	originURLCache  configdomain.OriginURLCache
+	originURLCache  configdomain.OriginURLCache    // TODO: remove if unused
 }
 
 func NewUnvalidatedConfig(args NewConfigArgs) (UnvalidatedConfig, *stringslice.Collector, error) {
