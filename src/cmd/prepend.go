@@ -10,10 +10,12 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -58,7 +60,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependData(args, repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -71,18 +73,18 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            prependProgram(config),
+		RunProgram:            prependProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
+		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -100,18 +102,19 @@ type prependData struct {
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
+	runner                    *git.ProdRunner
 	targetBranch              gitdomain.LocalBranchName
 }
 
 func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		HandleUnfinishedState: true,
@@ -124,8 +127,8 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	previousBranch := repo.BackendCommands.PreviouslyCheckedOutBranch()
+	remotes := fc.Remotes(repo.BackendCommands.Remotes())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -133,30 +136,23 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-		Runner:           repo.Runner,
-	})
+	localBranches := branchesSnapshot.Branches.LocalBranches()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchesSnapshot.Active}, localBranches, &repo.BackendCommands, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	parent, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	parent, hasParent := validatedConfig.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
 	if !hasParent {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Runner.Config.FullConfig,
+		config:                    validatedConfig.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
