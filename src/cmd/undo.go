@@ -51,17 +51,7 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var config *undoConfig
-	var initialStashSize gitdomain.StashSize
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{})
-	prodRunner := git.ProdRunner{
-		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
-	config, initialStashSize, validatedConfig.FullConfig.Lineage, err = determineUndoConfig(repo.UnvalidatedConfig.Config, repo, &prodRunner, verbose)
+	config, initialStashSize, err := determineUndoConfig(repo.UnvalidatedConfig.Config, repo, repo.Runn, verbose)
 	if err != nil {
 		return err
 	}
@@ -75,31 +65,32 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		Config:           validatedConfig.FullConfig,
+		Config:           config.config,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          validatedConfig.FullConfig.Lineage,
+		Lineage:          config.config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Runner:           &prodRunner,
+		Runner:           config.prodRunner,
 		Verbose:          verbose,
 	})
 }
 
 type undoConfig struct {
-	config                  *configdomain.ValidatedConfig
+	config                  configdomain.ValidatedConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          gitdomain.LocalBranchName
+	prodRunner              *git.ProdRunner
 }
 
-func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, runner *git.ProdRunner, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
+func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, runner *git.ProdRunner, verbose bool) (*undoConfig, gitdomain.StashSize, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, 0, runner.Config.FullConfig.Lineage, err
+		return nil, 0, err
 	}
 	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &unvalidatedConfig,
@@ -113,7 +104,18 @@ func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo 
 		Verbose:               verbose,
 	})
 	if err != nil {
-		return nil, initialStashSize, runner.Config.FullConfig.Lineage, err
+		return nil, initialStashSize, err
+	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, gitdomain.BranchInfos{}, &repo.BackendCommands, &dialogTestInputs)
+	if err != nil {
+		return nil, initialStashSize, err
+	}
+	prodRunner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
 	}
 	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
@@ -125,15 +127,16 @@ func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo 
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, initialStashSize, runner.Config.FullConfig.Lineage, err
+			return nil, initialStashSize, err
 		}
 	}
 	return &undoConfig{
-		config:                  &runner.Config.FullConfig,
+		config:                  validatedConfig.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, runner.Config.FullConfig.Lineage, nil
+		prodRunner:              &prodRunner,
+	}, initialStashSize, nil
 }
