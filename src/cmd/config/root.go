@@ -44,7 +44,7 @@ func executeConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	printConfig(&repo.Runner.Config.FullConfig)
+	printConfig(&repo.UnvalidatedConfig.Config)
 	return nil
 }
 
@@ -74,7 +74,7 @@ func printConfig(config *configdomain.UnvalidatedConfig) {
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.GitLabToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.GiteaToken))
 	fmt.Println()
-	if !config.MainBranch.IsEmpty() {
+	if len(config.Lineage) > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
 	}
 }
