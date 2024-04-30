@@ -1,8 +1,11 @@
 package validate
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 func ValidateConfig(unvalidated config.UnvalidatedConfig) (*config.ValidatedConfig, error) {
@@ -13,8 +16,14 @@ func ValidateConfig(unvalidated config.UnvalidatedConfig) (*config.ValidatedConf
 	if err != nil {
 		return nil, err
 	}
-	validatedGitUserEmail := validateGitUserEmail(unvalidated.GitUserEmail)
-	validatedGitUserName := validateGitUserName(unvalidated.GitUserName)
+	validatedGitUserEmail, hasGitUserEmail := unvalidated.Config.GitUserEmail.Get()
+	if !hasGitUserEmail {
+		return nil, errors.New(messages.GitUserEmailMissing)
+	}
+	validatedGitUserName, hasGitUserName := unvalidated.Config.GitUserName.Get()
+	if !hasGitUserName {
+		return nil, errors.New(messages.GitUserNameMissing)
+	}
 	validatedLineage := validateLineage(unvalidated.Config.Lineage)
 	validatedConfig := configdomain.ValidatedConfig{
 		Aliases:                  unvalidated.Config.Aliases,

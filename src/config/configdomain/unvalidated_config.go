@@ -12,8 +12,8 @@ type UnvalidatedConfig struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
-	GitUserEmail             GitUserEmail
-	GitUserName              GitUserName
+	GitUserEmail             Option[GitUserEmail]
+	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
