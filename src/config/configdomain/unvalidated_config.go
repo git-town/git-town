@@ -126,11 +126,11 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.GitLabToken.IsSome() {
 		self.GitLabToken = other.GitLabToken
 	}
-	if email, has := other.GitUserEmail.Get(); has {
-		self.GitUserEmail = email
+	if other.GitUserEmail.IsSome() {
+		self.GitUserEmail = other.GitUserEmail
 	}
-	if name, has := other.GitUserName.Get(); has {
-		self.GitUserName = name
+	if other.GitUserName.IsSome() {
+		self.GitUserName = other.GitUserName
 	}
 	if branch, has := other.MainBranch.Get(); has {
 		self.MainBranch = Some(branch)
@@ -186,8 +186,8 @@ func DefaultConfig() UnvalidatedConfig {
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
-		GitUserEmail:             "",
-		GitUserName:              "",
+		GitUserEmail:             None[GitUserEmail](),
+		GitUserName:              None[GitUserName](),
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
