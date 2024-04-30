@@ -49,7 +49,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
 		return true, undo.Execute(undo.ExecuteArgs{
-			FullConfig:       args.Run.Config.FullConfig,
+			Config:           args.Run.Config.FullConfig,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,

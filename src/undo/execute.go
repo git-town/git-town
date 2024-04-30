@@ -21,7 +21,7 @@ func Execute(args ExecuteArgs) error {
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		DryRun:         args.Runner.Config.DryRun,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.FullConfig.NoPushHook(),
+		NoPushHook:     args.Config.NoPushHook(),
 		Run:            args.Runner,
 		RunState:       args.RunState,
 	})
@@ -35,7 +35,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	FullConfig       configdomain.FullConfig
+	Config           configdomain.FullConfig
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	Lineage          configdomain.Lineage
