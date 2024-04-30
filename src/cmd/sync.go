@@ -79,7 +79,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
 			BranchInfos:   config.allBranches,
-			Config:        config.UnvalidatedConfig,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &runProgram,
@@ -105,7 +105,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.UnvalidatedConfig,
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		HasOpenChanges:          config.hasOpenChanges,
@@ -122,7 +122,7 @@ func executeSync(all, dryRun, verbose bool) error {
 type syncConfig struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           configdomain.UnvalidatedConfig
+	config           configdomain.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -193,14 +193,14 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncConfig{
-		UnvalidatedConfig: repo.Runner.Config.FullConfig,
-		allBranches:       branchesSnapshot.Branches,
-		branchesToSync:    branchesToSync,
-		dialogTestInputs:  dialogTestInputs,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     branchesSnapshot.Active,
-		previousBranch:    previousBranch,
-		remotes:           remotes,
-		shouldPushTags:    shouldPushTags,
+		allBranches:      branchesSnapshot.Branches,
+		branchesToSync:   branchesToSync,
+		config:           repo.Runner.Config.FullConfig,
+		dialogTestInputs: dialogTestInputs,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    branchesSnapshot.Active,
+		previousBranch:   previousBranch,
+		remotes:          remotes,
+		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSize, false, err
 }

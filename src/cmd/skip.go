@@ -81,7 +81,7 @@ func executeSkip(verbose bool) error {
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.FullConfig,
+			Config:          &repo.Runner.Config.FullConfig,
 			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
