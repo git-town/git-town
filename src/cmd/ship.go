@@ -283,8 +283,8 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 	if config.config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			Config:        config.config,
 			BranchInfos:   config.allBranches,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &prog,
@@ -292,8 +292,8 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			Config:        config.config,
 			BranchInfos:   config.allBranches,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &prog,

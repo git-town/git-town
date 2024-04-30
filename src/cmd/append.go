@@ -168,8 +168,8 @@ func appendProgram(config appendConfig) program.Program {
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				Config:        config.config,
 				BranchInfos:   config.allBranches,
+				Config:        config.config,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
 				Remotes:       config.remotes,
