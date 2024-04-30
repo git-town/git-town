@@ -90,15 +90,9 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil || exit {
 		return err
 	}
-	if config.branchToShip.LocalName == config.initialBranch {
-		repoStatus, err := repo.Runner.Backend.RepoStatus()
-		if err != nil {
-			return err
-		}
-		err = validate.NoOpenChanges(repoStatus.OpenChanges)
-		if err != nil {
-			return err
-		}
+	err = validateData(*config)
+	if err != nil {
+		return err
 	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
@@ -366,4 +360,11 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 		return errors.New(messages.PerennialBranchCannotShip)
 	}
 	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
+}
+
+func validateData(data shipData) error {
+	if data.branchToShip.LocalName == data.initialBranch {
+		return validate.NoOpenChanges(data.hasOpenChanges)
+	}
+	return nil
 }
