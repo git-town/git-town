@@ -20,7 +20,7 @@ import (
 type TestRuntime struct {
 	commands.TestCommands
 	Backend git.BackendCommands
-	Config  *config.Config
+	Config  *config.ValidatedConfig
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
@@ -79,7 +79,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	config, _, err := config.NewConfig(config.NewConfigArgs{
+	unvalidatedConfig, _, err := config.NewUnvalidatedConfig(config.NewConfigArgs{
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -97,12 +97,12 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
-		Config:          config,
+		Config:          unvalidatedConfig,
 		TestRunner:      &runner,
 	}
 	return TestRuntime{
 		Backend:      backendCommands,
-		Config:       config,
+		Config:       unvalidatedConfig,
 		TestCommands: testCommands,
 	}
 }

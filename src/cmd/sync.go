@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/optimizer"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -72,15 +73,15 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig.Config)
 	prodRunner := git.ProdRunner{
-		Config:          repo.config,
-		Backend:         repo.backendCommands,
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
 		Frontend:        repo.Frontend,
-		CommandsCounter: &commandsCounter,
-		FinalMessages:   finalMessages,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
 	}
-
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, &prodRunner, *validatedConfig, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -122,7 +123,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     &prodRunner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -140,14 +141,14 @@ type syncConfig struct {
 	shouldPushTags   bool
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncConfig(allFlag bool, runner *git.ProdRunner, validatedConfig configdomain.ValidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -160,8 +161,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Runner.Backend.Remotes()
+	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := runner.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -171,12 +172,12 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		localBranches := branchesSnapshot.Branches.LocalBranches()
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: branchesSnapshot.Branches.LocalBranches().Names(),
-			Config:           repo.Runner.Config,
-			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+			Config:           runner.Config,
+			DefaultChoice:    validatedConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    localBranches,
-			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-			Runner:           repo.Runner,
+			MainBranch:       validatedConfig.MainBranch,
+			Runner:           runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, false, err
@@ -186,25 +187,25 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	} else {
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-			Config:           repo.Runner.Config,
-			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+			Config:           validatedConfig,
+			DefaultChoice:    validatedConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    branchesSnapshot.Branches,
-			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-			Runner:           repo.Runner,
+			MainBranch:       validatedConfig.MainBranch,
+			Runner:           runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
+		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
-	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := validatedConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncConfig{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Runner.Config.FullConfig,
+		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

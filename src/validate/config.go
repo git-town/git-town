@@ -13,7 +13,7 @@ func ValidateConfig(unvalidated configdomain.UnvalidatedConfig) (*configdomain.V
 	validatedGitUserEmail := validateGitUserEmail(unvalidated.GitUserEmail)
 	validatedGitUserName := validateGitUserName(unvalidated.GitUserName)
 	validatedLineage := validateLineage(unvalidated.Lineage)
-	return configdomain.ValidatedConfig{
+	return &configdomain.ValidatedConfig{
 		Aliases:                  unvalidated.Aliases,
 		ContributionBranches:     unvalidated.ContributionBranches,
 		GitHubToken:              unvalidated.GitHubToken,
@@ -37,5 +37,5 @@ func ValidateConfig(unvalidated configdomain.UnvalidatedConfig) (*configdomain.V
 		SyncFeatureStrategy:      unvalidated.SyncFeatureStrategy,
 		SyncPerennialStrategy:    unvalidated.SyncPerennialStrategy,
 		SyncUpstream:             unvalidated.SyncUpstream,
-	}
+	}, nil
 }
