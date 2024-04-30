@@ -148,7 +148,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		FullConfig:                repo.Runner.Config.FullConfig,
+		config:                    repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,
@@ -168,7 +168,7 @@ func appendProgram(config appendConfig) program.Program {
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				Config:        config.FullConfig,
+				Config:        config.config,
 				BranchInfos:   config.allBranches,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
@@ -181,7 +181,7 @@ func appendProgram(config appendConfig) program.Program {
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{

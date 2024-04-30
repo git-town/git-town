@@ -185,7 +185,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		FullConfig:          repo.Runner.Config.FullConfig,
+		config:              repo.Runner.Config.FullConfig,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
 		dialogTestInputs:    dialogTestInputs,
@@ -199,7 +199,7 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 func compressProgram(config *compressBranchesConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, config.Online(), config.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, config.config.Online(), config.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: config.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
