@@ -10,7 +10,7 @@ import (
 type ProdRunner struct {
 	Backend         BackendCommands
 	CommandsCounter *gohacks.Counter
-	Config          *config.Config
+	Config          *config.ValidatedConfig
 	FinalMessages   *stringslice.Collector
 	Frontend        FrontendCommands
 }

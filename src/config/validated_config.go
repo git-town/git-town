@@ -1,6 +1,3 @@
-// Package config provides functionality to read and write the Git Town configuration.
-// Git Town configuration can exist in a number of locations: in local or global Git metadata or in a configuration file.
-// Subspackages implement access to specific configuration locations.
 package config
 
 import (
@@ -87,7 +84,7 @@ func (self *ValidatedConfig) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
-	self.FullConfig = configdomain.NewValidatedConfig(unvalidatedConfig)
+	self.FullConfig = NewValidatedConfig(unvalidatedConfig)
 }
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
