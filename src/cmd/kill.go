@@ -162,7 +162,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
-		FullConfig:       repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.FullConfig,
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
@@ -196,7 +196,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killConfig) {
-	if config.branchNameToKill.HasTrackingBranch() && config.IsOnline() {
+	if config.branchNameToKill.HasTrackingBranch() && config.config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, config)
@@ -219,7 +219,7 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 	if parentBranch, hasParentBranch := config.parentBranch.Get(); hasParentBranch && !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchNameToKill.LocalName,
-			Lineage: config.Lineage,
+			Lineage: config.config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})

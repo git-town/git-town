@@ -167,7 +167,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
-		FullConfig:       repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		connector:        connector,
@@ -184,7 +184,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.config,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
@@ -203,7 +203,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 }
 
 func validateProposeConfig(config *proposeConfig) error {
-	initialBranchType := config.FullConfig.BranchType(config.initialBranch)
+	initialBranchType := config.config.BranchType(config.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil
