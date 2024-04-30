@@ -26,20 +26,20 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) { // T
 		}), nil
 	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  args.GiteaToken,
+			APIToken:  args.Config.GiteaToken,
 			Log:       args.Log,
 			OriginURL: args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitHub:
 		return github.NewConnector(github.NewConnectorArgs{
-			APIToken:   github.GetAPIToken(args.GitHubToken),
+			APIToken:   github.GetAPIToken(args.Config.GitHubToken),
 			Log:        args.Log,
-			MainBranch: args.MainBranch,
+			MainBranch: args.Config.MainBranch,
 			OriginURL:  args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitLab:
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  args.GitLabToken,
+			APIToken:  args.Config.GitLabToken,
 			Log:       args.Log,
 			OriginURL: args.OriginURL,
 		})
@@ -48,7 +48,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) { // T
 }
 
 type NewConnectorArgs struct {
-	*configdomain.UnvalidatedConfig
+	Config          *configdomain.ValidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	OriginURL       giturl.Parts

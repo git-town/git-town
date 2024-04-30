@@ -75,7 +75,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		ValidatedConfig:         config.ValidatedConfig,
+		Config:                  config.ValidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -168,7 +168,7 @@ func appendProgram(config appendConfig) program.Program {
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				Config:        config.UnvalidatedConfig,
+				Config:        config.ValidatedConfig,
 				BranchInfos:   config.allBranches,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
