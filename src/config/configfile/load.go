@@ -31,7 +31,7 @@ func Load() (Option[configdomain.PartialConfig], error) {
 	}
 	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, ".git-branches.yml", err)
 	}
 	result, err := Validate(*configFileData)
 	return Some(result), err

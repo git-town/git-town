@@ -57,7 +57,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := loadSetupConfig(repo, verbose)
+	config, exit, err := loadSetupData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -193,7 +193,7 @@ func enterData(runner *git.ProdRunner, config *setupData) (aborted bool, err err
 	return false, nil
 }
 
-func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
+func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

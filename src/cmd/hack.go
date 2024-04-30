@@ -67,7 +67,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	appendConfig, doAppend, makeFeatureBranchConfig, doMakeFeatureBranch := config.Get()
 	if doAppend {
 		return createBranch(createBranchArgs{
-			appendConfig:          appendConfig,
+			appendData:            appendConfig,
 			beginBranchesSnapshot: initialBranchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        initialStashSize,
@@ -81,7 +81,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return makeFeatureBranch(makeFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
 			config:              repo.Runner.Config,
-			makeFeatureConfig:   makeFeatureBranchConfig,
+			makeFeatureData:     makeFeatureBranchConfig,
 			rootDir:             repo.RootDir,
 			runner:              repo.Runner,
 			verbose:             verbose,
@@ -109,13 +109,13 @@ func createBranch(args createBranchArgs) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            appendProgram(args.appendConfig),
+		RunProgram:            appendProgram(args.appendData),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.appendConfig.config,
+		Config:                  args.appendData.config,
 		Connector:               nil,
-		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
-		HasOpenChanges:          args.appendConfig.hasOpenChanges,
+		DialogTestInputs:        &args.appendData.dialogTestInputs,
+		HasOpenChanges:          args.appendData.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
@@ -127,7 +127,7 @@ func createBranch(args createBranchArgs) error {
 }
 
 type createBranchArgs struct {
-	appendConfig          appendData
+	appendData            appendData
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
@@ -207,11 +207,11 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 }
 
 func makeFeatureBranch(args makeFeatureBranchArgs) error {
-	err := validateMakeFeatureConfig(args.makeFeatureConfig)
+	err := validateMakeFeatureData(args.makeFeatureData)
 	if err != nil {
 		return err
 	}
-	for branchName, branchType := range args.makeFeatureConfig.targetBranches {
+	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
 			err = args.config.RemoveFromContributionBranches(branchName)
@@ -240,13 +240,13 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              *config.Config
-	makeFeatureConfig   makeFeatureData
+	makeFeatureData     makeFeatureData
 	rootDir             gitdomain.RepoRootDir
 	runner              *git.ProdRunner
 	verbose             bool
 }
 
-func validateMakeFeatureConfig(config makeFeatureData) error {
+func validateMakeFeatureData(config makeFeatureData) error {
 	for branchName, branchType := range config.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:

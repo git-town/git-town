@@ -70,7 +70,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = validateProposeConfig(config); err != nil {
+	if err = validateProposeData(config); err != nil {
 		return err
 	}
 	runState := runstate.RunState{
@@ -202,8 +202,8 @@ func proposeProgram(config *proposeData) program.Program {
 	return prog
 }
 
-func validateProposeConfig(config *proposeData) error {
-	initialBranchType := config.config.BranchType(config.initialBranch)
+func validateProposeData(data *proposeData) error {
+	initialBranchType := data.config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

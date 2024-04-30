@@ -67,7 +67,7 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = validateContributeConfig(config)
+	err = validateContributeData(config)
 	if err != nil {
 		return err
 	}
@@ -155,7 +155,7 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 	}, nil
 }
 
-func validateContributeConfig(config contributeData) error {
+func validateContributeData(config contributeData) error {
 	for branchName, branchType := range config.branchesToMark {
 		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)

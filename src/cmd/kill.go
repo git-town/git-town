@@ -61,7 +61,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = validateKillConfig(config)
+	err = validateKillData(config)
 	if err != nil {
 		return err
 	}
@@ -226,8 +226,8 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 	}
 }
 
-func validateKillConfig(killConfig *killData) error {
-	switch killConfig.branchTypeToKill {
+func validateKillData(data *killData) error {
+	switch data.branchTypeToKill {
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -235,5 +235,5 @@ func validateKillConfig(killConfig *killData) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.KillCannotKillPerennialBranches)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", killConfig.branchTypeToKill))
+	panic(fmt.Sprintf("unhandled branch type: %s", data.branchTypeToKill))
 }

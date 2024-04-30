@@ -47,11 +47,11 @@ func executeStatus(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := loadDisplayStatusConfig(repo.RootDir)
+	data, err := loadDisplayStatusData(repo.RootDir)
 	if err != nil {
 		return err
 	}
-	displayStatus(*config)
+	displayStatus(*data)
 	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
@@ -61,7 +61,7 @@ type displayStatusData struct {
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusData, error) {
+func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (*displayStatusData, error) {
 	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
 		return nil, err

@@ -55,7 +55,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = verifySetParentConfig(config, repo)
+	err = verifySetParentData(config, repo)
 	if err != nil {
 		return err
 	}
@@ -145,9 +145,9 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func verifySetParentConfig(config *setParentData, repo *execute.OpenRepoResult) error {
-	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(config.currentBranch) {
-		return fmt.Errorf(messages.SetParentNoFeatureBranch, config.currentBranch)
+func verifySetParentData(data *setParentData, repo *execute.OpenRepoResult) error {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(data.currentBranch) {
+		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.currentBranch)
 	}
 	return nil
 }

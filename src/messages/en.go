@@ -37,7 +37,7 @@ const (
 	CompressParkedBranch               = "branch %q and should not compress it"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
-	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
+	ConfigFileInvalidContent           = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigLineageParentIsChild         = "removing lineage entry for %q because the parent is the child"
 	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"
 	ConfigNeeded                       = "Git Town needs to be configured\n\n"

@@ -59,7 +59,7 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = validateParkConfig(config)
+	err = validateParkData(config)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 	}, nil
 }
 
-func validateParkConfig(config parkData) error {
+func validateParkData(config parkData) error {
 	for branchName, branchType := range config.branchesToPark {
 		if !config.allBranches.HasLocalBranch(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)

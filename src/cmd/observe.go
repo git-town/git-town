@@ -65,7 +65,7 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = validateObserveConfig(config)
+	err = validateObserveData(config)
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	}, nil
 }
 
-func validateObserveConfig(config observeData) error {
+func validateObserveData(config observeData) error {
 	for branchName, branchType := range config.branchesToObserve {
 		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
