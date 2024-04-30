@@ -191,7 +191,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &config.FullConfig, config.FullConfig.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &validatedConfig.FullConfig, validatedConfig.FullConfig.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
