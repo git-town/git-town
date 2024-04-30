@@ -112,7 +112,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		RunProgram:            shipProgram(config, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.UnvalidatedConfig,
+		Config:                  config.config,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
 		HasOpenChanges:          config.hasOpenChanges,
@@ -131,7 +131,7 @@ type shipConfig struct {
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
-	config                   configdomain.UnvalidatedConfig
+	config                   configdomain.ValidatedConfig
 	connector                hostingdomain.Connector
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
@@ -213,7 +213,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.FullConfig,
+			Config:          &repo.Runner.Config.FullConfig,
 			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
@@ -268,8 +268,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config *configdomain.UnvalidatedConfig, lineage configdomain.Lineage) error {
-	parentBranch := lineage.Parent(branch)
+func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config *configdomain.ValidatedConfig, lineage configdomain.Lineage) error {
 	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
@@ -285,7 +284,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
 			BranchInfos:   config.allBranches,
-			Config:        config.UnvalidatedConfig,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &prog,
@@ -294,7 +293,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
 			BranchInfos:   config.allBranches,
-			Config:        config.UnvalidatedConfig,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &prog,
