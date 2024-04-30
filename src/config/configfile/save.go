@@ -17,7 +17,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderTOML(config *configdomain.UnvalidatedConfig) string {
+func RenderTOML(config *configdomain.ValidatedConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# Git Town configuration file\n")
 	result.WriteString("#\n")
@@ -62,7 +62,7 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	return result.String()
 }
 
-func Save(config *configdomain.UnvalidatedConfig) error {
+func Save(config *configdomain.ValidatedConfig) error {
 	return os.WriteFile(FileName, []byte(RenderTOML(config)), 0o600)
 }
 

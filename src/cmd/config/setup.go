@@ -444,7 +444,7 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBefore
 }
 
 func saveToFile(userInput userInput, runner *git.ProdRunner) error {
-	err := configfile.Save(&userInput.ValidatedConfig)
+	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
 	}
