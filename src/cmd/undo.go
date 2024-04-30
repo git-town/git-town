@@ -53,7 +53,7 @@ func executeUndo(verbose bool) error {
 	}
 	var config *undoConfig
 	var initialStashSize gitdomain.StashSize
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{})
 	prodRunner := git.ProdRunner{
 		Config:          validatedConfig,
 		Backend:         repo.BackendCommands,
