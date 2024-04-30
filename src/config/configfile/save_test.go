@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/configfile"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -41,7 +42,7 @@ func TestSave(t *testing.T) {
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.DefaultConfig()
-		give.MainBranch = gitdomain.NewLocalBranchName("main")
+		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
 		have := configfile.RenderTOML(&give)
 		want := `
@@ -155,7 +156,7 @@ perennial-branches = "rebase"
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.DefaultConfig()
-		give.MainBranch = gitdomain.NewLocalBranchName("main")
+		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 		err := configfile.Save(&give)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
