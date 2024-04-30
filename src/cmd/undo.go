@@ -65,7 +65,7 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		FullConfig:       config.config,
+		Config:           config.config,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.FullConfig.Lineage,
