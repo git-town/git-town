@@ -83,8 +83,6 @@ BEGIN OUTPUT FROM 'git branch -vva'
 %s
 END OUTPUT FROM 'git branch -vva'
 `
-	GitUserEmailMissing                   = `please set the Git user email by running: git config --global user.email "<your email>"`
-	GitUserNameMissing                    = `please set the Git user name by running: git config --global user.name "<your name>"`
 	GitURLCannotParse                     = "cannot parse Git URL %q"
 	GitVersionMajorNotNumber              = "cannot convert major version %q to int: %w"
 	GitVersionMinorNotNumber              = "cannot convert minor version %q to int: %w"
