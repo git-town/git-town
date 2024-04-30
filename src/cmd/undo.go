@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSize, err := determineUndoConfig(repo.UnvalidatedConfig.Config, repo, repo.Runn, verbose)
+	config, initialStashSize, err := determineUndoConfig(repo.UnvalidatedConfig.Config, repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -86,9 +86,9 @@ type undoConfig struct {
 	prodRunner              *git.ProdRunner
 }
 
-func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, runner *git.ProdRunner, verbose bool) (*undoConfig, gitdomain.StashSize, error) {
+func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := runner.Backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return nil, 0, err
 	}
@@ -117,12 +117,12 @@ func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo 
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.BackendCommands.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &runner.Config.FullConfig,
-			HostingPlatform: runner.Config.FullConfig.HostingPlatform,
+			Config:          &validatedConfig.FullConfig,
+			HostingPlatform: validatedConfig.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
