@@ -74,7 +74,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.UnvalidatedConfig,
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		HasOpenChanges:          config.hasOpenChanges,
@@ -91,7 +91,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 type prependConfig struct {
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
-	config                    configdomain.UnvalidatedConfig
+	config                    configdomain.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
@@ -154,9 +154,9 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
-		UnvalidatedConfig:         repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		config:                    repo.Runner.Config.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -173,8 +173,8 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			Config:        config.UnvalidatedConfig,
 			BranchInfos:   config.allBranches,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
