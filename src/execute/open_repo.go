@@ -68,6 +68,24 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
+		counter:          &commandsCounter,
+		dryRun:           args.DryRun,
+		getCurrentBranch: backendCommands.CurrentBranch,
+		omitBranchNames:  args.OmitBranchNames,
+		printCommands:    args.PrintCommands,
+	})
+	frontEndCommands := git.FrontendCommands{
+		Runner:                 frontEndRunner,
+		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
+	}
+	prodRunner := git.ProdRunner{
+		Config:          config,
+		Backend:         backendCommands,
+		Frontend:        frontEndCommands,
+		CommandsCounter: &commandsCounter,
+		FinalMessages:   finalMessages,
+	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
@@ -80,17 +98,6 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err
 	}
-	frontendRunner := newFrontendRunner(newFrontendRunnerArgs{
-		counter:          &commandsCounter,
-		dryRun:           args.DryRun,
-		getCurrentBranch: backendCommands.CurrentBranch,
-		omitBranchNames:  args.OmitBranchNames,
-		printCommands:    args.PrintCommands,
-	})
-	frontendCommands := git.FrontendCommands{
-		Runner:                 frontendRunner,
-		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
-	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
@@ -99,7 +106,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 		if currentDirectory != rootDir.String() {
-			err = frontendCommands.NavigateToDir(rootDir)
+			err = frontEndCommands.NavigateToDir(rootDir)
 		}
 	}
 	return &OpenRepoResult{
