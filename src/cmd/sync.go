@@ -162,7 +162,7 @@ func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.Unvalidate
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchNamesToSync, localBranches, &repo.BackendCommands, &dialogTestInputs)
 	var shouldPushTags bool
 	if allFlag {
 		shouldPushTags = true
