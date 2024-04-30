@@ -81,7 +81,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.FullConfig,
+		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -94,7 +94,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killConfig struct {
-	configdomain.FullConfig
+	config           configdomain.FullConfig
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
