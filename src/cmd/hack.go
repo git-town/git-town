@@ -112,7 +112,7 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendConfig),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.appendConfig.UnvalidatedConfig,
+		Config:                  args.appendConfig.config,
 		Connector:               nil,
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,

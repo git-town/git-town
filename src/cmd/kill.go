@@ -79,7 +79,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.UnvalidatedConfig,
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		HasOpenChanges:          config.hasOpenChanges,
@@ -97,7 +97,7 @@ type killConfig struct {
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
-	config           configdomain.UnvalidatedConfig
+	config           configdomain.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -162,16 +162,16 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
-		UnvalidatedConfig: repo.Runner.Config.FullConfig,
-		branchNameToKill:  *branchToKill,
-		branchTypeToKill:  branchTypeToKill,
-		branchWhenDone:    branchWhenDone,
-		dialogTestInputs:  dialogTestInputs,
-		dryRun:            dryRun,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     branchesSnapshot.Active,
-		parentBranch:      &parentBranch,
-		previousBranch:    previousBranch,
+		config:           repo.Runner.Config.FullConfig,
+		branchNameToKill: branchToKill,
+		branchTypeToKill: branchTypeToKill,
+		branchWhenDone:   branchWhenDone,
+		dialogTestInputs: dialogTestInputs,
+		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    branchesSnapshot.Active,
+		parentBranch:     parentBranch,
+		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
