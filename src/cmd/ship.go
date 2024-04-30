@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -86,12 +87,23 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, repo, dryRun, verbose)
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig.Config)
+	if err != nil {
+		return err
+	}
+	prodRunner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
+	}
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
 	if config.branchToShip.LocalName == config.initialBranch {
-		repoStatus, err := repo.Runner.Backend.RepoStatus()
+		repoStatus, err := prodRunner.Backend.RepoStatus()
 		if err != nil {
 			return err
 		}
@@ -120,7 +132,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     prodRunner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -146,14 +158,14 @@ type shipConfig struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipConfig(args []string, config configdomain.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                runner.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -166,8 +178,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Runner.Backend.Remotes()
+	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := runner.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -180,22 +192,22 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(repo.Runner.Config.FullConfig.BranchType(branchNameToShip)); err != nil {
+	if err = validateShippableBranchType(config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+		Config:           runner.Config,
+		DefaultChoice:    config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
-		Runner:           repo.Runner,
+		MainBranch:       config.MainBranch,
+		Runner:           runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName, hasTargetBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
@@ -203,18 +215,18 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Runner.Config.FullConfig, repo.Runner.Config.FullConfig.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &config, config.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
+	childBranches := config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &repo.Runner.Config.FullConfig,
-			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Config:          &config,
+			HostingPlatform: config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
