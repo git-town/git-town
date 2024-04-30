@@ -21,7 +21,7 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	hostingdomain.Config
+	hostingdomain.Data
 	APIToken   Option[configdomain.GitHubToken]
 	MainBranch gitdomain.LocalBranchName
 	client     *github.Client
@@ -125,7 +125,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	}
 	return Connector{
 		APIToken: args.APIToken,
-		Config: hostingdomain.Config{
+		Data: hostingdomain.Data{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

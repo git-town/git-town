@@ -99,7 +99,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -139,7 +139,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	})
 }
 
-type shipConfig struct {
+type shipData struct {
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
@@ -159,7 +159,7 @@ type shipConfig struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipConfig(args []string, config config.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, config config.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
@@ -260,7 +260,7 @@ func determineShipConfig(args []string, config config.ValidatedConfig, runner *g
 			}
 		}
 	}
-	return &shipConfig{
+	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -291,7 +291,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 	return nil
 }
 
-func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) program.Program {
+func shipProgram(config *shipData, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
 	if config.config.SyncBeforeShip {
 		// sync the parent branch

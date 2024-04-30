@@ -66,11 +66,11 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeConfig(repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeData(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	if err = validateProposeConfig(config); err != nil {
+	if err = validateProposeData(data); err != nil {
 		return err
 	}
 	runState := runstate.RunState{
@@ -82,13 +82,13 @@ func executePropose(dryRun, verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            proposeProgram(config),
+		RunProgram:            proposeProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		Config:                  data.config,
+		Connector:               data.connector,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -99,7 +99,7 @@ func executePropose(dryRun, verbose bool) error {
 	})
 }
 
-type proposeConfig struct {
+type proposeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	config           configdomain.ValidatedConfig
@@ -112,7 +112,7 @@ type proposeConfig struct {
 	remotes          gitdomain.Remotes
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -166,7 +166,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	return &proposeConfig{
+	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		config:           repo.Runner.Config.FullConfig,
@@ -180,7 +180,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func proposeProgram(config *proposeConfig) program.Program {
+func proposeProgram(config *proposeData) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
@@ -202,8 +202,8 @@ func proposeProgram(config *proposeConfig) program.Program {
 	return prog
 }
 
-func validateProposeConfig(config *proposeConfig) error {
-	initialBranchType := config.config.BranchType(config.initialBranch)
+func validateProposeData(data *proposeData) error {
+	initialBranchType := data.config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

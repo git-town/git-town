@@ -70,7 +70,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineRenameBranchConfig(args, force, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineRenameBranchData(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -100,7 +100,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	})
 }
 
-type renameBranchConfig struct {
+type renameBranchData struct {
 	config           configdomain.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -111,7 +111,7 @@ type renameBranchConfig struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineRenameBranchData(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -165,7 +165,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	return &renameBranchConfig{
+	return &renameBranchData{
 		config:           repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -177,7 +177,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func renameBranchProgram(config *renameBranchConfig) program.Program {
+func renameBranchProgram(config *renameBranchData) program.Program {
 	result := program.Program{}
 	result.Add(&opcodes.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.initialBranch == config.oldBranch.LocalName {

@@ -17,8 +17,8 @@ func TestGitlabConnector(t *testing.T) {
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		config := gitlab.Config{
-			Config: hostingdomain.Config{
+		config := gitlab.Data{
+			Data: hostingdomain.Data{
 				Hostname:     "",
 				Organization: "",
 				Repository:   "",
@@ -62,9 +62,9 @@ func TestGitlabConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := gitlab.Connector{
-					Config: gitlab.Config{
+					Data: gitlab.Data{
 						APIToken: configdomain.NewGitLabTokenOption("apiToken"),
-						Config: hostingdomain.Config{
+						Data: hostingdomain.Data{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
@@ -92,15 +92,15 @@ func TestNewGitlabConnector(t *testing.T) {
 			OriginURL: originURL,
 		})
 		must.NoError(t, err)
-		wantConfig := gitlab.Config{
-			Config: hostingdomain.Config{
+		wantConfig := gitlab.Data{
+			Data: hostingdomain.Data{
 				Hostname:     "gitlab.com",
 				Organization: "git-town",
 				Repository:   "docs",
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.Eq(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Data)
 	})
 
 	t.Run("custom URL", func(t *testing.T) {
@@ -113,15 +113,15 @@ func TestNewGitlabConnector(t *testing.T) {
 			OriginURL: originURL,
 		})
 		must.NoError(t, err)
-		wantConfig := gitlab.Config{
-			Config: hostingdomain.Config{
+		wantConfig := gitlab.Data{
+			Data: hostingdomain.Data{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.Eq(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Data)
 	})
 
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
@@ -134,14 +134,14 @@ func TestNewGitlabConnector(t *testing.T) {
 			OriginURL: originURL,
 		})
 		must.NoError(t, err)
-		wantConfig := gitlab.Config{
-			Config: hostingdomain.Config{
+		wantConfig := gitlab.Data{
+			Data: hostingdomain.Data{
 				Hostname:     "gitlab.domain",
 				Organization: "group",
 				Repository:   "project",
 			},
 			APIToken: configdomain.NewGitLabTokenOption("apiToken"),
 		}
-		must.Eq(t, wantConfig, have.Config)
+		must.Eq(t, wantConfig, have.Data)
 	})
 }

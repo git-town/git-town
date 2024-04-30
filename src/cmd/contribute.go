@@ -63,23 +63,23 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineContributeConfig(args, repo)
+	data, err := determineContributeData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateContributeConfig(config)
+	err = validateContributeData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToMark.Keys()
+	branchNames := data.branchesToMark.Keys()
 	if err = repo.Runner.Config.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.Runner.Config); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
-	branchToCheckout, hasBranchToCheckout := config.branchToCheckout.Get()
+	branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get()
 	if hasBranchToCheckout {
 		if err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
 			return err
@@ -95,7 +95,7 @@ func executeContribute(args []string, verbose bool) error {
 	})
 }
 
-type contributeConfig struct {
+type contributeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchToCheckout Option[gitdomain.LocalBranchName]
 	branchesToMark   commandconfig.BranchesAndTypes
@@ -124,10 +124,10 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 	return nil
 }
 
-func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (contributeConfig, error) {
+func determineContributeData(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return contributeConfig{}, err
+		return contributeData{}, err
 	}
 	branchesToMark := commandconfig.BranchesAndTypes{}
 	var branchToCheckout Option[gitdomain.LocalBranchName]
@@ -148,16 +148,16 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
-	return contributeConfig{
+	return contributeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchToCheckout: branchToCheckout,
 		branchesToMark:   branchesToMark,
 	}, nil
 }
 
-func validateContributeConfig(config contributeConfig) error {
-	for branchName, branchType := range config.branchesToMark {
-		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
+func validateContributeData(data contributeData) error {
+	for branchName, branchType := range data.branchesToMark {
+		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

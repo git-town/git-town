@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSize, err := determineUndoConfig(repo.UnvalidatedConfig.Config, repo, verbose)
+	config, initialStashSize, err := determineUndoData(repo.UnvalidatedConfig.Config, repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func executeUndo(verbose bool) error {
 	})
 }
 
-type undoConfig struct {
+type undoData struct {
 	config                  configdomain.ValidatedConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
@@ -86,7 +86,7 @@ type undoConfig struct {
 	prodRunner              *git.ProdRunner
 }
 
-func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, error) {
+func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
@@ -130,7 +130,7 @@ func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo 
 			return nil, initialStashSize, err
 		}
 	}
-	return &undoConfig{
+	return &undoData{
 		config:                  validatedConfig.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,

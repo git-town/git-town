@@ -73,7 +73,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo.UnvalidatedConfig.Config, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncData(all, repo.UnvalidatedConfig.Config, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -121,8 +121,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	})
 }
 
-// TODO: rename to syncData
-type syncConfig struct {
+type syncData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	config           configdomain.ValidatedConfig
@@ -135,7 +134,7 @@ type syncConfig struct {
 	shouldPushTags   bool
 }
 
-func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncData(allFlag bool, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
@@ -183,7 +182,7 @@ func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.Unvalidate
 	}
 	allBranchNamesToSync := validatedConfig.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
-	return &syncConfig{
+	return &syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		config:           validatedConfig.FullConfig,
