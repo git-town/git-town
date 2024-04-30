@@ -23,7 +23,7 @@ func RootCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeConfig(readVerboseFlag(cmd))
+			return executeDisplayConfig(readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&configCmd)
@@ -32,7 +32,7 @@ func RootCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeConfig(verbose bool) error {
+func executeDisplayConfig(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
