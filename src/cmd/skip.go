@@ -10,10 +10,12 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/skip"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -49,12 +51,12 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return err
 	}
 	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -78,11 +80,12 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.BackendCommands, &dialogTestInputs)
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &repo.Runner.Config.FullConfig,
-			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			Config:          &validatedConfig.FullConfig,
+			HostingPlatform: validatedConfig.FullConfig.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -90,13 +93,20 @@ func executeSkip(verbose bool) error {
 			return err
 		}
 	}
+	prodRunner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
+	}
 	return skip.Execute(skip.ExecuteArgs{
 		Connector:      connector,
 		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
 		RunState:       runState,
-		Runner:         repo.Runner,
+		Runner:         &prodRunner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,
 	})
