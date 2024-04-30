@@ -8,10 +8,6 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-type FullConfig interface {
-	BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType
-}
-
 type BranchesAndTypes map[gitdomain.LocalBranchName]configdomain.BranchType
 
 func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, fullConfig configdomain.ValidatedConfig) BranchesAndTypes {
@@ -22,11 +18,11 @@ func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, fullConfig configd
 	return result
 }
 
-func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig FullConfig) {
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig configdomain.UnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
-func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig FullConfig) {
+func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig configdomain.UnvalidatedConfig) {
 	for _, branch := range branches {
 		self.Add(branch, fullConfig)
 	}

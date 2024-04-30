@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/commandconfig"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -47,7 +48,6 @@ func parkCmd() *cobra.Command {
 }
 
 func executePark(args []string, verbose bool) error {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -67,15 +67,11 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, data.branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	branchNames := data.branchesToPark.Keys()
-	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
+	if err = data.config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, repo.Runner.Config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, &data.config); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
@@ -84,14 +80,17 @@ func executePark(args []string, verbose bool) error {
 		Command:             "park",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner,
+		Runner:              data.runner,
 		Verbose:             verbose,
 	})
 }
 
 type parkData struct {
-	allBranches    gitdomain.BranchInfos
-	branchesToPark commandconfig.BranchesAndTypes
+	allBranches      gitdomain.BranchInfos
+	branchesSnapshot gitdomain.BranchesSnapshot
+	branchesToPark   commandconfig.BranchesAndTypes
+	config           config.ValidatedConfig
+	runner           *git.ProdRunner
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -100,7 +99,7 @@ func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
+func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.ValidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -118,19 +117,35 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 }
 
 func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
 	if err != nil {
 		return parkData{}, err
 	}
+	localBranches := branchesSnapshot.Branches.LocalBranches()
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
-		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
+		branchesToPark.Add(branchesSnapshot.Active, repo.UnvalidatedConfig.Config)
 	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
+	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
+	if err != nil {
+		return parkData{}, err
+	}
+	runner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
 	}
 	return parkData{
-		allBranches:    branchesSnapshot.Branches,
-		branchesToPark: branchesToPark,
+		allBranches:      branchesSnapshot.Branches,
+		branchesSnapshot: branchesSnapshot,
+		branchesToPark:   branchesToPark,
+		config:           *validatedConfig,
+		runner:           &runner,
 	}, nil
 }
 
