@@ -112,9 +112,9 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		RunProgram:            shipProgram(config, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -127,11 +127,11 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 }
 
 type shipConfig struct {
-	configdomain.FullConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
+	config                   configdomain.FullConfig
 	connector                hostingdomain.Connector
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
@@ -248,11 +248,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		FullConfig:               repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
+		config:                   repo.Runner.Config.FullConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
@@ -280,10 +280,10 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
-	if config.SyncBeforeShip {
+	if config.config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.config,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
@@ -292,7 +292,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			Config:        config.FullConfig,
+			Config:        config.config,
 			BranchInfos:   config.allBranches,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
@@ -300,7 +300,7 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 			PushBranch:    false,
 		})
 	}
-	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})
+	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.config.MainBranch})
 	prog.Add(&opcodes.Checkout{Branch: config.targetBranch.LocalName})
 	if proposal, hasProposal := config.proposal.Get(); hasProposal && config.canShipViaAPI {
 		// update the proposals of child branches
@@ -321,15 +321,15 @@ func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) prog
 	} else {
 		prog.Add(&opcodes.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
-	if config.remotes.HasOrigin() && config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.IsOnline() {
 		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
 	}
 	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.IsOnline()) {
-		if config.ShipDeleteTrackingBranch {
+	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.config.IsOnline()) {
+		if config.config.ShipDeleteTrackingBranch {
 			prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
