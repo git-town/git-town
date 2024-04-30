@@ -41,7 +41,24 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.DefaultConfig()
+		give := configdomain.ValidatedConfig{
+			HostingOriginHostname:    Option{},
+			HostingPlatform:          Option{},
+			Lineage:                  map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},
+			MainBranch:               "",
+			ObservedBranches:         []gitdomain.LocalBranchName{},
+			Offline:                  false,
+			ParkedBranches:           []gitdomain.LocalBranchName{},
+			PerennialBranches:        []gitdomain.LocalBranchName{},
+			PerennialRegex:           Option{},
+			PushHook:                 false,
+			PushNewBranches:          false,
+			ShipDeleteTrackingBranch: false,
+			SyncBeforeShip:           false,
+			SyncFeatureStrategy:      "",
+			SyncPerennialStrategy:    "",
+			SyncUpstream:             false,
+		}
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
 		have := configfile.RenderTOML(&give)
