@@ -12,7 +12,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGitTown(t *testing.T) {
+func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Author", func(t *testing.T) {

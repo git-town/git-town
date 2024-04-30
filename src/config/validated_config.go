@@ -80,12 +80,12 @@ func (self *ValidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
-func (self *ValidatedConfig) Reload() {
-	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
-	self.FullConfig = NewValidatedConfig(unvalidatedConfig)
-}
+// func (self *ValidatedConfig) Reload() {
+// 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+// 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+// 	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
+// 	self.FullConfig = NewValidatedConfig(unvalidatedConfig)
+// }
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
