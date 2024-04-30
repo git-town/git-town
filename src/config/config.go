@@ -319,7 +319,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 }
 
 func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
-	config := configdomain.NewValidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
+	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
 	err := cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess, &finalMessages)
