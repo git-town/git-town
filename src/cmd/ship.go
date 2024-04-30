@@ -88,7 +88,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo.UnvalidatedConfig, repo, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -159,14 +159,14 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, config config.ValidatedConfig, runner *git.ProdRunner, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, backend *git.BackendCommands, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := runner.Backend.RepoStatus()
+	repoStatus, err := backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -179,8 +179,8 @@ func determineShipData(args []string, config config.ValidatedConfig, runner *git
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := runner.Backend.Remotes()
+	previousBranch := backend.PreviouslyCheckedOutBranch()
+	remotes, err := backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -193,22 +193,15 @@ func determineShipData(args []string, config config.ValidatedConfig, runner *git
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(config.FullConfig.BranchType(branchNameToShip)); err != nil {
+	if err = validateShippableBranchType(repo.UnvalidatedConfig.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
-		Config:           runner.Config,
-		DefaultChoice:    config.FullConfig.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       config.FullConfig.MainBranch,
-		Runner:           runner,
-	})
+	localBranches := branchesSnapshot.Branches.LocalBranches()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchToShip.LocalName}, localBranches, &repo.BackendCommands, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName, hasTargetBranch := config.FullConfig.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.FullConfig.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
