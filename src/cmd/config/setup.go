@@ -87,7 +87,7 @@ type setupConfig struct {
 }
 
 type userInput struct {
-	config        configdomain.ValidatedConfig
+	config        configdomain.UnvalidatedConfig
 	configStorage dialog.ConfigStorageOption
 }
 
