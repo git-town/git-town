@@ -78,8 +78,8 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			Config:        config.config,
 			BranchInfos:   config.allBranches,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &runProgram,

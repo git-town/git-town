@@ -173,8 +173,8 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			Config:        config.config,
 			BranchInfos:   config.allBranches,
+			Config:        config.config,
 			InitialBranch: config.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
