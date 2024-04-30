@@ -73,15 +73,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
-	prodRunner := git.ProdRunner{
-		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, &prodRunner, validatedConfig.FullConfig, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo.UnvalidatedConfig, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -141,14 +133,22 @@ type syncConfig struct {
 	shouldPushTags   bool
 }
 
-func determineSyncConfig(allFlag bool, runner *git.ProdRunner, validatedConfig configdomain.ValidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncConfig(allFlag bool, runner *git.ProdRunner, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
+	prodRunner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                runner.Config,
+		Config:                &unvalidatedConfig,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,

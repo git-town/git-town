@@ -61,7 +61,7 @@ func executeUndo(verbose bool) error {
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
 	}
-	config, initialStashSize, validatedConfig.FullConfig.Lineage, err = determineUndoConfig(repo, &prodRunner, verbose)
+	config, initialStashSize, validatedConfig.FullConfig.Lineage, err = determineUndoConfig(repo.UnvalidatedConfig.Config, repo, &prodRunner, verbose)
 	if err != nil {
 		return err
 	}
@@ -95,14 +95,14 @@ type undoConfig struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, runner *git.ProdRunner, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
+func determineUndoConfig(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, runner *git.ProdRunner, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, 0, runner.Config.FullConfig.Lineage, err
 	}
 	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                runner.Config,
+		Config:                &unvalidatedConfig,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,

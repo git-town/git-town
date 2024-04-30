@@ -10,7 +10,9 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -45,6 +47,14 @@ func executeSwitch(verbose, merge bool) error {
 	})
 	if err != nil {
 		return err
+	}
+	validatedConfig, err := validate.ValidateConfig(repo.UnvalidatedConfig)
+	prodRunner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
 	}
 	config, initialBranches, exit, err := determineSwitchConfig(repo, verbose)
 	if err != nil || exit {
