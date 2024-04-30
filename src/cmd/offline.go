@@ -52,7 +52,7 @@ func executeOffline(args []string, verbose bool) error {
 	}
 	switch len(args) {
 	case 0:
-		displayOfflineStatus(repo.Runner)
+		displayOfflineStatus(repo.UnvalidatedConfig.Config)
 	case 1:
 		err = setOfflineStatus(args[0], repo.Runner)
 		if err != nil {
@@ -69,8 +69,8 @@ func executeOffline(args []string, verbose bool) error {
 	})
 }
 
-func displayOfflineStatus(run *git.ProdRunner) {
-	fmt.Println(format.Bool(run.Config.FullConfig.Offline.Bool()))
+func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
+	fmt.Println(format.Bool(config.Offline.Bool()))
 }
 
 func setOfflineStatus(text string, run *git.ProdRunner) error {
