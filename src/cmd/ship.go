@@ -88,7 +88,11 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo.UnvalidatedConfig, repo, repo, dryRun, verbose)
+	if err != nil || exit {
+		return err
+	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.BackendCommands, &dialogTestInputs)
 	if err != nil {
 		return err
 	}
@@ -98,10 +102,6 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,
-	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, *validatedConfig, &prodRunner, repo, dryRun, verbose)
-	if err != nil || exit {
-		return err
 	}
 	if config.branchToShip.LocalName == config.initialBranch {
 		repoStatus, err := prodRunner.Backend.RepoStatus()
