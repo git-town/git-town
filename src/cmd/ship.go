@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -88,23 +87,12 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.BackendCommands, &dialogTestInputs)
-	if err != nil {
-		return err
-	}
-	prodRunner := git.ProdRunner{
-		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
-	if config.branchToShip.LocalName == config.initialBranch {
-		repoStatus, err := prodRunner.Backend.RepoStatus()
+	if data.branchToShip.LocalName == data.initialBranch {
+		repoStatus, err := repo.BackendCommands.RepoStatus()
 		if err != nil {
 			return err
 		}
@@ -122,18 +110,18 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            shipProgram(config, message),
+		RunProgram:            shipProgram(data, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		Config:                  data.config,
+		Connector:               data.connector,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     &prodRunner,
+		Run:                     data.prodRunner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -159,9 +147,9 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, backend *git.BackendCommands, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := backend.RepoStatus()
+	repoStatus, err := repo.BackendCommands.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
@@ -179,8 +167,8 @@ func determineShipData(args []string, backend *git.BackendCommands, repo *execut
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := backend.PreviouslyCheckedOutBranch()
-	remotes, err := backend.Remotes()
+	previousBranch := repo.BackendCommands.PreviouslyCheckedOutBranch()
+	remotes, err := repo.BackendCommands.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
