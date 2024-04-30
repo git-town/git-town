@@ -61,9 +61,9 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

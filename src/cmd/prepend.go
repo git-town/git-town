@@ -154,9 +154,9 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
-		config:                    repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		config:                    repo.Runner.Config.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

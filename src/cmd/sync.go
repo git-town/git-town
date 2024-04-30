@@ -193,9 +193,9 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncConfig{
-		config:           repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
+		config:           repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

@@ -185,9 +185,9 @@ func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	return &compressBranchesConfig{
-		config:              repo.Runner.Config.FullConfig,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
+		config:              repo.Runner.Config.FullConfig,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,

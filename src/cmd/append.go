@@ -148,9 +148,9 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		config:                    repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		config:                    repo.Runner.Config.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

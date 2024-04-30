@@ -162,10 +162,10 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
-		config:           repo.Runner.Config.FullConfig,
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
+		config:           repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

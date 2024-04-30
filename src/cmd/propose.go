@@ -167,9 +167,9 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeConfig{
-		config:           repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
+		config:           repo.Runner.Config.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
