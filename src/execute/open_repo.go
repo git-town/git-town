@@ -79,13 +79,6 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Runner:                 frontEndRunner,
 		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 	}
-	prodRunner := git.ProdRunner{
-		Config:          config,
-		Backend:         backendCommands,
-		Frontend:        frontEndCommands,
-		CommandsCounter: &commandsCounter,
-		FinalMessages:   finalMessages,
-	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
