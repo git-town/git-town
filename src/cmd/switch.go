@@ -46,7 +46,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranches, exit, err := determineSwitchConfig(repo, verbose)
+	config, initialBranches, exit, err := determineSwitchData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -76,7 +76,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
+func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

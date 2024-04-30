@@ -57,7 +57,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -102,7 +102,7 @@ type appendData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()

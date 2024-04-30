@@ -51,7 +51,7 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineRepoConfig(repo)
+	config, err := determineRepoData(repo)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoConfig(repo *execute.OpenRepoResult) (*repoData, error) {
+func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return nil, err

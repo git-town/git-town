@@ -66,7 +66,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeConfig(repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeData(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -112,7 +112,7 @@ type proposeData struct {
 	remotes          gitdomain.Remotes
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

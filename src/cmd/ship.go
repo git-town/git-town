@@ -86,7 +86,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -146,7 +146,7 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

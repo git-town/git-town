@@ -70,7 +70,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineRenameBranchConfig(args, force, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineRenameBranchData(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -111,7 +111,7 @@ type renameBranchData struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineRenameBranchData(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

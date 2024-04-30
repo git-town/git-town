@@ -70,7 +70,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesConfig(repo, dryRun, verbose, message, stack)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
 	if err != nil || exit {
 		return err
 	}
@@ -120,7 +120,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesConfig(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()

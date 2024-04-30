@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	}
 	var config *undoData
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoConfig(repo, verbose)
+	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ type undoData struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
+func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

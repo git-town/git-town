@@ -52,7 +52,7 @@ func executeContinue(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -75,7 +75,7 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

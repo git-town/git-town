@@ -51,7 +51,7 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentConfig(args, repo, verbose)
+	config, exit, err := determineDiffParentData(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -69,7 +69,7 @@ type diffParentData struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
+func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

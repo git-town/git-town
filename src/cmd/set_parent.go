@@ -51,7 +51,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -108,7 +108,7 @@ type setParentData struct {
 	mainBranch       gitdomain.LocalBranchName
 }
 
-func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

@@ -55,7 +55,7 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineParkConfig(args, repo)
+	config, err := determineParkData(args, repo)
 	if err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkData, error) {
+func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return parkData{}, err

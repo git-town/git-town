@@ -58,7 +58,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -103,7 +103,7 @@ type prependData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

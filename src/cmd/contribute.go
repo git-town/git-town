@@ -63,7 +63,7 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineContributeConfig(args, repo)
+	config, err := determineContributeData(args, repo)
 	if err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 	return nil
 }
 
-func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
+func determineContributeData(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return contributeData{}, err

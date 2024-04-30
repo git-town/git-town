@@ -71,7 +71,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncData(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -131,7 +131,7 @@ type syncData struct {
 	shouldPushTags   bool
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

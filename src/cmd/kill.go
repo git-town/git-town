@@ -57,7 +57,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineKillConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineKillData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -106,7 +106,7 @@ type killData struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
