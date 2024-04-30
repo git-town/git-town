@@ -101,7 +101,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
-		FullConfig:              args.Run.Config.FullConfig,
+		Config:                  args.Run.Config.FullConfig,
 		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,

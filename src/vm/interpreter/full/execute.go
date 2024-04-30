@@ -27,7 +27,7 @@ func Execute(args ExecuteArgs) error {
 		err := nextStep.Run(shared.RunArgs{
 			Connector:                       args.Connector,
 			DialogTestInputs:                args.DialogTestInputs,
-			Lineage:                         args.Lineage,
+			Lineage:                         args.Config.Lineage,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			Runner:                          args.Run,
@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	configdomain.ValidatedConfig
+	Config                  configdomain.ValidatedConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
 	HasOpenChanges          bool
