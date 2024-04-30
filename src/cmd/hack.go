@@ -114,7 +114,7 @@ func createBranch(args createBranchArgs) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
-		FullConfig:              args.appendConfig.UnvalidatedConfig,
+		Config:                  args.appendConfig.UnvalidatedConfig,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
