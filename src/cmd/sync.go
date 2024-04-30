@@ -121,6 +121,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	})
 }
 
+// TODO: rename to syncData
 type syncConfig struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
@@ -135,14 +136,6 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
-	runner := git.ProdRunner{
-		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := runner.Backend.RepoStatus()
 	if err != nil {
@@ -161,6 +154,14 @@ func determineSyncConfig(allFlag bool, unvalidatedConfig configdomain.Unvalidate
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig)
+	runner := git.ProdRunner{
+		Config:          validatedConfig,
+		Backend:         repo.BackendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: repo.CommandsCounter,
+		FinalMessages:   &repo.FinalMessages,
 	}
 	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
 	remotes, err := runner.Backend.Remotes()
