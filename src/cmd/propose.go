@@ -87,7 +87,7 @@ func executePropose(dryRun, verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.FullConfig,
+		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -100,7 +100,7 @@ func executePropose(dryRun, verbose bool) error {
 }
 
 type proposeConfig struct {
-	configdomain.FullConfig
+	config           configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	connector        hostingdomain.Connector
