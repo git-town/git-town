@@ -81,7 +81,7 @@ func executePark(args []string, verbose bool) error {
 	})
 }
 
-type parkConfig struct {
+type parkData struct {
 	allBranches    gitdomain.BranchInfos
 	branchesToPark commandconfig.BranchesAndTypes
 }
@@ -109,10 +109,10 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfig, error) {
+func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return parkConfig{}, err
+		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
@@ -120,13 +120,13 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
-	return parkConfig{
+	return parkData{
 		allBranches:    branchesSnapshot.Branches,
 		branchesToPark: branchesToPark,
 	}, nil
 }
 
-func validateParkConfig(config parkConfig) error {
+func validateParkConfig(config parkData) error {
 	for branchName, branchType := range config.branchesToPark {
 		if !config.allBranches.HasLocalBranch(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)

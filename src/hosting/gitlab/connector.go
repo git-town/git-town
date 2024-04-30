@@ -19,7 +19,7 @@ import (
 // via the GitLab API.
 type Connector struct {
 	client *gitlab.Client
-	Config
+	Data
 	log print.Logger
 }
 
@@ -79,9 +79,9 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
-	gitlabConfig := Config{
+	gitlabConfig := Data{
 		APIToken: args.APIToken,
-		Config: hostingdomain.Config{
+		Data: hostingdomain.Data{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
@@ -94,7 +94,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		return Connector{}, err
 	}
 	connector := Connector{
-		Config: gitlabConfig,
+		Data:   gitlabConfig,
 		client: client,
 		log:    args.Log,
 	}

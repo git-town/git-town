@@ -99,7 +99,7 @@ func executePropose(dryRun, verbose bool) error {
 	})
 }
 
-type proposeConfig struct {
+type proposeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	config           configdomain.FullConfig
@@ -112,7 +112,7 @@ type proposeConfig struct {
 	remotes          gitdomain.Remotes
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -166,7 +166,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}
 	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	return &proposeConfig{
+	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		config:           repo.Runner.Config.FullConfig,
@@ -180,7 +180,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func proposeProgram(config *proposeConfig) program.Program {
+func proposeProgram(config *proposeData) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
@@ -202,7 +202,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	return prog
 }
 
-func validateProposeConfig(config *proposeConfig) error {
+func validateProposeConfig(config *proposeData) error {
 	initialBranchType := config.config.BranchType(config.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:

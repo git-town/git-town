@@ -56,12 +56,12 @@ func executeStatus(verbose bool) error {
 	return nil
 }
 
-type displayStatusConfig struct {
+type displayStatusData struct {
 	filepath string                    // filepath of the runstate file
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfig, error) {
+func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusData, error) {
 	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
 		return nil, err
@@ -70,13 +70,13 @@ func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfi
 	if err != nil {
 		return nil, err
 	}
-	return &displayStatusConfig{
+	return &displayStatusData{
 		filepath: filepath,
 		state:    state,
 	}, nil
 }
 
-func displayStatus(config displayStatusConfig) {
+func displayStatus(config displayStatusData) {
 	state, hasState := config.state.Get()
 	if !hasState {
 		fmt.Println(messages.StatusFileNotFound)

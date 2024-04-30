@@ -60,7 +60,7 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
+func determineRepoConfig(repo *execute.OpenRepoResult) (*repoData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return nil, err
@@ -85,11 +85,11 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if connector == nil {
 		return nil, hostingdomain.UnsupportedServiceError()
 	}
-	return &repoConfig{
+	return &repoData{
 		connector: connector,
 	}, err
 }
 
-type repoConfig struct {
+type repoData struct {
 	connector hostingdomain.Connector
 }

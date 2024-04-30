@@ -126,7 +126,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 	})
 }
 
-type shipConfig struct {
+type shipData struct {
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
@@ -146,7 +146,7 @@ type shipConfig struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -247,7 +247,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			}
 		}
 	}
-	return &shipConfig{
+	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -278,7 +278,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 	return nil
 }
 
-func shipProgram(config *shipConfig, commitMessage gitdomain.CommitMessage) program.Program {
+func shipProgram(config *shipData, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
 	if config.config.SyncBeforeShip {
 		// sync the parent branch

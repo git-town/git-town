@@ -79,7 +79,7 @@ func executeConfigSetup(verbose bool) error {
 	})
 }
 
-type setupConfig struct {
+type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
@@ -101,7 +101,7 @@ func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdo
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+func enterData(runner *git.ProdRunner, config *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -193,7 +193,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	return false, nil
 }
 
-func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, bool, error) {
+func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -210,7 +210,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (*setupConfig, 
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	return &setupConfig{
+	return &setupData{
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Runner.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,

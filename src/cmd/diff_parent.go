@@ -63,13 +63,13 @@ func executeDiffParent(args []string, verbose bool) error {
 	return nil
 }
 
-type diffParentConfig struct {
+type diffParentData struct {
 	branch       gitdomain.LocalBranchName
 	parentBranch gitdomain.LocalBranchName
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
+func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -111,7 +111,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if !hasParent {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
-	return &diffParentConfig{
+	return &diffParentData{
 		branch:       branch,
 		parentBranch: parentBranch,
 	}, false, nil

@@ -92,10 +92,10 @@ func executeHack(args []string, dryRun, verbose bool) error {
 
 // If set to appendConfig, the user wants to append a new branch to an existing branch.
 // If set to makeFeatureConfig, the user wants to make an existing branch a feature branch.
-type hackConfig = Either[appendConfig, makeFeatureConfig]
+type hackConfig = Either[appendData, makeFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
-type makeFeatureConfig struct {
+type makeFeatureData struct {
 	targetBranches commandconfig.BranchesAndTypes
 }
 
@@ -127,7 +127,7 @@ func createBranch(args createBranchArgs) error {
 }
 
 type createBranchArgs struct {
-	appendConfig          appendConfig
+	appendConfig          appendData
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
@@ -162,13 +162,13 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	if len(targetBranches) == 0 {
-		config = Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
+		config = Right[appendData, makeFeatureData](makeFeatureData{
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.FullConfig),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
-		config = Right[appendConfig, makeFeatureConfig](makeFeatureConfig{
+		config = Right[appendData, makeFeatureData](makeFeatureData{
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.FullConfig),
 		})
 		return
@@ -189,7 +189,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	config = Left[appendConfig, makeFeatureConfig](appendConfig{
+	config = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		config:                    repo.Runner.Config.FullConfig,
@@ -240,13 +240,13 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              *config.Config
-	makeFeatureConfig   makeFeatureConfig
+	makeFeatureConfig   makeFeatureData
 	rootDir             gitdomain.RepoRootDir
 	runner              *git.ProdRunner
 	verbose             bool
 }
 
-func validateMakeFeatureConfig(config makeFeatureConfig) error {
+func validateMakeFeatureConfig(config makeFeatureData) error {
 	for branchName, branchType := range config.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:

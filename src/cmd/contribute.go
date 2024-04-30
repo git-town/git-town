@@ -95,7 +95,7 @@ func executeContribute(args []string, verbose bool) error {
 	})
 }
 
-type contributeConfig struct {
+type contributeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchToCheckout Option[gitdomain.LocalBranchName]
 	branchesToMark   commandconfig.BranchesAndTypes
@@ -124,10 +124,10 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 	return nil
 }
 
-func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (contributeConfig, error) {
+func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return contributeConfig{}, err
+		return contributeData{}, err
 	}
 	branchesToMark := commandconfig.BranchesAndTypes{}
 	var branchToCheckout Option[gitdomain.LocalBranchName]
@@ -148,14 +148,14 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
-	return contributeConfig{
+	return contributeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchToCheckout: branchToCheckout,
 		branchesToMark:   branchesToMark,
 	}, nil
 }
 
-func validateContributeConfig(config contributeConfig) error {
+func validateContributeConfig(config contributeData) error {
 	for branchName, branchType := range config.branchesToMark {
 		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)

@@ -92,7 +92,7 @@ func executeObserve(args []string, verbose bool) error {
 	})
 }
 
-type observeConfig struct {
+type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
@@ -121,10 +121,10 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 	return nil
 }
 
-func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observeConfig, error) {
+func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observeData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return observeConfig{}, err
+		return observeData{}, err
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
 	checkout := gitdomain.EmptyLocalBranchName()
@@ -141,14 +141,14 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
-	return observeConfig{
+	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
 	}, nil
 }
 
-func validateObserveConfig(config observeConfig) error {
+func validateObserveConfig(config observeData) error {
 	for branchName, branchType := range config.branchesToObserve {
 		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)

@@ -18,7 +18,7 @@ import (
 )
 
 type Connector struct {
-	hostingdomain.Config
+	hostingdomain.Data
 	APIToken Option[configdomain.GiteaToken]
 	client   *gitea.Client
 	log      print.Logger
@@ -111,7 +111,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	giteaClient := gitea.NewClientWithHTTP("https://"+args.OriginURL.Host, httpClient)
 	return Connector{
 		APIToken: args.APIToken,
-		Config: hostingdomain.Config{
+		Data: hostingdomain.Data{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

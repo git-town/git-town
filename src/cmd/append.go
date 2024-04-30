@@ -87,7 +87,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	})
 }
 
-type appendConfig struct {
+type appendData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	config                    configdomain.FullConfig
@@ -102,7 +102,7 @@ type appendConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
@@ -147,7 +147,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
-	return &appendConfig{
+	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		config:                    repo.Runner.Config.FullConfig,
@@ -163,7 +163,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func appendProgram(config appendConfig) program.Program {
+func appendProgram(config appendData) program.Program {
 	prog := program.Program{}
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
