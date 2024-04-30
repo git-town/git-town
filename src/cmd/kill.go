@@ -79,9 +79,9 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.UnvalidatedConfig,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -94,10 +94,10 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killConfig struct {
-	configdomain.UnvalidatedConfig
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
+	config           configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -196,7 +196,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killConfig) {
-	if config.branchNameToKill.HasTrackingBranch() && config.IsOnline() {
+	if config.branchNameToKill.HasTrackingBranch() && config.config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, config)
@@ -219,7 +219,7 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 	if parentBranch, hasParentBranch := config.parentBranch.Get(); hasParentBranch && !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchNameToKill.LocalName,
-			Lineage: config.Lineage,
+			Lineage: config.config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})

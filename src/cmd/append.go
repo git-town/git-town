@@ -73,9 +73,9 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:            appendProgram(*config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.ValidatedConfig,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.ValidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -88,9 +88,9 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 }
 
 type appendConfig struct {
-	configdomain.ValidatedConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
+	config                    configdomain.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
@@ -148,9 +148,9 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		ValidatedConfig:           repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		config:                    repo.Runner.Config.FullConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -168,8 +168,8 @@ func appendProgram(config appendConfig) program.Program {
 	if !config.hasOpenChanges {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				Config:        config.ValidatedConfig,
 				BranchInfos:   config.allBranches,
+				Config:        config.ValidatedConfig,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
 				Remotes:       config.remotes,
@@ -181,7 +181,7 @@ func appendProgram(config appendConfig) program.Program {
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{

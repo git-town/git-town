@@ -86,9 +86,9 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunProgram:            renameBranchProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.UnvalidatedConfig,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -101,7 +101,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	configdomain.UnvalidatedConfig
+	config           configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -166,7 +166,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:       repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -184,21 +184,21 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 		result.Add(&opcodes.Checkout{Branch: config.newBranch})
 	}
 	if !config.dryRun {
-		if config.IsPerennialBranch(config.initialBranch) {
+		if config.config.IsPerennialBranch(config.initialBranch) {
 			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
 			result.Add(&opcodes.AddToPerennialBranches{Branch: config.newBranch})
 		} else {
 			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-			parentBranch, hasParent := config.Lineage.Parent(config.oldBranch.LocalName).Get()
+			parentBranch, hasParent := config.config.Lineage.Parent(config.oldBranch.LocalName).Get()
 			if hasParent {
 				result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: parentBranch})
 			}
 		}
 	}
-	for _, child := range config.Lineage.Children(config.oldBranch.LocalName) {
+	for _, child := range config.config.Lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcodes.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && config.IsOnline() {
+	if config.oldBranch.HasTrackingBranch() && config.config.IsOnline() {
 		result.Add(&opcodes.CreateTrackingBranch{Branch: config.newBranch})
 		result.Add(&opcodes.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}

@@ -74,9 +74,9 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.UnvalidatedConfig,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -89,9 +89,9 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 }
 
 type prependConfig struct {
-	configdomain.UnvalidatedConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
+	config                    configdomain.UnvalidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
@@ -195,7 +195,7 @@ func prependProgram(config *prependConfig) program.Program {
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

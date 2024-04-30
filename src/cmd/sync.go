@@ -78,8 +78,8 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			Config:        config.UnvalidatedConfig,
 			BranchInfos:   config.allBranches,
+			Config:        config.UnvalidatedConfig,
 			InitialBranch: config.initialBranch,
 			Remotes:       config.remotes,
 			Program:       &runProgram,
@@ -105,9 +105,9 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.UnvalidatedConfig,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.UnvalidatedConfig,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -120,9 +120,9 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	configdomain.UnvalidatedConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
+	config           configdomain.UnvalidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

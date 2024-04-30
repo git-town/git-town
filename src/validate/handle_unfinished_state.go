@@ -99,9 +99,9 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  args.Run.Config.FullConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
-		Config:                  args.Run.Config.FullConfig,
 		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
