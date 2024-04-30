@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -57,7 +58,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	config, finalMessages, err := config.NewConfig(config.NewConfigArgs{
+	unvalidatedConfig, finalMessages, err := config.NewUnvalidatedConfig(config.NewConfigArgs{
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
@@ -67,22 +68,6 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	prodRunner := git.ProdRunner{
-		Config:  config,
-		Backend: backendCommands,
-		Frontend: git.FrontendCommands{
-			Runner: newFrontendRunner(newFrontendRunnerArgs{
-				counter:          &commandsCounter,
-				dryRun:           args.DryRun,
-				getCurrentBranch: backendCommands.CurrentBranch,
-				omitBranchNames:  args.OmitBranchNames,
-				printCommands:    args.PrintCommands,
-			}),
-			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
-		},
-		CommandsCounter: &commandsCounter,
-		FinalMessages:   finalMessages,
-	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
@@ -90,10 +75,21 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 	}
-	isOffline := config.FullConfig.Offline
+	isOffline := unvalidatedConfig.Config.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err
+	}
+	frontendRunner := newFrontendRunner(newFrontendRunnerArgs{
+		counter:          &commandsCounter,
+		dryRun:           args.DryRun,
+		getCurrentBranch: backendCommands.CurrentBranch,
+		omitBranchNames:  args.OmitBranchNames,
+		printCommands:    args.PrintCommands,
+	})
+	frontendCommands := git.FrontendCommands{
+		Runner:                 frontendRunner,
+		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
@@ -103,14 +99,15 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 		if currentDirectory != rootDir.String() {
-			err = prodRunner.Frontend.NavigateToDir(rootDir)
+			err = frontendCommands.NavigateToDir(rootDir)
 		}
 	}
 	return &OpenRepoResult{
-		ConfigSnapshot: configSnapshot,
-		IsOffline:      isOffline,
-		RootDir:        rootDir,
-		Runner:         &prodRunner,
+		ConfigSnapshot:    configSnapshot,
+		FinalMessages:     *finalMessages,
+		IsOffline:         isOffline,
+		RootDir:           rootDir,
+		UnvalidatedConfig: unvalidatedConfig,
 	}, err
 }
 
@@ -124,10 +121,13 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	ConfigSnapshot undoconfig.ConfigSnapshot
-	IsOffline      configdomain.Offline
-	RootDir        gitdomain.RepoRootDir
-	Runner         *git.ProdRunner
+	ConfigSnapshot    undoconfig.ConfigSnapshot
+	FinalMessages     stringslice.Collector
+	Frontend          git.FrontendCommands
+	IsOffline         configdomain.Offline
+	RootDir           gitdomain.RepoRootDir
+	Runner            *git.ProdRunner
+	UnvalidatedConfig config.UnvalidatedConfig
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

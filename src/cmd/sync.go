@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -71,6 +72,14 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
+	prodRunner := git.ProdRunner{
+		Config:          repo.config,
+		Backend:         repo.backendCommands,
+		Frontend:        repo.Frontend,
+		CommandsCounter: &commandsCounter,
+		FinalMessages:   finalMessages,
+	}
+
 	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo, verbose)
 	if err != nil || exit {
 		return err
