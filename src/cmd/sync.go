@@ -105,9 +105,9 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -120,9 +120,9 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	config           configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
+	config           configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

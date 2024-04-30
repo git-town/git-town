@@ -112,9 +112,9 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendConfig),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  args.appendConfig.config,
 		Connector:               nil,
 		DialogTestInputs:        &args.appendConfig.dialogTestInputs,
-		Config:                  args.appendConfig.config,
 		HasOpenChanges:          args.appendConfig.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,

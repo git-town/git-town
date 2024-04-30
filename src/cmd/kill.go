@@ -79,9 +79,9 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -94,10 +94,10 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killConfig struct {
-	config           configdomain.FullConfig
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
+	config           configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool

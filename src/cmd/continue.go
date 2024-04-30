@@ -119,8 +119,8 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 }
 
 type continueConfig struct {
-	connector        hostingdomain.Connector
 	config           configdomain.FullConfig
+	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 }

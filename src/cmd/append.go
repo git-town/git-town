@@ -73,9 +73,9 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:            appendProgram(*config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -88,9 +88,9 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 }
 
 type appendConfig struct {
-	config                    configdomain.FullConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
+	config                    configdomain.FullConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool

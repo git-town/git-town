@@ -112,9 +112,9 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		RunProgram:            shipProgram(config, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -127,11 +127,11 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 }
 
 type shipConfig struct {
-	config                   configdomain.FullConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
+	config                   configdomain.FullConfig
 	connector                hostingdomain.Connector
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
@@ -248,11 +248,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		config:                   repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
+		config:                   repo.Runner.Config.FullConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,

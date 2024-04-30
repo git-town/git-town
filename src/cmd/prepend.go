@@ -74,9 +74,9 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Config:                  config.config,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Config:                  config.config,
 		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -89,9 +89,9 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 }
 
 type prependConfig struct {
-	config                    configdomain.FullConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
+	config                    configdomain.FullConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
