@@ -57,15 +57,15 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineKillConfig(args, repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineKillData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = validateKillConfig(config)
+	err = validateKillData(data)
 	if err != nil {
 		return err
 	}
-	steps, finalUndoProgram := killProgram(config)
+	steps, finalUndoProgram := killProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -79,10 +79,10 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
+		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -93,7 +93,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	})
 }
 
-type killConfig struct {
+type killData struct {
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
@@ -106,7 +106,7 @@ type killConfig struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -161,7 +161,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone = branchesSnapshot.Active
 	}
 	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
-	return &killConfig{
+	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
@@ -175,7 +175,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
+func killProgram(config *killData) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
 	switch config.branchTypeToKill {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
@@ -195,7 +195,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killConfig) {
+func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killData) {
 	if config.branchNameToKill.HasTrackingBranch() && config.config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchNameToKill.RemoteName})
 	}
@@ -203,7 +203,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, config *killConfig) {
+func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, config *killData) {
 	if config.initialBranch == config.branchNameToKill.LocalName {
 		if config.hasOpenChanges {
 			prog.Add(&opcodes.CommitOpenChanges{})
@@ -226,8 +226,8 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 	}
 }
 
-func validateKillConfig(killConfig *killConfig) error {
-	switch killConfig.branchTypeToKill {
+func validateKillData(data *killData) error {
+	switch data.branchTypeToKill {
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -235,5 +235,5 @@ func validateKillConfig(killConfig *killConfig) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.KillCannotKillPerennialBranches)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", killConfig.branchTypeToKill))
+	panic(fmt.Sprintf("unhandled branch type: %s", data.branchTypeToKill))
 }

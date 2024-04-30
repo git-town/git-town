@@ -26,12 +26,12 @@ func TestBitbucketConnector(t *testing.T) {
 				HostingPlatform: None[configdomain.HostingPlatform](),
 				OriginURL:       url,
 			})
-			wantConfig := hostingdomain.Config{
+			wantConfig := hostingdomain.Data{
 				Hostname:     "bitbucket.org",
 				Organization: "git-town",
 				Repository:   "docs",
 			}
-			must.EqOp(t, wantConfig, have.Config)
+			must.EqOp(t, wantConfig, have.Data)
 		})
 
 		t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -42,12 +42,12 @@ func TestBitbucketConnector(t *testing.T) {
 				HostingPlatform: Some(configdomain.HostingPlatformBitbucket),
 				OriginURL:       url,
 			})
-			wantConfig := hostingdomain.Config{
+			wantConfig := hostingdomain.Data{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",
 			}
-			must.EqOp(t, wantConfig, have.Config)
+			must.EqOp(t, wantConfig, have.Data)
 		})
 	})
 

@@ -49,9 +49,9 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var config *undoConfig
+	var config *undoData
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoConfig(repo, verbose)
+	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func executeUndo(verbose bool) error {
 	})
 }
 
-type undoConfig struct {
+type undoData struct {
 	config                  configdomain.FullConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
@@ -85,7 +85,7 @@ type undoConfig struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
+func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -118,7 +118,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 			return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 		}
 	}
-	return &undoConfig{
+	return &undoData{
 		config:                  repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,

@@ -2,8 +2,8 @@ package hostingdomain
 
 import "strings"
 
-// Config contains data needed by all platform connectors.
-type Config struct {
+// Data contains data needed by all platform connectors.
+type Data struct {
 	// Hostname override
 	Hostname string
 
@@ -14,7 +14,7 @@ type Config struct {
 	Repository string
 }
 
-func (self Config) HostnameWithStandardPort() string {
+func (self Data) HostnameWithStandardPort() string {
 	index := strings.IndexRune(self.Hostname, ':')
 	if index == -1 {
 		return self.Hostname

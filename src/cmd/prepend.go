@@ -58,7 +58,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determinePrependData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -88,7 +88,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 	})
 }
 
-type prependConfig struct {
+type prependData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	config                    configdomain.FullConfig
@@ -103,7 +103,7 @@ type prependConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -153,7 +153,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	}
 	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
-	return &prependConfig{
+	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		config:                    repo.Runner.Config.FullConfig,
@@ -169,7 +169,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func prependProgram(config *prependConfig) program.Program {
+func prependProgram(config *prependData) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{

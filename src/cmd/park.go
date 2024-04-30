@@ -55,19 +55,19 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineParkConfig(args, repo)
+	data, err := determineParkData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateParkConfig(config)
+	err = validateParkData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToPark.Keys()
+	branchNames := data.branchesToPark.Keys()
 	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(config.branchesToPark, repo.Runner.Config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, repo.Runner.Config); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
@@ -81,7 +81,7 @@ func executePark(args []string, verbose bool) error {
 	})
 }
 
-type parkConfig struct {
+type parkData struct {
 	allBranches    gitdomain.BranchInfos
 	branchesToPark commandconfig.BranchesAndTypes
 }
@@ -109,10 +109,10 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfig, error) {
+func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return parkConfig{}, err
+		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
@@ -120,15 +120,15 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
-	return parkConfig{
+	return parkData{
 		allBranches:    branchesSnapshot.Branches,
 		branchesToPark: branchesToPark,
 	}, nil
 }
 
-func validateParkConfig(config parkConfig) error {
-	for branchName, branchType := range config.branchesToPark {
-		if !config.allBranches.HasLocalBranch(branchName) {
+func validateParkData(data parkData) error {
+	for branchName, branchType := range data.branchesToPark {
+		if !data.allBranches.HasLocalBranch(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

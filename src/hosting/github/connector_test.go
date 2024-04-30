@@ -53,7 +53,7 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := github.Connector{
-					Config: hostingdomain.Config{
+					Data: hostingdomain.Data{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
@@ -71,7 +71,7 @@ func TestConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{ //nolint:exhaustruct
-			Config: hostingdomain.Config{
+			Data: hostingdomain.Data{
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",
@@ -97,12 +97,12 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:  originURL,
 		})
 		must.NoError(t, err)
-		wantConfig := hostingdomain.Config{
+		wantConfig := hostingdomain.Data{
 			Hostname:     "github.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.EqOp(t, wantConfig, have.Data)
 	})
 
 	t.Run("custom URL", func(t *testing.T) {
@@ -116,11 +116,11 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:  originURL,
 		})
 		must.NoError(t, err)
-		wantConfig := hostingdomain.Config{
+		wantConfig := hostingdomain.Data{
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		must.EqOp(t, wantConfig, have.Config)
+		must.EqOp(t, wantConfig, have.Data)
 	})
 }

@@ -15,14 +15,14 @@ import (
 
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
-	hostingdomain.Config
+	hostingdomain.Data
 }
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
 	return Connector{
-		Config: hostingdomain.Config{
+		Data: hostingdomain.Data{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

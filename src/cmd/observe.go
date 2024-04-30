@@ -61,24 +61,24 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineObserveConfig(args, repo)
+	data, err := determineObserveData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateObserveConfig(config)
+	err = validateObserveData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToObserve.Keys()
+	branchNames := data.branchesToObserve.Keys()
 	if err = repo.Runner.Config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
-	if !config.checkout.IsEmpty() {
-		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout, false); err != nil {
+	if !data.checkout.IsEmpty() {
+		if err = repo.Runner.Frontend.CheckoutBranch(data.checkout, false); err != nil {
 			return err
 		}
 	}
@@ -92,7 +92,7 @@ func executeObserve(args []string, verbose bool) error {
 	})
 }
 
-type observeConfig struct {
+type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
@@ -121,10 +121,10 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 	return nil
 }
 
-func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observeConfig, error) {
+func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return observeConfig{}, err
+		return observeData{}, err
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
 	checkout := gitdomain.EmptyLocalBranchName()
@@ -141,16 +141,16 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
-	return observeConfig{
+	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
 	}, nil
 }
 
-func validateObserveConfig(config observeConfig) error {
-	for branchName, branchType := range config.branchesToObserve {
-		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
+func validateObserveData(data observeData) error {
+	for branchName, branchType := range data.branchesToObserve {
+		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

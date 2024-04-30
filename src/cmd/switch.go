@@ -46,7 +46,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranches, exit, err := determineSwitchConfig(repo, verbose)
+	config, initialBranches, exit, err := determineSwitchData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -69,14 +69,14 @@ func executeSwitch(verbose, merge bool) error {
 	return nil
 }
 
-type switchConfig struct {
+type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	uncommittedChanges bool
 }
 
-func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, gitdomain.BranchesSnapshot, bool, error) {
+func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -96,7 +96,7 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err
 	}
-	return &switchConfig{
+	return &switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,

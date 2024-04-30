@@ -51,26 +51,26 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentConfig(repo, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = verifySetParentConfig(config, repo)
+	err = verifySetParentData(data, repo)
 	if err != nil {
 		return err
 	}
 	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
-		Branch:          config.currentBranch,
-		DefaultChoice:   config.defaultChoice,
-		DialogTestInput: config.dialogTestInputs.Next(),
+		Branch:          data.currentBranch,
+		DefaultChoice:   data.defaultChoice,
+		DialogTestInput: data.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
-		MainBranch:      config.mainBranch,
+		MainBranch:      data.mainBranch,
 	})
 	if err != nil {
 		return err
 	}
-	prog, aborted := setParentProgram(outcome, selectedBranch, config.currentBranch)
+	prog, aborted := setParentProgram(outcome, selectedBranch, data.currentBranch)
 	if aborted {
 		return nil
 	}
@@ -88,8 +88,8 @@ func executeSetParent(verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Config:                  repo.Runner.Config.FullConfig,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -100,7 +100,7 @@ func executeSetParent(verbose bool) error {
 	})
 }
 
-type setParentConfig struct {
+type setParentData struct {
 	currentBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
@@ -108,7 +108,7 @@ type setParentConfig struct {
 	mainBranch       gitdomain.LocalBranchName
 }
 
-func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setParentConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -136,7 +136,7 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	} else {
 		defaultChoice = mainBranch
 	}
-	return &setParentConfig{
+	return &setParentData{
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
@@ -145,9 +145,9 @@ func determineSetParentConfig(repo *execute.OpenRepoResult, verbose bool) (*setP
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func verifySetParentConfig(config *setParentConfig, repo *execute.OpenRepoResult) error {
-	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(config.currentBranch) {
-		return fmt.Errorf(messages.SetParentNoFeatureBranch, config.currentBranch)
+func verifySetParentData(data *setParentData, repo *execute.OpenRepoResult) error {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(data.currentBranch) {
+		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.currentBranch)
 	}
 	return nil
 }
