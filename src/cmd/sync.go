@@ -167,7 +167,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: branchesSnapshot.Branches.LocalBranches().Names(),
+		BranchesToVerify: branchNamesToSync,
 		Config:           repo.Runner.Config,
 		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
