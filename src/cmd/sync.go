@@ -162,6 +162,9 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchNamesToSync, localBranches, &repo.BackendCommands, &dialogTestInputs)
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
+	}
 	var shouldPushTags bool
 	if allFlag {
 		shouldPushTags = true
