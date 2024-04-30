@@ -63,23 +63,23 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineContributeData(args, repo)
+	data, err := determineContributeData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateContributeData(config)
+	err = validateContributeData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToMark.Keys()
+	branchNames := data.branchesToMark.Keys()
 	if err = repo.Runner.Config.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.Runner.Config); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
-	branchToCheckout, hasBranchToCheckout := config.branchToCheckout.Get()
+	branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get()
 	if hasBranchToCheckout {
 		if err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
 			return err
@@ -155,9 +155,9 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 	}, nil
 }
 
-func validateContributeData(config contributeData) error {
-	for branchName, branchType := range config.branchesToMark {
-		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
+func validateContributeData(data contributeData) error {
+	for branchName, branchType := range data.branchesToMark {
+		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

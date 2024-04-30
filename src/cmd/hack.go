@@ -64,10 +64,10 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendConfig, doAppend, makeFeatureBranchConfig, doMakeFeatureBranch := config.Get()
+	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := config.Get()
 	if doAppend {
 		return createBranch(createBranchArgs{
-			appendData:            appendConfig,
+			appendData:            appendData,
 			beginBranchesSnapshot: initialBranchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        initialStashSize,
@@ -81,7 +81,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return makeFeatureBranch(makeFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
 			config:              repo.Runner.Config,
-			makeFeatureData:     makeFeatureBranchConfig,
+			makeFeatureData:     makeFeatureBranchData,
 			rootDir:             repo.RootDir,
 			runner:              repo.Runner,
 			verbose:             verbose,
@@ -246,8 +246,8 @@ type makeFeatureBranchArgs struct {
 	verbose             bool
 }
 
-func validateMakeFeatureData(config makeFeatureData) error {
-	for branchName, branchType := range config.targetBranches {
+func validateMakeFeatureData(data makeFeatureData) error {
+	for branchName, branchType := range data.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 			return nil

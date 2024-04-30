@@ -51,26 +51,26 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentData(repo, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineSetParentData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = verifySetParentData(config, repo)
+	err = verifySetParentData(data, repo)
 	if err != nil {
 		return err
 	}
 	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
-		Branch:          config.currentBranch,
-		DefaultChoice:   config.defaultChoice,
-		DialogTestInput: config.dialogTestInputs.Next(),
+		Branch:          data.currentBranch,
+		DefaultChoice:   data.defaultChoice,
+		DialogTestInput: data.dialogTestInputs.Next(),
 		Lineage:         repo.Runner.Config.FullConfig.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
-		MainBranch:      config.mainBranch,
+		MainBranch:      data.mainBranch,
 	})
 	if err != nil {
 		return err
 	}
-	prog, aborted := setParentProgram(outcome, selectedBranch, config.currentBranch)
+	prog, aborted := setParentProgram(outcome, selectedBranch, data.currentBranch)
 	if aborted {
 		return nil
 	}
@@ -88,8 +88,8 @@ func executeSetParent(verbose bool) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Config:                  repo.Runner.Config.FullConfig,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

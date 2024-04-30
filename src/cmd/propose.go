@@ -66,11 +66,11 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeData(repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeData(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	if err = validateProposeData(config); err != nil {
+	if err = validateProposeData(data); err != nil {
 		return err
 	}
 	runState := runstate.RunState{
@@ -82,13 +82,13 @@ func executePropose(dryRun, verbose bool) error {
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		RunProgram:            proposeProgram(config),
+		RunProgram:            proposeProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		Config:                  data.config,
+		Connector:               data.connector,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

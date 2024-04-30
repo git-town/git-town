@@ -55,19 +55,19 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineParkData(args, repo)
+	data, err := determineParkData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateParkData(config)
+	err = validateParkData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToPark.Keys()
+	branchNames := data.branchesToPark.Keys()
 	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(config.branchesToPark, repo.Runner.Config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, repo.Runner.Config); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
@@ -126,9 +126,9 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 	}, nil
 }
 
-func validateParkData(config parkData) error {
-	for branchName, branchType := range config.branchesToPark {
-		if !config.allBranches.HasLocalBranch(branchName) {
+func validateParkData(data parkData) error {
+	for branchName, branchType := range data.branchesToPark {
+		if !data.allBranches.HasLocalBranch(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

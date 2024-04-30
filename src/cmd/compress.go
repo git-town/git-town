@@ -211,14 +211,14 @@ func compressProgram(config *compressBranchesData) program.Program {
 	return prog
 }
 
-func compressBranchProgram(prog *program.Program, branch compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
-	if !shouldCompressBranch(branch.branchInfo.LocalName, branch.branchType, initialBranch) {
+func compressBranchProgram(prog *program.Program, data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
+	if !shouldCompressBranch(data.branchInfo.LocalName, data.branchType, initialBranch) {
 		return
 	}
-	prog.Add(&opcodes.Checkout{Branch: branch.branchInfo.LocalName})
-	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: branch.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: branch.newCommitMessage})
-	if branch.branchInfo.HasRemoteBranch() && online.Bool() {
+	prog.Add(&opcodes.Checkout{Branch: data.branchInfo.LocalName})
+	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: data.newCommitMessage})
+	if data.branchInfo.HasRemoteBranch() && online.Bool() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }

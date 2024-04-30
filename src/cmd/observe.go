@@ -61,24 +61,24 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineObserveData(args, repo)
+	data, err := determineObserveData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(config)
+	err = validateObserveData(data)
 	if err != nil {
 		return err
 	}
-	branchNames := config.branchesToObserve.Keys()
+	branchNames := data.branchesToObserve.Keys()
 	if err = repo.Runner.Config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
-	if !config.checkout.IsEmpty() {
-		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout, false); err != nil {
+	if !data.checkout.IsEmpty() {
+		if err = repo.Runner.Frontend.CheckoutBranch(data.checkout, false); err != nil {
 			return err
 		}
 	}
@@ -148,9 +148,9 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	}, nil
 }
 
-func validateObserveData(config observeData) error {
-	for branchName, branchType := range config.branchesToObserve {
-		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
+func validateObserveData(data observeData) error {
+	for branchName, branchType := range data.branchesToObserve {
+		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

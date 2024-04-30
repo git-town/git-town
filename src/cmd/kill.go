@@ -57,15 +57,15 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineKillData(args, repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineKillData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = validateKillData(config)
+	err = validateKillData(data)
 	if err != nil {
 		return err
 	}
-	steps, finalUndoProgram := killProgram(config)
+	steps, finalUndoProgram := killProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -79,10 +79,10 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
+		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
