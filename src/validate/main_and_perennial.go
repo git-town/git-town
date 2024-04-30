@@ -14,50 +14,44 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func MainAndPerennials(args MainAndPerennialsArgs) MainAndPerennialsResult {
+func MainAndPerennials(args MainAndPerennialsArgs) (MainAndPerennialsResult, error) {
 	unvalidatedMain, hasMain := args.UnvalidatedMain.Get()
 	if hasMain {
 		return MainAndPerennialsResult{
 			ValidatedMain:       unvalidatedMain,
 			ValidatedPerennials: args.UnvalidatedPerennials,
-			Err:                 nil,
-		}
+		}, nil
 	}
 	if args.HasConfigFile {
-		return emptyMainAndPerennialsResult(errors.New(messages.ConfigMainbranchInConfigFile))
+		return emptyMainAndPerennialsResult(), errors.New(messages.ConfigMainbranchInConfigFile)
 	}
 	fmt.Print(messages.ConfigNeeded)
 	var err error
 	var aborted bool
 	validatedMain, aborted, err := dialog.MainBranch(args.LocalBranches, args.Backend.DefaultBranch(), args.DialogInputs.Next())
 	if err != nil || aborted {
-		return MainAndPerennialsResult{
-			ValidatedMain:       validatedMain,
-			ValidatedPerennials: args.UnvalidatedPerennials,
-			Err:                 err,
-		}
+		return emptyMainAndPerennialsResult(), err
 	}
 	if validatedMain != unvalidatedMain {
 		err := args.LocalGitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, validatedMain.String())
 		if err != nil {
-			return emptyMainAndPerennialsResult(err)
+			return emptyMainAndPerennialsResult(), err
 		}
 	}
 	validatedPerennials, aborted, err := dialog.PerennialBranches(args.LocalBranches, args.UnvalidatedPerennials, validatedMain, args.DialogInputs.Next())
 	if err != nil || aborted {
-		return emptyMainAndPerennialsResult(err)
+		return emptyMainAndPerennialsResult(), err
 	}
 	if slices.Compare(validatedPerennials, args.UnvalidatedPerennials) != 0 {
 		err := args.LocalGitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, validatedPerennials.Join(" "))
 		if err != nil {
-			return emptyMainAndPerennialsResult(err)
+			return emptyMainAndPerennialsResult(), err
 		}
 	}
 	return MainAndPerennialsResult{
 		ValidatedMain:       validatedMain,
 		ValidatedPerennials: validatedPerennials,
-		Err:                 nil,
-	}
+	}, nil
 }
 
 type MainAndPerennialsArgs struct {
@@ -76,10 +70,9 @@ type MainAndPerennialsResult struct {
 	Err                 error
 }
 
-func emptyMainAndPerennialsResult(err error) MainAndPerennialsResult {
+func emptyMainAndPerennialsResult() MainAndPerennialsResult {
 	return MainAndPerennialsResult{
 		ValidatedMain:       gitdomain.EmptyLocalBranchName(),
 		ValidatedPerennials: gitdomain.LocalBranchNames{},
-		Err:                 err,
 	}
 }
