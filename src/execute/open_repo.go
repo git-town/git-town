@@ -67,19 +67,21 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
+		counter:          &commandsCounter,
+		dryRun:           args.DryRun,
+		getCurrentBranch: backendCommands.CurrentBranch,
+		omitBranchNames:  args.OmitBranchNames,
+		printCommands:    args.PrintCommands,
+	})
+	frontEndCommands := git.FrontendCommands{
+		Runner:                 frontEndRunner,
+		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
+	}
 	prodRunner := git.ProdRunner{
-		Config:  config,
-		Backend: backendCommands,
-		Frontend: git.FrontendCommands{
-			Runner: newFrontendRunner(newFrontendRunnerArgs{
-				counter:          &commandsCounter,
-				dryRun:           args.DryRun,
-				getCurrentBranch: backendCommands.CurrentBranch,
-				omitBranchNames:  args.OmitBranchNames,
-				printCommands:    args.PrintCommands,
-			}),
-			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
-		},
+		Config:          config,
+		Backend:         backendCommands,
+		Frontend:        frontEndCommands,
 		CommandsCounter: &commandsCounter,
 		FinalMessages:   finalMessages,
 	}
