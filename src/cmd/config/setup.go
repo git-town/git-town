@@ -266,7 +266,7 @@ func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	if err != nil {
 		return err
 	}
-	err = saveMainBranch(runner, userInput.config.MainBranch)
+	err = saveMainBranch(runner, userInput.config.MainBranch.GetOrPanic())
 	if err != nil {
 		return err
 	}
