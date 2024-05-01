@@ -18,14 +18,14 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Config.FullConfig.Lineage)
+	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Config.Config.Lineage)
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
 	}
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.Runner.Config.FullConfig,
+		Config:                  args.Runner.Config.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		HasOpenChanges:          args.HasOpenChanges,
@@ -83,10 +83,10 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.CurrentBranch,
-		Config:                   args.Runner.Config.FullConfig,
+		Config:                   args.Runner.Config.Config,
 		EndBranch:                args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Config.FullConfig.Lineage)
+	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Config.Config.Lineage)
 	return nil
 }

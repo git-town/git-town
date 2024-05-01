@@ -138,34 +138,34 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: gitdomain.LocalBranchNames{branchToKill.LocalName},
 			Config:           repo.Runner.Config,
-			DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+			DefaultChoice:    repo.Runner.Config.Config.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    branchesSnapshot.Branches,
-			MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
+			MainBranch:       repo.Runner.Config.Config.MainBranch,
 			Runner:           repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 	}
-	branchTypeToKill := repo.Runner.Config.FullConfig.BranchType(branchNameToKill)
+	branchTypeToKill := repo.Runner.Config.Config.BranchType(branchNameToKill)
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == branchesSnapshot.Active {
 		if previousBranch == branchesSnapshot.Active {
-			branchWhenDone = repo.Runner.Config.FullConfig.MainBranch
+			branchWhenDone = repo.Runner.Config.Config.MainBranch
 		} else {
 			branchWhenDone = previousBranch
 		}
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
-	parentBranch := repo.Runner.Config.FullConfig.Lineage.Parent(branchToKill.LocalName)
+	parentBranch := repo.Runner.Config.Config.Lineage.Parent(branchToKill.LocalName)
 	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

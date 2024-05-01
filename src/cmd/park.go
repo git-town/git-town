@@ -118,9 +118,9 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
-		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
+		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.Config)
 	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.Config)
 	}
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,

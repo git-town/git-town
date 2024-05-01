@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	}
 	var config *undoData
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoData(repo, verbose)
+	config, initialStashSize, repo.Runner.Config.Config.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func executeUndo(verbose bool) error {
 		Config:           config.config,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          repo.Runner.Config.FullConfig.Lineage,
+		Lineage:          repo.Runner.Config.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
 		Runner:           repo.Runner,
@@ -89,7 +89,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, 0, repo.Runner.Config.FullConfig.Lineage, err
+		return nil, 0, repo.Runner.Config.Config.Lineage, err
 	}
 	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Runner.Config,
@@ -103,27 +103,27 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Verbose:               verbose,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
+		return nil, initialStashSize, repo.Runner.Config.Config.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.FullConfig,
-			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			FullConfig:      &repo.Runner.Config.Config,
+			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
+			return nil, initialStashSize, repo.Runner.Config.Config.Lineage, err
 		}
 	}
 	return &undoData{
-		config:                  repo.Runner.Config.FullConfig,
+		config:                  repo.Runner.Config.Config,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, repo.Runner.Config.FullConfig.Lineage, nil
+	}, initialStashSize, repo.Runner.Config.Config.Lineage, nil
 }

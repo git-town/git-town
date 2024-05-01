@@ -104,14 +104,14 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.FullConfig,
-			HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
+			FullConfig:      &repo.Runner.Config.Config,
+			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 	}
 	return &continueData{
-		config:           repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,

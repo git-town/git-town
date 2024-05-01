@@ -15,7 +15,7 @@ import (
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
 func IsConfigured(backend *git.BackendCommands, config *config.Config, localBranches gitdomain.LocalBranchNames, dialogInputs *components.TestInputs) error {
-	mainBranch := config.FullConfig.MainBranch
+	mainBranch := config.Config.MainBranch
 	if mainBranch.IsEmpty() {
 		if config.ConfigFile.IsSome() {
 			return errors.New(messages.ConfigMainbranchInConfigFile)
@@ -26,18 +26,18 @@ func IsConfigured(backend *git.BackendCommands, config *config.Config, localBran
 		if err != nil || aborted {
 			return err
 		}
-		if newMainBranch != config.FullConfig.MainBranch {
+		if newMainBranch != config.Config.MainBranch {
 			err := config.SetMainBranch(newMainBranch)
 			if err != nil {
 				return err
 			}
-			config.FullConfig.MainBranch = newMainBranch
+			config.Config.MainBranch = newMainBranch
 		}
-		newPerennialBranches, aborted, err := dialog.PerennialBranches(localBranches, config.FullConfig.PerennialBranches, config.FullConfig.MainBranch, dialogInputs.Next())
+		newPerennialBranches, aborted, err := dialog.PerennialBranches(localBranches, config.Config.PerennialBranches, config.Config.MainBranch, dialogInputs.Next())
 		if err != nil || aborted {
 			return err
 		}
-		if slices.Compare(newPerennialBranches, config.FullConfig.PerennialBranches) != 0 {
+		if slices.Compare(newPerennialBranches, config.Config.PerennialBranches) != 0 {
 			err := config.SetPerennialBranches(newPerennialBranches)
 			if err != nil {
 				return err

@@ -135,11 +135,11 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
-		branchesToMark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
+		branchesToMark.Add(branchesSnapshot.Active, &repo.Runner.Config.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, &repo.Runner.Config.FullConfig)
+		branchesToMark.Add(branch, &repo.Runner.Config.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
@@ -147,7 +147,7 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
+		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{

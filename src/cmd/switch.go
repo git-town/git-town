@@ -50,7 +50,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.Config.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
