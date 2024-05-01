@@ -136,8 +136,8 @@ type OpenRepoResult struct {
 	Config          *config.Config
 	ConfigSnapshot  undoconfig.ConfigSnapshot
 	FinalMessages   *stringslice.Collector
-	IsOffline       configdomain.Offline
 	Frontend        git.FrontendCommands
+	IsOffline       configdomain.Offline
 	RootDir         gitdomain.RepoRootDir
 }
 
