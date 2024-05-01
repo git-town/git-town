@@ -70,11 +70,11 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
 	if err != nil || exit {
 		return err
 	}
-	program := compressProgram(config)
+	program := compressProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -87,10 +87,10 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
+		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

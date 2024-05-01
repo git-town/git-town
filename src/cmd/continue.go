@@ -52,7 +52,7 @@ func executeContinue(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueData(repo, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -61,10 +61,10 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		Config:                  data.config,
+		Connector:               data.connector,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

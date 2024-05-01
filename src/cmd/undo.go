@@ -49,9 +49,9 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var config *undoData
+	var data *undoData
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Config.Config.Lineage, err = determineUndoData(repo, verbose)
+	data, initialStashSize, repo.Runner.Config.Config.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -65,8 +65,8 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		Config:           config.config,
-		HasOpenChanges:   config.hasOpenChanges,
+		Config:           data.config,
+		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Config.Config.Lineage,
 		RootDir:          repo.RootDir,

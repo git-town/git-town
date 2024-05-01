@@ -60,11 +60,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineHackData(args, repo, dryRun, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineHackData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := config.Get()
+	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
 	if doAppend {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
