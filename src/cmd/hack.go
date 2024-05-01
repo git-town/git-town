@@ -12,11 +12,11 @@ import (
 	"github.com/git-town/git-town/v14/src/config/commandconfig"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
@@ -73,14 +73,13 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			beginStashSize:        initialStashSize,
 			dryRun:                dryRun,
 			rootDir:               repo.RootDir,
-			runner:                data.runner,
 			verbose:               verbose,
 		})
 	}
 	if doMakeFeatureBranch {
 		return makeFeatureBranch(makeFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              repo.Runner.Config,
+			config:              makeFeatureBranchData.config,
 			makeFeatureData:     makeFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
@@ -90,12 +89,13 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// If set to appendConfig, the user wants to append a new branch to an existing branch.
-// If set to makeFeatureConfig, the user wants to make an existing branch a feature branch.
+// If set to appendData, the user wants to append a new branch to an existing branch.
+// If set to makeFeatureData, the user wants to make an existing branch a feature branch.
 type hackData = Either[appendData, makeFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureData struct {
+	config         config.ValidatedConfig
 	targetBranches commandconfig.BranchesAndTypes
 }
 
@@ -120,7 +120,7 @@ func createBranch(args createBranchArgs) error {
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
 		RootDir:                 args.rootDir,
-		Run:                     args.runner,
+		Run:                     args.appendData.runner,
 		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
@@ -133,7 +133,6 @@ type createBranchArgs struct {
 	beginStashSize        gitdomain.StashSize
 	dryRun                bool
 	rootDir               gitdomain.RepoRootDir
-	runner                *git.ProdRunner
 	verbose               bool
 }
 
@@ -141,12 +140,12 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	var repoStatus gitdomain.RepoStatus
-	repoStatus, err = repo.Runner.Backend.RepoStatus()
+	repoStatus, err = repo.Backend.RepoStatus()
 	if err != nil {
 		return
 	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
 		HandleUnfinishedState: true,
@@ -159,17 +158,22 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
+	localBranches := branchesSnapshot.Branches.LocalBranches()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, targetBranches, localBranches, &repo.Backend, &dialogTestInputs)
+	if err != nil {
+		return data, branchesSnapshot, stashSize, false, err
+	}
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.FullConfig),
+			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, validatedConfig.Config),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.FullConfig),
+			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, validatedConfig.Config),
 		})
 		return
 	}
@@ -178,7 +182,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return
 	}
 	targetBranch := targetBranches[0]
-	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	remotes := fc.Remotes(repo.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		err = fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 		return
@@ -187,18 +191,18 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 		return
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Runner.Config.FullConfig,
+		config:                    validatedConfig.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch},
-		parentBranch:              repo.Runner.Config.FullConfig.MainBranch,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,
@@ -228,12 +232,12 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             args.repo.Runner.Backend,
+		Backend:             args.repo.Backend,
 		BeginConfigSnapshot: args.beginConfigSnapshot,
 		Command:             "observe",
-		CommandsCounter:     args.repo.Runner.CommandsCounter,
+		CommandsCounter:     args.repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       args.repo.Runner.FinalMessages,
+		FinalMessages:       &args.repo.FinalMessages,
 		RootDir:             args.rootDir,
 		Verbose:             args.verbose,
 	})
@@ -241,7 +245,7 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 
 type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
-	config              *config.Config
+	config              config.ValidatedConfig
 	makeFeatureData     makeFeatureData
 	repo                *execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
