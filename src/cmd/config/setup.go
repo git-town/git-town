@@ -61,18 +61,11 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
-	aborted, err := enterData(&runner, data)
+	aborted, err := enterData(data.runner, data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(&runner, data.userInput)
+	err = saveAll(data.runner, data.userInput)
 	if err != nil {
 		return err
 	}
@@ -92,6 +85,7 @@ type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
+	runner        *git.ProdRunner
 	userInput     userInput
 }
 
@@ -231,6 +225,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
+		runner:        &runner,
 		userInput:     defaultUserInput(),
 	}, exit, err
 }
