@@ -52,11 +52,11 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentData(args, repo, verbose)
+	data, exit, err := determineDiffParentData(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = repo.Frontend.DiffParent(config.branch, config.parentBranch)
+	err = repo.Frontend.DiffParent(data.branch, data.parentBranch)
 	if err != nil {
 		return err
 	}

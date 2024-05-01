@@ -73,26 +73,26 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncData(all, repo, verbose)
+	data, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncData(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config,
-			InitialBranch: config.initialBranch,
-			Remotes:       config.remotes,
+			BranchInfos:   data.allBranches,
+			Config:        data.config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
 			Program:       &runProgram,
 			PushBranch:    true,
 		},
-		BranchesToSync: config.branchesToSync,
+		BranchesToSync: data.branchesToSync,
 		DryRun:         dryRun,
-		HasOpenChanges: config.hasOpenChanges,
-		InitialBranch:  config.initialBranch,
-		PreviousBranch: config.previousBranch,
-		ShouldPushTags: config.shouldPushTags,
+		HasOpenChanges: data.hasOpenChanges,
+		InitialBranch:  data.initialBranch,
+		PreviousBranch: data.previousBranch,
+		ShouldPushTags: data.shouldPushTags,
 	})
 	runProgram = optimizer.Optimize(runProgram)
 	runState := runstate.RunState{
@@ -107,10 +107,10 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  config.config,
+		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &config.dialogTestInputs,
-		HasOpenChanges:          config.hasOpenChanges,
+		DialogTestInputs:        &data.dialogTestInputs,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

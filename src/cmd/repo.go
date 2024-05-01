@@ -51,11 +51,11 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineRepoData(repo)
+	data, err := determineRepoData(repo)
 	if err != nil {
 		return err
 	}
-	browser.Open(config.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
+	browser.Open(data.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
 	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
 	return nil
 }
