@@ -82,8 +82,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			beginConfigSnapshot: repo.ConfigSnapshot,
 			config:              repo.Runner.Config,
 			makeFeatureData:     makeFeatureBranchData,
+			repo:                repo,
 			rootDir:             repo.RootDir,
-			runner:              repo.Runner,
 			verbose:             verbose,
 		})
 	}
@@ -228,11 +228,13 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		Backend:             args.repo.Runner.Backend,
 		BeginConfigSnapshot: args.beginConfigSnapshot,
 		Command:             "observe",
+		CommandsCounter:     args.repo.Runner.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		FinalMessages:       args.repo.Runner.FinalMessages,
 		RootDir:             args.rootDir,
-		Runner:              args.runner,
 		Verbose:             args.verbose,
 	})
 }
@@ -241,8 +243,8 @@ type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              *config.Config
 	makeFeatureData     makeFeatureData
+	repo                *execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
-	runner              *git.ProdRunner
 	verbose             bool
 }
 

@@ -70,11 +70,13 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		Backend:             repo.Runner.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "setup",
+		CommandsCounter:     repo.Runner.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		FinalMessages:       repo.Runner.FinalMessages,
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner,
 		Verbose:             verbose,
 	})
 }
