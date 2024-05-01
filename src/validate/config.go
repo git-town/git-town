@@ -62,12 +62,7 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 		SyncUpstream:             unvalidated.Config.SyncUpstream,
 	}
 	vConfig := config.ValidatedConfig{
-		ConfigFile:      unvalidated.ConfigFile,
-		DryRun:          unvalidated.DryRun,
-		Config:          validatedConfig,
-		GitConfig:       unvalidated.GitConfig,
-		GlobalGitConfig: unvalidated.GlobalGitConfig,
-		LocalGitConfig:  unvalidated.LocalGitConfig,
+		Config: validatedConfig,
 	}
 	return &vConfig, nil
 }
