@@ -83,6 +83,13 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -121,6 +128,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		runner:           &runner,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 

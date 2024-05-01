@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/commandconfig"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -83,6 +84,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			makeFeatureData:     makeFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
+			runner:              makeFeatureBranchData.runner,
 			verbose:             verbose,
 		})
 	}
@@ -144,6 +146,13 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil {
 		return
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -204,6 +213,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
+		runner:                    &runner,
 		targetBranch:              targetBranch,
 	})
 	return
@@ -248,6 +258,7 @@ type makeFeatureBranchArgs struct {
 	makeFeatureData     makeFeatureData
 	repo                *execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
+	runner              *git.ProdRunner
 	verbose             bool
 }
 

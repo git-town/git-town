@@ -130,6 +130,13 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -200,6 +207,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		previousBranch:      previousBranch,
+		runner:              &runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

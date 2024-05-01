@@ -121,6 +121,13 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -172,6 +179,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
+		runner:           &runner,
 	}, branchesSnapshot, stashSize, false, err
 }
 
