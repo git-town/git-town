@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -113,7 +114,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -128,17 +129,18 @@ type syncData struct {
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 	remotes          gitdomain.Remotes
+	runner           *git.ProdRunner
 	shouldPushTags   bool
 }
 
 func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -151,8 +153,8 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Runner.Backend.Remotes()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -164,31 +166,39 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		shouldPushTags = true
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = repo.Runner.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
+		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
+	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: branchNamesToSync,
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.Config.MainBranch,
+		Config:           repo.Config,
+		DefaultChoice:    repo.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    localBranches,
-		MainBranch:       repo.Runner.Config.Config.MainBranch,
-		Runner:           repo.Runner,
+		MainBranch:       repo.Config.Config.MainBranch,
+		Runner:           &runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	allBranchNamesToSync := repo.Runner.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := repo.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Runner.Config.Config,
+		config:           repo.Config.Config,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
+		runner:           &runner,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSize, false, err
 }
