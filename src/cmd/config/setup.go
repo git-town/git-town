@@ -213,7 +213,6 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
