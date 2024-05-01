@@ -47,12 +47,12 @@ type KnowsBranchesAncestorsArgs struct {
 // knowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func knowsBranchAncestors(branch gitdomain.LocalBranchName, args knowsBranchAncestorsArgs) (bool, error) {
 	currentBranch := branch
-	if args.Config.FullConfig.IsMainOrPerennialBranch(branch) || args.Config.FullConfig.IsObservedBranch(branch) || args.Config.FullConfig.IsContributionBranch(branch) {
+	if args.Config.Config.IsMainOrPerennialBranch(branch) || args.Config.Config.IsObservedBranch(branch) || args.Config.Config.IsContributionBranch(branch) {
 		return false, nil
 	}
 	updated := false
 	for {
-		lineage := args.Config.FullConfig.Lineage
+		lineage := args.Config.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
 		if !hasParent { //nolint:nestif
 			var err error
@@ -60,7 +60,7 @@ func knowsBranchAncestors(branch gitdomain.LocalBranchName, args knowsBranchAnce
 				Branch:          currentBranch,
 				DefaultChoice:   args.DefaultChoice,
 				DialogTestInput: args.DialogTestInputs.Next(),
-				Lineage:         args.Config.FullConfig.Lineage,
+				Lineage:         args.Config.Config.Lineage,
 				LocalBranches:   args.LocalBranches,
 				MainBranch:      args.MainBranch,
 			})
@@ -86,7 +86,7 @@ func knowsBranchAncestors(branch gitdomain.LocalBranchName, args knowsBranchAnce
 				updated = true
 			}
 		}
-		if args.Config.FullConfig.IsMainOrPerennialBranch(parent) {
+		if args.Config.Config.IsMainOrPerennialBranch(parent) {
 			break
 		}
 		currentBranch = parent

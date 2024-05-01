@@ -164,26 +164,26 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		shouldPushTags = true
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
+		shouldPushTags = repo.Runner.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: branchNamesToSync,
 		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.FullConfig.MainBranch,
+		DefaultChoice:    repo.Runner.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    localBranches,
-		MainBranch:       repo.Runner.Config.FullConfig.MainBranch,
+		MainBranch:       repo.Runner.Config.Config.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := repo.Runner.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Runner.Config.FullConfig,
+		config:           repo.Runner.Config.Config,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

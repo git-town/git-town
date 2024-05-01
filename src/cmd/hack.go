@@ -163,13 +163,13 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.FullConfig),
+			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Runner.Config.Config),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.FullConfig),
+			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Runner.Config.Config),
 		})
 		return
 	}
@@ -187,18 +187,18 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 		return
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.Config.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Runner.Config.FullConfig,
+		config:                    repo.Runner.Config.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch},
-		parentBranch:              repo.Runner.Config.FullConfig.MainBranch,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.Config.MainBranch},
+		parentBranch:              repo.Runner.Config.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,

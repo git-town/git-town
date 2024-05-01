@@ -144,7 +144,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = repo.Runner.Config.FullConfig.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToCompress = repo.Runner.Config.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -154,14 +154,14 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		if !hasBranchInfo {
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := repo.Runner.Config.FullConfig.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := repo.Runner.Config.Config.BranchType(branchNameToCompress.BranchName().LocalName())
 		if err := validateCanCompressBranchType(branchInfo.LocalName, branchType); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
 		if err := validateBranchIsSynced(branchInfo.LocalName, branchInfo.SyncStatus); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
-		parent := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToCompress)
+		parent := repo.Runner.Config.Config.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Runner.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
@@ -187,7 +187,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
-		config:              repo.Runner.Config.FullConfig,
+		config:              repo.Runner.Config.Config,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,

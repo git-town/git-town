@@ -215,11 +215,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is (?:now|still) a contribution branch`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if !state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+		if !state.fixture.DevRepo.Config.Config.IsContributionBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
-				strings.Join(state.fixture.DevRepo.Config.FullConfig.ContributionBranches.Strings(), ", "),
+				strings.Join(state.fixture.DevRepo.Config.Config.ContributionBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -227,7 +227,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if state.fixture.DevRepo.Config.FullConfig.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
+		if state.fixture.DevRepo.Config.Config.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
 			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
 		}
 		return nil
@@ -235,11 +235,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+		if !state.fixture.DevRepo.Config.Config.IsObservedBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't observed as expected.\nObserved branches: %s",
 				branch,
-				strings.Join(state.fixture.DevRepo.Config.FullConfig.ObservedBranches.Strings(), ", "),
+				strings.Join(state.fixture.DevRepo.Config.Config.ObservedBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -247,11 +247,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is now parked`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if !state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+		if !state.fixture.DevRepo.Config.Config.IsParkedBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't parked as expected.\nParked branches: %s",
 				branch,
-				strings.Join(state.fixture.DevRepo.Config.FullConfig.ParkedBranches.Strings(), ", "),
+				strings.Join(state.fixture.DevRepo.Config.Config.ParkedBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -259,11 +259,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if !state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+		if !state.fixture.DevRepo.Config.Config.IsPerennialBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't perennial as expected.\nPerennial branches: %s",
 				branch,
-				strings.Join(state.fixture.DevRepo.Config.FullConfig.PerennialBranches.Strings(), ", "),
+				strings.Join(state.fixture.DevRepo.Config.Config.PerennialBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -271,16 +271,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^branch "([^"]+)" is now a feature branch`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		if state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+		if state.fixture.DevRepo.Config.Config.IsParkedBranch(branch) {
 			return fmt.Errorf("branch %q is parked", branch)
 		}
-		if state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+		if state.fixture.DevRepo.Config.Config.IsObservedBranch(branch) {
 			return fmt.Errorf("branch %q is observed", branch)
 		}
-		if state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+		if state.fixture.DevRepo.Config.Config.IsContributionBranch(branch) {
 			return fmt.Errorf("branch %q is contribution", branch)
 		}
-		if state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+		if state.fixture.DevRepo.Config.Config.IsPerennialBranch(branch) {
 			return fmt.Errorf("branch %q is perennial", branch)
 		}
 		return nil
@@ -362,7 +362,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return errors.New("key not found")
 		}
 		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		command, has := state.fixture.DevRepo.Config.FullConfig.Aliases[*aliasableCommand]
+		command, has := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
 		if !has {
 			return nil
 		}
@@ -378,7 +378,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if aliasableCommand == nil {
 			return fmt.Errorf("aliasableCommand not found for key %q", *key)
 		}
-		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*aliasableCommand]
+		have := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -1105,8 +1105,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
-		if state.fixture.DevRepo.Config.FullConfig.ContainsLineage() {
-			lineage := state.fixture.DevRepo.Config.FullConfig.Lineage
+		if state.fixture.DevRepo.Config.Config.ContainsLineage() {
+			lineage := state.fixture.DevRepo.Config.Config.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil
@@ -1144,7 +1144,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline := state.fixture.DevRepo.Config.FullConfig.Offline
+		isOffline := state.fixture.DevRepo.Config.Config.Offline
 		if isOffline {
 			return errors.New("expected to not be offline but am")
 		}
@@ -1547,7 +1547,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.FullConfig.MainBranch
+		have := state.fixture.DevRepo.Config.Config.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}

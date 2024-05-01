@@ -18,7 +18,7 @@ func TestGitTown(t *testing.T) {
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
 		conf := config.Config{ //nolint:exhaustruct
-			FullConfig: configdomain.FullConfig{ //nolint:exhaustruct
+			Config: configdomain.FullConfig{ //nolint:exhaustruct
 				GitUserName:  configdomain.GitUserName("name"),
 				GitUserEmail: configdomain.GitUserEmail("email"),
 			},
@@ -34,7 +34,7 @@ func TestGitTown(t *testing.T) {
 		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
 		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
 		repo.Config.Reload()
-		have := repo.Config.FullConfig.Lineage
+		have := repo.Config.Config.Lineage
 		want := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature1"): gitdomain.NewLocalBranchName("main"),
 			gitdomain.NewLocalBranchName("feature2"): gitdomain.NewLocalBranchName("main"),
@@ -73,7 +73,7 @@ func TestGitTown(t *testing.T) {
 			want := configdomain.Lineage{
 				branch: gitdomain.NewLocalBranchName("main"),
 			}
-			must.Eq(t, want, repo.Config.FullConfig.Lineage)
+			must.Eq(t, want, repo.Config.Config.Lineage)
 		})
 	})
 
@@ -82,11 +82,11 @@ func TestGitTown(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
 		must.NoError(t, err)
-		offline := repo.Config.FullConfig.Offline
+		offline := repo.Config.Config.Offline
 		must.True(t, offline.Bool())
 		err = repo.Config.SetOffline(false)
 		must.NoError(t, err)
-		offline = repo.Config.FullConfig.Offline
+		offline = repo.Config.Config.Offline
 		must.False(t, offline.Bool())
 	})
 }

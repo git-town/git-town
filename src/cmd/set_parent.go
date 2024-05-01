@@ -63,7 +63,7 @@ func executeSetParent(verbose bool) error {
 		Branch:          data.currentBranch,
 		DefaultChoice:   data.defaultChoice,
 		DialogTestInput: data.dialogTestInputs.Next(),
-		Lineage:         repo.Runner.Config.FullConfig.Lineage,
+		Lineage:         repo.Runner.Config.Config.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      data.mainBranch,
 	})
@@ -86,7 +86,7 @@ func executeSetParent(verbose bool) error {
 		RunProgram:            prog,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  repo.Runner.Config.FullConfig,
+		Config:                  repo.Runner.Config.Config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -128,8 +128,8 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	if err != nil || exit {
 		return nil, branchesSnapshot, 0, exit, err
 	}
-	mainBranch := repo.Runner.Config.FullConfig.MainBranch
-	existingParent, hasParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	mainBranch := repo.Runner.Config.Config.MainBranch
+	existingParent, hasParent := repo.Runner.Config.Config.Lineage.Parent(branchesSnapshot.Active).Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
 		defaultChoice = existingParent
@@ -146,7 +146,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 }
 
 func verifySetParentData(data *setParentData, repo *execute.OpenRepoResult) error {
-	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(data.currentBranch) {
+	if repo.Runner.Config.Config.IsMainOrPerennialBranch(data.currentBranch) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.currentBranch)
 	}
 	return nil
