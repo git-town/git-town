@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -69,7 +70,7 @@ func executeContinue(verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -77,12 +78,12 @@ func executeContinue(verbose bool) error {
 
 func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -102,19 +103,27 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	return &continueData{
-		config:           repo.Runner.Config.Config,
+		config:           repo.Config.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		runner:           &runner,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
@@ -123,6 +132,7 @@ type continueData struct {
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
+	runner           *git.ProdRunner
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
