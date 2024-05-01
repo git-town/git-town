@@ -99,7 +99,6 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

@@ -83,7 +83,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

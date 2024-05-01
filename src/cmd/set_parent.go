@@ -126,7 +126,6 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

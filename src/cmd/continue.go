@@ -90,7 +90,6 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

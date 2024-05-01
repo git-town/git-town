@@ -122,7 +122,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

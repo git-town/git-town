@@ -128,7 +128,6 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

@@ -119,7 +119,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
