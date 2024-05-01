@@ -97,7 +97,7 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(config config.UnvalidatedConfig, ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
