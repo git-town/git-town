@@ -56,3 +56,9 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	}
 	return self.GitConfig.OriginRemote()
 }
+
+// SetOffline updates whether Git Town is in offline mode.
+func (self *UnvalidatedConfig) SetOffline(value configdomain.Offline) error {
+	self.Config.Offline = value
+	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
+}
