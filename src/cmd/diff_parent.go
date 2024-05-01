@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -66,6 +67,7 @@ func executeDiffParent(args []string, verbose bool) error {
 type diffParentData struct {
 	branch       gitdomain.LocalBranchName
 	parentBranch gitdomain.LocalBranchName
+	runner       *git.ProdRunner
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
@@ -95,6 +97,13 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branch},
 		Config:           repo.Config,
@@ -102,7 +111,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
 		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           repo.Runner,
+		Runner:           &runner,
 	})
 	if err != nil {
 		return nil, false, err
@@ -114,5 +123,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	return &diffParentData{
 		branch:       branch,
 		parentBranch: parentBranch,
+		runner:       &runner,
 	}, false, nil
 }
