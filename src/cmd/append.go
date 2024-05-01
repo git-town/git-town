@@ -111,6 +111,13 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -118,6 +125,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -132,13 +140,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
