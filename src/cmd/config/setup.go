@@ -67,7 +67,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(repo.Runner, data.userInput)
+	err = saveAll(data.runner, data.userInput)
 	if err != nil {
 		return err
 	}
@@ -88,6 +88,7 @@ type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
+	runner        *git.ProdRunner
 	userInput     userInput
 }
 
