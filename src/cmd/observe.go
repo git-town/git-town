@@ -3,7 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
@@ -71,10 +73,10 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
+	if err = data.config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, &repo.UnvalidatedConfig); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, &data.config); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -108,7 +110,7 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.UnvalidatedConfig) error {
+func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.ValidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -126,6 +128,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 }
 
 func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err
@@ -145,15 +148,16 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
+	localBranches := branchesSnapshot.Branches.LocalBranches()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToObserve.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
 	if err != nil {
-		return parkData{}, err
+		return observeData{}, err
 	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
-		config:            validatedConfig,
+		config:            *validatedConfig,
 	}, nil
 }
 
