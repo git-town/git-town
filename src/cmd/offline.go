@@ -53,24 +53,24 @@ func executeOffline(args []string, verbose bool) error {
 	}
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
 	if err != nil {
-		return parkData{}, err
+		return err
 	}
 	switch len(args) {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig.Config)
 	case 1:
-		err = setOfflineStatus(args[0], repo.Runner)
+		err = setOfflineStatus(args[0], *validatedConfig)
 		if err != nil {
 			return err
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.BackendCommands,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       &repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
