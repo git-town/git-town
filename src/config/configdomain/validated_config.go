@@ -27,15 +27,6 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 	return BranchTypeFeatureBranch
 }
 
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *ValidatedConfig) ContainsLineage() bool {
-	return len(self.Lineage) > 0
-}
-
-func (self *ValidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ContributionBranches, branch)
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
@@ -46,18 +37,6 @@ func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
-}
-
-func (self *ValidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ObservedBranches, branch)
-}
-
-func (self *ValidatedConfig) IsOnline() bool {
-	return self.Online().Bool()
-}
-
-func (self *ValidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ParkedBranches, branch)
 }
 
 func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -72,16 +51,4 @@ func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName)
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
-}
-
-func (self *ValidatedConfig) NoPushHook() NoPushHook {
-	return self.PushHook.Negate()
-}
-
-func (self *ValidatedConfig) Online() Online {
-	return self.Offline.ToOnline()
-}
-
-func (self *ValidatedConfig) ShouldPushNewBranches() bool {
-	return self.PushNewBranches.Bool()
 }
