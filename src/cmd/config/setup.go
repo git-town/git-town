@@ -115,10 +115,10 @@ func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error
 	}
 	existingMainBranch := runner.Config.Config.MainBranch
 	var defaultChoice Option[gitdomain.LocalBranchName]
-	if existingMainBranch.IsEmpty() {
-		defaultChoice = None[gitdomain.LocalBranchName]()
-	} else {
+	if !existingMainBranch.IsEmpty() {
 		defaultChoice = Some(existingMainBranch)
+	} else {
+		defaultChoice = None[gitdomain.LocalBranchName]()
 	}
 	if existingMainBranch.IsEmpty() {
 		defaultChoice = runner.Backend.DefaultBranch()
