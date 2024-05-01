@@ -190,12 +190,6 @@ func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchN
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
-// SetOffline updates whether Git Town is in offline mode.
-func (self *ValidatedConfig) SetOffline(value configdomain.Offline) error {
-	self.FullConfig.Offline = value
-	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
-}
-
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {

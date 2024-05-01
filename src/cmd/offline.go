@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
-	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -51,15 +50,11 @@ func executeOffline(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
-	if err != nil {
-		return err
-	}
 	switch len(args) {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig.Config)
 	case 1:
-		err = setOfflineStatus(args[0], *validatedConfig)
+		err = setOfflineStatus(args[0], repo.UnvalidatedConfig)
 		if err != nil {
 			return err
 		}
@@ -80,7 +75,7 @@ func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.Offline.Bool()))
 }
 
-func setOfflineStatus(text string, config config.ValidatedConfig) error {
+func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)

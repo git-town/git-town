@@ -32,3 +32,9 @@ func NewUnvalidatedConfig(args NewConfigArgs) (UnvalidatedConfig, *stringslice.C
 		originURLCache:  configdomain.OriginURLCache{},
 	}, &finalMessages, err
 }
+
+// SetOffline updates whether Git Town is in offline mode.
+func (self *UnvalidatedConfig) SetOffline(value configdomain.Offline) error {
+	self.Config.Offline = value
+	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
+}
