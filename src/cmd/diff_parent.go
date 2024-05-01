@@ -77,6 +77,13 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	if err != nil {
 		return nil, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -84,6 +91,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -96,13 +104,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branch},
