@@ -64,20 +64,20 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
-	if err = repo.Runner.Config.AddToParkedBranches(branchNames...); err != nil {
+	if err = repo.Config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, repo.Runner.Config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, repo.Config); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "park",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
@@ -112,15 +112,15 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 }
 
 func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
-		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.Config)
+		branchesToPark.Add(branchesSnapshot.Active, &repo.Config.Config)
 	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.Config)
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Config.Config)
 	}
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,
