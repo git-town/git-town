@@ -63,7 +63,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(data.config, repo.Backend, data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, data)
 	if err != nil || aborted {
 		return err
 	}
