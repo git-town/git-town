@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/configfile"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -61,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(data.runner, data)
+	aborted, err := enterData(*data.runner.Config, &data.runner.Backend, data)
 	if err != nil || aborted {
 		return err
 	}
@@ -94,26 +95,26 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(runner *git.ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(config config.Config, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if originURL, hasOriginURL := runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := config.OriginURL().Get(); hasOriginURL {
 		return hosting.Detect(originURL, userChoice)
 	}
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error) {
+func enterData(config config.Config, backend *git.BackendCommands, data *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Config.Config.Aliases, data.dialogInputs.Next())
+	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	existingMainBranch := runner.Config.Config.MainBranch
+	existingMainBranch := config.Config.MainBranch
 	var defaultChoice Option[gitdomain.LocalBranchName]
 	if !existingMainBranch.IsEmpty() {
 		defaultChoice = Some(existingMainBranch)
@@ -121,77 +122,77 @@ func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error
 		defaultChoice = None[gitdomain.LocalBranchName]()
 	}
 	if defaultChoice.IsNone() {
-		defaultChoice = runner.Backend.DefaultBranch()
+		defaultChoice = backend.DefaultBranch()
 	}
 	if defaultChoice.IsNone() {
-		defaultChoice = runner.Backend.OriginHead()
+		defaultChoice = backend.OriginHead()
 	}
 	data.userInput.config.MainBranch, aborted, err = dialog.MainBranch(data.localBranches.Names(), defaultChoice, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), runner.Config.Config.PerennialBranches, data.userInput.config.MainBranch, data.dialogInputs.Next())
+	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.PerennialBranches, data.userInput.config.MainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(runner.Config.Config.PerennialRegex, data.dialogInputs.Next())
+	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.PerennialRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.Config.Config.HostingPlatform, data.dialogInputs.Next())
+	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.HostingPlatform, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if platform, has := determineHostingPlatform(runner, data.userInput.config.HostingPlatform).Get(); has {
+	if platform, has := determineHostingPlatform(config, data.userInput.config.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
 		case configdomain.HostingPlatformGitea:
-			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.Config.GiteaToken, data.dialogInputs.Next())
+			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.Config.GitHubToken, data.dialogInputs.Next())
+			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.Config.GitLabToken, data.dialogInputs.Next())
+			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.Config.Config.HostingOriginHostname, data.dialogInputs.Next())
+	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.HostingOriginHostname, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.Config.Config.SyncFeatureStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.SyncFeatureStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.Config.Config.SyncPerennialStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.SyncPerennialStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.Config.Config.SyncUpstream, data.dialogInputs.Next())
+	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(runner.Config.Config.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushHook, aborted, err = dialog.PushHook(runner.Config.Config.PushHook, data.dialogInputs.Next())
+	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.PushHook, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.Config.Config.SyncBeforeShip, data.dialogInputs.Next())
+	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(config.Config.SyncBeforeShip, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.Config.Config.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
