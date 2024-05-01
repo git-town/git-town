@@ -145,51 +145,51 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
 		case configdomain.HostingPlatformGitea:
-			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(runner.Config.Config.GiteaToken, data.dialogInputs.Next())
+			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(runner.Config.Config.GitHubToken, data.dialogInputs.Next())
+			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(runner.Config.Config.GitLabToken, data.dialogInputs.Next())
+			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.Config.Config.HostingOriginHostname, data.dialogInputs.Next())
+	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.HostingOriginHostname, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.Config.Config.SyncFeatureStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.SyncFeatureStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.Config.Config.SyncPerennialStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.SyncPerennialStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.Config.Config.SyncUpstream, data.dialogInputs.Next())
+	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(runner.Config.Config.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushHook, aborted, err = dialog.PushHook(runner.Config.Config.PushHook, data.dialogInputs.Next())
+	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.PushHook, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.Config.Config.SyncBeforeShip, data.dialogInputs.Next())
+	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(config.Config.SyncBeforeShip, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.Config.Config.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -223,7 +223,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		return nil, false, err
 	}
 	return &setupData{
-		config:        validatedConfig,
+		config:        *validatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
