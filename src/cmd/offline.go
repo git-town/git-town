@@ -60,11 +60,13 @@ func executeOffline(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		Backend:             repo.Runner.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
+		CommandsCounter:     repo.Runner.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		FinalMessages:       repo.Runner.FinalMessages,
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner,
 		Verbose:             verbose,
 	})
 }
