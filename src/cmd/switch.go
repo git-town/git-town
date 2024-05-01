@@ -81,7 +81,7 @@ type switchData struct {
 
 func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.BackendCommands.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
@@ -99,7 +99,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesSnapshot.Branches.LocalBranches().Names(), branchesSnapshot.Branches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesSnapshot.Branches.LocalBranches().Names(), branchesSnapshot.Branches, &repo.Backend, &dialogTestInputs)
 	return &switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		dialogInputs:       dialogTestInputs,

@@ -86,7 +86,7 @@ func executeObserve(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.BackendCommands,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "observe",
 		CommandsCounter:     repo.CommandsCounter,
@@ -129,7 +129,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 
 func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err
 	}
@@ -149,7 +149,7 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToObserve.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToObserve.Keys(), localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return observeData{}, err
 	}

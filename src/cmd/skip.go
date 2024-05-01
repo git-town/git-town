@@ -51,7 +51,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.BackendCommands.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.Backend, &dialogTestInputs)
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -95,7 +95,7 @@ func executeSkip(verbose bool) error {
 	}
 	prodRunner := git.ProdRunner{
 		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
+		Backend:         repo.Backend,
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,

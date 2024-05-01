@@ -136,7 +136,7 @@ type syncData struct {
 
 func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.BackendCommands.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
@@ -161,7 +161,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchNamesToSync, localBranches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchNamesToSync, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -173,7 +173,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	}
 	runner := git.ProdRunner{
 		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
+		Backend:         repo.Backend,
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,

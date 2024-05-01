@@ -76,7 +76,7 @@ func executePark(args []string, verbose bool) error {
 	}
 	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.BackendCommands,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "park",
 		CommandsCounter:     repo.CommandsCounter,
@@ -120,7 +120,7 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 
 func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return parkData{}, err
 	}
@@ -131,13 +131,13 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return parkData{}, err
 	}
 	runner := git.ProdRunner{
 		Config:          validatedConfig,
-		Backend:         repo.BackendCommands,
+		Backend:         repo.Backend,
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
 		FinalMessages:   &repo.FinalMessages,

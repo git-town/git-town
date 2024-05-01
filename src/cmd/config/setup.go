@@ -197,7 +197,7 @@ func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error
 
 func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.BackendCommands.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}

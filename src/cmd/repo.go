@@ -55,19 +55,19 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(config.connector.RepositoryURL(), repo.Frontend.Runner, repo.BackendCommands.Runner)
+	browser.Open(config.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
 	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
 	return nil
 }
 
 func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
-	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return nil, err
 	}
 	dialogInputs := components.LoadTestInputs(os.Environ())
 	localBranches := branchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches.Names(), localBranches, &repo.BackendCommands, &dialogInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches.Names(), localBranches, &repo.Backend, &dialogInputs)
 	if err != nil {
 		return nil, err
 	}

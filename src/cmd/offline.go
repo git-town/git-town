@@ -63,7 +63,7 @@ func executeOffline(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.BackendCommands,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
 		CommandsCounter:     repo.CommandsCounter,
@@ -80,12 +80,12 @@ func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
 
 func setOfflineStatus(text string, repo *execute.OpenRepoResult) error {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, err := repo.BackendCommands.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.BackendCommands, &dialogTestInputs)
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return err
 	}
