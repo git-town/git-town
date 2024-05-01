@@ -17,7 +17,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderTOML(config *configdomain.PartialConfig) string {
+func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# Git Town configuration file\n")
 	result.WriteString("#\n")
