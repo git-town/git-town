@@ -317,6 +317,10 @@ func (self *BackendCommands) OriginHead() Option[gitdomain.LocalBranchName] {
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
+	output = strings.TrimSpace(output)
+	if output == "" {
+		return None[gitdomain.LocalBranchName]()
+	}
 	return Some(gitdomain.LocalBranchName(LastBranchInRef(output)))
 }
 
