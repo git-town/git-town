@@ -50,6 +50,6 @@ type FinishedArgs struct {
 	Command             string
 	EndConfigSnapshot   undoconfig.ConfigSnapshot
 	RootDir             gitdomain.RepoRootDir
-	Runner              *git.ProdRunner
+	Runner              *git.ProdRunner // TODO: replace with the three fields of ProdRunner that are actually used
 	Verbose             bool
 }
