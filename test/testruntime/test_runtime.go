@@ -97,7 +97,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
-		Config:          unvalidatedConfig,
+		Config:          &unvalidatedConfig,
 		TestRunner:      &runner,
 	}
 	return TestRuntime{
