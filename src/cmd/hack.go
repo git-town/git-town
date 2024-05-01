@@ -147,6 +147,13 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil {
 		return
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -154,6 +161,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -191,13 +199,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Config.Config.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
