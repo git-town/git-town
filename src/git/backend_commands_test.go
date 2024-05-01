@@ -177,7 +177,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.SetDefaultGitBranch("main")
 		have := runtime.Backend.DefaultBranch()
-		want := gitdomain.NewLocalBranchName("main")
+		want := Some(gitdomain.NewLocalBranchName("main"))
 		must.EqOp(t, want, have)
 	})
 

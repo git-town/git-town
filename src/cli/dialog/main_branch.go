@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -20,7 +21,7 @@ This branch is often called "main", "master", or "development".
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntry gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntry Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := list.NewEntries(localBranches...)
 	cursor := entries.IndexWithTextOr(defaultEntry.String(), 0)
 	selection, aborted, err := components.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, inputs)

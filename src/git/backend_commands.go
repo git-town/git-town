@@ -261,9 +261,16 @@ func (self *BackendCommands) CurrentSHA() (gitdomain.SHA, error) {
 	return self.SHAForBranch(gitdomain.NewBranchName("HEAD"))
 }
 
-func (self *BackendCommands) DefaultBranch() gitdomain.LocalBranchName {
-	name, _ := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	return gitdomain.LocalBranchName(name)
+func (self *BackendCommands) DefaultBranch() Option[gitdomain.LocalBranchName] {
+	name, err := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
+	if err != nil {
+		return None[gitdomain.LocalBranchName]()
+	}
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return None[gitdomain.LocalBranchName]()
+	}
+	return Some(gitdomain.LocalBranchName(name))
 }
 
 func (self *BackendCommands) FirstExistingBranch(branches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
@@ -305,12 +312,16 @@ func (self *BackendCommands) LastCommitMessage() (gitdomain.CommitMessage, error
 	return gitdomain.CommitMessage(out), nil
 }
 
-func (self *BackendCommands) OriginHead() gitdomain.LocalBranchName {
+func (self *BackendCommands) OriginHead() Option[gitdomain.LocalBranchName] {
 	output, err := self.Runner.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName()
+		return None[gitdomain.LocalBranchName]()
 	}
-	return gitdomain.LocalBranchName(LastBranchInRef(output))
+	output = strings.TrimSpace(output)
+	if output == "" {
+		return None[gitdomain.LocalBranchName]()
+	}
+	return Some(gitdomain.LocalBranchName(LastBranchInRef(output)))
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.

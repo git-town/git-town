@@ -114,13 +114,17 @@ func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error
 		return aborted, err
 	}
 	existingMainBranch := runner.Config.Config.MainBranch
+	var defaultChoice Option[gitdomain.LocalBranchName]
 	if existingMainBranch.IsEmpty() {
-		existingMainBranch = runner.Backend.DefaultBranch()
+		defaultChoice = None[gitdomain.LocalBranchName]()
 	}
 	if existingMainBranch.IsEmpty() {
-		existingMainBranch = runner.Backend.OriginHead()
+		defaultChoice = runner.Backend.DefaultBranch()
 	}
-	data.userInput.config.MainBranch, aborted, err = dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
+	if existingMainBranch.IsEmpty() {
+		defaultChoice = runner.Backend.OriginHead()
+	}
+	data.userInput.config.MainBranch, aborted, err = dialog.MainBranch(data.localBranches.Names(), defaultChoice, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
