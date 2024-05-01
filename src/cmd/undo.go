@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -51,7 +52,7 @@ func executeUndo(verbose bool) error {
 	}
 	var data *undoData
 	var initialStashSize gitdomain.StashSize
-	data, initialStashSize, repo.Runner.Config.Config.Lineage, err = determineUndoData(repo, verbose)
+	data, initialStashSize, repo.Config.Config.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -68,10 +69,10 @@ func executeUndo(verbose bool) error {
 		Config:           data.config,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          repo.Runner.Config.Config.Lineage,
+		Lineage:          repo.Config.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Runner:           repo.Runner,
+		Runner:           data.runner,
 		Verbose:          verbose,
 	})
 }
@@ -83,16 +84,17 @@ type undoData struct {
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          gitdomain.LocalBranchName
+	runner                  *git.ProdRunner
 }
 
 func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, 0, repo.Runner.Config.Config.Lineage, err
+		return nil, 0, repo.Config.Config.Lineage, err
 	}
 	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -103,27 +105,35 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Verbose:               verbose,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.Config.Lineage, err
+		return nil, initialStashSize, repo.Config.Config.Lineage, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, initialStashSize, repo.Runner.Config.Config.Lineage, err
+			return nil, initialStashSize, repo.Config.Config.Lineage, err
 		}
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	return &undoData{
-		config:                  repo.Runner.Config.Config,
+		config:                  repo.Config.Config,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, repo.Runner.Config.Config.Lineage, nil
+		runner:                  &runner,
+	}, initialStashSize, repo.Config.Config.Lineage, nil
 }
