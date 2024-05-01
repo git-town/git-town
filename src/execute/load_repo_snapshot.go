@@ -3,6 +3,7 @@ package execute
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -11,12 +12,12 @@ import (
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesSnapshot
 	var err error
-	stashSize, err := args.Repo.Runner.Backend.StashSize()
+	stashSize, err := args.Repo.Backend.StashSize()
 	if err != nil {
 		return branchesSnapshot, stashSize, false, err
 	}
 	if args.HandleUnfinishedState {
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Repo.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
@@ -31,7 +32,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Lineage:                 args.Config.Config.Lineage,
 			PushHook:                args.Config.Config.PushHook,
 			RootDir:                 args.Repo.RootDir,
-			Run:                     args.Repo.Runner,
+			Run:                     args.Runner,
 			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
@@ -46,30 +47,30 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
-		remotes, err := args.Repo.Runner.Backend.Remotes()
+		remotes, err := args.Repo.Backend.Remotes()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
-			err = args.Repo.Runner.Frontend.Fetch()
+			err = args.Repo.Frontend.Fetch()
 			if err != nil {
 				return branchesSnapshot, stashSize, false, err
 			}
 		}
 		// must always reload the snapshot here because we fetched updates from the remote
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Repo.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 	}
 	if branchesSnapshot.IsEmpty() {
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Repo.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 	}
 	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.Config, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
+		err = validate.IsConfigured(&args.Repo.Backend, args.Config, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
 	}
 	return branchesSnapshot, stashSize, false, err
 }
@@ -81,6 +82,7 @@ type LoadRepoSnapshotArgs struct {
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
+	Runner                *git.ProdRunner
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 	Verbose               bool
