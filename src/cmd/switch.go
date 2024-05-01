@@ -104,7 +104,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		branchNames:        branchesSnapshot.Branches.Names(),
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,
-		Lineage:            validatedConfig.FullConfig.Lineage,
+		Lineage:            validatedConfig.Config.Lineage,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, branchesSnapshot, false, err
 }

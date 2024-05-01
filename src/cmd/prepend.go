@@ -141,18 +141,18 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	branchNamesToSync := validatedConfig.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	parent, hasParent := validatedConfig.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	parent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
 	if !hasParent {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	parentAndAncestors := validatedConfig.FullConfig.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    validatedConfig.FullConfig,
+		config:                    validatedConfig.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

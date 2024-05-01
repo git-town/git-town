@@ -64,7 +64,7 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	vConfig := config.ValidatedConfig{
 		ConfigFile:      unvalidated.ConfigFile,
 		DryRun:          unvalidated.DryRun,
-		FullConfig:      validatedConfig,
+		Config:          validatedConfig,
 		GitConfig:       unvalidated.GitConfig,
 		GlobalGitConfig: unvalidated.GlobalGitConfig,
 		LocalGitConfig:  unvalidated.LocalGitConfig,

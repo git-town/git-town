@@ -21,7 +21,7 @@ import (
 type ValidatedConfig struct {
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
-	FullConfig      configdomain.ValidatedConfig // the merged configuration data
+	Config          configdomain.ValidatedConfig // the merged configuration data
 	GitConfig       gitconfig.Access             // access to the Git configuration settings
 	GlobalGitConfig configdomain.PartialConfig   // content of the global Git configuration
 	LocalGitConfig  configdomain.PartialConfig   // content of the local Git configuration
@@ -31,31 +31,31 @@ type ValidatedConfig struct {
 // AddToContributionBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetContributionBranches(append(self.FullConfig.ContributionBranches, branches...))
+	return self.SetContributionBranches(append(self.Config.ContributionBranches, branches...))
 }
 
 // AddToObservedBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetObservedBranches(append(self.FullConfig.ObservedBranches, branches...))
+	return self.SetObservedBranches(append(self.Config.ObservedBranches, branches...))
 }
 
 // AddToParkedBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetParkedBranches(append(self.FullConfig.ParkedBranches, branches...))
+	return self.SetParkedBranches(append(self.Config.ParkedBranches, branches...))
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.FullConfig.PerennialBranches, branches...))
+	return self.SetPerennialBranches(append(self.Config.PerennialBranches, branches...))
 }
 
 // Author provides the locally Git configured user.
 func (self *ValidatedConfig) Author() gitdomain.Author {
-	email := self.FullConfig.GitUserEmail
-	name := self.FullConfig.GitUserName
+	email := self.Config.GitUserEmail
+	name := self.Config.GitUserName
 	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
 }
 
@@ -67,7 +67,7 @@ func (self *ValidatedConfig) OriginURL() Option[giturl.Parts] {
 	if text == "" {
 		return None[giturl.Parts]()
 	}
-	return confighelpers.DetermineOriginURL(text, self.FullConfig.HostingOriginHostname, self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.Config.HostingOriginHostname, self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
@@ -89,26 +89,26 @@ func (self *ValidatedConfig) OriginURLString() string {
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
-	self.FullConfig.ContributionBranches = slice.Remove(self.FullConfig.ContributionBranches, branch)
-	return self.SetContributionBranches(self.FullConfig.ContributionBranches)
+	self.Config.ContributionBranches = slice.Remove(self.Config.ContributionBranches, branch)
+	return self.SetContributionBranches(self.Config.ContributionBranches)
 }
 
 // RemoveFromObservedBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
-	self.FullConfig.ObservedBranches = slice.Remove(self.FullConfig.ObservedBranches, branch)
-	return self.SetObservedBranches(self.FullConfig.ObservedBranches)
+	self.Config.ObservedBranches = slice.Remove(self.Config.ObservedBranches, branch)
+	return self.SetObservedBranches(self.Config.ObservedBranches)
 }
 
 // RemoveFromParkedBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
-	self.FullConfig.ParkedBranches = slice.Remove(self.FullConfig.ParkedBranches, branch)
-	return self.SetParkedBranches(self.FullConfig.ParkedBranches)
+	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)
+	return self.SetParkedBranches(self.Config.ParkedBranches)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
-	self.FullConfig.PerennialBranches = slice.Remove(self.FullConfig.PerennialBranches, branch)
-	return self.SetPerennialBranches(self.FullConfig.PerennialBranches)
+	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
+	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
 func (self *ValidatedConfig) RemoveMainBranch() {
@@ -117,7 +117,7 @@ func (self *ValidatedConfig) RemoveMainBranch() {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *ValidatedConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.FullConfig.Lineage {
+	for child, parent := range self.Config.Lineage {
 		hasChildBranch := localBranches.Contains(child)
 		hasParentBranch := localBranches.Contains(parent)
 		if !hasChildBranch || !hasParentBranch {
@@ -173,33 +173,33 @@ func (self *ValidatedConfig) RemoveSyncUpstream() {
 
 // SetObservedBranches marks the given branches as observed branches.
 func (self *ValidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
-	self.FullConfig.ContributionBranches = branches
+	self.Config.ContributionBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
-	self.FullConfig.MainBranch = branch
+	self.Config.MainBranch = branch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
-	self.FullConfig.ObservedBranches = branches
+	self.Config.ObservedBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (self *ValidatedConfig) SetOffline(value configdomain.Offline) error {
-	self.FullConfig.Offline = value
+	self.Config.Offline = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
-	self.FullConfig.HostingOriginHostname = Some(hostName)
+	self.Config.HostingOriginHostname = Some(hostName)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
@@ -209,37 +209,37 @@ func (self *ValidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBranc
 	if self.DryRun {
 		return nil
 	}
-	self.FullConfig.Lineage[branch] = parentBranch
+	self.Config.Lineage[branch] = parentBranch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
 }
 
 // SetObservedBranches marks the given branches as perennial branches.
 func (self *ValidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
-	self.FullConfig.ParkedBranches = branches
+	self.Config.ParkedBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *ValidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
-	self.FullConfig.PerennialBranches = branches
+	self.Config.PerennialBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
 // SetPerennialRegexLocally updates the locally configured perennial regex.
 func (self *ValidatedConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
-	self.FullConfig.PerennialRegex = Some(value)
+	self.Config.PerennialRegex = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
 }
 
 // SetPushHook updates the configured push-hook strategy.
 func (self *ValidatedConfig) SetPushHookGlobally(value configdomain.PushHook) error {
-	self.FullConfig.PushHook = value
+	self.Config.PushHook = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(value.Bool()))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *ValidatedConfig) SetPushHookLocally(value configdomain.PushHook) error {
-	self.FullConfig.PushHook = value
+	self.Config.PushHook = value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
@@ -247,7 +247,7 @@ func (self *ValidatedConfig) SetPushHookLocally(value configdomain.PushHook) err
 // freshly created branches to origin.
 func (self *ValidatedConfig) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
 	setting := strconv.FormatBool(bool(value))
-	self.FullConfig.PushNewBranches = value
+	self.Config.PushNewBranches = value
 	if global {
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
 	}
@@ -256,7 +256,7 @@ func (self *ValidatedConfig) SetPushNewBranches(value configdomain.PushNewBranch
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
 func (self *ValidatedConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, global bool) error {
-	self.FullConfig.ShipDeleteTrackingBranch = value
+	self.Config.ShipDeleteTrackingBranch = value
 	if global {
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
@@ -264,7 +264,7 @@ func (self *ValidatedConfig) SetShipDeleteTrackingBranch(value configdomain.Ship
 }
 
 func (self *ValidatedConfig) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global bool) error {
-	self.FullConfig.SyncBeforeShip = value
+	self.Config.SyncBeforeShip = value
 	if global {
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
 	}
@@ -272,24 +272,24 @@ func (self *ValidatedConfig) SetSyncBeforeShip(value configdomain.SyncBeforeShip
 }
 
 func (self *ValidatedConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
-	self.FullConfig.SyncFeatureStrategy = value
+	self.Config.SyncFeatureStrategy = value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
 func (self *ValidatedConfig) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
-	self.FullConfig.SyncFeatureStrategy = value
+	self.Config.SyncFeatureStrategy = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *ValidatedConfig) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
-	self.FullConfig.SyncPerennialStrategy = strategy
+	self.Config.SyncPerennialStrategy = strategy
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncPerennialStrategy, strategy.String())
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
 func (self *ValidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
-	self.FullConfig.SyncUpstream = value
+	self.Config.SyncUpstream = value
 	if global {
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	}

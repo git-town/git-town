@@ -13,7 +13,7 @@ type RebaseFeatureTrackingBranch struct {
 
 func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {
 	// Try to force-push the local branch with lease and includes to the remote branch.
-	err := args.Runner.Frontend.ForcePushBranchSafely(args.Runner.Config.FullConfig.NoPushHook())
+	err := args.Runner.Frontend.ForcePushBranchSafely(args.Runner.Config.Config.NoPushHook())
 	if err == nil {
 		// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
 		return nil

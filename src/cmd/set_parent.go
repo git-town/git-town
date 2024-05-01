@@ -138,8 +138,8 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	if err != nil {
 		return nil, branchesSnapshot, 0, exit, err
 	}
-	mainBranch := validatedConfig.FullConfig.MainBranch
-	existingParent, hasParent := validatedConfig.FullConfig.Lineage.Parent(branchesSnapshot.Active).Get()
+	mainBranch := validatedConfig.Config.MainBranch
+	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
 		defaultChoice = existingParent

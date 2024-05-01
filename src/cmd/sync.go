@@ -169,7 +169,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	if allFlag {
 		shouldPushTags = true
 	} else {
-		shouldPushTags = validatedConfig.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
+		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	runner := git.ProdRunner{
 		Config:          validatedConfig,
@@ -183,12 +183,12 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	allBranchNamesToSync := validatedConfig.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           validatedConfig.FullConfig,
+		config:           validatedConfig.Config,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

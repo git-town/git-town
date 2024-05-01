@@ -148,8 +148,8 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &validatedConfig.FullConfig,
-			HostingPlatform: validatedConfig.FullConfig.HostingPlatform,
+			Config:          &validatedConfig.Config,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -160,12 +160,12 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	if connector == nil {
 		return nil, branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := validatedConfig.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           validatedConfig.FullConfig,
+		config:           validatedConfig.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,

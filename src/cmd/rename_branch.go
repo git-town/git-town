@@ -149,11 +149,11 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	if validatedConfig.FullConfig.IsMainBranch(oldBranchName) {
+	if validatedConfig.Config.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if validatedConfig.FullConfig.IsPerennialBranch(oldBranchName) {
+		if validatedConfig.Config.IsPerennialBranch(oldBranchName) {
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -174,7 +174,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchData{
-		config:           validatedConfig.FullConfig,
+		config:           validatedConfig.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
