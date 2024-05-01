@@ -72,26 +72,26 @@ func executeContribute(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.Runner.Config.AddToContributionBranches(branchNames...); err != nil {
+	if err = repo.Config.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.Runner.Config); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.Config); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
 	branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get()
 	if hasBranchToCheckout {
-		if err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
+		if err = repo.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
 			return err
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "contribute",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
@@ -127,7 +127,7 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 }
 
 func determineContributeData(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return contributeData{}, err
 	}
@@ -135,11 +135,11 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
-		branchesToMark.Add(branchesSnapshot.Active, &repo.Runner.Config.Config)
+		branchesToMark.Add(branchesSnapshot.Active, &repo.Config.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, &repo.Runner.Config.Config)
+		branchesToMark.Add(branch, &repo.Config.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
@@ -147,7 +147,7 @@ func determineContributeData(args []string, repo *execute.OpenRepoResult) (contr
 			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.Config)
+		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Config.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{

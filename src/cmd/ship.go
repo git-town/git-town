@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -114,7 +115,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -137,22 +138,31 @@ type shipData struct {
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
 	remotes                  gitdomain.Remotes
+	runner                   *git.ProdRunner
 	targetBranch             gitdomain.BranchInfo
 }
 
 func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
 		Verbose:               verbose,
@@ -160,8 +170,8 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Runner.Backend.Remotes()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -174,22 +184,22 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(repo.Runner.Config.Config.BranchType(branchNameToShip)); err != nil {
+	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.Config.MainBranch,
+		Config:           repo.Config,
+		DefaultChoice:    repo.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Runner.Config.Config.MainBranch,
-		Runner:           repo.Runner,
+		MainBranch:       repo.Config.Config.MainBranch,
+		Runner:           &runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName, hasTargetBranch := repo.Runner.Config.Config.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := repo.Config.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
@@ -197,18 +207,18 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Runner.Config.Config, repo.Runner.Config.Config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Config.Config, repo.Config.Config.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := repo.Runner.Config.Config.Lineage.Children(branchNameToShip)
+	childBranches := repo.Config.Config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -246,7 +256,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		config:                   repo.Runner.Config.Config,
+		config:                   repo.Config.Config,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
@@ -258,6 +268,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
+		runner:                   &runner,
 		targetBranch:             targetBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }

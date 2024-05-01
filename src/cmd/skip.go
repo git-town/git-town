@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -49,17 +50,25 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -79,10 +88,10 @@ func executeSkip(verbose bool) error {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -96,7 +105,7 @@ func executeSkip(verbose bool) error {
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
 		RunState:       runState,
-		Runner:         repo.Runner,
+		Runner:         &runner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,
 	})

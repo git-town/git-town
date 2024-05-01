@@ -55,26 +55,26 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(data.connector.RepositoryURL(), repo.Runner.Frontend.Runner, repo.Runner.Backend.Runner)
-	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), repo.Runner.FinalMessages.Result())
+	browser.Open(data.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
+	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
 	return nil
 }
 
 func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return nil, err
 	}
 	dialogInputs := components.LoadTestInputs(os.Environ())
-	err = validate.IsConfigured(&repo.Runner.Backend, repo.Runner.Config, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
+	err = validate.IsConfigured(&repo.Backend, repo.Config, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
 	if err != nil {
 		return nil, err
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})

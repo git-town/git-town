@@ -61,21 +61,21 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.Runner, data)
+	aborted, err := enterData(data.runner, data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(repo.Runner, data.userInput)
+	err = saveAll(data.runner, data.userInput)
 	if err != nil {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "setup",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
@@ -85,6 +85,7 @@ type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
+	runner        *git.ProdRunner
 	userInput     userInput
 }
 
@@ -197,25 +198,34 @@ func enterData(runner *git.ProdRunner, data *setupData) (aborted bool, err error
 
 func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
 	return &setupData{
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.Runner.Config.ConfigFile.IsSome(),
+		hasConfigFile: repo.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
+		runner:        &runner,
 		userInput:     defaultUserInput(),
 	}, exit, err
 }

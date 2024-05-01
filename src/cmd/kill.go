@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -87,7 +88,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -104,21 +105,30 @@ type killData struct {
 	initialBranch    gitdomain.LocalBranchName
 	parentBranch     Option[gitdomain.LocalBranchName]
 	previousBranch   gitdomain.LocalBranchName
+	runner           *git.ProdRunner
 }
 
 func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -137,41 +147,42 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if branchToKill.IsLocal() {
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			BranchesToVerify: gitdomain.LocalBranchNames{branchToKill.LocalName},
-			Config:           repo.Runner.Config,
-			DefaultChoice:    repo.Runner.Config.Config.MainBranch,
+			Config:           repo.Config,
+			DefaultChoice:    repo.Config.Config.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    branchesSnapshot.Branches,
-			MainBranch:       repo.Runner.Config.Config.MainBranch,
-			Runner:           repo.Runner,
+			MainBranch:       repo.Config.Config.MainBranch,
+			Runner:           &runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 	}
-	branchTypeToKill := repo.Runner.Config.Config.BranchType(branchNameToKill)
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	branchTypeToKill := repo.Config.Config.BranchType(branchNameToKill)
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == branchesSnapshot.Active {
 		if previousBranch == branchesSnapshot.Active {
-			branchWhenDone = repo.Runner.Config.Config.MainBranch
+			branchWhenDone = repo.Config.Config.MainBranch
 		} else {
 			branchWhenDone = previousBranch
 		}
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
-	parentBranch := repo.Runner.Config.Config.Lineage.Parent(branchToKill.LocalName)
+	parentBranch := repo.Config.Config.Lineage.Parent(branchToKill.LocalName)
 	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           repo.Runner.Config.Config,
+		config:           repo.Config.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
 		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
+		runner:           &runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

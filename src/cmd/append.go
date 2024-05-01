@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
@@ -81,7 +82,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -99,23 +100,32 @@ type appendData struct {
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
+	runner                    *git.ProdRunner
 	targetBranch              gitdomain.LocalBranchName
 }
 
 func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -123,8 +133,8 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes := fc.Remotes(repo.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -133,24 +143,24 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.Config.MainBranch,
+		Config:           repo.Config,
+		DefaultChoice:    repo.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
-		MainBranch:       repo.Runner.Config.Config.MainBranch,
-		Runner:           repo.Runner,
+		MainBranch:       repo.Config.Config.MainBranch,
+		Runner:           &runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	branchNamesToSync := repo.Runner.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	initialAndAncestors := repo.Runner.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	initialAndAncestors := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Runner.Config.Config,
+		config:                    repo.Config.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -159,6 +169,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		parentBranch:              branchesSnapshot.Active,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
+		runner:                    &runner,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }

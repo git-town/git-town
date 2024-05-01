@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -50,14 +51,14 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, repo.Runner.Config.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, repo.Config.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, merge)
+	err = repo.Frontend.CheckoutBranch(branchToCheckout, merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
@@ -78,17 +79,25 @@ type switchData struct {
 
 func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

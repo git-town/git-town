@@ -50,22 +50,29 @@ func executeOffline(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	switch len(args) {
 	case 0:
-		displayOfflineStatus(repo.Runner)
+		displayOfflineStatus(&runner)
 	case 1:
-		err = setOfflineStatus(args[0], repo.Runner)
+		err = setOfflineStatus(args[0], &runner)
 		if err != nil {
 			return err
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})

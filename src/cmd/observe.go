@@ -70,25 +70,25 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.Runner.Config.AddToObservedBranches(branchNames...); err != nil {
+	if err = repo.Config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.Runner.Config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.Config); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
 	if !data.checkout.IsEmpty() {
-		if err = repo.Runner.Frontend.CheckoutBranch(data.checkout, false); err != nil {
+		if err = repo.Frontend.CheckoutBranch(data.checkout, false); err != nil {
 			return err
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Runner.Backend,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "observe",
-		CommandsCounter:     repo.Runner.CommandsCounter,
+		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       repo.Runner.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
@@ -124,7 +124,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 }
 
 func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err
 	}
@@ -132,16 +132,16 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToObserve.Add(branchesSnapshot.Active, &repo.Runner.Config.Config)
+		branchesToObserve.Add(branchesSnapshot.Active, &repo.Config.Config)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve.Add(branch, &repo.Runner.Config.Config)
+		branchesToObserve.Add(branch, &repo.Config.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
-		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.Config)
+		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Config.Config)
 	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,

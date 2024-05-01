@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -109,10 +110,14 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		}
 	}
 	return &OpenRepoResult{
-		ConfigSnapshot: configSnapshot,
-		IsOffline:      isOffline,
-		RootDir:        rootDir,
-		Runner:         &prodRunner,
+		Backend:         backendCommands,
+		CommandsCounter: &commandsCounter,
+		Config:          config,
+		ConfigSnapshot:  configSnapshot,
+		FinalMessages:   finalMessages,
+		Frontend:        frontEndCommands,
+		IsOffline:       isOffline,
+		RootDir:         rootDir,
 	}, err
 }
 
@@ -126,10 +131,14 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	ConfigSnapshot undoconfig.ConfigSnapshot
-	IsOffline      configdomain.Offline
-	RootDir        gitdomain.RepoRootDir
-	Runner         *git.ProdRunner
+	Backend         git.BackendCommands
+	CommandsCounter *gohacks.Counter
+	Config          *config.Config
+	ConfigSnapshot  undoconfig.ConfigSnapshot
+	FinalMessages   *stringslice.Collector
+	Frontend        git.FrontendCommands
+	IsOffline       configdomain.Offline
+	RootDir         gitdomain.RepoRootDir
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

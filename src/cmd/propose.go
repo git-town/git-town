@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -93,7 +94,7 @@ func executePropose(dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
+		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -110,21 +111,30 @@ type proposeData struct {
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 	remotes          gitdomain.Remotes
+	runner           *git.ProdRunner
 }
 
 func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Runner.Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -132,28 +142,28 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Runner.Backend.Remotes()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		Config:           repo.Runner.Config,
-		DefaultChoice:    repo.Runner.Config.Config.MainBranch,
+		Config:           repo.Config,
+		DefaultChoice:    repo.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Runner.Config.Config.MainBranch,
-		Runner:           repo.Runner,
+		MainBranch:       repo.Config.Config.MainBranch,
+		Runner:           &runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Runner.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Runner.Config.Config,
-			HostingPlatform: repo.Runner.Config.Config.HostingPlatform,
+			FullConfig:      &repo.Config.Config,
+			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -164,12 +174,12 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	if connector == nil {
 		return nil, branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := repo.Runner.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Runner.Config.Config,
+		config:           repo.Config.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -177,6 +187,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
+		runner:           &runner,
 	}, branchesSnapshot, stashSize, false, err
 }
 
