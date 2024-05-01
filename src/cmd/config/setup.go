@@ -97,7 +97,7 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(config config.ValidatedConfig, ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(config config.UnvalidatedConfig, ProdRunner, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
@@ -140,7 +140,7 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if platform, has := determineHostingPlatform(runner, data.userInput.config.HostingPlatform).Get(); has {
+	if platform, has := determineHostingPlatform(config, data.userInput.config.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet

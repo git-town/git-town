@@ -2,7 +2,10 @@ package config
 
 import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/confighelpers"
+	"github.com/git-town/git-town/v14/src/config/envconfig"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/git/giturl"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 )
@@ -31,4 +34,25 @@ func NewUnvalidatedConfig(args NewConfigArgs) (UnvalidatedConfig, *stringslice.C
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, &finalMessages, err
+}
+
+// OriginURL provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Caches its result so can be called repeatedly.
+func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
+	text := self.OriginURLString()
+	if text == "" {
+		return None[giturl.Parts]()
+	}
+	return confighelpers.DetermineOriginURL(text, self.Config.HostingOriginHostname, self.originURLCache)
+}
+
+// OriginURLString provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+func (self *UnvalidatedConfig) OriginURLString() string {
+	remoteOverride := envconfig.OriginURLOverride()
+	if remoteOverride != "" {
+		return remoteOverride
+	}
+	return self.GitConfig.OriginRemote()
 }

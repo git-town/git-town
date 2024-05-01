@@ -5,11 +5,8 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/confighelpers"
-	"github.com/git-town/git-town/v14/src/config/envconfig"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/git/giturl"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
@@ -19,13 +16,8 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type ValidatedConfig struct {
-	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	DryRun          bool
-	Config          configdomain.ValidatedConfig // the merged configuration data
-	GitConfig       gitconfig.Access             // access to the Git configuration settings
-	GlobalGitConfig configdomain.PartialConfig   // content of the global Git configuration
-	LocalGitConfig  configdomain.PartialConfig   // content of the local Git configuration
-	originURLCache  configdomain.OriginURLCache
+	UnvalidatedConfig
+	Config configdomain.ValidatedConfig // the merged configuration data
 }
 
 // AddToContributionBranches registers the given branch names as perennial branches.
@@ -57,27 +49,6 @@ func (self *ValidatedConfig) Author() gitdomain.Author {
 	email := self.Config.GitUserEmail
 	name := self.Config.GitUserName
 	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
-}
-
-// OriginURL provides the URL for the "origin" remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-// Caches its result so can be called repeatedly.
-func (self *ValidatedConfig) OriginURL() Option[giturl.Parts] {
-	text := self.OriginURLString()
-	if text == "" {
-		return None[giturl.Parts]()
-	}
-	return confighelpers.DetermineOriginURL(text, self.Config.HostingOriginHostname, self.originURLCache)
-}
-
-// OriginURLString provides the URL for the "origin" remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func (self *ValidatedConfig) OriginURLString() string {
-	remoteOverride := envconfig.OriginURLOverride()
-	if remoteOverride != "" {
-		return remoteOverride
-	}
-	return self.GitConfig.OriginRemote()
 }
 
 // func (self *ValidatedConfig) Reload() {
