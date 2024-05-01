@@ -9,24 +9,14 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-type mockFullConfig struct {
-	branchTypes map[gitdomain.LocalBranchName]configdomain.BranchType
-}
-
-func (self mockFullConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
-	return self.branchTypes[branch]
-}
-
 func TestBranchesAndTypes(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := mockFullConfig{
-			branchTypes: map[gitdomain.LocalBranchName]configdomain.BranchType{
-				"main": configdomain.BranchTypeMainBranch,
-			},
+		fullConfig := configdomain.FullConfig{
+			MainBranch: gitdomain.NewLocalBranchName("main"),
 		}
 		have.Add("main", fullConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
@@ -38,11 +28,9 @@ func TestBranchesAndTypes(t *testing.T) {
 	t.Run("AddMany", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := mockFullConfig{
-			branchTypes: map[gitdomain.LocalBranchName]configdomain.BranchType{
-				"main":      configdomain.BranchTypeMainBranch,
-				"perennial": configdomain.BranchTypePerennialBranch,
-			},
+		fullConfig := configdomain.FullConfig{
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 		}
 		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), fullConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
