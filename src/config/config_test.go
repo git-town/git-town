@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -19,8 +20,10 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		conf := config.ValidatedConfig{ //nolint:exhaustruct
 			Config: configdomain.ValidatedConfig{ //nolint:exhaustruct
-				GitUserName:  configdomain.GitUserName("name"),
-				GitUserEmail: configdomain.GitUserEmail("email"),
+				UnvalidatedConfig: configdomain.UnvalidatedConfig{
+					GitUserName:  Some(configdomain.GitUserName("name")),
+					GitUserEmail: Some(configdomain.GitUserEmail("email")),
+				},
 			},
 		}
 		have := conf.Author()
@@ -28,19 +31,19 @@ func TestValidatedConfig(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
-	// t.Run("Lineage", func(t *testing.T) {
-	// 	t.Parallel()
-	// 	repo := testruntime.CreateGitTown(t)
-	// 	repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
-	// 	repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
-	// 	repo.Config.Reload()
-	// 	have := repo.Config.FullConfig.Lineage
-	// 	want := configdomain.Lineage{
-	// 		gitdomain.NewLocalBranchName("feature1"): gitdomain.NewLocalBranchName("main"),
-	// 		gitdomain.NewLocalBranchName("feature2"): gitdomain.NewLocalBranchName("main"),
-	// 	}
-	// 	must.Eq(t, want, have)
-	// })
+	t.Run("Lineage", func(t *testing.T) {
+		t.Parallel()
+		repo := testruntime.CreateGitTown(t)
+		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
+		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
+		repo.Config.Reload()
+		have := repo.Config.Config.Lineage
+		want := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature1"): gitdomain.NewLocalBranchName("main"),
+			gitdomain.NewLocalBranchName("feature2"): gitdomain.NewLocalBranchName("main"),
+		}
+		must.Eq(t, want, have)
+	})
 
 	t.Run("OriginURL", func(t *testing.T) {
 		t.Parallel()
