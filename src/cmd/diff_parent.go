@@ -59,7 +59,7 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, repo.CommandsCounter.Count(), repo..FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
 	return nil
 }
 
@@ -71,12 +71,12 @@ type diffParentData struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo..Backend.RepoStatus()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo..Config,
+		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
@@ -97,17 +97,17 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	}
 	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 		BranchesToVerify: gitdomain.LocalBranchNames{branch},
-		Config:           repo..Config,
-		DefaultChoice:    repo..Config.Config.MainBranch,
+		Config:           repo.Config,
+		DefaultChoice:    repo.Config.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
-		MainBranch:       repo..Config.Config.MainBranch,
+		MainBranch:       repo.Config.Config.MainBranch,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, false, err
 	}
-	parentBranch, hasParent := repo..Config.Config.Lineage.Parent(branch).Get()
+	parentBranch, hasParent := repo.Config.Config.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
