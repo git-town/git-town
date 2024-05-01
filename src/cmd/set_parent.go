@@ -116,6 +116,13 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          repo.Config,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -123,6 +130,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		Runner:                &runner,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
@@ -137,13 +145,6 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		defaultChoice = existingParent
 	} else {
 		defaultChoice = mainBranch
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	return &setParentData{
 		currentBranch:    branchesSnapshot.Active,
