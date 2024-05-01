@@ -2,35 +2,13 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
 // ValidatedConfig is validated UnvalidatedConfig
 type ValidatedConfig struct {
-	Aliases                  Aliases
-	ContributionBranches     gitdomain.LocalBranchNames
-	GitHubToken              Option[GitHubToken]
-	GitLabToken              Option[GitLabToken]
-	GitUserEmail             GitUserEmail
-	GitUserName              GitUserName
-	GiteaToken               Option[GiteaToken]
-	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
-	Lineage                  Lineage
-	MainBranch               gitdomain.LocalBranchName
-	ObservedBranches         gitdomain.LocalBranchNames
-	Offline                  Offline
-	ParkedBranches           gitdomain.LocalBranchNames
-	PerennialBranches        gitdomain.LocalBranchNames
-	PerennialRegex           Option[PerennialRegex]
-	PushHook                 PushHook
-	PushNewBranches          PushNewBranches
-	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
-	SyncBeforeShip           SyncBeforeShip
-	SyncFeatureStrategy      SyncFeatureStrategy
-	SyncPerennialStrategy    SyncPerennialStrategy
-	SyncUpstream             SyncUpstream
+	UnvalidatedConfig
+	MainBranch gitdomain.LocalBranchName
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {

@@ -19,15 +19,13 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	if err != nil {
 		return nil, err
 	}
-	validatedGitUserEmail, hasGitUserEmail := unvalidated.Config.GitUserEmail.Get()
-	if !hasGitUserEmail {
+	if unvalidated.Config.GitUserEmail.IsNone() {
 		return nil, errors.New(messages.GitUserEmailMissing)
 	}
-	validatedGitUserName, hasGitUserName := unvalidated.Config.GitUserName.Get()
-	if !hasGitUserName {
+	if unvalidated.Config.GitUserName.IsNone() {
 		return nil, errors.New(messages.GitUserNameMissing)
 	}
-	validatedLineage, err := Lineage(LineageArgs{
+	unvalidated.Config.Lineage, err = Lineage(LineageArgs{
 		Backend:          backend,
 		BranchesToVerify: branchesToValidate,
 		Config:           &unvalidated,
@@ -36,30 +34,12 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 		LocalBranches:    localBranches,
 		MainBranch:       validateResult.ValidatedMain,
 	})
+	if err != nil {
+		return nil, err
+	}
 	validatedConfig := configdomain.ValidatedConfig{
-		Aliases:                  unvalidated.Config.Aliases,
-		ContributionBranches:     unvalidated.Config.ContributionBranches,
-		GitHubToken:              unvalidated.Config.GitHubToken,
-		GitLabToken:              unvalidated.Config.GitLabToken,
-		GitUserEmail:             validatedGitUserEmail,
-		GitUserName:              validatedGitUserName,
-		GiteaToken:               unvalidated.Config.GiteaToken,
-		HostingOriginHostname:    unvalidated.Config.HostingOriginHostname,
-		HostingPlatform:          unvalidated.Config.HostingPlatform,
-		Lineage:                  validatedLineage,
-		MainBranch:               validateResult.ValidatedMain,
-		ObservedBranches:         unvalidated.Config.ObservedBranches,
-		Offline:                  unvalidated.Config.Offline,
-		ParkedBranches:           unvalidated.Config.ParkedBranches,
-		PerennialBranches:        validateResult.ValidatedPerennials,
-		PerennialRegex:           unvalidated.Config.PerennialRegex,
-		PushHook:                 unvalidated.Config.PushHook,
-		PushNewBranches:          unvalidated.Config.PushNewBranches,
-		ShipDeleteTrackingBranch: unvalidated.Config.ShipDeleteTrackingBranch,
-		SyncBeforeShip:           unvalidated.Config.SyncBeforeShip,
-		SyncFeatureStrategy:      unvalidated.Config.SyncFeatureStrategy,
-		SyncPerennialStrategy:    unvalidated.Config.SyncPerennialStrategy,
-		SyncUpstream:             unvalidated.Config.SyncUpstream,
+		UnvalidatedConfig: unvalidated.Config,
+		MainBranch:        validateResult.ValidatedMain,
 	}
 	vConfig := config.ValidatedConfig{
 		Config: validatedConfig,
