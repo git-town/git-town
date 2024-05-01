@@ -46,15 +46,15 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranches, exit, err := determineSwitchData(repo, verbose)
+	data, initialBranches, exit, err := determineSwitchData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.Config.Lineage, initialBranches.Branches, config.uncommittedChanges, config.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, repo.Runner.Config.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
-	if branchToCheckout == config.initialBranch {
+	if branchToCheckout == data.initialBranch {
 		return nil
 	}
 	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout, merge)
