@@ -28,6 +28,24 @@ type ValidatedConfig struct {
 	originURLCache  configdomain.OriginURLCache
 }
 
+// AddToContributionBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *ValidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetContributionBranches(append(self.FullConfig.ContributionBranches, branches...))
+}
+
+// AddToObservedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *ValidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetObservedBranches(append(self.FullConfig.ObservedBranches, branches...))
+}
+
+// AddToParkedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *ValidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetParkedBranches(append(self.FullConfig.ParkedBranches, branches...))
+}
+
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
@@ -68,6 +86,24 @@ func (self *ValidatedConfig) OriginURLString() string {
 // 	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
 // 	self.FullConfig = NewValidatedConfig(unvalidatedConfig)
 // }
+
+// RemoveFromContributionBranches removes the given branch as a perennial branch.
+func (self *ValidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ContributionBranches = slice.Remove(self.FullConfig.ContributionBranches, branch)
+	return self.SetContributionBranches(self.FullConfig.ContributionBranches)
+}
+
+// RemoveFromObservedBranches removes the given branch as a perennial branch.
+func (self *ValidatedConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ObservedBranches = slice.Remove(self.FullConfig.ObservedBranches, branch)
+	return self.SetObservedBranches(self.FullConfig.ObservedBranches)
+}
+
+// RemoveFromParkedBranches removes the given branch as a perennial branch.
+func (self *ValidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ParkedBranches = slice.Remove(self.FullConfig.ParkedBranches, branch)
+	return self.SetParkedBranches(self.FullConfig.ParkedBranches)
+}
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
@@ -135,11 +171,29 @@ func (self *ValidatedConfig) RemoveSyncUpstream() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
 }
 
+// SetObservedBranches marks the given branches as observed branches.
+func (self *ValidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ContributionBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.FullConfig.MainBranch = branch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
+}
+
+// SetContributionBranches marks the given branches as contribution branches.
+func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ObservedBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
+}
+
+// SetOffline updates whether Git Town is in offline mode.
+func (self *ValidatedConfig) SetOffline(value configdomain.Offline) error {
+	self.FullConfig.Offline = value
+	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
 // SetOriginHostname marks the given branch as the main branch
@@ -157,6 +211,12 @@ func (self *ValidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBranc
 	}
 	self.FullConfig.Lineage[branch] = parentBranch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
+}
+
+// SetObservedBranches marks the given branches as perennial branches.
+func (self *ValidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ParkedBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.

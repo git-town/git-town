@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -98,6 +99,7 @@ type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
+	config            config.ValidatedConfig
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
@@ -143,10 +145,15 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToObserve.Keys(), localBranches, &repo.BackendCommands, &dialogTestInputs)
+	if err != nil {
+		return parkData{}, err
+	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
+		config:            validatedConfig,
 	}, nil
 }
 
