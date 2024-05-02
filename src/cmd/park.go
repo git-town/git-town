@@ -59,8 +59,8 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineParkData(args, repo)
-	if err != nil {
+	data, abort, err := determineParkData(args, repo)
+	if err != nil || abort {
 		return err
 	}
 	err = validateParkData(data)
@@ -118,11 +118,11 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, error) {
+func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
-		return parkData{}, err
+		return parkData{}, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToPark := commandconfig.BranchesAndTypes{}
@@ -131,12 +131,18 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToPark.Keys(), localBranches, &repo.Backend, &dialogTestInputs)
-	if err != nil {
-		return parkData{}, err
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: branchesToPark.Keys(),
+		LocalBranches:      localBranches,
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogTestInputs,
+	})
+	if err != nil || abort {
+		return parkData{}, abort, err
 	}
 	runner := git.ProdRunner{
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		Backend:         repo.Backend,
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
@@ -146,9 +152,9 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, e
 		allBranches:      branchesSnapshot.Branches,
 		branchesSnapshot: branchesSnapshot,
 		branchesToPark:   branchesToPark,
-		config:           *validatedConfig,
+		config:           validatedConfig,
 		runner:           &runner,
-	}, nil
+	}, false, nil
 }
 
 func validateParkData(data parkData) error {
