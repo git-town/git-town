@@ -180,6 +180,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchNamesToSync,
+		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranchNames,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        *repo.Config,

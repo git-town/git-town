@@ -144,6 +144,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        *repo.Config,

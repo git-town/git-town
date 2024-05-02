@@ -108,6 +108,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
+		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        *repo.Config,
