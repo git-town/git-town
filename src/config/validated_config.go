@@ -151,13 +151,6 @@ func (self *ValidatedConfig) SetContributionBranches(branches gitdomain.LocalBra
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
 }
 
-// SetMainBranch marks the given branch as the main branch
-// in the Git Town configuration.
-func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
-	self.Config.MainBranch = branch
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
-}
-
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.ObservedBranches = branches
@@ -185,12 +178,6 @@ func (self *ValidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBranc
 func (self *ValidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.ParkedBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
-}
-
-// SetPerennialBranches marks the given branches as perennial branches.
-func (self *ValidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
-	self.Config.PerennialBranches = branches
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
 // SetPerennialRegexLocally updates the locally configured perennial regex.

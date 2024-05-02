@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/confighelpers"
 	"github.com/git-town/git-town/v14/src/config/envconfig"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
@@ -57,8 +58,21 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
+// SetMainBranch marks the given branch as the main branch
+// in the Git Town configuration.
+func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
+	self.Config.MainBranch = Some(branch)
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
+}
+
 // SetOffline updates whether Git Town is in offline mode.
 func (self *UnvalidatedConfig) SetOffline(value configdomain.Offline) error {
 	self.Config.Offline = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
+}
+
+// SetPerennialBranches marks the given branches as perennial branches.
+func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.PerennialBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
