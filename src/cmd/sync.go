@@ -161,6 +161,11 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches()
 	localBranchNames := localBranches.Names()
 	var branchNamesToSync gitdomain.LocalBranchNames
@@ -181,11 +186,6 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
-	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Backend.Remotes()
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
 	}
 	allBranchNamesToSync := repo.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
