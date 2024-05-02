@@ -115,7 +115,9 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 	if err != nil || exit {
 		return nil, initialStashSize, repo.Config.Config.Lineage, err
 	}
+	fmt.Println("1111111111111111", initialBranchesSnapshot.Active)
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	fmt.Println("2222222222222222", localBranches)
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
