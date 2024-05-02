@@ -74,9 +74,9 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	}
 
 	// remove outdated lineage
-	args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
+	err = args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
 
-	return &args.Unvalidated, false, nil
+	return &args.Unvalidated, false, err
 }
 
 type ConfigArgs struct {
