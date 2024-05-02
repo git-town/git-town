@@ -41,22 +41,22 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.ValidatedConfig{
-			HostingOriginHostname:    Option{},
-			HostingPlatform:          Option{},
+		give := configdomain.UnvalidatedConfig{
+			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
+			HostingPlatform:          None[configdomain.HostingPlatform](),
 			Lineage:                  map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},
-			MainBranch:               "",
-			ObservedBranches:         []gitdomain.LocalBranchName{},
+			MainBranch:               None[gitdomain.LocalBranchName](),
+			ObservedBranches:         gitdomain.LocalBranchNames{},
 			Offline:                  false,
-			ParkedBranches:           []gitdomain.LocalBranchName{},
-			PerennialBranches:        []gitdomain.LocalBranchName{},
-			PerennialRegex:           Option{},
+			ParkedBranches:           gitdomain.LocalBranchNames{},
+			PerennialBranches:        gitdomain.LocalBranchNames{},
+			PerennialRegex:           None[configdomain.PerennialRegex](),
 			PushHook:                 false,
 			PushNewBranches:          false,
 			ShipDeleteTrackingBranch: false,
 			SyncBeforeShip:           false,
-			SyncFeatureStrategy:      "",
-			SyncPerennialStrategy:    "",
+			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
+			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
 			SyncUpstream:             false,
 		}
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
