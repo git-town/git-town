@@ -100,7 +100,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 	}
-	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -112,7 +112,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return nil, initialStashSize, repo.Config.Config.Lineage, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
