@@ -100,7 +100,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Unvalidated:        unvalidatedConfig,
 	})
 	if err != nil || abort {
-		panic(fmt.Sprintf("cannot create test runtime: aborted: %d, err: %v", abort, err))
+		panic(fmt.Sprintf("cannot create test runtime: aborted: %t, err: %v", abort, err))
 	}
 	backendCommands := git.BackendCommands{
 		Runner:             &runner,
