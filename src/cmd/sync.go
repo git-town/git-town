@@ -166,10 +166,10 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches()
-	localBranchNames := localBranches.Names()
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
+	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranchNames := localBranches.Names()
 	if allFlag {
 		branchNamesToSync = localBranchNames
 		shouldPushTags = true
