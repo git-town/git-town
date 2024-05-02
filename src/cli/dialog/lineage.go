@@ -12,7 +12,8 @@ import (
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
 	additionalLineage = make(configdomain.Lineage)
 	branchesToVerify := args.BranchesToVerify
-	for _, branchToVerify := range args.BranchesToVerify {
+	for i := 0; i < len(branchesToVerify); i++ {
+		branchToVerify := branchesToVerify[i]
 		if args.Config.IsMainOrPerennialBranch(branchToVerify) {
 			continue
 		}
