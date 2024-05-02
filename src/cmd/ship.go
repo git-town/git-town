@@ -169,6 +169,11 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
+	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
@@ -177,6 +182,9 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+	}
+	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
@@ -187,14 +195,6 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
-	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Backend.Remotes()
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
-	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
 	}
 	targetBranchName, hasTargetBranch := repo.Config.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
