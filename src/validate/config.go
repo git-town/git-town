@@ -19,6 +19,10 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 		mainOpt = Some(args.Unvalidated.Config.MainBranch)
 	}
 	validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
+		DialogInputs:          args.TestInputs,
+		GetDefaultBranch:      args.Backend.DefaultBranch,
+		HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),
+		LocalBranches:         args.LocalBranches,
 		UnvalidatedMain:       mainOpt,
 		UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
 	})

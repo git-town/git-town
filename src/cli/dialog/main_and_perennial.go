@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -30,12 +28,10 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 }
 
 type MainAndPerennialsArgs struct {
-	Backend               *git.BackendCommands
 	DialogInputs          *components.TestInputs
 	GetDefaultBranch      func() Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
 	LocalBranches         gitdomain.LocalBranchNames
-	LocalGitConfig        *gitconfig.Access
 	UnvalidatedMain       Option[gitdomain.LocalBranchName]
 	UnvalidatedPerennials gitdomain.LocalBranchNames
 }
