@@ -84,7 +84,6 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			makeFeatureData:     makeFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
-			runner:              makeFeatureBranchData.runner,
 			verbose:             verbose,
 		})
 	}
@@ -98,6 +97,7 @@ type hackData = Either[appendData, makeFeatureData]
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureData struct {
 	config         config.ValidatedConfig
+	runner         *git.ProdRunner
 	targetBranches commandconfig.BranchesAndTypes
 }
 
@@ -146,13 +146,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil {
 		return
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -198,6 +191,13 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 		return
+	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          validatedConfig,
+		FinalMessages:   &repo.FinalMessages,
+		Frontend:        repo.Frontend,
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
@@ -258,7 +258,6 @@ type makeFeatureBranchArgs struct {
 	makeFeatureData     makeFeatureData
 	repo                *execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
-	runner              *git.ProdRunner
 	verbose             bool
 }
 
