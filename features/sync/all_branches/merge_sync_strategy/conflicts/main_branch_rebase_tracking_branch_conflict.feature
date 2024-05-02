@@ -30,9 +30,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  @this
   Scenario: undo
-    # And inspect the repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
