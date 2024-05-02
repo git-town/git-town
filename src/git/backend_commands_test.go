@@ -409,7 +409,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
-		t.Run("recognizes the current branch", func(t *testing.T) {
+		t.Run("recognizes the branch names", func(t *testing.T) {
 			t.Parallel()
 			t.Run("marker is at the first entry", func(t *testing.T) {
 				t.Parallel()
@@ -624,22 +624,41 @@ func TestBackendCommands(t *testing.T) {
 					have, _ := git.ParseVerboseBranchesOutput(give)
 					must.Eq(t, want, have)
 				})
+			})
 
-				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
-					t.Parallel()
-					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
-					want := gitdomain.BranchInfos{
-						gitdomain.BranchInfo{
-							LocalName:  gitdomain.NewLocalBranchName("branch-1"),
-							LocalSHA:   gitdomain.NewSHA("01a7eded"),
-							SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-							RemoteName: gitdomain.NewRemoteBranchName("origin/branch-1"),
-							RemoteSHA:  gitdomain.EmptySHA(),
-						},
-					}
-					have, _ := git.ParseVerboseBranchesOutput(give)
-					must.Eq(t, want, have)
-				})
+			t.Run("remote gone", func(t *testing.T) {
+				t.Parallel()
+				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
+				want := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{
+						LocalName:  gitdomain.NewLocalBranchName("branch-1"),
+						LocalSHA:   gitdomain.NewSHA("01a7eded"),
+						SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+						RemoteName: gitdomain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  gitdomain.EmptySHA(),
+					},
+				}
+				have, _ := git.ParseVerboseBranchesOutput(give)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("in the middle of a rebase", func(t *testing.T) {
+				t.Parallel()
+				give := `
+* (no branch, rebasing main) 214ba79 origin main commit
+  feature                    62bf22e [origin/feature: ahead 1] feature commit
+  main                       11716d4 [origin/main: ahead 1, behind 1] local main commit`[1:]
+				want := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{
+						LocalName:  gitdomain.NewLocalBranchName("branch-1"),
+						LocalSHA:   gitdomain.NewSHA("01a7eded"),
+						SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+						RemoteName: gitdomain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  gitdomain.EmptySHA(),
+					},
+				}
+				have, _ := git.ParseVerboseBranchesOutput(give)
+				must.Eq(t, want, have)
 			})
 		})
 

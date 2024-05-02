@@ -32,7 +32,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
 
   @this
   Scenario: undo
-    And inspect the repo
+    # And inspect the repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
