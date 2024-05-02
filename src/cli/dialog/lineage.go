@@ -1,7 +1,6 @@
-package validate
+package dialog
 
 import (
-	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -11,6 +10,7 @@ import (
 // Prompts missing lineage information from the user and updates persisted lineage as needed.
 // Returns the validated Lineage.
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
+	additionalLineage = make(configdomain.Lineage)
 	branchesToVerify := args.BranchesToVerify
 	for _, branchToVerify := range args.BranchesToVerify {
 		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
@@ -18,7 +18,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
-		outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
+		outcome, selectedBranch, err := Parent(ParentArgs{
 			Branch:          branchToVerify,
 			DefaultChoice:   args.DefaultChoice,
 			DialogTestInput: args.DialogTestInputs.Next(),
@@ -30,11 +30,11 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			return additionalLineage, additionalPerennials, false, err
 		}
 		switch outcome {
-		case dialog.ParentOutcomeAborted:
+		case ParentOutcomeAborted:
 			return additionalLineage, additionalPerennials, true, nil
-		case dialog.ParentOutcomePerennialBranch:
+		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)
-		case dialog.ParentOutcomeSelectedParent:
+		case ParentOutcomeSelectedParent:
 			additionalLineage[branchToVerify] = selectedBranch
 		}
 		if args.Config.IsMainOrPerennialBranch(selectedBranch) {

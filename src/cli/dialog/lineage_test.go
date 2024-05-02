@@ -1,4 +1,4 @@
-package validate_test
+package dialog_test
 
 import "testing"
 
