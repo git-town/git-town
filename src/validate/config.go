@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err error) {
+func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err error) {
 	// enter and save main and perennials
 	var mainOpt Option[gitdomain.LocalBranchName]
 	if !args.Unvalidated.Config.MainBranch.IsEmpty() {
@@ -65,7 +65,7 @@ func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err e
 		}
 	}
 
-	return args.Unvalidated, false, nil
+	return &args.Unvalidated, false, nil
 }
 
 type ConfigArgs struct {

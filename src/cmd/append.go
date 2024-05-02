@@ -133,7 +133,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
@@ -143,7 +143,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	repo.Config = &validatedConfig
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {

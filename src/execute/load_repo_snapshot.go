@@ -69,8 +69,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return branchesSnapshot, stashSize, false, err
 		}
 	}
-	if args.ValidateIsConfigured {
-	}
 	return branchesSnapshot, stashSize, false, err
 }
 

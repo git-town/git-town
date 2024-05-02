@@ -224,7 +224,6 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
