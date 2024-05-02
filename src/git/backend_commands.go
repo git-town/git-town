@@ -494,7 +494,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 		}
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = gitdomain.NewLocalBranchName(branchName)
+			checkedoutBranch = gitdomain.LocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {
