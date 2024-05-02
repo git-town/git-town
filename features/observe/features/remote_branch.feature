@@ -1,7 +1,7 @@
 Feature: observe a remote branch
 
   Background:
-    Given a known remote feature branch "remote-feature"
+    Given a known remote branch "remote-feature"
     And an uncommitted file
     When I run "git-town observe remote-feature"
 
