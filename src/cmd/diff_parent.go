@@ -100,6 +100,11 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		return nil, exit, err
 	}
 	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	if branch != branchesSnapshot.Active {
+		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
+			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
+		}
+	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
@@ -109,11 +114,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	})
 	if err != nil || exit {
 		return nil, exit, err
-	}
-	if branch != branchesSnapshot.Active {
-		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
-			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
-		}
 	}
 	parentBranch, hasParent := repo.Config.Config.Lineage.Parent(branch).Get()
 	if !hasParent {
