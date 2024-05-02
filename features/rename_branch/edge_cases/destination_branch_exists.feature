@@ -20,7 +20,7 @@ Feature: destination branch exists
 
   Scenario: destination branch exists in origin
     Given the current branch is a feature branch "alpha"
-    And a remote feature branch "beta"
+    And a remote branch "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

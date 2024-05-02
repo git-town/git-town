@@ -1,7 +1,7 @@
 Feature: already existing remote branch
 
   Background:
-    Given a remote feature branch "existing"
+    Given a remote branch "existing"
     And an uncommitted file
     And I run "git fetch"
     When I run "git-town hack existing"

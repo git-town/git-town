@@ -157,7 +157,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branchText string) error {
+	suite.Step(`^a remote branch "([^"]*)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
 		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))

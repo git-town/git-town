@@ -2,7 +2,7 @@ Feature: already existing remote branch
 
   Background:
     Given the current branch is a feature branch "old"
-    And a remote feature branch "existing"
+    And a remote branch "existing"
     And an uncommitted file
     And I run "git fetch"
     When I run "git-town prepend existing"
