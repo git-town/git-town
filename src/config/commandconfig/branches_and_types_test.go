@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/commandconfig"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,10 +16,10 @@ func TestBranchesAndTypes(t *testing.T) {
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := configdomain.FullConfig{ //nolint:exhaustruct
-			MainBranch: gitdomain.NewLocalBranchName("main"),
+		unvalidatedConfig := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 		}
-		have.Add("main", fullConfig)
+		have.Add("main", unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main": configdomain.BranchTypeMainBranch,
 		}
@@ -28,11 +29,11 @@ func TestBranchesAndTypes(t *testing.T) {
 	t.Run("AddMany", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := configdomain.FullConfig{ //nolint:exhaustruct
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		unvalidatedConfig := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 		}
-		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), fullConfig)
+		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main":      configdomain.BranchTypeMainBranch,
 			"perennial": configdomain.BranchTypePerennialBranch,
