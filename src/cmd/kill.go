@@ -136,9 +136,10 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToKill},
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        *repo.Config,
@@ -146,7 +147,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToKill, hasBranchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill).Get()
 	if !hasBranchToKill {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
