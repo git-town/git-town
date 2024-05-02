@@ -20,22 +20,22 @@ func Lineage(args LineageArgs) (configdomain.Lineage, error) {
 	// step 3: if missing: ask user and add the ancestry info to the validated lineage
 	// step 4: add the parent to the list of branches that need to be verified
 
-	updated := false
-	for _, branch := range args.BranchesToVerify {
-		branchUpdated, err := knowsBranchAncestors(branch, knowsBranchAncestorsArgs{
-			Config:           args.Config,
-			DefaultChoice:    args.DefaultChoice,
-			DialogTestInputs: args.DialogTestInputs,
-			LocalBranches:    args.LocalBranches.Names(),
-			MainBranch:       args.MainBranch,
-		})
-		if err != nil {
-			return updated, err
-		}
-		if branchUpdated {
-			updated = true
-		}
-	}
+	// updated := false
+	// for _, branch := range args.BranchesToVerify {
+	// 	branchUpdated, err := knowsBranchAncestors(branch, knowsBranchAncestorsArgs{
+	// 		Config:           args.Config,
+	// 		DefaultChoice:    args.DefaultChoice,
+	// 		DialogTestInputs: args.DialogTestInputs,
+	// 		LocalBranches:    args.LocalBranches.Names(),
+	// 		MainBranch:       args.MainBranch,
+	// 	})
+	// 	if err != nil {
+	// 		return updated, err
+	// 	}
+	// 	if branchUpdated {
+	// 		updated = true
+	// 	}
+	// }
 	return updated, nil
 }
 
