@@ -163,9 +163,18 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches()
 	localBranchNames := localBranches.Names()
+	var branchNamesToSync gitdomain.LocalBranchNames
+	var shouldPushTags bool
+	if allFlag {
+		branchNamesToSync = localBranchNames
+		shouldPushTags = true
+	} else {
+		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
+	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
-		BranchesToValidate: localBranchNames,
+		BranchesToValidate: branchNamesToSync,
 		LocalBranches:      localBranchNames,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        *repo.Config,
@@ -177,15 +186,6 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
-	}
-	var branchNamesToSync gitdomain.LocalBranchNames
-	var shouldPushTags bool
-	if allFlag {
-		branchNamesToSync = localBranchNames
-		shouldPushTags = true
-	} else {
-		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	allBranchNamesToSync := repo.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
