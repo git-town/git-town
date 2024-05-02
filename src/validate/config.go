@@ -25,7 +25,7 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	if unvalidated.Config.GitUserName.IsNone() {
 		return nil, errors.New(messages.GitUserNameMissing)
 	}
-	unvalidated.Config.Lineage, err = Lineage(LineageArgs{
+	unvalidatedLineage, err := Lineage(LineageArgs{
 		Backend:          backend,
 		BranchesToVerify: branchesToValidate,
 		Config:           &unvalidated,
@@ -37,6 +37,7 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	if err != nil {
 		return nil, err
 	}
+	unv
 	validatedConfig := configdomain.ValidatedConfig{
 		UnvalidatedConfig: unvalidated.Config,
 		MainBranch:        validateResult.ValidatedMain,
