@@ -17,8 +17,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		if !args.Config.MustKnowParent(branchToVerify) {
 			continue
 		}
-		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
-		if hasParent {
+		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
