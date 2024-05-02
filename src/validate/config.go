@@ -56,7 +56,9 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 		return validatedResult, abort, err
 	}
 	for branch, parent := range additionalLineage {
-		args.Unvalidated.SetParent(branch, parent)
+		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
+			return validatedResult, abort, err
+		}
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
