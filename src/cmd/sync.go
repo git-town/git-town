@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/optimizer"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -154,9 +155,20 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranchNames := localBranches.Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranchNames,
+		LocalBranches:      localBranchNames,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -168,9 +180,8 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
-	localBranches := branchesSnapshot.Branches.LocalBranches()
 	if allFlag {
-		branchNamesToSync = localBranches.Names()
+		branchNamesToSync = localBranchNames
 		shouldPushTags = true
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
