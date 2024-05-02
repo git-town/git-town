@@ -2,7 +2,6 @@ package validate
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
@@ -51,7 +50,6 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	}
 
 	// enter and save missing parent branches
-	fmt.Println("111111111111", validatedMain)
 	additionalLineage, additionalPerennials, abort, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           args.Unvalidated.Config,
