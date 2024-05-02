@@ -51,8 +51,8 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineRepoData(repo)
-	if err != nil {
+	data, abort, err := determineRepoData(repo)
+	if err != nil || abort {
 		return err
 	}
 	browser.Open(data.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
@@ -60,16 +60,22 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
+func determineRepoData(repo *execute.OpenRepoResult) (*repoData, bool, error) {
 	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	dialogInputs := components.LoadTestInputs(os.Environ())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches, localBranches, &repo.Backend, &dialogInputs)
-	if err != nil {
-		return nil, err
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: localBranches,
+		LocalBranches:      localBranches,
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogInputs,
+	})
+	if err != nil || abort {
+		return nil, abort, err
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -80,15 +86,15 @@ func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 	}
 	if connector == nil {
-		return nil, hostingdomain.UnsupportedServiceError()
+		return nil, false, hostingdomain.UnsupportedServiceError()
 	}
 	return &repoData{
 		connector: connector,
-	}, err
+	}, false, err
 }
 
 type repoData struct {
