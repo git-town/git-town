@@ -37,10 +37,10 @@ func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err e
 	}
 
 	// check Git user data
-	if args.Unvalidated.Config.GitUserEmail.IsNone() {
+	if args.Unvalidated.Config.GitUserEmail == "" {
 		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
 	}
-	if args.Unvalidated.Config.GitUserName.IsNone() {
+	if args.Unvalidated.Config.GitUserName == "" {
 		return validatedResult, false, errors.New(messages.GitUserNameMissing)
 	}
 
