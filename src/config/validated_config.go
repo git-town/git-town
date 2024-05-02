@@ -164,16 +164,6 @@ func (self *ValidatedConfig) SetOriginHostname(hostName configdomain.HostingOrig
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
-// SetParent marks the given branch as the direct parent of the other given branch
-// in the Git Town configuration.
-func (self *ValidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
-	if self.DryRun {
-		return nil
-	}
-	self.Config.Lineage[branch] = parentBranch
-	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
-}
-
 // SetObservedBranches marks the given branches as perennial branches.
 func (self *ValidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.ParkedBranches = branches

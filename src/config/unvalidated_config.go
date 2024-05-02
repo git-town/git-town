@@ -71,6 +71,16 @@ func (self *UnvalidatedConfig) SetOffline(value configdomain.Offline) error {
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
+// SetParent marks the given branch as the direct parent of the other given branch
+// in the Git Town configuration.
+func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
+	if self.DryRun {
+		return nil
+	}
+	self.Config.Lineage[branch] = parentBranch
+	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
+}
+
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.PerennialBranches = branches
