@@ -9,9 +9,9 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
@@ -53,7 +53,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.UnvalidatedConfig.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || abort {
 		return err
 	}
@@ -74,6 +74,7 @@ func executeSwitch(verbose, merge bool) error {
 
 type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
+	config             config.ValidatedConfig
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	Lineage            configdomain.Lineage
@@ -85,13 +86,6 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
@@ -109,6 +103,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesSnapshot.Branches.LocalBranches().Names(), branchesSnapshot.Branches, &repo.Backend, &dialogTestInputs)
 	return &switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
+		config:             *validatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,
 		Lineage:            validatedConfig.Config.Lineage,
