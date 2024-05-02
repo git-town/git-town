@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -138,12 +137,13 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &[]components.TestInput{},
-		Unvalidated:        config.Config{},
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	repo.Config = &validatedConfig
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
