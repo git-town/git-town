@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -14,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -126,9 +128,18 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &[]components.TestInput{},
+		Unvalidated:        config.Config{},
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
