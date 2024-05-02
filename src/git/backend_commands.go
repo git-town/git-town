@@ -486,7 +486,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 		}
 		branchName := parts[0]
 		var sha gitdomain.SHA
-		if parts[1] == "branch," {
+		if parts[1] == "branch," || parts[1] == "(no" {
 			// we are rebasing and don't need the SHA
 			sha = gitdomain.EmptySHA()
 		} else {

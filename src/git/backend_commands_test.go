@@ -438,6 +438,15 @@ func TestBackendCommands(t *testing.T) {
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
 				must.EqOp(t, gitdomain.NewLocalBranchName("branch-3"), currentBranch)
 			})
+			t.Run("in the middle of a rebase", func(t *testing.T) {
+				t.Parallel()
+				give := `
+				* (no branch, rebasing main) 214ba79 origin main commit
+  feature                    62bf22e [origin/feature: ahead 1] feature commit
+  main                       11716d4 [origin/main: ahead 1, behind 1] local main commit`[1:]
+				_, currentBranch := git.ParseVerboseBranchesOutput(give)
+				must.EqOp(t, gitdomain.LocalBranchName(""), currentBranch)
+			})
 		})
 
 		t.Run("recognizes the branch sync status", func(t *testing.T) {
