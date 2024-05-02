@@ -217,19 +217,25 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		Verbose:               verbose,
 	})
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, aborted, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
+	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
+		LocalBranches:      localBranches,
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogTestInputs,
+	})
 	if err != nil || aborted {
 		return nil, aborted, err
 	}
 	runner := git.ProdRunner{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		FinalMessages:   &repo.FinalMessages,
 		Frontend:        repo.Frontend,
 	}
 	return &setupData{
-		config:        *validatedConfig,
+		config:        validatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
