@@ -14,28 +14,28 @@ import (
 
 func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err error) {
 	// enter and save main and perennials
-	var mainOpt Option[gitdomain.LocalBranchName]
-	if !args.Unvalidated.Config.MainBranch.IsEmpty() {
-		mainOpt = Some(args.Unvalidated.Config.MainBranch)
-	}
-	validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
-		DialogInputs:          args.TestInputs,
-		GetDefaultBranch:      args.Backend.DefaultBranch,
-		HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),
-		LocalBranches:         args.LocalBranches,
-		UnvalidatedMain:       mainOpt,
-		UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
-	})
-	if err != nil || aborted {
-		return validatedResult, aborted, err
-	}
-	if err = args.Unvalidated.SetMainBranch(validatedMain); err != nil {
-		return validatedResult, false, err
-	}
-	if len(additionalPerennials) > 0 {
-		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
-		if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
+	var validatedMain gitdomain.LocalBranchName
+	var additionalPerennials gitdomain.LocalBranchNames
+	if args.Unvalidated.Config.MainBranch.IsEmpty() {
+		validatedMain, additionalPerennials, aborted, err = dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
+			DialogInputs:          args.TestInputs,
+			GetDefaultBranch:      args.Backend.DefaultBranch,
+			HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),
+			LocalBranches:         args.LocalBranches,
+			UnvalidatedMain:       None[gitdomain.LocalBranchName](),
+			UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
+		})
+		if err != nil || aborted {
+			return validatedResult, aborted, err
+		}
+		if err = args.Unvalidated.SetMainBranch(validatedMain); err != nil {
 			return validatedResult, false, err
+		}
+		if len(additionalPerennials) > 0 {
+			newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
+			if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
+				return validatedResult, false, err
+			}
 		}
 	}
 

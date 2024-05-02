@@ -13,6 +13,9 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 	additionalLineage = make(configdomain.Lineage)
 	branchesToVerify := args.BranchesToVerify
 	for _, branchToVerify := range args.BranchesToVerify {
+		if args.Config.IsMainOrPerennialBranch(branchToVerify) {
+			continue
+		}
 		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
 		if hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
@@ -36,9 +39,6 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		case ParentOutcomeSelectedParent:
 			additionalLineage[branchToVerify] = selectedBranch
-		}
-		if args.Config.IsMainOrPerennialBranch(selectedBranch) {
-			break
 		}
 	}
 	return additionalLineage, additionalPerennials, false, nil

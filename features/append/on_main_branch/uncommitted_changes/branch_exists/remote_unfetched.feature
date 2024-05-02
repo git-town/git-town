@@ -5,7 +5,6 @@ Feature: already existing unfetched remote branch
     And an uncommitted file
     When I run "git-town append existing"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
