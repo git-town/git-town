@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo"
-	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -111,19 +110,6 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
-	})
-	if err != nil || exit {
-		return nil, initialStashSize, repo.Config.Config.Lineage, err
-	}
-	fmt.Println("1111111111111111", initialBranchesSnapshot.Active)
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	fmt.Println("2222222222222222", localBranches)
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesToValidate: localBranches,
-		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
 	})
 	if err != nil || exit {
 		return nil, initialStashSize, repo.Config.Config.Lineage, err
