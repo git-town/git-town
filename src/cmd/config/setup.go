@@ -206,13 +206,6 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	if err != nil {
 		return nil, false, err
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -227,6 +220,13 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, false, err
+	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          validatedConfig,
+		FinalMessages:   &repo.FinalMessages,
+		Frontend:        repo.Frontend,
 	}
 	return &setupData{
 		config:        *validatedConfig,
