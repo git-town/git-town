@@ -141,6 +141,9 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if !hasBranchToKill {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
+	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
+	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToKill},
@@ -150,9 +153,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
-	}
-	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	branchTypeToKill := repo.Config.Config.BranchType(branchNameToKill)
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
