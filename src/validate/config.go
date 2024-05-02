@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -65,14 +64,8 @@ func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err e
 			return validatedResult, false, err
 		}
 	}
-	fullConfig := configdomain.FullConfig{
-		UnvalidatedConfig: args.Unvalidated.Config,
-		MainBranch:        validatedMain,
-	}
-	vConfig := config.Config{
-		Config: fullConfig,
-	}
-	return vConfig, false, nil
+
+	return args.Unvalidated, false, nil
 }
 
 type ConfigArgs struct {
