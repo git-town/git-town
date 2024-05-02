@@ -2,7 +2,7 @@ Feature: does not sync branches that exist only on remotes
 
   Background:
     Given a feature branch "mine"
-    And a remote feature branch "other"
+    And a remote branch "other"
     And the commits
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | origin        | main commit     |

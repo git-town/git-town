@@ -1,7 +1,7 @@
 Feature: already existing known remote branch
 
   Background:
-    Given a remote feature branch "existing"
+    Given a remote branch "existing"
     And I run "git fetch"
     When I run "git-town append existing"
 

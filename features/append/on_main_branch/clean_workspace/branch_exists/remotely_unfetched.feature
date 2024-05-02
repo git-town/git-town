@@ -1,7 +1,7 @@
 Feature: already existing unfetched remote branch
 
   Background:
-    Given a remote feature branch "existing"
+    Given a remote branch "existing"
     When I run "git-town append existing"
 
   Scenario: result
