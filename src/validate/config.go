@@ -9,13 +9,18 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bool, err error) {
+func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err error) {
 	// enter and save main and perennials
+	var mainOpt Option[gitdomain.LocalBranchName]
+	if !args.Unvalidated.Config.MainBranch.IsEmpty() {
+		mainOpt = Some(args.Unvalidated.Config.MainBranch)
+	}
 	validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
-		UnvalidatedMain:       args.Unvalidated.Config.MainBranch,
+		UnvalidatedMain:       mainOpt,
 		UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
 	})
 	if err != nil || aborted {
@@ -60,12 +65,12 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 			return validatedResult, false, err
 		}
 	}
-	validatedConfig := configdomain.ValidatedConfig{
+	fullConfig := configdomain.FullConfig{
 		UnvalidatedConfig: args.Unvalidated.Config,
 		MainBranch:        validatedMain,
 	}
-	vConfig := config.ValidatedConfig{
-		Config: validatedConfig,
+	vConfig := config.Config{
+		Config: fullConfig,
 	}
 	return vConfig, false, nil
 }
@@ -75,5 +80,5 @@ type ConfigArgs struct {
 	BranchesToValidate gitdomain.LocalBranchNames
 	LocalBranches      gitdomain.LocalBranchNames
 	TestInputs         *components.TestInputs
-	Unvalidated        config.UnvalidatedConfig
+	Unvalidated        config.Config
 }
