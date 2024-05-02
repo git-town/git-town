@@ -648,8 +648,8 @@ func TestBackendCommands(t *testing.T) {
 * (no branch, rebasing main) 214ba79 origin main commit
   feature                    62bf22e [origin/feature: ahead 1] feature commit
   main                       11716d4 [origin/main: ahead 1, behind 1] local main commit
-	remotes/origin/feature     4989007 initial commit
-	remotes/origin/main        214ba79 origin main commit`[1:]
+  remotes/origin/feature     4989007 initial commit
+  remotes/origin/main        214ba79 origin main commit`[1:]
 
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{

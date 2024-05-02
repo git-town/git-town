@@ -484,14 +484,18 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 			fmt.Printf(messages.GitOutputIrregular, line, output)
 			os.Exit(1)
 		}
-		fmt.Println("444444444444", parts)
-		if parts[1] == "branch," || parts[1] == "(no" {
+		if parts[0] == "(no" || parts[1] == "(no" {
 			continue
 		}
 		branchName := parts[0]
-		shaText := parts[1]
+		var sha gitdomain.SHA
+		if parts[1] == "branch," {
+			// we are rebasing and don't need the SHA
+			sha = gitdomain.EmptySHA()
+		} else {
+			sha = gitdomain.NewSHA(parts[1])
+		}
 		remoteText := parts[2]
-		sha := gitdomain.NewSHA(shaText)
 		if line[0] == '*' { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = gitdomain.LocalBranchName(branchName)
 		}
