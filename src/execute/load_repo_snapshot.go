@@ -3,7 +3,6 @@ package execute
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -12,12 +11,12 @@ import (
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesSnapshot
 	var err error
-	stashSize, err := args.Runner.Backend.StashSize()
+	stashSize, err := args.Backend.StashSize()
 	if err != nil {
 		return branchesSnapshot, stashSize, false, err
 	}
 	if args.HandleUnfinishedState {
-		branchesSnapshot, err = args.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
@@ -47,24 +46,24 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
-		remotes, err := args.Runner.Backend.Remotes()
+		remotes, err := args.Backend.Remotes()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
-			err = args.Runner.Frontend.Fetch()
+			err = args.Frontend.Fetch()
 			if err != nil {
 				return branchesSnapshot, stashSize, false, err
 			}
 		}
 		// must always reload the snapshot here because we fetched updates from the remote
-		branchesSnapshot, err = args.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 	}
 	if branchesSnapshot.IsEmpty() {
-		branchesSnapshot, err = args.Runner.Backend.BranchesSnapshot()
+		branchesSnapshot, err = args.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
@@ -79,7 +78,6 @@ type LoadRepoSnapshotArgs struct {
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
-	Runner                *git.ProdRunner
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }
