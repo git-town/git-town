@@ -113,13 +113,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	fc := execute.FailureCollector{}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -155,6 +148,13 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	}
 	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          validatedConfig,
+		FinalMessages:   &repo.FinalMessages,
+		Frontend:        repo.Frontend,
+	}
 	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,

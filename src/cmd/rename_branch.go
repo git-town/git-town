@@ -120,13 +120,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -178,6 +171,13 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+	}
+	runner := git.ProdRunner{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          validatedConfig,
+		FinalMessages:   &repo.FinalMessages,
+		Frontend:        repo.Frontend,
 	}
 	return &renameBranchData{
 		config:           validatedConfig.Config,
