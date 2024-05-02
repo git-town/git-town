@@ -136,9 +136,15 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchesSnapshot.Active}, localBranches, &repo.Backend, &dialogTestInputs)
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		LocalBranches:      localBranches,
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogTestInputs,
+	})
+	if err != nil || abort {
+		return nil, branchesSnapshot, stashSize, abort, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
@@ -151,7 +157,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	runner := git.ProdRunner{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		FinalMessages:   &repo.FinalMessages,
 		Frontend:        repo.Frontend,
 	}
