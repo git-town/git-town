@@ -134,6 +134,15 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes := fc.Remotes(repo.Backend.Remotes())
+	targetBranch := gitdomain.NewLocalBranchName(args[0])
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+	}
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
@@ -143,15 +152,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
-	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Backend.Remotes())
-	targetBranch := gitdomain.NewLocalBranchName(args[0])
-	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
-	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
