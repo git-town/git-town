@@ -217,9 +217,9 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		Verbose:               verbose,
 	})
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
-	if err != nil {
-		return nil, false, err
+	validatedConfig, aborted, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
+	if err != nil || aborted {
+		return nil, aborted, err
 	}
 	runner := git.ProdRunner{
 		Backend:         repo.Backend,

@@ -133,15 +133,20 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchesSnapshot.Active}, localBranches, &repo.Backend, &dialogTestInputs)
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogTestInputs,
+	})
+	if err != nil || aborted {
+		return nil, branchesSnapshot, stashSize, aborted, err
 	}
 	runner := git.ProdRunner{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		FinalMessages:   &repo.FinalMessages,
 		Frontend:        repo.Frontend,
 	}

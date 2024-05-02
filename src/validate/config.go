@@ -16,8 +16,8 @@ import (
 
 func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bool, err error) {
 	validatedMain, validatedPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
-		UnvalidatedMain:       args.unvalidated.Config.MainBranch,
-		UnvalidatedPerennials: args.unvalidated.Config.PerennialBranches,
+		UnvalidatedMain:       args.Unvalidated.Config.MainBranch,
+		UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
 	})
 	if err != nil || aborted {
 		return validatedResult, aborted, err
@@ -60,9 +60,9 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 }
 
 type ConfigArgs struct {
-	unvalidated        config.UnvalidatedConfig
-	branchesToValidate gitdomain.LocalBranchNames
-	localBranches      gitdomain.LocalBranchNames
-	backend            *git.BackendCommands
-	testInputs         *components.TestInputs
+	Unvalidated        config.UnvalidatedConfig
+	BranchesToValidate gitdomain.LocalBranchNames
+	LocalBranches      gitdomain.LocalBranchNames
+	Backend            *git.BackendCommands
+	TestInputs         *components.TestInputs
 }
