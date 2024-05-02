@@ -1,7 +1,7 @@
 Feature: make a remote branch a contribution branch
 
   Background:
-    Given a known remote feature branch "remote-feature"
+    Given a known remote branch "remote-feature"
     And an uncommitted file
     When I run "git-town contribute remote-feature"
 
