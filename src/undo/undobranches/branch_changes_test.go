@@ -70,10 +70,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			PushHook:          false,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PushHook:          false,
+				PerennialBranches: gitdomain.NewLocalBranchNames(),
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -124,10 +126,12 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           configdomain.Lineage{},
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           configdomain.Lineage{},
+				PerennialBranches: gitdomain.NewLocalBranchNames(),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -213,10 +217,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			Lineage:           lineage,
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				Lineage:           lineage,
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -303,10 +309,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -387,10 +395,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -455,10 +465,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -548,10 +560,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          true,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          true,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -644,10 +658,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          true,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          true,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -753,10 +769,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch: before.Active,
@@ -853,10 +871,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch: before.Active,
@@ -971,10 +991,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -1067,10 +1089,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -1163,10 +1187,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -1247,10 +1273,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -1333,10 +1361,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
@@ -1414,10 +1444,12 @@ func TestChanges(t *testing.T) {
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
-			Lineage:           lineage,
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
-			PushHook:          false,
+			MainBranch: gitdomain.NewLocalBranchName("main"),
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				Lineage:           lineage,
+				PerennialBranches: gitdomain.NewLocalBranchNames(),
+				PushHook:          false,
+			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active,
