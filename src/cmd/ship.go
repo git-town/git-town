@@ -179,9 +179,15 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchToShip.LocalName}, localBranches, &repo.Backend, &dialogTestInputs)
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+		Unvalidated:        repo.UnvalidatedConfig,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip.LocalName},
+		LocalBranches:      localBranches,
+		Backend:            &repo.Backend,
+		TestInputs:         &dialogTestInputs,
+	})
+	if err != nil || abort {
+		return nil, branchesSnapshot, stashSize, abort, err
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
@@ -236,7 +242,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		}
 	}
 	runner := git.ProdRunner{
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		Backend:         repo.Backend,
 		Frontend:        repo.Frontend,
 		CommandsCounter: repo.CommandsCounter,
