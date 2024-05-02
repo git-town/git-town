@@ -161,11 +161,11 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: branchNamesToSync,
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || abort {
 		return nil, branchesSnapshot, stashSize, abort, err

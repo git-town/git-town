@@ -77,7 +77,7 @@ type switchData struct {
 	config             config.ValidatedConfig
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
-	Lineage            configdomain.Lineage
+	lineage            configdomain.Lineage
 	uncommittedChanges bool
 }
 
@@ -102,11 +102,11 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || abort {
 		return nil, branchesSnapshot, abort, err
@@ -116,7 +116,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		config:             validatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,
-		Lineage:            validatedConfig.Config.Lineage,
+		lineage:            validatedConfig.Config.Lineage,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, branchesSnapshot, false, err
 }

@@ -150,11 +150,11 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: branchesToObserve.Keys(),
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || abort {
 		return observeData{}, err

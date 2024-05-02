@@ -218,11 +218,11 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	})
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || aborted {
 		return nil, aborted, err

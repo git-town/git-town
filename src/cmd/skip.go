@@ -81,11 +81,11 @@ func executeSkip(verbose bool) error {
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || abort {
 		return err

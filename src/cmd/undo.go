@@ -106,11 +106,11 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 		return nil, initialStashSize, false, err
 	}
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		LocalBranches:      gitdomain.LocalBranchNames{},
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || abort {
 		return nil, initialStashSize, abort, err

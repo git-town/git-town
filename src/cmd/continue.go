@@ -104,11 +104,11 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || aborted {
 		return nil, initialBranchesSnapshot, initialStashSize, aborted, err

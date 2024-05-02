@@ -12,13 +12,13 @@ import (
 )
 
 type UnvalidatedConfig struct {
+	Config          configdomain.UnvalidatedConfig     // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
-	Config          configdomain.UnvalidatedConfig // the merged configuration data
-	GitConfig       gitconfig.Access               // access to the Git configuration settings
-	GlobalGitConfig configdomain.PartialConfig     // content of the global Git configuration
-	LocalGitConfig  configdomain.PartialConfig     // content of the local Git configuration
-	originURLCache  configdomain.OriginURLCache    // TODO: remove if unused
+	GitConfig       gitconfig.Access            // access to the Git configuration settings
+	GlobalGitConfig configdomain.PartialConfig  // content of the global Git configuration
+	LocalGitConfig  configdomain.PartialConfig  // content of the local Git configuration
+	originURLCache  configdomain.OriginURLCache // TODO: remove if unused
 }
 
 func NewUnvalidatedConfig(args NewConfigArgs) (UnvalidatedConfig, *stringslice.Collector, error) {

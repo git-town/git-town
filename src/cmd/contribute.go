@@ -94,11 +94,11 @@ func executeContribute(args []string, verbose bool) error {
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
-		Unvalidated:        repo.UnvalidatedConfig,
+		Backend:            &repo.Backend,
 		BranchesToValidate: branchNames,
 		LocalBranches:      localBranches,
-		Backend:            &repo.Backend,
 		TestInputs:         &dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || aborted {
 		return err
