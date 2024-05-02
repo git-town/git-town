@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -100,7 +101,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 	}
-	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -108,11 +109,21 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	if err != nil {
+	if err != nil || exit {
+		return nil, initialStashSize, repo.Config.Config.Lineage, err
+	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranches,
+		LocalBranches:      localBranches,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
 		return nil, initialStashSize, repo.Config.Config.Lineage, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
