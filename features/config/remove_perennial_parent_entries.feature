@@ -8,7 +8,7 @@ Feature: remove parent entries for perennial branches
       main = "main"
       perennials = [ "feature-1" ]
       """
-    When I run "git town config"
+    When I run "git town sync"
     Then this lineage exists now
       | BRANCH    | PARENT |
       | feature-2 | main   |
