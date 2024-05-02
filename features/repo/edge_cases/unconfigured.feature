@@ -8,8 +8,8 @@ Feature: ask for missing configuration
     And tool "open" is installed
     And inspect the repo
     When I run "git-town repo" and enter into the dialog:
-      | DIALOG          | KEYS  |
-      | ent main branch | enter |
+      | DIALOG            | KEYS  |
+      | enter main branch | enter |
     Then "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town
