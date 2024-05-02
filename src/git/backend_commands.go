@@ -483,6 +483,9 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 			fmt.Printf(messages.GitOutputIrregular, line, output)
 			os.Exit(1)
 		}
+		if parts[0] == "(no" || parts[1] == "(no" {
+			continue
+		}
 		branchName := parts[0]
 		var sha gitdomain.SHA
 		if parts[1] == "branch," {
