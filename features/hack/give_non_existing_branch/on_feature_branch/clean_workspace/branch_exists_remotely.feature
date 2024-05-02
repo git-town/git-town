@@ -1,7 +1,7 @@
 Feature: already existing remote branch
 
   Background:
-    Given a remote feature branch "existing"
+    Given a remote branch "existing"
     When I run "git-town hack existing"
 
   Scenario: result
