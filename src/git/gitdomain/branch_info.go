@@ -1,5 +1,7 @@
 package gitdomain
 
+import "fmt"
+
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
 	// LocalName contains the local name of the branch.
@@ -64,5 +66,5 @@ func (self BranchInfo) IsOmniBranch() bool {
 }
 
 func (self BranchInfo) String() string {
-	return "not used but needed for optionality"
+	return fmt.Sprintf("BranchInfo local: %s (%s) remote: %s (%s) %s", self.LocalName, self.LocalSHA, self.RemoteName, self.RemoteSHA, self.SyncStatus)
 }
