@@ -196,18 +196,6 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
-	})
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	targetBranchName, hasTargetBranch := repo.Config.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)

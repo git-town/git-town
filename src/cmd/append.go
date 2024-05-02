@@ -151,18 +151,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
-	})
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	initialAndAncestors := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)

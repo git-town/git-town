@@ -115,18 +115,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branch},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
-	})
-	if err != nil {
-		return nil, false, err
-	}
 	parentBranch, hasParent := repo.Config.Config.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)

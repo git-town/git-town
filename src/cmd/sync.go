@@ -187,18 +187,6 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: branchNamesToSync,
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    localBranches,
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
-	})
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	allBranchNamesToSync := repo.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return &syncData{
