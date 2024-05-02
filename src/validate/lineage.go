@@ -11,10 +11,7 @@ import (
 // Prompts missing lineage information from the user and updates persisted lineage as needed.
 // Returns the validated Lineage.
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
-	// step 1: determine all branches for which the parent must be known
 	branchesToVerify := args.BranchesToVerify
-
-	// step 2: for each branch: check the ancestor
 	for _, branchToVerify := range args.BranchesToVerify {
 		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
 		if hasParent {
@@ -49,7 +46,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 
 type LineageArgs struct {
 	BranchesToVerify gitdomain.LocalBranchNames
-	Config           *configdomain.UnvalidatedConfig
+	Config           configdomain.UnvalidatedConfig
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames

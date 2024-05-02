@@ -132,8 +132,8 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	if err != nil || exit {
 		return nil, branchesSnapshot, 0, exit, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches.Names(), localBranches, &repo.Backend, &dialogTestInputs)
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, 0, exit, err
 	}

@@ -140,7 +140,8 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	branchTypeToKill := repo.UnvalidatedConfig.Config.BranchType(branchNameToKill)
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToKill, branchesSnapshot.Branches.LocalBranches(), &repo.Backend, &dialogTestInputs)
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToKill, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}

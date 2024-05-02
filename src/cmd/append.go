@@ -133,7 +133,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchesSnapshot.Active}, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err

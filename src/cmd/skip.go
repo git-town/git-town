@@ -79,7 +79,8 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, initialBranchesSnapshot.Branches.LocalBranches().Names(), initialBranchesSnapshot.Branches, &repo.Backend, &dialogTestInputs)
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches, localBranches, &repo.Backend, &dialogTestInputs)
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

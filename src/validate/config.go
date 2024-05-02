@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.LocalBranchNames, localBranches gitdomain.BranchInfos, backend *git.BackendCommands, testInputs *components.TestInputs) (*config.ValidatedConfig, error) {
+func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.LocalBranchNames, localBranches gitdomain.LocalBranchNames, backend *git.BackendCommands, testInputs *components.TestInputs) (*config.ValidatedConfig, error) {
 	validateResult, err := MainAndPerennials(MainAndPerennialsArgs{
 		UnvalidatedMain:       unvalidated.Config.MainBranch,
 		UnvalidatedPerennials: unvalidated.Config.PerennialBranches,
@@ -25,10 +25,9 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	if unvalidated.Config.GitUserName.IsNone() {
 		return nil, errors.New(messages.GitUserNameMissing)
 	}
-	unvalidatedLineage, err := Lineage(LineageArgs{
-		Backend:          backend,
+	additionalLineage, additionalPerennials, aborted, err := Lineage(LineageArgs{
 		BranchesToVerify: branchesToValidate,
-		Config:           &unvalidated,
+		Config:           unvalidated.Config,
 		DefaultChoice:    validateResult.ValidatedMain,
 		DialogTestInputs: testInputs,
 		LocalBranches:    localBranches,
@@ -37,7 +36,6 @@ func Config(unvalidated config.UnvalidatedConfig, branchesToValidate gitdomain.L
 	if err != nil {
 		return nil, err
 	}
-	unv
 	validatedConfig := configdomain.ValidatedConfig{
 		UnvalidatedConfig: unvalidated.Config,
 		MainBranch:        validateResult.ValidatedMain,

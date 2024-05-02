@@ -92,7 +92,7 @@ func executeContribute(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchNames, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return err

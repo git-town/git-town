@@ -216,7 +216,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{}, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, false, err

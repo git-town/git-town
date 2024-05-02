@@ -148,7 +148,7 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, branchesToObserve.Keys(), localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return observeData{}, err

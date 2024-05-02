@@ -66,8 +66,8 @@ func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
 		return nil, err
 	}
 	dialogInputs := components.LoadTestInputs(os.Environ())
-	localBranches := branchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches.Names(), localBranches, &repo.Backend, &dialogInputs)
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches, localBranches, &repo.Backend, &dialogInputs)
 	if err != nil {
 		return nil, err
 	}

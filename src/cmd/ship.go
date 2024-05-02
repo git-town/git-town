@@ -178,7 +178,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err = validateShippableBranchType(repo.UnvalidatedConfig.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, gitdomain.LocalBranchNames{branchToShip.LocalName}, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err

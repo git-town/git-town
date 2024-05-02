@@ -102,8 +102,8 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	if repoStatus.UntrackedChanges {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches()
-	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches.Names(), localBranches, &repo.Backend, &dialogTestInputs)
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, err := validate.Config(repo.UnvalidatedConfig, localBranches, localBranches, &repo.Backend, &dialogTestInputs)
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSize, false, err
 	}
