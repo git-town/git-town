@@ -14,7 +14,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 	branchesToVerify := args.BranchesToVerify
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
-		if args.Config.IsMainOrPerennialBranch(branchToVerify) {
+		if !args.Config.MustKnowParent(branchToVerify) {
 			continue
 		}
 		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
