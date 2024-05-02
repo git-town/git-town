@@ -2,13 +2,11 @@ package validate
 
 import (
 	"errors"
-	"slices"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -53,27 +51,26 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 	if err != nil || abort {
 		return validatedResult, abort, err
 	}
-	if slices.Compare(additionalPerennials, args.UnvalidatedPerennials) != 0 {
-		err := args.LocalGitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, additionalPerennials.Join(" "))
-		if err != nil {
-			return emptyMainAndPerennialsResult(), err
+	if len(additionalPerennials) > 0 {
+		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
+		if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
+			return validatedResult, false, err
 		}
 	}
 	validatedConfig := configdomain.ValidatedConfig{
-		UnvalidatedConfig: unvalidated.Config,
-		MainBranch:        validateResult.ValidatedMain,
+		UnvalidatedConfig: args.Unvalidated.Config,
+		MainBranch:        validatedMain,
 	}
 	vConfig := config.ValidatedConfig{
 		Config: validatedConfig,
 	}
-	return &vConfig, nil
+	return vConfig, false, nil
 }
 
 type ConfigArgs struct {
 	Backend            *git.BackendCommands
-	Unvalidated        config.UnvalidatedConfig
 	BranchesToValidate gitdomain.LocalBranchNames
 	LocalBranches      gitdomain.LocalBranchNames
-	Backend            *git.BackendCommands
 	TestInputs         *components.TestInputs
+	Unvalidated        config.UnvalidatedConfig
 }
