@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -72,13 +73,12 @@ func executeUndo(verbose bool) error {
 		Lineage:          repo.Config.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Runner:           data.runner,
 		Verbose:          verbose,
 	})
 }
 
 type undoData struct {
-	config                  configdomain.FullConfig
+	config                  config.Config
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -127,7 +127,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		}
 	}
 	return &undoData{
-		config:                  repo.Config.Config,
+		config:                  *repo.Config,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

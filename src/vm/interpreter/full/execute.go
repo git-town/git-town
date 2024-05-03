@@ -26,6 +26,7 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := nextStep.Run(shared.RunArgs{
+			Backend:                         args.Backend,
 			Connector:                       args.Connector,
 			DialogTestInputs:                args.DialogTestInputs,
 			Lineage:                         args.Config.Config.Lineage,
