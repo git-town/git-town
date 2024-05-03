@@ -15,10 +15,10 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote                                    |
       | main   | frontend | git add -A                                    |
       |        | frontend | git stash                                     |

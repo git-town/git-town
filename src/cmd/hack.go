@@ -139,8 +139,9 @@ type createBranchArgs struct {
 }
 
 func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (data hackData, branchesSnapshot gitdomain.BranchesSnapshot, stashSize gitdomain.StashSize, exit bool, err error) {
-	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Backend.RepoStatus()
 	if err != nil {
@@ -189,7 +190,11 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return
 	}
 	targetBranch := targetBranches[0]
-	remotes := fc.Remotes(repo.Backend.Remotes())
+	var remotes gitdomain.Remotes
+	remotes, err = repo.Backend.Remotes()
+	if err != nil {
+		return
+	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		err = fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 		return
