@@ -59,11 +59,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		Access:       configGitAccess,
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
 		LocalConfig:  localConfig,
-		Access:       configGitAccess,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		counter:          &commandsCounter,

@@ -141,8 +141,8 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
-		BranchesSnapshot:   branchesSnapshot,
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		CommandsCounter:    repo.CommandsCounter,
 		ConfigSnapshot:     repo.ConfigSnapshot,
