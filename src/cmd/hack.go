@@ -211,7 +211,8 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		Frontend:        repo.Frontend,
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
-	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
+	var branchesToSync gitdomain.BranchInfos
+	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
