@@ -190,25 +190,25 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func proposeProgram(config *proposeData) program.Program {
+func proposeProgram(data *proposeData) program.Program {
 	prog := program.Program{}
-	for _, branch := range config.branchesToSync {
+	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config,
-			InitialBranch: config.initialBranch,
-			Remotes:       config.remotes,
+			BranchInfos:   data.allBranches,
+			Config:        data.config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
 			Program:       &prog,
 			PushBranch:    true,
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
-	prog.Add(&opcodes.CreateProposal{Branch: config.initialBranch})
+	prog.Add(&opcodes.CreateProposal{Branch: data.initialBranch})
 	return prog
 }
 
