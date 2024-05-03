@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strconv"
+
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/confighelpers"
 	"github.com/git-town/git-town/v14/src/config/envconfig"
@@ -148,6 +150,66 @@ func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBra
 func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.PerennialBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
+}
+
+// SetPerennialRegexLocally updates the locally configured perennial regex.
+func (self *UnvalidatedConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
+	self.Config.PerennialRegex = Some(value)
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
+}
+
+// SetPushHookLocally updates the locally configured push-hook strategy.
+func (self *UnvalidatedConfig) SetPushHookLocally(value configdomain.PushHook) error {
+	self.Config.PushHook = value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
+}
+
+// SetPushNewBranches updates whether the current repository is configured to push
+// freshly created branches to origin.
+func (self *UnvalidatedConfig) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
+	setting := strconv.FormatBool(bool(value))
+	self.Config.PushNewBranches = value
+	if global {
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
+	}
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
+}
+
+// SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
+func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, global bool) error {
+	self.Config.ShipDeleteTrackingBranch = value
+	if global {
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
+	}
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
+}
+
+func (self *UnvalidatedConfig) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global bool) error {
+	self.Config.SyncBeforeShip = value
+	if global {
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
+	}
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
+}
+
+func (self *UnvalidatedConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
+	self.Config.SyncFeatureStrategy = value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
+}
+
+// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
+func (self *UnvalidatedConfig) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
+	self.Config.SyncPerennialStrategy = strategy
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncPerennialStrategy, strategy.String())
+}
+
+// SetSyncUpstream updates the configured sync-upstream strategy.
+func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
+	self.Config.SyncUpstream = value
+	if global {
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+	}
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
 type NewUnvalidatedConfigArgs struct {
