@@ -20,7 +20,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		conf := config.ValidatedConfig{ //nolint:exhaustruct
 			Config: configdomain.ValidatedConfig{ //nolint:exhaustruct
-				UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+				UnvalidatedConfig: &configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 					GitUserName:  Some(configdomain.GitUserName("name")),
 					GitUserEmail: Some(configdomain.GitUserEmail("email")),
 				},

@@ -51,13 +51,13 @@ func TestSave(t *testing.T) {
 			ParkedBranches:           gitdomain.LocalBranchNames{},
 			PerennialBranches:        gitdomain.LocalBranchNames{},
 			PerennialRegex:           None[configdomain.PerennialRegex](),
-			PushHook:                 false,
+			PushHook:                 true,
 			PushNewBranches:          false,
-			ShipDeleteTrackingBranch: false,
+			ShipDeleteTrackingBranch: true,
 			SyncBeforeShip:           false,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-			SyncUpstream:             false,
+			SyncUpstream:             true,
 		}
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")

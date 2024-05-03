@@ -126,7 +126,7 @@ func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                &repo.UnvalidatedConfig.Config,
+		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		Frontend:              &repo.Frontend,

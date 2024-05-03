@@ -132,7 +132,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                &repo.UnvalidatedConfig.Config,
+		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		Frontend:              &repo.Frontend,

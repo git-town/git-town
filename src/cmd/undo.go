@@ -86,7 +86,7 @@ type undoData struct {
 	prodRunner              *git.ProdRunner
 }
 
-func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
+func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -94,7 +94,7 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                &unvalidatedConfig,
+		Config:                unvalidatedConfig,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
@@ -131,7 +131,7 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &repo.UnvalidatedConfig.Config,
+			Config:          repo.UnvalidatedConfig.Config,
 			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,

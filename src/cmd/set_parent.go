@@ -121,7 +121,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                &repo.UnvalidatedConfig.Config,
+		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,

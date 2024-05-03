@@ -47,7 +47,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 
 type LineageArgs struct {
 	BranchesToVerify gitdomain.LocalBranchNames
-	Config           configdomain.UnvalidatedConfig
+	Config           *configdomain.UnvalidatedConfig
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs *components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames

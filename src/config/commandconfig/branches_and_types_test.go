@@ -19,7 +19,7 @@ func TestBranchesAndTypes(t *testing.T) {
 		unvalidatedConfig := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 		}
-		have.Add("main", unvalidatedConfig)
+		have.Add("main", &unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main": configdomain.BranchTypeMainBranch,
 		}
@@ -33,7 +33,7 @@ func TestBranchesAndTypes(t *testing.T) {
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 		}
-		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), unvalidatedConfig)
+		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), &unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main":      configdomain.BranchTypeMainBranch,
 			"perennial": configdomain.BranchTypePerennialBranch,

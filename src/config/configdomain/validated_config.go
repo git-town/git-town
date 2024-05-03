@@ -7,7 +7,7 @@ import (
 
 // ValidatedConfig is validated UnvalidatedConfig
 type ValidatedConfig struct {
-	UnvalidatedConfig
+	*UnvalidatedConfig
 	MainBranch gitdomain.LocalBranchName
 }
 

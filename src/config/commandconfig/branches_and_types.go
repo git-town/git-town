@@ -18,11 +18,11 @@ func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, config configdomai
 	return result
 }
 
-func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig configdomain.UnvalidatedConfig) {
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig *configdomain.UnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
-func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig configdomain.UnvalidatedConfig) {
+func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig *configdomain.UnvalidatedConfig) {
 	for _, branch := range branches {
 		self.Add(branch, fullConfig)
 	}
