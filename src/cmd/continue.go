@@ -83,10 +83,12 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
-	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{ // TODO: rename all instances to branchesSnapshot for consistency across commands
+		Backend:               &repo.Backend,
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -99,10 +101,20 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: localBranches,
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
 		LocalBranches:      localBranches,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          initialStashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
