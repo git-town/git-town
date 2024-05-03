@@ -66,7 +66,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(repo.UnvalidatedConfig, data.userInput, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -228,7 +228,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	}, exit, err
 }
 
-func saveAll(oldConfig config.UnvalidatedConfig, userInput userInput, frontend git.FrontendCommands) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, frontend git.FrontendCommands) error {
 	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, frontend)
 	if err != nil {
 		return err
