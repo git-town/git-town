@@ -237,7 +237,7 @@ func saveAll(oldConfig configdomain.UnvalidatedConfig, userInput userInput, fron
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(runner, userInput.config.GitHubToken)
+	err = saveGitHubToken(oldConfig.GitHubToken, userInput.config.GitHubToken, frontend)
 	if err != nil {
 		return err
 	}
@@ -333,14 +333,14 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], frontend
 	return frontend.RemoveGiteaToken()
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken Option[configdomain.GitHubToken]) error {
-	if newToken == runner.Config.Config.GitHubToken {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGitHubToken(value)
+		return frontend.SetGitHubToken(value)
 	}
-	return runner.Frontend.RemoveGitHubToken()
+	return frontend.RemoveGitHubToken()
 }
 
 func saveGitLabToken(runner *git.ProdRunner, newToken Option[configdomain.GitLabToken]) error {
