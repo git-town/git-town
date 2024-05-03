@@ -48,7 +48,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) { // T
 }
 
 type NewConnectorArgs struct {
-	Config          *configdomain.ValidatedConfig
+	Config          *configdomain.UnvalidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	OriginURL       giturl.Parts

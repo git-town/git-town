@@ -22,10 +22,9 @@ import (
 // via the GitHub API.
 type Connector struct {
 	hostingdomain.Data
-	APIToken   Option[configdomain.GitHubToken]
-	MainBranch gitdomain.LocalBranchName
-	client     *github.Client
-	log        print.Logger
+	APIToken Option[configdomain.GitHubToken]
+	client   *github.Client
+	log      print.Logger
 }
 
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -51,9 +50,9 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	return Some(proposal), nil
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
-	if parentBranch != self.MainBranch {
+	if parentBranch != mainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare)), nil
@@ -130,17 +129,15 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		MainBranch: args.MainBranch,
-		client:     githubClient,
-		log:        args.Log,
+		client: githubClient,
+		log:    args.Log,
 	}, nil
 }
 
 type NewConnectorArgs struct {
-	APIToken   Option[configdomain.GitHubToken]
-	Log        print.Logger
-	MainBranch gitdomain.LocalBranchName
-	OriginURL  giturl.Parts
+	APIToken  Option[configdomain.GitHubToken]
+	Log       print.Logger
+	OriginURL giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

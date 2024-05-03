@@ -52,16 +52,16 @@ func TestConnector(t *testing.T) {
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
+				main := gitdomain.NewLocalBranchName("main")
 				connector := github.Connector{
 					Data: hostingdomain.Data{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
-					MainBranch: gitdomain.NewLocalBranchName("main"),
+					APIToken: configdomain.NewGitHubTokenOption("apiToken"),
 				}
-				have, err := connector.NewProposalURL(tt.branch, tt.parent)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent, main)
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})
@@ -91,10 +91,9 @@ func TestNewConnector(t *testing.T) {
 		originURL, has := giturl.Parse("git@github.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
-			Log:        print.Logger{},
-			MainBranch: gitdomain.NewLocalBranchName("mainBranch"),
-			OriginURL:  originURL,
+			APIToken:  configdomain.NewGitHubTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{
@@ -110,10 +109,9 @@ func TestNewConnector(t *testing.T) {
 		originURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:   configdomain.NewGitHubTokenOption("apiToken"),
-			Log:        print.Logger{},
-			MainBranch: gitdomain.NewLocalBranchName("mainBranch"),
-			OriginURL:  originURL,
+			APIToken:  configdomain.NewGitHubTokenOption("apiToken"),
+			Log:       print.Logger{},
+			OriginURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{

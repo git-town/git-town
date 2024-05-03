@@ -60,7 +60,7 @@ func executeRepo(verbose bool) error {
 func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
 	var err error
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          &validatedConfig.Config,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
