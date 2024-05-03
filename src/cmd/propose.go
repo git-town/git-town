@@ -143,6 +143,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,

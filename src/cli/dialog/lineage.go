@@ -7,14 +7,17 @@ import (
 )
 
 // Lineage validates that the given lineage contains the ancestry for all given branches.
-// Prompts missing lineage information from the user and updates persisted lineage as needed.
-// Returns the validated Lineage.
+// Prompts missing lineage information from the user.
+// Returns the new lineage and perennial branches to add to the config storage.
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
 	additionalLineage = make(configdomain.Lineage)
 	branchesToVerify := args.BranchesToVerify
-	for _, branchToVerify := range args.BranchesToVerify {
-		parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get()
-		if hasParent {
+	for i := 0; i < len(branchesToVerify); i++ {
+		branchToVerify := branchesToVerify[i]
+		if !args.Config.MustKnowParent(branchToVerify) {
+			continue
+		}
+		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
@@ -36,9 +39,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		case ParentOutcomeSelectedParent:
 			additionalLineage[branchToVerify] = selectedBranch
-		}
-		if args.Config.IsMainOrPerennialBranch(selectedBranch) {
-			break
+			branchesToVerify = append(branchesToVerify, selectedBranch)
 		}
 	}
 	return additionalLineage, additionalPerennials, false, nil

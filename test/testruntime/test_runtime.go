@@ -82,7 +82,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	unvalidatedConfig, _, err := config.NewUnvalidatedConfig(config.NewConfigArgs{
+	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewConfigArgs{
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),

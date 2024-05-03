@@ -65,9 +65,6 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		LocalConfig:  localConfig,
 		Runner:       backendRunner,
 	})
-	if err != nil {
-		return nil, err
-	}
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		counter:          &commandsCounter,
 		dryRun:           args.DryRun,

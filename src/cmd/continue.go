@@ -96,6 +96,18 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
 	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranches,
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      localBranches,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
+		return nil, initialBranchesSnapshot, initialStashSize, exit, err
+	}
 	if repoStatus.Conflicts {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}

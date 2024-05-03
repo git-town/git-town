@@ -66,7 +66,7 @@ func (self *LocalBranchNames) Prepend(branch LocalBranchName) {
 
 // Remove removes the given branch names from this collection.
 func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(self)-1)
+	result := make(LocalBranchNames, 0, len(self))
 	for _, branch := range self {
 		if !slices.Contains(toRemove, branch) {
 			result = append(result, branch)

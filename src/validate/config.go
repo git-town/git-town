@@ -13,6 +13,14 @@ import (
 )
 
 func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bool, err error) {
+	// check Git user data
+	if args.Unvalidated.Config.GitUserEmail.IsNone() {
+		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
+	}
+	if args.Unvalidated.Config.GitUserName.IsNone() {
+		return validatedResult, false, errors.New(messages.GitUserNameMissing)
+	}
+
 	// enter and save main and perennials
 	validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 		UnvalidatedMain:       args.Unvalidated.Config.MainBranch,
@@ -31,14 +39,6 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 		}
 	}
 
-	// check Git user data
-	if args.Unvalidated.Config.GitUserEmail.IsNone() {
-		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
-	}
-	if args.Unvalidated.Config.GitUserName.IsNone() {
-		return validatedResult, false, errors.New(messages.GitUserNameMissing)
-	}
-
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, abort, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
@@ -52,7 +52,9 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 		return validatedResult, abort, err
 	}
 	for branch, parent := range additionalLineage {
-		args.Unvalidated.SetParent(branch, parent)
+		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
+			return validatedResult, abort, err
+		}
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
@@ -60,6 +62,14 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 			return validatedResult, false, err
 		}
 	}
+
+	// remove outdated lineage
+	err = args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
+	if err != nil {
+		return validatedResult, abort, err
+	}
+	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, validatedPerennials, args.Unvalidated.GitConfig, args.FinalMessages)
+
 	validatedConfig := configdomain.ValidatedConfig{
 		UnvalidatedConfig: args.Unvalidated.Config,
 		MainBranch:        validatedMain,
@@ -73,7 +83,21 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 type ConfigArgs struct {
 	Backend            *git.BackendCommands
 	BranchesToValidate gitdomain.LocalBranchNames
+	FinalMessages      *stringslice.Collector
 	LocalBranches      gitdomain.LocalBranchNames
 	TestInputs         *components.TestInputs
 	Unvalidated        config.UnvalidatedConfig
+
+// cleanupPerennialParentEntries removes outdated entries from the configuration.
+func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
+	for _, perennialBranch := range perennialBranches {
+		if lineage.Parent(perennialBranch).IsSome() {
+			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
+				return err
+			}
+			lineage.RemoveBranch(perennialBranch)
+			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
+		}
+	}
+	return nil
 }

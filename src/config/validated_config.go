@@ -9,8 +9,6 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
-	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -239,26 +237,4 @@ func (self *ValidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, gl
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	}
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
-}
-
-type NewConfigArgs struct {
-	ConfigFile   Option[configdomain.PartialConfig]
-	DryRun       bool
-	GlobalConfig configdomain.PartialConfig
-	LocalConfig  configdomain.PartialConfig
-	Runner       gitconfig.Runner
-}
-
-// cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
-	for _, perennialBranch := range perennialBranches {
-		if lineage.Parent(perennialBranch).IsSome() {
-			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
-			lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
-		}
-	}
-	return nil
 }

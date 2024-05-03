@@ -133,6 +133,17 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
+	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName

@@ -2,10 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v14/src/browser"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
@@ -13,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -60,23 +57,8 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoData(repo *execute.OpenRepoResult) (*repoData, bool, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
-	if err != nil {
-		return nil, false, err
-	}
-	dialogInputs := components.LoadTestInputs(os.Environ())
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesToValidate: localBranches,
-		LocalBranches:      localBranches,
-		TestInputs:         &dialogInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-	})
-	if err != nil || abort {
-		return nil, abort, err
-	}
+func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
+	var err error
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

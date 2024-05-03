@@ -68,6 +68,18 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranches,
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      localBranches,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
+		return err
+	}
 	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)

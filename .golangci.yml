@@ -57,6 +57,9 @@ issues:
     - Using the variable on range scope `(input|expected)` in function literal
   exclude-rules:
     - linters:
+        - gocritic
+      text: "appendAssign: append result not assigned to the same slice" # there are legitimate use cases for this, correct appending should be verified by unit tests
+    - linters:
         - revive
       text: "dot-imports: should not use dot imports"
     - linters:

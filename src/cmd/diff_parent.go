@@ -102,6 +102,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchesToDiff,
+		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
