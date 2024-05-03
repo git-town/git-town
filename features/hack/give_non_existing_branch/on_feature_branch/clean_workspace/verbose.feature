@@ -1,3 +1,4 @@
+@this
 Feature: display all executed Git commands
 
   Background:
@@ -14,13 +15,13 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote                                    |
       | main   | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
