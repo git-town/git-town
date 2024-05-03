@@ -223,8 +223,8 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 
 func compressProgram(data *compressBranchesData) program.Program {
 	prog := program.Program{}
-	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, config.config.Config.Online(), config.initialBranch)
+	for _, branchToCompress := range data.branchesToCompress {
+		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

@@ -185,9 +185,9 @@ func prependProgram(data *prependData) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config.Config,
-			InitialBranch: config.initialBranch,
+			BranchInfos:   data.allBranches,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
 			Remotes:       data.remotes,
@@ -207,8 +207,8 @@ func prependProgram(data *prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.config.Config.ShouldPushNewBranches() && config.config.Config.IsOnline() {
-		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
+	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

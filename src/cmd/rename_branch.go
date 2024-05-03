@@ -207,24 +207,24 @@ func renameBranchProgram(data *renameBranchData) program.Program {
 	if data.initialBranch == data.oldBranch.LocalName {
 		result.Add(&opcodes.Checkout{Branch: data.newBranch})
 	}
-	if !config.dryRun {
-		if config.config.Config.IsPerennialBranch(config.initialBranch) {
-			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
-			result.Add(&opcodes.AddToPerennialBranches{Branch: config.newBranch})
+	if !data.dryRun {
+		if data.config.Config.IsPerennialBranch(data.initialBranch) {
+			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: data.oldBranch.LocalName})
+			result.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
 		} else {
-			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-			parentBranch, hasParent := config.config.Config.Lineage.Parent(config.oldBranch.LocalName).Get()
+			result.Add(&opcodes.DeleteParentBranch{Branch: data.oldBranch.LocalName})
+			parentBranch, hasParent := data.config.Config.Lineage.Parent(data.oldBranch.LocalName).Get()
 			if hasParent {
 				result.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
 		}
 	}
-	for _, child := range config.config.Config.Lineage.Children(config.oldBranch.LocalName) {
-		result.Add(&opcodes.SetParent{Branch: child, Parent: config.newBranch})
+	for _, child := range data.config.Config.Lineage.Children(data.oldBranch.LocalName) {
+		result.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && config.config.Config.IsOnline() {
-		result.Add(&opcodes.CreateTrackingBranch{Branch: config.newBranch})
-		result.Add(&opcodes.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
+	if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
+		result.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+		result.Add(&opcodes.DeleteTrackingBranch{Branch: data.oldBranch.RemoteName})
 	}
 	result.Add(&opcodes.DeleteLocalBranch{Branch: data.oldBranch.LocalName})
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{

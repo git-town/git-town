@@ -206,9 +206,9 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killData) {
-	if config.branchNameToKill.HasTrackingBranch() && config.config.Config.IsOnline() {
-		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchNameToKill.RemoteName})
+func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
+	if data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
+		prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
 }
@@ -229,8 +229,8 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, d
 	prog.Add(&opcodes.DeleteLocalBranch{Branch: data.branchNameToKill.LocalName})
 	if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
-			Branch:  config.branchNameToKill.LocalName,
-			Lineage: config.config.Config.Lineage,
+			Branch:  data.branchNameToKill.LocalName,
+			Lineage: data.config.Config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})

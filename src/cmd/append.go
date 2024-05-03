@@ -180,9 +180,9 @@ func appendProgram(data appendData) program.Program {
 	if !data.hasOpenChanges {
 		for _, branch := range data.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				BranchInfos:   config.allBranches,
-				Config:        config.config.Config,
-				InitialBranch: config.initialBranch,
+				BranchInfos:   data.allBranches,
+				Config:        data.config.Config,
+				InitialBranch: data.initialBranch,
 				Program:       &prog,
 				Remotes:       data.remotes,
 				PushBranch:    true,
@@ -193,8 +193,8 @@ func appendProgram(data appendData) program.Program {
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.config.Config.ShouldPushNewBranches() && config.config.Config.IsOnline() {
-		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
+	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{
 		Branch:    data.targetBranch,
