@@ -172,7 +172,7 @@ func TestCategorize(t *testing.T) {
 			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
-		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
+		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
