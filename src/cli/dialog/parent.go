@@ -33,10 +33,10 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
 	if aborted {
-		return ParentOutcomeAborted, gitdomain.EmptyLocalBranchName(), err
+		return ParentOutcomeAborted, selection.Data, err
 	}
 	if selection.Data == PerennialBranchOption {
-		return ParentOutcomePerennialBranch, gitdomain.EmptyLocalBranchName(), err
+		return ParentOutcomePerennialBranch, selection.Data, err
 	}
 	return ParentOutcomeSelectedParent, selection.Data, err
 }
