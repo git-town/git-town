@@ -116,7 +116,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &validatedConfig.Config,
+			Config:          &repo.UnvalidatedConfig.Config,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
