@@ -63,7 +63,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
 		LocalConfig:  localConfig,
-		Runner:       backendRunner,
+		Access:       configGitAccess,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		counter:          &commandsCounter,

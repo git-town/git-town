@@ -140,11 +140,18 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+		BranchesSnapshot:   branchesSnapshot,
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
 		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
@@ -168,13 +175,6 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
@@ -186,29 +186,32 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
-		runner:           &runner,
+		runner:           runner,
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func proposeProgram(config *proposeData) program.Program {
+func proposeProgram(data *proposeData) program.Program {
 	prog := program.Program{}
-	for _, branch := range config.branchesToSync {
+	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config,
-			InitialBranch: config.initialBranch,
-			Remotes:       config.remotes,
+			BranchInfos:   data.allBranches,
+			Config:        data.config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
 			Program:       &prog,
 			PushBranch:    true,
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
-	prog.Add(&opcodes.CreateProposal{Branch: config.initialBranch})
+	prog.Add(&opcodes.CreateProposal{
+		Branch:     data.initialBranch,
+		MainBranch: data.config.MainBranch,
+	})
 	return prog
 }
 

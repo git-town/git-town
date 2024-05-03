@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -69,7 +68,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
@@ -102,20 +101,13 @@ func executeSkip(verbose bool) error {
 			return err
 		}
 	}
-	prodRunner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	return skip.Execute(skip.ExecuteArgs{
 		Connector:      connector,
 		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
 		RunState:       runState,
-		Runner:         &prodRunner,
+		Runner:         runner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,
 	})

@@ -144,7 +144,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		LocalBranches:      localBranches,
@@ -178,13 +178,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &renameBranchData{
 		config:           validatedConfig.Config,
 		dialogTestInputs: dialogTestInputs,
@@ -194,7 +187,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		newBranch:        newBranchName,
 		oldBranch:        oldBranch,
 		previousBranch:   previousBranch,
-		runner:           &runner,
+		runner:           runner,
 	}, branchesSnapshot, stashSize, false, err
 }
 

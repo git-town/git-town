@@ -131,7 +131,7 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, b
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchesToPark.Keys(),
 		LocalBranches:      localBranches,
@@ -141,19 +141,12 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, b
 	if err != nil || abort {
 		return parkData{}, abort, err
 	}
-	runner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	return parkData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesSnapshot: branchesSnapshot,
 		branchesToPark:   branchesToPark,
-		config:           validatedConfig,
-		runner:           &runner,
+		config:           *validatedConfig,
+		runner:           runner,
 	}, false, nil
 }
 

@@ -161,7 +161,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: targetBranches,
 		LocalBranches:      localBranches,
@@ -173,12 +173,16 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	}
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
+			config:         *validatedConfig,
+			runner:         runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, validatedConfig.Config),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
+			config:         *validatedConfig,
+			runner:         runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, validatedConfig.Config),
 		})
 		return
@@ -201,13 +205,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 		return
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
@@ -223,7 +220,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    &runner,
+		runner:                    runner,
 		targetBranch:              targetBranch,
 	})
 	return

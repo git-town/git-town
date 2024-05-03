@@ -97,7 +97,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
@@ -122,19 +122,12 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 			OriginURL:       originURL,
 		})
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &continueData{
 		config:           validatedConfig.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
-		runner:           &runner,
+		runner:           runner,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 

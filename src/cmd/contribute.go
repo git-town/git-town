@@ -93,7 +93,7 @@ func executeContribute(args []string, verbose bool) error {
 	}
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, _, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchNames,
 		LocalBranches:      localBranches,
@@ -106,7 +106,7 @@ func executeContribute(args []string, verbose bool) error {
 	if err = validatedConfig.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, &validatedConfig); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, validatedConfig); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)

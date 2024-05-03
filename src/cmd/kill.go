@@ -141,7 +141,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchesToKill,
 		LocalBranches:      localBranches,
@@ -161,13 +161,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchWhenDone = branchesSnapshot.Active
 	}
 	parentBranch := validatedConfig.Config.Lineage.Parent(branchToKill.LocalName)
-	runner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
@@ -179,7 +172,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		initialBranch:    branchesSnapshot.Active,
 		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
-		runner:           &runner,
+		runner:           runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

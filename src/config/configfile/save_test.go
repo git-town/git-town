@@ -41,7 +41,7 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.UnvalidatedConfig{
+		give := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 			HostingPlatform:          None[configdomain.HostingPlatform](),
 			Lineage:                  map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},

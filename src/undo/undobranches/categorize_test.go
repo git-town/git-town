@@ -174,7 +174,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 			},
 		}

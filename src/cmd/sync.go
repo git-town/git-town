@@ -160,7 +160,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchNamesToSync,
 		LocalBranches:      localBranches,
@@ -175,13 +175,6 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		shouldPushTags = true
 	} else {
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
-	}
-	runner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
 	}
 	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
 	remotes, err := runner.Backend.Remotes()
@@ -199,7 +192,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
-		runner:           &runner,
+		runner:           runner,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSize, false, err
 }

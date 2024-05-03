@@ -101,7 +101,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		return nil, branchesSnapshot, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, _, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
@@ -113,7 +113,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	}
 	return &switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
-		config:             validatedConfig,
+		config:             *validatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,
 		lineage:            validatedConfig.Config.Lineage,

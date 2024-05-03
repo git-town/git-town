@@ -136,7 +136,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		LocalBranches:      localBranches,
@@ -154,13 +154,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	}
 	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
@@ -173,7 +166,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		parentBranch:              parent,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    &runner,
+		runner:                    runner,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSize, false, fc.Err // TODO: add branchesSnapshot, stashSize to prependData
 }

@@ -131,9 +131,11 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -143,12 +145,12 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
-	var branchNamesToCompress gitdomain.LocalBranchNames
-	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, runner, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		FinalMessages:      &repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
@@ -156,6 +158,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	if err != nil || aborted {
 		return nil, branchesSnapshot, stashSize, aborted, err
 	}
+	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
 		branchNamesToCompress = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
 	} else {
@@ -197,13 +200,6 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 			parentBranch:     parentBranch,
 		}
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
@@ -213,7 +209,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		previousBranch:      previousBranch,
-		runner:              &runner,
+		runner:              runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

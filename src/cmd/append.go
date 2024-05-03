@@ -133,7 +133,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
@@ -142,13 +142,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	})
 	if err != nil || aborted {
 		return nil, branchesSnapshot, stashSize, aborted, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
@@ -166,7 +159,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		parentBranch:              branchesSnapshot.Active,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    &runner,
+		runner:                    runner,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }

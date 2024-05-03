@@ -99,7 +99,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	}
 	branchesToDiff := gitdomain.LocalBranchNames{branch}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: branchesToDiff,
 		FinalMessages:      &repo.FinalMessages,
@@ -114,16 +114,9 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	if !hasParent {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          &validatedConfig,
-		FinalMessages:   &repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	return &diffParentData{
 		branch:       branch,
 		parentBranch: parentBranch,
-		runner:       &runner,
+		runner:       runner,
 	}, false, nil
 }

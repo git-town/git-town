@@ -11,6 +11,11 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 )
 
+type Runner interface {
+	Query(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
+}
+
 type UnvalidatedConfig struct {
 	Config          configdomain.UnvalidatedConfig     // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
@@ -23,13 +28,12 @@ type UnvalidatedConfig struct {
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *stringslice.Collector) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
-	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
 	return UnvalidatedConfig{
 		Config:          config,
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
-		GitConfig:       configAccess,
+		GitConfig:       args.Access,
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
@@ -107,9 +111,9 @@ func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBran
 }
 
 type NewUnvalidatedConfigArgs struct {
+	Access       gitconfig.Access
 	ConfigFile   Option[configdomain.PartialConfig]
 	DryRun       bool
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
-	Runner       gitconfig.Runner
 }

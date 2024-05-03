@@ -77,19 +77,13 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
-	runner := testshell.TestRunner{
-		WorkingDir: workingDir,
-		HomeDir:    homeDir,
-		BinDir:     binDir,
-	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
-		Runner:       &runner,
 	})
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            nil,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		LocalBranches:      gitdomain.LocalBranchNames{},
@@ -100,19 +94,25 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		panic(fmt.Sprintf("cannot create test runtime: aborted: %t, err: %v", abort, err))
 	}
 	backendCommands := git.BackendCommands{
-		Runner:             &runner,
+		Runner:             runner.Backend.Runner,
 		DryRun:             false,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
+	testRunner := testshell.TestRunner{
+		BinDir:     binDir,
+		HomeDir:    homeDir,
+		Verbose:    false,
+		WorkingDir: workingDir,
+	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
-		Config:          &validatedConfig,
-		TestRunner:      &runner,
+		Config:          validatedConfig,
+		TestRunner:      &testRunner,
 	}
 	return TestRuntime{
 		Backend:      backendCommands,
-		Config:       &validatedConfig,
+		Config:       validatedConfig,
 		TestCommands: testCommands,
 	}
 }

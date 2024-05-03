@@ -16,29 +16,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	if err != nil {
 		return branchesSnapshot, stashSize, false, err
 	}
-	if args.HandleUnfinishedState {
-		branchesSnapshot, err = args.Backend.BranchesSnapshot()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
-		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
-			Connector:               nil,
-			CurrentBranch:           branchesSnapshot.Active,
-			DialogTestInputs:        args.DialogTestInputs,
-			HasOpenChanges:          args.RepoStatus.OpenChanges,
-			InitialBranchesSnapshot: branchesSnapshot,
-			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
-			InitialStashSize:        stashSize,
-			Lineage:                 args.Config.Lineage,
-			PushHook:                args.Config.PushHook,
-			RootDir:                 args.Repo.RootDir,
-			Run:                     args.Runner,
-			Verbose:                 args.Verbose,
-		})
-		if err != nil || exit {
-			return branchesSnapshot, stashSize, exit, err
-		}
-	}
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
@@ -81,7 +58,6 @@ type LoadRepoSnapshotArgs struct {
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
-	Runner                *git.ProdRunner
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }

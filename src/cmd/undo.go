@@ -105,7 +105,7 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	if err != nil || exit {
 		return nil, initialStashSize, false, err
 	}
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		LocalBranches:      gitdomain.LocalBranchNames{},
@@ -114,13 +114,6 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	})
 	if err != nil || abort {
 		return nil, initialStashSize, abort, err
-	}
-	prodRunner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
@@ -142,6 +135,6 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-		prodRunner:              &prodRunner,
+		prodRunner:              runner,
 	}, initialStashSize, false, nil
 }

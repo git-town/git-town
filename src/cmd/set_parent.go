@@ -133,7 +133,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
@@ -151,20 +151,14 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	} else {
 		defaultChoice = mainBranch
 	}
-	runner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         repo.Backend,
-		Frontend:        repo.Frontend,
-		CommandsCounter: repo.CommandsCounter,
-		FinalMessages:   &repo.FinalMessages,
-	}
 	return &setParentData{
+		config:           validatedConfig.Config,
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       mainBranch,
-		runner:           &runner,
+		runner:           runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
