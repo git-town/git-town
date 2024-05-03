@@ -69,15 +69,14 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
-		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
-	if err != nil || exit {
+	if err != nil || abort {
 		return err
 	}
 	runStateOpt, err := statefile.Load(repo.RootDir)
@@ -91,21 +90,10 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesToValidate: localBranches,
-		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-	})
-	if err != nil || abort {
-		return err
-	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &validatedConfig.Config,
+			Config:          &repo.UnvalidatedConfig.Config,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
