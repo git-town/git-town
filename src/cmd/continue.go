@@ -97,33 +97,21 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesToValidate: localBranches,
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
-	})
-	if err != nil || exit {
-		return nil, initialBranchesSnapshot, initialStashSize, exit, err
-	}
-	if repoStatus.Conflicts {
-		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
-	}
-	if repoStatus.UntrackedChanges {
-		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
-	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesToValidate: localBranches,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
-	if err != nil || aborted {
-		return nil, initialBranchesSnapshot, initialStashSize, aborted, err
+	if err != nil || abort {
+		return nil, initialBranchesSnapshot, initialStashSize, abort, err
+	}
+	if repoStatus.Conflicts {
+		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
+	}
+	if repoStatus.UntrackedChanges {
+		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
