@@ -175,36 +175,36 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func appendProgram(config appendData) program.Program {
+func appendProgram(data appendData) program.Program {
 	prog := program.Program{}
-	if !config.hasOpenChanges {
-		for _, branch := range config.branchesToSync {
+	if !data.hasOpenChanges {
+		for _, branch := range data.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   config.allBranches,
 				Config:        config.config.Config,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
-				Remotes:       config.remotes,
+				Remotes:       data.remotes,
 				PushBranch:    true,
 			})
 		}
 	}
 	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
-		Ancestors: config.newBranchParentCandidates,
-		Branch:    config.targetBranch,
+		Ancestors: data.newBranchParentCandidates,
+		Branch:    data.targetBranch,
 	})
 	if config.remotes.HasOrigin() && config.config.Config.ShouldPushNewBranches() && config.config.Config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{
-		Branch:    config.targetBranch,
-		Ancestors: config.newBranchParentCandidates,
+		Branch:    data.targetBranch,
+		Ancestors: data.newBranchParentCandidates,
 	})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.initialBranch, config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.initialBranch, data.previousBranch},
 	})
 	return prog
 }

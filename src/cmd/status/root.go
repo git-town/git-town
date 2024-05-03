@@ -76,8 +76,8 @@ func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (*displayStatusData, e
 	}, nil
 }
 
-func displayStatus(config displayStatusData) {
-	state, hasState := config.state.Get()
+func displayStatus(data displayStatusData) {
+	state, hasState := data.state.Get()
 	if !hasState {
 		fmt.Println(messages.StatusFileNotFound)
 		return

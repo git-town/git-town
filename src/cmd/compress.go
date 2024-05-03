@@ -221,17 +221,17 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func compressProgram(config *compressBranchesData) program.Program {
+func compressProgram(data *compressBranchesData) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
 		compressBranchProgram(&prog, branchToCompress, config.config.Config.Online(), config.initialBranch)
 	}
-	prog.Add(&opcodes.Checkout{Branch: config.initialBranch.BranchName().LocalName()})
+	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
 	return prog
 }

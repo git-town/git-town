@@ -201,11 +201,11 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func renameBranchProgram(config *renameBranchData) program.Program {
+func renameBranchProgram(data *renameBranchData) program.Program {
 	result := program.Program{}
-	result.Add(&opcodes.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
-	if config.initialBranch == config.oldBranch.LocalName {
-		result.Add(&opcodes.Checkout{Branch: config.newBranch})
+	result.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: data.oldBranch.LocalName.Location()})
+	if data.initialBranch == data.oldBranch.LocalName {
+		result.Add(&opcodes.Checkout{Branch: data.newBranch})
 	}
 	if !config.dryRun {
 		if config.config.Config.IsPerennialBranch(config.initialBranch) {
@@ -215,7 +215,7 @@ func renameBranchProgram(config *renameBranchData) program.Program {
 			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
 			parentBranch, hasParent := config.config.Config.Lineage.Parent(config.oldBranch.LocalName).Get()
 			if hasParent {
-				result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: parentBranch})
+				result.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
 		}
 	}
@@ -226,12 +226,12 @@ func renameBranchProgram(config *renameBranchData) program.Program {
 		result.Add(&opcodes.CreateTrackingBranch{Branch: config.newBranch})
 		result.Add(&opcodes.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
-	result.Add(&opcodes.DeleteLocalBranch{Branch: config.oldBranch.LocalName})
+	result.Add(&opcodes.DeleteLocalBranch{Branch: data.oldBranch.LocalName})
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.newBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.newBranch},
 	})
 	return result
 }
