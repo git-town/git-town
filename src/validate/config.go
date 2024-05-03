@@ -51,7 +51,7 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, abort, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
-		Config:           args.Unvalidated.Config,
+		Config:           *args.Unvalidated.Config,
 		DefaultChoice:    validatedMain,
 		DialogTestInputs: args.TestInputs,
 		LocalBranches:    args.LocalBranches,
