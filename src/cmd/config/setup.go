@@ -17,7 +17,6 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
-	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -84,11 +83,10 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupData struct {
-	config        config.ValidatedConfig
+	config        config.UnvalidatedConfig
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
-	runner        *git.ProdRunner
 	userInput     userInput
 }
 
@@ -206,7 +204,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	if err != nil {
 		return nil, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
 		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -221,39 +219,17 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	if err != nil {
 		return nil, false, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, aborted, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      &repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         &dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
-	})
-	if err != nil || aborted {
-		return nil, aborted, err
-	}
 	return &setupData{
-		config:        *validatedConfig,
+		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
-		runner:        runner,
 		userInput:     defaultUserInput(),
 	}, exit, err
 }
 
-func saveAll(runner *git.ProdRunner, userInput userInput) error {
-	err := saveAliases(runner, userInput.config.Aliases)
+func saveAll(oldConfig configdomain.UnvalidatedConfig, userInput userInput, frontend git.FrontendCommands) error {
+	err := saveAliases(oldConfig.Aliases, userInput.config.Aliases, frontend)
 	if err != nil {
 		return err
 	}
@@ -330,15 +306,15 @@ func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	return nil
 }
 
-func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err error) {
+func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.FrontendCommands) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
-		oldAlias, hasOld := runner.Config.Config.Aliases[aliasableCommand]
+		oldAlias, hasOld := oldAliases[aliasableCommand]
 		newAlias, hasNew := newAliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
-			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
+			err = frontend.RemoveGitAlias(aliasableCommand)
 		case newAlias != oldAlias:
-			err = runner.Frontend.SetGitAlias(aliasableCommand)
+			err = frontend.SetGitAlias(aliasableCommand)
 		}
 		if err != nil {
 			return err
@@ -347,14 +323,14 @@ func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err e
 	return nil
 }
 
-func saveGiteaToken(runner *git.ProdRunner, newToken Option[configdomain.GiteaToken]) error {
-	if newToken == runner.Config.Config.GiteaToken {
+func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGiteaToken(value)
+		return frontend.SetGiteaToken(value)
 	}
-	return runner.Frontend.RemoveGiteaToken()
+	return frontend.RemoveGiteaToken()
 }
 
 func saveGitHubToken(runner *git.ProdRunner, newToken Option[configdomain.GitHubToken]) error {
