@@ -151,9 +151,10 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
+	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
@@ -162,7 +163,6 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
 		branchNamesToCompress = repo.Config.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
