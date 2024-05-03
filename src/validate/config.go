@@ -19,7 +19,6 @@ import (
 func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err error) {
 	// enter and save main and perennials
 	var validatedMain gitdomain.LocalBranchName
-	var validatedPerennials gitdomain.LocalBranchNames
 	if args.Unvalidated.Config.MainBranch.IsEmpty() {
 		var additionalPerennials gitdomain.LocalBranchNames
 		validatedMain, additionalPerennials, aborted, err = dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
@@ -36,7 +35,7 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 		if err = args.Unvalidated.SetMainBranch(validatedMain); err != nil {
 			return validatedResult, false, err
 		}
-		validatedPerennials = append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
+		validatedPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
 		if len(additionalPerennials) > 0 {
 			if err = args.Unvalidated.SetPerennialBranches(validatedPerennials); err != nil {
 				return validatedResult, false, err
