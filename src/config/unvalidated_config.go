@@ -21,11 +21,10 @@ type UnvalidatedConfig struct {
 	originURLCache  configdomain.OriginURLCache // TODO: remove if unused
 }
 
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *stringslice.Collector, error) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *stringslice.Collector) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
-	err := cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess, &finalMessages)
 	return UnvalidatedConfig{
 		Config:          config,
 		ConfigFile:      args.ConfigFile,
@@ -34,7 +33,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *st
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
-	}, &finalMessages, err
+	}, &finalMessages
 }
 
 // OriginURL provides the URL for the "origin" remote.
