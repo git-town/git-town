@@ -21,7 +21,7 @@ type UnvalidatedConfig struct {
 	originURLCache  configdomain.OriginURLCache // TODO: remove if unused
 }
 
-func NewUnvalidatedConfig(args NewConfigArgs) (UnvalidatedConfig, *stringslice.Collector, error) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *stringslice.Collector, error) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
@@ -85,4 +85,12 @@ func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBra
 func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.PerennialBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
+}
+
+type NewUnvalidatedConfigArgs struct {
+	ConfigFile   Option[configdomain.PartialConfig]
+	DryRun       bool
+	GlobalConfig configdomain.PartialConfig
+	LocalConfig  configdomain.PartialConfig
+	Runner       gitconfig.Runner
 }

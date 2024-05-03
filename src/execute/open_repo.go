@@ -58,7 +58,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	unvalidatedConfig, finalMessages, err := config.NewUnvalidatedConfig(config.NewConfigArgs{
+	unvalidatedConfig, finalMessages, err := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
