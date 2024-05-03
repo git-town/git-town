@@ -93,9 +93,11 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 		return nil, 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
 		Config:                &unvalidatedConfig,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -107,10 +109,20 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	}
 	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      gitdomain.LocalBranchNames{},
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          initialStashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return nil, initialStashSize, abort, err

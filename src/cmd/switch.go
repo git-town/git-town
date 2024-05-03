@@ -87,10 +87,12 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -103,10 +105,20 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, _, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return nil, branchesSnapshot, abort, err
