@@ -1,20 +1,19 @@
 package testruntime
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/validate"
+	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
 	"github.com/shoenig/test/must"
@@ -78,30 +77,32 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
+	backendRunner := subshell.BackendRunner{
+		Dir:             Some(workingDir),
+		CommandsCounter: &gohacks.Counter{},
+		Verbose:         false,
+	}
+	backendCommands := git.BackendCommands{
+		Runner:             backendRunner,
+		DryRun:             false,
+		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
+		RemotesCache:       &cache.Remotes{},
+	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
-			Runner: nil,
+			Runner: backendRunner,
 		},
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 	})
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
-		Backend:            nil,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		LocalBranches:      gitdomain.LocalBranchNames{},
-		TestInputs:         &components.TestInputs{},
-		Unvalidated:        unvalidatedConfig,
-	})
-	if err != nil || abort {
-		panic(fmt.Sprintf("cannot create test runtime: aborted: %t, err: %v", abort, err))
-	}
-	backendCommands := git.BackendCommands{
-		Runner:             runner.Backend.Runner,
-		DryRun:             false,
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+	validatedConfig := config.ValidatedConfig{
+		Config: configdomain.ValidatedConfig{
+			UnvalidatedConfig: unvalidatedConfig.Config,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		},
+		UnvalidatedConfig: unvalidatedConfig,
 	}
 	testRunner := testshell.TestRunner{
 		BinDir:     binDir,
@@ -111,12 +112,12 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
-		Config:          validatedConfig,
+		Config:          &validatedConfig,
 		TestRunner:      &testRunner,
 	}
 	return TestRuntime{
 		Backend:      backendCommands,
-		Config:       validatedConfig,
+		Config:       &validatedConfig,
 		TestCommands: testCommands,
 	}
 }
