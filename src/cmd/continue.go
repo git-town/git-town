@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -71,7 +71,6 @@ func executeContinue(verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -97,7 +96,6 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -132,7 +130,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		})
 	}
 	return &continueData{
-		config:           repo.Config.Config,
+		config:           *repo.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -141,7 +139,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 }
 
 type continueData struct {
-	config           configdomain.FullConfig
+	config           config.Config
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool

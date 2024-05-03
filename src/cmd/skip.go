@@ -69,7 +69,6 @@ func executeSkip(verbose bool) error {
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

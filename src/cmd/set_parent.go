@@ -88,7 +88,7 @@ func executeSetParent(verbose bool) error {
 		RunProgram:            prog,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  repo.Config.Config,
+		Config:                  *repo.Config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -96,7 +96,6 @@ func executeSetParent(verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -131,7 +130,6 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

@@ -5,12 +5,11 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/vm/program"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
-func Execute(prog program.Program, runner *git.ProdRunner, lineage configdomain.Lineage) {
+func Execute(prog program.Program, lineage configdomain.Lineage) {
 	for _, opcode := range prog {
 		err := opcode.Run(shared.RunArgs{
 			Connector:                       nil,
@@ -18,7 +17,6 @@ func Execute(prog program.Program, runner *git.ProdRunner, lineage configdomain.
 			Lineage:                         lineage,
 			PrependOpcodes:                  nil,
 			RegisterUndoablePerennialCommit: nil,
-			Runner:                          runner,
 			UpdateInitialBranchLocalSHA:     nil,
 		})
 		if err != nil {

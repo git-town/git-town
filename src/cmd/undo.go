@@ -107,7 +107,6 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -97,7 +98,6 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -106,7 +106,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 type compressBranchesData struct {
 	branchesToCompress  []compressBranchData
 	compressEntireStack bool
-	config              configdomain.FullConfig
+	config              config.Config
 	dialogTestInputs    components.TestInputs
 	dryRun              bool
 	hasOpenChanges      bool
@@ -144,7 +144,6 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -208,7 +207,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
-		config:              repo.Config.Config,
+		config:              *repo.Config,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
@@ -221,7 +220,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 func compressProgram(config *compressBranchesData) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range config.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, config.config.Online(), config.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, config.config.Config.Online(), config.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: config.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -18,14 +19,14 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner.Config.Config.Lineage)
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
 	}
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.Runner.Config.Config,
+		Config:                  args.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		HasOpenChanges:          args.HasOpenChanges,
@@ -33,13 +34,13 @@ func Execute(args ExecuteArgs) error {
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
 		RootDir:                 args.RootDir,
-		Run:                     args.Runner,
 		RunState:                args.RunState,
 		Verbose:                 args.Verbose,
 	})
 }
 
 type ExecuteArgs struct {
+	Config         config.Config
 	Connector      hostingdomain.Connector
 	CurrentBranch  gitdomain.LocalBranchName
 	HasOpenChanges bool
@@ -87,6 +88,6 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		EndBranch:                args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner.Config.Config.Lineage)
 	return nil
 }

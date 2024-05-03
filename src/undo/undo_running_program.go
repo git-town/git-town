@@ -16,7 +16,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
 	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Run.Config.Config))
-	finalStashSize, err := args.Run.Backend.StashSize()
+	finalStashSize, err := args.Backend.StashSize()
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -25,6 +25,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 }
 
 type CreateUndoProgramArgs struct {
+	Backend        git.BackendCommands
 	DryRun         bool
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook

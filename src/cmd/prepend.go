@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -84,7 +84,6 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -93,7 +92,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 type prependData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
-	config                    configdomain.FullConfig
+	config                    config.Config
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
@@ -127,7 +126,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -165,7 +163,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	return &prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Config.Config,
+		config:                    *repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -184,7 +182,7 @@ func prependProgram(config *prependData) program.Program {
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			BranchInfos:   config.allBranches,
-			Config:        config.config,
+			Config:        config.config.Config,
 			InitialBranch: config.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
@@ -205,7 +203,7 @@ func prependProgram(config *prependData) program.Program {
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.Config.ShouldPushNewBranches() && config.config.Config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

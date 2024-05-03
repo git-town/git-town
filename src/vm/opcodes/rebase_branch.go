@@ -23,5 +23,5 @@ func (self *RebaseBranch) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.Rebase(self.Branch)
+	return args.Frontend.Rebase(self.Branch)
 }

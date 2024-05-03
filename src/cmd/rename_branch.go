@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -96,14 +96,13 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
 }
 
 type renameBranchData struct {
-	config           configdomain.FullConfig
+	config           config.Config
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -134,7 +133,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -187,7 +185,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchData{
-		config:           repo.Config.Config,
+		config:           *repo.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -206,21 +204,21 @@ func renameBranchProgram(config *renameBranchData) program.Program {
 		result.Add(&opcodes.Checkout{Branch: config.newBranch})
 	}
 	if !config.dryRun {
-		if config.config.IsPerennialBranch(config.initialBranch) {
+		if config.config.Config.IsPerennialBranch(config.initialBranch) {
 			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
 			result.Add(&opcodes.AddToPerennialBranches{Branch: config.newBranch})
 		} else {
 			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-			parentBranch, hasParent := config.config.Lineage.Parent(config.oldBranch.LocalName).Get()
+			parentBranch, hasParent := config.config.Config.Lineage.Parent(config.oldBranch.LocalName).Get()
 			if hasParent {
 				result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: parentBranch})
 			}
 		}
 	}
-	for _, child := range config.config.Lineage.Children(config.oldBranch.LocalName) {
+	for _, child := range config.config.Config.Lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcodes.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && config.config.IsOnline() {
+	if config.oldBranch.HasTrackingBranch() && config.config.Config.IsOnline() {
 		result.Add(&opcodes.CreateTrackingBranch{Branch: config.newBranch})
 		result.Add(&opcodes.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}

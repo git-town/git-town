@@ -21,12 +21,12 @@ func (self *ContinueRebase) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *ContinueRebase) Run(args shared.RunArgs) error {
-	repoStatus, err := args.Runner.Backend.RepoStatus()
+	repoStatus, err := args.Backend.RepoStatus()
 	if err != nil {
 		return err
 	}
 	if repoStatus.RebaseInProgress {
-		return args.Runner.Frontend.ContinueRebase()
+		return args.Frontend.ContinueRebase()
 	}
 	return nil
 }

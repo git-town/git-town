@@ -17,15 +17,14 @@ import (
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
-		DryRun:         args.Run.Config.DryRun,
+		DryRun:         args.Config.DryRun,
 		HasOpenChanges: false,
-		NoPushHook:     args.Config.NoPushHook(),
-		Run:            args.Run,
+		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
 	if err != nil {
 		return err
 	}
-	lightInterpreter.Execute(undoProgram, args.Run, args.Config.Lineage)
+	lightInterpreter.Execute(undoProgram, args.Config.Config.Lineage)
 	return opcode.CreateAutomaticUndoError()
 }

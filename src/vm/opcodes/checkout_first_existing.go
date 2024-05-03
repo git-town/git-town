@@ -14,6 +14,6 @@ type CheckoutFirstExisting struct {
 }
 
 func (self *CheckoutFirstExisting) Run(args shared.RunArgs) error {
-	existingBranch := args.Runner.Backend.FirstExistingBranch(self.Branches, self.MainBranch)
+	existingBranch := args.Backend.FirstExistingBranch(self.Branches, self.MainBranch)
 	return (&Checkout{Branch: existingBranch}).Run(args)
 }

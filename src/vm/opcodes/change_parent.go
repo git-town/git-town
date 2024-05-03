@@ -17,10 +17,10 @@ type ChangeParent struct {
 }
 
 func (self *ChangeParent) Run(args shared.RunArgs) error {
-	err := args.Runner.Config.SetParent(self.Branch, self.Parent)
+	err := args.Config.SetParent(self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
-	args.Runner.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, self.Branch, self.Parent))
+	args.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, self.Branch, self.Parent))
 	return nil
 }

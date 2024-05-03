@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -95,7 +96,6 @@ func executePropose(dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -104,7 +104,7 @@ func executePropose(dryRun, verbose bool) error {
 type proposeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           configdomain.FullConfig
+	config           config.Config
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -135,7 +135,6 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -178,7 +177,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Config.Config,
+		config:           *repo.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -190,30 +189,30 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func proposeProgram(config *proposeData) program.Program {
+func proposeProgram(data *proposeData) program.Program {
 	prog := program.Program{}
-	for _, branch := range config.branchesToSync {
+	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config,
-			InitialBranch: config.initialBranch,
-			Remotes:       config.remotes,
+			BranchInfos:   data.allBranches,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
 			Program:       &prog,
 			PushBranch:    true,
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
-	prog.Add(&opcodes.CreateProposal{Branch: config.initialBranch})
+	prog.Add(&opcodes.CreateProposal{Branch: data.initialBranch})
 	return prog
 }
 
 func validateProposeData(data *proposeData) error {
-	initialBranchType := data.config.BranchType(data.initialBranch)
+	initialBranchType := data.config.Config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

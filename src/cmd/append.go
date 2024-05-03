@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -83,7 +83,6 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -92,7 +91,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 type appendData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
-	config                    configdomain.FullConfig
+	config                    config.Config
 	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
@@ -126,7 +125,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -159,7 +157,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Config.Config,
+		config:                    *repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -179,7 +177,7 @@ func appendProgram(config appendData) program.Program {
 		for _, branch := range config.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   config.allBranches,
-				Config:        config.config,
+				Config:        config.config.Config,
 				InitialBranch: config.initialBranch,
 				Program:       &prog,
 				Remotes:       config.remotes,
@@ -191,7 +189,7 @@ func appendProgram(config appendData) program.Program {
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
+	if config.remotes.HasOrigin() && config.config.Config.ShouldPushNewBranches() && config.config.Config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{

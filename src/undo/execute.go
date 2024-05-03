@@ -25,7 +25,7 @@ func Execute(args ExecuteArgs) error {
 		Run:            args.Runner,
 		RunState:       args.RunState,
 	})
-	lightInterpreter.Execute(program, args.Runner, args.Lineage)
+	lightInterpreter.Execute(program, args.Lineage)
 	err := statefile.Delete(args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)

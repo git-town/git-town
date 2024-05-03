@@ -13,11 +13,11 @@ import (
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	var err error
-	args.RunState.EndBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	args.RunState.EndBranchesSnapshot, err = args.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Run.Backend.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	args.RunState.EndStashSize, err = args.Run.Backend.StashSize()
+	args.RunState.EndStashSize, err = args.Backend.StashSize()
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
 	return nil
 }
 
@@ -52,6 +52,6 @@ func finishedDryRunCommand(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
 	return nil
 }

@@ -35,5 +35,5 @@ func (self *RebaseParent) Run(args shared.RunArgs) error {
 	} else {
 		branchToRebase = parent.BranchName()
 	}
-	return args.Runner.Frontend.Rebase(branchToRebase)
+	return args.Frontend.Rebase(branchToRebase)
 }

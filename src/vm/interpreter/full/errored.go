@@ -15,11 +15,11 @@ import (
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	var err error
-	args.RunState.EndBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	args.RunState.EndBranchesSnapshot, err = args.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Run.Backend.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
@@ -32,7 +32,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	args.RunState.EndStashSize, err = args.Run.Backend.StashSize()
+	args.RunState.EndStashSize, err = args.Backend.StashSize()
 	if err != nil {
 		return err
 	}
@@ -41,26 +41,26 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return autoUndo(failedOpcode, runErr, args)
 	}
 	args.RunState.RunProgram.Prepend(failedOpcode.CreateContinueProgram()...)
-	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)
+	err = args.RunState.MarkAsUnfinished(&args.Backend)
 	if err != nil {
 		return err
 	}
-	currentBranch, err := args.Run.Backend.CurrentBranch()
+	currentBranch, err := args.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	repoStatus, err := args.Run.Backend.RepoStatus()
+	repoStatus, err := args.Backend.RepoStatus()
 	if err != nil {
 		return err
 	}
-	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Run.Config.Config.IsMainBranch(currentBranch)) {
+	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
 	message := runErr.Error()
 	message += messages.UndoContinueGuidance
 	if args.RunState.UnfinishedDetails.CanSkip {

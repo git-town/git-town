@@ -16,14 +16,14 @@ func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
 	if self.Branch.IsEmpty() {
 		return nil
 	}
-	existingBranch, err := args.Runner.Backend.CurrentBranch()
+	existingBranch, err := args.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if existingBranch == self.Branch {
 		return nil
 	}
-	if !args.Runner.Backend.HasLocalBranch(self.Branch) {
+	if !args.Backend.HasLocalBranch(self.Branch) {
 		return nil
 	}
 	return (&Checkout{Branch: self.Branch}).Run(args)

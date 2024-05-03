@@ -123,7 +123,6 @@ func createBranch(args createBranchArgs) error {
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
 		RootDir:                 args.rootDir,
-		Run:                     args.runner,
 		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
@@ -163,7 +162,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -222,7 +220,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Config.Config,
+		config:                    *repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

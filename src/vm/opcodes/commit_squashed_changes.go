@@ -12,5 +12,5 @@ type CommitSquashedChanges struct {
 }
 
 func (self *CommitSquashedChanges) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.Commit(self.Message, "")
+	return args.Frontend.Commit(self.Message, "")
 }

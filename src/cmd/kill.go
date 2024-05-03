@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -89,7 +90,6 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -99,7 +99,7 @@ type killData struct {
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
-	config           configdomain.FullConfig
+	config           config.Config
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -129,7 +129,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -172,7 +171,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           repo.Config.Config,
+		config:           *repo.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -204,7 +203,7 @@ func killProgram(config *killData) (runProgram, finalUndoProgram program.Program
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config *killData) {
-	if config.branchNameToKill.HasTrackingBranch() && config.config.IsOnline() {
+	if config.branchNameToKill.HasTrackingBranch() && config.config.Config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, config)
@@ -227,7 +226,7 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, c
 	if parentBranch, hasParentBranch := config.parentBranch.Get(); hasParentBranch && !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchNameToKill.LocalName,
-			Lineage: config.config.Lineage,
+			Lineage: config.config.Config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})
