@@ -241,7 +241,7 @@ func saveAll(oldConfig configdomain.UnvalidatedConfig, userInput userInput, fron
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(runner, userInput.config.GitLabToken)
+	err = saveGitLabToken(oldConfig.GitLabToken, userInput.config.GitLabToken, frontend)
 	if err != nil {
 		return err
 	}
@@ -343,14 +343,14 @@ func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], fronte
 	return frontend.RemoveGitHubToken()
 }
 
-func saveGitLabToken(runner *git.ProdRunner, newToken Option[configdomain.GitLabToken]) error {
-	if newToken == runner.Config.Config.GitLabToken {
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGitLabToken(value)
+		return frontend.SetGitLabToken(value)
 	}
-	return runner.Frontend.RemoveGitLabToken()
+	return frontend.RemoveGitLabToken()
 }
 
 func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform Option[configdomain.HostingPlatform]) (err error) {
