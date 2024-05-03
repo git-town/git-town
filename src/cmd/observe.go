@@ -179,6 +179,7 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult, verbose b
 		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return observeData{}, err

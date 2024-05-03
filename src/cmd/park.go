@@ -118,11 +118,26 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, bool, error) {
+func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool) (parkData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return parkData{}, false, err
+	}
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
+		Config:                &repo.UnvalidatedConfig.Config,
+		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 true,
+		Frontend:              &repo.Frontend,
+		HandleUnfinishedState: false,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return parkData{}, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToPark := commandconfig.BranchesAndTypes{}
@@ -133,10 +148,20 @@ func determineParkData(args []string, repo *execute.OpenRepoResult) (parkData, b
 	}
 	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToPark.Keys(),
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return parkData{}, abort, err
