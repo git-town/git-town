@@ -81,6 +81,7 @@ type LoadRepoSnapshotArgs struct {
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
+	Runner                *git.ProdRunner
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }
