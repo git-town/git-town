@@ -233,7 +233,7 @@ func saveAll(oldConfig configdomain.UnvalidatedConfig, userInput userInput, fron
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(runner, userInput.config.GiteaToken)
+	err = saveGiteaToken(oldConfig.GiteaToken, userInput.config.GiteaToken, frontend)
 	if err != nil {
 		return err
 	}
