@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(*data.runner.Config, &data.runner.Backend, data)
+	aborted, err := enterData(*repo.Config, &repo.Backend, data)
 	if err != nil || aborted {
 		return err
 	}
