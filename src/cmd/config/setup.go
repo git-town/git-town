@@ -66,7 +66,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.runner, data.userInput)
+	err = saveAll(data.userInput, *repo.Config, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -236,93 +236,93 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	}, exit, err
 }
 
-func saveAll(runner *git.ProdRunner, userInput userInput) error {
-	err := saveAliases(runner, userInput.config.Aliases)
+func saveAll(userInput userInput, oldConfig config.Config, frontend git.FrontendCommands) error {
+	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(runner, userInput.config.GiteaToken)
+	err = saveGiteaToken(oldConfig.Config.GiteaToken, userInput.config.GiteaToken, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(runner, userInput.config.GitHubToken)
+	err = saveGitHubToken(oldConfig.Config.GitHubToken, userInput.config.GitHubToken, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(runner, userInput.config.GitLabToken)
+	err = saveGitLabToken(oldConfig.Config.GitLabToken, userInput.config.GitLabToken, frontend)
 	if err != nil {
 		return err
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, runner)
+		return saveToFile(userInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(runner, userInput)
+		return saveToGit(userInput, oldConfig, frontend)
 	}
 	panic("unknown configStorage: " + userInput.configStorage)
 }
 
-func saveToGit(runner *git.ProdRunner, userInput userInput) error {
-	err := saveHostingPlatform(runner, userInput.config.HostingPlatform)
+func saveToGit(userInput userInput, oldConfig config.Config, frontend git.FrontendCommands) error {
+	err := saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveOriginHostname(runner, userInput.config.HostingOriginHostname)
+	err = saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveMainBranch(runner, userInput.config.MainBranch)
+	err = saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = savePerennialBranches(runner, userInput.config.PerennialBranches)
+	err = savePerennialBranches(oldConfig.Config.ContributionBranches, userInput.config.PerennialBranches, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = savePerennialRegex(runner, userInput.config.PerennialRegex)
+	err = savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = savePushHook(runner, userInput.config.PushHook)
+	err = savePushHook(oldConfig.Config.PushHook, userInput.config.PushHook, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = savePushNewBranches(runner, userInput.config.PushNewBranches)
+	err = savePushNewBranches(oldConfig.Config.PushNewBranches, userInput.config.PushNewBranches, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = saveShipDeleteTrackingBranch(runner, userInput.config.ShipDeleteTrackingBranch)
+	err = saveShipDeleteTrackingBranch(oldConfig.Config.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = saveSyncFeatureStrategy(runner, userInput.config.SyncFeatureStrategy)
+	err = saveSyncFeatureStrategy(oldConfig.Config.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = saveSyncPerennialStrategy(runner, userInput.config.SyncPerennialStrategy)
+	err = saveSyncPerennialStrategy(oldConfig.Config.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = saveSyncUpstream(runner, userInput.config.SyncUpstream)
+	err = saveSyncUpstream(oldConfig.Config.SyncUpstream, userInput.config.SyncUpstream, oldConfig)
 	if err != nil {
 		return err
 	}
-	err = saveSyncBeforeShip(runner, userInput.config.SyncBeforeShip)
+	err = saveSyncBeforeShip(oldConfig.Config.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err error) {
+func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.FrontendCommands) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
-		oldAlias, hasOld := runner.Config.Config.Aliases[aliasableCommand]
+		oldAlias, hasOld := oldAliases[aliasableCommand]
 		newAlias, hasNew := newAliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
-			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
+			err = frontend.RemoveGitAlias(aliasableCommand)
 		case newAlias != oldAlias:
-			err = runner.Frontend.SetGitAlias(aliasableCommand)
+			err = frontend.SetGitAlias(aliasableCommand)
 		}
 		if err != nil {
 			return err
@@ -331,38 +331,38 @@ func saveAliases(runner *git.ProdRunner, newAliases configdomain.Aliases) (err e
 	return nil
 }
 
-func saveGiteaToken(runner *git.ProdRunner, newToken Option[configdomain.GiteaToken]) error {
-	if newToken == runner.Config.Config.GiteaToken {
+func saveGiteaToken(oldValue, newToken Option[configdomain.GiteaToken], frontend git.FrontendCommands) error {
+	if newToken == oldValue {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGiteaToken(value)
+		return frontend.SetGiteaToken(value)
 	}
-	return runner.Frontend.RemoveGiteaToken()
+	return frontend.RemoveGiteaToken()
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newToken Option[configdomain.GitHubToken]) error {
-	if newToken == runner.Config.Config.GitHubToken {
+func saveGitHubToken(oldValue, newToken Option[configdomain.GitHubToken], frontend git.FrontendCommands) error {
+	if newToken == oldValue {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGitHubToken(value)
+		return frontend.SetGitHubToken(value)
 	}
-	return runner.Frontend.RemoveGitHubToken()
+	return frontend.RemoveGitHubToken()
 }
 
-func saveGitLabToken(runner *git.ProdRunner, newToken Option[configdomain.GitLabToken]) error {
-	if newToken == runner.Config.Config.GitLabToken {
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return runner.Frontend.SetGitLabToken(value)
+		return frontend.SetGitLabToken(value)
 	}
-	return runner.Frontend.RemoveGitLabToken()
+	return frontend.RemoveGitLabToken()
 }
 
-func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform Option[configdomain.HostingPlatform]) (err error) {
-	oldValue, oldHas := runner.Config.Config.HostingPlatform.Get()
+func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.HostingPlatform], frontend git.FrontendCommands) (err error) {
+	oldValue, oldHas := oldHostingPlatform.Get()
 	newValue, newHas := newHostingPlatform.Get()
 	if !oldHas && !newHas {
 		return nil
@@ -371,110 +371,109 @@ func saveHostingPlatform(runner *git.ProdRunner, newHostingPlatform Option[confi
 		return nil
 	}
 	if newHas {
-		return runner.Frontend.SetHostingPlatform(newValue)
+		return frontend.SetHostingPlatform(newValue)
 	}
-	return runner.Frontend.DeleteHostingPlatform()
+	return frontend.DeleteHostingPlatform()
 }
 
-func saveMainBranch(runner *git.ProdRunner, newValue gitdomain.LocalBranchName) error {
-	if newValue == runner.Config.Config.MainBranch {
+func saveMainBranch(oldValue, newValue gitdomain.LocalBranchName, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetMainBranch(newValue)
+	return config.SetMainBranch(newValue)
 }
 
-func saveOriginHostname(runner *git.ProdRunner, newValue Option[configdomain.HostingOriginHostname]) error {
-	if newValue == runner.Config.Config.HostingOriginHostname {
+func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], frontend git.FrontendCommands) error {
+	if newValue == oldValue {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return runner.Frontend.SetOriginHostname(value)
+		return frontend.SetOriginHostname(value)
 	}
-	return runner.Frontend.DeleteOriginHostname()
+	return frontend.DeleteOriginHostname()
 }
 
-func savePerennialBranches(runner *git.ProdRunner, newValue gitdomain.LocalBranchNames) error {
-	oldValue := runner.Config.Config.PerennialBranches
-	if slices.Compare(oldValue, newValue) != 0 || runner.Config.LocalGitConfig.PerennialBranches == nil {
-		return runner.Config.SetPerennialBranches(newValue)
+func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.Config) error {
+	if slices.Compare(oldValue, newValue) != 0 || config.LocalGitConfig.PerennialBranches == nil {
+		return config.SetPerennialBranches(newValue)
 	}
 	return nil
 }
 
-func savePerennialRegex(runner *git.ProdRunner, newValue Option[configdomain.PerennialRegex]) error {
-	if newValue == runner.Config.Config.PerennialRegex {
+func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return runner.Config.SetPerennialRegexLocally(value)
+		return config.SetPerennialRegexLocally(value)
 	}
-	runner.Config.RemovePerennialRegex()
+	config.RemovePerennialRegex()
 	return nil
 }
 
-func savePushHook(runner *git.ProdRunner, newValue configdomain.PushHook) error {
-	if newValue == runner.Config.Config.PushHook {
+func savePushHook(oldValue, newValue configdomain.PushHook, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetPushHookLocally(newValue)
+	return config.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(runner *git.ProdRunner, newValue configdomain.PushNewBranches) error {
-	if newValue == runner.Config.Config.PushNewBranches {
+func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetPushNewBranches(newValue, false)
+	return config.SetPushNewBranches(newValue, false)
 }
 
-func saveShipDeleteTrackingBranch(runner *git.ProdRunner, newValue configdomain.ShipDeleteTrackingBranch) error {
-	if newValue == runner.Config.Config.ShipDeleteTrackingBranch {
+func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetShipDeleteTrackingBranch(newValue, false)
+	return config.SetShipDeleteTrackingBranch(newValue, false)
 }
 
-func saveSyncFeatureStrategy(runner *git.ProdRunner, newValue configdomain.SyncFeatureStrategy) error {
-	if newValue == runner.Config.Config.SyncFeatureStrategy {
+func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetSyncFeatureStrategy(newValue)
+	return config.SetSyncFeatureStrategy(newValue)
 }
 
-func saveSyncPerennialStrategy(runner *git.ProdRunner, newValue configdomain.SyncPerennialStrategy) error {
-	if newValue == runner.Config.Config.SyncPerennialStrategy {
+func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetSyncPerennialStrategy(newValue)
+	return config.SetSyncPerennialStrategy(newValue)
 }
 
-func saveSyncUpstream(runner *git.ProdRunner, newValue configdomain.SyncUpstream) error {
-	if newValue == runner.Config.Config.SyncUpstream {
+func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetSyncUpstream(newValue, false)
+	return config.SetSyncUpstream(newValue, false)
 }
 
-func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBeforeShip) error {
-	if newValue == runner.Config.Config.SyncBeforeShip {
+func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, config config.Config) error {
+	if newValue == oldValue {
 		return nil
 	}
-	return runner.Config.SetSyncBeforeShip(newValue, false)
+	return config.SetSyncBeforeShip(newValue, false)
 }
 
-func saveToFile(userInput userInput, runner *git.ProdRunner) error {
+func saveToFile(userInput userInput, config config.Config) error {
 	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
 	}
-	runner.Config.RemoveMainBranch()
-	runner.Config.RemovePerennialBranches()
-	runner.Config.RemovePerennialRegex()
-	runner.Config.RemovePushNewBranches()
-	runner.Config.RemovePushHook()
-	runner.Config.RemoveSyncBeforeShip()
-	runner.Config.RemoveShipDeleteTrackingBranch()
-	runner.Config.RemoveSyncFeatureStrategy()
-	runner.Config.RemoveSyncPerennialStrategy()
-	runner.Config.RemoveSyncUpstream()
+	config.RemoveMainBranch()
+	config.RemovePerennialBranches()
+	config.RemovePerennialRegex()
+	config.RemovePushNewBranches()
+	config.RemovePushHook()
+	config.RemoveSyncBeforeShip()
+	config.RemoveShipDeleteTrackingBranch()
+	config.RemoveSyncFeatureStrategy()
+	config.RemoveSyncPerennialStrategy()
+	config.RemoveSyncUpstream()
 	return nil
 }
