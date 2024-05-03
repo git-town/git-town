@@ -2,14 +2,16 @@ package validate
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -69,7 +71,7 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 	if err != nil {
 		return validatedResult, abort, err
 	}
-	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, validatedPerennials, args.Unvalidated.GitConfig, args.FinalMessages)
+	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, args.Unvalidated.Config.PerennialBranches, args.Unvalidated.GitConfig, args.FinalMessages)
 
 	validatedConfig := configdomain.ValidatedConfig{
 		UnvalidatedConfig: args.Unvalidated.Config,
@@ -88,6 +90,7 @@ type ConfigArgs struct {
 	LocalBranches      gitdomain.LocalBranchNames
 	TestInputs         *components.TestInputs
 	Unvalidated        config.UnvalidatedConfig
+}
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
 func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {

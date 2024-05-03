@@ -89,9 +89,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 		Runner:       &runner,
 	})
-	if err != nil {
-		panic(err)
-	}
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            nil,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
