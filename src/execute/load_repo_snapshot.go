@@ -3,6 +3,7 @@ package execute
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -72,9 +73,11 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 }
 
 type LoadRepoSnapshotArgs struct {
+	Backend               *git.BackendCommands
 	Config                *configdomain.UnvalidatedConfig
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
+	Frontend              *git.FrontendCommands
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
