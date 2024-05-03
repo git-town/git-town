@@ -152,8 +152,10 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return nil, branchesSnapshot, stashSize, abort, err

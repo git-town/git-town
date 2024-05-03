@@ -78,7 +78,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	if err != nil {
 		return nil, false, err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -101,11 +101,20 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToDiff,
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
 		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || abort {
 		return nil, abort, err

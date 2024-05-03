@@ -218,6 +218,9 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
+	if err != nil {
+		return nil, false, err
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, runner, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
