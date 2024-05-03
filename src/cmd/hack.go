@@ -148,9 +148,11 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return
 	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -163,10 +165,20 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: targetBranches,
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || exit {
 		return data, branchesSnapshot, stashSize, exit, err

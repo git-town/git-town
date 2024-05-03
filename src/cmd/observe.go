@@ -64,7 +64,7 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineObserveData(args, repo)
+	data, err := determineObserveData(args, repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -127,10 +127,25 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 	return nil
 }
 
-func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
+func determineObserveData(args []string, repo *execute.OpenRepoResult, verbose bool) (observeData, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
+		return observeData{}, err
+	}
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
+		Config:                &repo.UnvalidatedConfig.Config,
+		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 true,
+		Frontend:              &repo.Frontend,
+		HandleUnfinishedState: false,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
+	})
+	if err != nil || exit {
 		return observeData{}, err
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
@@ -151,8 +166,17 @@ func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeD
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, _, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToObserve.Keys(),
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		FinalMessages:      &repo.FinalMessages,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
