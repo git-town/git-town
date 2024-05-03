@@ -80,7 +80,7 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	if err != nil {
 		return validatedResult, abort, err
 	}
-	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, args.Unvalidated.Config.PerennialBranches, args.Unvalidated.GitConfig, args.FinalMessages)
+	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, validatedPerennials, args.Unvalidated.GitConfig, args.FinalMessages)
 
 	return &args.Unvalidated, false, err
 }
