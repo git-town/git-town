@@ -69,9 +69,9 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
+		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 				Lineage:           lineage,
 				PushHook:          false,
 				PerennialBranches: gitdomain.NewLocalBranchNames(),
@@ -125,9 +125,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
+		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 				Lineage:           configdomain.Lineage{},
 				PerennialBranches: gitdomain.NewLocalBranchNames(),
 				PushHook:          false,
@@ -216,9 +216,9 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.ValidatedConfig{ //nolint:exhaustruct
+		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{ //nolint:exhaustruct
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				Lineage:           lineage,
 				PushHook:          false,

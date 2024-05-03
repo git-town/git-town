@@ -84,7 +84,7 @@ func Config(args ConfigArgs) (validatedResult config.ValidatedConfig, aborted bo
 	vConfig := config.ValidatedConfig{
 		Config: validatedConfig,
 	}
-	return vConfig, false, nil
+	return vConfig, false, err
 }
 
 type ConfigArgs struct {
