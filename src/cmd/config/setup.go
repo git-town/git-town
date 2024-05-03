@@ -216,9 +216,6 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	if err != nil {
-		return nil, false, err
-	}
 	return &setupData{
 		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
