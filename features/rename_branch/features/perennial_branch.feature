@@ -18,6 +18,7 @@ Feature: rename a perennial branch
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """
 
+  @debug @this
   Scenario: forced rename works
     When I run "git-town rename-branch --force production new"
     Then it runs the commands
