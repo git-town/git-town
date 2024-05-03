@@ -74,7 +74,7 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.GitLabToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.GiteaToken))
 	fmt.Println()
-	if !config.MainBranch.IsEmpty() {
+	if len(config.Lineage) > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
 	}
 }
