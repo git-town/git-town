@@ -113,9 +113,11 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               &repo.Backend,
 		Config:                &repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
+		Frontend:              &repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -135,10 +137,19 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	}
 	validatedConfig, runner, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		CommandsCounter:    repo.CommandsCounter,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		RepoStatus:         repoStatus,
+		RootDir:            repo.RootDir,
+		StashSize:          stashSize,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
+		Verbose:            verbose,
 	})
 	if err != nil || aborted {
 		return nil, branchesSnapshot, stashSize, aborted, err
