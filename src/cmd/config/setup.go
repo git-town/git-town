@@ -118,7 +118,7 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 	}
 	existingMainBranch := config.Config.MainBranch
 	if existingMainBranch.IsNone() {
-		config.Config.MainBranch = backend.DefaultBranch()
+		existingMainBranch = backend.DefaultBranch()
 	}
 	if existingMainBranch.IsNone() {
 		existingMainBranch = backend.OriginHead()
