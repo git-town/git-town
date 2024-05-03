@@ -57,6 +57,26 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
+// RemoveOutdatedConfiguration removes outdated Git Town configuration.
+func (self *UnvalidatedConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
+	for child, parent := range self.Config.Lineage {
+		hasChildBranch := localBranches.Contains(child)
+		hasParentBranch := localBranches.Contains(parent)
+		if !hasChildBranch || !hasParentBranch {
+			self.RemoveParent(child)
+		}
+	}
+	return nil
+}
+
+// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
+func (self *UnvalidatedConfig) RemoveParent(branch gitdomain.LocalBranchName) {
+	if self.LocalGitConfig.Lineage != nil {
+		self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	}
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {

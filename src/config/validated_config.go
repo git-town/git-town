@@ -87,26 +87,6 @@ func (self *ValidatedConfig) RemoveMainBranch() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyMainBranch)
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *ValidatedConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.Config.Lineage {
-		hasChildBranch := localBranches.Contains(child)
-		hasParentBranch := localBranches.Contains(parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(child)
-		}
-	}
-	return nil
-}
-
-// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
-func (self *ValidatedConfig) RemoveParent(branch gitdomain.LocalBranchName) {
-	if self.LocalGitConfig.Lineage != nil {
-		self.LocalGitConfig.Lineage.RemoveBranch(branch)
-	}
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
-}
-
 func (self *ValidatedConfig) RemovePerennialBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
