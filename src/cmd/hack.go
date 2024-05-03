@@ -160,8 +160,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil || exit {
 		return
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
