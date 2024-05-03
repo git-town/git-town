@@ -83,10 +83,10 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupData struct {
+	config        config.Config
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
-	runner        *git.ProdRunner
 	userInput     userInput
 }
 
@@ -228,10 +228,10 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		Verbose:               verbose,
 	})
 	return &setupData{
+		config:        *repo.Config,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
-		runner:        &runner,
 		userInput:     defaultUserInput(),
 	}, exit, err
 }
