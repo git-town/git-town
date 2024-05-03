@@ -263,55 +263,20 @@ func saveAll(userInput userInput, oldConfig config.Config, frontend git.Frontend
 }
 
 func saveToGit(userInput userInput, oldConfig config.Config, frontend git.FrontendCommands) error {
-	err := saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = savePerennialBranches(oldConfig.Config.ContributionBranches, userInput.config.PerennialBranches, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = savePushHook(oldConfig.Config.PushHook, userInput.config.PushHook, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = savePushNewBranches(oldConfig.Config.PushNewBranches, userInput.config.PushNewBranches, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = saveShipDeleteTrackingBranch(oldConfig.Config.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = saveSyncFeatureStrategy(oldConfig.Config.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = saveSyncPerennialStrategy(oldConfig.Config.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = saveSyncUpstream(oldConfig.Config.SyncUpstream, userInput.config.SyncUpstream, oldConfig)
-	if err != nil {
-		return err
-	}
-	err = saveSyncBeforeShip(oldConfig.Config.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig)
-	if err != nil {
-		return err
-	}
-	return nil
+	fc := execute.FailureCollector{}
+	fc.Check(saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, frontend))
+	fc.Check(saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, frontend))
+	fc.Check(saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch, oldConfig))
+	fc.Check(savePerennialBranches(oldConfig.Config.ContributionBranches, userInput.config.PerennialBranches, oldConfig))
+	fc.Check(savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
+	fc.Check(savePushHook(oldConfig.Config.PushHook, userInput.config.PushHook, oldConfig))
+	fc.Check(savePushNewBranches(oldConfig.Config.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
+	fc.Check(saveShipDeleteTrackingBranch(oldConfig.Config.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
+	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
+	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncUpstream(oldConfig.Config.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
+	fc.Check(saveSyncBeforeShip(oldConfig.Config.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig))
+	return fc.Err
 }
 
 func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.FrontendCommands) (err error) {
