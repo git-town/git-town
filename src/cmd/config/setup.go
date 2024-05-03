@@ -296,8 +296,8 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.Front
 	return nil
 }
 
-func saveGiteaToken(oldValue, newToken Option[configdomain.GiteaToken], frontend git.FrontendCommands) error {
-	if newToken == oldValue {
+func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
@@ -306,8 +306,8 @@ func saveGiteaToken(oldValue, newToken Option[configdomain.GiteaToken], frontend
 	return frontend.RemoveGiteaToken()
 }
 
-func saveGitHubToken(oldValue, newToken Option[configdomain.GitHubToken], frontend git.FrontendCommands) error {
-	if newToken == oldValue {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], frontend git.FrontendCommands) error {
+	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
