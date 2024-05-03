@@ -66,14 +66,18 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		})
 	case dialog.ResponseSkip:
 		return true, skip.Execute(skip.ExecuteArgs{
-			Config:         args.Config,
-			Connector:      args.Connector,
-			CurrentBranch:  args.CurrentBranch,
-			HasOpenChanges: args.HasOpenChanges,
-			RootDir:        args.RootDir,
-			RunState:       runState,
-			TestInputs:     args.DialogTestInputs,
-			Verbose:        args.Verbose,
+			Backend:         args.Backend,
+			CommandsCounter: args.CommandsCounter,
+			Config:          args.Config,
+			Connector:       args.Connector,
+			CurrentBranch:   args.CurrentBranch,
+			FinalMessages:   args.FinalMessages,
+			Frontend:        args.Frontend,
+			HasOpenChanges:  args.HasOpenChanges,
+			RootDir:         args.RootDir,
+			RunState:        runState,
+			TestInputs:      args.DialogTestInputs,
+			Verbose:         args.Verbose,
 		})
 	case dialog.ResponseQuit:
 		return true, nil
@@ -109,9 +113,13 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 args.Backend,
+		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
+		FinalMessages:           args.FinalMessages,
+		Frontend:                args.Frontend,
 		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,

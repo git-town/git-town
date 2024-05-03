@@ -88,9 +88,13 @@ func executePropose(dryRun, verbose bool) error {
 		RunProgram:            proposeProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

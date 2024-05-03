@@ -76,9 +76,13 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

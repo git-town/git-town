@@ -103,13 +103,17 @@ func executeSkip(verbose bool) error {
 		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
-		Config:         *repo.Config,
-		Connector:      connector,
-		CurrentBranch:  initialBranchesSnapshot.Active,
-		HasOpenChanges: repoStatus.OpenChanges,
-		RootDir:        repo.RootDir,
-		RunState:       runState,
-		TestInputs:     dialogTestInputs,
-		Verbose:        verbose,
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          *repo.Config,
+		Connector:       connector,
+		CurrentBranch:   initialBranchesSnapshot.Active,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+		HasOpenChanges:  repoStatus.OpenChanges,
+		RootDir:         repo.RootDir,
+		RunState:        runState,
+		TestInputs:      dialogTestInputs,
+		Verbose:         verbose,
 	})
 }

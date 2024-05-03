@@ -22,8 +22,8 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:                 args.Repo.Backend,
-			Config:                  *args.Config,
 			CommandsCounter:         args.Repo.CommandsCounter,
+			Config:                  *args.Config,
 			Connector:               nil,
 			CurrentBranch:           branchesSnapshot.Active,
 			DialogTestInputs:        args.DialogTestInputs,
