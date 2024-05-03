@@ -17,6 +17,14 @@ import (
 )
 
 func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err error) {
+	// check Git user data
+	if args.Unvalidated.Config.GitUserEmail == "" {
+		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
+	}
+	if args.Unvalidated.Config.GitUserName == "" {
+		return validatedResult, false, errors.New(messages.GitUserNameMissing)
+	}
+
 	// enter and save main and perennials
 	var validatedMain gitdomain.LocalBranchName
 	if args.Unvalidated.Config.MainBranch.IsEmpty() {
@@ -40,14 +48,6 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 		}
 	} else {
 		validatedMain = args.Unvalidated.Config.MainBranch
-	}
-
-	// check Git user data
-	if args.Unvalidated.Config.GitUserEmail == "" {
-		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
-	}
-	if args.Unvalidated.Config.GitUserName == "" {
-		return validatedResult, false, errors.New(messages.GitUserNameMissing)
 	}
 
 	// enter and save missing parent branches
