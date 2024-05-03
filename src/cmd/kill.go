@@ -82,9 +82,13 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

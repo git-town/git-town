@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -54,13 +53,6 @@ func executeSkip(verbose bool) error {
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -117,7 +109,6 @@ func executeSkip(verbose bool) error {
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
 		RunState:       runState,
-		Runner:         &runner,
 		TestInputs:     dialogTestInputs,
 		Verbose:        verbose,
 	})

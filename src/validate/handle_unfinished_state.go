@@ -56,6 +56,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			CommandsCounter:  args.CommandsCounter,
 			Config:           args.Config,
 			FinalMessages:    args.FinalMessages,
+			Frontend:         args.Frontend,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,
@@ -65,6 +66,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		})
 	case dialog.ResponseSkip:
 		return true, skip.Execute(skip.ExecuteArgs{
+			Config:         args.Config,
 			Connector:      args.Connector,
 			CurrentBranch:  args.CurrentBranch,
 			HasOpenChanges: args.HasOpenChanges,
@@ -87,6 +89,7 @@ type UnfinishedStateArgs struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	DialogTestInputs        components.TestInputs
 	FinalMessages           *stringslice.Collector
+	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
