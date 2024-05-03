@@ -179,40 +179,40 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func prependProgram(config *prependData) program.Program {
+func prependProgram(data *prependData) program.Program {
 	prog := program.Program{}
-	for _, branchToSync := range config.branchesToSync {
+	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			BranchInfos:   config.allBranches,
-			Config:        config.config,
-			InitialBranch: config.initialBranch,
+			BranchInfos:   data.allBranches,
+			Config:        data.config,
+			InitialBranch: data.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
-			Remotes:       config.remotes,
+			Remotes:       data.remotes,
 		})
 	}
 	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
-		Ancestors: config.newBranchParentCandidates,
-		Branch:    config.targetBranch,
+		Ancestors: data.newBranchParentCandidates,
+		Branch:    data.targetBranch,
 	})
 	// set the parent of the newly created branch
 	prog.Add(&opcodes.SetExistingParent{
-		Branch:    config.targetBranch,
-		Ancestors: config.newBranchParentCandidates,
+		Branch:    data.targetBranch,
+		Ancestors: data.newBranchParentCandidates,
 	})
 	// set the parent of the branch prepended to
 	prog.Add(&opcodes.SetParentIfBranchExists{
-		Branch: config.initialBranch,
-		Parent: config.targetBranch,
+		Branch: data.initialBranch,
+		Parent: data.targetBranch,
 	})
-	if config.remotes.HasOrigin() && config.config.ShouldPushNewBranches() && config.config.IsOnline() {
-		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
+	if data.remotes.HasOrigin() && data.config.ShouldPushNewBranches() && data.config.IsOnline() {
+		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
-		DryRun:                   config.dryRun,
+		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
 	return prog
 }
