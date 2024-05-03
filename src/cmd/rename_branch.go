@@ -115,6 +115,7 @@ type renameBranchData struct {
 }
 
 func determineRenameBranchData(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -133,18 +134,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
-	})
-	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
-	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
 	if len(args) == 1 {
@@ -157,7 +146,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName, newBranchName},
+		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
