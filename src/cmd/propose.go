@@ -87,15 +87,18 @@ func executePropose(dryRun, verbose bool) error {
 		RunProgram:            proposeProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -199,7 +202,7 @@ func proposeProgram(data *proposeData) program.Program {
 	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &prog,
@@ -220,7 +223,7 @@ func proposeProgram(data *proposeData) program.Program {
 }
 
 func validateProposeData(data *proposeData) error {
-	initialBranchType := data.config.BranchType(data.initialBranch)
+	initialBranchType := data.config.Config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

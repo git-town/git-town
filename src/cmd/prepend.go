@@ -76,15 +76,18 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -188,7 +191,7 @@ func prependProgram(data *prependData) program.Program {
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
@@ -209,7 +212,7 @@ func prependProgram(data *prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.ShouldPushNewBranches() && data.config.IsOnline() {
+	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

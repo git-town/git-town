@@ -89,15 +89,18 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -225,7 +228,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 func compressProgram(data *compressBranchesData) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, data.config.Online(), data.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

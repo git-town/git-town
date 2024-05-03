@@ -88,15 +88,18 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunProgram:            renameBranchProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -210,21 +213,21 @@ func renameBranchProgram(data *renameBranchData) program.Program {
 		result.Add(&opcodes.Checkout{Branch: data.newBranch})
 	}
 	if !data.dryRun {
-		if data.config.IsPerennialBranch(data.initialBranch) {
+		if data.config.Config.IsPerennialBranch(data.initialBranch) {
 			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: data.oldBranch.LocalName})
 			result.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
 		} else {
 			result.Add(&opcodes.DeleteParentBranch{Branch: data.oldBranch.LocalName})
-			parentBranch, hasParent := data.config.Lineage.Parent(data.oldBranch.LocalName).Get()
+			parentBranch, hasParent := data.config.Config.Lineage.Parent(data.oldBranch.LocalName).Get()
 			if hasParent {
 				result.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
 		}
 	}
-	for _, child := range data.config.Lineage.Children(data.oldBranch.LocalName) {
+	for _, child := range data.config.Config.Lineage.Children(data.oldBranch.LocalName) {
 		result.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
 	}
-	if data.oldBranch.HasTrackingBranch() && data.config.IsOnline() {
+	if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 		result.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
 		result.Add(&opcodes.DeleteTrackingBranch{Branch: data.oldBranch.RemoteName})
 	}

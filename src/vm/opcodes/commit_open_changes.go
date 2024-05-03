@@ -19,13 +19,13 @@ func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
-	err := args.Runner.Frontend.StageFiles("-A")
+	err := args.Frontend.StageFiles("-A")
 	if err != nil {
 		return err
 	}
-	currentBranch, err := args.Runner.Backend.CurrentBranch()
+	currentBranch, err := args.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return args.Runner.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	return args.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

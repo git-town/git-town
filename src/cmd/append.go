@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -75,15 +74,18 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:            appendProgram(*data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
 		RootDir:                 repo.RootDir,
-		Run:                     data.runner,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -182,7 +184,7 @@ func appendProgram(data appendData) program.Program {
 		for _, branch := range data.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   data.allBranches,
-				Config:        data.config,
+				Config:        data.config.Config,
 				InitialBranch: data.initialBranch,
 				Program:       &prog,
 				Remotes:       data.remotes,
@@ -194,7 +196,7 @@ func appendProgram(data appendData) program.Program {
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.ShouldPushNewBranches() && data.config.IsOnline() {
+	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	prog.Add(&opcodes.SetExistingParent{

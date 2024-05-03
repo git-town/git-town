@@ -10,16 +10,16 @@ type ForcePushCurrentBranch struct {
 }
 
 func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Runner.Backend.CurrentBranch()
+	currentBranch, err := args.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	shouldPush, err := args.Runner.Backend.ShouldPushBranch(currentBranch, currentBranch.TrackingBranch())
+	shouldPush, err := args.Backend.ShouldPushBranch(currentBranch, currentBranch.TrackingBranch())
 	if err != nil {
 		return err
 	}
 	if !shouldPush {
 		return nil
 	}
-	return args.Runner.Frontend.ForcePushBranchSafely(args.Runner.Config.Config.NoPushHook())
+	return args.Frontend.ForcePushBranchSafely(args.Config.Config.NoPushHook())
 }

@@ -20,11 +20,11 @@ func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CreateProposal) Run(args shared.RunArgs) error {
-	parentBranch := args.Runner.Config.Config.Lineage[self.Branch]
+	parentBranch := args.Config.Config.Lineage[self.Branch]
 	prURL, err := args.Connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch)
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, args.Runner.Frontend.Runner, args.Runner.Backend.Runner)
+	browser.Open(prURL, args.Frontend.Runner, args.Backend.Runner)
 	return nil
 }

@@ -12,5 +12,5 @@ type DeleteLocalBranch struct {
 }
 
 func (self *DeleteLocalBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.DeleteLocalBranch(self.Branch)
+	return args.Frontend.DeleteLocalBranch(self.Branch)
 }

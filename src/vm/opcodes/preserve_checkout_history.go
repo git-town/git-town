@@ -12,21 +12,21 @@ type PreserveCheckoutHistory struct {
 }
 
 func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
-	if !args.Runner.Backend.CurrentBranchCache.Initialized() {
+	if !args.Backend.CurrentBranchCache.Initialized() {
 		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
 		return nil
 	}
-	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
-	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
+	currentBranch := args.Backend.CurrentBranchCache.Value()
+	actualPreviousBranch := args.Backend.CurrentBranchCache.Previous()
 	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
 	candidatesWithoutCurrent := self.PreviousBranchCandidates.Remove(currentBranch)
-	expectedPreviousBranch := args.Runner.Backend.FirstExistingBranch(candidatesWithoutCurrent, gitdomain.EmptyLocalBranchName())
+	expectedPreviousBranch := args.Backend.FirstExistingBranch(candidatesWithoutCurrent, gitdomain.EmptyLocalBranchName())
 	if expectedPreviousBranch.IsEmpty() || actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}
-	err := args.Runner.Backend.CheckoutBranchUncached(expectedPreviousBranch)
+	err := args.Backend.CheckoutBranchUncached(expectedPreviousBranch)
 	if err != nil {
 		return err
 	}
-	return args.Runner.Backend.CheckoutBranchUncached(currentBranch)
+	return args.Backend.CheckoutBranchUncached(currentBranch)
 }

@@ -65,13 +65,16 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
+		Backend:          repo.Backend,
+		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
+		FinalMessages:    repo.FinalMessages,
+		Frontend:         repo.Frontend,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          data.config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Runner:           data.prodRunner,
 		Verbose:          verbose,
 	})
 }
