@@ -88,6 +88,7 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 			UnvalidatedConfig: args.Unvalidated.Config,
 			MainBranch:        validatedMain,
 		},
+		UnvalidatedConfig: args.Unvalidated,
 	}
 
 	runner := git.ProdRunner{
