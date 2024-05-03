@@ -10,10 +10,8 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
 	"github.com/shoenig/test/must"
@@ -77,20 +75,21 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
-	backendRunner := subshell.BackendRunner{
-		Dir:             Some(workingDir),
-		CommandsCounter: &gohacks.Counter{},
-		Verbose:         false,
+	testRunner := testshell.TestRunner{
+		BinDir:     binDir,
+		HomeDir:    homeDir,
+		Verbose:    false,
+		WorkingDir: workingDir,
 	}
 	backendCommands := git.BackendCommands{
-		Runner:             backendRunner,
+		Runner:             &testRunner,
 		DryRun:             false,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
-			Runner: backendRunner,
+			Runner: &testRunner,
 		},
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
@@ -103,12 +102,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 		},
 		UnvalidatedConfig: unvalidatedConfig,
-	}
-	testRunner := testshell.TestRunner{
-		BinDir:     binDir,
-		HomeDir:    homeDir,
-		Verbose:    false,
-		WorkingDir: workingDir,
 	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
