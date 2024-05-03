@@ -31,7 +31,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Lineage:                 args.Config.Config.Lineage,
 			PushHook:                args.Config.Config.PushHook,
 			RootDir:                 args.Repo.RootDir,
-			Run:                     args.Runner,
 			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
