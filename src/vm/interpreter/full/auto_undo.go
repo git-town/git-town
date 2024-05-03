@@ -25,6 +25,13 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	lightInterpreter.Execute(undoProgram, args.Config.Config.Lineage)
+	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		Backend:       args.Backend,
+		Config:        args.Config,
+		FinalMessages: args.FinalMessages,
+		Frontend:      args.Frontend,
+		Prog:          undoProgram,
+		Lineage:       args.Config.Config.Lineage,
+	})
 	return opcode.CreateAutomaticUndoError()
 }

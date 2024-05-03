@@ -19,7 +19,14 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		Backend:       args.Runner.Backend,
+		Config:        args.Config,
+		FinalMessages: args.Runner.FinalMessages,
+		Frontend:      args.Runner.Frontend,
+		Lineage:       args.Runner.Config.Config.Lineage,
+		Prog:          args.RunState.AbortProgram,
+	})
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
@@ -88,6 +95,13 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		EndBranch:                args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		Backend:       args.Runner.Backend,
+		Config:        args.Config,
+		FinalMessages: args.Runner.FinalMessages,
+		Frontend:      args.Runner.Frontend,
+		Lineage:       args.Runner.Config.Config.Lineage,
+		Prog:          undoCurrentBranchProgram,
+	})
 	return nil
 }

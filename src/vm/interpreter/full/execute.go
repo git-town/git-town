@@ -46,6 +46,7 @@ type ExecuteArgs struct {
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
 	FinalMessages           *stringslice.Collector
+	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
