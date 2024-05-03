@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
@@ -66,19 +67,22 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
+		Backend:          repo.Backend,
+		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
+		FinalMessages:    repo.FinalMessages,
+		Frontend:         repo.Frontend,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Config.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Runner:           data.runner,
 		Verbose:          verbose,
 	})
 }
 
 type undoData struct {
-	config                  configdomain.FullConfig
+	config                  config.Config
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -107,7 +111,6 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -128,7 +131,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		}
 	}
 	return &undoData{
-		config:                  repo.Config.Config,
+		config:                  *repo.Config,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

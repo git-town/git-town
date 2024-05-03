@@ -16,5 +16,5 @@ func (self *CheckoutParent) Run(args shared.RunArgs) error {
 	if !hasParent || parent == self.CurrentBranch {
 		return nil
 	}
-	return args.Runner.Frontend.CheckoutBranch(parent, false)
+	return args.Frontend.CheckoutBranch(parent, false)
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -55,13 +54,6 @@ func executeSkip(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -69,7 +61,6 @@ func executeSkip(verbose bool) error {
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -112,13 +103,17 @@ func executeSkip(verbose bool) error {
 		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
-		Connector:      connector,
-		CurrentBranch:  initialBranchesSnapshot.Active,
-		HasOpenChanges: repoStatus.OpenChanges,
-		RootDir:        repo.RootDir,
-		RunState:       runState,
-		Runner:         &runner,
-		TestInputs:     dialogTestInputs,
-		Verbose:        verbose,
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          *repo.Config,
+		Connector:       connector,
+		CurrentBranch:   initialBranchesSnapshot.Active,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+		HasOpenChanges:  repoStatus.OpenChanges,
+		RootDir:         repo.RootDir,
+		RunState:        runState,
+		TestInputs:      dialogTestInputs,
+		Verbose:         verbose,
 	})
 }

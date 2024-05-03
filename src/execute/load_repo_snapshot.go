@@ -3,7 +3,6 @@ package execute
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -22,9 +21,14 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return branchesSnapshot, stashSize, false, err
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
+			Backend:                 args.Repo.Backend,
+			CommandsCounter:         args.Repo.CommandsCounter,
+			Config:                  *args.Config,
 			Connector:               nil,
 			CurrentBranch:           branchesSnapshot.Active,
 			DialogTestInputs:        args.DialogTestInputs,
+			FinalMessages:           args.Repo.FinalMessages,
+			Frontend:                args.Repo.Frontend,
 			HasOpenChanges:          args.RepoStatus.OpenChanges,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
@@ -32,7 +36,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Lineage:                 args.Config.Config.Lineage,
 			PushHook:                args.Config.Config.PushHook,
 			RootDir:                 args.Repo.RootDir,
-			Run:                     args.Runner,
 			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
@@ -79,7 +82,6 @@ type LoadRepoSnapshotArgs struct {
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
-	Runner                *git.ProdRunner
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }

@@ -4,8 +4,11 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
@@ -18,36 +21,50 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		Backend:       args.Backend,
+		Config:        args.Config,
+		FinalMessages: args.FinalMessages,
+		Frontend:      args.Frontend,
+		Lineage:       args.Config.Config.Lineage,
+		Prog:          args.RunState.AbortProgram,
+	})
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
 	}
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.Runner.Config.Config,
+		Backend:                 args.Backend,
+		CommandsCounter:         args.CommandsCounter,
+		Config:                  args.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
+		FinalMessages:           args.FinalMessages,
+		Frontend:                args.Frontend,
 		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
 		RootDir:                 args.RootDir,
-		Run:                     args.Runner,
 		RunState:                args.RunState,
 		Verbose:                 args.Verbose,
 	})
 }
 
 type ExecuteArgs struct {
-	Connector      hostingdomain.Connector
-	CurrentBranch  gitdomain.LocalBranchName
-	HasOpenChanges bool
-	RootDir        gitdomain.RepoRootDir
-	RunState       runstate.RunState
-	Runner         *git.ProdRunner
-	TestInputs     components.TestInputs
-	Verbose        bool
+	Backend         git.BackendCommands
+	CommandsCounter *gohacks.Counter
+	Config          config.Config
+	Connector       hostingdomain.Connector
+	CurrentBranch   gitdomain.LocalBranchName
+	FinalMessages   *stringslice.Collector
+	Frontend        git.FrontendCommands
+	HasOpenChanges  bool
+	RootDir         gitdomain.RepoRootDir
+	RunState        runstate.RunState
+	TestInputs      components.TestInputs
+	Verbose         bool
 }
 
 // removes the remaining opcodes for the current branch from the given program
@@ -83,10 +100,17 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.CurrentBranch,
-		Config:                   args.Runner.Config.Config,
+		Config:                   args.Config.Config,
 		EndBranch:                args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Config.Config.Lineage)
+	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		Backend:       args.Backend,
+		Config:        args.Config,
+		FinalMessages: args.FinalMessages,
+		Frontend:      args.Frontend,
+		Lineage:       args.Config.Config.Lineage,
+		Prog:          undoCurrentBranchProgram,
+	})
 	return nil
 }

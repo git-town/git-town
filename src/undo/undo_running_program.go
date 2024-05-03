@@ -1,6 +1,7 @@
 package undo
 
 import (
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
@@ -15,8 +16,8 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
-	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Run.Config.Config))
-	finalStashSize, err := args.Run.Backend.StashSize()
+	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config.Config))
+	finalStashSize, err := args.Backend.StashSize()
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -25,9 +26,10 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 }
 
 type CreateUndoProgramArgs struct {
+	Backend        git.BackendCommands
+	Config         config.Config
 	DryRun         bool
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook
-	Run            *git.ProdRunner
 	RunState       runstate.RunState
 }

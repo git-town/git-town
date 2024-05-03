@@ -6,9 +6,12 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/skip"
@@ -49,25 +52,32 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
 		return true, undo.Execute(undo.ExecuteArgs{
-			Config:           args.Run.Config.Config,
+			Backend:          args.Backend,
+			CommandsCounter:  args.CommandsCounter,
+			Config:           args.Config,
+			FinalMessages:    args.FinalMessages,
+			Frontend:         args.Frontend,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,
 			RootDir:          args.RootDir,
 			RunState:         runState,
-			Runner:           args.Run,
 			Verbose:          args.Verbose,
 		})
 	case dialog.ResponseSkip:
 		return true, skip.Execute(skip.ExecuteArgs{
-			Connector:      args.Connector,
-			CurrentBranch:  args.CurrentBranch,
-			HasOpenChanges: args.HasOpenChanges,
-			RootDir:        args.RootDir,
-			RunState:       runState,
-			Runner:         args.Run,
-			TestInputs:     args.DialogTestInputs,
-			Verbose:        args.Verbose,
+			Backend:         args.Backend,
+			CommandsCounter: args.CommandsCounter,
+			Config:          args.Config,
+			Connector:       args.Connector,
+			CurrentBranch:   args.CurrentBranch,
+			FinalMessages:   args.FinalMessages,
+			Frontend:        args.Frontend,
+			HasOpenChanges:  args.HasOpenChanges,
+			RootDir:         args.RootDir,
+			RunState:        runState,
+			TestInputs:      args.DialogTestInputs,
+			Verbose:         args.Verbose,
 		})
 	case dialog.ResponseQuit:
 		return true, nil
@@ -76,9 +86,14 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
+	Backend                 git.BackendCommands
+	CommandsCounter         *gohacks.Counter
+	Config                  config.Config
 	Connector               hostingdomain.Connector
 	CurrentBranch           gitdomain.LocalBranchName
 	DialogTestInputs        components.TestInputs
+	FinalMessages           *stringslice.Collector
+	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
@@ -86,12 +101,11 @@ type UnfinishedStateArgs struct {
 	Lineage                 configdomain.Lineage
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir
-	Run                     *git.ProdRunner
 	Verbose                 bool
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	repoStatus, err := args.Run.Backend.RepoStatus()
+	repoStatus, err := args.Backend.RepoStatus()
 	if err != nil {
 		return false, err
 	}
@@ -99,15 +113,18 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Config:                  args.Run.Config.Config,
+		Backend:                 args.Backend,
+		CommandsCounter:         args.CommandsCounter,
+		Config:                  args.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
+		FinalMessages:           args.FinalMessages,
+		Frontend:                args.Frontend,
 		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
-		Run:                     args.Run,
 		RunState:                runState,
 		Verbose:                 args.Verbose,
 	})

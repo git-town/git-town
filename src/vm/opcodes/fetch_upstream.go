@@ -13,5 +13,5 @@ type FetchUpstream struct {
 }
 
 func (self *FetchUpstream) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.FetchUpstream(self.Branch)
+	return args.Frontend.FetchUpstream(self.Branch)
 }

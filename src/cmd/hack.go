@@ -115,15 +115,18 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendData),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 args.runner.Backend,
+		CommandsCounter:         args.runner.CommandsCounter,
 		Config:                  args.appendData.config,
 		Connector:               nil,
 		DialogTestInputs:        &args.appendData.dialogTestInputs,
+		FinalMessages:           args.runner.FinalMessages,
+		Frontend:                args.runner.Frontend,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
 		RootDir:                 args.rootDir,
-		Run:                     args.runner,
 		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
@@ -163,7 +166,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
-		Runner:                &runner,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -222,7 +224,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    repo.Config.Config,
+		config:                    *repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

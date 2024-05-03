@@ -8,6 +8,6 @@ type QueueMessage struct {
 }
 
 func (self *QueueMessage) Run(args shared.RunArgs) error {
-	args.Runner.FinalMessages.Add(self.Message)
+	args.FinalMessages.Add(self.Message)
 	return nil
 }

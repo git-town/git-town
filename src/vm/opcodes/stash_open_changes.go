@@ -7,5 +7,5 @@ type StashOpenChanges struct {
 }
 
 func (self *StashOpenChanges) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.Stash()
+	return args.Frontend.Stash()
 }
