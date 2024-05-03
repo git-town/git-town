@@ -100,9 +100,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		}
 	}
 	return &OpenRepoResult{
+		Backend:           backendCommands,
 		CommandsCounter:   &commandsCounter,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     *finalMessages,
+		Frontend:          frontEndCommands,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
