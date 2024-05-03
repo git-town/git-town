@@ -61,6 +61,46 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
+func (self *UnvalidatedConfig) RemoveMainBranch() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyMainBranch)
+}
+
+func (self *UnvalidatedConfig) RemovePerennialBranches() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
+}
+
+func (self *UnvalidatedConfig) RemovePerennialRegex() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialRegex)
+}
+
+func (self *UnvalidatedConfig) RemovePushHook() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
+}
+
+func (self *UnvalidatedConfig) RemovePushNewBranches() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
+}
+
+func (self *UnvalidatedConfig) RemoveShipDeleteTrackingBranch() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch)
+}
+
+func (self *UnvalidatedConfig) RemoveSyncBeforeShip() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncBeforeShip)
+}
+
+func (self *UnvalidatedConfig) RemoveSyncFeatureStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncFeatureStrategy)
+}
+
+func (self *UnvalidatedConfig) RemoveSyncPerennialStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncPerennialStrategy)
+}
+
+func (self *UnvalidatedConfig) RemoveSyncUpstream() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
+}
+
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *UnvalidatedConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
 	for child, parent := range self.Config.Lineage {

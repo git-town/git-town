@@ -66,7 +66,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.runner, data.userInput)
+	err = saveAll(*repo.UnvalidatedConfig.Config, data.userInput, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -453,20 +453,20 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBefore
 	return runner.Config.SetSyncBeforeShip(newValue, false)
 }
 
-func saveToFile(userInput userInput, runner *git.ProdRunner) error {
+func saveToFile(userInput userInput, config *config.UnvalidatedConfig) error {
 	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
 	}
-	runner.Config.RemoveMainBranch()
-	runner.Config.RemovePerennialBranches()
-	runner.Config.RemovePerennialRegex()
-	runner.Config.RemovePushNewBranches()
-	runner.Config.RemovePushHook()
-	runner.Config.RemoveSyncBeforeShip()
-	runner.Config.RemoveShipDeleteTrackingBranch()
-	runner.Config.RemoveSyncFeatureStrategy()
-	runner.Config.RemoveSyncPerennialStrategy()
-	runner.Config.RemoveSyncUpstream()
+	config.RemoveMainBranch()
+	config.RemovePerennialBranches()
+	config.RemovePerennialRegex()
+	config.RemovePushNewBranches()
+	config.RemovePushHook()
+	config.RemoveSyncBeforeShip()
+	config.RemoveShipDeleteTrackingBranch()
+	config.RemoveSyncFeatureStrategy()
+	config.RemoveSyncPerennialStrategy()
+	config.RemoveSyncUpstream()
 	return nil
 }

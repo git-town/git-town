@@ -82,46 +82,6 @@ func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalB
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
-func (self *ValidatedConfig) RemoveMainBranch() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyMainBranch)
-}
-
-func (self *ValidatedConfig) RemovePerennialBranches() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
-}
-
-func (self *ValidatedConfig) RemovePerennialRegex() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialRegex)
-}
-
-func (self *ValidatedConfig) RemovePushHook() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
-}
-
-func (self *ValidatedConfig) RemovePushNewBranches() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
-}
-
-func (self *ValidatedConfig) RemoveShipDeleteTrackingBranch() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch)
-}
-
-func (self *ValidatedConfig) RemoveSyncBeforeShip() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncBeforeShip)
-}
-
-func (self *ValidatedConfig) RemoveSyncFeatureStrategy() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncFeatureStrategy)
-}
-
-func (self *ValidatedConfig) RemoveSyncPerennialStrategy() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncPerennialStrategy)
-}
-
-func (self *ValidatedConfig) RemoveSyncUpstream() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
-}
-
 // SetObservedBranches marks the given branches as observed branches.
 func (self *ValidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.ContributionBranches = branches
