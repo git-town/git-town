@@ -48,8 +48,8 @@ func executeRepo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, abort, err := determineRepoData(repo)
-	if err != nil || abort {
+	data, err := determineRepoData(repo)
+	if err != nil {
 		return err
 	}
 	browser.Open(data.connector.RepositoryURL(), repo.Frontend.Runner, repo.Backend.Runner)
@@ -62,21 +62,21 @@ func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &validatedConfig.Config,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Config:          &repo.UnvalidatedConfig.Config,
+			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, err
 		}
 	}
 	if connector == nil {
-		return nil, false, hostingdomain.UnsupportedServiceError()
+		return nil, hostingdomain.UnsupportedServiceError()
 	}
 	return &repoData{
 		connector: connector,
-	}, false, err
+	}, err
 }
 
 type repoData struct {
