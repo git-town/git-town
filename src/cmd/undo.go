@@ -126,8 +126,8 @@ func determineUndoData(unvalidatedConfig configdomain.UnvalidatedConfig, repo *e
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          &validatedConfig.Config,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Config:          &repo.UnvalidatedConfig.Config,
+			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
