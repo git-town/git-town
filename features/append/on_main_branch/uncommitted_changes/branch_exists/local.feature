@@ -13,6 +13,7 @@ Feature: already existing local branch
       """
     And the uncommitted file still exists
 
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
