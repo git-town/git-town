@@ -111,6 +111,7 @@ func executeSkip(verbose bool) error {
 		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
+		Config:         *repo.Config,
 		Connector:      connector,
 		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,

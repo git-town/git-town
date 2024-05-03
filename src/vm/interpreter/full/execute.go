@@ -27,8 +27,11 @@ func Execute(args ExecuteArgs) error {
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
+			Config:                          args.Config,
 			Connector:                       args.Connector,
 			DialogTestInputs:                args.DialogTestInputs,
+			FinalMessages:                   args.FinalMessages,
+			Frontend:                        args.Frontend,
 			Lineage:                         args.Config.Config.Lineage,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,

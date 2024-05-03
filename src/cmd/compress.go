@@ -90,9 +90,13 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
