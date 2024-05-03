@@ -56,7 +56,6 @@ func (self *ValidatedConfig) Reload() {
 		UnvalidatedConfig: configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig),
 		MainBranch:        self.UnvalidatedConfig.Config.MainBranch.GetOrPanic(),
 	}
-
 }
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
