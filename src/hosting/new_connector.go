@@ -32,10 +32,9 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) { // T
 		})
 	case configdomain.HostingPlatformGitHub:
 		return github.NewConnector(github.NewConnectorArgs{
-			APIToken:   github.GetAPIToken(args.Config.GitHubToken),
-			Log:        args.Log,
-			MainBranch: args.Config.MainBranch,
-			OriginURL:  args.OriginURL,
+			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
+			Log:       args.Log,
+			OriginURL: args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitLab:
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
