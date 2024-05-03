@@ -13,7 +13,6 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -295,11 +294,10 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
+func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector) {
 	config := configdomain.NewFullConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.Collector{}
-	err := cleanupPerennialParentEntries(config.Lineage, config.MainAndPerennials(), configAccess, &finalMessages)
 	return &Config{
 		Config:          config,
 		ConfigFile:      args.ConfigFile,
@@ -308,7 +306,7 @@ func NewConfig(args NewConfigArgs) (*Config, *stringslice.Collector, error) {
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
-	}, &finalMessages, err
+	}, &finalMessages
 }
 
 type NewConfigArgs struct {
@@ -317,18 +315,4 @@ type NewConfigArgs struct {
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
 	Runner       gitconfig.Runner
-}
-
-// cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
-	for _, perennialBranch := range perennialBranches {
-		if lineage.Parent(perennialBranch).IsSome() {
-			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
-			lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
-		}
-	}
-	return nil
 }

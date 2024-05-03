@@ -79,16 +79,13 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	config, _, err := config.NewConfig(config.NewConfigArgs{
+	config, _ := config.NewConfig(config.NewConfigArgs{
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 		Runner:       &runner,
 	})
-	if err != nil {
-		panic(err)
-	}
 	backendCommands := git.BackendCommands{
 		Runner:             &runner,
 		DryRun:             false,

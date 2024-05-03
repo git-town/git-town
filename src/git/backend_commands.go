@@ -465,6 +465,7 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
+// TODO: return Option for checkedoutBranch
 func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain.LocalBranchName) {
 	result := gitdomain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
@@ -489,8 +490,8 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 		branchName := parts[0]
 		sha := gitdomain.NewSHA(parts[1])
 		remoteText := parts[2]
-		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = gitdomain.NewLocalBranchName(branchName)
+		if line[0] == '*' { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
+			checkedoutBranch = gitdomain.LocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {

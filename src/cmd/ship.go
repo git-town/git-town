@@ -163,7 +163,6 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
 		Verbose:               verbose,
 	})
@@ -184,19 +183,18 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchNameToShip},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
-	if err != nil {
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	if err = validateShippableBranchType(repo.Config.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	targetBranchName, hasTargetBranch := repo.Config.Config.Lineage.Parent(branchNameToShip).Get()

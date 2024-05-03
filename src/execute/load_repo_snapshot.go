@@ -69,9 +69,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return branchesSnapshot, stashSize, false, err
 		}
 	}
-	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&args.Repo.Backend, args.Config, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
-	}
 	return branchesSnapshot, stashSize, false, err
 }
 
@@ -83,7 +80,6 @@ type LoadRepoSnapshotArgs struct {
 	Repo                  *OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	Runner                *git.ProdRunner
-	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }

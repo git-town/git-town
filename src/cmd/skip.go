@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/skip"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -69,9 +70,20 @@ func executeSkip(verbose bool) error {
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return err
+	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranches,
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      localBranches,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
 	if err != nil || exit {
 		return err

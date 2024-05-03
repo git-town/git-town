@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -92,7 +93,6 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -105,17 +105,16 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branch},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches.LocalBranches(),
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branch},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
-	if err != nil {
-		return nil, false, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
 	parentBranch, hasParent := repo.Config.Config.Lineage.Parent(branch).Get()
 	if !hasParent {

@@ -2,10 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v14/src/browser"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
@@ -13,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -61,15 +58,7 @@ func executeRepo(verbose bool) error {
 }
 
 func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
-	if err != nil {
-		return nil, err
-	}
-	dialogInputs := components.LoadTestInputs(os.Environ())
-	err = validate.IsConfigured(&repo.Backend, repo.Config, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
-	if err != nil {
-		return nil, err
-	}
+	var err error
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{

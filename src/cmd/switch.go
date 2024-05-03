@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -98,9 +99,20 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, exit, err
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: localBranches,
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      localBranches,
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err

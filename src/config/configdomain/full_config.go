@@ -161,6 +161,10 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 }
 
+func (self *FullConfig) MustKnowParent(branch gitdomain.LocalBranchName) bool {
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsContributionBranch(branch) && !self.IsObservedBranch(branch)
+}
+
 func (self *FullConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }

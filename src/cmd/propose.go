@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -135,7 +136,6 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -147,17 +147,16 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-		BranchesToVerify: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		Config:           repo.Config,
-		DefaultChoice:    repo.Config.Config.MainBranch,
-		DialogTestInputs: &dialogTestInputs,
-		LocalBranches:    branchesSnapshot.Branches,
-		MainBranch:       repo.Config.Config.MainBranch,
-		Runner:           &runner,
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
 	})
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {

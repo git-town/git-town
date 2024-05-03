@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -129,7 +130,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -144,19 +144,16 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
-	if branchToKill.IsLocal() {
-		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-			BranchesToVerify: gitdomain.LocalBranchNames{branchToKill.LocalName},
-			Config:           repo.Config,
-			DefaultChoice:    repo.Config.Config.MainBranch,
-			DialogTestInputs: &dialogTestInputs,
-			LocalBranches:    branchesSnapshot.Branches,
-			MainBranch:       repo.Config.Config.MainBranch,
-			Runner:           &runner,
-		})
-		if err != nil {
-			return nil, branchesSnapshot, stashSize, false, err
-		}
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToKill},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	branchTypeToKill := repo.Config.Config.BranchType(branchNameToKill)
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()

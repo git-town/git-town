@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
+	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -131,12 +132,22 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		Runner:                &runner,
-		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, 0, exit, err
+	}
+	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+		Backend:            &repo.Backend,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		FinalMessages:      repo.FinalMessages,
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		TestInputs:         &dialogTestInputs,
+		Unvalidated:        *repo.Config,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	mainBranch := repo.Config.Config.MainBranch
 	existingParent, hasParent := repo.Config.Config.Lineage.Parent(branchesSnapshot.Active).Get()
