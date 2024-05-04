@@ -93,9 +93,14 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 
 	// handle unfinished state
 	exit, err := HandleUnfinishedState(UnfinishedStateArgs{
+		Backend:                 *args.Backend,
+		CommandsCounter:         args.CommandsCounter,
+		Config:                  validatedConfig,
 		Connector:               nil,
 		CurrentBranch:           args.BranchesSnapshot.Active,
 		DialogTestInputs:        args.DialogTestInputs,
+		FinalMessages:           args.FinalMessages,
+		Frontend:                args.Frontend,
 		HasOpenChanges:          args.RepoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.BranchesSnapshot,
 		InitialConfigSnapshot:   args.ConfigSnapshot,
