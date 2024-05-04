@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -142,7 +141,6 @@ type shipData struct {
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
 	remotes                  gitdomain.Remotes
-	runner                   *git.ProdRunner
 	targetBranch             gitdomain.BranchInfo
 }
 
@@ -151,13 +149,6 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -269,7 +260,6 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
-		runner:                   &runner,
 		targetBranch:             targetBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }
