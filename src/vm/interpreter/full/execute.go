@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
@@ -45,7 +46,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	Backend                 git.BackendCommands
 	CommandsCounter         *gohacks.Counter
-	Config                  configdomain.ValidatedConfig
+	Config                  config.ValidatedConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
 	FinalMessages           *stringslice.Collector

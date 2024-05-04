@@ -143,7 +143,7 @@ func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *
 		}
 	}
 	return &undoData{
-		config:                  validatedConfig.Config,
+		config:                  *validatedConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

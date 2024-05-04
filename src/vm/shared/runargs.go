@@ -12,7 +12,7 @@ import (
 
 type RunArgs struct {
 	Backend                         git.BackendCommands
-	Config                          *config.Config
+	Config                          *config.ValidatedConfig
 	Connector                       hostingdomain.Connector
 	DialogTestInputs                *components.TestInputs
 	FinalMessages                   *stringslice.Collector
