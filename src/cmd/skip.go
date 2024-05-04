@@ -70,7 +70,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: localBranches,
@@ -116,15 +116,14 @@ func executeSkip(verbose bool) error {
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          *repo.Config,
+		Config:          *validatedConfig,
 		Connector:       connector,
 		CurrentBranch:   initialBranchesSnapshot.Active,
-		FinalMessages:   repo.FinalMessages,
+		FinalMessages:   &repo.FinalMessages,
 		Frontend:        repo.Frontend,
 		HasOpenChanges:  repoStatus.OpenChanges,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
-		Runner:          runner,
 		TestInputs:      dialogTestInputs,
 		Verbose:         verbose,
 	})

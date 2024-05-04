@@ -80,7 +80,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
+			Config:        data.config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &runProgram,
@@ -111,7 +111,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -163,7 +163,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	}
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
@@ -189,8 +189,8 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	} else {
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
-	previousBranch := runner.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := runner.Backend.Remotes()
+	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}

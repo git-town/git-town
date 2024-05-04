@@ -23,9 +23,9 @@ func Execute(args ExecuteArgs) error {
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
 		Config:         args.Config,
-		DryRun:         args.Config.DryRun,
+		DryRun:         args.RunState.DryRun,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.Config.Config.NoPushHook(),
+		NoPushHook:     args.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{

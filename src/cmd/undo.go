@@ -67,7 +67,7 @@ func executeUndo(verbose bool) error {
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
-		FinalMessages:    repo.FinalMessages,
+		FinalMessages:    &repo.FinalMessages,
 		Frontend:         repo.Frontend,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
@@ -108,7 +108,7 @@ func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *
 	if err != nil || exit {
 		return nil, initialStashSize, false, err
 	}
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},

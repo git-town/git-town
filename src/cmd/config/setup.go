@@ -206,7 +206,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                repo.UnvalidatedConfig,
+		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
