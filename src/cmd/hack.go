@@ -90,7 +90,6 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			makeFeatureData:     makeFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
-			runner:              makeFeatureBranchData.runner,
 			verbose:             verbose,
 		})
 	}
@@ -103,7 +102,6 @@ type hackData = Either[appendData, makeFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureData struct {
-	runner         *git.ProdRunner
 	targetBranches commandconfig.BranchesAndTypes
 }
 
@@ -160,13 +158,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if err != nil {
 		return
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -193,14 +184,12 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	}
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			runner:         &runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, repo.Config.Config),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			runner:         &runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, repo.Config.Config),
 		})
 		return
