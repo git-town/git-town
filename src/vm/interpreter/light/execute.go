@@ -34,7 +34,7 @@ func Execute(args ExecuteArgs) {
 
 type ExecuteArgs struct {
 	Backend       git.BackendCommands
-	Config        config.Config
+	Config        config.ValidatedConfig
 	FinalMessages *stringslice.Collector
 	Frontend      git.FrontendCommands
 	Lineage       configdomain.Lineage

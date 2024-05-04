@@ -115,7 +115,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
-		Config:                  args.Config.Config,
+		Config:                  args.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
 		FinalMessages:           args.FinalMessages,

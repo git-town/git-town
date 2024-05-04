@@ -2,6 +2,7 @@ package shared
 
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -11,7 +12,7 @@ import (
 
 type RunArgs struct {
 	Backend                         git.BackendCommands
-	Config                          *configdomain.ValidatedConfig
+	Config                          *config.ValidatedConfig
 	Connector                       hostingdomain.Connector
 	DialogTestInputs                *components.TestInputs
 	FinalMessages                   *stringslice.Collector
