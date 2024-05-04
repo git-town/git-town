@@ -17,13 +17,13 @@ import (
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 )
 
-func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, error) {
+func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 	// check Git user data
 	if args.Unvalidated.Config.GitUserEmail.IsNone() {
-		return nil, nil, false, errors.New(messages.GitUserEmailMissing)
+		return nil, false, errors.New(messages.GitUserEmailMissing)
 	}
 	if args.Unvalidated.Config.GitUserName.IsNone() {
-		return nil, nil, false, errors.New(messages.GitUserNameMissing)
+		return nil, false, errors.New(messages.GitUserNameMissing)
 	}
 
 	// enter and save main and perennials
@@ -36,15 +36,15 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 		UnvalidatedPerennials: args.Unvalidated.Config.PerennialBranches,
 	})
 	if err != nil || aborted {
-		return nil, nil, aborted, err
+		return nil, aborted, err
 	}
 	if err = args.Unvalidated.SetMainBranch(validatedMain); err != nil {
-		return nil, nil, false, err
+		return nil, false, err
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
 		if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
-			return nil, nil, false, err
+			return nil, false, err
 		}
 	}
 
@@ -58,28 +58,28 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 		MainBranch:       validatedMain,
 	})
 	if err != nil || abort {
-		return nil, nil, abort, err
+		return nil, abort, err
 	}
 	for branch, parent := range additionalLineage {
 		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
-			return nil, nil, abort, err
+			return nil, abort, err
 		}
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Config.PerennialBranches, additionalPerennials...)
 		if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
-			return nil, nil, false, err
+			return nil, false, err
 		}
 	}
 
 	// remove outdated lineage
 	err = args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
 	if err != nil {
-		return nil, nil, false, err
+		return nil, false, err
 	}
 	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, args.Unvalidated.Config.PerennialBranches, args.Unvalidated.GitConfig, args.FinalMessages)
 	if err != nil {
-		return nil, nil, false, err
+		return nil, false, err
 	}
 
 	// create validated configuration
@@ -89,14 +89,6 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 			MainBranch:        validatedMain,
 		},
 		UnvalidatedConfig: args.Unvalidated,
-	}
-
-	runner := git.ProdRunner{
-		Config:          &validatedConfig,
-		Backend:         *args.Backend,
-		Frontend:        args.Frontend,
-		CommandsCounter: args.CommandsCounter,
-		FinalMessages:   args.FinalMessages,
 	}
 
 	// handle unfinished state
@@ -111,14 +103,13 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, *git.ProdRunner, bool, er
 		Lineage:                 validatedConfig.Config.Lineage,
 		PushHook:                validatedConfig.Config.PushHook,
 		RootDir:                 args.RootDir,
-		Run:                     &runner,
 		Verbose:                 args.Verbose,
 	})
 	if err != nil || exit {
-		return nil, &runner, false, err
+		return nil, false, err
 	}
 
-	return &validatedConfig, &runner, false, err
+	return &validatedConfig, false, err
 }
 
 type ConfigArgs struct {
