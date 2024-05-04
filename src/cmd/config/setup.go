@@ -58,7 +58,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := loadSetupData(repo, verbose)
+	data, exit, err := loadSetupData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -198,7 +198,7 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 	return false, nil
 }
 
-func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
+func loadSetupData(repo *execute.OpenRepoResult) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -206,15 +206,12 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
-		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
 	return &setupData{
 		config:        repo.UnvalidatedConfig,

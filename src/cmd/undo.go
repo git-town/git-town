@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
@@ -51,7 +50,7 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, initialStashSize, exit, err := determineUndoData(repo.UnvalidatedConfig.Config, repo, verbose)
+	data, initialStashSize, exit, err := determineUndoData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -88,7 +87,7 @@ type undoData struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
+func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -96,15 +95,12 @@ func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                unvalidatedConfig,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
-		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, initialStashSize, false, err
