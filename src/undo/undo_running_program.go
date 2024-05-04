@@ -27,7 +27,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 
 type CreateUndoProgramArgs struct {
 	Backend        git.BackendCommands
-	Config         config.Config
+	Config         config.ValidatedConfig
 	DryRun         bool
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook

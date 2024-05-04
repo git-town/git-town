@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/print"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -25,7 +26,7 @@ func Execute(args ExecuteArgs) error {
 		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.Config.NoPushHook(),
+		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
@@ -47,7 +48,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	Backend          git.BackendCommands
 	CommandsCounter  *gohacks.Counter
-	Config           configdomain.ValidatedConfig
+	Config           config.ValidatedConfig
 	FinalMessages    *stringslice.Collector
 	Frontend         git.FrontendCommands
 	HasOpenChanges   bool
