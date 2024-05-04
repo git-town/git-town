@@ -85,7 +85,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -144,7 +144,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToKill,
@@ -209,7 +209,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	if data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
+	if data.branchNameToKill.HasTrackingBranch() && data.config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
@@ -232,7 +232,7 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, d
 	if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  data.branchNameToKill.LocalName,
-			Lineage: data.config.Config.Lineage,
+			Lineage: data.config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})

@@ -95,7 +95,7 @@ func executeContribute(args []string, verbose bool) error {
 	}
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, _, aborted, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNames,

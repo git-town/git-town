@@ -67,7 +67,7 @@ func executeContinue(verbose bool) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -101,7 +101,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: localBranches,

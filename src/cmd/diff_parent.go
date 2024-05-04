@@ -99,7 +99,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	}
 	branchesToDiff := gitdomain.LocalBranchNames{branch}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToDiff,

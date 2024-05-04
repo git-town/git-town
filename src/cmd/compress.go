@@ -93,7 +93,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -148,7 +148,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	}
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
@@ -225,7 +225,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 func compressProgram(data *compressBranchesData) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, data.config.Online(), data.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

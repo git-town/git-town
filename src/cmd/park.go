@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/commandconfig"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -92,7 +91,6 @@ type parkData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToPark   commandconfig.BranchesAndTypes
 	config           config.ValidatedConfig
-	runner           *git.ProdRunner
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -146,7 +144,7 @@ func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
 	}
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToPark.Keys(),
@@ -171,7 +169,6 @@ func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool
 		branchesSnapshot: branchesSnapshot,
 		branchesToPark:   branchesToPark,
 		config:           *validatedConfig,
-		runner:           runner,
 	}, false, nil
 }
 

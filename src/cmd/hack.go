@@ -77,7 +77,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			beginStashSize:        initialStashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
-			finalMessages:         repo.FinalMessages,
+			finalMessages:         &repo.FinalMessages,
 			frontend:              repo.Frontend,
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
@@ -175,7 +175,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		return
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: targetBranches,

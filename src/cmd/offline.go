@@ -54,7 +54,7 @@ func executeOffline(args []string, verbose bool) error {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig.Config)
 	case 1:
-		err = setOfflineStatus(args[0], repo)
+		err = setOfflineStatus(args[0], repo.UnvalidatedConfig)
 		if err != nil {
 			return err
 		}
@@ -75,10 +75,10 @@ func displayOfflineStatus(config *configdomain.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.Offline.Bool()))
 }
 
-func setOfflineStatus(text string, config config.Config) error {
+func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)
 	}
-	return repo.UnvalidatedConfig.SetOffline(configdomain.Offline(value))
+	return config.SetOffline(configdomain.Offline(value))
 }
