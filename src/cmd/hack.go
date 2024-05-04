@@ -14,7 +14,9 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -69,10 +71,14 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if doAppend {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
+			backend:               repo.Backend,
 			beginBranchesSnapshot: initialBranchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        initialStashSize,
+			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
+			finalMessages:         repo.FinalMessages,
+			frontend:              repo.Frontend,
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
 		})
@@ -97,7 +103,6 @@ type hackData = Either[appendData, makeFeatureData]
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureData struct {
 	config         config.ValidatedConfig
-	runner         *git.ProdRunner
 	targetBranches commandconfig.BranchesAndTypes
 }
 
@@ -114,13 +119,13 @@ func createBranch(args createBranchArgs) error {
 		RunProgram:            appendProgram(args.appendData),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 args.runner.Backend,
-		CommandsCounter:         args.runner.CommandsCounter,
+		Backend:                 args.backend,
+		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
 		Connector:               nil,
 		DialogTestInputs:        &args.appendData.dialogTestInputs,
-		FinalMessages:           args.runner.FinalMessages,
-		Frontend:                args.runner.Frontend,
+		FinalMessages:           args.finalMessages,
+		Frontend:                args.frontend,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
@@ -133,10 +138,14 @@ func createBranch(args createBranchArgs) error {
 
 type createBranchArgs struct {
 	appendData            appendData
+	backend               git.BackendCommands
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
+	commandsCounter       *gohacks.Counter
 	dryRun                bool
+	finalMessages         *stringslice.Collector
+	frontend              git.FrontendCommands
 	rootDir               gitdomain.RepoRootDir
 	verbose               bool
 }
@@ -189,7 +198,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
 			config:         *validatedConfig,
-			runner:         runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, validatedConfig.Config),
 		})
 		return
@@ -197,7 +205,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
 			config:         *validatedConfig,
-			runner:         runner,
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, validatedConfig.Config),
 		})
 		return
@@ -235,7 +242,6 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    runner,
 		targetBranch:              targetBranch,
 	})
 	return

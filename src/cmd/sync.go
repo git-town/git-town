@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -133,7 +132,6 @@ type syncData struct {
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
 	remotes          gitdomain.Remotes
-	runner           *git.ProdRunner
 	shouldPushTags   bool
 }
 
@@ -207,7 +205,6 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
-		runner:           runner,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSize, false, err
 }

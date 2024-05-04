@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -68,7 +67,6 @@ func executeDiffParent(args []string, verbose bool) error {
 type diffParentData struct {
 	branch       gitdomain.LocalBranchName
 	parentBranch gitdomain.LocalBranchName
-	runner       *git.ProdRunner
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
@@ -128,6 +126,5 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 	return &diffParentData{
 		branch:       branch,
 		parentBranch: parentBranch,
-		runner:       runner,
 	}, false, nil
 }

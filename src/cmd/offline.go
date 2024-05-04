@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/format"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -74,7 +75,7 @@ func displayOfflineStatus(config *configdomain.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.Offline.Bool()))
 }
 
-func setOfflineStatus(text string, repo *execute.OpenRepoResult) error {
+func setOfflineStatus(text string, config config.Config) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)

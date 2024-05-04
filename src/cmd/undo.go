@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -86,7 +85,6 @@ type undoData struct {
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          gitdomain.LocalBranchName
-	prodRunner              *git.ProdRunner
 }
 
 func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
@@ -150,6 +148,5 @@ func determineUndoData(unvalidatedConfig *configdomain.UnvalidatedConfig, repo *
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-		prodRunner:              runner,
 	}, initialStashSize, false, nil
 }

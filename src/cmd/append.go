@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
@@ -103,7 +102,6 @@ type appendData struct {
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
-	runner                    *git.ProdRunner
 	targetBranch              gitdomain.LocalBranchName
 }
 
@@ -173,7 +171,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		parentBranch:              branchesSnapshot.Active,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    runner,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }

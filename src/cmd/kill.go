@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -109,7 +108,6 @@ type killData struct {
 	initialBranch    gitdomain.LocalBranchName
 	parentBranch     Option[gitdomain.LocalBranchName]
 	previousBranch   gitdomain.LocalBranchName
-	runner           *git.ProdRunner
 }
 
 func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
@@ -187,7 +185,6 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		initialBranch:    branchesSnapshot.Active,
 		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
-		runner:           runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 
