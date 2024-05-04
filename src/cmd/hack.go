@@ -274,7 +274,6 @@ type makeFeatureBranchArgs struct {
 	makeFeatureData     makeFeatureData
 	repo                *execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
-	runner              *git.ProdRunner
 	verbose             bool
 }
 

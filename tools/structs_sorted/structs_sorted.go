@@ -24,7 +24,6 @@ var (
 		"Change",
 		"InconsistentChange",
 		"Parts",
-		"ProdRunner",
 	}
 )
 
