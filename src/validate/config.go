@@ -52,7 +52,7 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	}
 
 	// enter and save missing parent branches
-	additionalLineage, additionalPerennials, abort, err := dialog.Lineage(dialog.LineageArgs{
+	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           args.Unvalidated.Config,
 		DefaultChoice:    validatedMain,
@@ -60,12 +60,12 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 		LocalBranches:    args.LocalBranches,
 		MainBranch:       validatedMain,
 	})
-	if err != nil || abort {
-		return validatedResult, abort, err
+	if err != nil || exit {
+		return validatedResult, exit, err
 	}
 	for branch, parent := range additionalLineage {
 		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
-			return validatedResult, abort, err
+			return validatedResult, false, err
 		}
 	}
 	if len(additionalPerennials) > 0 {
@@ -78,7 +78,7 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	// remove outdated lineage
 	err = args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
 	if err != nil {
-		return validatedResult, abort, err
+		return validatedResult, false, err
 	}
 	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, validatedPerennials, args.Unvalidated.GitConfig, args.FinalMessages)
 
