@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -114,7 +113,6 @@ type renameBranchData struct {
 	newBranch        gitdomain.LocalBranchName
 	oldBranch        gitdomain.BranchInfo
 	previousBranch   gitdomain.LocalBranchName
-	runner           *git.ProdRunner
 }
 
 func determineRenameBranchData(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
@@ -122,13 +120,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -197,7 +188,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		newBranch:        newBranchName,
 		oldBranch:        oldBranch,
 		previousBranch:   previousBranch,
-		runner:           &runner,
 	}, branchesSnapshot, stashSize, false, err
 }
 
