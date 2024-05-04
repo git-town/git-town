@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -111,7 +110,6 @@ type setParentData struct {
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	mainBranch       gitdomain.LocalBranchName
-	runner           *git.ProdRunner
 }
 
 func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
@@ -119,13 +117,6 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -165,7 +156,6 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		mainBranch:       mainBranch,
-		runner:           &runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

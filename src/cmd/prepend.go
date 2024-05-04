@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
@@ -105,7 +104,6 @@ type prependData struct {
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
-	runner                    *git.ProdRunner
 	targetBranch              gitdomain.LocalBranchName
 }
 
@@ -116,13 +114,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	fc := execute.FailureCollector{}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
 		DialogTestInputs:      dialogTestInputs,
@@ -176,7 +167,6 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		parentBranch:              parent,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		runner:                    &runner,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSize, false, fc.Err
 }

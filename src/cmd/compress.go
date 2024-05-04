@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -116,7 +115,6 @@ type compressBranchesData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	previousBranch      gitdomain.LocalBranchName
-	runner              *git.ProdRunner
 }
 
 type compressBranchData struct {
@@ -133,13 +131,6 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -217,7 +208,6 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		previousBranch:      previousBranch,
-		runner:              &runner,
 	}, branchesSnapshot, stashSize, false, nil
 }
 

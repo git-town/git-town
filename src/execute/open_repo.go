@@ -76,13 +76,6 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Runner:                 frontEndRunner,
 		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 	}
-	prodRunner := git.ProdRunner{
-		Config:          config,
-		Backend:         backendCommands,
-		Frontend:        frontEndCommands,
-		CommandsCounter: &commandsCounter,
-		FinalMessages:   finalMessages,
-	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
@@ -103,7 +96,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 		if currentDirectory != rootDir.String() {
-			err = prodRunner.Frontend.NavigateToDir(rootDir)
+			err = frontEndCommands.NavigateToDir(rootDir)
 		}
 	}
 	return &OpenRepoResult{

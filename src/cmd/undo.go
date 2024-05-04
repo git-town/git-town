@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -88,7 +87,6 @@ type undoData struct {
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          gitdomain.LocalBranchName
-	runner                  *git.ProdRunner
 }
 
 func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
@@ -96,13 +94,6 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
 		return nil, 0, repo.Config.Config.Lineage, err
-	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -137,6 +128,5 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-		runner:                  &runner,
 	}, initialStashSize, repo.Config.Config.Lineage, nil
 }
