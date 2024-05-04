@@ -144,7 +144,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
@@ -161,8 +161,8 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || abort {
-		return nil, branchesSnapshot, stashSize, abort, err
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
