@@ -87,10 +87,9 @@ func executePark(args []string, verbose bool) error {
 }
 
 type parkData struct {
-	allBranches      gitdomain.BranchInfos
-	branchesSnapshot gitdomain.BranchesSnapshot
-	branchesToPark   commandconfig.BranchesAndTypes
-	config           config.ValidatedConfig
+	allBranches    gitdomain.BranchInfos
+	branchesToPark commandconfig.BranchesAndTypes
+	config         config.ValidatedConfig
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -165,10 +164,9 @@ func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool
 		return parkData{}, abort, err
 	}
 	return parkData{
-		allBranches:      branchesSnapshot.Branches,
-		branchesSnapshot: branchesSnapshot,
-		branchesToPark:   branchesToPark,
-		config:           *validatedConfig,
+		allBranches:    branchesSnapshot.Branches,
+		branchesToPark: branchesToPark,
+		config:         *validatedConfig,
 	}, false, nil
 }
 
