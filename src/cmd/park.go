@@ -58,8 +58,8 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, abort, err := determineParkData(args, repo, verbose)
-	if err != nil || abort {
+	data, exit, err := determineParkData(args, repo, verbose)
+	if err != nil || exit {
 		return err
 	}
 	err = validateParkData(data)
