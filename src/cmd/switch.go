@@ -89,15 +89,12 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
-		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err

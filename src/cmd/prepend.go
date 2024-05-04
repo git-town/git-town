@@ -116,15 +116,12 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
-		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		Frontend:              &repo.Frontend,
-		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

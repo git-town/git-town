@@ -87,15 +87,12 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{ // TODO: rename all instances to branchesSnapshot for consistency across commands
 		Backend:               &repo.Backend,
-		Config:                repo.UnvalidatedConfig.Config,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		Frontend:              &repo.Frontend,
-		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
