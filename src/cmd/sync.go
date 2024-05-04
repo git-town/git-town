@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -80,7 +80,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &runProgram,
@@ -126,7 +126,7 @@ func executeSync(all, dryRun, verbose bool) error {
 type syncData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           configdomain.ValidatedConfig
+	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -199,7 +199,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	return &syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           validatedConfig.Config,
+		config:           *validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
