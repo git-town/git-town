@@ -49,7 +49,7 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 	}
 
 	// enter and save missing parent branches
-	additionalLineage, additionalPerennials, abort, err := dialog.Lineage(dialog.LineageArgs{
+	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           *args.Unvalidated.Config,
 		DefaultChoice:    validatedMain,
@@ -57,12 +57,12 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 		LocalBranches:    args.LocalBranches,
 		MainBranch:       validatedMain,
 	})
-	if err != nil || abort {
-		return nil, abort, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
 	for branch, parent := range additionalLineage {
 		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
-			return nil, abort, err
+			return nil, false, err
 		}
 	}
 	if len(additionalPerennials) > 0 {
@@ -92,7 +92,7 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 	}
 
 	// handle unfinished state
-	exit, err := HandleUnfinishedState(UnfinishedStateArgs{
+	exit, err = HandleUnfinishedState(UnfinishedStateArgs{
 		Backend:                 *args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,

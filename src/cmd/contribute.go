@@ -92,7 +92,7 @@ func executeContribute(args []string, verbose bool) error {
 	}
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, aborted, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNames,
@@ -109,7 +109,7 @@ func executeContribute(args []string, verbose bool) error {
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || aborted {
+	if err != nil || exit {
 		return err
 	}
 	if err = validatedConfig.AddToContributionBranches(branchNames...); err != nil {

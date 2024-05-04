@@ -67,7 +67,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: localBranches,
@@ -84,7 +84,7 @@ func executeSkip(verbose bool) error {
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || abort {
+	if err != nil || exit {
 		return err
 	}
 	runStateOpt, err := statefile.Load(repo.RootDir)

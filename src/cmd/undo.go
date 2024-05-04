@@ -105,7 +105,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 	if err != nil || exit {
 		return nil, initialStashSize, false, err
 	}
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
@@ -122,8 +122,8 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || abort {
-		return nil, initialStashSize, abort, err
+	if err != nil || exit {
+		return nil, initialStashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector

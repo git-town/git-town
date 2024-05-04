@@ -53,8 +53,8 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.UnvalidatedConfig.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
-	if err != nil || abort {
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.UnvalidatedConfig.Config.Lineage, initialBranches.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	if err != nil || exit {
 		return err
 	}
 	if branchToCheckout == data.initialBranch {
@@ -100,7 +100,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		return nil, branchesSnapshot, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
@@ -117,8 +117,8 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || abort {
-		return nil, branchesSnapshot, abort, err
+	if err != nil || exit {
+		return nil, branchesSnapshot, exit, err
 	}
 	return &switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
