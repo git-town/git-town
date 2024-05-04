@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -106,7 +107,7 @@ func executePropose(dryRun, verbose bool) error {
 type proposeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           configdomain.ValidatedConfig
+	config           config.ValidatedConfig
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -183,7 +184,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           validatedConfig.Config,
+		config:           *validatedConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -199,7 +200,7 @@ func proposeProgram(data *proposeData) program.Program {
 	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &prog,
@@ -214,13 +215,13 @@ func proposeProgram(data *proposeData) program.Program {
 	})
 	prog.Add(&opcodes.CreateProposal{
 		Branch:     data.initialBranch,
-		MainBranch: data.config.MainBranch,
+		MainBranch: data.config.Config.MainBranch,
 	})
 	return prog
 }
 
 func validateProposeData(data *proposeData) error {
-	initialBranchType := data.config.BranchType(data.initialBranch)
+	initialBranchType := data.config.Config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil

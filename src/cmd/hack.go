@@ -233,7 +233,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    validatedConfig.Config,
+		config:                    *validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

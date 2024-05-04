@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -108,7 +109,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 type compressBranchesData struct {
 	branchesToCompress  []compressBranchData
 	compressEntireStack bool
-	config              configdomain.ValidatedConfig
+	config              config.ValidatedConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              bool
 	hasOpenChanges      bool
@@ -213,7 +214,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
-		config:              validatedConfig.Config,
+		config:              *validatedConfig,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
@@ -225,7 +226,7 @@ func determineCompressBranchesData(repo *execute.OpenRepoResult, dryRun, verbose
 func compressProgram(data *compressBranchesData) program.Program {
 	prog := program.Program{}
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, data.config.Online(), data.initialBranch)
+		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

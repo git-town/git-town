@@ -37,7 +37,7 @@ func Execute(args ExecuteArgs) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
-		Config:                  args.Config,
+		Config:                  args.Config.Config,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		FinalMessages:           args.FinalMessages,

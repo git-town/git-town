@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
@@ -137,7 +137,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		})
 	}
 	return &continueData{
-		config:           validatedConfig.Config,
+		config:           *validatedConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -145,7 +145,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 }
 
 type continueData struct {
-	config           configdomain.ValidatedConfig
+	config           config.ValidatedConfig
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool

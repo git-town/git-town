@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -101,7 +102,7 @@ type killData struct {
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
-	config           configdomain.ValidatedConfig
+	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -178,7 +179,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           validatedConfig.Config,
+		config:           *validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -209,7 +210,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	if data.branchNameToKill.HasTrackingBranch() && data.config.IsOnline() {
+	if data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
@@ -232,7 +233,7 @@ func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, d
 	if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  data.branchNameToKill.LocalName,
-			Lineage: data.config.Lineage,
+			Lineage: data.config.Config.Lineage,
 			Parent:  parentBranch,
 			Program: prog,
 		})
