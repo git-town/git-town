@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -65,7 +65,7 @@ func executeSetParent(verbose bool) error {
 		Branch:          data.currentBranch,
 		DefaultChoice:   data.defaultChoice,
 		DialogTestInput: data.dialogTestInputs.Next(),
-		Lineage:         data.config.Lineage,
+		Lineage:         data.config.Config.Lineage,
 		LocalBranches:   initialBranchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      data.mainBranch,
 	})
@@ -106,7 +106,7 @@ func executeSetParent(verbose bool) error {
 }
 
 type setParentData struct {
-	config           configdomain.ValidatedConfig
+	config           config.ValidatedConfig
 	currentBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
@@ -165,7 +165,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		defaultChoice = mainBranch
 	}
 	return &setParentData{
-		config:           validatedConfig.Config,
+		config:           *validatedConfig,
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
@@ -175,7 +175,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 }
 
 func verifySetParentData(data *setParentData) error {
-	if data.config.IsMainOrPerennialBranch(data.currentBranch) {
+	if data.config.Config.IsMainOrPerennialBranch(data.currentBranch) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.currentBranch)
 	}
 	return nil

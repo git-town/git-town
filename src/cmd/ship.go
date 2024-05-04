@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
@@ -128,7 +129,7 @@ type shipData struct {
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
-	config                   configdomain.ValidatedConfig
+	config                   config.ValidatedConfig
 	connector                hostingdomain.Connector
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
@@ -259,7 +260,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		config:                   validatedConfig.Config,
+		config:                   *validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
@@ -287,11 +288,11 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data *shipData, commitMessage gitdomain.CommitMessage) program.Program {
 	prog := program.Program{}
-	if data.config.SyncBeforeShip {
+	if data.config.Config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &prog,
@@ -300,14 +301,14 @@ func shipProgram(data *shipData, commitMessage gitdomain.CommitMessage) program.
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(data.branchToShip, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config,
+			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &prog,
 			PushBranch:    false,
 		})
 	}
-	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: data.branchToShip.LocalName, Parent: data.config.MainBranch})
+	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: data.branchToShip.LocalName, Parent: data.config.Config.MainBranch})
 	prog.Add(&opcodes.Checkout{Branch: data.targetBranch.LocalName})
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
@@ -328,15 +329,15 @@ func shipProgram(data *shipData, commitMessage gitdomain.CommitMessage) program.
 	} else {
 		prog.Add(&opcodes.SquashMerge{Branch: data.branchToShip.LocalName, CommitMessage: commitMessage, Parent: data.targetBranch.LocalName})
 	}
-	if data.remotes.HasOrigin() && data.config.IsOnline() {
+	if data.remotes.HasOrigin() && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: data.targetBranch.LocalName})
 	}
 	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if data.canShipViaAPI || (data.branchToShip.HasTrackingBranch() && len(data.childBranches) == 0 && data.config.IsOnline()) {
-		if data.config.ShipDeleteTrackingBranch {
+	if data.canShipViaAPI || (data.branchToShip.HasTrackingBranch() && len(data.childBranches) == 0 && data.config.Config.IsOnline()) {
+		if data.config.Config.ShipDeleteTrackingBranch {
 			prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchToShip.RemoteName})
 		}
 	}
