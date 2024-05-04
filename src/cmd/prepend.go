@@ -80,7 +80,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -139,7 +139,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
@@ -188,7 +188,7 @@ func prependProgram(data *prependData) program.Program {
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
+			Config:        data.config,
 			InitialBranch: data.initialBranch,
 			Program:       &prog,
 			PushBranch:    true,
@@ -209,7 +209,7 @@ func prependProgram(data *prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+	if data.remotes.HasOrigin() && data.config.ShouldPushNewBranches() && data.config.IsOnline() {
 		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

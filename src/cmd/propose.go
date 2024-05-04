@@ -91,7 +91,7 @@ func executePropose(dryRun, verbose bool) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
+		FinalMessages:           &repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -143,7 +143,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 		return nil, branchesSnapshot, stashSize, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, runner, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
@@ -199,7 +199,7 @@ func proposeProgram(data *proposeData) program.Program {
 	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
+			Config:        data.config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       &prog,
@@ -220,7 +220,7 @@ func proposeProgram(data *proposeData) program.Program {
 }
 
 func validateProposeData(data *proposeData) error {
-	initialBranchType := data.config.Config.BranchType(data.initialBranch)
+	initialBranchType := data.config.BranchType(data.initialBranch)
 	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil
