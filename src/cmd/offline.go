@@ -6,10 +6,10 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/format"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -50,18 +50,11 @@ func executeOffline(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	runner := git.ProdRunner{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-	}
 	switch len(args) {
 	case 0:
-		displayOfflineStatus(&runner)
+		displayOfflineStatus(repo.Config.Config)
 	case 1:
-		err = setOfflineStatus(args[0], &runner)
+		err = setOfflineStatus(args[0], *repo.Config)
 		if err != nil {
 			return err
 		}
@@ -78,14 +71,14 @@ func executeOffline(args []string, verbose bool) error {
 	})
 }
 
-func displayOfflineStatus(run *git.ProdRunner) {
-	fmt.Println(format.Bool(run.Config.Config.Offline.Bool()))
+func displayOfflineStatus(config configdomain.FullConfig) {
+	fmt.Println(format.Bool(config.Offline.Bool()))
 }
 
-func setOfflineStatus(text string, run *git.ProdRunner) error {
+func setOfflineStatus(text string, config config.Config) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)
 	}
-	return run.Config.SetOffline(configdomain.Offline(value))
+	return config.SetOffline(configdomain.Offline(value))
 }
