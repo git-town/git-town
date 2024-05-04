@@ -136,7 +136,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, abort, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
@@ -153,7 +153,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
-	if err != nil || abort {
+	if err != nil || exit {
 		return nil, branchesSnapshot, 0, exit, err
 	}
 	mainBranch := validatedConfig.Config.MainBranch
