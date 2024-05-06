@@ -51,7 +51,7 @@ func (self textFieldModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { //nolint:ireturn
+func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { //nolint: ireturn
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive

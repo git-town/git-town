@@ -29,7 +29,7 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 		hostingPlatformGitHub,
 		hostingPlatformGitLab,
 	}
-	cursor := entries.IndexOfHostingPlatformOrStart(existingValue.GetOrDefault())
+	cursor := entries.IndexOfHostingPlatformOrStart(*existingValue.GetOrDefault())
 	newValue, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
@@ -69,7 +69,7 @@ type hostingPlatformEntries []hostingPlatformEntry
 
 func (entries hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
 	for h, entry := range entries {
-		if value, has := entry.HostingPlatform().Get(); has && value == needle {
+		if value, has := entry.HostingPlatform().Get(); has && *value == needle {
 			return h
 		}
 	}

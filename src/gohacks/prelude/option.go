@@ -22,27 +22,26 @@ type Option[T any] struct {
 
 // Get provides a copy of the contained value
 // as well as an indicator whether that value exists.
-func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
+func (self Option[T]) Get() (value *T, hasValue bool) {
 	if self.IsSome() {
-		return *self.value, true
+		return self.value, true
 	}
-	var empty T
-	return empty, false
+	return nil, false
 }
 
 // GetOrDefault provides a copy of the contained value.
 // If this option contains nothing, you get the zero value of the contained type.
-func (self Option[T]) GetOrDefault() T { //nolint:ireturn
+func (self Option[T]) GetOrDefault() *T {
 	if value, has := self.Get(); has {
 		return value
 	}
 	var empty T
-	return empty
+	return &empty
 }
 
 // GetOrElse provides a copy of the contained value.
 // If this option contains nothing, you get a copy of the given alternative value.
-func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
+func (self Option[T]) GetOrElse(other *T) *T {
 	if value, has := self.Get(); has {
 		return value
 	}
@@ -51,7 +50,7 @@ func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
 
 // GetOrPanic provides a copy of the contained value.
 // Panics if this option contains nothing.
-func (self Option[T]) GetOrPanic() T { //nolint:ireturn
+func (self Option[T]) GetOrPanic() *T {
 	if value, has := self.Get(); has {
 		return value
 	}

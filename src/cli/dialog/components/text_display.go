@@ -36,7 +36,7 @@ func (self textDisplayModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { //nolint:ireturn
+func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { //nolint: ireturn
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive
