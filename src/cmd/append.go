@@ -79,7 +79,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		Config:                  data.config,
 		Connector:               nil,
 		DialogTestInputs:        &data.dialogTestInputs,
-		FinalMessages:           &repo.FinalMessages,
+		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
