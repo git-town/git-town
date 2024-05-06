@@ -87,11 +87,15 @@ type undoData struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
+func emptyUndoData() undoData {
+	return undoData{} //exhaustruct:ignore
+}
+
 func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, 0, false, err
+		return emptyUndoData(), 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
@@ -103,7 +107,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, initialStashSize, false, err
+		return emptyUndoData(), initialStashSize, false, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
@@ -123,7 +127,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		Verbose:            verbose,
 	})
 	if err != nil || exit {
-		return nil, initialStashSize, exit, err
+		return emptyUndoData(), initialStashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
@@ -135,7 +139,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, initialStashSize, false, err
+			return emptyUndoData(), initialStashSize, false, err
 		}
 	}
 	return undoData{
