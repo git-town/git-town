@@ -199,7 +199,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if !hasTargetBranch {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, &repo.Config.Config, repo.Config.Config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, repo.Config.Config, repo.Config.Config.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
@@ -264,7 +264,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config configdomain.FullConfig, lineage configdomain.Lineage) error {
 	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]

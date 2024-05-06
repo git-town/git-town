@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.Config, &repo.Backend, data)
+	aborted, err := enterData(repo.Config, &repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
@@ -88,6 +88,10 @@ type setupData struct {
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	userInput     userInput
+}
+
+func emptySetupData() setupData {
+	return setupData{} //exhaustruct:ignore
 }
 
 type userInput struct {
@@ -203,11 +207,11 @@ func enterData(config config.Config, backend *git.BackendCommands, data *setupDa
 	return false, nil
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, false, err
+		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -219,7 +223,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose bool) (*setupData, bool,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	return &setupData{
+	return setupData{
 		config:        repo.Config,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Config.ConfigFile.IsSome(),
