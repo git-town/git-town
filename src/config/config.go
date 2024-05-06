@@ -297,7 +297,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 func NewConfig(args NewConfigArgs) (Config, *stringslice.Collector) {
 	config := configdomain.NewFullConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
-	finalMessages := stringslice.Collector{}
+	finalMessages := stringslice.NewCollector()
 	return Config{
 		Config:          config,
 		ConfigFile:      args.ConfigFile,
