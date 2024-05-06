@@ -141,7 +141,7 @@ type createBranchArgs struct {
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
-	commandsCounter       *gohacks.Counter
+	commandsCounter       gohacks.Counter
 	dryRun                bool
 	finalMessages         stringslice.Collector
 	frontend              git.FrontendCommands

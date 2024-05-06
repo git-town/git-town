@@ -87,7 +87,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Backend                 git.BackendCommands
-	CommandsCounter         *gohacks.Counter
+	CommandsCounter         gohacks.Counter
 	Config                  config.Config
 	Connector               hostingdomain.Connector
 	CurrentBranch           gitdomain.LocalBranchName

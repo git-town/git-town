@@ -51,7 +51,7 @@ type FinishedArgs struct {
 	Backend             git.BackendCommands
 	BeginConfigSnapshot undoconfig.ConfigSnapshot
 	Command             string
-	CommandsCounter     *gohacks.Counter
+	CommandsCounter     gohacks.Counter
 	EndConfigSnapshot   undoconfig.ConfigSnapshot
 	FinalMessages       stringslice.Collector
 	RootDir             gitdomain.RepoRootDir
