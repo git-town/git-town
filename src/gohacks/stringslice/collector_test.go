@@ -10,6 +10,7 @@ import (
 func TestCollector(t *testing.T) {
 	t.Parallel()
 	t.Run("owned variable", func(t *testing.T) {
+		t.Parallel()
 		collector := stringslice.NewCollector()
 		must.Eq(t, []string{}, collector.Result())
 		collector.Add("one")

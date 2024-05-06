@@ -49,7 +49,7 @@ type ExecuteArgs struct {
 	Backend          git.BackendCommands
 	CommandsCounter  *gohacks.Counter
 	Config           config.Config
-	FinalMessages    *stringslice.Collector
+	FinalMessages    stringslice.Collector
 	Frontend         git.FrontendCommands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize

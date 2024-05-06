@@ -125,7 +125,7 @@ type OpenRepoResult struct {
 	CommandsCounter *gohacks.Counter
 	Config          config.Config
 	ConfigSnapshot  undoconfig.ConfigSnapshot
-	FinalMessages   *stringslice.Collector
+	FinalMessages   stringslice.Collector
 	Frontend        git.FrontendCommands
 	IsOffline       configdomain.Offline
 	RootDir         gitdomain.RepoRootDir

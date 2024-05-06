@@ -88,14 +88,14 @@ func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err e
 type ConfigArgs struct {
 	Backend            *git.BackendCommands
 	BranchesToValidate gitdomain.LocalBranchNames
-	FinalMessages      *stringslice.Collector
+	FinalMessages      stringslice.Collector
 	LocalBranches      gitdomain.LocalBranchNames
 	TestInputs         *components.TestInputs
 	Unvalidated        config.Config
 }
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages *stringslice.Collector) error {
+func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages stringslice.Collector) error {
 	for _, perennialBranch := range perennialBranches {
 		if lineage.Parent(perennialBranch).IsSome() {
 			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {

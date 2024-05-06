@@ -294,7 +294,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-func NewConfig(args NewConfigArgs) (Config, *stringslice.Collector) {
+func NewConfig(args NewConfigArgs) (Config, stringslice.Collector) {
 	config := configdomain.NewFullConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	configAccess := gitconfig.Access{Runner: args.Runner}
 	finalMessages := stringslice.NewCollector()
@@ -306,7 +306,7 @@ func NewConfig(args NewConfigArgs) (Config, *stringslice.Collector) {
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
-	}, &finalMessages
+	}, finalMessages
 }
 
 type NewConfigArgs struct {

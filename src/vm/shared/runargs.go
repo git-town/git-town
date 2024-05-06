@@ -15,7 +15,7 @@ type RunArgs struct {
 	Config                          *config.Config
 	Connector                       hostingdomain.Connector
 	DialogTestInputs                *components.TestInputs
-	FinalMessages                   *stringslice.Collector
+	FinalMessages                   stringslice.Collector
 	Frontend                        git.FrontendCommands
 	Lineage                         configdomain.Lineage
 	PrependOpcodes                  func(...Opcode)
