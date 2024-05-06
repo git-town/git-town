@@ -11,10 +11,10 @@ import (
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA,
 // but only if it currently has a particular SHA.
 type ResetRemoteBranchToSHA struct {
-	Branch      gitdomain.RemoteBranchName
-	MustHaveSHA gitdomain.SHA
-	SetToSHA    gitdomain.SHA
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.RemoteBranchName
+	MustHaveSHA             gitdomain.SHA
+	SetToSHA                gitdomain.SHA
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ResetRemoteBranchToSHA) Run(args shared.RunArgs) error {

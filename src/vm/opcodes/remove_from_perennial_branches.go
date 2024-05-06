@@ -7,8 +7,8 @@ import (
 
 // RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranches struct {
-	Branch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RemoveFromPerennialBranches) Run(args shared.RunArgs) error {

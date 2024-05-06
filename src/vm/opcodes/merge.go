@@ -7,8 +7,8 @@ import (
 
 // Merge merges the branch with the given name into the current branch.
 type Merge struct {
-	Branch gitdomain.BranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.BranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *Merge) CreateAbortProgram() []shared.Opcode {

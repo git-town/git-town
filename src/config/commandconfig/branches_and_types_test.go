@@ -15,7 +15,7 @@ func TestBranchesAndTypes(t *testing.T) {
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := configdomain.FullConfig{ //nolint:exhaustruct
+		fullConfig := configdomain.FullConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 		}
 		have.Add("main", fullConfig)
@@ -28,7 +28,7 @@ func TestBranchesAndTypes(t *testing.T) {
 	t.Run("AddMany", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
-		fullConfig := configdomain.FullConfig{ //nolint:exhaustruct
+		fullConfig := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 		}

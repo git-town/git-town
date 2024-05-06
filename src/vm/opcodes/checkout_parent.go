@@ -7,8 +7,8 @@ import (
 
 // CheckoutParent checks out the parent branch of the current branch.
 type CheckoutParent struct {
-	CurrentBranch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	CurrentBranch           gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CheckoutParent) Run(args shared.RunArgs) error {

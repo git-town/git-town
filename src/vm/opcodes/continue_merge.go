@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v14/src/vm/shared"
 // ContinueMerge finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type ContinueMerge struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ContinueMerge) CreateContinueProgram() []shared.Opcode {

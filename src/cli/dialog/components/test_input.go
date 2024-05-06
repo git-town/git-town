@@ -64,53 +64,53 @@ func ParseTestInput(envData string) TestInput {
 func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "backspace":
-		return tea.KeyMsg{Type: tea.KeyBackspace} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyBackspace} //exhaustruct:ignore
 	case "ctrl+c":
-		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyCtrlC} //exhaustruct:ignore
 	case "down":
-		return tea.KeyMsg{Type: tea.KeyDown} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyDown} //exhaustruct:ignore
 	case "enter":
-		return tea.KeyMsg{Type: tea.KeyEnter} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyEnter} //exhaustruct:ignore
 	case "space":
-		return tea.KeyMsg{Type: tea.KeySpace} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeySpace} //exhaustruct:ignore
 	case "up":
-		return tea.KeyMsg{Type: tea.KeyUp} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyUp} //exhaustruct:ignore
 	case "esc":
-		return tea.KeyMsg{Type: tea.KeyEsc} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyEsc} //exhaustruct:ignore
 	case "0":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}} //exhaustruct:ignore
 	case "1":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'1'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'1'}} //exhaustruct:ignore
 	case "2":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'2'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'2'}} //exhaustruct:ignore
 	case "3":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'3'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'3'}} //exhaustruct:ignore
 	case "4":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'4'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'4'}} //exhaustruct:ignore
 	case "5":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}} //exhaustruct:ignore
 	case "6":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'6'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'6'}} //exhaustruct:ignore
 	case "7":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'7'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'7'}} //exhaustruct:ignore
 	case "8":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'8'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'8'}} //exhaustruct:ignore
 	case "9":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //exhaustruct:ignore
 	case "a":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //exhaustruct:ignore
 	case "c":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'c'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'c'}} //exhaustruct:ignore
 	case "d":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //exhaustruct:ignore
 	case "e":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //exhaustruct:ignore
 	case "n":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'n'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'n'}} //exhaustruct:ignore
 	case "o":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //exhaustruct:ignore
 	case "q":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //exhaustruct:ignore
 	}
 	panic("unknown test input: " + input)
 }

@@ -6,8 +6,8 @@ import (
 )
 
 type RemoveGlobalConfig struct {
-	Key gitconfig.Key // the config key to remove
-	undeclaredOpcodeMethods
+	Key                     gitconfig.Key // the config key to remove
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RemoveGlobalConfig) Run(args shared.RunArgs) error {

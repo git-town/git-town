@@ -8,9 +8,9 @@ import (
 // CheckoutIfExists does the same as Checkout
 // but only if that branch actually exists.
 type CheckoutFirstExisting struct {
-	Branches   gitdomain.LocalBranchNames
-	MainBranch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branches                gitdomain.LocalBranchNames
+	MainBranch              gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CheckoutFirstExisting) Run(args shared.RunArgs) error {

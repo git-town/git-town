@@ -1,4 +1,4 @@
-RTA_VERSION = 0.5.0 # run-that-app version to use
+RTA_VERSION = 0.6.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -49,6 +49,7 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
+	@make --no-print-dir lint-smoke &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
 	@make --no-print-directory deadcode &
 	@make --no-print-directory lint-structs-sorted &
@@ -70,6 +71,10 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
+
+lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
+	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+# @tools/rta ireturn --reject="github.com/git-town/git-town/v14/src/gohacks/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted

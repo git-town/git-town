@@ -6,9 +6,9 @@ import (
 )
 
 type SetGlobalConfig struct {
-	Key   gitconfig.Key
-	Value string
-	undeclaredOpcodeMethods
+	Key                     gitconfig.Key
+	Value                   string
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *SetGlobalConfig) Run(args shared.RunArgs) error {

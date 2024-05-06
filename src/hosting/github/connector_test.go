@@ -17,8 +17,8 @@ func TestConnector(t *testing.T) {
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		connector := github.Connector{} //nolint:exhaustruct
-		give := hostingdomain.Proposal{ //nolint:exhaustruct
+		connector := github.Connector{}
+		give := hostingdomain.Proposal{
 			Number: 1,
 			Title:  "my title",
 		}
@@ -70,7 +70,7 @@ func TestConnector(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := github.Connector{ //nolint:exhaustruct
+		connector := github.Connector{
 			Data: hostingdomain.Data{
 				Hostname:     "github.com",
 				Organization: "organization",

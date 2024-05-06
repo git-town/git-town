@@ -10,8 +10,8 @@ import (
 
 // DeleteBranchIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.
 type DeleteBranchIfEmptyAtRuntime struct {
-	Branch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {

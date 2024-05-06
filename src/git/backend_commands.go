@@ -343,9 +343,9 @@ func (self *BackendCommands) Remotes() (gitdomain.Remotes, error) {
 		if err != nil {
 			return remotes, err
 		}
-		self.RemotesCache.Set(remotes)
+		self.RemotesCache.Set(&remotes)
 	}
-	return self.RemotesCache.Value(), nil
+	return *self.RemotesCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.

@@ -17,7 +17,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
 				Selections: []int{1, 2, 3},
@@ -29,7 +29,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
 				Selections: []int{1, 3},
@@ -45,7 +45,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
 				Selections: []int{1, 3},
@@ -57,7 +57,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
 				Selections: []int{1, 2, 3},
@@ -73,7 +73,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("selected row is checked", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
 				Selections: []int{2},
@@ -83,7 +83,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("selected row is not checked", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.PerennialBranchesModel{
-				List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 1,
 				},
 				Selections: []int{2},
@@ -94,7 +94,7 @@ func TestPerennialBranches(t *testing.T) {
 
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.PerennialBranchesModel{ //nolint:exhaustruct
+		model := dialog.PerennialBranchesModel{
 			Selections: []int{2},
 		}
 		must.False(t, model.IsRowChecked(1))
@@ -105,7 +105,7 @@ func TestPerennialBranches(t *testing.T) {
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.PerennialBranchesModel{
-			List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			List: list.List[gitdomain.LocalBranchName]{
 				Entries: list.NewEntries[gitdomain.LocalBranchName]("zero", "one", "two", "three"),
 			},
 			Selections: []int{1, 3},
@@ -118,7 +118,7 @@ func TestPerennialBranches(t *testing.T) {
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.PerennialBranchesModel{
-			List: list.List[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			List: list.List[gitdomain.LocalBranchName]{
 				Cursor: 2,
 			},
 			Selections: []int{1, 3},

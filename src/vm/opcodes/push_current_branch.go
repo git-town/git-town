@@ -7,8 +7,8 @@ import (
 
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
 type PushCurrentBranch struct {
-	CurrentBranch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	CurrentBranch           gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *PushCurrentBranch) CreateContinueProgram() []shared.Opcode {

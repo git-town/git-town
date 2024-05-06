@@ -7,8 +7,8 @@ import (
 
 // DeleteLocalBranch deletes the branch with the given name.
 type DeleteLocalBranch struct {
-	Branch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *DeleteLocalBranch) Run(args shared.RunArgs) error {
