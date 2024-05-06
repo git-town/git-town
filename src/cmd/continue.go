@@ -105,7 +105,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		CommandsCounter:    repo.CommandsCounter,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      &repo.FinalMessages,
+		FinalMessages:      repo.FinalMessages,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,

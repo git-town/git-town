@@ -28,7 +28,7 @@ type UnvalidatedConfig struct {
 	originURLCache  configdomain.OriginURLCache // TODO: remove if unused
 }
 
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *stringslice.Collector) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	finalMessages := stringslice.Collector{}
 	return UnvalidatedConfig{
@@ -39,7 +39,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, *st
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
-	}, &finalMessages
+	}, finalMessages
 }
 
 // OriginURL provides the URL for the "origin" remote.

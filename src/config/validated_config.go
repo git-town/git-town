@@ -18,6 +18,10 @@ type ValidatedConfig struct {
 	Config configdomain.ValidatedConfig // the merged configuration data
 }
 
+func EmptyValidatedConfig() ValidatedConfig {
+	return ValidatedConfig{} //exhaustruct:ignore
+}
+
 // AddToContributionBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {

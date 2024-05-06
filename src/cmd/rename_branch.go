@@ -155,25 +155,25 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		CommandsCounter:    repo.CommandsCounter,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      &repo.FinalMessages,
+		FinalMessages:      repo.FinalMessages,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
 		StashSize:          stashSize,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, exit, err
 	}
 	if validatedConfig.Config.IsMainBranch(oldBranchName) {
-		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if validatedConfig.Config.IsPerennialBranch(oldBranchName) {
-			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {

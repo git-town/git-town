@@ -155,7 +155,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		Verbose:            verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, 0, exit, err
+		return emptySetParentData(), branchesSnapshot, 0, exit, err
 	}
 	mainBranch := validatedConfig.Config.MainBranch
 	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
@@ -166,7 +166,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		defaultChoice = mainBranch
 	}
 	return setParentData{
-		config:           *validatedConfig,
+		config:           validatedConfig,
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,

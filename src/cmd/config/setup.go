@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, &data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, data)
 	if err != nil || aborted {
 		return err
 	}
@@ -76,7 +76,7 @@ func executeConfigSetup(verbose bool) error {
 		Command:             "setup",
 		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       &repo.FinalMessages,
+		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})

@@ -77,7 +77,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			beginStashSize:        initialStashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
-			finalMessages:         &repo.FinalMessages,
+			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
@@ -271,7 +271,7 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-		FinalMessages:       &args.repo.FinalMessages,
+		FinalMessages:       args.repo.FinalMessages,
 		RootDir:             args.rootDir,
 		Verbose:             args.verbose,
 	})
