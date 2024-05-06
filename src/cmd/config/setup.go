@@ -90,6 +90,10 @@ type setupData struct {
 	userInput     userInput
 }
 
+func emptySetupData() setupData {
+	return setupData{} //exhaustruct:ignore
+}
+
 type userInput struct {
 	config        configdomain.FullConfig
 	configStorage dialog.ConfigStorageOption
@@ -105,7 +109,7 @@ func determineHostingPlatform(config config.Config, userChoice Option[configdoma
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.Config, backend *git.BackendCommands, data *setupData) (aborted bool, err error) {
+func enterData(config config.Config, backend *git.BackendCommands, data setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -203,11 +207,11 @@ func enterData(config config.Config, backend *git.BackendCommands, data *setupDa
 	return false, nil
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, false, err
+		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -219,7 +223,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose bool) (*setupData, bool,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
-	return &setupData{
+	return setupData{
 		config:        repo.Config,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Config.ConfigFile.IsSome(),
