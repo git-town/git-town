@@ -79,11 +79,11 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptyContinueData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -96,7 +96,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (*continue
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, initialBranchesSnapshot, initialStashSize, exit, err
+		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
@@ -108,24 +108,24 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (*continue
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
-		return nil, initialBranchesSnapshot, initialStashSize, exit, err
+		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	if repoStatus.Conflicts {
-		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
+		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
+		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Config.Config,
+			FullConfig:      repo.Config.Config,
 			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 	}
-	return &continueData{
+	return continueData{
 		config:           repo.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
@@ -138,6 +138,10 @@ type continueData struct {
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
+}
+
+func emptyContinueData() continueData {
+	return continueData{} //exhaustruct:ignore
 }
 
 func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, bool, error) {
