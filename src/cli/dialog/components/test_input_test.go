@@ -62,14 +62,12 @@ func TestTestInputs(t *testing.T) {
 		haveNext = testInputs.Next()
 		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.NewTestInputs()
-		must.Eq(t, wantRemaining, testInputs)
+		must.EqOp(t, 0, testInputs.Len())
 		// request the next entry: empty
 		haveNext = testInputs.Next()
 		wantNext = components.TestInput{}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.NewTestInputs()
-		must.Eq(t, wantRemaining, testInputs)
+		must.EqOp(t, 0, testInputs.Len())
 	})
 
 	t.Run("ParseTestInput", func(t *testing.T) {

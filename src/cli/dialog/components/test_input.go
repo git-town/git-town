@@ -21,12 +21,16 @@ type TestInputs struct {
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self *TestInputs) Append(input TestInput) {
+func (self TestInputs) Append(input TestInput) {
 	*self.inputs = append(*self.inputs, input)
 }
 
+func (self TestInputs) Len() int {
+	return len(*self.inputs)
+}
+
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self *TestInputs) Next() TestInput {
+func (self TestInputs) Next() TestInput {
 	if len(*self.inputs) == 0 {
 		return TestInput{}
 	}
