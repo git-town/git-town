@@ -72,7 +72,7 @@ func TestAliases(t *testing.T) {
 
 	t.Run("Checked", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //exhaustruct:ignore
+		model := dialog.AliasesModel{
 			AllAliasableCommands: configdomain.AliasableCommands{
 				configdomain.AliasableCommandAppend,
 				configdomain.AliasableCommandHack,
@@ -129,7 +129,7 @@ func TestAliases(t *testing.T) {
 					dialog.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				List: list.List[configdomain.AliasableCommand]{ //exhaustruct:ignore
+				List: list.List[configdomain.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -158,7 +158,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
-				List: list.List[configdomain.AliasableCommand]{ //exhaustruct:ignore
+				List: list.List[configdomain.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -187,7 +187,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				List: list.List[configdomain.AliasableCommand]{ //exhaustruct:ignore
+				List: list.List[configdomain.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -214,7 +214,7 @@ func TestAliases(t *testing.T) {
 
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //exhaustruct:ignore
+		model := dialog.AliasesModel{
 			List: list.List[configdomain.AliasableCommand]{ //exhaustruct:ignore
 				Entries: list.NewEntries(
 					configdomain.AliasableCommandAppend,
@@ -239,7 +239,7 @@ func TestAliases(t *testing.T) {
 
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //exhaustruct:ignore
+		model := dialog.AliasesModel{
 			List: list.List[configdomain.AliasableCommand]{ //exhaustruct:ignore
 				Entries: list.NewEntries(
 					configdomain.AliasableCommandAppend,
