@@ -6,7 +6,9 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
-// UnvalidatedConfig is Git Town configuration from merging the Git-based and the configfile-based configuration.
+// UnvalidatedConfig is the merged Git-based and the configfile-based Git Town configuration.
+// It might be lacking essential information in case Git metadata and config files don't contain it.
+// If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
