@@ -15,7 +15,7 @@ type SquashMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	CommitMessage           gitdomain.CommitMessage
 	Parent                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	undeclaredOpcodeMethods //`exhaustruct:"optional"`
 }
 
 func (self *SquashMerge) CreateAbortProgram() []shared.Opcode {
