@@ -16,22 +16,33 @@ const TestInputKey = "GITTOWN_DIALOG_INPUT"
 type TestInput []tea.Msg
 
 // TestInputs contains the input for all dialogs in an end-to-end test.
-type TestInputs []TestInput
+type TestInputs struct {
+	inputs *[]TestInput
+}
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self *TestInputs) Next() TestInput {
-	if len(*self) == 0 {
+func (self TestInputs) Append(input TestInput) {
+	*self.inputs = append(*self.inputs, input)
+}
+
+func (self TestInputs) Len() int {
+	return len(*self.inputs)
+}
+
+// Next provides the TestInput for the next dialog in an end-to-end test.
+func (self TestInputs) Next() TestInput {
+	if len(*self.inputs) == 0 {
 		return TestInput{}
 	}
-	result := (*self)[0]
-	*self = (*self)[1:]
+	result := (*self.inputs)[0]
+	*self.inputs = (*self.inputs)[1:]
 	return result
 }
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
 func LoadTestInputs(environmenttVariables []string) TestInputs {
-	result := TestInputs{}
+	result := NewTestInputs()
 	sort.Strings(environmenttVariables)
 	for _, environmentVariable := range environmenttVariables {
 		if !strings.HasPrefix(environmentVariable, TestInputKey) {
@@ -42,10 +53,16 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 			fmt.Printf(messages.SettingIgnoreInvalid, environmentVariable)
 			continue
 		}
-		inputs := ParseTestInput(value)
-		result = append(result, inputs)
+		input := ParseTestInput(value)
+		result.Append(input)
 	}
 	return result
+}
+
+func NewTestInputs(inputs ...TestInput) TestInputs {
+	return TestInputs{
+		inputs: &inputs,
+	}
 }
 
 // ParseTestInput converts the given input data in the environment variable format

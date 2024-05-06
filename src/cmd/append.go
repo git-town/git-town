@@ -78,7 +78,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -146,7 +146,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
 		StashSize:          stashSize,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})

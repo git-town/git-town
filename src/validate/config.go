@@ -118,7 +118,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		return nil, false, err
 	}
 
-	return &validatedConfig, false, err
+	return validatedConfig, false, err
 }
 
 type ConfigArgs struct {
@@ -134,7 +134,7 @@ type ConfigArgs struct {
 	RepoStatus         gitdomain.RepoStatus
 	RootDir            gitdomain.RepoRootDir
 	StashSize          gitdomain.StashSize
-	TestInputs         *components.TestInputs
+	TestInputs         components.TestInputs
 	Unvalidated        config.UnvalidatedConfig
 	Verbose            bool
 }

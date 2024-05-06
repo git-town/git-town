@@ -20,7 +20,7 @@ func TestTestInputs(t *testing.T) {
 			"GITTOWN_DIALOG_INPUT_3=ctrl+c",
 		}
 		have := components.LoadTestInputs(give)
-		want := components.TestInputs{
+		want := components.NewTestInputs(
 			components.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
 			components.TestInput{
 				tea.KeyMsg{Type: tea.KeySpace},
@@ -30,46 +30,44 @@ func TestTestInputs(t *testing.T) {
 				tea.KeyMsg{Type: tea.KeyEnter},
 			},
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		}
+		)
 		must.Eq(t, want, have)
 	})
 
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
-		testInputs := components.TestInputs{
+		testInputs := components.NewTestInputs(
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		}
+		)
 		// request the first entry: A
 		haveNext := testInputs.Next()
 		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining := components.TestInputs{
+		wantRemaining := components.NewTestInputs(
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		}
+		)
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: B
 		haveNext = testInputs.Next()
 		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.TestInputs{
+		wantRemaining = components.NewTestInputs(
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		}
+		)
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: C
 		haveNext = testInputs.Next()
 		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.TestInputs{}
-		must.Eq(t, wantRemaining, testInputs)
+		must.EqOp(t, 0, testInputs.Len())
 		// request the next entry: empty
 		haveNext = testInputs.Next()
 		wantNext = components.TestInput{}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.TestInputs{}
-		must.Eq(t, wantRemaining, testInputs)
+		must.EqOp(t, 0, testInputs.Len())
 	})
 
 	t.Run("ParseTestInput", func(t *testing.T) {

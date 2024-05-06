@@ -39,7 +39,7 @@ func Execute(args ExecuteArgs) error {
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
 		Connector:               args.Connector,
-		DialogTestInputs:        &args.TestInputs,
+		DialogTestInputs:        args.TestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          args.HasOpenChanges,

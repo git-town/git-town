@@ -117,7 +117,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
 		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
+		DialogTestInputs:        args.DialogTestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          repoStatus.OpenChanges,

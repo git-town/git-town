@@ -80,7 +80,7 @@ func executeSkip(verbose bool) error {
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
 		StashSize:          stashSize,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
 		Verbose:            verbose,
 	})
