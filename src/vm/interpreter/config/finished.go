@@ -53,7 +53,7 @@ type FinishedArgs struct {
 	Command             string
 	CommandsCounter     *gohacks.Counter
 	EndConfigSnapshot   undoconfig.ConfigSnapshot
-	FinalMessages       *stringslice.Collector
+	FinalMessages       stringslice.Collector
 	RootDir             gitdomain.RepoRootDir
 	Verbose             bool
 }

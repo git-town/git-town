@@ -92,7 +92,7 @@ type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
 	CurrentBranch           gitdomain.LocalBranchName
 	DialogTestInputs        components.TestInputs
-	FinalMessages           *stringslice.Collector
+	FinalMessages           stringslice.Collector
 	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
