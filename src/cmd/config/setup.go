@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.Config, &repo.Backend, &data)
+	aborted, err := enterData(repo.Config, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
@@ -109,7 +109,7 @@ func determineHostingPlatform(config config.Config, userChoice Option[configdoma
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.Config, backend *git.BackendCommands, data *setupData) (aborted bool, err error) {
+func enterData(config config.Config, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
