@@ -138,7 +138,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 			return nil, initialStashSize, false, err
 		}
 	}
-	return &undoData{
+	return undoData{
 		config:                  validatedConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
