@@ -13,7 +13,6 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-// nolint: ireturn
 func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) { // TODO wrap in option here to avoid the nil interface problem?
 	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
 	if !hasPlatform {
