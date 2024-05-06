@@ -37,7 +37,7 @@ func EmptyRunState() RunState {
 
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
 // after all the opcodes for the current branch.
-func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {
+func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend git.BackendCommands) error {
 	popped := program.Program{}
 	for {
 		nextOpcode := self.RunProgram.Peek()
@@ -75,7 +75,7 @@ func (self *RunState) MarkAsFinished() {
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (self *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
+func (self *RunState) MarkAsUnfinished(backend git.BackendCommands) error {
 	currentBranch, err := backend.CurrentBranch()
 	if err != nil {
 		return err

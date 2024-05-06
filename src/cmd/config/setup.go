@@ -109,7 +109,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data setupData) (aborted bool, err error) {
+func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
