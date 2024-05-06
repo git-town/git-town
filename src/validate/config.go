@@ -86,7 +86,7 @@ func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err e
 }
 
 type ConfigArgs struct {
-	Backend            *git.BackendCommands
+	Backend            git.BackendCommands
 	BranchesToValidate gitdomain.LocalBranchNames
 	FinalMessages      stringslice.Collector
 	LocalBranches      gitdomain.LocalBranchNames

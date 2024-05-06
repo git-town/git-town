@@ -175,7 +175,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: branchNamesToSync,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranchNames,

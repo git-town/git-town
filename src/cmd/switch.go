@@ -102,7 +102,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: localBranches,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,

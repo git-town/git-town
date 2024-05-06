@@ -135,7 +135,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),

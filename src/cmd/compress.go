@@ -147,7 +147,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	}
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),

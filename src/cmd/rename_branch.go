@@ -139,7 +139,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		return emptyRenameBranchData(), branchesSnapshot, stashSize, exit, err
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
