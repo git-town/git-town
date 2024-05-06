@@ -70,7 +70,7 @@ type diffParentData struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
+func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -101,7 +101,7 @@ func determineDiffParentData(args []string, repo *execute.OpenRepoResult, verbos
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, exit, err

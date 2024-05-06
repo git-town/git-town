@@ -44,11 +44,11 @@ func executeDisplayConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	printConfig(&repo.Config.Config)
+	printConfig(repo.Config.Config)
 	return nil
 }
 
-func printConfig(config *configdomain.FullConfig) {
+func printConfig(config configdomain.FullConfig) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))

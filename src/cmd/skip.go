@@ -74,7 +74,7 @@ func executeSkip(verbose bool) error {
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return err
@@ -105,7 +105,7 @@ func executeSkip(verbose bool) error {
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          *repo.Config,
+		Config:          repo.Config,
 		Connector:       connector,
 		CurrentBranch:   initialBranchesSnapshot.Active,
 		FinalMessages:   repo.FinalMessages,

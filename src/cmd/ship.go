@@ -144,7 +144,7 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -183,7 +183,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -248,7 +248,7 @@ func determineShipData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		config:                   *repo.Config,
+		config:                   repo.Config,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,

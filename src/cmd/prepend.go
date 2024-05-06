@@ -107,11 +107,15 @@ type prependData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func emptyPrependData() prependData {
+	return prependData{} //exhaustruct:ignore
+}
+
+func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (prependData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptyPrependData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
@@ -125,16 +129,16 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptyPrependData(), branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Backend.Remotes())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return emptyPrependData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return emptyPrependData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
@@ -142,23 +146,23 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptyPrependData(), branchesSnapshot, stashSize, exit, err
 	}
 	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	parent, hasParent := repo.Config.Config.Lineage.Parent(branchesSnapshot.Active).Get()
 	if !hasParent {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
+		return emptyPrependData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	parentAndAncestors := repo.Config.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
-	return &prependData{
+	return prependData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    *repo.Config,
+		config:                    repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -171,7 +175,7 @@ func determinePrependData(args []string, repo *execute.OpenRepoResult, dryRun, v
 	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
-func prependProgram(data *prependData) program.Program {
+func prependProgram(data prependData) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{

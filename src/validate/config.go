@@ -16,7 +16,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err error) {
+func Config(args ConfigArgs) (validatedResult config.Config, aborted bool, err error) {
 	// check Git user data
 	if args.Unvalidated.Config.GitUserEmail == "" {
 		return validatedResult, false, errors.New(messages.GitUserEmailMissing)
@@ -82,7 +82,7 @@ func Config(args ConfigArgs) (validatedResult *config.Config, aborted bool, err 
 	}
 	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, validatedPerennials, args.Unvalidated.GitConfig, args.FinalMessages)
 
-	return &args.Unvalidated, false, err
+	return args.Unvalidated, false, err
 }
 
 type ConfigArgs struct {
