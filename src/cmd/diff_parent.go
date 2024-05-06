@@ -100,7 +100,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

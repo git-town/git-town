@@ -111,7 +111,7 @@ func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -182,7 +182,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

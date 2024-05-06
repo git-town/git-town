@@ -48,7 +48,7 @@ type ExecuteArgs struct {
 	CommandsCounter         gohacks.Counter
 	Config                  config.Config
 	Connector               hostingdomain.Connector
-	DialogTestInputs        *components.TestInputs
+	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector
 	Frontend                git.FrontendCommands
 	HasOpenChanges          bool

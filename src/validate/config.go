@@ -90,7 +90,7 @@ type ConfigArgs struct {
 	BranchesToValidate gitdomain.LocalBranchNames
 	FinalMessages      stringslice.Collector
 	LocalBranches      gitdomain.LocalBranchNames
-	TestInputs         *components.TestInputs
+	TestInputs         components.TestInputs
 	Unvalidated        config.Config
 }
 

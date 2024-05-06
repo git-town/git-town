@@ -28,7 +28,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 }
 
 type MainAndPerennialsArgs struct {
-	DialogInputs          *components.TestInputs
+	DialogInputs          components.TestInputs
 	GetDefaultBranch      func() Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
 	LocalBranches         gitdomain.LocalBranchNames

@@ -14,7 +14,7 @@ type RunArgs struct {
 	Backend                         git.BackendCommands
 	Config                          *config.Config
 	Connector                       hostingdomain.Connector
-	DialogTestInputs                *components.TestInputs
+	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        git.FrontendCommands
 	Lineage                         configdomain.Lineage

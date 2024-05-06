@@ -85,7 +85,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -143,7 +143,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToKill},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

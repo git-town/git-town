@@ -66,7 +66,7 @@ func executeContinue(verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -104,7 +104,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		BranchesToValidate: localBranches,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

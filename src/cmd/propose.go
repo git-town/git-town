@@ -91,7 +91,7 @@ func executePropose(dryRun, verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -150,7 +150,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

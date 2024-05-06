@@ -110,7 +110,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               nil,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -179,7 +179,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		BranchesToValidate: branchNamesToSync,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranchNames,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
