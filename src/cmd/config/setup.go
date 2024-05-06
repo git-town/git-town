@@ -245,7 +245,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, frontend g
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, &oldConfig)
+		return saveToFile(userInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, frontend)
 	}
@@ -415,7 +415,7 @@ func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, oldConfi
 	return oldConfig.SetSyncBeforeShip(newValue, false)
 }
 
-func saveToFile(userInput userInput, config *config.UnvalidatedConfig) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
