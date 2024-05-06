@@ -20,7 +20,7 @@ func Right[LEFT any, RIGHT any](right RIGHT) Either[LEFT, RIGHT] {
 	}
 }
 
-func (self Either[LEFT, RIGHT]) Get() (left LEFT, hasLeft bool, right RIGHT, hasRight bool) {
+func (self Either[LEFT, RIGHT]) Get() (left LEFT, hasLeft bool, right RIGHT, hasRight bool) { //nolint:ireturn
 	if self.left != nil {
 		left = *self.left
 		hasLeft = true
