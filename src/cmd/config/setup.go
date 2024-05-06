@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
@@ -88,6 +88,10 @@ type setupData struct {
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	userInput     userInput
+}
+
+func emptySetupData() setupData {
+	return setupData{} //exhaustruct:ignore
 }
 
 type userInput struct {
