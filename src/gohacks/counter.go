@@ -5,6 +5,13 @@ type Counter struct {
 	count *int
 }
 
+func NewCounter() Counter {
+	var count int
+	return Counter{
+		count: &count,
+	}
+}
+
 func (self *Counter) Count() int {
 	return *self.count
 }
