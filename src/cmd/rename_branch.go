@@ -115,11 +115,15 @@ type renameBranchData struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func emptyRenameBranchData() renameBranchData {
+	return renameBranchData{} //exhaustruct:ignore
+}
+
+func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptyRenameBranchData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -132,7 +136,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, exit, err
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            &repo.Backend,
@@ -143,7 +147,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var oldBranchName gitdomain.LocalBranchName
@@ -156,30 +160,30 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
 	if repo.Config.Config.IsMainBranch(oldBranchName) {
-		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if repo.Config.Config.IsPerennialBranch(oldBranchName) {
-			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameToSameName)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, errors.New(messages.RenameToSameName)
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	return &renameBranchData{
+	return renameBranchData{
 		config:           repo.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -191,7 +195,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func renameBranchProgram(data *renameBranchData) program.Program {
+func renameBranchProgram(data renameBranchData) program.Program {
 	result := program.Program{}
 	result.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: data.oldBranch.LocalName.Location()})
 	if data.initialBranch == data.oldBranch.LocalName {

@@ -116,7 +116,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      &repo.Config.Config,
+			FullConfig:      repo.Config.Config,
 			HostingPlatform: repo.Config.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
