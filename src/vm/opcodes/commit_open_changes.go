@@ -9,7 +9,7 @@ import (
 // CommitOpenChanges commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChanges struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {

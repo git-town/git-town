@@ -8,9 +8,9 @@ import (
 // SetParent sets the given parent branch as the parent of the given branch.
 // Use ChangeParent to change an existing parent.
 type SetParent struct {
-	Branch gitdomain.LocalBranchName
-	Parent gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	Parent                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *SetParent) Run(args shared.RunArgs) error {

@@ -7,8 +7,8 @@ import (
 
 // RebaseFeatureTrackingBranch rebases the current feature branch against its tracking branch.
 type RebaseFeatureTrackingBranch struct {
-	RemoteBranch gitdomain.RemoteBranchName
-	undeclaredOpcodeMethods
+	RemoteBranch            gitdomain.RemoteBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {

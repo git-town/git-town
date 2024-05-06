@@ -10,9 +10,9 @@ import (
 
 // UpdateProposalTarget updates the target of the proposal with the given number at the code hosting platform.
 type UpdateProposalTarget struct {
-	NewTarget      gitdomain.LocalBranchName
-	ProposalNumber int
-	undeclaredOpcodeMethods
+	NewTarget               gitdomain.LocalBranchName
+	ProposalNumber          int
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *UpdateProposalTarget) CreateAutomaticUndoError() error {

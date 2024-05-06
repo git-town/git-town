@@ -6,9 +6,9 @@ import (
 )
 
 type SetLocalConfig struct {
-	Key   gitconfig.Key
-	Value string
-	undeclaredOpcodeMethods
+	Key                     gitconfig.Key
+	Value                   string
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *SetLocalConfig) Run(args shared.RunArgs) error {

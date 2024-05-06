@@ -6,8 +6,8 @@ import (
 )
 
 type RemoveBranchFromLineage struct {
-	Branch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {

@@ -8,8 +8,8 @@ import (
 // RebaseBranch rebases the current branch
 // against the branch with the given name.
 type RebaseBranch struct {
-	Branch gitdomain.BranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.BranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RebaseBranch) CreateAbortProgram() []shared.Opcode {

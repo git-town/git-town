@@ -7,8 +7,8 @@ import (
 
 // CommitOpenChanges commits all open changes as a new commit.
 type CommitSquashedChanges struct {
-	Message gitdomain.CommitMessage
-	undeclaredOpcodeMethods
+	Message                 gitdomain.CommitMessage
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CommitSquashedChanges) Run(args shared.RunArgs) error {

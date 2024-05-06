@@ -9,7 +9,7 @@ import (
 type MergeParent struct {
 	CurrentBranch               gitdomain.LocalBranchName
 	ParentActiveInOtherWorktree bool
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
 
 func (self *MergeParent) CreateAbortProgram() []shared.Opcode {
