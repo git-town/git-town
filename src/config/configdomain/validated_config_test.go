@@ -15,7 +15,7 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+		config := configdomain.UnvalidatedConfig{
 			ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
 			MainBranch:           Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
@@ -40,7 +40,7 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+		config := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -52,7 +52,7 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+		config := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 			PerennialRegex:    configdomain.NewPerennialRegexOption("release-.*"),
@@ -75,7 +75,7 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.UnvalidatedConfig{ //nolint:exhaustruct
+		config := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 		}

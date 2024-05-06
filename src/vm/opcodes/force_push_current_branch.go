@@ -6,7 +6,7 @@ import (
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {

@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v14/src/vm/shared"
 // AbortRebase represents aborting on ongoing merge conflict.
 // This opcode is used in the abort scripts for Git Town commands.
 type AbortRebase struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *AbortRebase) Run(args shared.RunArgs) error {

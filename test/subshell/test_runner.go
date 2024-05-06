@@ -287,12 +287,12 @@ func (self *TestRunner) createMockBinary(name string, content string) {
 type Options struct {
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
-	Dir string
+	Dir string `exhaustruct:"optional"`
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
-	Env []string
+	Env []string `exhaustruct:"optional"`
 
 	// when set, captures the output and returns it
-	IgnoreOutput bool
+	IgnoreOutput bool `exhaustruct:"optional"`
 }

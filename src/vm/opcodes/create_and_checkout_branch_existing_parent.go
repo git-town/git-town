@@ -7,9 +7,9 @@ import (
 
 // CreateAndCheckoutBranchExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
 type CreateAndCheckoutBranchExistingParent struct {
-	Ancestors gitdomain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
-	Branch    gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Ancestors               gitdomain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CreateAndCheckoutBranchExistingParent) CreateContinueProgram() []shared.Opcode {

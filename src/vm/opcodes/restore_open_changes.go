@@ -9,7 +9,7 @@ import (
 
 // RestoreOpenChanges restores stashed away changes into the workspace.
 type RestoreOpenChanges struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {

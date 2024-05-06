@@ -7,9 +7,9 @@ import (
 
 // CreateBranch creates a new branch but leaves the current branch unchanged.
 type CreateBranch struct {
-	Branch        gitdomain.LocalBranchName
-	StartingPoint gitdomain.Location
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	StartingPoint           gitdomain.Location
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CreateBranch) Run(args shared.RunArgs) error {

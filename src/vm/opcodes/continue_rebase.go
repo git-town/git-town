@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v14/src/vm/shared"
 // ContinueRebase finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.
 type ContinueRebase struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ContinueRebase) CreateAbortProgram() []shared.Opcode {

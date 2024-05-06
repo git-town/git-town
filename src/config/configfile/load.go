@@ -39,7 +39,7 @@ func Load() (Option[configdomain.PartialConfig], error) {
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data) (configdomain.PartialConfig, error) {
-	result := configdomain.PartialConfig{} //nolint:exhaustruct
+	result := configdomain.PartialConfig{} //exhaustruct:ignore
 	var err error
 	if data.Branches != nil {
 		if data.Branches.Main != nil {

@@ -104,8 +104,8 @@ branches.main = "main"
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			main := "main"
-			want := configfile.Data{ //nolint:exhaustruct
-				Branches: &configfile.Branches{ //nolint:exhaustruct
+			want := configfile.Data{
+				Branches: &configfile.Branches{
 					Main: &main,
 				},
 			}
@@ -123,8 +123,8 @@ perennials = [
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			want := configfile.Data{ //nolint:exhaustruct
-				Branches: &configfile.Branches{ //nolint:exhaustruct
+			want := configfile.Data{
+				Branches: &configfile.Branches{
 					Perennials: []string{"one", "two"},
 				},
 			}

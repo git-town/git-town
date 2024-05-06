@@ -4,5 +4,5 @@ package opcodes
 // All opcodes after this opcode are not for syncing this branch.
 // They might sync another branch, or do something else.
 type EndOfBranchProgram struct {
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }

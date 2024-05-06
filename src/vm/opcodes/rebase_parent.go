@@ -9,7 +9,7 @@ import (
 type RebaseParent struct {
 	CurrentBranch               gitdomain.LocalBranchName
 	ParentActiveInOtherWorktree bool
-	undeclaredOpcodeMethods
+	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
 
 func (self *RebaseParent) CreateAbortProgram() []shared.Opcode {

@@ -8,9 +8,9 @@ import (
 
 // CreateProposal creates a new proposal for the current branch.
 type CreateProposal struct {
-	Branch     gitdomain.LocalBranchName
-	MainBranch gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
+	Branch                  gitdomain.LocalBranchName
+	MainBranch              gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
