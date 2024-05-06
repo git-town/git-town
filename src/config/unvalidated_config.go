@@ -19,7 +19,7 @@ type Runner interface {
 }
 
 type UnvalidatedConfig struct {
-	Config          *configdomain.UnvalidatedConfig    // the merged configuration data
+	Config          configdomain.UnvalidatedConfig     // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
 	GitConfig       gitconfig.Access            // access to the Git configuration settings

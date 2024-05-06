@@ -7,10 +7,10 @@ import (
 
 // ValidatedConfig is validated UnvalidatedConfig
 type ValidatedConfig struct {
-	*UnvalidatedConfig
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
+	UnvalidatedConfig
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
