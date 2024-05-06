@@ -91,7 +91,7 @@ func executeSetParent(verbose bool) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  repo.Config,
 		Connector:               nil,
-		DialogTestInputs:        &data.dialogTestInputs,
+		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
@@ -140,7 +140,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

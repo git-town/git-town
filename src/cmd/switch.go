@@ -106,7 +106,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		BranchesToValidate: localBranches,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

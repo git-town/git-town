@@ -49,7 +49,7 @@ type LineageArgs struct {
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           configdomain.FullConfig
 	DefaultChoice    gitdomain.LocalBranchName
-	DialogTestInputs *components.TestInputs
+	DialogTestInputs components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames
 	MainBranch       gitdomain.LocalBranchName
 }

@@ -122,7 +122,7 @@ func createBranch(args createBranchArgs) error {
 		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
 		Connector:               nil,
-		DialogTestInputs:        &args.appendData.dialogTestInputs,
+		DialogTestInputs:        args.appendData.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
@@ -176,7 +176,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {

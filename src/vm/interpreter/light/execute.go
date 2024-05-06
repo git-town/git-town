@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
@@ -18,7 +19,7 @@ func Execute(args ExecuteArgs) {
 			Backend:                         args.Backend,
 			Config:                          args.Config,
 			Connector:                       nil,
-			DialogTestInputs:                nil,
+			DialogTestInputs:                components.NewTestInputs(),
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Lineage:                         args.Lineage,

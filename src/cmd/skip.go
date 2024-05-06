@@ -73,7 +73,7 @@ func executeSkip(verbose bool) error {
 		BranchesToValidate: localBranches,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
-		TestInputs:         &dialogTestInputs,
+		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
