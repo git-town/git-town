@@ -30,10 +30,10 @@ func TestCollector(t *testing.T) {
 	})
 }
 
-func passByValue(collector stringslice.Collector) {
+func passByReference(collector *stringslice.Collector) {
 	collector.Add("external")
 }
 
-func passByReference(collector *stringslice.Collector) {
+func passByValue(collector stringslice.Collector) {
 	collector.Add("external")
 }
