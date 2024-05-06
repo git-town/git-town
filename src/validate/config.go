@@ -19,10 +19,12 @@ import (
 
 func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 	// check Git user data
-	if args.Unvalidated.Config.GitUserEmail.IsNone() {
+	gitUserEmail, hasGitUserEmail := args.Unvalidated.Config.GitUserEmail.Get()
+	if !hasGitUserEmail {
 		return nil, false, errors.New(messages.GitUserEmailMissing)
 	}
-	if args.Unvalidated.Config.GitUserName.IsNone() {
+	gitUserName, hasGitUserName := args.Unvalidated.Config.GitUserName.Get()
+	if !hasGitUserName {
 		return nil, false, errors.New(messages.GitUserNameMissing)
 	}
 
@@ -86,6 +88,8 @@ func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
 	validatedConfig := config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
 			UnvalidatedConfig: args.Unvalidated.Config,
+			GitUserEmail:      gitUserEmail,
+			GitUserName:       gitUserName,
 			MainBranch:        validatedMain,
 		},
 		UnvalidatedConfig: args.Unvalidated,
