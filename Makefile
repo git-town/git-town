@@ -72,7 +72,7 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
-	@tools/rta exhaustruct -test=false "-e=github.com/spf13/cobra\.Command" github.com/git-town/git-town/...
+	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
