@@ -55,9 +55,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly}, //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},  //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},  //exhaustruct:ignore
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -78,9 +78,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},    //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusOtherWorktree}, //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},     //exhaustruct:ignore
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusOtherWorktree},
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -102,10 +102,10 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},      //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},       //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},       //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly}, //exhaustruct:ignore
+				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -127,9 +127,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly}, //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                     //exhaustruct:ignore
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},                                                                           //exhaustruct:ignore
+				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -145,7 +145,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				List: list.List[dialog.SwitchBranchEntry]{ //exhaustruct:ignore
+				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor:       0,
 					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
 					MaxDigits:    1,
@@ -166,7 +166,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				List: list.List[dialog.SwitchBranchEntry]{ //exhaustruct:ignore
+				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
 					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
@@ -196,7 +196,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("stacked changes", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				List: list.List[dialog.SwitchBranchEntry]{ //exhaustruct:ignore
+				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
 					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
@@ -234,7 +234,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("uncommitted changes", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				List: list.List[dialog.SwitchBranchEntry]{ //exhaustruct:ignore
+				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor:       0,
 					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
 					MaxDigits:    1,

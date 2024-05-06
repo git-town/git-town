@@ -21,15 +21,15 @@ func TestTestInputs(t *testing.T) {
 		}
 		have := components.LoadTestInputs(give)
 		want := components.TestInputs{
-			components.TestInput{tea.KeyMsg{Type: tea.KeyEnter}}, //exhaustruct:ignore
+			components.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
 			components.TestInput{
-				tea.KeyMsg{Type: tea.KeySpace},                     //exhaustruct:ignore
-				tea.KeyMsg{Type: tea.KeyDown},                      //exhaustruct:ignore
-				tea.KeyMsg{Type: tea.KeySpace},                     //exhaustruct:ignore
-				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}}, //exhaustruct:ignore
-				tea.KeyMsg{Type: tea.KeyEnter},                     //exhaustruct:ignore
+				tea.KeyMsg{Type: tea.KeySpace},
+				tea.KeyMsg{Type: tea.KeyDown},
+				tea.KeyMsg{Type: tea.KeySpace},
+				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
+				tea.KeyMsg{Type: tea.KeyEnter},
 			},
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //exhaustruct:ignore
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		}
 		must.Eq(t, want, have)
 	})
@@ -37,30 +37,30 @@ func TestTestInputs(t *testing.T) {
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
 		testInputs := components.TestInputs{
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}, //exhaustruct:ignore
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //exhaustruct:ignore
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //exhaustruct:ignore
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		}
 		// request the first entry: A
 		haveNext := testInputs.Next()
-		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}} //exhaustruct:ignore
+		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining := components.TestInputs{
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //exhaustruct:ignore
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //exhaustruct:ignore
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		}
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: B
 		haveNext = testInputs.Next()
-		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}} //exhaustruct:ignore
+		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining = components.TestInputs{
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //exhaustruct:ignore
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		}
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: C
 		haveNext = testInputs.Next()
-		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}} //exhaustruct:ignore
+		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining = components.TestInputs{}
 		must.Eq(t, wantRemaining, testInputs)
@@ -78,13 +78,13 @@ func TestTestInputs(t *testing.T) {
 			t.Parallel()
 			have := components.ParseTestInput("enter|space|ctrl+c")
 			want := components.TestInput{
-				tea.KeyMsg{ //exhaustruct:ignore
+				tea.KeyMsg{
 					Type: tea.KeyEnter,
 				},
-				tea.KeyMsg{ //exhaustruct:ignore
+				tea.KeyMsg{
 					Type: tea.KeySpace,
 				},
-				tea.KeyMsg{ //exhaustruct:ignore
+				tea.KeyMsg{
 					Type: tea.KeyCtrlC,
 				},
 			}
@@ -94,7 +94,7 @@ func TestTestInputs(t *testing.T) {
 			t.Parallel()
 			have := components.ParseTestInput("enter")
 			want := components.TestInput{
-				tea.KeyMsg{ //exhaustruct:ignore
+				tea.KeyMsg{
 					Type: tea.KeyEnter,
 				},
 			}

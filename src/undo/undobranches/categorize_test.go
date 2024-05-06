@@ -49,7 +49,7 @@ func TestCategorize(t *testing.T) {
 				},
 			},
 		}
-		config := configdomain.FullConfig{ //exhaustruct:ignore
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 		}
@@ -106,7 +106,7 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		config := configdomain.FullConfig{ //exhaustruct:ignore
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
@@ -139,7 +139,7 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		config := configdomain.FullConfig{ //exhaustruct:ignore
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
@@ -166,7 +166,7 @@ func TestCategorize(t *testing.T) {
 			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
-		config := configdomain.FullConfig{ //exhaustruct:ignore
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
