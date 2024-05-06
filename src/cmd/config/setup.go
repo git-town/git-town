@@ -331,11 +331,11 @@ func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdom
 	return frontend.DeleteHostingPlatform()
 }
 
-func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, oldConfig config.UnvalidatedConfig) error {
+func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
 	if Some(newValue) == oldValue {
 		return nil
 	}
-	return oldConfig.SetMainBranch(newValue)
+	return config.SetMainBranch(newValue)
 }
 
 func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], frontend git.FrontendCommands) error {
@@ -348,71 +348,71 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 	return frontend.DeleteOriginHostname()
 }
 
-func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, oldConfig config.UnvalidatedConfig) error {
-	if slices.Compare(oldValue, newValue) != 0 || oldConfig.LocalGitConfig.PerennialBranches == nil {
-		return oldConfig.SetPerennialBranches(newValue)
+func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {
+	if slices.Compare(oldValue, newValue) != 0 || config.LocalGitConfig.PerennialBranches == nil {
+		return config.SetPerennialBranches(newValue)
 	}
 	return nil
 }
 
-func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], oldConfig config.UnvalidatedConfig) error {
+func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return oldConfig.SetPerennialRegexLocally(value)
+		return config.SetPerennialRegexLocally(value)
 	}
-	oldConfig.RemovePerennialRegex()
+	config.RemovePerennialRegex()
 	return nil
 }
 
-func savePushHook(oldValue, newValue configdomain.PushHook, oldConfig config.UnvalidatedConfig) error {
+func savePushHook(oldValue, newValue configdomain.PushHook, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetPushHookLocally(newValue)
+	return config.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, oldConfig config.UnvalidatedConfig) error {
+func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetPushNewBranches(newValue, false)
+	return config.SetPushNewBranches(newValue, false)
 }
 
-func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, oldConfig config.UnvalidatedConfig) error {
+func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetShipDeleteTrackingBranch(newValue, false)
+	return config.SetShipDeleteTrackingBranch(newValue, false)
 }
 
-func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, oldConfig config.UnvalidatedConfig) error {
+func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetSyncFeatureStrategy(newValue)
+	return config.SetSyncFeatureStrategy(newValue)
 }
 
-func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, oldConfig config.UnvalidatedConfig) error {
+func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetSyncPerennialStrategy(newValue)
+	return config.SetSyncPerennialStrategy(newValue)
 }
 
-func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, oldConfig config.UnvalidatedConfig) error {
+func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetSyncUpstream(newValue, false)
+	return config.SetSyncUpstream(newValue, false)
 }
 
-func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, oldConfig config.UnvalidatedConfig) error {
+func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return oldConfig.SetSyncBeforeShip(newValue, false)
+	return config.SetSyncBeforeShip(newValue, false)
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
