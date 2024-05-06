@@ -54,6 +54,8 @@ func (self *ValidatedConfig) Reload() {
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	self.Config = configdomain.ValidatedConfig{
 		UnvalidatedConfig: configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig),
+		GitUserEmail:      self.Config.GitUserEmail,
+		GitUserName:       self.Config.GitUserName,
 		MainBranch:        self.Config.MainBranch,
 	}
 }
