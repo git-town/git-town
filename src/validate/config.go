@@ -97,7 +97,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 
 	// handle unfinished state
 	exit, err = HandleUnfinishedState(UnfinishedStateArgs{
-		Backend:                 *args.Backend,
+		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,
 		Connector:               nil,
@@ -122,7 +122,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 }
 
 type ConfigArgs struct {
-	Backend            *git.BackendCommands
+	Backend            git.BackendCommands
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	CommandsCounter    gohacks.Counter

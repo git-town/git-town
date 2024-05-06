@@ -138,7 +138,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		CommandsCounter:    repo.CommandsCounter,

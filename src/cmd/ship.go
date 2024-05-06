@@ -181,7 +181,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip.LocalName},
 		CommandsCounter:    repo.CommandsCounter,

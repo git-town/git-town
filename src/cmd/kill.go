@@ -140,7 +140,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToKill,
 		CommandsCounter:    repo.CommandsCounter,
