@@ -55,10 +55,10 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	initialBranchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,

@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
@@ -209,10 +209,10 @@ func loadSetupData(repo execute.OpenRepoResult) (setupData, bool, error) {
 		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,

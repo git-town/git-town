@@ -77,10 +77,10 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,

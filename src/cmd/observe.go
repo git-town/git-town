@@ -134,10 +134,10 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 		return observeData{}, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
@@ -162,7 +162,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToObserve.Keys(),
 		CommandsCounter:    repo.CommandsCounter,

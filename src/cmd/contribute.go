@@ -79,10 +79,10 @@ func executeContribute(args []string, verbose bool) error {
 		return err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
@@ -93,7 +93,7 @@ func executeContribute(args []string, verbose bool) error {
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNames,
 		CommandsCounter:    repo.CommandsCounter,

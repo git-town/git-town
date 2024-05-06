@@ -49,10 +49,10 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 }
 
 type LoadRepoSnapshotArgs struct {
-	Backend               *git.BackendCommands
+	Backend               git.BackendCommands
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
-	Frontend              *git.FrontendCommands
+	Frontend              git.FrontendCommands
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	ValidateNoOpenChanges bool

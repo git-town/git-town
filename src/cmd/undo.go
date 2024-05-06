@@ -98,10 +98,10 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		return emptyUndoData(), 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               &repo.Backend,
+		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		Frontend:              &repo.Frontend,
+		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
@@ -110,7 +110,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		return emptyUndoData(), initialStashSize, false, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		CommandsCounter:    repo.CommandsCounter,
