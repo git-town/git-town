@@ -96,8 +96,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// If set to appendConfig, the user wants to append a new branch to an existing branch.
-// If set to makeFeatureConfig, the user wants to make an existing branch a feature branch.
+// If set to appendData, the user wants to append a new branch to an existing branch.
+// If set to makeFeatureData, the user wants to make an existing branch a feature branch.
 type hackData = Either[appendData, makeFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
