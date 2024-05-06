@@ -99,6 +99,8 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	validatedConfig := config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
 			UnvalidatedConfig: unvalidatedConfig.Config,
+			GitUserEmail:      "test@test.com",
+			GitUserName:       "Tester",
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 		},
 		UnvalidatedConfig: unvalidatedConfig,
