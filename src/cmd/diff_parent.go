@@ -96,7 +96,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		}
 	}
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),

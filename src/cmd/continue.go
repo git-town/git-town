@@ -100,7 +100,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
-		Backend:            &repo.Backend,
+		Backend:            repo.Backend,
 		BranchesToValidate: localBranches,
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
