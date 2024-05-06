@@ -54,7 +54,7 @@ func executeOffline(args []string, verbose bool) error {
 	case 0:
 		displayOfflineStatus(repo.Config.Config)
 	case 1:
-		err = setOfflineStatus(args[0], *repo.Config)
+		err = setOfflineStatus(args[0], repo.Config)
 		if err != nil {
 			return err
 		}

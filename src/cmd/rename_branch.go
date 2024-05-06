@@ -115,7 +115,7 @@ type renameBranchData struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineRenameBranchData(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -140,7 +140,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -180,7 +180,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo *execute.Open
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchData{
-		config:           *repo.Config,
+		config:           repo.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

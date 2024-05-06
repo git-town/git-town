@@ -106,7 +106,7 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
+func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.Config) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -123,7 +123,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 	return nil
 }
 
-func determineObserveData(args []string, repo *execute.OpenRepoResult) (observeData, error) {
+func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
 	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err

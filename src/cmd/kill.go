@@ -111,7 +111,7 @@ type killData struct {
 	previousBranch   gitdomain.LocalBranchName
 }
 
-func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -144,7 +144,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -166,7 +166,7 @@ func determineKillData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           *repo.Config,
+		config:           repo.Config,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

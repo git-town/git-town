@@ -149,7 +149,7 @@ type createBranchArgs struct {
 	verbose               bool
 }
 
-func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (data hackData, branchesSnapshot gitdomain.BranchesSnapshot, stashSize gitdomain.StashSize, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, branchesSnapshot gitdomain.BranchesSnapshot, stashSize gitdomain.StashSize, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -177,7 +177,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return
@@ -221,7 +221,7 @@ func determineHackData(args []string, repo *execute.OpenRepoResult, dryRun, verb
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    *repo.Config,
+		config:                    repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -270,9 +270,9 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 
 type makeFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
-	config              *config.Config
+	config              config.Config
 	makeFeatureData     makeFeatureData
-	repo                *execute.OpenRepoResult
+	repo                execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
 	verbose             bool
 }

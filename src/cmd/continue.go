@@ -79,7 +79,7 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineContinueData(repo execute.OpenRepoResult, verbose bool) (*continueData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -105,7 +105,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      localBranches,
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
@@ -126,7 +126,7 @@ func determineContinueData(repo *execute.OpenRepoResult, verbose bool) (*continu
 		})
 	}
 	return &continueData{
-		config:           *repo.Config,
+		config:           repo.Config,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
@@ -140,7 +140,7 @@ type continueData struct {
 	hasOpenChanges   bool
 }
 
-func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
+func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, bool, error) {
 	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)

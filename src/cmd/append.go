@@ -106,7 +106,7 @@ type appendData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun, verbose bool) (*appendData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
@@ -140,7 +140,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 		FinalMessages:      repo.FinalMessages,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		TestInputs:         &dialogTestInputs,
-		Unvalidated:        *repo.Config,
+		Unvalidated:        repo.Config,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -152,7 +152,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo *execute.O
 	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
-		config:                    *repo.Config,
+		config:                    repo.Config,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

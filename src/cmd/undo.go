@@ -50,7 +50,7 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var data *undoData
+	var data undoData
 	var initialStashSize gitdomain.StashSize
 	data, initialStashSize, repo.Config.Config.Lineage, err = determineUndoData(repo, verbose)
 	if err != nil {
@@ -89,11 +89,15 @@ type undoData struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, configdomain.Lineage, error) {
+func emptyUndoData() undoData {
+	return undoData{} //exhaustruct:ignore
+}
+
+func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, 0, repo.Config.Config.Lineage, err
+		return emptyUndoData(), 0, repo.Config.Config.Lineage, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Config:                repo.Config,
@@ -106,7 +110,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, initialStashSize, repo.Config.Config.Lineage, err
+		return emptyUndoData(), initialStashSize, repo.Config.Config.Lineage, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
@@ -118,11 +122,11 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, initialStashSize, repo.Config.Config.Lineage, err
+			return emptyUndoData(), initialStashSize, repo.Config.Config.Lineage, err
 		}
 	}
-	return &undoData{
-		config:                  *repo.Config,
+	return undoData{
+		config:                  repo.Config,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,

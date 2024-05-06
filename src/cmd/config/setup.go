@@ -62,11 +62,11 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(*repo.Config, &repo.Backend, data)
+	aborted, err := enterData(repo.Config, &repo.Backend, data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, *repo.Config, repo.Frontend)
+	err = saveAll(data.userInput, repo.Config, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -203,7 +203,7 @@ func enterData(config config.Config, backend *git.BackendCommands, data *setupDa
 	return false, nil
 }
 
-func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose bool) (*setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -220,7 +220,7 @@ func loadSetupData(repo *execute.OpenRepoResult, verbose bool) (*setupData, bool
 		Verbose:               verbose,
 	})
 	return &setupData{
-		config:        *repo.Config,
+		config:        repo.Config,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Config.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,

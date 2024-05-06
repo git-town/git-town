@@ -57,7 +57,7 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoData(repo *execute.OpenRepoResult) (*repoData, error) {
+func determineRepoData(repo execute.OpenRepoResult) (*repoData, error) {
 	var err error
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
