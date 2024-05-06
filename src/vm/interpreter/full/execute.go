@@ -45,7 +45,7 @@ func Execute(args ExecuteArgs) error {
 
 type ExecuteArgs struct {
 	Backend                 git.BackendCommands
-	CommandsCounter         *gohacks.Counter
+	CommandsCounter         gohacks.Counter
 	Config                  config.Config
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs

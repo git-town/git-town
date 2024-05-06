@@ -21,10 +21,10 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
-	commandsCounter := gohacks.Counter{}
+	commandsCounter := gohacks.NewCounter()
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
-		CommandsCounter: &commandsCounter,
+		CommandsCounter: commandsCounter,
 		Verbose:         args.Verbose,
 	}
 	backendCommands := git.BackendCommands{
@@ -101,7 +101,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	}
 	return OpenRepoResult{
 		Backend:         backendCommands,
-		CommandsCounter: &commandsCounter,
+		CommandsCounter: commandsCounter,
 		Config:          config,
 		ConfigSnapshot:  configSnapshot,
 		FinalMessages:   finalMessages,
@@ -122,7 +122,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Backend         git.BackendCommands
-	CommandsCounter *gohacks.Counter
+	CommandsCounter gohacks.Counter
 	Config          config.Config
 	ConfigSnapshot  undoconfig.ConfigSnapshot
 	FinalMessages   stringslice.Collector

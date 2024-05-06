@@ -809,7 +809,7 @@ func TestBackendCommands(t *testing.T) {
 			runner := subshell.BackendRunner{
 				Dir:             Some(dir),
 				Verbose:         false,
-				CommandsCounter: &gohacks.Counter{},
+				CommandsCounter: gohacks.NewCounter(),
 			}
 			cmds := git.BackendCommands{
 				Runner:             runner,
