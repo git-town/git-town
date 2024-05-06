@@ -188,7 +188,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	return &renameBranchData{
+	return renameBranchData{
 		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -200,7 +200,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	}, branchesSnapshot, stashSize, false, err
 }
 
-func renameBranchProgram(data *renameBranchData) program.Program {
+func renameBranchProgram(data renameBranchData) program.Program {
 	result := program.Program{}
 	result.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: data.oldBranch.LocalName.Location()})
 	if data.initialBranch == data.oldBranch.LocalName {

@@ -126,7 +126,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
-		config:             *validatedConfig,
+		config:             validatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      branchesSnapshot.Active,
 		lineage:            validatedConfig.Config.Lineage,

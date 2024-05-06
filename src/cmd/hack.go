@@ -194,14 +194,14 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	if len(targetBranches) == 0 {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			config:         *validatedConfig,
+			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(gitdomain.LocalBranchNames{branchesSnapshot.Active}, validatedConfig.Config),
 		})
 		return
 	}
 	if len(targetBranches) > 0 && branchesSnapshot.Branches.HasLocalBranches(targetBranches) {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
-			config:         *validatedConfig,
+			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(targetBranches, validatedConfig.Config),
 		})
 		return

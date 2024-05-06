@@ -76,7 +76,7 @@ func executeObserve(args []string, verbose bool) error {
 	if err = data.config.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, &data.config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, data.config); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -185,7 +185,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
-		config:            *validatedConfig,
+		config:            validatedConfig,
 	}, nil
 }
 

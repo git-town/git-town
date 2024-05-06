@@ -70,7 +70,7 @@ func executePark(args []string, verbose bool) error {
 	if err = data.config.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, &data.config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, data.config); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
@@ -163,7 +163,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,
 		branchesToPark: branchesToPark,
-		config:         *validatedConfig,
+		config:         validatedConfig,
 	}, false, nil
 }
 

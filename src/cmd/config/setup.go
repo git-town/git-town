@@ -105,7 +105,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
+func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -202,7 +202,7 @@ func loadSetupData(repo execute.OpenRepoResult) (setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, false, err
+		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
@@ -213,7 +213,7 @@ func loadSetupData(repo execute.OpenRepoResult) (setupData, bool, error) {
 		RepoStatus:            repoStatus,
 		ValidateNoOpenChanges: false,
 	})
-	return &setupData{
+	return setupData{
 		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
