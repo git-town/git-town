@@ -20,6 +20,7 @@ Feature: override an existing Git alias
       | sync-before-ship            | enter   |
       | save config to config file  | enter   |
 
+  @this
   Scenario: result
     Then it runs the commands
       | COMMAND                                        |
