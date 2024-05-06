@@ -30,7 +30,7 @@ type UnvalidatedConfig struct {
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
-	finalMessages := stringslice.Collector{}
+	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		Config:          config,
 		ConfigFile:      args.ConfigFile,
