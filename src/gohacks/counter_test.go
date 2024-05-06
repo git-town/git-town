@@ -11,20 +11,20 @@ func TestCounter(t *testing.T) {
 	t.Parallel()
 	t.Run("owned variable", func(t *testing.T) {
 		t.Parallel()
-		counter := gohacks.Counter{}
+		counter := gohacks.NewCounter()
 		counter.Register()
 		counter.Register()
 		must.Eq(t, 2, counter.Count())
 	})
 	t.Run("pass by reference works", func(t *testing.T) {
 		t.Parallel()
-		counter := gohacks.Counter{}
+		counter := gohacks.NewCounter()
 		passByReference(&counter)
 		must.Eq(t, 2, counter.Count())
 	})
 	t.Run("pass by value works", func(t *testing.T) {
 		t.Parallel()
-		counter := gohacks.Counter{}
+		counter := gohacks.NewCounter()
 		passByValue(counter)
 		must.Eq(t, 2, counter.Count())
 	})
