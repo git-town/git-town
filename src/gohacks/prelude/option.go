@@ -22,7 +22,7 @@ type Option[T any] struct {
 
 // Get provides a copy of the contained value
 // as well as an indicator whether that value exists.
-func (self Option[T]) Get() (value T, hasValue bool) { //nolint: ireturn
+func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	if self.IsSome() {
 		return *self.value, true
 	}

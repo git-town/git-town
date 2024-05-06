@@ -54,7 +54,7 @@ func (self SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint: ireturn
+func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil

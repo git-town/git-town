@@ -61,7 +61,7 @@ func ParseTestInput(envData string) TestInput {
 }
 
 // recognizeTestInput provides the matching BubbleTea message for the given string.
-func recognizeTestInput(input string) tea.Msg { //nolint: ireturn
+func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "backspace":
 		return tea.KeyMsg{Type: tea.KeyBackspace} //exhaustruct:ignore

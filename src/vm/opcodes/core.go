@@ -32,7 +32,7 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyUndoOnError() bool {
 	return false
 }
 
-func Lookup(opcodeType string) shared.Opcode { //nolint: ireturn
+func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	for _, opcode := range Types() {
 		if gohacks.TypeName(opcode) == opcodeType {
 			return opcode

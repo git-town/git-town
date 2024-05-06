@@ -47,7 +47,7 @@ func (self Program) OpcodeTypes() []string {
 }
 
 // Peek provides the first element of this program.
-func (self Program) Peek() shared.Opcode { //nolint: ireturn
+func (self Program) Peek() shared.Opcode { //nolint:ireturn
 	if self.IsEmpty() {
 		return nil
 	}
@@ -55,7 +55,7 @@ func (self Program) Peek() shared.Opcode { //nolint: ireturn
 }
 
 // Pop removes and provides the first element of this program.
-func (self *Program) Pop() shared.Opcode { //nolint: ireturn
+func (self *Program) Pop() shared.Opcode { //nolint:ireturn
 	if self.IsEmpty() {
 		return nil
 	}

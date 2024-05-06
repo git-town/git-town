@@ -13,7 +13,7 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint: ireturn
+func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
 		help:  help,
@@ -38,7 +38,7 @@ func (self radioListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
-func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint: ireturn
+func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil

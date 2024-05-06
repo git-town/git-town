@@ -104,7 +104,7 @@ func (self *AliasesModel) SelectNone() {
 	}
 }
 
-func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint: ireturn
+func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil

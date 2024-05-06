@@ -172,7 +172,7 @@ func (self *List[S]) MovePageUp() {
 	}
 }
 
-func (self List[S]) SelectedData() S { //nolint: ireturn
+func (self List[S]) SelectedData() S { //nolint:ireturn
 	return self.SelectedEntry().Data
 }
 
