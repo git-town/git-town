@@ -26,7 +26,7 @@ func switchBranch() *cobra.Command {
 			for i := 0; i < int(amount); i++ {
 				branchName := gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i))
 				localBranches = append(localBranches, branchName)
-				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: branchName, SyncStatus: gitdomain.SyncStatusLocalOnly}) //nolint:exhaustruct
+				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: branchName, SyncStatus: gitdomain.SyncStatusLocalOnly}) //exhaustruct:ignore
 			}
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())

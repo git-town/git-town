@@ -1,4 +1,4 @@
-RTA_VERSION = 0.5.0 # run-that-app version to use
+RTA_VERSION = 0.6.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -70,6 +70,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
+
+lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
+	@tools/rta exhaustruct -test=false "-e=github.com/spf13/cobra\.Command" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted

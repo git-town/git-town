@@ -67,12 +67,12 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		give := hostingdomain.Proposal{ //nolint:exhaustruct
+		give := hostingdomain.Proposal{ //exhaustruct:ignore
 			Number: 1,
 			Title:  "my title",
 		}
 		want := "my title (#1)"
-		connector := gitea.Connector{} //nolint:exhaustruct
+		connector := gitea.Connector{} //exhaustruct:ignore
 		have := connector.DefaultProposalMessage(give)
 		must.EqOp(t, want, have)
 	})

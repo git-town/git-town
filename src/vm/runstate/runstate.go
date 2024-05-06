@@ -32,7 +32,7 @@ type RunState struct {
 }
 
 func EmptyRunState() RunState {
-	return RunState{} //nolint:exhaustruct
+	return RunState{} //exhaustruct:ignore
 }
 
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode

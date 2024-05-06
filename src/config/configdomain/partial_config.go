@@ -33,7 +33,7 @@ type PartialConfig struct {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{ //nolint:exhaustruct
+	return PartialConfig{ //exhaustruct:ignore
 		Aliases: Aliases{},
 	}
 }

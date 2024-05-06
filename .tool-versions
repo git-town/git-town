@@ -1,5 +1,6 @@
 actionlint 1.6.27
 alphavet 0.1.0
+exhaustruct 3.2.0
 deadcode 0.16.1
 ghokin 3.5.0
 depth 1.2.1
