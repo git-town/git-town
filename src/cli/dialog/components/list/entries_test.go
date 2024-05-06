@@ -16,17 +16,17 @@ func TestEntries(t *testing.T) {
 		t.Run("all entries are disabled", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
-				{Enabled: false}, //exhaustruct:ignore
-				{Enabled: false}, //exhaustruct:ignore
+				{Enabled: false},
+				{Enabled: false},
 			}
 			must.True(t, entries.AllDisabled())
 		})
 		t.Run("some entries are enabled", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
-				{Enabled: false}, //exhaustruct:ignore
-				{Enabled: false}, //exhaustruct:ignore
-				{Enabled: true},  //exhaustruct:ignore
+				{Enabled: false},
+				{Enabled: false},
+				{Enabled: true},
 			}
 			must.False(t, entries.AllDisabled())
 		})
