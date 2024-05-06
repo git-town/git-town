@@ -144,7 +144,7 @@ type createBranchArgs struct {
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       *gohacks.Counter
 	dryRun                bool
-	finalMessages         *stringslice.Collector
+	finalMessages         stringslice.Collector
 	frontend              git.FrontendCommands
 	rootDir               gitdomain.RepoRootDir
 	verbose               bool

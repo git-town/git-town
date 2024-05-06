@@ -58,7 +58,7 @@ type ExecuteArgs struct {
 	Config          config.ValidatedConfig
 	Connector       hostingdomain.Connector
 	CurrentBranch   gitdomain.LocalBranchName
-	FinalMessages   *stringslice.Collector
+	FinalMessages   stringslice.Collector
 	Frontend        git.FrontendCommands
 	HasOpenChanges  bool
 	RootDir         gitdomain.RepoRootDir

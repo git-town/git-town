@@ -49,7 +49,7 @@ type ExecuteArgs struct {
 	Config                  config.ValidatedConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
-	FinalMessages           *stringslice.Collector
+	FinalMessages           stringslice.Collector
 	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
