@@ -113,7 +113,7 @@ func executeSkip(verbose bool) error {
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          *validatedConfig,
+		Config:          validatedConfig,
 		Connector:       connector,
 		CurrentBranch:   initialBranchesSnapshot.Active,
 		FinalMessages:   &repo.FinalMessages,

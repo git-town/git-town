@@ -117,7 +117,7 @@ type proposeData struct {
 	remotes          gitdomain.Remotes
 }
 
-func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (*proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -181,7 +181,7 @@ func determineProposeData(repo *execute.OpenRepoResult, dryRun, verbose bool) (*
 	return &proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           *validatedConfig,
+		config:           validatedConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,

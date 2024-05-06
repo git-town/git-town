@@ -21,7 +21,7 @@ import (
 type TestRuntime struct {
 	commands.TestCommands
 	Backend git.BackendCommands
-	Config  *config.ValidatedConfig
+	Config  config.ValidatedConfig
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.

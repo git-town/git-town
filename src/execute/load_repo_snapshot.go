@@ -53,7 +53,7 @@ type LoadRepoSnapshotArgs struct {
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	Frontend              *git.FrontendCommands
-	Repo                  *OpenRepoResult
+	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	ValidateNoOpenChanges bool
 }

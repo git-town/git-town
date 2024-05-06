@@ -135,11 +135,15 @@ type syncData struct {
 	shouldPushTags   bool
 }
 
-func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func emptySyncData() syncData {
+	return syncData{} //exhaustruct:ignore
+}
+
+func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptySyncData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
@@ -151,12 +155,12 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptySyncData(), branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+		return emptySyncData(), branchesSnapshot, stashSize, false, err
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
@@ -183,7 +187,7 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 		Verbose:            verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return emptySyncData(), branchesSnapshot, stashSize, exit, err
 	}
 	var shouldPushTags bool
 	if allFlag {
@@ -193,10 +197,10 @@ func determineSyncData(allFlag bool, repo *execute.OpenRepoResult, verbose bool)
 	}
 	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
-	return &syncData{
+	return syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           *validatedConfig,
+		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

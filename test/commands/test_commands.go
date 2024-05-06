@@ -25,7 +25,7 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.BackendCommands
-	Config *config.ValidatedConfig
+	Config config.ValidatedConfig
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

@@ -149,7 +149,7 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config *config.ValidatedConfig) error {
+func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.ValidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
@@ -166,7 +166,7 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 	return nil
 }
 
-func determineContributeData(args []string, repo *execute.OpenRepoResult) (contributeData, error) {
+func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
 	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return contributeData{}, err

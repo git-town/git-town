@@ -98,7 +98,7 @@ func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.ValidatedConfig) error {
+func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.ValidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -115,7 +115,7 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkData(args []string, repo *execute.OpenRepoResult, verbose bool) (parkData, bool, error) {
+func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool) (parkData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {

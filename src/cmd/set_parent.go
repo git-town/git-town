@@ -114,11 +114,15 @@ type setParentData struct {
 	mainBranch       gitdomain.LocalBranchName
 }
 
-func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func emptySetParentData() setParentData {
+	return setParentData{} //exhaustruct:ignore
+}
+
+func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParentData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptySetParentData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
@@ -130,7 +134,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, 0, exit, err
+		return emptySetParentData(), branchesSnapshot, 0, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -161,7 +165,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	} else {
 		defaultChoice = mainBranch
 	}
-	return &setParentData{
+	return setParentData{
 		config:           *validatedConfig,
 		currentBranch:    branchesSnapshot.Active,
 		defaultChoice:    defaultChoice,
@@ -171,7 +175,7 @@ func determineSetParentData(repo *execute.OpenRepoResult, verbose bool) (*setPar
 	}, branchesSnapshot, stashSize, false, nil
 }
 
-func verifySetParentData(data *setParentData) error {
+func verifySetParentData(data setParentData) error {
 	if data.config.Config.IsMainOrPerennialBranch(data.currentBranch) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.currentBranch)
 	}

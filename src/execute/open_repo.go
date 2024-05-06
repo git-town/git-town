@@ -20,7 +20,7 @@ import (
 	"github.com/git-town/git-town/v14/src/validate"
 )
 
-func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
+func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	commandsCounter := gohacks.Counter{}
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
@@ -35,20 +35,20 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	gitVersionMajor, gitVersionMinor, err := backendCommands.Version()
 	if err != nil {
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	err = validate.HasAcceptableGitVersion(gitVersionMajor, gitVersionMinor)
 	if err != nil {
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
 	globalSnapshot, globalConfig, err := configGitAccess.LoadGlobal(true)
 	if err != nil {
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	localSnapshot, localConfig, err := configGitAccess.LoadLocal(true)
 	if err != nil {
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	configSnapshot := undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
@@ -56,7 +56,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	configFile, err := configfile.Load()
 	if err != nil {
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access:       configGitAccess,
@@ -80,26 +80,26 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
 			err = errors.New(messages.RepoOutside)
-			return nil, err
+			return emptyOpenRepoResult(), err
 		}
 	}
 	isOffline := unvalidatedConfig.Config.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
-		return nil, err
+		return emptyOpenRepoResult(), err
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
 		if err != nil {
 			err = errors.New(messages.DirCurrentProblem)
-			return nil, err
+			return emptyOpenRepoResult(), err
 		}
 		if currentDirectory != rootDir.String() {
 			err = frontEndCommands.NavigateToDir(rootDir)
 		}
 	}
-	return &OpenRepoResult{
+	return OpenRepoResult{
 		Backend:           backendCommands,
 		CommandsCounter:   &commandsCounter,
 		ConfigSnapshot:    configSnapshot,
@@ -129,6 +129,10 @@ type OpenRepoResult struct {
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
 	UnvalidatedConfig config.UnvalidatedConfig
+}
+
+func emptyOpenRepoResult() OpenRepoResult {
+	return OpenRepoResult{} //exhaustruct:ignore
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

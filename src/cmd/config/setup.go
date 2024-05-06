@@ -198,7 +198,7 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 	return false, nil
 }
 
-func loadSetupData(repo *execute.OpenRepoResult) (*setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult) (setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {

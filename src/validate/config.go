@@ -17,7 +17,7 @@ import (
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 )
 
-func Config(args ConfigArgs) (*config.ValidatedConfig, bool, error) {
+func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// check Git user data
 	gitUserEmail, hasGitUserEmail := args.Unvalidated.Config.GitUserEmail.Get()
 	if !hasGitUserEmail {

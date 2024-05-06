@@ -81,11 +81,15 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchData, gitdomain.BranchesSnapshot, bool, error) {
+func emptySwitchData() switchData {
+	return switchData{} //exhaustruct:ignore
+}
+
+func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData, gitdomain.BranchesSnapshot, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), false, err
+		return emptySwitchData(), gitdomain.EmptyBranchesSnapshot(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               &repo.Backend,
@@ -97,7 +101,7 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, exit, err
+		return emptySwitchData(), branchesSnapshot, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -118,9 +122,9 @@ func determineSwitchData(repo *execute.OpenRepoResult, verbose bool) (*switchDat
 		Verbose:            verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, exit, err
+		return emptySwitchData(), branchesSnapshot, exit, err
 	}
-	return &switchData{
+	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		config:             *validatedConfig,
 		dialogInputs:       dialogTestInputs,

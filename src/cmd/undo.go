@@ -87,7 +87,7 @@ type undoData struct {
 	previousBranch          gitdomain.LocalBranchName
 }
 
-func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, gitdomain.StashSize, bool, error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
@@ -139,7 +139,7 @@ func determineUndoData(repo *execute.OpenRepoResult, verbose bool) (*undoData, g
 		}
 	}
 	return &undoData{
-		config:                  *validatedConfig,
+		config:                  validatedConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
