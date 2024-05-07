@@ -81,7 +81,7 @@ func executeContribute(args []string, verbose bool) error {
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 false,
 		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,

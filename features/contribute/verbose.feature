@@ -15,15 +15,13 @@ Feature: make a branch contribution verbosely
       |        | git status --long --ignore-submodules            |
       |        | git branch -vva --sort=refname                   |
       |        | git stash list                                   |
-      |        | git remote                                       |
-      |        | git fetch --prune --tags                         |
       |        | git branch -vva --sort=refname                   |
       |        | git config git-town.contribution-branches branch |
       |        | git config -lz --global                          |
       |        | git config -lz --local                           |
     And it prints:
       """
-      Ran 13 shell commands
+      Ran 11 shell commands
       """
     And it prints:
       """
