@@ -119,12 +119,18 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
@@ -140,22 +146,15 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:               repo.Backend,
-		BranchesSnapshot:      branchesSnapshot,
-		BranchesToValidate:    branchesToKill,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
-		LocalBranches:         localBranches,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		StashSize:             stashSize,
-		TestInputs:            dialogTestInputs,
-		Unvalidated:           repo.UnvalidatedConfig,
-		Verbose:               verbose,
+		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: branchesToKill,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

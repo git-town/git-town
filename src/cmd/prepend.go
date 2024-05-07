@@ -120,12 +120,18 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
+		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return emptyPrependData(), branchesSnapshot, stashSize, exit, err
@@ -141,22 +147,15 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:               repo.Backend,
-		BranchesSnapshot:      branchesSnapshot,
-		BranchesToValidate:    gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
-		LocalBranches:         localBranches,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		StashSize:             stashSize,
-		TestInputs:            dialogTestInputs,
-		Unvalidated:           repo.UnvalidatedConfig,
-		Verbose:               verbose,
+		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return emptyPrependData(), branchesSnapshot, stashSize, exit, err
