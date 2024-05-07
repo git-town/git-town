@@ -162,12 +162,18 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
+		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return
@@ -185,22 +191,15 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:               repo.Backend,
-		BranchesSnapshot:      branchesSnapshot,
-		BranchesToValidate:    branchesToValidate,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
-		LocalBranches:         localBranchNames,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		StashSize:             stashSize,
-		TestInputs:            dialogTestInputs,
-		Unvalidated:           repo.UnvalidatedConfig,
-		Verbose:               verbose,
+		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: branchesToValidate,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranchNames,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return data, branchesSnapshot, stashSize, exit, err
