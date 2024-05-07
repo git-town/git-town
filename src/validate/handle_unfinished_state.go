@@ -42,7 +42,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 		return exit, err
 	}
 	if exit {
-		return false, errors.New("user aborted")
+		return true, errors.New("user aborted")
 	}
 	switch response {
 	case dialog.ResponseDiscard:
