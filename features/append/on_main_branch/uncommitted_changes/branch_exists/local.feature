@@ -1,4 +1,3 @@
-@this
 Feature: already existing local branch
 
   Background:
