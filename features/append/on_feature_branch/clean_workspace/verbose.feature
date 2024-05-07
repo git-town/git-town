@@ -22,7 +22,6 @@ Feature: display all executed Git commands
       | existing | frontend | git fetch --prune --tags                             |
       |          | backend  | git branch -vva --sort=refname                       |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
-      |          | backend  | git config git-town.main-branch main                 |
       | existing | frontend | git checkout main                                    |
       | main     | frontend | git rebase origin/main                               |
       |          | backend  | git rev-list --left-right main...origin/main         |
@@ -41,7 +40,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                       |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "new"
 
