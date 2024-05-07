@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -171,17 +172,28 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil || exit {
 		return
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
+	var branchesToValidate gitdomain.LocalBranchNames
+	shouldCreateBranch := len(targetBranches) == 1 && !slice.Contains(localBranchNames, targetBranches[0])
+	if shouldCreateBranch {
+		branchesToValidate = gitdomain.LocalBranchNames{}
+	} else {
+		if len(targetBranches) == 0 {
+			branchesToValidate = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+		} else {
+			branchesToValidate = targetBranches
+		}
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: targetBranches,
+		BranchesToValidate: branchesToValidate,
 		CommandsCounter:    repo.CommandsCounter,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		DialogTestInputs:   dialogTestInputs,
 		FinalMessages:      repo.FinalMessages,
 		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
+		LocalBranches:      localBranchNames,
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
 		StashSize:          stashSize,
