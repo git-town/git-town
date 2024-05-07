@@ -491,7 +491,7 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	self.Config.Reload()
 	for aliasName, aliasValue := range self.Config.Config.Aliases {
 		if strings.HasPrefix(aliasValue, "town ") {
-			return fmt.Errorf("unexpected Git Town alias %q with value %q", aliasName, aliasValue)
+			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.Config.Aliases)
 		}
 	}
 	return nil
