@@ -81,11 +81,12 @@ func executeSync(all, dryRun, verbose bool) error {
 	}
 
 	// remove outdated lineage
-	err = data.config.RemoveOutdatedConfiguration(data.allBranches.LocalBranches().Names())
-	if err != nil {
+	if err = data.config.RemoveOutdatedConfiguration(data.allBranches.LocalBranches().Names()); err != nil {
 		return err
 	}
-	err = cleanupPerennialParentEntries(data.config.Config.Lineage, data.config.Config.PerennialBranches, data.config.GitConfig, repo.FinalMessages)
+	if err = cleanupPerennialParentEntries(data.config.Config.Lineage, data.config.Config.PerennialBranches, data.config.GitConfig, repo.FinalMessages); err != nil {
+		return err
+	}
 
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
