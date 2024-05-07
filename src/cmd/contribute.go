@@ -95,7 +95,7 @@ func executeContribute(args []string, verbose bool) error {
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:               repo.Backend,
 		BranchesSnapshot:      branchesSnapshot,
-		BranchesToValidate:    branchNames,
+		BranchesToValidate:    gitdomain.LocalBranchNames{},
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
