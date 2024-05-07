@@ -16,14 +16,13 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/skip"
 	"github.com/git-town/git-town/v14/src/undo"
-	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
+func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -40,10 +39,14 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		args.DialogTestInputs.Next(),
 	)
 	if err != nil {
-		return quit, err
+		return aborted, err
 	}
 	if aborted {
-		return quit, errors.New("user aborted")
+		return false, errors.New("user aborted")
+	}
+	currentBranch, err := args.Backend.CurrentBranch()
+	if err != nil {
+		return false, err
 	}
 	switch response {
 	case dialog.ResponseDiscard:
@@ -58,7 +61,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			FinalMessages:    args.FinalMessages,
 			Frontend:         args.Frontend,
 			HasOpenChanges:   args.HasOpenChanges,
-			InitialStashSize: args.InitialStashSize,
+			InitialStashSize: runState.BeginStashSize,
 			Lineage:          args.Lineage,
 			RootDir:          args.RootDir,
 			RunState:         runState,
@@ -70,7 +73,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 			CommandsCounter: args.CommandsCounter,
 			Config:          args.Config,
 			Connector:       args.Connector,
-			CurrentBranch:   args.CurrentBranch,
+			CurrentBranch:   currentBranch,
 			FinalMessages:   args.FinalMessages,
 			Frontend:        args.Frontend,
 			HasOpenChanges:  args.HasOpenChanges,
@@ -86,22 +89,18 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Backend                 git.BackendCommands
-	CommandsCounter         gohacks.Counter
-	Config                  config.Config
-	Connector               hostingdomain.Connector
-	CurrentBranch           gitdomain.LocalBranchName
-	DialogTestInputs        components.TestInputs
-	FinalMessages           stringslice.Collector
-	Frontend                git.FrontendCommands
-	HasOpenChanges          bool
-	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSize        gitdomain.StashSize
-	Lineage                 configdomain.Lineage
-	PushHook                configdomain.PushHook
-	RootDir                 gitdomain.RepoRootDir
-	Verbose                 bool
+	Backend          git.BackendCommands
+	CommandsCounter  gohacks.Counter
+	Config           config.Config
+	Connector        hostingdomain.Connector
+	DialogTestInputs components.TestInputs
+	FinalMessages    stringslice.Collector
+	Frontend         git.FrontendCommands
+	HasOpenChanges   bool
+	Lineage          configdomain.Lineage
+	PushHook         configdomain.PushHook
+	RootDir          gitdomain.RepoRootDir
+	Verbose          bool
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
@@ -121,9 +120,9 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          repoStatus.OpenChanges,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
+		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
+		InitialConfigSnapshot:   runState.BeginConfigSnapshot,
+		InitialStashSize:        runState.BeginStashSize,
 		RootDir:                 args.RootDir,
 		RunState:                runState,
 		Verbose:                 args.Verbose,
