@@ -2,13 +2,10 @@ package validate
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
@@ -78,16 +75,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		}
 	}
 
-	// remove outdated lineage
-	err = args.Unvalidated.RemoveOutdatedConfiguration(args.LocalBranches)
-	if err != nil {
-		return config.EmptyValidatedConfig(), false, err
-	}
-	err = cleanupPerennialParentEntries(args.Unvalidated.Config.Lineage, args.Unvalidated.Config.PerennialBranches, args.Unvalidated.GitConfig, args.FinalMessages)
-	if err != nil {
-		return config.EmptyValidatedConfig(), false, err
-	}
-
 	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
@@ -144,18 +131,4 @@ type ConfigArgs struct {
 	TestInputs            components.TestInputs
 	Unvalidated           config.UnvalidatedConfig
 	Verbose               bool
-}
-
-// cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages stringslice.Collector) error {
-	for _, perennialBranch := range perennialBranches {
-		if lineage.Parent(perennialBranch).IsSome() {
-			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
-			lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
-		}
-	}
-	return nil
 }
