@@ -172,7 +172,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,
-	}, branchesSnapshot, stashSize, false, fc.Err
+	}, branchesSnapshot, stashSize, false, fc.Err // TODO: add branchesSnapshot, stashSize to prependData
 }
 
 func prependProgram(data prependData) program.Program {
