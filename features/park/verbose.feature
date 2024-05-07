@@ -1,3 +1,4 @@
+@this
 Feature: park a branch verbosely
 
   Background:
@@ -12,13 +13,17 @@ Feature: park a branch verbosely
       |        | git config -lz --global                    |
       |        | git config -lz --local                     |
       |        | git rev-parse --show-toplevel              |
+      |        | git status --long --ignore-submodules      |
+      |        | git stash list                             |
+      |        | git remote                                 |
+      |        | git fetch --prune --tags                   |
       |        | git branch -vva --sort=refname             |
       |        | git config git-town.parked-branches branch |
       |        | git config -lz --global                    |
       |        | git config -lz --local                     |
     And it prints:
       """
-      Ran 8 shell commands
+      Ran 12 shell commands
       """
     And it prints:
       """
