@@ -9,6 +9,13 @@ import (
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+
+	// order:
+	//
+	// 1. load saved runstate
+	// 2. has saved runstate: validate config (will always work, okay to ask user), continue runstate, exit
+	// 3. no saved runstate: fetch, snapshot, validate config, execute business logic
+
 	var branchesSnapshot gitdomain.BranchesSnapshot
 	var err error
 	stashSize, err := args.Backend.StashSize()

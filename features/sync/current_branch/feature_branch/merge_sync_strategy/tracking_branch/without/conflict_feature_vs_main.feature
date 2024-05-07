@@ -49,6 +49,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
+  @debug @this
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG            | KEYS    |
