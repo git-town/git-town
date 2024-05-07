@@ -1,3 +1,4 @@
+@this
 Feature: already existing local branch
 
   Background:
@@ -13,9 +14,8 @@ Feature: already existing local branch
       """
     And the uncommitted file still exists
 
-  @debug @this
   Scenario: undo
-    When I run "git-town undo -v"
+    When I run "git-town undo"
     Then it runs no commands
     And the current branch is now "main"
     And the initial commits exist

@@ -63,17 +63,6 @@ func executeUndo(verbose bool) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
-	fmt.Println("111111111111111111111", runState)
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
@@ -120,6 +109,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 	if err != nil || exit {
 		return emptyUndoData(), initialStashSize, false, err
 	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   initialBranchesSnapshot,
@@ -129,7 +119,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		DialogTestInputs:   dialogTestInputs,
 		FinalMessages:      repo.FinalMessages,
 		Frontend:           repo.Frontend,
-		LocalBranches:      gitdomain.LocalBranchNames{},
+		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		RootDir:            repo.RootDir,
 		StashSize:          initialStashSize,
