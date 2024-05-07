@@ -5,7 +5,8 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
-// ValidatedConfig is validated UnvalidatedConfig
+// ValidatedConfig is UnvalidatedConfig where all essential values are guaranteed to exist
+// and have meaningful values.
 type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
