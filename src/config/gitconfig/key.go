@@ -158,6 +158,7 @@ func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key 
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
+	// TODO: use LineageKeyPrefix and LineageKeySuffix here
 	return Key(fmt.Sprintf("git-town-branch.%s.parent", branch))
 }
 
