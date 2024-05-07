@@ -36,5 +36,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
+      Ran 21 shell commands.
       """
     And the current branch is now "other"
