@@ -33,39 +33,28 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 	}
-	branchesSnapshot, err := args.Repo.Backend.BranchesSnapshot()
-	if err != nil {
-		return branchesSnapshot, stashSize, false, err
-	}
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Repo.Backend.Remotes()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
 			err = args.Repo.Frontend.Fetch()
 			if err != nil {
-				return branchesSnapshot, stashSize, false, err
+				return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 			}
 		}
-		// must always reload the snapshot here because we fetched updates from the remote
-		branchesSnapshot, err = args.Repo.Backend.BranchesSnapshot()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
 	}
-	if branchesSnapshot.IsEmpty() {
-		branchesSnapshot, err = args.Repo.Backend.BranchesSnapshot()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
+	branchesSnapshot, err := args.Repo.Backend.BranchesSnapshot()
+	if err != nil {
+		return branchesSnapshot, stashSize, false, err
 	}
 	return branchesSnapshot, stashSize, false, err
 }
