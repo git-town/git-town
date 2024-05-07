@@ -185,21 +185,22 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: branchesToValidate,
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranchNames,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
+		Backend:               repo.Backend,
+		BranchesSnapshot:      branchesSnapshot,
+		BranchesToValidate:    branchesToValidate,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
+		LocalBranches:         localBranchNames,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		StashSize:             stashSize,
+		TestInputs:            dialogTestInputs,
+		Unvalidated:           repo.UnvalidatedConfig,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return data, branchesSnapshot, stashSize, exit, err

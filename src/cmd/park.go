@@ -141,21 +141,22 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: branchesToPark.Keys(),
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
+		Backend:               repo.Backend,
+		BranchesSnapshot:      branchesSnapshot,
+		BranchesToValidate:    branchesToPark.Keys(),
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
+		LocalBranches:         localBranches,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		StashSize:             stashSize,
+		TestInputs:            dialogTestInputs,
+		Unvalidated:           repo.UnvalidatedConfig,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return parkData{}, exit, err

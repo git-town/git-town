@@ -147,21 +147,22 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
+		Backend:               repo.Backend,
+		BranchesSnapshot:      branchesSnapshot,
+		BranchesToValidate:    gitdomain.LocalBranchNames{initialBranch},
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
+		LocalBranches:         localBranches,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		StashSize:             stashSize,
+		TestInputs:            dialogTestInputs,
+		Unvalidated:           repo.UnvalidatedConfig,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

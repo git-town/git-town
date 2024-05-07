@@ -93,21 +93,22 @@ func executeContribute(args []string, verbose bool) error {
 	branchNames := data.branchesToMark.Keys()
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: branchNames,
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
+		Backend:               repo.Backend,
+		BranchesSnapshot:      branchesSnapshot,
+		BranchesToValidate:    branchNames,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
+		LocalBranches:         localBranches,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		StashSize:             stashSize,
+		TestInputs:            dialogTestInputs,
+		Unvalidated:           repo.UnvalidatedConfig,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return err

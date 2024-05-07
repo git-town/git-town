@@ -146,21 +146,22 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		CommandsCounter:    repo.CommandsCounter,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		DialogTestInputs:   dialogTestInputs,
-		FinalMessages:      repo.FinalMessages,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
+		Backend:               repo.Backend,
+		BranchesSnapshot:      branchesSnapshot,
+		BranchesToValidate:    gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
+		LocalBranches:         localBranches,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		StashSize:             stashSize,
+		TestInputs:            dialogTestInputs,
+		Unvalidated:           repo.UnvalidatedConfig,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return emptyProposeData(), branchesSnapshot, stashSize, exit, err

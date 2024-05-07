@@ -100,47 +100,50 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	}
 
 	// handle unfinished state
-	exit, err = HandleUnfinishedState(UnfinishedStateArgs{
-		Backend:                 args.Backend,
-		CommandsCounter:         args.CommandsCounter,
-		Config:                  validatedConfig,
-		Connector:               nil,
-		CurrentBranch:           args.BranchesSnapshot.Active,
-		DialogTestInputs:        args.DialogTestInputs,
-		FinalMessages:           args.FinalMessages,
-		Frontend:                args.Frontend,
-		HasOpenChanges:          args.RepoStatus.OpenChanges,
-		InitialBranchesSnapshot: args.BranchesSnapshot,
-		InitialConfigSnapshot:   args.ConfigSnapshot,
-		InitialStashSize:        args.StashSize,
-		Lineage:                 validatedConfig.Config.Lineage,
-		PushHook:                validatedConfig.Config.PushHook,
-		RootDir:                 args.RootDir,
-		Verbose:                 args.Verbose,
-	})
-	if err != nil || exit {
-		return config.EmptyValidatedConfig(), exit, err
+	if args.HandleUnfinishedState {
+		exit, err = HandleUnfinishedState(UnfinishedStateArgs{
+			Backend:                 args.Backend,
+			CommandsCounter:         args.CommandsCounter,
+			Config:                  validatedConfig,
+			Connector:               nil,
+			CurrentBranch:           args.BranchesSnapshot.Active,
+			DialogTestInputs:        args.DialogTestInputs,
+			FinalMessages:           args.FinalMessages,
+			Frontend:                args.Frontend,
+			HasOpenChanges:          args.RepoStatus.OpenChanges,
+			InitialBranchesSnapshot: args.BranchesSnapshot,
+			InitialConfigSnapshot:   args.ConfigSnapshot,
+			InitialStashSize:        args.StashSize,
+			Lineage:                 validatedConfig.Config.Lineage,
+			PushHook:                validatedConfig.Config.PushHook,
+			RootDir:                 args.RootDir,
+			Verbose:                 args.Verbose,
+		})
+		if err != nil || exit {
+			return config.EmptyValidatedConfig(), exit, err
+		}
 	}
 
 	return validatedConfig, false, err
 }
 
 type ConfigArgs struct {
-	Backend            git.BackendCommands
-	BranchesSnapshot   gitdomain.BranchesSnapshot
-	BranchesToValidate gitdomain.LocalBranchNames
-	CommandsCounter    gohacks.Counter
-	ConfigSnapshot     undoconfig.ConfigSnapshot
-	DialogTestInputs   components.TestInputs
-	FinalMessages      stringslice.Collector
-	Frontend           git.FrontendCommands
-	LocalBranches      gitdomain.LocalBranchNames
-	RepoStatus         gitdomain.RepoStatus
-	RootDir            gitdomain.RepoRootDir
-	StashSize          gitdomain.StashSize
-	TestInputs         components.TestInputs
-	Unvalidated        config.UnvalidatedConfig
-	Verbose            bool
+	Backend               git.BackendCommands
+	BranchesSnapshot      gitdomain.BranchesSnapshot
+	BranchesToValidate    gitdomain.LocalBranchNames
+	CommandsCounter       gohacks.Counter
+	ConfigSnapshot        undoconfig.ConfigSnapshot
+	DialogTestInputs      components.TestInputs
+	FinalMessages         stringslice.Collector
+	Frontend              git.FrontendCommands
+	HandleUnfinishedState bool
+	LocalBranches         gitdomain.LocalBranchNames
+	RepoStatus            gitdomain.RepoStatus
+	RootDir               gitdomain.RepoRootDir
+	StashSize             gitdomain.StashSize
+	TestInputs            components.TestInputs
+	Unvalidated           config.UnvalidatedConfig
+	Verbose               bool
 }
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
