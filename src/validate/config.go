@@ -119,7 +119,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		Verbose:                 args.Verbose,
 	})
 	if err != nil || exit {
-		return config.EmptyValidatedConfig(), false, err
+		return config.EmptyValidatedConfig(), exit, err
 	}
 
 	return validatedConfig, false, err
