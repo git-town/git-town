@@ -124,7 +124,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 false,
 		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -143,7 +143,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:               repo.Backend,
 		BranchesSnapshot:      branchesSnapshot,
-		BranchesToValidate:    branchesToPark.Keys(),
+		BranchesToValidate:    gitdomain.LocalBranchNames{},
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
