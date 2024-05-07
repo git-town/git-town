@@ -49,21 +49,19 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
 		}
 		exit, err = validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
-			Backend:                 args.Backend,
-			CommandsCounter:         args.CommandsCounter,
-			Config:                  validatedConfig,
-			Connector:               nil,
-			CurrentBranch:           args.BranchesSnapshot.Active,
-			DialogTestInputs:        args.DialogTestInputs,
-			Frontend:                args.Frontend,
-			HasOpenChanges:          args.RepoStatus.OpenChanges,
-			InitialBranchesSnapshot: args.BranchesSnapshot,
-			InitialConfigSnapshot:   args.ConfigSnapshot,
-			InitialStashSize:        args.StashSize,
-			Lineage:                 validatedConfig.Config.Lineage,
-			PushHook:                validatedConfig.Config.PushHook,
-			RootDir:                 args.RootDir,
-			Verbose:                 args.Verbose,
+			Backend:          args.Repo.Backend,
+			CommandsCounter:  args.Repo.CommandsCounter,
+			Config:           args.Config,
+			Connector:        nil,
+			DialogTestInputs: args.DialogTestInputs,
+			FinalMessages:    args.Repo.FinalMessages,
+			Frontend:         args.Repo.Frontend,
+			HasOpenChanges:   args.RepoStatus.OpenChanges,
+			Lineage:          args.Config.Config.Lineage,
+			PushHook:         args.Config.Config.PushHook,
+			RepoStatus:       args.RepoStatus,
+			RootDir:          args.Repo.RootDir,
+			Verbose:          args.Verbose,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
@@ -79,32 +77,29 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Backend.Remotes()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
 			err = args.Frontend.Fetch()
 			if err != nil {
-				return branchesSnapshot, stashSize, false, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
 		}
-		// must always reload the snapshot here because we fetched updates from the remote
-		branchesSnapshot, err = args.Backend.BranchesSnapshot()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
 	}
-	if branchesSnapshot.IsEmpty() {
-		branchesSnapshot, err = args.Backend.BranchesSnapshot()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
+	stashSize, err := args.Repo.Backend.StashSize()
+	if err != nil {
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+	}
+	branchesSnapshot, err := args.Repo.Backend.BranchesSnapshot()
+	if err != nil {
+		return branchesSnapshot, stashSize, false, err
 	}
 	return branchesSnapshot, stashSize, false, err
 }
