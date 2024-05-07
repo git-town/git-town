@@ -19,11 +19,12 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --show-toplevel                      |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git status --long --ignore-submodules              |
-      |         | git stash list                                     |
-      |         | git branch -vva --sort=refname                     |
       |         | git remote                                         |
+      |         | git status --long --ignore-submodules              |
+      |         | git rev-parse --abbrev-ref HEAD                    |
       | feature | git fetch --prune --tags                           |
-      | <none>  | git branch -vva --sort=refname                     |
+      | <none>  | git stash list                                     |
+      |         | git branch -vva --sort=refname                     |
       |         | git cherry -v main feature                         |
       | feature | git add -A                                         |
       |         | git stash                                          |
@@ -39,7 +40,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git stash list                                     |
     And it prints:
       """
-      Ran 24 shell commands
+      Ran 25 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"

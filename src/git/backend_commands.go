@@ -238,6 +238,7 @@ func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) 
 
 // CurrentBranch provides the currently checked out branch.
 func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName, error) {
+	// TODO: try the normal way of determining the Git branch first, only if that doesn't work assume a rebase is going and determine the current branch during a rebase
 	repoStatus, err := self.RepoStatus()
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)

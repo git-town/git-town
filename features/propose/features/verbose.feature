@@ -13,10 +13,11 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --local                                             |
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git status --long --ignore-submodules                              |
-      |         | backend  | git stash list                                                     |
-      |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git remote                                                         |
+      |         | backend  | git status --long --ignore-submodules                              |
+      |         | backend  | git rev-parse --abbrev-ref HEAD                                    |
       | feature | frontend | git fetch --prune --tags                                           |
+      |         | backend  | git stash list                                                     |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       | feature | frontend | git checkout main                                                  |
@@ -38,7 +39,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 29 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """

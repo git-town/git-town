@@ -17,10 +17,11 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git status --long --ignore-submodules         |
-      |        | backend  | git stash list                                |
-      |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote                                    |
+      |        | backend  | git status --long --ignore-submodules         |
+      |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
+      |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | old    | frontend | git checkout main                             |
@@ -40,7 +41,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
