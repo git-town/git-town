@@ -1,17 +1,12 @@
 package execute
 
 import (
-	"errors"
-
-	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 )
@@ -27,48 +22,19 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 
 	// handle unfinished state
 	if args.HandleUnfinishedState {
-		mainBranch, hasMain := args.UnvalidatedConfig.Config.MainBranch.Get()
-		if !hasMain {
-			validatedMain, aborted, err := dialog.MainBranch(args.LocalBranches, args.GetDefaultBranch(), args.DialogInputs.Next())
-			if err != nil || aborted {
-				return gitdomain.EmptyBranchesSnapshot(), 0, aborted, err
-			}
-			if err = args.UnvalidatedConfig.SetMainBranch(validatedMain); err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
-			}
-			mainBranch = validatedMain
-		}
-		gitUserEmail, hasGitUserEmail := args.UnvalidatedConfig.Config.GitUserEmail.Get()
-		if !hasGitUserEmail {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, errors.New(messages.GitUserEmailMissing)
-		}
-		gitUserName, hasGitUserName := args.UnvalidatedConfig.Config.GitUserName.Get()
-		if !hasGitUserName {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, errors.New(messages.GitUserNameMissing)
-		}
-		validatedConfig := config.ValidatedConfig{
-			Config: configdomain.ValidatedConfig{
-				UnvalidatedConfig: args.UnvalidatedConfig.Config,
-				GitUserEmail:      gitUserEmail,
-				GitUserName:       gitUserName,
-				MainBranch:        mainBranch,
-			},
-			UnvalidatedConfig: &args.UnvalidatedConfig,
-		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
-			Backend:          args.Repo.Backend,
-			CommandsCounter:  args.Repo.CommandsCounter,
-			Config:           validatedConfig,
-			Connector:        nil,
-			DialogTestInputs: args.DialogTestInputs,
-			FinalMessages:    args.Repo.FinalMessages,
-			Frontend:         args.Repo.Frontend,
-			HasOpenChanges:   args.RepoStatus.OpenChanges,
-			Lineage:          validatedConfig.Config.Lineage,
-			PushHook:         validatedConfig.Config.PushHook,
-			RepoStatus:       args.RepoStatus,
-			RootDir:          args.Repo.RootDir,
-			Verbose:          args.Verbose,
+			Backend:           args.Repo.Backend,
+			CommandsCounter:   args.Repo.CommandsCounter,
+			Connector:         nil,
+			DialogTestInputs:  args.DialogTestInputs,
+			FinalMessages:     args.Repo.FinalMessages,
+			Frontend:          args.Repo.Frontend,
+			HasOpenChanges:    args.RepoStatus.OpenChanges,
+			PushHook:          args.UnvalidatedConfig.Config.PushHook,
+			RepoStatus:        args.RepoStatus,
+			RootDir:           args.Repo.RootDir,
+			UnvalidatedConfig: args.UnvalidatedConfig,
+			Verbose:           args.Verbose,
 		})
 		if err != nil || exit {
 			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err

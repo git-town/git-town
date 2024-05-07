@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -50,28 +51,44 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
+		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+			dialogInputs:     args.DialogTestInputs,
+			getDefaultBranch: args.GetDefaultBranch,
+			unvalidated:      args.UnvalidatedConfig,
+		})
+		if err != nil || exit {
+			return exit, err
+		}
 		return true, undo.Execute(undo.ExecuteArgs{
 			Backend:          args.Backend,
 			CommandsCounter:  args.CommandsCounter,
-			Config:           args.Config,
+			Config:           validatedConfig,
 			FinalMessages:    args.FinalMessages,
 			Frontend:         args.Frontend,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: runState.BeginStashSize,
-			Lineage:          args.Lineage,
 			RootDir:          args.RootDir,
 			RunState:         runState,
 			Verbose:          args.Verbose,
 		})
 	case dialog.ResponseSkip:
+		// TODO: extract into function
 		currentBranch, err := args.Backend.CurrentBranch()
 		if err != nil {
 			return false, err
 		}
+		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+			dialogInputs:     args.DialogTestInputs,
+			getDefaultBranch: args.GetDefaultBranch,
+			unvalidated:      args.UnvalidatedConfig,
+		})
+		if err != nil || exit {
+			return exit, err
+		}
 		return true, skip.Execute(skip.ExecuteArgs{
 			Backend:         args.Backend,
 			CommandsCounter: args.CommandsCounter,
-			Config:          args.Config,
+			Config:          validatedConfig,
 			Connector:       args.Connector,
 			CurrentBranch:   currentBranch,
 			FinalMessages:   args.FinalMessages,
@@ -89,30 +106,38 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 }
 
 type UnfinishedStateArgs struct {
-	Backend          git.BackendCommands
-	CommandsCounter  gohacks.Counter
-	Config           config.ValidatedConfig
-	Connector        hostingdomain.Connector
-	CurrentBranch    gitdomain.LocalBranchName
-	DialogTestInputs components.TestInputs
-	FinalMessages    stringslice.Collector
-	Frontend         git.FrontendCommands
-	HasOpenChanges   bool
-	Lineage          configdomain.Lineage
-	PushHook         configdomain.PushHook
-	RepoStatus       gitdomain.RepoStatus
-	RootDir          gitdomain.RepoRootDir
-	Verbose          bool
+	Backend           git.BackendCommands
+	CommandsCounter   gohacks.Counter
+	Connector         hostingdomain.Connector
+	CurrentBranch     gitdomain.LocalBranchName
+	DialogTestInputs  components.TestInputs
+	FinalMessages     stringslice.Collector
+	Frontend          git.FrontendCommands
+	GetDefaultBranch  func() Option[gitdomain.LocalBranchName]
+	HasOpenChanges    bool
+	PushHook          configdomain.PushHook
+	RepoStatus        gitdomain.RepoStatus
+	RootDir           gitdomain.RepoRootDir
+	UnvalidatedConfig config.UnvalidatedConfig
+	Verbose           bool
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	if args.RepoStatus.Conflicts {
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
+	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+		dialogInputs:     args.DialogTestInputs,
+		getDefaultBranch: args.GetDefaultBranch,
+		unvalidated:      args.UnvalidatedConfig,
+	})
+	if err != nil || exit {
+		return exit, err
+	}
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
-		Config:                  args.Config,
+		Config:                  validatedConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        args.DialogTestInputs,
 		FinalMessages:           args.FinalMessages,
@@ -130,4 +155,50 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 	err := statefile.Delete(rootDir)
 	return false, err
+}
+
+// quickly provides a ValidatedConfig instance in situations where we continue runstate.
+// It is expected that all data exists.
+// This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
+func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, bool, error) {
+	mainBranch, hasMain := args.unvalidated.Config.MainBranch.Get()
+	if !hasMain {
+		branchesSnapshot, err := args.backend.BranchesSnapshot()
+		if err != nil {
+			return config.EmptyValidatedConfig(), false, err
+		}
+		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+		validatedMain, exit, err := dialog.MainBranch(localBranches, args.getDefaultBranch(), args.dialogInputs.Next())
+		if err != nil || exit {
+			return config.EmptyValidatedConfig(), exit, err
+		}
+		if err = args.unvalidated.SetMainBranch(validatedMain); err != nil {
+			return config.EmptyValidatedConfig(), false, err
+		}
+		mainBranch = validatedMain
+	}
+	gitUserEmail, hasGitUserEmail := args.unvalidated.Config.GitUserEmail.Get()
+	if !hasGitUserEmail {
+		return config.EmptyValidatedConfig(), false, errors.New(messages.GitUserEmailMissing)
+	}
+	gitUserName, hasGitUserName := args.unvalidated.Config.GitUserName.Get()
+	if !hasGitUserName {
+		return config.EmptyValidatedConfig(), false, errors.New(messages.GitUserNameMissing)
+	}
+	return config.ValidatedConfig{
+		Config: configdomain.ValidatedConfig{
+			UnvalidatedConfig: args.unvalidated.Config,
+			GitUserEmail:      gitUserEmail,
+			GitUserName:       gitUserName,
+			MainBranch:        mainBranch,
+		},
+		UnvalidatedConfig: &args.unvalidated,
+	}, false, nil
+}
+
+type quickValidateConfigArgs struct {
+	backend          git.BackendCommands
+	dialogInputs     components.TestInputs
+	getDefaultBranch func() Option[gitdomain.LocalBranchName]
+	unvalidated      config.UnvalidatedConfig
 }

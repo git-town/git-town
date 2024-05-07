@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -22,7 +21,6 @@ func Execute(args ExecuteArgs) {
 			DialogTestInputs:                components.NewTestInputs(),
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
-			Lineage:                         args.Lineage,
 			PrependOpcodes:                  nil,
 			RegisterUndoablePerennialCommit: nil,
 			UpdateInitialBranchLocalSHA:     nil,
@@ -38,6 +36,5 @@ type ExecuteArgs struct {
 	Config        config.ValidatedConfig
 	FinalMessages stringslice.Collector
 	Frontend      git.FrontendCommands
-	Lineage       configdomain.Lineage
 	Prog          program.Program
 }

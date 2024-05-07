@@ -125,7 +125,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
-		StashSize:             stashSize,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
