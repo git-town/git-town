@@ -1,7 +1,7 @@
 # git ship [branch name] [-m message]
 
 _Notice: Most people don't need to use the _ship_ command. The recommended way
-to merge your feature branches is to us the web UI or merge queue of your code
+to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you already do. `git ship` is for edge cases like developing
 in [offline mode](../preferences/offline.md)._
 
