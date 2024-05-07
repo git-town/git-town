@@ -86,22 +86,22 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Backend                 git.BackendCommands
-	CommandsCounter         gohacks.Counter
-	Config                  config.ValidatedConfig
-	Connector               hostingdomain.Connector
-	CurrentBranch           gitdomain.LocalBranchName
-	DialogTestInputs        components.TestInputs
-	FinalMessages           stringslice.Collector
-	Frontend                git.FrontendCommands
-	HasOpenChanges          bool
-	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSize        gitdomain.StashSize
-	Lineage                 configdomain.Lineage
-	PushHook                configdomain.PushHook
-	RootDir                 gitdomain.RepoRootDir
-	Verbose                 bool
+	Backend          git.BackendCommands
+	CommandsCounter  gohacks.Counter
+	Config           config.ValidatedConfig
+	Connector        hostingdomain.Connector
+	CurrentBranch    gitdomain.LocalBranchName
+	DialogTestInputs components.TestInputs
+	FinalMessages    stringslice.Collector
+	Frontend         git.FrontendCommands
+	HasOpenChanges   bool
+	// InitialBranchesSnapshot gitdomain.BranchesSnapshot
+	InitialConfigSnapshot undoconfig.ConfigSnapshot
+	InitialStashSize      gitdomain.StashSize
+	Lineage               configdomain.Lineage
+	PushHook              configdomain.PushHook
+	RootDir               gitdomain.RepoRootDir
+	Verbose               bool
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
@@ -121,9 +121,9 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          repoStatus.OpenChanges,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
+		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
+		InitialConfigSnapshot:   runState.BeginConfigSnapshot,
+		InitialStashSize:        runState.BeginStashSize,
 		RootDir:                 args.RootDir,
 		RunState:                runState,
 		Verbose:                 args.Verbose,

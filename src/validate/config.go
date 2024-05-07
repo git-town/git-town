@@ -9,10 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
-	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
-	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
@@ -87,49 +84,17 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		UnvalidatedConfig: &args.Unvalidated,
 	}
 
-	// handle unfinished state
-	if args.HandleUnfinishedState {
-		exit, err = HandleUnfinishedState(UnfinishedStateArgs{
-			Backend:                 args.Backend,
-			CommandsCounter:         args.CommandsCounter,
-			Config:                  validatedConfig,
-			Connector:               nil,
-			CurrentBranch:           args.BranchesSnapshot.Active,
-			DialogTestInputs:        args.DialogTestInputs,
-			FinalMessages:           args.FinalMessages,
-			Frontend:                args.Frontend,
-			HasOpenChanges:          args.RepoStatus.OpenChanges,
-			InitialBranchesSnapshot: args.BranchesSnapshot,
-			InitialConfigSnapshot:   args.ConfigSnapshot,
-			InitialStashSize:        args.StashSize,
-			Lineage:                 validatedConfig.Config.Lineage,
-			PushHook:                validatedConfig.Config.PushHook,
-			RootDir:                 args.RootDir,
-			Verbose:                 args.Verbose,
-		})
-		if err != nil || exit {
-			return config.EmptyValidatedConfig(), exit, err
-		}
-	}
-
 	return validatedConfig, false, err
 }
 
 type ConfigArgs struct {
-	Backend               git.BackendCommands
-	BranchesSnapshot      gitdomain.BranchesSnapshot
-	BranchesToValidate    gitdomain.LocalBranchNames
-	CommandsCounter       gohacks.Counter
-	ConfigSnapshot        undoconfig.ConfigSnapshot
-	DialogTestInputs      components.TestInputs
-	FinalMessages         stringslice.Collector
-	Frontend              git.FrontendCommands
-	HandleUnfinishedState bool
-	LocalBranches         gitdomain.LocalBranchNames
-	RepoStatus            gitdomain.RepoStatus
-	RootDir               gitdomain.RepoRootDir
-	StashSize             gitdomain.StashSize
-	TestInputs            components.TestInputs
-	Unvalidated           config.UnvalidatedConfig
-	Verbose               bool
+	Backend            git.BackendCommands
+	BranchesSnapshot   gitdomain.BranchesSnapshot
+	BranchesToValidate gitdomain.LocalBranchNames
+	DialogTestInputs   components.TestInputs
+	Frontend           git.FrontendCommands
+	LocalBranches      gitdomain.LocalBranchNames
+	RepoStatus         gitdomain.RepoStatus
+	TestInputs         components.TestInputs
+	Unvalidated        config.UnvalidatedConfig
 }
