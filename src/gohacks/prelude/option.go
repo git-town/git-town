@@ -4,18 +4,15 @@ import (
 	"fmt"
 )
 
-// Option provides infrastructure for optional (nullable) values that is fully enforced by the type checker.
-// Option provides copies of the optional value.
-// If you need direct access to the optional value, use an OptionP instead.
+// Option provides infrastructure for optional (nullable) values
+// that is fully enforced by the type checker.
+// Matching the data architecture of this codebase, this Option
+// provides copies of the optional value, i.e. works only for const and copyable values.
+// If you need direct access to the optional value, i.e. don't want a copy, use an OptionP instead.
 // The zero value is the None option.
 //
-// A simpler approach to express optionality would be using pointers to the optional values
-// since pointers can be nil.
-// This is a poor-man's approach since pointers mix reference, mutability, and optionality.
-// Go sometimes derefences pointers, resulting in too many situations
-// where calling methods on a nil pointer happily passes the type checker
-// and then panics at runtime.
-// Better to have a dedicated facility just for optionality.
+// Option is worth the overhead because it removes one of the many possible meanings (optionality)
+// from pointer values. This means a pointer in this codebase implies mutability and nothing else.
 type Option[T any] struct {
 	value *T
 }
