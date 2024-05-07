@@ -15,7 +15,7 @@ Feature: already existing local branch
 
   @debug @this
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo -v"
     Then it runs no commands
     And the current branch is now "main"
     And the initial commits exist

@@ -63,6 +63,17 @@ func executeUndo(verbose bool) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
+	fmt.Println("111111111111111111111", runState)
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
