@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -20,10 +19,8 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		conf := config.ValidatedConfig{
 			Config: configdomain.ValidatedConfig{
-				UnvalidatedConfig: configdomain.UnvalidatedConfig{
-					GitUserName:  Some(configdomain.GitUserName("name")),
-					GitUserEmail: Some(configdomain.GitUserEmail("email")),
-				},
+				GitUserName:  configdomain.GitUserName("name"),
+				GitUserEmail: configdomain.GitUserEmail("email"),
 			},
 		}
 		have := conf.Author()
@@ -85,11 +82,9 @@ func TestValidatedConfig(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
 		must.NoError(t, err)
-		offline := repo.Config.Config.Offline
-		must.True(t, offline.Bool())
+		must.True(t, repo.Config.Config.Offline.Bool())
 		err = repo.Config.SetOffline(false)
 		must.NoError(t, err)
-		offline = repo.Config.Config.Offline
-		must.False(t, offline.Bool())
+		must.False(t, repo.Config.Config.Offline.Bool())
 	})
 }
