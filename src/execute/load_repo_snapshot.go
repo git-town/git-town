@@ -30,28 +30,28 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
 		}
 	}
-	stashSize, err := args.Repo.Backend.StashSize()
-	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
-	}
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Repo.Backend.Remotes()
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
 			err = args.Repo.Frontend.Fetch()
 			if err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
 		}
+	}
+	stashSize, err := args.Repo.Backend.StashSize()
+	if err != nil {
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 	}
 	branchesSnapshot, err := args.Repo.Backend.BranchesSnapshot()
 	if err != nil {
