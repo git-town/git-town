@@ -22,6 +22,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			HasOpenChanges:   args.RepoStatus.OpenChanges,
 			Lineage:          args.Config.Config.Lineage,
 			PushHook:         args.Config.Config.PushHook,
+			RepoStatus:       args.RepoStatus,
 			RootDir:          args.Repo.RootDir,
 			Verbose:          args.Verbose,
 		})

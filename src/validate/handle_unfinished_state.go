@@ -44,10 +44,6 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	if exit {
 		return false, errors.New("user aborted")
 	}
-	currentBranch, err := args.Backend.CurrentBranch()
-	if err != nil {
-		return false, err
-	}
 	switch response {
 	case dialog.ResponseDiscard:
 		return discardRunstate(args.RootDir)
@@ -68,6 +64,10 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 			Verbose:          args.Verbose,
 		})
 	case dialog.ResponseSkip:
+		currentBranch, err := args.Backend.CurrentBranch()
+		if err != nil {
+			return false, err
+		}
 		return true, skip.Execute(skip.ExecuteArgs{
 			Backend:         args.Backend,
 			CommandsCounter: args.CommandsCounter,
@@ -99,16 +99,13 @@ type UnfinishedStateArgs struct {
 	HasOpenChanges   bool
 	Lineage          configdomain.Lineage
 	PushHook         configdomain.PushHook
+	RepoStatus       gitdomain.RepoStatus
 	RootDir          gitdomain.RepoRootDir
 	Verbose          bool
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	repoStatus, err := args.Backend.RepoStatus()
-	if err != nil {
-		return false, err
-	}
-	if repoStatus.Conflicts {
+	if args.RepoStatus.Conflicts {
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
@@ -119,7 +116,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		DialogTestInputs:        args.DialogTestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
-		HasOpenChanges:          repoStatus.OpenChanges,
+		HasOpenChanges:          args.RepoStatus.OpenChanges,
 		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   runState.BeginConfigSnapshot,
 		InitialStashSize:        runState.BeginStashSize,
