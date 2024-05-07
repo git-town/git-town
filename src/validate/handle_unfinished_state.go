@@ -39,10 +39,10 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 		args.DialogTestInputs.Next(),
 	)
 	if err != nil {
-		return exit, err
+		return false, err
 	}
 	if exit {
-		return true, errors.New("user aborted")
+		return exit, errors.New("user aborted")
 	}
 	switch response {
 	case dialog.ResponseDiscard:
