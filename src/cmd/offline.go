@@ -52,7 +52,7 @@ func executeOffline(args []string, verbose bool) error {
 	}
 	switch len(args) {
 	case 0:
-		displayOfflineStatus(repo.UnvalidatedConfig.Config)
+		displayOfflineStatus(*repo.UnvalidatedConfig.Config)
 	case 1:
 		err = setOfflineStatus(args[0], repo.UnvalidatedConfig)
 		if err != nil {

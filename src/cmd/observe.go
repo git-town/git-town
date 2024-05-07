@@ -149,16 +149,16 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToObserve.Add(branchesSnapshot.Active, repo.UnvalidatedConfig.Config)
+		branchesToObserve.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve.Add(branch, repo.UnvalidatedConfig.Config)
+		branchesToObserve.Add(branch, *repo.UnvalidatedConfig.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
-		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
+		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{

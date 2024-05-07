@@ -11,7 +11,7 @@ type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
-	UnvalidatedConfig
+	*UnvalidatedConfig
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {

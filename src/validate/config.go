@@ -53,7 +53,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesToVerify: args.BranchesToValidate,
-		Config:           args.Unvalidated.Config,
+		Config:           *args.Unvalidated.Config,
 		DefaultChoice:    validatedMain,
 		DialogTestInputs: args.TestInputs,
 		LocalBranches:    args.LocalBranches,
@@ -87,12 +87,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
-			UnvalidatedConfig: args.Unvalidated.Config,
+			UnvalidatedConfig: &args.Unvalidated.Config,
 			GitUserEmail:      gitUserEmail,
 			GitUserName:       gitUserName,
 			MainBranch:        validatedMain,
 		},
-		UnvalidatedConfig: args.Unvalidated,
+		UnvalidatedConfig: &args.Unvalidated,
 	}
 
 	// handle unfinished state

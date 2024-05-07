@@ -103,7 +103,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 			GitUserName:       "Tester",
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 		},
-		UnvalidatedConfig: unvalidatedConfig,
+		UnvalidatedConfig: &unvalidatedConfig,
 	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,

@@ -44,7 +44,7 @@ func executeDisplayConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	printConfig(repo.UnvalidatedConfig.Config)
+	printConfig(*repo.UnvalidatedConfig.Config)
 	return nil
 }
 
