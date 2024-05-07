@@ -26,6 +26,8 @@ Feature: Accepting all default values leads to a working setup
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches
+    And local Git Town setting "main-branch" still doesn't exist
+    And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "push-new-branches" is still not set
     And local Git Town setting "push-hook" is still not set
@@ -154,8 +156,8 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
-    And the main branch is still ""
-    And there are still no perennial branches
+    And local Git Town setting "main-branch" still doesn't exist
+    And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "github-token" still doesn't exist
     And local Git Town setting "hosting-origin-hostname" still doesn't exist
