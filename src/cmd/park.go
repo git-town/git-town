@@ -138,7 +138,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	if len(args) == 0 {
 		branchesToPark.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
 	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config)
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
