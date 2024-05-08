@@ -1,26 +1,19 @@
 package validate
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// check Git user data
-	gitUserEmail, hasGitUserEmail := args.Unvalidated.Config.GitUserEmail.Get()
-	if !hasGitUserEmail {
-		return config.EmptyValidatedConfig(), false, errors.New(messages.GitUserEmailMissing)
-	}
-	gitUserName, hasGitUserName := args.Unvalidated.Config.GitUserName.Get()
-	if !hasGitUserName {
-		return config.EmptyValidatedConfig(), false, errors.New(messages.GitUserNameMissing)
+	gitUserEmail, gitUserName, err := GitUser(*args.Unvalidated.Config)
+	if err != nil {
+		return config.EmptyValidatedConfig(), false, err
 	}
 
 	// enter and save main and perennials
