@@ -69,8 +69,9 @@ func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, err
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
-	branches, currentBranch := ParseVerboseBranchesOutput(output)
-	if !currentBranch.IsEmpty() {
+	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if hasCurrentBranch {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
@@ -467,11 +468,11 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
 // TODO: return Option for checkedoutBranch
-func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain.LocalBranchName) {
+func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gitdomain.LocalBranchName]) {
 	result := gitdomain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
 	lines := stringslice.Lines(output)
-	checkedoutBranch := gitdomain.EmptyLocalBranchName()
+	checkedoutBranch := None[gitdomain.LocalBranchName]()
 	for _, line := range lines {
 		if strings.TrimSpace(line) == "" {
 			continue
@@ -492,7 +493,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain
 		sha := gitdomain.NewSHA(parts[1])
 		remoteText := parts[2]
 		if line[0] == '*' { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = gitdomain.LocalBranchName(branchName)
+			checkedoutBranch = Some(gitdomain.LocalBranchName(branchName))
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {
