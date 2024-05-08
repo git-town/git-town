@@ -72,10 +72,10 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = data.config.AddToObservedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, data.config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -100,7 +100,6 @@ type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
-	config            config.UnvalidatedConfig
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
@@ -170,7 +169,6 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
-		config:            repo.UnvalidatedConfig,
 	}, nil
 }
 
