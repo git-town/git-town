@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
@@ -50,13 +49,6 @@ func (self *ValidatedConfig) Reload() {
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
-}
-
-// SetOriginHostname marks the given branch as the main branch
-// in the Git Town configuration.
-func (self *ValidatedConfig) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
-	self.Config.HostingOriginHostname = Some(hostName)
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
 // SetPushHook updates the configured push-hook strategy.
