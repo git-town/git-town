@@ -418,7 +418,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.EqOp(t, gitdomain.NewLocalBranchName("branch-1"), currentBranch)
+				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-1")), currentBranch)
 			})
 			t.Run("marker is at the middle entry", func(t *testing.T) {
 				t.Parallel()
@@ -427,7 +427,7 @@ func TestBackendCommands(t *testing.T) {
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.EqOp(t, gitdomain.NewLocalBranchName("branch-2"), currentBranch)
+				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 			})
 			t.Run("marker is at the last entry", func(t *testing.T) {
 				t.Parallel()
@@ -436,7 +436,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
 * branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.EqOp(t, gitdomain.NewLocalBranchName("branch-3"), currentBranch)
+				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-3")), currentBranch)
 			})
 			t.Run("in the middle of a rebase", func(t *testing.T) {
 				t.Parallel()
@@ -445,7 +445,7 @@ func TestBackendCommands(t *testing.T) {
   feature                    62bf22e [origin/feature: ahead 1] feature commit
   main                       11716d4 [origin/main: ahead 1, behind 1] local main commit`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.EqOp(t, gitdomain.LocalBranchName(""), currentBranch)
+				must.Eq(t, None[gitdomain.LocalBranchName](), currentBranch)
 			})
 		})
 
@@ -669,7 +669,7 @@ func TestBackendCommands(t *testing.T) {
 				}
 				have, active := git.ParseVerboseBranchesOutput(give)
 				must.Eq(t, want, have)
-				must.Eq(t, gitdomain.EmptyLocalBranchName(), active)
+				must.Eq(t, None[gitdomain.LocalBranchName](), active)
 			})
 		})
 
@@ -770,7 +770,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
 			must.Eq(t, want, have)
-			must.EqOp(t, gitdomain.NewLocalBranchName("branch-2"), currentBranch)
+			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 		})
 	})
 
