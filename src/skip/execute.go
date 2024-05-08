@@ -26,7 +26,6 @@ func Execute(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
-		Lineage:       args.Config.Config.Lineage,
 		Prog:          args.RunState.AbortProgram,
 	})
 	err := revertChangesToCurrentBranch(args)
@@ -109,7 +108,6 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
-		Lineage:       args.Config.Config.Lineage,
 		Prog:          undoCurrentBranchProgram,
 	})
 	return nil

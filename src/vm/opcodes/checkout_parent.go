@@ -12,7 +12,7 @@ type CheckoutParent struct {
 }
 
 func (self *CheckoutParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Lineage.Parent(self.CurrentBranch).Get()
+	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent || parent == self.CurrentBranch {
 		return nil
 	}

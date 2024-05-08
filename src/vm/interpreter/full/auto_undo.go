@@ -32,7 +32,6 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
-		Lineage:       args.Config.Config.Lineage,
 		Prog:          undoProgram,
 	})
 	return opcode.CreateAutomaticUndoError()
