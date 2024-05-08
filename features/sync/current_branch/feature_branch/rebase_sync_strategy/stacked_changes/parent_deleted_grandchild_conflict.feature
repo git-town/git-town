@@ -37,6 +37,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And the current branch is now "grandchild"
     And a rebase is now in progress
 
+  # @debug @this
   Scenario: skip the grandchild merge conflict and kill the grandchild branch
     When I run "git-town skip"
     Then it runs the commands
