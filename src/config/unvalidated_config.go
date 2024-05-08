@@ -88,16 +88,16 @@ func (self *UnvalidatedConfig) RemoveFromContributionBranches(branch gitdomain.L
 	return self.SetContributionBranches(self.Config.ContributionBranches)
 }
 
-// RemoveFromParkedBranches removes the given branch as a perennial branch.
-func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)
-	return self.SetParkedBranches(self.Config.ParkedBranches)
-}
-
 // RemoveFromObservedBranches removes the given branch as a perennial branch.
 func (self *UnvalidatedConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.ObservedBranches = slice.Remove(self.Config.ObservedBranches, branch)
 	return self.SetObservedBranches(self.Config.ObservedBranches)
+}
+
+// RemoveFromParkedBranches removes the given branch as a perennial branch.
+func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)
+	return self.SetParkedBranches(self.Config.ParkedBranches)
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
