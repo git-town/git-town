@@ -183,9 +183,6 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
-	if err = validateShippableBranchType(repo.UnvalidatedConfig.Config.BranchType(branchNameToShip)); err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -200,6 +197,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
+	}
+	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
