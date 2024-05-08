@@ -141,7 +141,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptySetParentData(), branchesSnapshot, 0, exit, err
+		return emptySetParentData(), branchesSnapshot, stashSize, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -156,7 +156,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptySetParentData(), branchesSnapshot, 0, exit, err
+		return emptySetParentData(), branchesSnapshot, stashSize, exit, err
 	}
 	mainBranch := validatedConfig.Config.MainBranch
 	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
