@@ -82,6 +82,12 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
+// RemoveFromContributionBranches removes the given branch as a perennial branch.
+func (self *UnvalidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.ContributionBranches = slice.Remove(self.Config.ContributionBranches, branch)
+	return self.SetContributionBranches(self.Config.ContributionBranches)
+}
+
 // RemoveFromParkedBranches removes the given branch as a perennial branch.
 func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)

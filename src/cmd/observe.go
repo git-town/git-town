@@ -15,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
-	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -101,7 +100,7 @@ type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
-	config            config.ValidatedConfig
+	config            config.UnvalidatedConfig
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
@@ -110,7 +109,7 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.ValidatedConfig) error {
+func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -167,26 +166,11 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		DialogTestInputs:   dialogTestInputs,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-	})
-	if err != nil || exit {
-		return observeData{}, err
-	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
-		config:            validatedConfig,
+		config:            repo.UnvalidatedConfig,
 	}, nil
 }
 

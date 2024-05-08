@@ -46,12 +46,6 @@ func (self *ValidatedConfig) Reload() {
 	}
 }
 
-// RemoveFromContributionBranches removes the given branch as a perennial branch.
-func (self *ValidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.ContributionBranches = slice.Remove(self.Config.ContributionBranches, branch)
-	return self.SetContributionBranches(self.Config.ContributionBranches)
-}
-
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
