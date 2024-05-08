@@ -138,6 +138,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

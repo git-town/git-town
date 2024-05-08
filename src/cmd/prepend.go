@@ -130,6 +130,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

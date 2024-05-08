@@ -139,6 +139,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

@@ -136,6 +136,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

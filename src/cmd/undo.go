@@ -108,6 +108,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

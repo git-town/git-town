@@ -172,6 +172,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

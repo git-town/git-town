@@ -145,6 +145,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bo
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

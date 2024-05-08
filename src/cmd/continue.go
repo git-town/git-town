@@ -97,6 +97,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

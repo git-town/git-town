@@ -162,6 +162,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: len(args) == 0,
 		Verbose:               verbose,
 	})

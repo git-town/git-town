@@ -144,6 +144,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})

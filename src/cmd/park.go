@@ -133,6 +133,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
