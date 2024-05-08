@@ -3,9 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
@@ -57,8 +55,8 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineParkData(args, repo, verbose)
-	if err != nil || exit {
+	data, err := determineParkData(args, repo, verbose)
+	if err != nil {
 		return err
 	}
 	err = validateParkData(data)
@@ -113,30 +111,10 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	return nil
 }
 
-func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool) (parkData, bool, error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool) (parkData, error) {
+	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
-		return parkData{}, false, err
-	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
-	})
-	if err != nil || exit {
-		return parkData{}, exit, err
+		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
@@ -147,7 +125,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,
 		branchesToPark: branchesToPark,
-	}, false, nil
+	}, nil
 }
 
 func validateParkData(data parkData) error {
