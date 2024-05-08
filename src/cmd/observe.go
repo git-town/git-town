@@ -61,7 +61,7 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineObserveData(args, repo, verbose)
+	data, err := determineObserveData(args, repo)
 	if err != nil {
 		return err
 	}
@@ -123,7 +123,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 	return nil
 }
 
-func determineObserveData(args []string, repo execute.OpenRepoResult, verbose bool) (observeData, error) {
+func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
 	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err
