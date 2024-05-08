@@ -2,10 +2,8 @@ package config
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
@@ -49,15 +47,4 @@ func (self *ValidatedConfig) Reload() {
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
-}
-
-// SetPushHook updates the configured push-hook strategy.
-func (self *ValidatedConfig) SetPushHookGlobally(value configdomain.PushHook) error {
-	self.Config.PushHook = value
-	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(value.Bool()))
-}
-
-func (self *ValidatedConfig) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
-	self.Config.SyncFeatureStrategy = value
-	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
