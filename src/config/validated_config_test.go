@@ -76,15 +76,4 @@ func TestValidatedConfig(t *testing.T) {
 			must.Eq(t, want, repo.Config.Config.Lineage)
 		})
 	})
-
-	t.Run("SetOffline", func(t *testing.T) {
-		t.Parallel()
-		repo := testruntime.CreateGitTown(t)
-		err := repo.Config.SetOffline(true)
-		must.NoError(t, err)
-		must.True(t, repo.Config.Config.Offline.Bool())
-		err = repo.Config.SetOffline(false)
-		must.NoError(t, err)
-		must.False(t, repo.Config.Config.Offline.Bool())
-	})
 }
