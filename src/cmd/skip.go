@@ -62,7 +62,7 @@ func executeSkip(verbose bool) error {
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
+		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
