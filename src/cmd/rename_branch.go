@@ -154,6 +154,10 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
+	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
+	if !hasOldBranch {
+		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -179,10 +183,6 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	}
 	if oldBranchName == newBranchName {
 		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, errors.New(messages.RenameToSameName)
-	}
-	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
-	if !hasOldBranch {
-		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
 		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
