@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
@@ -23,8 +22,8 @@ func Execute(args ExecuteArgs) error {
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
-		Config:         args.Config,
-		DryRun:         args.Config.DryRun,
+		Config:         args.Config.Config,
+		DryRun:         args.RunState.DryRun,
 		HasOpenChanges: args.HasOpenChanges,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
@@ -34,7 +33,6 @@ func Execute(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
-		Lineage:       args.Lineage,
 		Prog:          program,
 	})
 	err := statefile.Delete(args.RootDir)
@@ -48,12 +46,11 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	Backend          git.BackendCommands
 	CommandsCounter  gohacks.Counter
-	Config           config.Config
+	Config           config.ValidatedConfig
 	FinalMessages    stringslice.Collector
 	Frontend         git.FrontendCommands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
-	Lineage          configdomain.Lineage
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 	Verbose          bool

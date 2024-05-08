@@ -77,12 +77,18 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		return nil, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -95,18 +101,23 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	branchesToDiff := gitdomain.LocalBranchNames{branch}
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{branch},
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: branchesToDiff,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	parentBranch, hasParent := repo.Config.Config.Lineage.Parent(branch).Get()
+	parentBranch, hasParent := validatedConfig.Config.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}

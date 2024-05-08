@@ -38,6 +38,7 @@ func TestGitlabConnector(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
+		main := gitdomain.NewLocalBranchName("main")
 		tests := map[string]struct {
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
@@ -45,7 +46,7 @@ func TestGitlabConnector(t *testing.T) {
 		}{
 			"top-level branch": {
 				branch: gitdomain.NewLocalBranchName("feature"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				parent: main,
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
 			},
 			"stacked change": {
@@ -55,7 +56,7 @@ func TestGitlabConnector(t *testing.T) {
 			},
 			"special characters in branch name": {
 				branch: gitdomain.NewLocalBranchName("feature-#"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				parent: main,
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
 			},
 		}
@@ -71,7 +72,7 @@ func TestGitlabConnector(t *testing.T) {
 						},
 					},
 				}
-				have, err := connector.NewProposalURL(tt.branch, tt.parent)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent, main)
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})

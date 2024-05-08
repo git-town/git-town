@@ -102,7 +102,7 @@ type killData struct {
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
-	config           config.Config
+	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -118,12 +118,18 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		HandleUnfinishedState: false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -138,35 +144,40 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToKill},
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: branchesToKill,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	branchTypeToKill := repo.Config.Config.BranchType(branchNameToKill)
+	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == branchesSnapshot.Active {
 		if previousBranch == branchesSnapshot.Active {
-			branchWhenDone = repo.Config.Config.MainBranch
+			branchWhenDone = validatedConfig.Config.MainBranch
 		} else {
 			branchWhenDone = previousBranch
 		}
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
-	parentBranch := repo.Config.Config.Lineage.Parent(branchToKill.LocalName)
+	parentBranch := validatedConfig.Config.Lineage.Parent(branchToKill.LocalName)
 	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
-		config:           repo.Config,
+		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

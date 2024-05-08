@@ -67,15 +67,14 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = validateContributeData(data)
-	if err != nil {
+	if err = validateContributeData(data); err != nil {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.Config.AddToContributionBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.Config); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
@@ -109,7 +108,7 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.Config) error {
+func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
@@ -135,11 +134,11 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
-		branchesToMark.Add(branchesSnapshot.Active, repo.Config.Config)
+		branchesToMark.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, repo.Config.Config)
+		branchesToMark.Add(branch, *repo.UnvalidatedConfig.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
@@ -147,7 +146,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.Config.Config)
+		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{

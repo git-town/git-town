@@ -32,7 +32,6 @@ func Execute(args ExecuteArgs) error {
 			DialogTestInputs:                args.DialogTestInputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
-			Lineage:                         args.Config.Config.Lineage,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
@@ -46,7 +45,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	Backend                 git.BackendCommands
 	CommandsCounter         gohacks.Counter
-	Config                  config.Config
+	Config                  config.ValidatedConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector

@@ -109,7 +109,7 @@ func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stac
 type compressBranchesData struct {
 	branchesToCompress  []compressBranchData
 	compressEntireStack bool
-	config              config.Config
+	config              config.ValidatedConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              bool
 	hasOpenChanges      bool
@@ -133,12 +133,18 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -146,20 +152,24 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = repo.Config.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToCompress = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -169,14 +179,14 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		if !hasBranchInfo {
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := repo.Config.Config.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName())
 		if err := validateCanCompressBranchType(branchInfo.LocalName, branchType); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
 		if err := validateBranchIsSynced(branchInfo.LocalName, branchInfo.SyncStatus); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
-		parent := repo.Config.Config.Lineage.Parent(branchNameToCompress)
+		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
@@ -202,7 +212,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
-		config:              repo.Config,
+		config:              validatedConfig,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,

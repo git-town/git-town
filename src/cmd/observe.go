@@ -70,10 +70,10 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.Config.AddToObservedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.Config); err != nil {
+	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -106,7 +106,7 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.Config) error {
+func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -132,16 +132,16 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToObserve.Add(branchesSnapshot.Active, repo.Config.Config)
+		branchesToObserve.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve.Add(branch, repo.Config.Config)
+		branchesToObserve.Add(branch, *repo.UnvalidatedConfig.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
-		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.Config.Config)
+		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,

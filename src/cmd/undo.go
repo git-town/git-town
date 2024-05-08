@@ -9,13 +9,13 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo"
+	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -50,10 +50,8 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var data undoData
-	var initialStashSize gitdomain.StashSize
-	data, initialStashSize, repo.Config.Config.Lineage, err = determineUndoData(repo, verbose)
-	if err != nil {
+	data, initialStashSize, exit, err := determineUndoData(repo, verbose)
+	if err != nil || exit {
 		return err
 	}
 	runStateOpt, err := statefile.Load(repo.RootDir)
@@ -73,7 +71,6 @@ func executeUndo(verbose bool) error {
 		Frontend:         repo.Frontend,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          repo.Config.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
 		Verbose:          verbose,
@@ -81,7 +78,7 @@ func executeUndo(verbose bool) error {
 }
 
 type undoData struct {
-	config                  config.Config
+	config                  config.ValidatedConfig
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
@@ -93,44 +90,65 @@ func emptyUndoData() undoData {
 	return undoData{} //exhaustruct:ignore
 }
 
-func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, gitdomain.StashSize, configdomain.Lineage, error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return emptyUndoData(), 0, repo.Config.Config.Lineage, err
+		return emptyUndoData(), 0, false, err
 	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyUndoData(), initialStashSize, repo.Config.Config.Lineage, err
+		return emptyUndoData(), initialStashSize, false, err
+	}
+	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesSnapshot:   initialBranchesSnapshot,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
+	})
+	if err != nil || exit {
+		return emptyUndoData(), initialStashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      repo.Config.Config,
-			HostingPlatform: repo.Config.Config.HostingPlatform,
+			Config:          *repo.UnvalidatedConfig.Config,
+			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return emptyUndoData(), initialStashSize, repo.Config.Config.Lineage, err
+			return emptyUndoData(), initialStashSize, false, err
 		}
 	}
 	return undoData{
-		config:                  repo.Config,
+		config:                  validatedConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, repo.Config.Config.Lineage, nil
+	}, initialStashSize, false, nil
 }

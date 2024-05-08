@@ -107,7 +107,7 @@ func executePropose(dryRun, verbose bool) error {
 type proposeData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           config.Config
+	config           config.ValidatedConfig
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -128,12 +128,18 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		return emptyProposeData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -145,22 +151,26 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	if err != nil {
 		return emptyProposeData(), branchesSnapshot, stashSize, false, err
 	}
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return emptyProposeData(), branchesSnapshot, stashSize, exit, err
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      repo.Config.Config,
-			HostingPlatform: repo.Config.Config.HostingPlatform,
+			Config:          *validatedConfig.Config.UnvalidatedConfig,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -171,12 +181,12 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	if connector == nil {
 		return emptyProposeData(), branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := repo.Config.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Config,
+		config:           validatedConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -205,7 +215,10 @@ func proposeProgram(data proposeData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
 	})
-	prog.Add(&opcodes.CreateProposal{Branch: data.initialBranch})
+	prog.Add(&opcodes.CreateProposal{
+		Branch:     data.initialBranch,
+		MainBranch: data.config.Config.MainBranch,
+	})
 	return prog
 }
 

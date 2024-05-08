@@ -55,12 +55,18 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -68,13 +74,16 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesSnapshot:   initialBranchesSnapshot,
 		BranchesToValidate: localBranches,
-		FinalMessages:      repo.FinalMessages,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return err
@@ -91,10 +100,10 @@ func executeSkip(verbose bool) error {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
 	var connector hostingdomain.Connector
-	if originURL, hasOriginURL := repo.Config.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			FullConfig:      repo.Config.Config,
-			HostingPlatform: repo.Config.Config.HostingPlatform,
+			Config:          *validatedConfig.Config.UnvalidatedConfig,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
@@ -105,7 +114,7 @@ func executeSkip(verbose bool) error {
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
-		Config:          repo.Config,
+		Config:          validatedConfig,
 		Connector:       connector,
 		CurrentBranch:   initialBranchesSnapshot.Active,
 		FinalMessages:   repo.FinalMessages,

@@ -138,7 +138,7 @@ func executeSync(all, dryRun, verbose bool) error {
 type syncData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	config           config.Config
+	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -158,12 +158,18 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		return emptySyncData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
@@ -176,33 +182,38 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		return emptySyncData(), branchesSnapshot, stashSize, false, err
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
-	var shouldPushTags bool
-	localBranches := branchesSnapshot.Branches.LocalBranches()
-	localBranchNames := localBranches.Names()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	if allFlag {
-		branchNamesToSync = localBranchNames
-		shouldPushTags = true
+		branchNamesToSync = localBranches
 	} else {
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = repo.Config.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
-	repo.Config, exit, err = validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
-		FinalMessages:      repo.FinalMessages,
-		LocalBranches:      localBranchNames,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.Config,
+		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
 		return emptySyncData(), branchesSnapshot, stashSize, exit, err
 	}
-	allBranchNamesToSync := repo.Config.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
+	var shouldPushTags bool
+	if allFlag {
+		shouldPushTags = true
+	} else {
+		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(branchesSnapshot.Active)
+	}
+	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
-		config:           repo.Config,
+		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,

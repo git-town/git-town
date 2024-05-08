@@ -6,17 +6,18 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
-func TestFullConfig(t *testing.T) {
+func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
+		config := configdomain.UnvalidatedConfig{
 			ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
-			MainBranch:           gitdomain.NewLocalBranchName("main"),
+			MainBranch:           Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
 			ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
@@ -39,8 +40,8 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		config := configdomain.UnvalidatedConfig{
+			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("feature")))
@@ -51,8 +52,8 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		config := configdomain.UnvalidatedConfig{
+			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 			PerennialRegex:    configdomain.NewPerennialRegexOption("release-.*"),
 		}
@@ -74,8 +75,8 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		config := configdomain.UnvalidatedConfig{
+			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 		}
 		have := config.MainAndPerennials()

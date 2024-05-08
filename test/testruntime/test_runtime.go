@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
@@ -20,7 +21,7 @@ import (
 type TestRuntime struct {
 	commands.TestCommands
 	Backend git.BackendCommands
-	Config  config.Config
+	Config  config.ValidatedConfig
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
@@ -74,32 +75,44 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
-	runner := testshell.TestRunner{
-		WorkingDir: workingDir,
-		HomeDir:    homeDir,
+	testRunner := testshell.TestRunner{
 		BinDir:     binDir,
+		HomeDir:    homeDir,
+		Verbose:    false,
+		WorkingDir: workingDir,
 	}
-	config, _ := config.NewConfig(config.NewConfigArgs{
-		ConfigFile:   None[configdomain.PartialConfig](),
-		DryRun:       false,
-		GlobalConfig: configdomain.EmptyPartialConfig(),
-		LocalConfig:  configdomain.EmptyPartialConfig(),
-		Runner:       &runner,
-	})
 	backendCommands := git.BackendCommands{
-		Runner:             &runner,
+		Runner:             &testRunner,
 		DryRun:             false,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
+	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		Access: gitconfig.Access{
+			Runner: &testRunner,
+		},
+		ConfigFile:   None[configdomain.PartialConfig](),
+		DryRun:       false,
+		GlobalConfig: configdomain.EmptyPartialConfig(),
+		LocalConfig:  configdomain.EmptyPartialConfig(),
+	})
+	validatedConfig := config.ValidatedConfig{
+		Config: configdomain.ValidatedConfig{
+			UnvalidatedConfig: unvalidatedConfig.Config,
+			GitUserEmail:      "test@test.com",
+			GitUserName:       "Tester",
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+		},
+		UnvalidatedConfig: &unvalidatedConfig,
+	}
 	testCommands := commands.TestCommands{
 		BackendCommands: &backendCommands,
-		Config:          config,
-		TestRunner:      &runner,
+		Config:          validatedConfig,
+		TestRunner:      &testRunner,
 	}
 	return TestRuntime{
 		Backend:      backendCommands,
-		Config:       config,
+		Config:       validatedConfig,
 		TestCommands: testCommands,
 	}
 }

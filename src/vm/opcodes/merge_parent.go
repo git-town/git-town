@@ -25,7 +25,7 @@ func (self *MergeParent) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *MergeParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Lineage.Parent(self.CurrentBranch).Get()
+	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
 		return nil
 	}

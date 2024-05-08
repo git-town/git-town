@@ -58,12 +58,12 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	config, finalMessages := config.NewConfig(config.NewConfigArgs{
+	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		Access:       configGitAccess,
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
 		GlobalConfig: globalConfig,
 		LocalConfig:  localConfig,
-		Runner:       backendRunner,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		counter:          &commandsCounter,
@@ -83,7 +83,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), err
 		}
 	}
-	isOffline := config.Config.Offline
+	isOffline := unvalidatedConfig.Config.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return emptyOpenRepoResult(), err
@@ -100,14 +100,14 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	return OpenRepoResult{
-		Backend:         backendCommands,
-		CommandsCounter: commandsCounter,
-		Config:          config,
-		ConfigSnapshot:  configSnapshot,
-		FinalMessages:   finalMessages,
-		Frontend:        frontEndCommands,
-		IsOffline:       isOffline,
-		RootDir:         rootDir,
+		Backend:           backendCommands,
+		CommandsCounter:   commandsCounter,
+		ConfigSnapshot:    configSnapshot,
+		FinalMessages:     finalMessages,
+		Frontend:          frontEndCommands,
+		IsOffline:         isOffline,
+		RootDir:           rootDir,
+		UnvalidatedConfig: unvalidatedConfig,
 	}, err
 }
 
@@ -121,14 +121,14 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Backend         git.BackendCommands
-	CommandsCounter gohacks.Counter
-	Config          config.Config
-	ConfigSnapshot  undoconfig.ConfigSnapshot
-	FinalMessages   stringslice.Collector
-	Frontend        git.FrontendCommands
-	IsOffline       configdomain.Offline
-	RootDir         gitdomain.RepoRootDir
+	Backend           git.BackendCommands
+	CommandsCounter   gohacks.Counter
+	ConfigSnapshot    undoconfig.ConfigSnapshot
+	FinalMessages     stringslice.Collector
+	Frontend          git.FrontendCommands
+	IsOffline         configdomain.Offline
+	RootDir           gitdomain.RepoRootDir
+	UnvalidatedConfig config.UnvalidatedConfig
 }
 
 func emptyOpenRepoResult() OpenRepoResult {

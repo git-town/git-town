@@ -12,13 +12,13 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGitTown(t *testing.T) {
+func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
-		conf := config.Config{
-			Config: configdomain.FullConfig{
+		conf := config.ValidatedConfig{
+			Config: configdomain.ValidatedConfig{
 				GitUserName:  configdomain.GitUserName("name"),
 				GitUserEmail: configdomain.GitUserEmail("email"),
 			},
@@ -75,18 +75,5 @@ func TestGitTown(t *testing.T) {
 			}
 			must.Eq(t, want, repo.Config.Config.Lineage)
 		})
-	})
-
-	t.Run("SetOffline", func(t *testing.T) {
-		t.Parallel()
-		repo := testruntime.CreateGitTown(t)
-		err := repo.Config.SetOffline(true)
-		must.NoError(t, err)
-		offline := repo.Config.Config.Offline
-		must.True(t, offline.Bool())
-		err = repo.Config.SetOffline(false)
-		must.NoError(t, err)
-		offline = repo.Config.Config.Offline
-		must.False(t, offline.Bool())
 	})
 }

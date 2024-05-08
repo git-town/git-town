@@ -3,33 +3,41 @@ package execute
 import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
-	var err error
+	// 1. load saved runstate
+	// 2. has saved runstate: validate config (will always work, okay to ask user), continue runstate, exit
+	// 3. no saved runstate: do the normal thing - fetch, snapshot, validate config, execute business logic
+
+	// handle unfinished state
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
-			Backend:          args.Repo.Backend,
-			CommandsCounter:  args.Repo.CommandsCounter,
-			Config:           args.Config,
-			Connector:        nil,
-			DialogTestInputs: args.DialogTestInputs,
-			FinalMessages:    args.Repo.FinalMessages,
-			Frontend:         args.Repo.Frontend,
-			HasOpenChanges:   args.RepoStatus.OpenChanges,
-			Lineage:          args.Config.Config.Lineage,
-			PushHook:         args.Config.Config.PushHook,
-			RepoStatus:       args.RepoStatus,
-			RootDir:          args.Repo.RootDir,
-			Verbose:          args.Verbose,
+			Backend:           args.Repo.Backend,
+			CommandsCounter:   args.Repo.CommandsCounter,
+			Connector:         nil,
+			DialogTestInputs:  args.DialogTestInputs,
+			FinalMessages:     args.Repo.FinalMessages,
+			Frontend:          args.Repo.Frontend,
+			HasOpenChanges:    args.RepoStatus.OpenChanges,
+			PushHook:          args.UnvalidatedConfig.Config.PushHook,
+			RepoStatus:        args.RepoStatus,
+			RootDir:           args.Repo.RootDir,
+			UnvalidatedConfig: args.UnvalidatedConfig,
+			Verbose:           args.Verbose,
 		})
 		if err != nil || exit {
 			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
 		}
 	}
+	var err error
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
@@ -38,12 +46,12 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
-		remotes, err := args.Repo.Backend.Remotes()
+		remotes, err := args.Backend.Remotes()
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
-			err = args.Repo.Frontend.Fetch()
+			err = args.Frontend.Fetch()
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
@@ -61,12 +69,18 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 }
 
 type LoadRepoSnapshotArgs struct {
-	Config                config.Config
+	Backend               git.BackendCommands
+	CommandsCounter       gohacks.Counter
+	ConfigSnapshot        undoconfig.ConfigSnapshot
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
+	FinalMessages         stringslice.Collector
+	Frontend              git.FrontendCommands
 	HandleUnfinishedState bool
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
+	RootDir               gitdomain.RepoRootDir
+	UnvalidatedConfig     config.UnvalidatedConfig
 	ValidateNoOpenChanges bool
 	Verbose               bool
 }

@@ -62,11 +62,11 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.Config, repo.Backend, &data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, repo.Config, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupData struct {
-	config        config.Config
+	config        config.UnvalidatedConfig
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
@@ -95,11 +95,11 @@ func emptySetupData() setupData {
 }
 
 type userInput struct {
-	config        configdomain.FullConfig
+	config        configdomain.UnvalidatedConfig
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(config config.Config, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
@@ -109,7 +109,7 @@ func determineHostingPlatform(config config.Config, userChoice Option[configdoma
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.Config, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
+func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -119,23 +119,18 @@ func enterData(config config.Config, backend git.BackendCommands, data *setupDat
 		return aborted, err
 	}
 	existingMainBranch := config.Config.MainBranch
-	var defaultChoice Option[gitdomain.LocalBranchName]
-	if !existingMainBranch.IsEmpty() {
-		defaultChoice = Some(existingMainBranch)
-	} else {
-		defaultChoice = None[gitdomain.LocalBranchName]()
+	if existingMainBranch.IsNone() {
+		existingMainBranch = backend.DefaultBranch()
 	}
-	if defaultChoice.IsNone() {
-		defaultChoice = backend.DefaultBranch()
+	if existingMainBranch.IsNone() {
+		existingMainBranch = backend.OriginHead()
 	}
-	if defaultChoice.IsNone() {
-		defaultChoice = backend.OriginHead()
-	}
-	data.userInput.config.MainBranch, aborted, err = dialog.MainBranch(data.localBranches.Names(), defaultChoice, data.dialogInputs.Next())
+	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.PerennialBranches, data.userInput.config.MainBranch, data.dialogInputs.Next())
+	data.userInput.config.MainBranch = Some(mainBranch)
+	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.PerennialBranches, mainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -214,25 +209,31 @@ func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, 
 		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Config:                repo.Config,
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		HandleUnfinishedState: false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
 	return setupData{
-		config:        repo.Config,
+		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.Config.ConfigFile.IsSome(),
+		hasConfigFile: repo.UnvalidatedConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
 		userInput:     defaultUserInput(),
 	}, exit, err
 }
 
-func saveAll(userInput userInput, oldConfig config.Config, frontend git.FrontendCommands) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, frontend git.FrontendCommands) error {
 	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, frontend)
 	if err != nil {
 		return err
@@ -258,12 +259,12 @@ func saveAll(userInput userInput, oldConfig config.Config, frontend git.Frontend
 	panic("unknown configStorage: " + userInput.configStorage)
 }
 
-func saveToGit(userInput userInput, oldConfig config.Config, frontend git.FrontendCommands) error {
+func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, frontend git.FrontendCommands) error {
 	fc := execute.FailureCollector{}
 	fc.Check(saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, frontend))
 	fc.Check(saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, frontend))
-	fc.Check(saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch, oldConfig))
-	fc.Check(savePerennialBranches(oldConfig.Config.ContributionBranches, userInput.config.PerennialBranches, oldConfig))
+	fc.Check(saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
+	fc.Check(savePerennialBranches(oldConfig.Config.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
 	fc.Check(savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.Config.PushHook, userInput.config.PushHook, oldConfig))
 	fc.Check(savePushNewBranches(oldConfig.Config.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
@@ -337,8 +338,8 @@ func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdom
 	return frontend.DeleteHostingPlatform()
 }
 
-func saveMainBranch(oldValue, newValue gitdomain.LocalBranchName, config config.Config) error {
-	if newValue == oldValue {
+func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
+	if Some(newValue) == oldValue {
 		return nil
 	}
 	return config.SetMainBranch(newValue)
@@ -354,14 +355,14 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 	return frontend.DeleteOriginHostname()
 }
 
-func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.Config) error {
+func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {
 	if slices.Compare(oldValue, newValue) != 0 || config.LocalGitConfig.PerennialBranches == nil {
 		return config.SetPerennialBranches(newValue)
 	}
 	return nil
 }
 
-func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.Config) error {
+func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
@@ -372,56 +373,56 @@ func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], 
 	return nil
 }
 
-func savePushHook(oldValue, newValue configdomain.PushHook, config config.Config) error {
+func savePushHook(oldValue, newValue configdomain.PushHook, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.Config) error {
+func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetPushNewBranches(newValue, false)
 }
 
-func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.Config) error {
+func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetShipDeleteTrackingBranch(newValue, false)
 }
 
-func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.Config) error {
+func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetSyncFeatureStrategy(newValue)
 }
 
-func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.Config) error {
+func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetSyncPerennialStrategy(newValue)
 }
 
-func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.Config) error {
+func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetSyncUpstream(newValue, false)
 }
 
-func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, config config.Config) error {
+func saveSyncBeforeShip(oldValue, newValue configdomain.SyncBeforeShip, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
 	return config.SetSyncBeforeShip(newValue, false)
 }
 
-func saveToFile(userInput userInput, config config.Config) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err

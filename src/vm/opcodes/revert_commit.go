@@ -20,7 +20,7 @@ func (self *RevertCommit) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	parent := args.Lineage.Parent(currentBranch)
+	parent := args.Config.Config.Lineage.Parent(currentBranch)
 	commitsInCurrentBranch, err := args.Backend.CommitsInBranch(currentBranch, parent)
 	if err != nil {
 		return err

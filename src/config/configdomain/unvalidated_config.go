@@ -6,19 +6,21 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
-// FullConfig is the merged configuration to be used by Git Town commands.
-type FullConfig struct {
+// UnvalidatedConfig is the Git Town configuration as read from disk.
+// It might be lacking essential information in case Git metadata and config files don't contain it.
+// If you need this information, validate it into a ValidatedConfig.
+type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
-	GitUserEmail             GitUserEmail
-	GitUserName              GitUserName
+	GitUserEmail             Option[GitUserEmail]
+	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
-	MainBranch               gitdomain.LocalBranchName
+	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
@@ -33,7 +35,7 @@ type FullConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
-func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
 	switch {
 	case self.IsMainBranch(branch):
 		return BranchTypeMainBranch
@@ -50,39 +52,42 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *FullConfig) ContainsLineage() bool {
+func (self *UnvalidatedConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
-func (self *FullConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ContributionBranches, branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
-	return branch == self.MainBranch
+func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
+	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
+		return branch == mainBranch
+	}
+	return false
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
-func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
-func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ObservedBranches, branch)
 }
 
-func (self *FullConfig) IsOnline() bool {
+func (self *UnvalidatedConfig) IsOnline() bool {
 	return self.Online().Bool()
 }
 
-func (self *FullConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ParkedBranches, branch)
 }
 
-func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
@@ -92,12 +97,15 @@ func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool
 	return false
 }
 
-func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
-	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
+func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
+	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
+		return append(gitdomain.LocalBranchNames{mainBranch}, self.PerennialBranches...)
+	}
+	return self.PerennialBranches
 }
 
 // Merges the given PartialConfig into this configuration object.
-func (self *FullConfig) Merge(other PartialConfig) {
+func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
 		self.Aliases[key] = value
 	}
@@ -120,14 +128,14 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.GitLabToken.IsSome() {
 		self.GitLabToken = other.GitLabToken
 	}
-	if email, has := other.GitUserEmail.Get(); has {
-		self.GitUserEmail = email
+	if other.GitUserEmail.IsSome() {
+		self.GitUserEmail = other.GitUserEmail
 	}
-	if name, has := other.GitUserName.Get(); has {
-		self.GitUserName = name
+	if other.GitUserName.IsSome() {
+		self.GitUserName = other.GitUserName
 	}
 	if branch, has := other.MainBranch.Get(); has {
-		self.MainBranch = branch
+		self.MainBranch = Some(branch)
 	}
 	if pushNewBranches, has := other.PushNewBranches.Get(); has {
 		self.PushNewBranches = pushNewBranches
@@ -161,36 +169,36 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 }
 
-func (self *FullConfig) MustKnowParent(branch gitdomain.LocalBranchName) bool {
+func (self *UnvalidatedConfig) MustKnowParent(branch gitdomain.LocalBranchName) bool {
 	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsContributionBranch(branch) && !self.IsObservedBranch(branch)
 }
 
-func (self *FullConfig) NoPushHook() NoPushHook {
+func (self *UnvalidatedConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 
-func (self *FullConfig) Online() Online {
+func (self *UnvalidatedConfig) Online() Online {
 	return self.Offline.ToOnline()
 }
 
-func (self *FullConfig) ShouldPushNewBranches() bool {
+func (self *UnvalidatedConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.Bool()
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
-func DefaultConfig() FullConfig {
-	return FullConfig{
+func DefaultConfig() UnvalidatedConfig {
+	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
-		GitUserEmail:             "",
-		GitUserName:              "",
+		GitUserEmail:             None[GitUserEmail](),
+		GitUserName:              None[GitUserName](),
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  Lineage{},
-		MainBranch:               gitdomain.EmptyLocalBranchName(),
+		MainBranch:               None[gitdomain.LocalBranchName](),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
@@ -206,12 +214,12 @@ func DefaultConfig() FullConfig {
 	}
 }
 
-func NewFullConfig(configFileOpt Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) FullConfig {
+func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) *UnvalidatedConfig {
 	result := DefaultConfig()
-	if configFile, hasConfigFile := configFileOpt.Get(); hasConfigFile {
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result.Merge(configFile)
 	}
 	result.Merge(globalGitConfig)
 	result.Merge(localGitConfig)
-	return result
+	return &result
 }

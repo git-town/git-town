@@ -10,19 +10,19 @@ import (
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]configdomain.BranchType
 
-func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, fullConfig configdomain.FullConfig) BranchesAndTypes {
+func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, config configdomain.ValidatedConfig) BranchesAndTypes {
 	result := make(BranchesAndTypes, len(branches))
 	for _, branch := range branches {
-		result[branch] = fullConfig.BranchType(branch)
+		result[branch] = config.BranchType(branch)
 	}
 	return result
 }
 
-func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig configdomain.FullConfig) {
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig configdomain.UnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
-func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig configdomain.FullConfig) {
+func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig configdomain.UnvalidatedConfig) {
 	for _, branch := range branches {
 		self.Add(branch, fullConfig)
 	}

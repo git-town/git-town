@@ -15,7 +15,7 @@ type DeleteBranchIfEmptyAtRuntime struct {
 }
 
 func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
 	}

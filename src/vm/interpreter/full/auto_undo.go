@@ -18,7 +18,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		Backend:        args.Backend,
-		Config:         args.Config,
+		Config:         args.Config.Config,
 		DryRun:         args.Config.DryRun,
 		HasOpenChanges: false,
 		NoPushHook:     args.Config.Config.NoPushHook(),
@@ -32,7 +32,6 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
-		Lineage:       args.Config.Config.Lineage,
 		Prog:          undoProgram,
 	})
 	return opcode.CreateAutomaticUndoError()
