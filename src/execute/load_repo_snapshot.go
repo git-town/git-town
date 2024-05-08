@@ -13,13 +13,6 @@ import (
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
-	// order:
-	//
-	// 1. load saved runstate
-	// 2. has saved runstate: validate config (will always work, okay to ask user), continue runstate, exit
-	// 3. no saved runstate: do the normal thing - fetch, snapshot, validate config, execute business logic
-
-	// handle unfinished state
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
