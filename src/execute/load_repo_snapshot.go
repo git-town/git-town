@@ -13,7 +13,6 @@ import (
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
-
 	// order:
 	//
 	// 1. load saved runstate
