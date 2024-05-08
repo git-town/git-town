@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
@@ -77,8 +78,8 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	printObservedBranches(branchNames)
-	if !data.checkout.IsEmpty() {
-		if err = repo.Frontend.CheckoutBranch(data.checkout, false); err != nil {
+	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
+		if err = repo.Frontend.CheckoutBranch(checkout, false); err != nil {
 			return err
 		}
 	}
@@ -97,7 +98,7 @@ func executeObserve(args []string, verbose bool) error {
 type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve commandconfig.BranchesAndTypes
-	checkout          gitdomain.LocalBranchName
+	checkout          Option[gitdomain.LocalBranchName]
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
@@ -129,7 +130,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		return observeData{}, err
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
-	checkout := gitdomain.EmptyLocalBranchName()
+	checkout := None[gitdomain.LocalBranchName]()
 	switch len(args) {
 	case 0:
 		branchesToObserve.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
@@ -138,7 +139,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		branchesToObserve.Add(branch, *repo.UnvalidatedConfig.Config)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			checkout = branch
+			checkout = Some(branch)
 		}
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
