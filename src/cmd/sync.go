@@ -159,6 +159,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
+		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
@@ -166,7 +167,9 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Frontend:              repo.Frontend,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return emptySyncData(), branchesSnapshot, stashSize, exit, err
@@ -187,16 +190,12 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
-		ConfigSnapshot:     repo.ConfigSnapshot,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		RootDir:            repo.RootDir,
-		StashSize:          stashSize,
 		TestInputs:         dialogTestInputs,
 		Unvalidated:        repo.UnvalidatedConfig,
-		Verbose:            verbose,
 	})
 	if err != nil || exit {
 		return emptySyncData(), branchesSnapshot, stashSize, exit, err
