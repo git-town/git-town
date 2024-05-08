@@ -15,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
-	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -67,10 +66,10 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
-	if err = data.config.AddToParkedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, data.config); err != nil {
+	if err = removeNonParkBranchTypes(data.branchesToPark, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
@@ -89,7 +88,6 @@ func executePark(args []string, verbose bool) error {
 type parkData struct {
 	allBranches    gitdomain.BranchInfos
 	branchesToPark commandconfig.BranchesAndTypes
-	config         config.ValidatedConfig
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -98,7 +96,7 @@ func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.ValidatedConfig) error {
+func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -140,31 +138,15 @@ func determineParkData(args []string, repo execute.OpenRepoResult, verbose bool)
 	if err != nil || exit {
 		return parkData{}, exit, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
 		branchesToPark.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		DialogTestInputs:   dialogTestInputs,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-	})
-	if err != nil || exit {
-		return parkData{}, exit, err
-	}
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,
 		branchesToPark: branchesToPark,
-		config:         validatedConfig,
 	}, false, nil
 }
 
