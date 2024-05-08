@@ -1,20 +1,24 @@
 package gitdomain
 
-import "fmt"
+import (
+	"fmt"
+
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+)
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
 	// LocalName contains the local name of the branch.
-	LocalName LocalBranchName
+	LocalName Option[LocalBranchName]
 
 	// LocalSHA contains the SHA that this branch had locally before Git Town ran.
-	LocalSHA SHA
+	LocalSHA Option[SHA]
 
 	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	RemoteName RemoteBranchName
+	RemoteName Option[RemoteBranchName]
 
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
-	RemoteSHA SHA
+	RemoteSHA Option[SHA]
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
@@ -22,16 +26,16 @@ type BranchInfo struct {
 
 func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
-		LocalName:  EmptyLocalBranchName(),
-		LocalSHA:   EmptySHA(),
-		RemoteName: EmptyRemoteBranchName(),
-		RemoteSHA:  EmptySHA(),
+		LocalName:  None[LocalBranchName](),
+		LocalSHA:   None[SHA](),
+		RemoteName: None[RemoteBranchName](),
+		RemoteSHA:  None[SHA](),
 		SyncStatus: SyncStatusUpToDate,
 	}
 }
 
 func (self BranchInfo) HasLocalBranch() bool {
-	return !self.LocalName.IsEmpty() && !self.LocalSHA.IsEmpty()
+	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
 }
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
@@ -43,7 +47,7 @@ func (self BranchInfo) HasOnlyRemoteBranch() bool {
 }
 
 func (self BranchInfo) HasRemoteBranch() bool {
-	return !self.RemoteName.IsEmpty() && !self.RemoteSHA.IsEmpty()
+	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
 }
 
 func (self BranchInfo) HasTrackingBranch() bool {
@@ -57,7 +61,7 @@ func (self BranchInfo) IsEmpty() bool {
 
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {
-	return !self.LocalName.IsEmpty()
+	return self.LocalName.IsSome()
 }
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.

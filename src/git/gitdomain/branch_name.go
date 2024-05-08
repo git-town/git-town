@@ -3,6 +3,8 @@ package gitdomain
 import (
 	"fmt"
 	"strings"
+
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // BranchName is the name of a local or remote Git branch.
@@ -26,11 +28,11 @@ func (self BranchName) LocalName() LocalBranchName {
 }
 
 // RemoteName provides the remote version of this branch name.
-func (self BranchName) RemoteName() RemoteBranchName {
+func (self BranchName) RemoteName() Option[RemoteBranchName] {
 	if strings.HasPrefix(string(self), "origin/") {
-		return NewRemoteBranchName(string(self))
+		return NewRemoteBranchNameOpt(string(self))
 	}
-	return NewRemoteBranchName("origin/" + string(self))
+	return NewRemoteBranchNameOpt("origin/" + string(self))
 }
 
 // Implementation of the fmt.Stringer interface.

@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -55,9 +56,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -78,9 +79,9 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusOtherWorktree},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
+				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -102,10 +103,10 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: alpha, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: beta, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: perennial1, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(perennial1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
@@ -127,7 +128,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			allBranches := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: gitdomain.EmptyLocalBranchName(), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+				gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
