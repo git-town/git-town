@@ -22,24 +22,6 @@ func EmptyValidatedConfig() ValidatedConfig {
 	return ValidatedConfig{} //exhaustruct:ignore
 }
 
-// AddToContributionBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *ValidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetContributionBranches(append(self.Config.ContributionBranches, branches...))
-}
-
-// AddToObservedBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *ValidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetObservedBranches(append(self.Config.ObservedBranches, branches...))
-}
-
-// AddToParkedBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *ValidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetParkedBranches(append(self.Config.ParkedBranches, branches...))
-}
-
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *ValidatedConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
@@ -70,34 +52,10 @@ func (self *ValidatedConfig) RemoveFromContributionBranches(branch gitdomain.Loc
 	return self.SetContributionBranches(self.Config.ContributionBranches)
 }
 
-// RemoveFromObservedBranches removes the given branch as a perennial branch.
-func (self *ValidatedConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.ObservedBranches = slice.Remove(self.Config.ObservedBranches, branch)
-	return self.SetObservedBranches(self.Config.ObservedBranches)
-}
-
-// RemoveFromParkedBranches removes the given branch as a perennial branch.
-func (self *ValidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)
-	return self.SetParkedBranches(self.Config.ParkedBranches)
-}
-
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
-}
-
-// SetObservedBranches marks the given branches as observed branches.
-func (self *ValidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
-	self.Config.ContributionBranches = branches
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
-}
-
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
-	self.Config.ObservedBranches = branches
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
 // SetOriginHostname marks the given branch as the main branch
@@ -105,12 +63,6 @@ func (self *ValidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchN
 func (self *ValidatedConfig) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
 	self.Config.HostingOriginHostname = Some(hostName)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
-}
-
-// SetObservedBranches marks the given branches as perennial branches.
-func (self *ValidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
-	self.Config.ParkedBranches = branches
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPushHook updates the configured push-hook strategy.

@@ -3,9 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
@@ -16,7 +14,6 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
-	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -55,7 +52,6 @@ func contributeCmd() *cobra.Command {
 }
 
 func executeContribute(args []string, verbose bool) error {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -67,10 +63,6 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	repoStatus, err := repo.Backend.RepoStatus()
-	if err != nil {
-		return err
-	}
 	data, err := determineContributeData(args, repo)
 	if err != nil {
 		return err
@@ -78,45 +70,11 @@ func executeContribute(args []string, verbose bool) error {
 	if err = validateContributeData(data); err != nil {
 		return err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		HandleUnfinishedState: true,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
-	})
-	if err != nil || exit {
-		return err
-	}
 	branchNames := data.branchesToMark.Keys()
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		DialogTestInputs:   dialogTestInputs,
-		Frontend:           repo.Frontend,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
-	})
-	if err != nil || exit {
+	if err = repo.UnvalidatedConfig.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
-	if err = validatedConfig.AddToContributionBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, validatedConfig); err != nil {
+	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
@@ -150,7 +108,7 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.ValidatedConfig) error {
+func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:

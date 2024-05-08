@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 )
 
@@ -42,6 +43,24 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	}, finalMessages
 }
 
+// AddToContributionBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *UnvalidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetContributionBranches(append(self.Config.ContributionBranches, branches...))
+}
+
+// AddToObservedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *UnvalidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetObservedBranches(append(self.Config.ObservedBranches, branches...))
+}
+
+// AddToParkedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetParkedBranches(append(self.Config.ParkedBranches, branches...))
+}
+
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -61,6 +80,18 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 		return remoteOverride
 	}
 	return self.GitConfig.OriginRemote()
+}
+
+// RemoveFromParkedBranches removes the given branch as a perennial branch.
+func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.ParkedBranches = slice.Remove(self.Config.ParkedBranches, branch)
+	return self.SetParkedBranches(self.Config.ParkedBranches)
+}
+
+// RemoveFromObservedBranches removes the given branch as a perennial branch.
+func (self *UnvalidatedConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.ObservedBranches = slice.Remove(self.Config.ObservedBranches, branch)
+	return self.SetObservedBranches(self.Config.ObservedBranches)
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
@@ -123,11 +154,23 @@ func (self *UnvalidatedConfig) RemoveSyncUpstream() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
 }
 
+// SetObservedBranches marks the given branches as observed branches.
+func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.ContributionBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.Config.MainBranch = Some(branch)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
+}
+
+// SetContributionBranches marks the given branches as contribution branches.
+func (self *UnvalidatedConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.ObservedBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
 // SetOffline updates whether Git Town is in offline mode.
@@ -144,6 +187,12 @@ func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBra
 	}
 	self.Config.Lineage[branch] = parentBranch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
+}
+
+// SetObservedBranches marks the given branches as perennial branches.
+func (self *UnvalidatedConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.ParkedBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.

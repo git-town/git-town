@@ -12,16 +12,13 @@ Feature: make a branch contribution verbosely
       |        | git config -lz --global                          |
       |        | git config -lz --local                           |
       |        | git rev-parse --show-toplevel                    |
-      |        | git status --long --ignore-submodules            |
-      |        | git branch -vva --sort=refname                   |
-      |        | git stash list                                   |
       |        | git branch -vva --sort=refname                   |
       |        | git config git-town.contribution-branches branch |
       |        | git config -lz --global                          |
       |        | git config -lz --local                           |
     And it prints:
       """
-      Ran 11 shell commands
+      Ran 8 shell commands
       """
     And it prints:
       """
