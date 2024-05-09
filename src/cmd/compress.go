@@ -118,7 +118,8 @@ type compressBranchesData struct {
 }
 
 type compressBranchData struct {
-	branchInfo       gitdomain.BranchInfo
+	name             gitdomain.LocalBranchName
+	hasTracking      bool
 	branchType       configdomain.BranchType
 	commitCount      int                     // number of commits in this branch
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
@@ -180,10 +181,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
 		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName())
-		if err := validateCanCompressBranchType(branchInfo.LocalName, branchType); err != nil {
+		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
-		if err := validateBranchIsSynced(branchInfo.LocalName, branchInfo.SyncStatus); err != nil {
+		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
 		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
@@ -206,7 +207,8 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		branchesToCompress = append(branchesToCompress, compressBranchData{
-			branchInfo:       branchInfo,
+			name:             branchNameToCompress,
+			hasTracking:      branchInfo.HasRemoteBranch(),
 			branchType:       branchType,
 			commitCount:      commitCount,
 			newCommitMessage: newCommitMessage,
@@ -247,13 +249,13 @@ func compressProgram(data *compressBranchesData) program.Program {
 }
 
 func compressBranchProgram(prog *program.Program, data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
-	if !shouldCompressBranch(data.branchInfo.LocalName, data.branchType, initialBranch) {
+	if !shouldCompressBranch(data.name, data.branchType, initialBranch) {
 		return
 	}
-	prog.Add(&opcodes.Checkout{Branch: data.branchInfo.LocalName})
+	prog.Add(&opcodes.Checkout{Branch: data.name})
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
 	prog.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
-	if data.branchInfo.HasRemoteBranch() && online.Bool() {
+	if data.hasTracking && online.Bool() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
