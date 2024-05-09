@@ -249,7 +249,7 @@ func compressBranchProgram(prog *program.Program, data compressBranchData, onlin
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.branchInfo.LocalName})
 	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: data.newCommitMessage})
+	prog.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
 	if data.branchInfo.HasRemoteBranch() && online.Bool() {
 		prog.Add(&opcodes.ForcePushCurrentBranch{})
 	}

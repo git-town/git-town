@@ -154,7 +154,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.SkipCurrentBranch{},
 				&opcodes.SquashMerge{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
-					CommitMessage: "commit message",
+					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.StashOpenChanges{},
