@@ -280,16 +280,6 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 	return nil
 }
 
-func validateBranchHasMultipleCommits(branch gitdomain.LocalBranchName, commitCount int) error {
-	switch commitCount {
-	case 0:
-		return fmt.Errorf(messages.CompressNoCommits, branch)
-	case 1:
-		return fmt.Errorf(messages.CompressAlreadyOneCommit, branch)
-	}
-	return nil
-}
-
 func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
 	switch syncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
