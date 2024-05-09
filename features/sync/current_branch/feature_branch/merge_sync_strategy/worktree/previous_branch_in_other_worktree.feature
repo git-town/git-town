@@ -8,8 +8,8 @@ Feature: sync a branch when the previous branch is active in another worktree
       |          | origin   | origin current commit  |
       | previous | local    | local previous commit  |
       |          | origin   | origin previous commit |
-    And branch "previous" is active in another worktree
     And the current branch is "current" and the previous branch is "previous"
+    And branch "previous" is active in another worktree
     When I run "git-town sync"
 
   @this
