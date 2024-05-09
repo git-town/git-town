@@ -129,8 +129,8 @@ func TestSwitchBranch(t *testing.T) {
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: child.BranchName().RemoteName(), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-				gitdomain.BranchInfo{LocalName: grandchild, SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: main, SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
