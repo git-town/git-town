@@ -6,7 +6,6 @@ Feature: sync a branch when the previous branch is active in another worktree
     And branch "previous" is active in another worktree
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |
@@ -21,16 +20,6 @@ Feature: sync a branch when the previous branch is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND                                                                            |
-      | child  | git reset --hard {{ sha 'local child commit' }}                                    |
-      |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child |
-    And the current branch is still "child"
-    And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE              |
-      | main   | local, origin, worktree | origin main commit   |
-      |        |                         | local main commit    |
-      | child  | local                   | local child commit   |
-      |        | origin                  | origin child commit  |
-      | parent | origin                  | origin parent commit |
-      |        | worktree                | local parent commit  |
+    Then it runs no commands
+    And the current branch is still "current"
+    And no commits exist now
