@@ -2,7 +2,6 @@ package statefile_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -478,8 +477,10 @@ func TestLoadSave(t *testing.T) {
 		// NOTE: comparing runState and newState directly leads to incorrect test failures
 		// solely due to different pointer addresses, even when using reflect.DeepEqual.
 		// Comparing the serialization seems to work better here.
-		runStateText := fmt.Sprintf("%+v", runState)
-		newStateText := fmt.Sprintf("%+v", newState)
-		must.EqOp(t, runStateText, newStateText)
+		runStateText, err := json.MarshalIndent(runState, "", "  ")
+		must.NoError(t, err)
+		newStateText, err := json.MarshalIndent(newState, "", "  ")
+		must.NoError(t, err)
+		must.EqOp(t, string(runStateText), string(newStateText))
 	})
 }
