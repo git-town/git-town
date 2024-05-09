@@ -125,7 +125,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, messageOpt Option[gitdomain.CommitMessage], compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
@@ -196,8 +196,8 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 			continue
 		}
 		var newCommitMessage gitdomain.CommitMessage
-		if message, hasMessage := messageOpt.Get(); hasMessage {
-			newCommitMessage = message
+		if messageContent, has := message.Get(); has {
+			newCommitMessage = messageContent
 		} else {
 			newCommitMessage = commits.Messages()[0]
 		}
