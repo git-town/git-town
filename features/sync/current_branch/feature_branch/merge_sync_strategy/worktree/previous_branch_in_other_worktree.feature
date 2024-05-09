@@ -12,7 +12,7 @@ Feature: sync a branch when the previous branch is active in another worktree
     And branch "previous" is active in another worktree
     When I run "git-town sync"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |
@@ -23,18 +23,14 @@ Feature: sync a branch when the previous branch is active in another worktree
       | current | git merge --no-edit --ff origin/current |
       |         | git merge --no-edit --ff main           |
       |         | git push                                |
-    And the current branch is still "child"
+    And the current branch is still "current"
     And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE                                                 |
-      | main   | local, origin, worktree | origin main commit                                      |
-      |        |                         | local main commit                                       |
-      | child  | local, origin           | local child commit                                      |
-      |        |                         | origin child commit                                     |
-      |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        |                         | origin parent commit                                    |
-      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
-      | parent | origin                  | origin parent commit                                    |
-      |        | worktree                | local parent commit                                     |
+      | BRANCH   | LOCATION      | MESSAGE                                                    |
+      | current  | local, origin | local current commit                                       |
+      |          |               | origin current commit                                      |
+      |          |               | Merge remote-tracking branch 'origin/current' into current |
+      | previous | origin        | origin previous commit                                     |
+      |          | worktree      | local previous commit                                      |
 
   Scenario: undo
     When I run "git-town undo"
