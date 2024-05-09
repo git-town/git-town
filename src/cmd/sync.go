@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/sync"
@@ -142,7 +143,7 @@ type syncData struct {
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
-	previousBranch   gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
 	remotes          gitdomain.Remotes
 	shouldPushTags   bool
 }
@@ -177,6 +178,15 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		return emptySyncData(), branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	var previousBranchOpt Option[gitdomain.LocalBranchName]
+	if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
+		switch previousBranchInfo.SyncStatus {
+		case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusUpToDate:
+			previousBranchOpt = Some(previousBranchInfo.LocalName)
+		case gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+			previousBranchOpt = None[gitdomain.LocalBranchName]()
+		}
+	}
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
 		return emptySyncData(), branchesSnapshot, stashSize, false, err
@@ -217,7 +227,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		previousBranch:   previousBranch,
+		previousBranch:   previousBranchOpt,
 		remotes:          remotes,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSize, false, err
