@@ -1,7 +1,7 @@
 Feature: sync a branch when the previous branch is active in another worktree
 
   Background:
-    Given feature branches "current" and "previous"
+    Given the feature branches "current" and "previous"
     And the commits
       | BRANCH   | LOCATION | MESSAGE                |
       | current  | local    | local current commit   |
