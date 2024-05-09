@@ -173,8 +173,8 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
-	branchesToCompress := make([]compressBranchData, len(branchNamesToCompress))
-	for b, branchNameToCompress := range branchNamesToCompress {
+	branchesToCompress := make([]compressBranchData, 0, len(branchNamesToCompress))
+	for _, branchNameToCompress := range branchNamesToCompress {
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress).Get()
 		if !hasBranchInfo {
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
@@ -201,20 +201,23 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		} else {
 			newCommitMessage = commits.Messages()[0]
 		}
-		if err := validateBranchHasMultipleCommits(branchInfo.LocalName, commitCount); err != nil {
-			return nil, branchesSnapshot, stashSize, exit, err
-		}
 		parentBranch, hasParent := parent.Get()
 		if !hasParent {
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
-		branchesToCompress[b] = compressBranchData{
+		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchInfo:       branchInfo,
 			branchType:       branchType,
 			commitCount:      commitCount,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
-		}
+		})
+	}
+	if len(branchesToCompress) == 0 {
+		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
+	}
+	if len(branchesToCompress) == 1 && branchesToCompress[0].commitCount == 1 {
+		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
 	}
 	return &compressBranchesData{
 		branchesToCompress:  branchesToCompress,
