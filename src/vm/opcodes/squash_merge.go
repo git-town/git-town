@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -13,7 +14,7 @@ import (
 // SquashMerge squash merges the branch with the given name into the current branch.
 type SquashMerge struct {
 	Branch        gitdomain.LocalBranchName
-	CommitMessage gitdomain.CommitMessage
+	CommitMessage Option[gitdomain.CommitMessage]
 	Parent        gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
