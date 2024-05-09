@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -60,7 +60,7 @@ func compressCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCompress(dryRun, verbose bool, message gitdomain.CommitMessage, stack bool) error {
+func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessage], stack bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -125,7 +125,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message gitdomain.CommitMessage, compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, messageOpt Option[gitdomain.CommitMessage], compressEntireStack bool) (*compressBranchesData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
@@ -191,9 +191,16 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		if err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}
-		commitMessages := commits.Messages()
-		newCommitMessage := slice.FirstNonEmpty(message, commitMessages...)
-		commitCount := len(commitMessages)
+		commitCount := len(commits)
+		if commitCount == 0 {
+			continue
+		}
+		var newCommitMessage gitdomain.CommitMessage
+		if message, hasMessage := messageOpt.Get(); hasMessage {
+			newCommitMessage = message
+		} else {
+			newCommitMessage = commits.Messages()[0]
+		}
 		if err := validateBranchHasMultipleCommits(branchInfo.LocalName, commitCount); err != nil {
 			return nil, branchesSnapshot, stashSize, exit, err
 		}

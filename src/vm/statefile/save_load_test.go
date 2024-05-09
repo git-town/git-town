@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -57,7 +58,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitOpenChanges{},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
-					CommitMessage:   "commit message",
+					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},

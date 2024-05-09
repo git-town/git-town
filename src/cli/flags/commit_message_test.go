@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/cli/flags"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +20,7 @@ func TestCommitMessage(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--message", "my-value"})
 		must.NoError(t, err)
-		must.EqOp(t, "my-value", readFlag(&cmd))
+		must.Eq(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -28,6 +30,6 @@ func TestCommitMessage(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m", "my-value"})
 		must.NoError(t, err)
-		must.EqOp(t, "my-value", readFlag(&cmd))
+		must.EqOp(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
 	})
 }
