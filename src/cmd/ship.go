@@ -75,7 +75,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, message gitdomain.CommitMessage, dryRun, verbose bool) error {
+func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -284,7 +284,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 	return nil
 }
 
-func shipProgram(data *shipData, commitMessage gitdomain.CommitMessage) program.Program {
+func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := program.Program{}
 	if data.config.Config.SyncBeforeShip {
 		// sync the parent branch
