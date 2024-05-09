@@ -19,9 +19,10 @@ func BranchesProgram(args BranchesProgramArgs) {
 		args.Program.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(args.Program, cmdhelpers.WrapOptions{
-		DryRun:                   args.DryRun,
-		RunInGitRoot:             true,
-		StashOpenChanges:         args.HasOpenChanges,
+		DryRun:           args.DryRun,
+		RunInGitRoot:     true,
+		StashOpenChanges: args.HasOpenChanges,
+		// TODO: only add args.PreviousBranch if it isn't in another workspace
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
 	})
 }
