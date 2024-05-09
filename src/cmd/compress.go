@@ -260,10 +260,10 @@ func compressBranchProgram(prog *program.Program, data compressBranchData, onlin
 
 func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {
 	isInitialBranch := branchName == initialBranchName
-	if branchType == configdomain.BranchTypeParkedBranch && !isInitialBranch {
-		return false
+	if isInitialBranch {
+		return true
 	}
-	return true
+	return branchType != configdomain.BranchTypeParkedBranch
 }
 
 func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
