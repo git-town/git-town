@@ -29,6 +29,7 @@ func Execute(args ExecuteArgs) error {
 		RunState:       args.RunState,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		AllBranches:   args.RunState.BeginBranchesSnapshot.Branches,
 		Backend:       args.Backend,
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,

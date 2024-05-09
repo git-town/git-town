@@ -460,4 +460,110 @@ func TestBranchInfos(t *testing.T) {
 		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
+
+	t.Run("WithStatuses", func(t *testing.T) {
+		t.Parallel()
+		t.Run("matches", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-1"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-2"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("deleted-at-remote"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("up-to-date"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+			}
+			have := branchInfos.WithStatuses(gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusUpToDate)
+			want := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-1"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-2"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("up-to-date"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("no matches", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-1"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("deleted-at-remote"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+			}
+			have := branchInfos.WithStatuses(gitdomain.SyncStatusNotInSync)
+			want := gitdomain.BranchInfos{}
+			must.Eq(t, want, have)
+		})
+		t.Run("no statuses given", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("local-only-1"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.NewLocalBranchName("deleted-at-remote"),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+			}
+			have := branchInfos.WithStatuses()
+			want := gitdomain.BranchInfos{}
+			must.Eq(t, want, have)
+		})
+	})
 }

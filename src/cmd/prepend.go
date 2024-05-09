@@ -218,7 +218,7 @@ func prependProgram(data prependData) program.Program {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.previousBranch),
 	})
 	return prog
 }

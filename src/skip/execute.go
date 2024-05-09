@@ -22,6 +22,7 @@ import (
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		AllBranches:   args.RunState.BeginBranchesSnapshot.Branches,
 		Backend:       args.Backend,
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
@@ -104,6 +105,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+		AllBranches:   args.RunState.BeginBranchesSnapshot.Branches,
 		Backend:       args.Backend,
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,

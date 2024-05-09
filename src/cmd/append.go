@@ -203,7 +203,7 @@ func appendProgram(data appendData) program.Program {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.initialBranch, data.previousBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.initialBranch, data.previousBranch),
 	})
 	return prog
 }

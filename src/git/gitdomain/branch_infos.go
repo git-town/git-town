@@ -135,3 +135,28 @@ func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
 	}
 	return fmt.Errorf("branch %q not found", branch)
 }
+
+func (self BranchInfos) WithNames(names ...LocalBranchName) BranchInfos {
+	result := BranchInfos{}
+	for _, bi := range self {
+		for _, name := range names {
+			if bi.LocalName == name {
+				result = append(result, bi)
+			}
+		}
+	}
+	return result
+}
+
+// LocalBranches provides only the branches that exist on the local machine.
+func (self BranchInfos) WithStatuses(statuses ...SyncStatus) BranchInfos {
+	result := BranchInfos{}
+	for _, bi := range self {
+		for _, status := range statuses {
+			if bi.SyncStatus == status {
+				result = append(result, bi)
+			}
+		}
+	}
+	return result
+}

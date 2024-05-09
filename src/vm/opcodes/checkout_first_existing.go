@@ -9,11 +9,12 @@ import (
 // but only if that branch actually exists.
 type CheckoutFirstExisting struct {
 	Branches                gitdomain.LocalBranchNames
-	MainBranch              gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CheckoutFirstExisting) Run(args shared.RunArgs) error {
-	existingBranch := args.Backend.FirstExistingBranch(self.Branches, self.MainBranch)
-	return (&Checkout{Branch: existingBranch}).Run(args)
+	candidates := args.BranchInfos.WithNames(self.Branches...).WithStatuses(gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote).Names()
+	candidates = append(candidates, args.Config.Config.MainBranch)
+	branch := candidates[0]
+	return (&Checkout{Branch: branch}).Run(args)
 }

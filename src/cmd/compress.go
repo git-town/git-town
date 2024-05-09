@@ -107,6 +107,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 }
 
 type compressBranchesData struct {
+	allBranches         gitdomain.BranchInfos
 	branchesToCompress  []compressBranchData
 	compressEntireStack bool
 	config              config.ValidatedConfig
@@ -220,6 +221,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
 	}
 	return &compressBranchesData{
+		allBranches:         branchesSnapshot.Branches,
 		branchesToCompress:  branchesToCompress,
 		compressEntireStack: compressEntireStack,
 		config:              validatedConfig,
@@ -241,7 +243,7 @@ func compressProgram(data *compressBranchesData) program.Program {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.previousBranch),
 	})
 	return prog
 }

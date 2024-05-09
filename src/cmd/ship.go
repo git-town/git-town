@@ -353,7 +353,7 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !data.isShippingInitialBranch && data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.previousBranch),
 	})
 	return prog
 }

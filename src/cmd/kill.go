@@ -99,6 +99,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killData struct {
+	allBranches      gitdomain.BranchInfos
 	branchNameToKill gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
@@ -174,6 +175,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	parentBranch := validatedConfig.Config.Lineage.Parent(branchToKill.LocalName)
 	return &killData{
+		allBranches:      branchesSnapshot.Branches,
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
@@ -201,7 +203,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.initialBranch != data.branchNameToKill.LocalName && data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.initialBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.previousBranch, data.initialBranch),
 	})
 	return prog, finalUndoProgram
 }

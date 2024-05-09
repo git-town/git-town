@@ -105,6 +105,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchData struct {
+	allBranches      gitdomain.BranchInfos
 	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -194,6 +195,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		return emptyRenameBranchData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return renameBranchData{
+		allBranches:      branchesSnapshot.Branches,
 		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
@@ -235,7 +237,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.newBranch},
+		PreviousBranchCandidates: data.allBranches.WithNames(data.previousBranch, data.newBranch),
 	})
 	return result
 }

@@ -11,6 +11,7 @@ import (
 
 type RunArgs struct {
 	Backend                         git.BackendCommands
+	BranchInfos                     gitdomain.BranchInfos
 	Config                          *config.ValidatedConfig
 	Connector                       hostingdomain.Connector
 	DialogTestInputs                components.TestInputs

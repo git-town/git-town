@@ -12,8 +12,9 @@ func Wrap(program *program.Program, options WrapOptions) {
 		return
 	}
 	if !options.DryRun {
+		previousBranchCandidates := options.PreviousBranchCandidates.LocalBranches().WithStatuses(gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusNotInSync)
 		program.Add(&opcodes.PreserveCheckoutHistory{
-			PreviousBranchCandidates: options.PreviousBranchCandidates,
+			PreviousBranchCandidates: previousBranchCandidates.Names(),
 		})
 	}
 	if options.StashOpenChanges {
@@ -25,7 +26,7 @@ func Wrap(program *program.Program, options WrapOptions) {
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	DryRun                   bool
-	PreviousBranchCandidates gitdomain.LocalBranchNames
+	PreviousBranchCandidates gitdomain.BranchInfos
 	RunInGitRoot             bool
 	StashOpenChanges         bool
 }
