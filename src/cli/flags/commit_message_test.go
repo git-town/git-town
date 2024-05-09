@@ -30,6 +30,6 @@ func TestCommitMessage(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m", "my-value"})
 		must.NoError(t, err)
-		must.EqOp(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
+		must.Eq(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
 	})
 }
