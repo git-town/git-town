@@ -1,6 +1,7 @@
 package prelude
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -65,6 +66,11 @@ func (self Option[T]) IsSome() bool {
 	return self.value != nil
 }
 
+// MarshalJSON is used when serializing this LocalBranchName to JSON.
+func (self Option[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(self.value)
+}
+
 // String provides the string serialization of the contained value.
 // If this option contains nothing, you get an empty string.
 func (self Option[T]) String() string {
@@ -78,4 +84,12 @@ func (self Option[T]) StringOr(other string) string {
 		return fmt.Sprint(self.value)
 	}
 	return other
+}
+
+// UnmarshalJSON is used when de-serializing JSON into a Location.
+func (self Option[T]) UnmarshalJSON(b []byte) error {
+	var value T
+	err := json.Unmarshal(b, &value)
+	self.value = &value
+	return err
 }
