@@ -12,29 +12,23 @@ func BranchesProgram(args BranchesProgramArgs) {
 	for _, branch := range args.BranchesToSync {
 		BranchProgram(branch, args.BranchProgramArgs)
 	}
-	previousBranch, hasPreviousBranch := args.PreviousBranch.Get()
+	previousbranchCandidates := gitdomain.LocalBranchNames{}
 	finalBranchCandidates := gitdomain.LocalBranchNames{args.InitialBranch}
-	if hasPreviousBranch {
+	if previousBranch, hasPreviousBranch := args.PreviousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
+		previousbranchCandidates = append(previousbranchCandidates, previousBranch)
 	}
-	if hasPreviousBranch {
-		args.Program.Add(&opcodes.CheckoutFirstExisting{
-			Branches:   finalBranchCandidates,
-			MainBranch: args.Config.MainBranch,
-		})
-	}
+	args.Program.Add(&opcodes.CheckoutFirstExisting{
+		Branches:   finalBranchCandidates,
+		MainBranch: args.Config.MainBranch,
+	})
 	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.Config.IsOnline() {
 		args.Program.Add(&opcodes.PushTags{})
 	}
-	previousbranchCandidates := gitdomain.LocalBranchNames{}
-	if hasPreviousBranch {
-		previousbranchCandidates = append(previousbranchCandidates, previousBranch)
-	}
 	cmdhelpers.Wrap(args.Program, cmdhelpers.WrapOptions{
-		DryRun:           args.DryRun,
-		RunInGitRoot:     true,
-		StashOpenChanges: args.HasOpenChanges,
-		// TODO: only add args.PreviousBranch if it isn't in another workspace
+		DryRun:                   args.DryRun,
+		RunInGitRoot:             true,
+		StashOpenChanges:         args.HasOpenChanges,
 		PreviousBranchCandidates: previousbranchCandidates,
 	})
 }
