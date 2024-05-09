@@ -2,13 +2,13 @@ package statefile_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 	"time"
 
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -57,7 +57,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitOpenChanges{},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
-					CommitMessage:   "commit message",
+					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},
@@ -153,7 +153,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.SkipCurrentBranch{},
 				&opcodes.SquashMerge{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
-					CommitMessage: "commit message",
+					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.StashOpenChanges{},
@@ -477,8 +477,10 @@ func TestLoadSave(t *testing.T) {
 		// NOTE: comparing runState and newState directly leads to incorrect test failures
 		// solely due to different pointer addresses, even when using reflect.DeepEqual.
 		// Comparing the serialization seems to work better here.
-		runStateText := fmt.Sprintf("%+v", runState)
-		newStateText := fmt.Sprintf("%+v", newState)
-		must.EqOp(t, runStateText, newStateText)
+		runStateText, err := json.MarshalIndent(runState, "", "  ")
+		must.NoError(t, err)
+		newStateText, err := json.MarshalIndent(newState, "", "  ")
+		must.NoError(t, err)
+		must.EqOp(t, string(runStateText), string(newStateText))
 	})
 }

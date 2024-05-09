@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -12,7 +13,7 @@ import (
 // ConnectorMergeProposal squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposal struct {
 	Branch                    gitdomain.LocalBranchName
-	CommitMessage             gitdomain.CommitMessage
+	CommitMessage             Option[gitdomain.CommitMessage]
 	ProposalMessage           string
 	ProposalNumber            int
 	enteredEmptyCommitMessage bool
@@ -40,9 +41,9 @@ func (self *ConnectorMergeProposal) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
-	commitMessage := self.CommitMessage
+	commitMessage, hasCommitMessage := self.CommitMessage.Get()
 	//nolint:nestif
-	if commitMessage == "" {
+	if !hasCommitMessage {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		self.enteredEmptyCommitMessage = true
