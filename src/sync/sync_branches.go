@@ -3,6 +3,7 @@ package sync
 import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 )
 
@@ -11,8 +12,14 @@ func BranchesProgram(args BranchesProgramArgs) {
 	for _, branch := range args.BranchesToSync {
 		BranchProgram(branch, args.BranchProgramArgs)
 	}
+	previousbranchCandidates := gitdomain.LocalBranchNames{}
+	finalBranchCandidates := gitdomain.LocalBranchNames{args.InitialBranch}
+	if previousBranch, hasPreviousBranch := args.PreviousBranch.Get(); hasPreviousBranch {
+		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
+		previousbranchCandidates = append(previousbranchCandidates, previousBranch)
+	}
 	args.Program.Add(&opcodes.CheckoutFirstExisting{
-		Branches:   gitdomain.LocalBranchNames{args.InitialBranch, args.PreviousBranch},
+		Branches:   finalBranchCandidates,
 		MainBranch: args.Config.MainBranch,
 	})
 	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.Config.IsOnline() {
@@ -22,7 +29,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 		DryRun:                   args.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
+		PreviousBranchCandidates: previousbranchCandidates,
 	})
 }
 
@@ -32,6 +39,6 @@ type BranchesProgramArgs struct {
 	DryRun         bool
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName
-	PreviousBranch gitdomain.LocalBranchName
+	PreviousBranch Option[gitdomain.LocalBranchName]
 	ShouldPushTags bool
 }
