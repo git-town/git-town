@@ -8,13 +8,13 @@ The _contribute_ command makes some of your branches
 Make the current branch a contribution branch:
 
 ```fish
-git park
+git contribute
 ```
 
 Make branches "alpha" and "beta" contribution branches:
 
 ```fish
-git park alpha beta
+git contribute alpha beta
 ```
 
 Check out a remote branch (that exists at origin but not on your local machine)
