@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,18 +19,18 @@ func TestCollector(t *testing.T) {
 			fc := execute.FailureCollector{}
 			branchInfos := gitdomain.BranchInfos{
 				{
-					LocalName:  gitdomain.NewLocalBranchName("branch1"),
-					LocalSHA:   gitdomain.EmptySHA(),
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch1")),
+					LocalSHA:   Some(gitdomain.EmptySHA()),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
-					RemoteName: gitdomain.EmptyRemoteBranchName(),
-					RemoteSHA:  gitdomain.EmptySHA(),
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				{
-					LocalName:  gitdomain.NewLocalBranchName("branch2"),
-					LocalSHA:   gitdomain.EmptySHA(),
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch2")),
+					LocalSHA:   Some(gitdomain.EmptySHA()),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
-					RemoteName: gitdomain.EmptyRemoteBranchName(),
-					RemoteSHA:  gitdomain.EmptySHA(),
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
 			have := fc.BranchInfos(branchInfos, nil)

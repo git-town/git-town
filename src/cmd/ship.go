@@ -187,7 +187,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip.LocalName},
+		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
@@ -306,45 +306,51 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 			PushBranch:    false,
 		})
 	}
-	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: data.branchToShip.LocalName, Parent: data.config.Config.MainBranch})
-	prog.Add(&opcodes.Checkout{Branch: data.targetBranch.LocalName})
+	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
+	localTargetBranch, hasLocalTargetBranch := data.targetBranch.LocalName.Get()
+	if hasLocalBranchToShip {
+		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
+		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
+	}
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range data.proposalsOfChildBranches {
 			prog.Add(&opcodes.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
-				NewTarget:      data.targetBranch.LocalName,
+				NewTarget:      localTargetBranch,
 			})
 		}
-		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: data.branchToShip.LocalName})
+		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: localBranchToShip})
 		prog.Add(&opcodes.ConnectorMergeProposal{
-			Branch:          data.branchToShip.LocalName,
+			Branch:          localBranchToShip,
 			ProposalNumber:  proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: data.proposalMessage,
 		})
 		prog.Add(&opcodes.PullCurrentBranch{})
 	} else {
-		prog.Add(&opcodes.SquashMerge{Branch: data.branchToShip.LocalName, CommitMessage: commitMessage, Parent: data.targetBranch.LocalName})
+		prog.Add(&opcodes.SquashMerge{Branch: localBranchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	}
 	if data.remotes.HasOrigin() && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: data.targetBranch.LocalName})
+		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: localTargetBranch})
 	}
 	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if data.canShipViaAPI || (data.branchToShip.HasTrackingBranch() && len(data.childBranches) == 0 && data.config.Config.IsOnline()) {
-		if data.config.Config.ShipDeleteTrackingBranch {
-			prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchToShip.RemoteName})
+	if branchToShipRemoteName, hasRemoteName := data.branchToShip.RemoteName.Get(); hasRemoteName {
+		if data.canShipViaAPI || (data.branchToShip.HasTrackingBranch() && len(data.childBranches) == 0 && data.config.Config.IsOnline()) {
+			if data.config.Config.ShipDeleteTrackingBranch {
+				prog.Add(&opcodes.DeleteTrackingBranch{Branch: branchToShipRemoteName})
+			}
 		}
 	}
-	prog.Add(&opcodes.DeleteLocalBranch{Branch: data.branchToShip.LocalName})
+	prog.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToShip})
 	if !data.dryRun {
-		prog.Add(&opcodes.DeleteParentBranch{Branch: data.branchToShip.LocalName})
+		prog.Add(&opcodes.DeleteParentBranch{Branch: localBranchToShip})
 	}
 	for _, child := range data.childBranches {
-		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: data.targetBranch.LocalName})
+		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
 	if !data.isShippingInitialBranch {
 		prog.Add(&opcodes.Checkout{Branch: data.initialBranch})
