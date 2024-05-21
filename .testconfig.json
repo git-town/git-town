@@ -1,0 +1,20 @@
+{
+  "actions": [
+    {
+      "type": "testAll",
+      "run": "make test-go"
+    },
+
+    {
+      "type": "testFile",
+      "files": "\\.feature$",
+      "run": "make cuke"
+    },
+
+    {
+      "type": "testFileLine",
+      "files": "\\.feature$",
+      "run": "make cukethis"
+    }
+  ]
+}
