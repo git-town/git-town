@@ -7,13 +7,13 @@
 
     {
       "type": "testFile",
-      "file": "\\.feature$",
+      "files": "\\.feature$",
       "run": "make cuke"
     },
 
     {
       "type": "testFileLine",
-      "file": "\\.feature$",
+      "files": "\\.feature$",
       "run": "make cukethis"
     }
   ]
