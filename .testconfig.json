@@ -1,0 +1,24 @@
+{
+  "actions": [
+    {
+      "trigger": { "command": "testAll" },
+      "run": "make test-go"
+    },
+
+    {
+      "trigger": {
+        "command": "testFile",
+        "file": "\\.feature$"
+      },
+      "run": "make cuke"
+    },
+
+    {
+      "trigger": {
+        "command": "testFileLine",
+        "file": "\\.feature$"
+      },
+      "run": "make cukethis"
+    }
+  ]
+}
