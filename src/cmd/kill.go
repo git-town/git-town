@@ -172,7 +172,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	} else {
 		branchWhenDone = branchesSnapshot.Active
 	}
-	parentBranch := validatedConfig.Config.Lineage.Parent(branchToKill.LocalName)
+	localBranchToKill, hasLocalBranchToKill := branchToKill.LocalName.Get()
+	var parentBranch Option[gitdomain.LocalBranchName]
+	if hasLocalBranchToKill {
+		parentBranch = validatedConfig.Config.Lineage.Parent(localBranchToKill)
+	} else {
+		parentBranch = None[gitdomain.LocalBranchName]()
+	}
 	return &killData{
 		branchNameToKill: branchToKill,
 		branchTypeToKill: branchTypeToKill,
@@ -197,10 +203,11 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchTypeToKill))
 	}
+	localBranchNameToKill, hasLocalBranchToKill := data.branchNameToKill.LocalName.Get()
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         data.initialBranch != data.branchNameToKill.LocalName && data.hasOpenChanges,
+		StashOpenChanges:         hasLocalBranchToKill && data.initialBranch != localBranchNameToKill && data.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.initialBranch},
 	})
 	return prog, finalUndoProgram
@@ -208,33 +215,36 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	if data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchNameToKill.RemoteName})
+	trackingBranchToKill, hasTrackingBranchToKill := data.branchNameToKill.RemoteName.Get()
+	if hasTrackingBranchToKill && data.config.Config.IsOnline() {
+		prog.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	if data.initialBranch == data.branchNameToKill.LocalName {
-		if data.hasOpenChanges {
-			prog.Add(&opcodes.CommitOpenChanges{})
-			// update the registered initial SHA for this branch so that undo restores the just committed changes
-			prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
-			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoProgram.Add(&opcodes.Checkout{Branch: data.branchNameToKill.LocalName})
-			finalUndoProgram.Add(&opcodes.UndoLastCommit{})
+	if localBranchToKill, hasLocalBranchToKill := data.branchNameToKill.LocalName.Get(); hasLocalBranchToKill {
+		if data.initialBranch == localBranchToKill {
+			if data.hasOpenChanges {
+				prog.Add(&opcodes.CommitOpenChanges{})
+				// update the registered initial SHA for this branch so that undo restores the just committed changes
+				prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
+				// when undoing, manually undo the just committed changes so that they are uncommitted again
+				finalUndoProgram.Add(&opcodes.Checkout{Branch: localBranchToKill})
+				finalUndoProgram.Add(&opcodes.UndoLastCommit{})
+			}
+			prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
+			prog.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
 		}
-		prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
-	}
-	prog.Add(&opcodes.DeleteLocalBranch{Branch: data.branchNameToKill.LocalName})
-	if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
-		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
-			Branch:  data.branchNameToKill.LocalName,
-			Lineage: data.config.Config.Lineage,
-			Parent:  parentBranch,
-			Program: prog,
-		})
+		if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
+			sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
+				Branch:  localBranchToKill,
+				Lineage: data.config.Config.Lineage,
+				Parent:  parentBranch,
+				Program: prog,
+			})
+		}
 	}
 }
 
