@@ -499,32 +499,32 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		switch {
 		case line[0] == '+':
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName(branchName),
-				LocalSHA:   sha,
+				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
+				LocalSHA:   Some(sha),
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: Some(trackingBranchName),
+				RemoteSHA:  None[gitdomain.SHA](),
 			})
 		case isLocalBranchName(branchName):
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName(branchName),
-				LocalSHA:   sha,
+				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
+				LocalSHA:   Some(sha),
 				SyncStatus: syncStatus,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  gitdomain.EmptySHA(), // will be added later
+				RemoteName: Some(trackingBranchName),
+				RemoteSHA:  None[gitdomain.SHA](), // will be added later
 			})
 		default:
 			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
 			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
 			if existingBranchWithTracking != nil {
-				existingBranchWithTracking.RemoteSHA = sha
+				existingBranchWithTracking.RemoteSHA = Some(sha)
 			} else {
 				result = append(result, gitdomain.BranchInfo{
-					LocalName:  gitdomain.EmptyLocalBranchName(),
-					LocalSHA:   gitdomain.EmptySHA(),
+					LocalName:  None[gitdomain.LocalBranchName](),
+					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: remoteBranchName,
-					RemoteSHA:  sha,
+					RemoteName: Some(remoteBranchName),
+					RemoteSHA:  Some(sha),
 				})
 			}
 		}
