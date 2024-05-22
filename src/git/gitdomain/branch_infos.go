@@ -15,7 +15,8 @@ type BranchInfos []BranchInfo
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[BranchInfo] {
 	for bi, branch := range self {
-		if branch.LocalName == branchName {
+		localName, hasLocalName := branch.LocalName.Get()
+		if hasLocalName && localName == branchName {
 			return Some(self[bi])
 		}
 	}
@@ -26,7 +27,8 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[Branc
 // or nil if no such branch exists.
 func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, bi := range self {
-		if bi.RemoteName == remoteBranch {
+		remoteName, hasRemoteName := bi.RemoteName.Get()
+		if hasRemoteName && remoteName == remoteBranch {
 			return &self[b]
 		}
 	}
@@ -35,11 +37,19 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchI
 
 func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	for _, bi := range self {
-		if bi.LocalName == other.LocalName && !other.LocalName.IsEmpty() {
-			return bi
+		if biLocalName, hasBiLocalName := bi.LocalName.Get(); hasBiLocalName {
+			if otherLocalName, hasOtherLocalName := other.LocalName.Get(); hasOtherLocalName {
+				if biLocalName == otherLocalName {
+					return bi
+				}
+			}
 		}
-		if bi.RemoteName == other.RemoteName && !other.RemoteName.IsEmpty() {
-			return bi
+		if biRemoteName, hasBiRemoteName := bi.RemoteName.Get(); hasBiRemoteName {
+			if otherRemoteName, hasOtherRemoteName := other.RemoteName.Get(); hasOtherRemoteName {
+				if biRemoteName == otherRemoteName {
+					return bi
+				}
+			}
 		}
 	}
 	return EmptyBranchInfo()
