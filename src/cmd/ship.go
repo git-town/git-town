@@ -307,7 +307,7 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 		})
 	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
-	localTargetBranch, hasLocalTargetBranch := data.targetBranch.LocalName.Get()
+	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
 		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
 		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
