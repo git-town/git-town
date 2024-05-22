@@ -381,8 +381,10 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 }
 
 func validateData(data shipData) error {
-	if data.branchToShip.LocalName == data.initialBranch {
-		return validate.NoOpenChanges(data.hasOpenChanges)
+	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
+		if localName == data.initialBranch {
+			return validate.NoOpenChanges(data.hasOpenChanges)
+		}
 	}
 	return nil
 }
