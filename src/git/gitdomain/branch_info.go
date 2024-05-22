@@ -34,6 +34,7 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+// TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
 }
@@ -46,6 +47,7 @@ func (self BranchInfo) HasOnlyRemoteBranch() bool {
 	return self.HasRemoteBranch() && !self.HasLocalBranch()
 }
 
+// TODO: delete and replace with destructuring the RemoteName property
 func (self BranchInfo) HasRemoteBranch() bool {
 	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
 }
@@ -59,6 +61,7 @@ func (self BranchInfo) IsEmpty() bool {
 	return !self.HasLocalBranch() && !self.HasRemoteBranch()
 }
 
+// TODO: delete and replace with destructuring the LocalName property
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {
 	return self.LocalName.IsSome()

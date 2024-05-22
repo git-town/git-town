@@ -27,8 +27,8 @@ type featureBranchArgs struct {
 
 // syncs the given feature branch using the "merge" sync strategy
 func syncFeatureBranchMergeProgram(args featureBranchArgs) {
-	if args.branch.HasTrackingBranch() {
-		args.program.Add(&opcodes.Merge{Branch: args.branch.RemoteName.BranchName()})
+	if trackingBranch, hasTrackingBranch := args.branch.RemoteName.Get(); hasTrackingBranch {
+		args.program.Add(&opcodes.Merge{Branch: gitdomain.BranchName(trackingBranch)})
 	}
 	args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 }
