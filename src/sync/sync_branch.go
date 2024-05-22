@@ -19,7 +19,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.Program, branch, parentOtherWorktree, args)
+		syncDeletedBranchProgram(args.Program, branch.LocalName, parentOtherWorktree, args)
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
@@ -97,10 +97,10 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
-	syncStrategy        configdomain.SyncFeatureStrategy
-	program             *program.Program
 	branch              gitdomain.LocalBranchName
+	program             *program.Program
 	parentOtherWorktree bool
+	syncStrategy        configdomain.SyncFeatureStrategy
 }
 
 func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {

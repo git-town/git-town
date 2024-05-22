@@ -11,8 +11,8 @@ import (
 )
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	switch args.Config.BranchType(branch.LocalName) {
+func syncDeletedBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
+	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
