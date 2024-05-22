@@ -10,7 +10,8 @@ import (
 // BranchProgram syncs the given branch.
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentOtherWorktree := false
-	if localName, hasLocalName := branch.LocalName.Get(); hasLocalName {
+	localName, hasLocalName := branch.LocalName.Get()
+	if hasLocalName {
 		parent, hasParent := args.Config.Lineage.Parent(localName).Get()
 		if hasParent {
 			parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
@@ -19,7 +20,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.Program, branch.LocalName, parentOtherWorktree, args)
+		syncDeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
