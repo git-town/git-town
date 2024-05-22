@@ -87,13 +87,20 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(args featureBranchArgs) {
+func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	}
+}
+
+type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
+	syncStrategy        configdomain.SyncFeatureStrategy
+	program             *program.Program
+	branch              gitdomain.LocalBranchName
+	parentOtherWorktree bool
 }
 
 func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
