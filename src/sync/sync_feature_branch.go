@@ -3,44 +3,59 @@ package sync
 import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
 )
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(args featureBranchArgs) {
+	syncArgs := syncFeatureBranchProgramArgs{
+		localName:           args.localName,
+		parentOtherWorktree: args.parentOtherWorktree,
+		program:             args.program,
+		remoteName:          args.remoteName,
+	}
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		syncFeatureBranchMergeProgram(args)
+		syncFeatureBranchMergeProgram(syncArgs)
 	case configdomain.SyncFeatureStrategyRebase:
-		syncFeatureBranchRebaseProgram(args)
+		syncFeatureBranchRebaseProgram(syncArgs)
 	}
 }
 
 type featureBranchArgs struct {
-	branch              gitdomain.BranchInfo             // the branch to sync
-	offline             configdomain.Offline             // whether offline mode is enabled
+	localName  gitdomain.LocalBranchName
+	remoteName Option[gitdomain.RemoteBranchName]
+	// offline             configdomain.Offline             // whether offline mode is enabled
 	parentOtherWorktree bool                             // whether the parent of this branch exists on another worktre
 	program             *program.Program                 // the program to update
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
 
 // syncs the given feature branch using the "merge" sync strategy
-func syncFeatureBranchMergeProgram(args featureBranchArgs) {
-	if trackingBranch, hasTrackingBranch := args.branch.RemoteName.Get(); hasTrackingBranch {
-		args.program.Add(&opcodes.Merge{Branch: gitdomain.BranchName(trackingBranch)})
+func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
+	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
+		args.program.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	args.program.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 }
 
 // syncs the given feature branch using the "rebase" sync strategy
-func syncFeatureBranchRebaseProgram(args featureBranchArgs) {
+func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 	// rebase against parent
 	args.program.Add(&opcodes.RebaseParent{
-		CurrentBranch:               args.branch.LocalName,
+		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
-	if args.branch.HasTrackingBranch() && !args.offline.Bool() {
-		args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: args.branch.RemoteName})
+	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch /*&& !args.offline.Bool() */ {
+		args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
 	}
+}
+
+type syncFeatureBranchProgramArgs struct {
+	localName           gitdomain.LocalBranchName
+	parentOtherWorktree bool
+	program             *program.Program
+	remoteName          Option[gitdomain.RemoteBranchName]
 }
