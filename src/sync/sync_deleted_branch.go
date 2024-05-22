@@ -18,7 +18,7 @@ func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		syncDeletedPerennialBranchProgram(list, branch, args)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
-		syncDeletedObservedBranchProgram(list, branch, args)
+		syncDeletedObservedBranchProgram(list, branch.LocalName, args)
 	}
 }
 
@@ -36,17 +36,17 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch gitdomain.Bra
 	list.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
 }
 
-func syncDeletedObservedBranchProgram(list *program.Program, branch gitdomain.BranchInfo, args BranchProgramArgs) {
+func syncDeletedObservedBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
-		Branch:  branch.LocalName,
+		Branch:  branch,
 		Lineage: args.Config.Lineage,
 		Parent:  args.Config.MainBranch,
 		Program: list,
 	})
-	list.Add(&opcodes.RemoveFromObservedBranches{Branch: branch.LocalName})
+	list.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
 	list.Add(&opcodes.Checkout{Branch: args.Config.MainBranch})
-	list.Add(&opcodes.DeleteLocalBranch{Branch: branch.LocalName})
-	list.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
+	list.Add(&opcodes.DeleteLocalBranch{Branch: branch})
+	list.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
 
 func syncDeletedPerennialBranchProgram(list *program.Program, branch gitdomain.BranchInfo, args BranchProgramArgs) {
