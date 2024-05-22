@@ -7,10 +7,12 @@ import (
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config configdomain.ValidatedConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		if config.IsMainOrPerennialBranch(change.Before.LocalName) {
-			perennials = append(perennials, change)
-		} else {
-			features = append(features, change)
+		if localBefore, hasLocalBefore := change.Before.LocalName.Get(); hasLocalBefore {
+			if config.IsMainOrPerennialBranch(localBefore) {
+				perennials = append(perennials, change)
+			} else {
+				features = append(features, change)
+			}
 		}
 	}
 	return
