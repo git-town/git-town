@@ -182,7 +182,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
 		switch previousBranchInfo.SyncStatus {
 		case gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusUpToDate:
-			previousBranchOpt = Some(previousBranchInfo.LocalName)
+			previousBranchOpt = previousBranchInfo.LocalName
 		case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
 			previousBranchOpt = None[gitdomain.LocalBranchName]()
 		}
