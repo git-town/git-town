@@ -39,13 +39,17 @@ type BranchProgramArgs struct {
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
 func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(branch.LocalName)
+	localName, hasLocalName := branch.LocalName.Get()
+	if !hasLocalName {
+		return
+	}
+	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
-	branchType := args.Config.BranchType(branch.LocalName)
+	list.Add(&opcodes.Checkout{Branch: localName})
+	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
@@ -70,14 +74,14 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch, args.Program)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(branch.LocalName, args.InitialBranch) {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
-			list.Add(&opcodes.CreateTrackingBranch{Branch: branch.LocalName})
+			list.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
-			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch.LocalName})
+			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
 		default:
-			pushFeatureBranchProgram(list, branch.LocalName, args.Config.SyncFeatureStrategy)
+			pushFeatureBranchProgram(list, localName, args.Config.SyncFeatureStrategy)
 		}
 	}
 }
