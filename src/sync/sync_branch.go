@@ -75,7 +75,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branch)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branch, args.Program)
+		ObservedBranchProgram(branch.RemoteName, args.Program)
 	}
 	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
