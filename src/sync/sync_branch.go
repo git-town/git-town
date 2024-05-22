@@ -17,7 +17,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.Program, branch, parentOtherWorktree, args)
+		syncDeletedBranchProgram(args.Program, branch.LocalName, parentOtherWorktree, args)
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
@@ -81,13 +81,20 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(args featureBranchArgs) {
+func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	}
+}
+
+type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
+	branch              gitdomain.LocalBranchName
+	program             *program.Program
+	parentOtherWorktree bool
+	syncStrategy        configdomain.SyncFeatureStrategy
 }
 
 func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
