@@ -375,35 +375,35 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		bs := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("one"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("one")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("two"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("two")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
 		have := bs.Remove(gitdomain.NewLocalBranchName("zonk"))
 		want := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("one"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("one")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("two"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("two")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
 		must.Eq(t, want, have)
@@ -413,49 +413,49 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		bs := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("one"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("one")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("two"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("two")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("three"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("three")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("four"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("four")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
 		have, err := bs.Select(gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three"))
 		want := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("one"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("one")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 			gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName("three"),
-				LocalSHA:   gitdomain.EmptySHA(),
+				LocalName:  Some(gitdomain.NewLocalBranchName("three")),
+				LocalSHA:   Some(gitdomain.EmptySHA()),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: gitdomain.EmptyRemoteBranchName(),
-				RemoteSHA:  gitdomain.EmptySHA(),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
 		must.NoError(t, err)
