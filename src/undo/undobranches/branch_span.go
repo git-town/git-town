@@ -35,11 +35,7 @@ func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdo
 	return isOmniRemove, beforeName, beforeSHA
 }
 
-func (self BranchSpan) LocalAdded() bool {
-	return !self.Before.HasLocalBranch() && self.After.HasLocalBranch()
-}
-
-func (self BranchSpan) LocalAdded2() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
+func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
 	beforeHasLocalBranch, _, _ := self.Before.HasLocalBranch2()
 	afterHasLocalBranch, afterLocalBranch, afterSHA := self.After.HasLocalBranch2()
 	isLocalAdded = !beforeHasLocalBranch && afterHasLocalBranch

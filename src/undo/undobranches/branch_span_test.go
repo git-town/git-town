@@ -214,6 +214,8 @@ func TestBranchSpan(t *testing.T) {
 	t.Run("LocalAdded", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add a new local branch", func(t *testing.T) {
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
@@ -223,33 +225,41 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				After: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.True(t, bs.LocalAdded())
+			isLocalAdded, afterBranchName, afterSHA := bs.LocalAdded()
+			must.True(t, isLocalAdded)
+			must.Eq(t, branch1, afterBranchName)
+			must.Eq(t, sha1, afterSHA)
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteSHA:  Some(sha1),
 				},
 			}
-			must.True(t, bs.LocalAdded())
+			isLocalAdded, branchName, afterSHA := bs.LocalAdded()
+			must.True(t, isLocalAdded)
+			must.Eq(t, branch1, branchName)
+			must.Eq(t, sha1, afterSHA)
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
 			bs := undobranches.BranchSpan{
