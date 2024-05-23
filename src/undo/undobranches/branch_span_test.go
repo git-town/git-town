@@ -533,7 +533,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			}
-			must.False(t, bs.RemoteAdded())
+			isRemoteAdded, _, _ := bs.RemoteAdded()
+			must.False(t, isRemoteAdded)
 		})
 	})
 
