@@ -96,11 +96,12 @@ func (self BranchInfo) IsOmni() (bool, LocalBranchName, SHA) {
 func (self BranchInfo) IsOmniBranch() bool {
 	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
 }
-func (self BranchInfo) IsOmniBranch2() (isOmni bool, sha SHA) {
+func (self BranchInfo) IsOmniBranch2() (isOmni bool, branch LocalBranchName, sha SHA) {
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	branchName, hasBranch := self.LocalName.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	isOmni = hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
-	return isOmni, localSHA
+	isOmni = hasLocalSHA && hasRemoteSHA && hasBranch && localSHA == remoteSHA
+	return isOmni, branchName, localSHA
 }
 
 func (self BranchInfo) String() string {
