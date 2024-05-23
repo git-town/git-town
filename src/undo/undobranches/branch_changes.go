@@ -103,7 +103,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
-		if inconsistentlyChangedPerennial.After.IsOmniBranch() {
+		if isOmni, sha := inconsistentlyChangedPerennial.After.IsOmniBranch2(); isOmni {
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
 				result.Add(&opcodes.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
 				result.Add(&opcodes.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})

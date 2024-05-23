@@ -96,6 +96,12 @@ func (self BranchInfo) IsOmni() (bool, LocalBranchName, SHA) {
 func (self BranchInfo) IsOmniBranch() bool {
 	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
 }
+func (self BranchInfo) IsOmniBranch2() (isOmni bool, sha SHA) {
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	isOmni = hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
+	return isOmni, localSHA
+}
 
 func (self BranchInfo) String() string {
 	return fmt.Sprintf("BranchInfo local: %s (%s) remote: %s (%s) %s", self.LocalName, self.LocalSHA, self.RemoteName, self.RemoteSHA, self.SyncStatus)
