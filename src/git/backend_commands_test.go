@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/git"
@@ -12,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/subshell"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/testruntime"
-	"github.com/kr/pretty"
 	"github.com/shoenig/test/must"
 )
 
@@ -771,11 +769,6 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			fmt.Println("111111111111111111")
-			fmt.Println(pretty.Diff(want, have))
-			fmt.Println("222222222222222222")
-			pretty.Println(want, have)
-			// pretty.Ldiff(t, want, have)
 			must.Eq(t, want, have)
 			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 		})
