@@ -93,3 +93,9 @@ func (self BranchSpan) RemoteChanged() bool {
 func (self BranchSpan) RemoteRemoved() bool {
 	return self.Before.HasRemoteBranch() && !self.After.HasRemoteBranch()
 }
+func (self BranchSpan) RemoteRemoved2() (remoteRemoved bool, beforeRemoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
+	beforeHasRemoteBranch, beforeRemoteBranchName, beforeSHA := self.Before.HasRemoteBranch2()
+	afterHasRemoteBranch, _, _ := self.After.HasRemoteBranch2()
+	remoteRemoved = beforeHasRemoteBranch && !afterHasRemoteBranch
+	return remoteRemoved, beforeRemoteBranchName, beforeSHA
+}
