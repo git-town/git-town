@@ -34,15 +34,6 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
-// TODO: rename to IsOmni after the existing IsOmni has been replaced with calls to this method
-func (self BranchInfo) GetOmni() (bool, LocalBranchName, SHA) {
-	localBranch, hasLocalBranch := self.LocalName.Get()
-	localSHA, hasLocalSHA := self.LocalSHA.Get()
-	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	isOmni := hasLocalBranch && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
-	return isOmni, localBranch, localSHA
-}
-
 // TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
@@ -74,6 +65,15 @@ func (self BranchInfo) IsEmpty() bool {
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {
 	return self.LocalName.IsSome()
+}
+
+// TODO: rename to IsOmni after the existing IsOmni has been replaced with calls to this method
+func (self BranchInfo) IsOmni() (bool, LocalBranchName, SHA) {
+	localBranch, hasLocalBranch := self.LocalName.Get()
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	isOmni := hasLocalBranch && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
+	return isOmni, localBranch, localSHA
 }
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.
