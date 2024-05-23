@@ -492,23 +492,28 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(branch1),
+					RemoteSHA:  Some(sha1),
 				},
 			}
-			must.True(t, bs.RemoteAdded())
+			isRemoteAdded, addedRemoteBranchName, addedRemoteSHA := bs.RemoteAdded()
+			must.True(t, isRemoteAdded)
+			must.Eq(t, branch1, addedRemoteBranchName)
+			must.Eq(t, sha1, addedRemoteSHA)
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
