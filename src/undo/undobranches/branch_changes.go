@@ -114,28 +114,24 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		if beforeLocalName, hasBeforeLocalName := inconsistentChange.Before.LocalName.Get(); hasBeforeLocalName {
-			if beforeRemoteName, hasBeforeRemoteName := inconsistentChange.Before.RemoteName.Get(); hasBeforeRemoteName {
-				if beforeLocalSHA, hasBeforeLocalSHA := inconsistentChange.Before.LocalSHA.Get(); hasBeforeLocalSHA {
-					if beforeRemoteSHA, hasBeforeRemoteSHA := inconsistentChange.Before.RemoteSHA.Get(); hasBeforeRemoteSHA {
-						if afterLocalSHA, hasAfterLocalSHA := inconsistentChange.After.LocalSHA.Get(); hasAfterLocalSHA {
-							if afterRemoteSHA, hasAfterRemoteSHA := inconsistentChange.After.RemoteSHA.Get(); hasAfterRemoteSHA {
-								result.Add(&opcodes.Checkout{Branch: beforeLocalName})
-								result.Add(&opcodes.ResetCurrentBranchToSHA{
-									MustHaveSHA: afterLocalSHA,
-									SetToSHA:    beforeLocalSHA,
-									Hard:        true,
-								})
-								result.Add(&opcodes.ResetRemoteBranchToSHA{
-									Branch:      beforeRemoteName,
-									MustHaveSHA: afterRemoteSHA,
-									SetToSHA:    beforeRemoteSHA,
-								})
-							}
-						}
-					}
-				}
-			}
+		beforeLocalName, hasBeforeLocalName := inconsistentChange.Before.LocalName.Get()
+		beforeRemoteName, hasBeforeRemoteName := inconsistentChange.Before.RemoteName.Get()
+		beforeLocalSHA, hasBeforeLocalSHA := inconsistentChange.Before.LocalSHA.Get()
+		beforeRemoteSHA, hasBeforeRemoteSHA := inconsistentChange.Before.RemoteSHA.Get()
+		afterLocalSHA, hasAfterLocalSHA := inconsistentChange.After.LocalSHA.Get()
+		afterRemoteSHA, hasAfterRemoteSHA := inconsistentChange.After.RemoteSHA.Get()
+		if hasBeforeLocalName && hasBeforeRemoteName && hasBeforeLocalSHA && hasBeforeRemoteSHA && hasAfterLocalSHA && hasAfterRemoteSHA {
+			result.Add(&opcodes.Checkout{Branch: beforeLocalName})
+			result.Add(&opcodes.ResetCurrentBranchToSHA{
+				MustHaveSHA: afterLocalSHA,
+				SetToSHA:    beforeLocalSHA,
+				Hard:        true,
+			})
+			result.Add(&opcodes.ResetRemoteBranchToSHA{
+				Branch:      beforeRemoteName,
+				MustHaveSHA: afterRemoteSHA,
+				SetToSHA:    beforeRemoteSHA,
+			})
 		}
 	}
 
