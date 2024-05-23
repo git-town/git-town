@@ -44,12 +44,25 @@ func (self BranchSpan) LocalAdded() bool {
 	return !self.Before.HasLocalBranch() && self.After.HasLocalBranch()
 }
 
+func (self BranchSpan) LocalAdded2() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
+	beforeHasLocalBranch, _, _ := self.Before.HasLocalBranch2()
+	afterHasLocalBranch, afterLocalBranch, afterSHA := self.After.HasLocalBranch2()
+	isLocalAdded = !beforeHasLocalBranch && afterHasLocalBranch
+	return isLocalAdded, afterLocalBranch, afterSHA
+}
+
 func (self BranchSpan) LocalChanged() bool {
 	return self.Before.LocalSHA != self.After.LocalSHA
 }
 
 func (self BranchSpan) LocalRemoved() bool {
 	return self.Before.HasLocalBranch() && !self.After.HasLocalBranch()
+}
+func (self BranchSpan) LocalRemoved2() (localRemoved bool, beforeBranch gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+	hasBeforeBranch, beforeBranch, beforeSHA := self.Before.HasLocalBranch2()
+	hasAfterBranch, _, _ := self.After.HasLocalBranch2()
+	localRemoved = hasBeforeBranch && !hasAfterBranch
+	return localRemoved, beforeBranch, beforeSHA
 }
 
 // NoChanges indicates whether this BranchBeforeAfter contains changes or not.

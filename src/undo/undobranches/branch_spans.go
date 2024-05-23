@@ -53,12 +53,11 @@ func (self BranchSpans) Changes() BranchChanges {
 			})
 			continue
 		}
-		switch {
-		case branchSpan.LocalAdded():
-			result.LocalAdded = append(result.LocalAdded, branchSpan.After.LocalName)
-		case branchSpan.LocalRemoved():
-			result.LocalRemoved[branchSpan.Before.LocalName] = branchSpan.Before.LocalSHA
-		case branchSpan.LocalChanged():
+		if localAdded, afterBranch, _ := branchSpan.LocalAdded2(); localAdded {
+			result.LocalAdded = append(result.LocalAdded, afterBranch)
+		} else if localRemoved, beforeBranch, beforeSHA := branchSpan.LocalRemoved2(); localRemoved {
+			result.LocalRemoved[beforeBranch] = beforeSHA
+		} else if branchSpan.LocalChanged() {
 			result.LocalChanged[branchSpan.Before.LocalName] = undodomain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.LocalSHA,
 				After:  branchSpan.After.LocalSHA,

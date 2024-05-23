@@ -38,6 +38,12 @@ func EmptyBranchInfo() BranchInfo {
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
 }
+func (self BranchInfo) HasLocalBranch2() (hasLocalBranch bool, branchName LocalBranchName, sha SHA) {
+	localName, hasLocalName := self.LocalName.Get()
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	hasLocalBranch = hasLocalName && hasLocalSHA
+	return hasLocalBranch, localName, localSHA
+}
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
 	return self.HasLocalBranch() && !self.HasRemoteBranch()
