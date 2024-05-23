@@ -114,17 +114,29 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		result.Add(&opcodes.Checkout{Branch: inconsistentChange.Before.LocalName})
-		result.Add(&opcodes.ResetCurrentBranchToSHA{
-			MustHaveSHA: inconsistentChange.After.LocalSHA,
-			SetToSHA:    inconsistentChange.Before.LocalSHA,
-			Hard:        true,
-		})
-		result.Add(&opcodes.ResetRemoteBranchToSHA{
-			Branch:      inconsistentChange.Before.RemoteName,
-			MustHaveSHA: inconsistentChange.After.RemoteSHA,
-			SetToSHA:    inconsistentChange.Before.RemoteSHA,
-		})
+		if beforeLocalName, hasBeforeLocalName := inconsistentChange.Before.LocalName.Get(); hasBeforeLocalName {
+			if beforeRemoteName, hasBeforeRemoteName := inconsistentChange.Before.RemoteName.Get(); hasBeforeRemoteName {
+				if beforeLocalSHA, hasBeforeLocalSHA := inconsistentChange.Before.LocalSHA.Get(); hasBeforeLocalSHA {
+					if beforeRemoteSHA, hasBeforeRemoteSHA := inconsistentChange.Before.RemoteSHA.Get(); hasBeforeRemoteSHA {
+						if afterLocalSHA, hasAfterLocalSHA := inconsistentChange.After.LocalSHA.Get(); hasAfterLocalSHA {
+							if afterRemoteSHA, hasAfterRemoteSHA := inconsistentChange.After.RemoteSHA.Get(); hasAfterRemoteSHA {
+								result.Add(&opcodes.Checkout{Branch: beforeLocalName})
+								result.Add(&opcodes.ResetCurrentBranchToSHA{
+									MustHaveSHA: afterLocalSHA,
+									SetToSHA:    beforeLocalSHA,
+									Hard:        true,
+								})
+								result.Add(&opcodes.ResetRemoteBranchToSHA{
+									Branch:      beforeRemoteName,
+									MustHaveSHA: afterRemoteSHA,
+									SetToSHA:    beforeRemoteSHA,
+								})
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// remove remotely added branches
