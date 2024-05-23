@@ -60,10 +60,12 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni remove", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
@@ -76,13 +78,17 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.EmptySHA()),
 				},
 			}
-			must.True(t, bs.IsOmniRemove())
+			isOmniRemove, beforeBranchName, beforeSHA := bs.IsOmniRemove()
+			must.True(t, isOmniRemove)
+			must.Eq(t, branch1, beforeBranchName)
+			must.Eq(t, sha1, beforeSHA)
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					LocalName:  Some(branch1),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
@@ -96,7 +102,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.False(t, bs.IsOmniRemove())
+			isOmniRemove, _, _ := bs.IsOmniRemove()
+			must.False(t, isOmniRemove)
 		})
 	})
 

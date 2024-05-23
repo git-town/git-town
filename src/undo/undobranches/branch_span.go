@@ -27,14 +27,9 @@ func (self BranchSpan) IsOmniChange2() (isOmniChange bool, branchName gitdomain.
 	return isOmniChange, beforeName, beforeSHA, afterSHA
 }
 
-// TODO: replace all uses with IsOmniRemove2
-func (self BranchSpan) IsOmniRemove() bool {
-	return self.Before.IsOmniBranch() && self.After.IsEmpty()
-}
-
 // Indicates whether this BranchSpan describes the removal of an omni Branch
 // and provides all relevant data for this situation.
-func (self BranchSpan) IsOmniRemove2() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
 	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmni()
 	isOmniRemove = beforeIsOmni && self.After.IsEmpty()
 	return isOmniRemove, beforeName, beforeSHA

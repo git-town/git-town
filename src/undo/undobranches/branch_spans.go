@@ -35,7 +35,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		if branchSpan.NoChanges() {
 			continue
 		}
-		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove2(); isOmniRemove {
+		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
 			result.OmniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
