@@ -34,6 +34,15 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+// TODO: rename to IsOmni after the existing IsOmni has been replaced with calls to this method
+func (self BranchInfo) GetOmni() (bool, LocalBranchName, SHA) {
+	localBranch, hasLocalBranch := self.LocalName.Get()
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	isOmni := hasLocalBranch && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
+	return isOmni, localBranch, localSHA
+}
+
 // TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
