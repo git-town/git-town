@@ -673,7 +673,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			}
-			must.False(t, bs.RemoteRemoved())
+			isRemoteRemoved, _, _ := bs.RemoteRemoved()
+			must.False(t, isRemoteRemoved)
 		})
 
 		t.Run("upstream branch", func(t *testing.T) {
@@ -694,7 +695,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
-			must.False(t, bs.RemoteRemoved())
+			isRemoteRemoved, _, _ := bs.RemoteRemoved()
+			must.False(t, isRemoteRemoved)
 		})
 	})
 }
