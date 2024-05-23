@@ -38,6 +38,7 @@ func EmptyBranchInfo() BranchInfo {
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
 }
+
 func (self BranchInfo) HasLocalBranch2() (hasLocalBranch bool, branchName LocalBranchName, sha SHA) {
 	localName, hasLocalName := self.LocalName.Get()
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
@@ -57,6 +58,7 @@ func (self BranchInfo) HasOnlyRemoteBranch() bool {
 func (self BranchInfo) HasRemoteBranch() bool {
 	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
 }
+
 func (self BranchInfo) HasRemoteBranch2() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
 	remoteName, hasRemoteName := self.RemoteName.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
@@ -96,6 +98,7 @@ func (self BranchInfo) IsOmni() (bool, LocalBranchName, SHA) {
 func (self BranchInfo) IsOmniBranch() bool {
 	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
 }
+
 func (self BranchInfo) IsOmniBranch2() (isOmni bool, branch LocalBranchName, sha SHA) {
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
 	branchName, hasBranch := self.LocalName.Get()

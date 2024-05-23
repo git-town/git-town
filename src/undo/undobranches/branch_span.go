@@ -54,6 +54,7 @@ func (self BranchSpan) LocalAdded2() (isLocalAdded bool, afterBranchName gitdoma
 func (self BranchSpan) LocalChanged() bool {
 	return self.Before.LocalSHA != self.After.LocalSHA
 }
+
 func (self BranchSpan) LocalChanged2() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
 	hasLocalBranchBefore, beforeBranch, beforeSHA := self.Before.HasLocalBranch2()
 	hasLocalBranchAfter, _, afterSHA := self.After.HasLocalBranch2()
@@ -64,6 +65,7 @@ func (self BranchSpan) LocalChanged2() (localChanged bool, branch gitdomain.Loca
 func (self BranchSpan) LocalRemoved() bool {
 	return self.Before.HasLocalBranch() && !self.After.HasLocalBranch()
 }
+
 func (self BranchSpan) LocalRemoved2() (localRemoved bool, beforeBranch gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
 	hasBeforeBranch, beforeBranch, beforeSHA := self.Before.HasLocalBranch2()
 	hasAfterBranch, _, _ := self.After.HasLocalBranch2()
@@ -79,6 +81,7 @@ func (self BranchSpan) NoChanges() bool {
 func (self BranchSpan) RemoteAdded() bool {
 	return !self.Before.HasRemoteBranch() && self.After.HasRemoteBranch()
 }
+
 func (self BranchSpan) RemoteAdded2() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
 	beforeHasRemoteBranch, _, _ := self.Before.HasRemoteBranch2()
 	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := self.After.HasRemoteBranch2()
@@ -89,6 +92,7 @@ func (self BranchSpan) RemoteAdded2() (remoteAdded bool, addedRemoteBranchName g
 func (self BranchSpan) RemoteChanged() bool {
 	return self.Before.RemoteSHA != self.After.RemoteSHA
 }
+
 func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := self.Before.HasRemoteBranch2()
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := self.After.HasRemoteBranch2()
@@ -99,6 +103,7 @@ func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomai
 func (self BranchSpan) RemoteRemoved() bool {
 	return self.Before.HasRemoteBranch() && !self.After.HasRemoteBranch()
 }
+
 func (self BranchSpan) RemoteRemoved2() (remoteRemoved bool, beforeRemoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeSHA := self.Before.HasRemoteBranch2()
 	afterHasRemoteBranch, _, _ := self.After.HasRemoteBranch2()
