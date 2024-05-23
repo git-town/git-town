@@ -606,13 +606,15 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("removing a remote-only branch", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(branch1),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
@@ -622,27 +624,35 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.True(t, bs.RemoteRemoved())
+			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
+			must.True(t, isRemoteRemoved)
+			must.Eq(t, branch1, remoteBranchName)
+			must.Eq(t, sha1, beforeRemoteSHA)
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(branch1),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.True(t, bs.RemoteRemoved())
+			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
+			must.True(t, isRemoteRemoved)
+			must.Eq(t, branch1, remoteBranchName)
+			must.Eq(t, sha1, beforeRemoteSHA)
 		})
 
 		t.Run("changes a remote branch", func(t *testing.T) {

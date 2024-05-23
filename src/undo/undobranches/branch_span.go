@@ -83,13 +83,9 @@ func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomai
 	return remoteChanged, beforeRemoteBranchName, beforeSHA, afterSHA
 }
 
-func (self BranchSpan) RemoteRemoved() bool {
-	return self.Before.HasRemoteBranch() && !self.After.HasRemoteBranch()
-}
-
-func (self BranchSpan) RemoteRemoved2() (remoteRemoved bool, beforeRemoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
-	beforeHasRemoteBranch, beforeRemoteBranchName, beforeSHA := self.Before.HasRemoteBranch2()
+func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
+	beforeHasRemoteBranch, remoteBranchName, beforeSHA := self.Before.HasRemoteBranch2()
 	afterHasRemoteBranch, _, _ := self.After.HasRemoteBranch2()
 	remoteRemoved = beforeHasRemoteBranch && !afterHasRemoteBranch
-	return remoteRemoved, beforeRemoteBranchName, beforeSHA
+	return remoteRemoved, remoteBranchName, beforeSHA
 }
