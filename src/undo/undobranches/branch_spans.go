@@ -63,7 +63,7 @@ func (self BranchSpans) Changes() BranchChanges {
 				After:  afterSHA,
 			}
 		}
-		if remoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded2(); remoteAdded {
+		if remoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); remoteAdded {
 			result.RemoteAdded = append(result.RemoteAdded, remoteBranchName)
 		} else if remoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved2(); remoteRemoved {
 			result.RemoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
