@@ -414,7 +414,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.False(t, bs.LocalRemoved())
+			isLocalRemoved, _, _ := bs.LocalRemoved()
+			must.False(t, isLocalRemoved)
 		})
 	})
 
