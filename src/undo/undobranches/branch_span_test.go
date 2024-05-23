@@ -350,10 +350,12 @@ func TestBranchSpan(t *testing.T) {
 	t.Run("LocalRemoved", func(t *testing.T) {
 		t.Parallel()
 		t.Run("removed a local branch", func(t *testing.T) {
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
@@ -366,26 +368,34 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.True(t, bs.LocalRemoved())
+			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
+			must.True(t, isLocalRemoved)
+			must.Eq(t, branch1, branchName)
+			must.Eq(t, sha1, beforeSHA)
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteSHA:  Some(sha1),
 				},
 			}
-			must.True(t, bs.LocalRemoved())
+			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
+			must.True(t, isLocalRemoved)
+			must.Eq(t, branch1, branchName)
+			must.Eq(t, sha1, beforeSHA)
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
 			bs := undobranches.BranchSpan{
