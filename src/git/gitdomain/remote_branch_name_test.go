@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/shoenig/test/must"
 )
@@ -66,22 +65,6 @@ func TestRemoteBranchName(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
 			gitdomain.NewRemoteBranchName("")
-		})
-	})
-
-	t.Run("NewRemoteBranchNameOpt", func(t *testing.T) {
-		t.Parallel()
-		t.Run("Some", func(t *testing.T) {
-			t.Parallel()
-			have := gitdomain.NewRemoteBranchNameOpt("origin/branch")
-			want := Some(gitdomain.RemoteBranchName("origin/branch"))
-			must.Eq(t, want, have)
-		})
-		t.Run("None", func(t *testing.T) {
-			t.Parallel()
-			have := gitdomain.NewRemoteBranchNameOpt("")
-			want := None[gitdomain.RemoteBranchName]()
-			must.Eq(t, want, have)
 		})
 	})
 

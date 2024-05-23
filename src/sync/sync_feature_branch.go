@@ -25,11 +25,11 @@ func FeatureBranchProgram(args featureBranchArgs) {
 }
 
 type featureBranchArgs struct {
-	localName  gitdomain.LocalBranchName
-	remoteName Option[gitdomain.RemoteBranchName]
+	localName gitdomain.LocalBranchName
 	// offline             configdomain.Offline             // whether offline mode is enabled
-	parentOtherWorktree bool                             // whether the parent of this branch exists on another worktre
-	program             *program.Program                 // the program to update
+	parentOtherWorktree bool             // whether the parent of this branch exists on another worktre
+	program             *program.Program // the program to update
+	remoteName          Option[gitdomain.RemoteBranchName]
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
 

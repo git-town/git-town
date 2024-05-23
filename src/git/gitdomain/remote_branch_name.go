@@ -3,8 +3,6 @@ package gitdomain
 import (
 	"fmt"
 	"strings"
-
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
@@ -19,13 +17,6 @@ func NewRemoteBranchName(id string) RemoteBranchName {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
 	return RemoteBranchName(id)
-}
-
-func NewRemoteBranchNameOpt(id string) Option[RemoteBranchName] {
-	if id == "" {
-		return None[RemoteBranchName]()
-	}
-	return Some(NewRemoteBranchName(id))
 }
 
 func isValidRemoteBranchName(value string) bool {

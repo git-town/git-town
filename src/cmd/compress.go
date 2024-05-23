@@ -118,10 +118,10 @@ type compressBranchesData struct {
 }
 
 type compressBranchData struct {
-	name             gitdomain.LocalBranchName
-	hasTracking      bool
 	branchType       configdomain.BranchType
-	commitCount      int                     // number of commits in this branch
+	commitCount      int // number of commits in this branch
+	hasTracking      bool
+	name             gitdomain.LocalBranchName
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
 }
@@ -207,10 +207,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		branchesToCompress = append(branchesToCompress, compressBranchData{
-			name:             branchNameToCompress,
-			hasTracking:      branchInfo.HasRemoteBranch(),
 			branchType:       branchType,
 			commitCount:      commitCount,
+			hasTracking:      branchInfo.HasRemoteBranch(),
+			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
 		})

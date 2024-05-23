@@ -54,22 +54,22 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			localName:  localName,
-			remoteName: branch.RemoteName,
+			localName: localName,
 			// offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
-			localName:  localName,
-			remoteName: branch.RemoteName,
+			localName: localName,
 			// offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
 	case configdomain.BranchTypeContributionBranch:
@@ -101,8 +101,8 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch              gitdomain.LocalBranchName
-	program             *program.Program
 	parentOtherWorktree bool
+	program             *program.Program
 	syncStrategy        configdomain.SyncFeatureStrategy
 }
 
