@@ -57,6 +57,12 @@ func (self BranchInfo) HasOnlyRemoteBranch() bool {
 func (self BranchInfo) HasRemoteBranch() bool {
 	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
 }
+func (self BranchInfo) HasRemoteBranch2() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
+	remoteName, hasRemoteName := self.RemoteName.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	hasRemoteBranch = hasRemoteName && hasRemoteSHA
+	return hasRemoteBranch, remoteName, remoteSHA
+}
 
 func (self BranchInfo) HasTrackingBranch() bool {
 	return self.HasLocalBranch() && self.HasRemoteBranch()

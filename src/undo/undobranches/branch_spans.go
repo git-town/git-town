@@ -63,12 +63,11 @@ func (self BranchSpans) Changes() BranchChanges {
 				After:  afterSHA,
 			}
 		}
-		switch {
-		case branchSpan.RemoteAdded():
-			result.RemoteAdded = append(result.RemoteAdded, branchSpan.After.RemoteName)
-		case branchSpan.RemoteRemoved():
+		if remoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded2(); remoteAdded {
+			result.RemoteAdded = append(result.RemoteAdded, remoteBranchName)
+		} else if branchSpan.RemoteRemoved() {
 			result.RemoteRemoved[branchSpan.Before.RemoteName] = branchSpan.Before.RemoteSHA
-		case branchSpan.RemoteChanged():
+		} else if branchSpan.RemoteChanged() {
 			result.RemoteChanged[branchSpan.Before.RemoteName] = undodomain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.RemoteSHA,
 				After:  branchSpan.After.RemoteSHA,
