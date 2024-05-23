@@ -8,12 +8,6 @@ type BranchSpan struct {
 	After  gitdomain.BranchInfo // the status of the branch after Git Town ran
 }
 
-// new version of IsOmniRemove
-func (self BranchSpan) IsOmniRemove2() (bool, gitdomain.LocalBranchName, gitdomain.SHA) {
-	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmni()
-	return beforeIsOmni && self.After.IsEmpty(), beforeName, beforeSHA
-}
-
 func (self BranchSpan) IsInconsistentChange() bool {
 	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
 }
@@ -36,6 +30,14 @@ func (self BranchSpan) IsOmniChange2() (isOmniChange bool, branchName gitdomain.
 // TODO: replace all uses with IsOmniRemove2
 func (self BranchSpan) IsOmniRemove() bool {
 	return self.Before.IsOmniBranch() && self.After.IsEmpty()
+}
+
+// Indicates whether this BranchSpan describes the removal of an omni Branch
+// and provides all relevant data for this situation.
+func (self BranchSpan) IsOmniRemove2() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmni()
+	isOmniRemove = beforeIsOmni && self.After.IsEmpty()
+	return isOmniRemove, beforeName, beforeSHA
 }
 
 func (self BranchSpan) LocalAdded() bool {
