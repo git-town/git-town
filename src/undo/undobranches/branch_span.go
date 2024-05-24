@@ -73,7 +73,9 @@ func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gi
 }
 
 func (self BranchSpan) RemoteChanged() bool {
-	return self.Before.RemoteSHA != self.After.RemoteSHA
+	beforeSHA, hasBeforeSHA := self.Before.RemoteSHA.Get()
+	afterSHA, hasAfterSHA := self.After.RemoteSHA.Get()
+	return hasBeforeSHA && hasAfterSHA && beforeSHA != afterSHA
 }
 
 func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
