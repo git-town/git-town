@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/subshell"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/testruntime"
-	"github.com/kr/pretty"
 	"github.com/shoenig/test/must"
 )
 
@@ -567,9 +566,6 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				t.Log("1111111111111111111111")
-				pretty.Ldiff(t, want, have)
-				t.Log("1111111111111111111111")
 				must.Eq(t, want, have)
 			})
 
