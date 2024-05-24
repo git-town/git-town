@@ -62,29 +62,30 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
-			bs := undobranches.BranchSpan{
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(branch1),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
-					LocalName:  Some(branch1),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  None[gitdomain.LocalBranchName](),
+					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			isOmniRemove, beforeBranchName, beforeSHA := bs.IsOmniRemove()
+			isOmniRemove, beforeBranchName, beforeSHA := branchSpan.IsOmniRemove()
 			must.True(t, isOmniRemove)
 			must.Eq(t, branch1, beforeBranchName)
 			must.Eq(t, sha1, beforeSHA)
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
+			sha1 := gitdomain.NewSHA("111111")
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
@@ -95,11 +96,11 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				After: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+					RemoteSHA:  Some(sha1),
 				},
 			}
 			isOmniRemove, _, _ := bs.IsOmniRemove()
