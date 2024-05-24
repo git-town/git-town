@@ -559,7 +559,7 @@ func TestBackendCommands(t *testing.T) {
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.EmptyLocalBranchName()),
-						LocalSHA:   Some(gitdomain.EmptySHA()),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
 						SyncStatus: gitdomain.SyncStatusRemoteOnly,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
@@ -578,7 +578,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
 						RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
-						RemoteSHA:  Some(gitdomain.EmptySHA()),
+						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -618,7 +618,7 @@ func TestBackendCommands(t *testing.T) {
 							LocalSHA:   Some(gitdomain.NewSHA("3d0c4c13")),
 							SyncStatus: gitdomain.SyncStatusOtherWorktree,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-							RemoteSHA:  Some(gitdomain.EmptySHA()),
+							RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 						},
 					}
 					have, _ := git.ParseVerboseBranchesOutput(give)
@@ -635,7 +635,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
 						SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.EmptySHA()),
+						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -686,7 +686,7 @@ func TestBackendCommands(t *testing.T) {
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
-					RemoteSHA:  Some(gitdomain.EmptySHA()),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
@@ -697,7 +697,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.EmptyLocalBranchName()),
-					LocalSHA:   Some(gitdomain.EmptySHA()),
+					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),

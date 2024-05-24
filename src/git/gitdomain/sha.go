@@ -8,10 +8,6 @@ import (
 // This helps avoid stringly-typed code.
 type SHA string
 
-func EmptySHA() SHA {
-	return ""
-}
-
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHA(id string) SHA {

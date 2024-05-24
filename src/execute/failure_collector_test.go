@@ -20,14 +20,14 @@ func TestCollector(t *testing.T) {
 			branchInfos := gitdomain.BranchInfos{
 				{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch1")),
-					LocalSHA:   Some(gitdomain.EmptySHA()),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch2")),
-					LocalSHA:   Some(gitdomain.EmptySHA()),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),

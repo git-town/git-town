@@ -394,7 +394,7 @@ func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 func (self *BackendCommands) SHAForBranch(name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
-		return gitdomain.EmptySHA(), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
+		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
 	return gitdomain.NewSHA(output), nil
 }

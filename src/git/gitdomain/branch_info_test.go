@@ -19,8 +19,8 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
-				RemoteSHA:  Some(gitdomain.EmptySHA()),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
 			}
 			must.True(t, give.HasLocalBranch())
 		})
