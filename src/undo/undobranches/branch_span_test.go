@@ -540,7 +540,7 @@ func TestBranchSpan(t *testing.T) {
 
 	t.Run("RemoteChanged", func(t *testing.T) {
 		t.Parallel()
-		t.Run("changes a remote-only branch", func(t *testing.T) {
+		t.Run("changes to a remote-only branch", func(t *testing.T) {
 			t.Parallel()
 			bs := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
