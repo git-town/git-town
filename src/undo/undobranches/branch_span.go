@@ -43,7 +43,9 @@ func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomai
 }
 
 func (self BranchSpan) LocalChanged() bool {
-	return self.Before.LocalSHA != self.After.LocalSHA
+	beforeSHA, hasBeforeSHA := self.Before.LocalSHA.Get()
+	afterSHA, hasAfterSHA := self.After.LocalSHA.Get()
+	return hasBeforeSHA && hasAfterSHA && beforeSHA != afterSHA
 }
 
 func (self BranchSpan) LocalChanged2() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
@@ -82,7 +84,7 @@ func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomai
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := self.Before.HasRemoteBranch2()
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := self.After.HasRemoteBranch2()
 	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
-	return remoteChanged, beforeRemoteBranchName, beforeSHA, afterSHA
+	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
 }
 
 func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {

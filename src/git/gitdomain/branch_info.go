@@ -96,7 +96,9 @@ func (self BranchInfo) IsOmni() (bool, LocalBranchName, SHA) {
 // IsOmniBranch indicates whether the local and remote branch are in sync.
 // TODO: replace all usages with IsOmni.
 func (self BranchInfo) IsOmniBranch() bool {
-	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	return !self.IsEmpty() && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
 }
 
 func (self BranchInfo) IsOmniBranch2() (isOmni bool, branch LocalBranchName, sha SHA) {

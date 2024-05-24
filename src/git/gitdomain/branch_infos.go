@@ -37,19 +37,15 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchI
 
 func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	for _, bi := range self {
-		if biLocalName, hasBiLocalName := bi.LocalName.Get(); hasBiLocalName {
-			if otherLocalName, hasOtherLocalName := other.LocalName.Get(); hasOtherLocalName {
-				if biLocalName == otherLocalName {
-					return bi
-				}
-			}
+		biLocalName, hasBiLocalName := bi.LocalName.Get()
+		otherLocalName, hasOtherLocalName := other.LocalName.Get()
+		if hasBiLocalName && hasOtherLocalName && biLocalName == otherLocalName {
+			return bi
 		}
-		if biRemoteName, hasBiRemoteName := bi.RemoteName.Get(); hasBiRemoteName {
-			if otherRemoteName, hasOtherRemoteName := other.RemoteName.Get(); hasOtherRemoteName {
-				if biRemoteName == otherRemoteName {
-					return bi
-				}
-			}
+		biRemoteName, hasBiRemoteName := bi.RemoteName.Get()
+		otherRemoteName, hasOtherRemoteName := other.RemoteName.Get()
+		if hasBiRemoteName && hasOtherRemoteName && biRemoteName == otherRemoteName {
+			return bi
 		}
 	}
 	return EmptyBranchInfo()
