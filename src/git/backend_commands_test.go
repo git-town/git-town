@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/subshell"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/testruntime"
+	"github.com/kr/pretty"
 	"github.com/shoenig/test/must"
 )
 
@@ -558,14 +559,17 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1    222222 Commit message 2`[1:]
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.EmptyLocalBranchName()),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						LocalName:  None[gitdomain.LocalBranchName](),
+						LocalSHA:   None[gitdomain.SHA](),
 						SyncStatus: gitdomain.SyncStatusRemoteOnly,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
+				t.Log("1111111111111111111111")
+				pretty.Ldiff(t, want, have)
+				t.Log("1111111111111111111111")
 				must.Eq(t, want, have)
 			})
 
