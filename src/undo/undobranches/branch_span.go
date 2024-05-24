@@ -1,6 +1,8 @@
 package undobranches
 
-import "github.com/git-town/git-town/v14/src/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+)
 
 // BranchSpan represents changes of a branch over time.
 type BranchSpan struct {
@@ -62,9 +64,13 @@ func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.L
 	return localRemoved, branchName, beforeSHA
 }
 
-// NoChanges indicates whether this BranchBeforeAfter contains changes or not.
+// NoChanges indicates whether this BranchSpan contains changes or not.
 func (self BranchSpan) NoChanges() bool {
-	return !self.LocalChanged() && !self.RemoteChanged()
+	localAdded, _, _ := self.LocalAdded()
+	localRemoved, _, _ := self.LocalRemoved()
+	remoteAdded, _, _ := self.RemoteAdded()
+	remoteRemoved, _, _ := self.RemoteRemoved()
+	return !localAdded && !localRemoved && !self.LocalChanged() && !remoteAdded && !remoteRemoved && !self.RemoteChanged()
 }
 
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
