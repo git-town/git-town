@@ -68,7 +68,7 @@ func (self Option[T]) IsSome() bool {
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Option[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(*self.value)
+	return json.Marshal(self.GetOrDefault())
 }
 
 // String provides the string serialization of the contained value.
