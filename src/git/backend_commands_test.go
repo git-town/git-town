@@ -635,7 +635,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
 						SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+						RemoteSHA:  None[gitdomain.SHA](),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
