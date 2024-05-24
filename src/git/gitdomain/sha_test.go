@@ -12,20 +12,6 @@ import (
 func TestSHA(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsEmpty", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is empty", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.EmptySHA()
-			must.True(t, sha.IsEmpty())
-		})
-		t.Run("is not empty", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.NewSHA("123456")
-			must.False(t, sha.IsEmpty())
-		})
-	})
-
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		sha := gitdomain.NewSHA("123456")
@@ -86,7 +72,7 @@ func TestSHA(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`
-		have := gitdomain.EmptySHA()
+		have := gitdomain.SHA("")
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := gitdomain.NewSHA("123456")
