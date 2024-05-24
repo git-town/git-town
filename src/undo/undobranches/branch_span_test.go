@@ -72,10 +72,10 @@ func TestBranchSpan(t *testing.T) {
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.EmptyLocalBranchName()),
-					LocalSHA:   Some(gitdomain.EmptySHA()),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
-					RemoteSHA:  Some(gitdomain.EmptySHA()),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
 			isOmniRemove, beforeBranchName, beforeSHA := bs.IsOmniRemove()
