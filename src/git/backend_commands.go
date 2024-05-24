@@ -96,55 +96,55 @@ func (self *BackendCommands) CheckoutBranch(name gitdomain.LocalBranchName) erro
 	return nil
 }
 
-func IsAhead(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
+func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
-		return true, gitdomain.NewRemoteBranchName(matches[1])
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
-	return false, gitdomain.EmptyRemoteBranchName()
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
-func IsAheadAndBehind(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
+func IsAheadAndBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
-		return true, gitdomain.NewRemoteBranchName(matches[1])
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
-	return false, gitdomain.EmptyRemoteBranchName()
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
-func IsBehind(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
+func IsBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
-		return true, gitdomain.NewRemoteBranchName(matches[1])
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
-	return false, gitdomain.EmptyRemoteBranchName()
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
-func IsInSync(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
+func IsInSync(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
-		return true, gitdomain.NewRemoteBranchName(matches[1])
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
-	return false, gitdomain.EmptyRemoteBranchName()
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
 // IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
-func IsRemoteGone(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
+func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
-		return true, gitdomain.NewRemoteBranchName(matches[1])
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
-	return false, gitdomain.EmptyRemoteBranchName()
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
@@ -502,7 +502,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
 				LocalSHA:   Some(sha),
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
-				RemoteName: Some(trackingBranchName),
+				RemoteName: trackingBranchName,
 				RemoteSHA:  None[gitdomain.SHA](),
 			})
 		case isLocalBranchName(branchName):
@@ -510,7 +510,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
 				LocalSHA:   Some(sha),
 				SyncStatus: syncStatus,
-				RemoteName: Some(trackingBranchName),
+				RemoteName: trackingBranchName,
 				RemoteSHA:  None[gitdomain.SHA](), // will be added later
 			})
 		default:
@@ -532,7 +532,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 	return result, checkedoutBranch
 }
 
-func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName gitdomain.RemoteBranchName) {
+func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName Option[gitdomain.RemoteBranchName]) {
 	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
 	if isInSync {
 		return gitdomain.SyncStatusUpToDate, trackingBranchName
@@ -554,9 +554,9 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 		return gitdomain.SyncStatusNotInSync, trackingBranchName
 	}
 	if strings.HasPrefix(branchName, "remotes/") {
-		return gitdomain.SyncStatusRemoteOnly, gitdomain.EmptyRemoteBranchName()
+		return gitdomain.SyncStatusRemoteOnly, None[gitdomain.RemoteBranchName]()
 	}
-	return gitdomain.SyncStatusLocalOnly, gitdomain.EmptyRemoteBranchName()
+	return gitdomain.SyncStatusLocalOnly, None[gitdomain.RemoteBranchName]()
 }
 
 // isLocalBranchName indicates whether the branch with the given Git ref is local or remote.

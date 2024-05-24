@@ -71,10 +71,10 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				After: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.EmptyLocalBranchName()),
+					LocalName:  Some(branch1),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}

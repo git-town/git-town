@@ -210,14 +210,14 @@ func TestBranchInfos(t *testing.T) {
 				LocalName:  Some(gitdomain.NewLocalBranchName("ahead")),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusNotInSync,
-				RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/ahead")),
 				RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 			},
 			gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName("behind")),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusNotInSync,
-				RemoteName: Some(gitdomain.EmptyRemoteBranchName()),
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/behind")),
 				RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 			},
 			gitdomain.BranchInfo{
