@@ -224,8 +224,8 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
 			finalUndoProgram.Add(&opcodes.Checkout{Branch: data.branchNameToKill.LocalName})
 			finalUndoProgram.Add(&opcodes.UndoLastCommit{})
+			prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 		}
-		prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 	}
 	prog.Add(&opcodes.DeleteLocalBranch{Branch: data.branchNameToKill.LocalName})
 	if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
