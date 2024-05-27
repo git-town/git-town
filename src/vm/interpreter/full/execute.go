@@ -1,8 +1,6 @@
 package interpreter
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
@@ -23,7 +21,6 @@ func Execute(args ExecuteArgs) error {
 			return finished(args)
 		}
 		stepName := gohacks.TypeName(nextStep)
-		fmt.Println("111111111111 NEXT STEP:", stepName, nextStep)
 		if stepName == "SkipCurrentBranchProgram" {
 			args.RunState.SkipCurrentBranchProgram()
 			continue
