@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -159,7 +160,11 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		return emptySetParentData(), branchesSnapshot, stashSize, exit, err
 	}
 	mainBranch := validatedConfig.Config.MainBranch
-	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return emptySetParentData(), branchesSnapshot, stashSize, exit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(currentBranch).Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
 		defaultChoice = existingParent
@@ -168,7 +173,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 	}
 	return setParentData{
 		config:           validatedConfig,
-		currentBranch:    branchesSnapshot.Active,
+		currentBranch:    currentBranch,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
