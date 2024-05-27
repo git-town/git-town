@@ -73,6 +73,13 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	currentBranch := initialBranchesSnapshot.Active
+	if currentBranch.IsEmpty() {
+		currentBranch, err = repo.Backend.CurrentBranch()
+		if err != nil {
+			return err
+		}
+	}
 	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -116,7 +123,7 @@ func executeSkip(verbose bool) error {
 		CommandsCounter: repo.CommandsCounter,
 		Config:          validatedConfig,
 		Connector:       connector,
-		CurrentBranch:   initialBranchesSnapshot.Active,
+		CurrentBranch:   currentBranch,
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 		HasOpenChanges:  repoStatus.OpenChanges,
