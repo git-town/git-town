@@ -12,8 +12,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentOtherWorktree := false
 	localName, hasLocalName := branch.LocalName.Get()
 	if hasLocalName {
-		parent, hasParent := args.Config.Lineage.Parent(localName).Get()
-		if hasParent {
+		if parent, hasParent := args.Config.Lineage.Parent(localName).Get(); hasParent {
 			parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
 			parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 		}
