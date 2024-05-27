@@ -82,9 +82,12 @@ func (self Option[T]) IsSome() bool {
 	return self.value != nil
 }
 
-// MarshalJSON is used when serializing this LocalBranchName to JSON.
+// MarshalJSON is used when serializing this Option to JSON.
 func (self Option[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.GetOrDefault())
+	if value, hasValue := self.Get(); hasValue {
+		return json.Marshal(value)
+	}
+	return json.Marshal(nil)
 }
 
 // String provides the string serialization of the contained value.
@@ -102,17 +105,13 @@ func (self Option[T]) StringOr(other string) string {
 	return other
 }
 
-// UnmarshalJSON is used when de-serializing JSON into a Location.
+// UnmarshalJSON is used when de-serializing JSON into an Option.
 func (self *Option[T]) UnmarshalJSON(b []byte) error {
-	var value T
-	err := json.Unmarshal(b, &value)
-	if err != nil {
-		return err
-	}
-	if fmt.Sprint(value) == "" {
+	if string(b) == "null" {
 		self.value = nil
-	} else {
-		self.value = &value
+		return nil
 	}
-	return nil
+	var value T
+	self.value = &value
+	return json.Unmarshal(b, &self.value)
 }

@@ -48,6 +48,42 @@ func TestOption(t *testing.T) {
 		})
 	})
 
+	t.Run("MarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		t.Run("Some", func(t *testing.T) {
+			t.Parallel()
+			value := Some(12)
+			json, err := value.MarshalJSON()
+			must.NoError(t, err)
+			must.Eq(t, "12", string(json))
+		})
+		t.Run("None", func(t *testing.T) {
+			t.Parallel()
+			value := None[int]()
+			json, err := value.MarshalJSON()
+			must.NoError(t, err)
+			must.Eq(t, "null", string(json))
+		})
+	})
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Run("Some", func(t *testing.T) {
+			t.Parallel()
+			json := "12"
+			value := None[int]()
+			err := value.UnmarshalJSON([]byte(json))
+			must.NoError(t, err)
+			must.Eq(t, Some(12), value)
+		})
+		t.Run("None", func(t *testing.T) {
+			t.Parallel()
+			json := "null"
+			value := None[int]()
+			err := value.UnmarshalJSON([]byte(json))
+			must.NoError(t, err)
+			must.Eq(t, None[int](), value)
+		})
+	})
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {
