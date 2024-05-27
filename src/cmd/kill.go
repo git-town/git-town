@@ -208,7 +208,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	if data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
+	if data.branchNameToKill.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && data.branchNameToKill.HasTrackingBranch() && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: data.branchNameToKill.RemoteName})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
