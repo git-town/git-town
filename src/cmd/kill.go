@@ -215,7 +215,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
+func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 	if data.initialBranch == data.branchNameToKill.LocalName {
 		if data.hasOpenChanges {
 			prog.Add(&opcodes.CommitOpenChanges{})
