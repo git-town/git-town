@@ -15,9 +15,10 @@ type BranchInfos []BranchInfo
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[BranchInfo] {
 	for bi, branch := range self {
-		localName, hasLocalName := branch.LocalName.Get()
-		if hasLocalName && localName == branchName {
-			return Some(self[bi])
+		if localName, hasLocalName := branch.LocalName.Get(); hasLocalName {
+			if localName == branchName {
+				return Some(self[bi])
+			}
 		}
 	}
 	return None[BranchInfo]()
