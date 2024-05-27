@@ -2,6 +2,7 @@ Feature: offline mode
 
   Background:
     Given Git Town setting "sync-feature-strategy" is "rebase"
+    And offline mode is enabled
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
@@ -9,7 +10,6 @@ Feature: offline mode
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And offline mode is enabled
     When I run "git-town sync"
 
   Scenario: result
