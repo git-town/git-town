@@ -250,6 +250,7 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 			})
 		}
 	}
+	fmt.Println("555555555555555555555555", prog)
 }
 
 func validateKillData(data *killData) error {

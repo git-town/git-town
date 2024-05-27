@@ -23,8 +23,8 @@ func (self BranchSpan) IsOmniChange() bool {
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (self BranchSpan) IsOmniChange2() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
-	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmni()
-	afterIsOmni, _, afterSHA := self.After.IsOmni()
+	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmniBranch2()
+	afterIsOmni, _, afterSHA := self.After.IsOmniBranch2()
 	isOmniChange = beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
 	return isOmniChange, beforeName, beforeSHA, afterSHA
 }
@@ -32,7 +32,7 @@ func (self BranchSpan) IsOmniChange2() (isOmniChange bool, branchName gitdomain.
 // Indicates whether this BranchSpan describes the removal of an omni Branch
 // and provides all relevant data for this situation.
 func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
-	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmni()
+	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmniBranch2()
 	isOmniRemove = beforeIsOmni && self.After.IsEmpty()
 	return isOmniRemove, beforeName, beforeSHA
 }
