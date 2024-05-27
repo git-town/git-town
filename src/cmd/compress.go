@@ -152,7 +152,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	initialBranch := branchesSnapshot.Active.BranchName().LocalName()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return nil, branchesSnapshot, stashSize, exit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
