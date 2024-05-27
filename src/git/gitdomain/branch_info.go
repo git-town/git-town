@@ -82,7 +82,7 @@ func (self BranchInfo) IsLocal() bool {
 }
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.
-// TODO: replace all usages with IsOmni.
+// TODO: replace all usages with IsOmniBranch2.
 func (self BranchInfo) IsOmniBranch() bool {
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
