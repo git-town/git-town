@@ -28,7 +28,6 @@ Feature: offline mode
       |         |          | local feature commit  |
       |         | origin   | origin feature commit |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
