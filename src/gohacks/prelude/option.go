@@ -3,6 +3,7 @@ package prelude
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 )
 
 // Option provides infrastructure for optional (nullable) values
@@ -14,8 +15,23 @@ import (
 //
 // Option is worth the overhead because it removes one of the many possible meanings (optionality)
 // from pointer values. This means a pointer in this codebase implies mutability and nothing else.
+//
+// Compare Options using their .Equal method since direct comparison using == doesn't work properly.
 type Option[T any] struct {
 	value *T
+}
+
+// indicates whether the given other Option has the same value as this Option
+func (self Option[T]) Equal(other Option[T]) bool {
+	selfValue, hasSelfValue := self.Get()
+	otherValue, hasOtherValue := other.Get()
+	if !hasSelfValue && !hasOtherValue {
+		return true
+	}
+	if hasSelfValue != hasOtherValue {
+		return false
+	}
+	return reflect.DeepEqual(selfValue, otherValue)
 }
 
 // Get provides a copy of the contained value
@@ -66,9 +82,12 @@ func (self Option[T]) IsSome() bool {
 	return self.value != nil
 }
 
-// MarshalJSON is used when serializing this LocalBranchName to JSON.
+// MarshalJSON is used when serializing this Option to JSON.
 func (self Option[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(*self.value)
+	if value, hasValue := self.Get(); hasValue {
+		return json.Marshal(value)
+	}
+	return json.Marshal(nil)
 }
 
 // String provides the string serialization of the contained value.
@@ -86,17 +105,13 @@ func (self Option[T]) StringOr(other string) string {
 	return other
 }
 
-// UnmarshalJSON is used when de-serializing JSON into a Location.
+// UnmarshalJSON is used when de-serializing JSON into an Option.
 func (self *Option[T]) UnmarshalJSON(b []byte) error {
-	var value T
-	err := json.Unmarshal(b, &value)
-	if err != nil {
-		return err
-	}
-	if fmt.Sprint(value) == "" {
+	if string(b) == "null" {
 		self.value = nil
-	} else {
-		self.value = &value
+		return nil
 	}
-	return nil
+	var value T
+	self.value = &value
+	return json.Unmarshal(b, &self.value)
 }
