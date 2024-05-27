@@ -179,7 +179,11 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
-	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return nil, branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !hasBranchToShip {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
@@ -263,7 +267,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
-		initialBranch:            branchesSnapshot.Active,
+		initialBranch:            initialBranch,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposalOpt,
