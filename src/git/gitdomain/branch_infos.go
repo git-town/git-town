@@ -28,9 +28,10 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[Branc
 // or nil if no such branch exists.
 func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, bi := range self {
-		remoteName, hasRemoteName := bi.RemoteName.Get()
-		if hasRemoteName && remoteName == remoteBranch {
-			return &self[b]
+		if remoteName, hasRemoteName := bi.RemoteName.Get(); hasRemoteName {
+			if remoteName == remoteBranch {
+				return &self[b]
+			}
 		}
 	}
 	return nil
