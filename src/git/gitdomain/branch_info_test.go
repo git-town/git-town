@@ -114,7 +114,7 @@ func TestBranchInfo(t *testing.T) {
 			give := gitdomain.BranchInfo{
 				LocalName:  None[gitdomain.LocalBranchName](),
 				LocalSHA:   None[gitdomain.SHA](),
-				SyncStatus: gitdomain.SyncStatusUpToDate,
+				SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			}
