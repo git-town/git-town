@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"os"
 	"slices"
 
@@ -140,10 +141,14 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return nil, branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToValidate: gitdomain.LocalBranchNames{currentBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
@@ -154,9 +159,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(currentBranch)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(currentBranch)
 	slices.Reverse(initialAndAncestors)
 	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
@@ -165,9 +170,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
-		initialBranch:             branchesSnapshot.Active,
+		initialBranch:             currentBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		parentBranch:              branchesSnapshot.Active,
+		parentBranch:              currentBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,
