@@ -65,6 +65,7 @@ func TestOption(t *testing.T) {
 			must.Eq(t, "null", string(json))
 		})
 	})
+
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Run("Some", func(t *testing.T) {
 			t.Parallel()
