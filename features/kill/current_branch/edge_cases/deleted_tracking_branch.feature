@@ -12,7 +12,7 @@ Feature: the branch to kill has a deleted tracking branch
     And the current branch is "old" and the previous branch is "other"
     When I run "git-town kill"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                    |

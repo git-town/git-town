@@ -11,6 +11,43 @@ import (
 func TestOption(t *testing.T) {
 	t.Parallel()
 
+	t.Run("comparison", func(t *testing.T) {
+		t.Parallel()
+		t.Run("int", func(t *testing.T) {
+			t.Parallel()
+			t.Run("equal", func(t *testing.T) {
+				a := Some(1)
+				b := Some(1)
+				must.True(t, a.Equal(b))
+			})
+			t.Run("not equal", func(t *testing.T) {
+				a := Some(1)
+				b := Some(2)
+				must.False(t, a.Equal(b))
+			})
+			t.Run("Some and None", func(t *testing.T) {
+				a := Some(1)
+				b := None[int]()
+				must.False(t, a.Equal(b))
+			})
+			t.Run("None and Some", func(t *testing.T) {
+				a := Some(1)
+				b := None[int]()
+				must.False(t, a.Equal(b))
+			})
+			t.Run("None and None", func(t *testing.T) {
+				a := None[int]()
+				b := None[int]()
+				must.True(t, a.Equal(b))
+			})
+			t.Run("Some(Default) and None", func(t *testing.T) {
+				a := Some(0)
+				b := None[int]()
+				must.False(t, a.Equal(b))
+			})
+		})
+	})
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {

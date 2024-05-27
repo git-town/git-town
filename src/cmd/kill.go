@@ -224,9 +224,13 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killLocalBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
+	fmt.Println("11111111111111111111")
 	if localBranchToKill, hasLocalBranchToKill := data.branchNameToKill.LocalName.Get(); hasLocalBranchToKill {
+		fmt.Println("22222222222222222222")
 		if data.initialBranch == localBranchToKill {
+			fmt.Println("33333333333333333333")
 			if data.hasOpenChanges {
+				fmt.Println("44444444444444444444")
 				prog.Add(&opcodes.CommitOpenChanges{})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
 				prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})

@@ -3,6 +3,7 @@ package prelude
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 )
 
 // Option provides infrastructure for optional (nullable) values
@@ -14,8 +15,23 @@ import (
 //
 // Option is worth the overhead because it removes one of the many possible meanings (optionality)
 // from pointer values. This means a pointer in this codebase implies mutability and nothing else.
+//
+// Compare Options using their .Equal method, not directly.
 type Option[T any] struct {
 	value *T
+}
+
+// indicates whether the given other Option has the same value as this Option
+func (self Option[T]) Equal(other Option[T]) bool {
+	selfValue, hasSelfValue := self.Get()
+	otherValue, hasOtherValue := other.Get()
+	if !hasSelfValue && !hasOtherValue {
+		return true
+	}
+	if hasSelfValue != hasOtherValue {
+		return false
+	}
+	return reflect.DeepEqual(selfValue, otherValue)
 }
 
 // Get provides a copy of the contained value
