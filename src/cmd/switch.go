@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -110,6 +111,10 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 	if err != nil || exit {
 		return emptySwitchData(), branchesSnapshot, exit, err
 	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptySwitchData(), branchesSnapshot, exit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -129,7 +134,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		branchNames:        branchesSnapshot.Branches.Names(),
 		config:             validatedConfig,
 		dialogInputs:       dialogTestInputs,
-		initialBranch:      branchesSnapshot.Active,
+		initialBranch:      initialBranch,
 		lineage:            validatedConfig.Config.Lineage,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, branchesSnapshot, false, err
