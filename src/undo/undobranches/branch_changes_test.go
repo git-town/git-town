@@ -275,14 +275,14 @@ func TestChanges(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
@@ -856,7 +856,7 @@ func TestChanges(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("upstream/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
@@ -875,7 +875,7 @@ func TestChanges(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("upstream/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
@@ -1448,7 +1448,7 @@ func TestChanges(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("upstream/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
