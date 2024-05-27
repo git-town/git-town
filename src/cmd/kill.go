@@ -100,7 +100,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 
 type killData struct {
 	branchToKillInfo gitdomain.BranchInfo
-	branchTypeToKill configdomain.BranchType
+	branchToKillType configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
 	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
@@ -181,7 +181,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	return &killData{
 		branchToKillInfo: branchToKill,
-		branchTypeToKill: branchTypeToKill,
+		branchToKillType: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
 		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
@@ -195,13 +195,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 
 func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
-	switch data.branchTypeToKill {
+	switch data.branchToKillType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		killFeatureBranch(&prog, &finalUndoProgram, data)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch:
 		killLocalBranch(&prog, &finalUndoProgram, data)
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchTypeToKill))
+		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToKillType))
 	}
 	localBranchNameToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get()
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
@@ -250,7 +250,7 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 }
 
 func validateKillData(data *killData) error {
-	switch data.branchTypeToKill {
+	switch data.branchToKillType {
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -258,5 +258,5 @@ func validateKillData(data *killData) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.KillCannotKillPerennialBranches)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", data.branchTypeToKill))
+	panic(fmt.Sprintf("unhandled branch type: %s", data.branchToKillType))
 }
