@@ -12,6 +12,7 @@ import (
 func FeatureBranchProgram(args featureBranchArgs) {
 	syncArgs := syncFeatureBranchProgramArgs{
 		localName:           args.localName,
+		offline:             args.offline,
 		parentOtherWorktree: args.parentOtherWorktree,
 		program:             args.program,
 		remoteName:          args.remoteName,
@@ -25,10 +26,10 @@ func FeatureBranchProgram(args featureBranchArgs) {
 }
 
 type featureBranchArgs struct {
-	localName gitdomain.LocalBranchName
-	// offline             configdomain.Offline             // whether offline mode is enabled
-	parentOtherWorktree bool             // whether the parent of this branch exists on another worktre
-	program             *program.Program // the program to update
+	localName           gitdomain.LocalBranchName
+	offline             configdomain.Offline // whether offline mode is enabled
+	parentOtherWorktree bool                 // whether the parent of this branch exists on another worktre
+	program             *program.Program     // the program to update
 	remoteName          Option[gitdomain.RemoteBranchName]
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
@@ -48,13 +49,16 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
-	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch /*&& !args.offline.Bool() */ {
-		args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
+	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
+		if !args.offline.Bool() {
+			args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
+		}
 	}
 }
 
 type syncFeatureBranchProgramArgs struct {
 	localName           gitdomain.LocalBranchName
+	offline             configdomain.Offline // whether offline mode is enabled
 	parentOtherWorktree bool
 	program             *program.Program
 	remoteName          Option[gitdomain.RemoteBranchName]

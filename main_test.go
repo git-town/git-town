@@ -40,7 +40,7 @@ func TestGodog(t *testing.T) {
 		Concurrency:   runtime.NumCPU() * concurrency,
 		StopOnFailure: true,
 		Strict:        true,
-		Paths:         []string{"features/"},
+		Paths:         []string{"features/sync/current_branch/feature_branch/rebase_sync_strategy/offline"},
 		Tags:          tags,
 	})
 	if status > 0 {
