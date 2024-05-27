@@ -99,7 +99,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killData struct {
-	branchNameToKill gitdomain.BranchInfo
+	branchToKillInfo gitdomain.BranchInfo
 	branchTypeToKill configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
 	config           config.ValidatedConfig
@@ -180,7 +180,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
 	return &killData{
-		branchNameToKill: branchToKill,
+		branchToKillInfo: branchToKill,
 		branchTypeToKill: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
 		config:           validatedConfig,
@@ -203,7 +203,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchTypeToKill))
 	}
-	localBranchNameToKill, hasLocalBranchToKill := data.branchNameToKill.LocalName.Get()
+	localBranchNameToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get()
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
@@ -215,7 +215,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
-	trackingBranchToKill, hasTrackingBranchToKill := data.branchNameToKill.RemoteName.Get()
+	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if hasTrackingBranchToKill && data.config.Config.IsOnline() {
 		prog.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 	}
@@ -224,13 +224,9 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
-	fmt.Println("11111111111111111111")
-	if localBranchToKill, hasLocalBranchToKill := data.branchNameToKill.LocalName.Get(); hasLocalBranchToKill {
-		fmt.Println("22222222222222222222")
+	if localBranchToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get(); hasLocalBranchToKill {
 		if data.initialBranch == localBranchToKill {
-			fmt.Println("33333333333333333333")
 			if data.hasOpenChanges {
-				fmt.Println("44444444444444444444")
 				prog.Add(&opcodes.CommitOpenChanges{})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
 				prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
@@ -250,7 +246,7 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 			})
 		}
 	}
-	fmt.Println("555555555555555555555555", prog)
+	fmt.Println("5555555555555", prog)
 }
 
 func validateKillData(data *killData) error {
