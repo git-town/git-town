@@ -152,10 +152,14 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		return emptyProposeData(), branchesSnapshot, stashSize, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyProposeData(), branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
@@ -181,7 +185,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	if connector == nil {
 		return emptyProposeData(), branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return proposeData{
 		allBranches:      branchesSnapshot.Branches,
@@ -191,7 +195,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    branchesSnapshot.Active,
+		initialBranch:    initialBranch,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
 	}, branchesSnapshot, stashSize, false, err
