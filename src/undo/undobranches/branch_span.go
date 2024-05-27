@@ -1,8 +1,6 @@
 package undobranches
 
-import (
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
-)
+import "github.com/git-town/git-town/v14/src/git/gitdomain"
 
 // BranchSpan represents changes of a branch over time.
 type BranchSpan struct {
