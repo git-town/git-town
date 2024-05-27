@@ -72,7 +72,7 @@ func TestSHA(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`
-		have := gitdomain.SHA("")
+		var have gitdomain.SHA
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := gitdomain.NewSHA("123456")
