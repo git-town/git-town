@@ -16,7 +16,7 @@ import (
 // Option is worth the overhead because it removes one of the many possible meanings (optionality)
 // from pointer values. This means a pointer in this codebase implies mutability and nothing else.
 //
-// Compare Options using their .Equal method, not directly.
+// Compare Options using their .Equal method since direct comparison using == doesn't work properly.
 type Option[T any] struct {
 	value *T
 }
