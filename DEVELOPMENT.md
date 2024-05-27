@@ -82,6 +82,12 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
+Diff complex data structures:
+
+```
+pretty.Ldiff(t, value1, value2)
+```
+
 ## end-to-end tests
 
 Run all end-to-end tests:
