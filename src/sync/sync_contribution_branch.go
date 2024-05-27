@@ -8,7 +8,7 @@ import (
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func ContributionBranchProgram(prog *program.Program, branch gitdomain.BranchInfo) {
-	if branch.HasTrackingBranch() {
-		prog.Add(&opcodes.RebaseBranch{Branch: branch.RemoteName.BranchName()})
+	if trackingBranch, hasTrackingBranch := branch.RemoteName.Get(); hasTrackingBranch {
+		prog.Add(&opcodes.RebaseBranch{Branch: trackingBranch.BranchName()})
 	}
 }

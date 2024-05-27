@@ -1,20 +1,24 @@
 package gitdomain
 
-import "fmt"
+import (
+	"fmt"
+
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+)
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
 	// LocalName contains the local name of the branch.
-	LocalName LocalBranchName
+	LocalName Option[LocalBranchName]
 
 	// LocalSHA contains the SHA that this branch had locally before Git Town ran.
-	LocalSHA SHA
+	LocalSHA Option[SHA]
 
 	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	RemoteName RemoteBranchName
+	RemoteName Option[RemoteBranchName]
 
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
-	RemoteSHA SHA
+	RemoteSHA Option[SHA]
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
@@ -22,16 +26,24 @@ type BranchInfo struct {
 
 func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
-		LocalName:  EmptyLocalBranchName(),
-		LocalSHA:   EmptySHA(),
-		RemoteName: EmptyRemoteBranchName(),
-		RemoteSHA:  EmptySHA(),
+		LocalName:  None[LocalBranchName](),
+		LocalSHA:   None[SHA](),
+		RemoteName: None[RemoteBranchName](),
+		RemoteSHA:  None[SHA](),
 		SyncStatus: SyncStatusUpToDate,
 	}
 }
 
+// TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
-	return !self.LocalName.IsEmpty() && !self.LocalSHA.IsEmpty()
+	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
+}
+
+func (self BranchInfo) HasLocalBranch2() (hasLocalBranch bool, branchName LocalBranchName, sha SHA) {
+	localName, hasLocalName := self.LocalName.Get()
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	hasLocalBranch = hasLocalName && hasLocalSHA
+	return hasLocalBranch, localName, localSHA
 }
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
@@ -42,8 +54,16 @@ func (self BranchInfo) HasOnlyRemoteBranch() bool {
 	return self.HasRemoteBranch() && !self.HasLocalBranch()
 }
 
+// TODO: delete and replace with destructuring the RemoteName property
 func (self BranchInfo) HasRemoteBranch() bool {
-	return !self.RemoteName.IsEmpty() && !self.RemoteSHA.IsEmpty()
+	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
+}
+
+func (self BranchInfo) HasRemoteBranch2() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
+	remoteName, hasRemoteName := self.RemoteName.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	hasRemoteBranch = hasRemoteName && hasRemoteSHA
+	return hasRemoteBranch, remoteName, remoteSHA
 }
 
 func (self BranchInfo) HasTrackingBranch() bool {
@@ -55,14 +75,29 @@ func (self BranchInfo) IsEmpty() bool {
 	return !self.HasLocalBranch() && !self.HasRemoteBranch()
 }
 
+// TODO: delete and replace with destructuring the LocalName property
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {
-	return !self.LocalName.IsEmpty()
+	return self.LocalName.IsSome()
 }
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.
+// TODO: replace all usages with IsOmniBranch2.
 func (self BranchInfo) IsOmniBranch() bool {
-	return !self.IsEmpty() && self.LocalSHA == self.RemoteSHA
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	return !self.IsEmpty() && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
+}
+
+// Indicates whether the branch described by this BranchInfo is omni
+// and provides all relevant data around this scenario.
+// An omni branch has the same SHA locally and remotely.
+func (self BranchInfo) IsOmniBranch2() (isOmni bool, branch LocalBranchName, sha SHA) {
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	branchName, hasBranch := self.LocalName.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	isOmni = hasLocalSHA && hasRemoteSHA && hasBranch && localSHA == remoteSHA
+	return isOmni, branchName, localSHA
 }
 
 func (self BranchInfo) String() string {

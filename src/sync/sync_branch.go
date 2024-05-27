@@ -9,15 +9,17 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
-	parent, hasParent := args.Config.Lineage.Parent(branch.LocalName).Get()
-	var parentOtherWorktree bool
-	if hasParent {
-		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
-		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+	parentOtherWorktree := false
+	localName, hasLocalName := branch.LocalName.Get()
+	if hasLocalName {
+		if parent, hasParent := args.Config.Lineage.Parent(localName).Get(); hasParent {
+			parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
+			parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		}
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.Program, branch.LocalName, parentOtherWorktree, args)
+		syncDeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
@@ -37,45 +39,51 @@ type BranchProgramArgs struct {
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
 func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(branch.LocalName)
+	localName, hasLocalName := branch.LocalName.Get()
+	if !hasLocalName {
+		return
+	}
+	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
-	branchType := args.Config.BranchType(branch.LocalName)
+	list.Add(&opcodes.Checkout{Branch: localName})
+	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			branch:              branch,
+			localName:           localName,
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
-			branch:              branch,
+			localName:           localName,
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branch)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branch, args.Program)
+		ObservedBranchProgram(branch.RemoteName, args.Program)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(branch.LocalName, args.InitialBranch) {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
-			list.Add(&opcodes.CreateTrackingBranch{Branch: branch.LocalName})
+			list.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
-			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch.LocalName})
+			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
 		default:
-			pushFeatureBranchProgram(list, branch.LocalName, args.Config.SyncFeatureStrategy)
+			pushFeatureBranchProgram(list, localName, args.Config.SyncFeatureStrategy)
 		}
 	}
 }

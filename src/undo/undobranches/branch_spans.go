@@ -35,14 +35,14 @@ func (self BranchSpans) Changes() BranchChanges {
 		if branchSpan.NoChanges() {
 			continue
 		}
-		if branchSpan.IsOmniRemove() {
-			result.OmniRemoved[branchSpan.Before.LocalName] = branchSpan.Before.LocalSHA
+		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
+			result.OmniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
-		if branchSpan.IsOmniChange() {
-			result.OmniChanged[branchSpan.Before.LocalName] = undodomain.Change[gitdomain.SHA]{
-				Before: branchSpan.Before.LocalSHA,
-				After:  branchSpan.After.LocalSHA,
+		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange2(); isOmniChange {
+			result.OmniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
+				Before: beforeSHA,
+				After:  afterSHA,
 			}
 			continue
 		}
@@ -53,26 +53,24 @@ func (self BranchSpans) Changes() BranchChanges {
 			})
 			continue
 		}
-		switch {
-		case branchSpan.LocalAdded():
-			result.LocalAdded = append(result.LocalAdded, branchSpan.After.LocalName)
-		case branchSpan.LocalRemoved():
-			result.LocalRemoved[branchSpan.Before.LocalName] = branchSpan.Before.LocalSHA
-		case branchSpan.LocalChanged():
-			result.LocalChanged[branchSpan.Before.LocalName] = undodomain.Change[gitdomain.SHA]{
-				Before: branchSpan.Before.LocalSHA,
-				After:  branchSpan.After.LocalSHA,
+		if localAdded, afterBranch, _ := branchSpan.LocalAdded(); localAdded {
+			result.LocalAdded = append(result.LocalAdded, afterBranch)
+		} else if localRemoved, beforeBranch, beforeSHA := branchSpan.LocalRemoved(); localRemoved {
+			result.LocalRemoved[beforeBranch] = beforeSHA
+		} else if localChanged, branch, beforeSHA, afterSHA := branchSpan.LocalChanged2(); localChanged {
+			result.LocalChanged[branch] = undodomain.Change[gitdomain.SHA]{
+				Before: beforeSHA,
+				After:  afterSHA,
 			}
 		}
-		switch {
-		case branchSpan.RemoteAdded():
-			result.RemoteAdded = append(result.RemoteAdded, branchSpan.After.RemoteName)
-		case branchSpan.RemoteRemoved():
-			result.RemoteRemoved[branchSpan.Before.RemoteName] = branchSpan.Before.RemoteSHA
-		case branchSpan.RemoteChanged():
-			result.RemoteChanged[branchSpan.Before.RemoteName] = undodomain.Change[gitdomain.SHA]{
-				Before: branchSpan.Before.RemoteSHA,
-				After:  branchSpan.After.RemoteSHA,
+		if remoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); remoteAdded {
+			result.RemoteAdded = append(result.RemoteAdded, remoteBranchName)
+		} else if remoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved(); remoteRemoved {
+			result.RemoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
+		} else if remoteChanged, remoteBranchName, beforeSHA, afterSHA := branchSpan.RemoteChanged2(); remoteChanged {
+			result.RemoteChanged[remoteBranchName] = undodomain.Change[gitdomain.SHA]{
+				Before: beforeSHA,
+				After:  afterSHA,
 			}
 		}
 	}

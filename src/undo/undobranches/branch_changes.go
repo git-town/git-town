@@ -103,28 +103,36 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
-		if inconsistentlyChangedPerennial.After.IsOmniBranch() {
-			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
-				result.Add(&opcodes.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
-				result.Add(&opcodes.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
-				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName})
+		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch2(); isOmni {
+			if slice.Contains(args.UndoablePerennialCommits, afterSHA) {
+				result.Add(&opcodes.Checkout{Branch: branchName})
+				result.Add(&opcodes.RevertCommit{SHA: afterSHA})
+				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branchName})
 			}
 		}
 	}
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		result.Add(&opcodes.Checkout{Branch: inconsistentChange.Before.LocalName})
-		result.Add(&opcodes.ResetCurrentBranchToSHA{
-			MustHaveSHA: inconsistentChange.After.LocalSHA,
-			SetToSHA:    inconsistentChange.Before.LocalSHA,
-			Hard:        true,
-		})
-		result.Add(&opcodes.ResetRemoteBranchToSHA{
-			Branch:      inconsistentChange.Before.RemoteName,
-			MustHaveSHA: inconsistentChange.After.RemoteSHA,
-			SetToSHA:    inconsistentChange.Before.RemoteSHA,
-		})
+		beforeLocalName, hasBeforeLocalName := inconsistentChange.Before.LocalName.Get()
+		beforeRemoteName, hasBeforeRemoteName := inconsistentChange.Before.RemoteName.Get()
+		beforeLocalSHA, hasBeforeLocalSHA := inconsistentChange.Before.LocalSHA.Get()
+		beforeRemoteSHA, hasBeforeRemoteSHA := inconsistentChange.Before.RemoteSHA.Get()
+		afterLocalSHA, hasAfterLocalSHA := inconsistentChange.After.LocalSHA.Get()
+		afterRemoteSHA, hasAfterRemoteSHA := inconsistentChange.After.RemoteSHA.Get()
+		if hasBeforeLocalName && hasBeforeRemoteName && hasBeforeLocalSHA && hasBeforeRemoteSHA && hasAfterLocalSHA && hasAfterRemoteSHA {
+			result.Add(&opcodes.Checkout{Branch: beforeLocalName})
+			result.Add(&opcodes.ResetCurrentBranchToSHA{
+				MustHaveSHA: afterLocalSHA,
+				SetToSHA:    beforeLocalSHA,
+				Hard:        true,
+			})
+			result.Add(&opcodes.ResetRemoteBranchToSHA{
+				Branch:      beforeRemoteName,
+				MustHaveSHA: afterRemoteSHA,
+				SetToSHA:    beforeRemoteSHA,
+			})
+		}
 	}
 
 	// remove remotely added branches

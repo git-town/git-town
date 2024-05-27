@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,7 @@ func switchBranch() *cobra.Command {
 			for i := 0; i < int(amount); i++ {
 				branchName := gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i))
 				localBranches = append(localBranches, branchName)
-				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: branchName, SyncStatus: gitdomain.SyncStatusLocalOnly}) //exhaustruct:ignore
+				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: Some(branchName), SyncStatus: gitdomain.SyncStatusLocalOnly}) //exhaustruct:ignore
 			}
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())

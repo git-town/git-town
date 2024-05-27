@@ -8,10 +8,6 @@ import (
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName string
 
-func EmptyRemoteBranchName() RemoteBranchName {
-	return ""
-}
-
 func NewRemoteBranchName(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
@@ -34,6 +30,7 @@ func (self RemoteBranchName) BranchName() BranchName {
 	return BranchName(string(self))
 }
 
+// TODO: remove because this should be obsolete with Option
 func (self RemoteBranchName) IsEmpty() bool {
 	return self == ""
 }
