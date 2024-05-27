@@ -238,8 +238,8 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 				finalUndoProgram.Add(&opcodes.Checkout{Branch: localBranchToKill})
 				finalUndoProgram.Add(&opcodes.UndoLastCommit{})
 			}
+			prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 		}
-		prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 		prog.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
 		if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
 			sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
