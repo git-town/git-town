@@ -92,8 +92,8 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch              gitdomain.LocalBranchName
-	program             *program.Program
 	parentOtherWorktree bool
+	program             *program.Program
 	syncStrategy        configdomain.SyncFeatureStrategy
 }
 
