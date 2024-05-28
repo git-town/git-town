@@ -19,7 +19,3 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 		Branches: BranchInfos{},
 	}
 }
-
-func (self BranchesSnapshot) IsEmpty() bool {
-	return len(self.Branches) == 0 && self.Active.IsNone()
-}
