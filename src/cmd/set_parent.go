@@ -109,10 +109,10 @@ func executeSetParent(verbose bool) error {
 
 type setParentData struct {
 	config           config.ValidatedConfig
-	initialBranch    gitdomain.LocalBranchName
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
+	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName
 }
 
@@ -174,10 +174,10 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 	}
 	return setParentData{
 		config:           validatedConfig,
-		initialBranch:    initialBranch,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    initialBranch,
 		mainBranch:       mainBranch,
 	}, branchesSnapshot, stashSize, false, nil
 }

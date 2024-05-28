@@ -57,10 +57,10 @@ type ExecuteArgs struct {
 	CommandsCounter gohacks.Counter
 	Config          config.ValidatedConfig
 	Connector       hostingdomain.Connector
-	InitialBranch   gitdomain.LocalBranchName
 	FinalMessages   stringslice.Collector
 	Frontend        git.FrontendCommands
 	HasOpenChanges  bool
+	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 	TestInputs      components.TestInputs

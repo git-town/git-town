@@ -77,7 +77,6 @@ type LoadRepoSnapshotArgs struct {
 	FinalMessages         stringslice.Collector
 	Frontend              git.FrontendCommands
 	HandleUnfinishedState bool
-	InitialBranch         gitdomain.LocalBranchName
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	RootDir               gitdomain.RepoRootDir
