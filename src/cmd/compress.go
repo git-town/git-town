@@ -210,10 +210,11 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		if !hasParent {
 			return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
+		hasRemoteBranch, _, _ := branchInfo.HasRemoteBranch()
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
 			commitCount:      commitCount,
-			hasTracking:      branchInfo.HasRemoteBranch(),
+			hasTracking:      hasRemoteBranch,
 			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
