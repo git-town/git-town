@@ -140,7 +140,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          args.RepoStatus.OpenChanges,
-		InitialBranch:           args.,
+		InitialBranch:           runState.BeginBranchesSnapshot.Active.GetOrPanic(),
 		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   runState.BeginConfigSnapshot,
 		InitialStashSize:        runState.BeginStashSize,
