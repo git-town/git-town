@@ -76,9 +76,9 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Runner:                 frontEndRunner,
 		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 	}
-	rootDir := backendCommands.RootDirectory()
+	rootDir, hasRootDir := backendCommands.RootDirectory().Get()
 	if args.ValidateGitRepo {
-		if rootDir.IsEmpty() {
+		if !hasRootDir {
 			err = errors.New(messages.RepoOutside)
 			return emptyOpenRepoResult(), err
 		}

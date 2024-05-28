@@ -382,12 +382,12 @@ func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 
 // RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
+func (self *BackendCommands) RootDirectory() Option[gitdomain.RepoRootDir] {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
-		return gitdomain.EmptyRepoRootDir()
+		return None[gitdomain.RepoRootDir]()
 	}
-	return gitdomain.NewRepoRootDir(filepath.FromSlash(output))
+	return Some(gitdomain.NewRepoRootDir(filepath.FromSlash(output)))
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.

@@ -801,7 +801,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have := runtime.BackendCommands.RootDirectory()
-			must.False(t, have.IsEmpty())
+			must.True(t, have.IsSome())
 		})
 		t.Run("outside a Git repo", func(t *testing.T) {
 			t.Parallel()
@@ -818,8 +818,7 @@ func TestBackendCommands(t *testing.T) {
 				RemotesCache:       &cache.Remotes{},
 			}
 			have := cmds.RootDirectory()
-			want := gitdomain.EmptyRepoRootDir()
-			must.EqOp(t, want, have)
+			must.True(t, have.IsNone())
 		})
 	})
 
