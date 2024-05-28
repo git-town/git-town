@@ -116,9 +116,9 @@ func (self *RunState) String() string {
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
-	if self.UnfinishedDetails != nil {
+	if unfinishedDetails, hasUnfinishedDetails := self.UnfinishedDetails.Get(); hasUnfinishedDetails {
 		result.WriteString("  UnfineshedDetails: ")
-		result.WriteString(self.UnfinishedDetails.String())
+		result.WriteString(unfinishedDetails.String())
 	}
 	return result.String()
 }
