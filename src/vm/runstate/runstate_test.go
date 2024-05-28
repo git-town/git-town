@@ -35,7 +35,7 @@ func TestRunState(t *testing.T) {
 					Hard:        false,
 				},
 			},
-			EndBranchesSnapshot: gitdomain.BranchesSnapshot{
+			EndBranchesSnapshot: Some(gitdomain.BranchesSnapshot{
 				Active: Some(gitdomain.NewLocalBranchName("branch-1")),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
@@ -53,7 +53,7 @@ func TestRunState(t *testing.T) {
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
 					},
 				},
-			},
+			}),
 			EndConfigSnapshot:        undoconfig.EmptyConfigSnapshot(),
 			EndStashSize:             1,
 			BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
