@@ -64,20 +64,17 @@ func (self BranchInfo) HasLocalBranch() (hasLocalBranch bool, branchName LocalBr
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
 	hasLocalBranch, _, _ := self.HasLocalBranch()
-	return hasLocalBranch && !self.HasRemoteBranch()
+	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	return hasLocalBranch && !hasRemoteBranch
 }
 
 func (self BranchInfo) HasOnlyRemoteBranch() bool {
 	hasLocalBranch, _, _ := self.HasLocalBranch()
-	return self.HasRemoteBranch() && !hasLocalBranch
+	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	return hasRemoteBranch && !hasLocalBranch
 }
 
-// TODO: delete and replace with destructuring the RemoteName property
-func (self BranchInfo) HasRemoteBranch() bool {
-	return self.RemoteName.IsSome() && self.RemoteSHA.IsSome()
-}
-
-func (self BranchInfo) HasRemoteBranch2() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
+func (self BranchInfo) HasRemoteBranch() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
 	remoteName, hasRemoteName := self.RemoteName.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
 	hasRemoteBranch = hasRemoteName && hasRemoteSHA
@@ -86,13 +83,15 @@ func (self BranchInfo) HasRemoteBranch2() (hasRemoteBranch bool, remoteBranchNam
 
 func (self BranchInfo) HasTrackingBranch() bool {
 	hasLocalBranch, _, _ := self.HasLocalBranch()
-	return hasLocalBranch && self.HasRemoteBranch()
+	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	return hasLocalBranch && hasRemoteBranch
 }
 
 // IsEmpty indicates whether this BranchInfo is completely empty, i.e. not a single branch contains something.
 func (self BranchInfo) IsEmpty() bool {
 	hasLocalBranch, _, _ := self.HasLocalBranch()
-	return !hasLocalBranch && !self.HasRemoteBranch()
+	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	return !hasLocalBranch && !hasRemoteBranch
 }
 
 // TODO: delete and replace with destructuring the LocalName property
