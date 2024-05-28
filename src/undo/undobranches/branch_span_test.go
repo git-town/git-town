@@ -296,27 +296,37 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("changed a local branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
+			sha2 := gitdomain.NewSHA("222222")
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					LocalName:  Some(branch1),
+					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("222222")),
+					LocalSHA:   Some(sha2),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.True(t, bs.LocalChanged())
+			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
+			must.True(t, localChanged)
+			must.EqOp(t, branch1, name)
+			must.EqOp(t, sha1, beforeSHA)
+			must.EqOp(t, sha2, afterSHA)
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
+			sha2 := gitdomain.NewSHA("222222")
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
@@ -332,11 +342,15 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
-			must.True(t, bs.LocalChanged())
+			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
+			must.True(t, localChanged)
+			must.EqOp(t, branch1, name)
+			must.EqOp(t, sha1, beforeSHA)
+			must.EqOp(t, sha2, afterSHA)
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
@@ -352,7 +366,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			}
-			must.False(t, bs.LocalChanged())
+			localChanged, _, _, _ := branchSpan.LocalChanged()
+			must.False(t, localChanged)
 		})
 	})
 
