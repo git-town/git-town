@@ -1,6 +1,7 @@
 package gohacks
 
 // Counter is a Statistics implementation that counts how many commands were run.
+// This struct is always mutable, even if you provide or call it by value.
 type Counter struct {
 	count *int
 }

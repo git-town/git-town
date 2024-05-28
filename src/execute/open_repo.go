@@ -66,7 +66,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		LocalConfig:  localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
-		counter:          &commandsCounter,
+		counter:          commandsCounter,
 		dryRun:           args.DryRun,
 		getCurrentBranch: backendCommands.CurrentBranch,
 		omitBranchNames:  args.OmitBranchNames,
@@ -154,7 +154,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 }
 
 type newFrontendRunnerArgs struct {
-	counter          *gohacks.Counter
+	counter          gohacks.Counter
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	omitBranchNames  bool

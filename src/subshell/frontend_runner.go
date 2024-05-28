@@ -17,7 +17,7 @@ import (
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
-	CommandsCounter  *gohacks.Counter
+	CommandsCounter  gohacks.Counter
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	PrintCommands    bool
