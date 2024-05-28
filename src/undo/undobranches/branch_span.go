@@ -10,7 +10,8 @@ type BranchSpan struct {
 
 func (self BranchSpan) IsInconsistentChange() bool {
 	isOmniChange, _, _, _ := self.IsOmniChange()
-	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && self.LocalChanged() && self.RemoteChanged() && !isOmniChange
+	localChanged, _, _, _ := self.LocalChanged()
+	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && localChanged && self.RemoteChanged() && !isOmniChange
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
@@ -37,13 +38,7 @@ func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomai
 	return isLocalAdded, afterLocalBranch, afterSHA
 }
 
-func (self BranchSpan) LocalChanged() bool {
-	beforeSHA, hasBeforeSHA := self.Before.LocalSHA.Get()
-	afterSHA, hasAfterSHA := self.After.LocalSHA.Get()
-	return hasBeforeSHA && hasAfterSHA && beforeSHA != afterSHA
-}
-
-func (self BranchSpan) LocalChanged2() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
 	hasLocalBranchBefore, beforeBranch, beforeSHA := self.Before.HasLocalBranch()
 	hasLocalBranchAfter, _, afterSHA := self.After.HasLocalBranch()
 	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
@@ -63,7 +58,8 @@ func (self BranchSpan) NoChanges() bool {
 	localRemoved, _, _ := self.LocalRemoved()
 	remoteAdded, _, _ := self.RemoteAdded()
 	remoteRemoved, _, _ := self.RemoteRemoved()
-	return !localAdded && !localRemoved && !self.LocalChanged() && !remoteAdded && !remoteRemoved && !self.RemoteChanged()
+	localChanged, _, _, _ := self.LocalChanged()
+	return !localAdded && !localRemoved && !localChanged && !remoteAdded && !remoteRemoved && !self.RemoteChanged()
 }
 
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
