@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/confighelpers"
 	"github.com/git-town/git-town/v14/src/git/giturl"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -22,9 +23,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "github.com",
 				Org:  "git-town",
 				Repo: "docs",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("HTTPS URL", func(t *testing.T) {
 			t.Parallel()
@@ -34,9 +35,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "github.com",
 				Org:  "git-town",
 				Repo: "docs",
-				User: "",
+				User: None[string](),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
 			t.Parallel()
@@ -46,9 +47,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "gitlab.com",
 				Org:  "gitlab-com",
 				Repo: "www-gitlab-com",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("GitLab repository inside a group", func(t *testing.T) {
 			t.Parallel()
@@ -58,9 +59,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "gitlab.com",
 				Org:  "gitlab-org/quality",
 				Repo: "triage-ops",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("self-hosted GitLab server without URL override", func(t *testing.T) {
 			t.Parallel()
@@ -70,9 +71,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "self-hosted-gitlab.com",
 				Org:  "git-town",
 				Repo: "git-town",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("self-hosted GitLab server with URL override", func(t *testing.T) {
 			t.Parallel()
@@ -82,9 +83,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "override.com",
 				Org:  "git-town",
 				Repo: "git-town",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			t.Parallel()
@@ -94,9 +95,9 @@ func TestDetermineOriginURL(t *testing.T) {
 				Host: "gitlab.com",
 				Org:  "git-town",
 				Repo: "git-town",
-				User: "git",
+				User: Some("git"),
 			}
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 }

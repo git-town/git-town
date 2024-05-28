@@ -9,10 +9,10 @@ import (
 
 // Parts contains recognized parts of a Git URL.
 type Parts struct {
-	User string // optional username
-	Host string // hostname of the Git server
-	Org  string // name of the organization that the repo is in
-	Repo string // name of the repository
+	User Option[string] // optional username
+	Host string         // hostname of the Git server
+	Org  string         // name of the organization that the repo is in
+	Repo string         // name of the repository
 }
 
 func Parse(url string) Option[Parts] {
@@ -43,7 +43,7 @@ func Parse(url string) Option[Parts] {
 		Host: trimLast(matches[2]),
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
-		User: trimLast(matches[1]),
+		User: NewStringOption(trimLast(matches[1])),
 	})
 }
 
