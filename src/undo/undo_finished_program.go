@@ -29,15 +29,16 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
 	result.AddProgram(args.RunState.FinalUndoProgram)
-	initialBranch, hasInitialBranch := args.RunState.BeginBranchesSnapshot.Active.Get()
-	if hasInitialBranch {
+	previousBranchCandidates := gitdomain.LocalBranchNames{}
+	if initialBranch, hasInitialBranch := args.RunState.BeginBranchesSnapshot.Active.Get(); hasInitialBranch {
 		result.Add(&opcodes.Checkout{Branch: initialBranch})
+		previousBranchCandidates = append(previousBranchCandidates, initialBranch)
 	}
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{initialBranch},
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return result
 }
