@@ -9,20 +9,13 @@ type BranchSpan struct {
 }
 
 func (self BranchSpan) IsInconsistentChange() bool {
-	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
+	isOmniChange, _, _, _ := self.IsOmniChange()
+	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && self.LocalChanged() && self.RemoteChanged() && !isOmniChange
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (self BranchSpan) IsOmniChange() bool {
-	beforeIsOmni, _, _ := self.Before.IsOmniBranch()
-	afterIsOmni, _, _ := self.After.IsOmniBranch()
-	return beforeIsOmni && afterIsOmni && self.LocalChanged()
-}
-
-// IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
-// from one SHA both locally and remotely to another SHA both locally and remotely.
-func (self BranchSpan) IsOmniChange2() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
 	beforeIsOmni, beforeName, beforeSHA := self.Before.IsOmniBranch()
 	afterIsOmni, _, afterSHA := self.After.IsOmniBranch()
 	isOmniChange = beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
