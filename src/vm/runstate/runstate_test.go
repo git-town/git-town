@@ -76,7 +76,7 @@ func TestRunState(t *testing.T) {
     }
   ],
   "BeginBranchesSnapshot": {
-    "Active": "",
+    "Active": null,
     "Branches": []
   },
   "BeginConfigSnapshot": {
