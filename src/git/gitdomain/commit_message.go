@@ -11,10 +11,6 @@ type CommitMessageParts struct {
 	Text    string // the commit message text minus the first line and empty lines separating it from the rest of the message
 }
 
-func (self CommitMessage) IsEmpty() bool {
-	return self == ""
-}
-
 // Parts separates the parts of the given commit message.
 func (self CommitMessage) Parts() CommitMessageParts {
 	parts := strings.SplitN(self.String(), "\n", 2)
