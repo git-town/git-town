@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"os"
 	"slices"
 
@@ -141,10 +142,14 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return nil, branchesSnapshot, stashSize, exit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{currentBranch},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
@@ -155,9 +160,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(currentBranch)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(currentBranch)
+	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
 	return &appendData{
 		allBranches:               branchesSnapshot.Branches,
@@ -166,9 +171,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
-		initialBranch:             currentBranch,
+		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		parentBranch:              currentBranch,
+		parentBranch:              initialBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,
