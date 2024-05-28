@@ -4,6 +4,7 @@ linters:
     - cyclop # we keep a tab on function length ourselves
     - deadcode # deprecated
     - depguard # we review our dependencies in pull requests
+    - dogsled # nothing we can do about this one
     - dupl # too many false positives
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
     - exhaustivestruct # abandoned

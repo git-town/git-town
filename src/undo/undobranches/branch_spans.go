@@ -39,7 +39,7 @@ func (self BranchSpans) Changes() BranchChanges {
 			result.OmniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
-		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange2(); isOmniChange {
+		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange(); isOmniChange {
 			result.OmniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
 				Before: beforeSHA,
 				After:  afterSHA,
