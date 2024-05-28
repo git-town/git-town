@@ -15,7 +15,9 @@ func (self BranchSpan) IsInconsistentChange() bool {
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (self BranchSpan) IsOmniChange() bool {
-	return self.Before.IsOmniBranch() && self.After.IsOmniBranch() && self.LocalChanged()
+	beforeIsOmni, _, _ := self.Before.IsOmniBranch()
+	afterIsOmni, _, _ := self.After.IsOmniBranch()
+	return beforeIsOmni && afterIsOmni && self.LocalChanged()
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch

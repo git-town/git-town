@@ -100,18 +100,10 @@ func (self BranchInfo) IsLocal() bool {
 	return self.LocalName.IsSome()
 }
 
-// IsOmniBranch indicates whether the local and remote branch are in sync.
-// TODO: replace all usages with IsOmniBranch2.
-func (self BranchInfo) IsOmniBranch() bool {
-	localSHA, hasLocalSHA := self.LocalSHA.Get()
-	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	return !self.IsEmpty() && hasLocalSHA && hasRemoteSHA && localSHA == remoteSHA
-}
-
 // Indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
-func (self BranchInfo) IsOmniBranch2() (isOmni bool, branch LocalBranchName, sha SHA) {
+func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) {
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
 	branchName, hasBranch := self.LocalName.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
