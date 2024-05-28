@@ -116,7 +116,7 @@ func createBranch(args createBranchArgs) error {
 		DryRun:                args.dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-		EndStashSize:          0,
+		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            appendProgram(args.appendData),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

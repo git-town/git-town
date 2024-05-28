@@ -86,7 +86,7 @@ func executeSetParent(verbose bool) error {
 		DryRun:                false,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-		EndStashSize:          0,
+		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            prog,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

@@ -85,7 +85,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-		EndStashSize:          0,
+		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

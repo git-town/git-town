@@ -38,7 +38,7 @@ func Finished(args FinishedArgs) error {
 		DryRun:                   false,
 		EndBranchesSnapshot:      None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:        Some(configSnapshot),
-		EndStashSize:             0,
+		EndStashSize:             None[gitdomain.StashSize](),
 		FinalUndoProgram:         program.Program{},
 		RunProgram:               program.Program{},
 		UndoablePerennialCommits: gitdomain.SHAs{},

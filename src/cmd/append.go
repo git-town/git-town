@@ -72,7 +72,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-		EndStashSize:          0,
+		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            appendProgram(*data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

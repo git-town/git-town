@@ -84,7 +84,7 @@ func executePropose(dryRun, verbose bool) error {
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-		EndStashSize:          0,
+		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            proposeProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

@@ -31,10 +31,11 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})
-	args.RunState.EndStashSize, err = args.Backend.StashSize()
+	endStashSize, err := args.Backend.StashSize()
 	if err != nil {
 		return err
 	}
+	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished()
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
