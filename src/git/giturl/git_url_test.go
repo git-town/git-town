@@ -43,6 +43,6 @@ func TestParse(t *testing.T) {
 	for give, want := range tests {
 		have, has := giturl.Parse(give).Get()
 		must.True(t, has)
-		must.EqOp(t, want, have)
+		must.Eq(t, want, have)
 	}
 }
