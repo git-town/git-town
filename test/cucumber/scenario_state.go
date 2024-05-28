@@ -24,7 +24,7 @@ type ScenarioState struct {
 	initialCommits Option[datatable.DataTable]
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
-	initialCurrentBranch gitdomain.LocalBranchName
+	initialCurrentBranch Option[gitdomain.LocalBranchName]
 
 	// initialDevSHAs is only for looking up SHAs that existed at the developer repo before the first Git Town command ran.
 	// It's not a source of truth for which branches existed at that time
@@ -83,7 +83,7 @@ func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.initialDevSHAs = map[string]gitdomain.SHA{}
 	self.initialOriginSHAs = map[string]gitdomain.SHA{}
 	self.initialLineage = None[datatable.DataTable]()
-	self.initialCurrentBranch = gitdomain.EmptyLocalBranchName()
+	self.initialCurrentBranch = None[gitdomain.LocalBranchName]()
 	self.insideGitRepo = true
 	self.runOutput = ""
 	self.runExitCode = 0

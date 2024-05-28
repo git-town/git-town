@@ -1197,13 +1197,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
-		if state.initialCurrentBranch.IsEmpty() {
+		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
+		if !hasInitialBranch {
 			state.fixture.DevRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
 			return nil
 		}
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
-		if state.fixture.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
-			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+		if state.fixture.DevRepo.CurrentBranchCache.Value() != initialBranch {
+			state.fixture.DevRepo.CheckoutBranch(initialBranch)
 			return nil
 		}
 		return nil
@@ -1309,7 +1310,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
-		state.initialCurrentBranch = branch
+		state.initialCurrentBranch = Some(branch)
 		if !state.fixture.DevRepo.BranchExists(branch) {
 			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
@@ -1338,7 +1339,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if !isLocal {
 			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		}
-		state.initialCurrentBranch = branch
+		state.initialCurrentBranch = Some(branch)
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
 		if !state.fixture.DevRepo.CurrentBranchCache.Initialized() || state.fixture.DevRepo.CurrentBranchCache.Value() != branch {
 			state.fixture.DevRepo.CheckoutBranch(branch)
@@ -1349,7 +1350,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(currentText, previousText string) error {
 		current := gitdomain.NewLocalBranchName(currentText)
 		previous := gitdomain.NewLocalBranchName(previousText)
-		state.initialCurrentBranch = current
+		state.initialCurrentBranch = Some(current)
 		state.fixture.DevRepo.CheckoutBranch(previous)
 		state.fixture.DevRepo.CheckoutBranch(current)
 		return nil
