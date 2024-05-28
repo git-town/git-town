@@ -29,8 +29,10 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
 	result.AddProgram(args.RunState.FinalUndoProgram)
-	initialBranch, _ := args.RunState.BeginBranchesSnapshot.Active.Get()
-	result.Add(&opcodes.Checkout{Branch: initialBranch})
+	initialBranch, hasInitialBranch := args.RunState.BeginBranchesSnapshot.Active.Get()
+	if hasInitialBranch {
+		result.Add(&opcodes.Checkout{Branch: initialBranch})
+	}
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
