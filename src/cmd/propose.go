@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -81,7 +82,7 @@ func executePropose(dryRun, verbose bool) error {
 		BeginStashSize:        initialStashSize,
 		Command:               proposeCmd,
 		DryRun:                dryRun,
-		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
 		RunProgram:            proposeProgram(data),

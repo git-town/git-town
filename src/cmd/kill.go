@@ -74,7 +74,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		BeginStashSize:        initialStashSize,
 		Command:               "kill",
 		DryRun:                dryRun,
-		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
 		RunProgram:            steps,

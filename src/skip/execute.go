@@ -1,6 +1,7 @@
 package skip
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
@@ -88,7 +89,11 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	if !hasBefore {
 		return fmt.Errorf(messages.SkipNoInitialBranchInfo, args.InitialBranch)
 	}
-	after, hasAfter := args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.InitialBranch).Get()
+	afterSnapshot, hasAfterSnapshot := args.RunState.EndBranchesSnapshot.Get()
+	if !hasAfterSnapshot {
+		return errors.New(messages.SkipNoFinalSnapshot)
+	}
+	after, hasAfter := afterSnapshot.Branches.FindByLocalName(args.InitialBranch).Get()
 	if !hasAfter {
 		return fmt.Errorf(messages.SkipNoFinalBranchInfo, args.InitialBranch)
 	}

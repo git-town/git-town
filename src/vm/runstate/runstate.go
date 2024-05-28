@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -22,7 +23,7 @@ type RunState struct {
 	BeginStashSize           gitdomain.StashSize
 	Command                  string
 	DryRun                   bool
-	EndBranchesSnapshot      gitdomain.BranchesSnapshot
+	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]
 	EndConfigSnapshot        undoconfig.ConfigSnapshot
 	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
