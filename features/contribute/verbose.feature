@@ -44,12 +44,11 @@ Feature: make a branch contribution verbosely
       | branch | git add -A                                        |
       |        | git stash                                         |
       | <none> | git config --unset git-town.contribution-branches |
-      |        | git show-ref --verify --quiet refs/heads/         |
       |        | git stash list                                    |
       | branch | git stash pop                                     |
     And it prints:
       """
-      Ran 15 shell commands
+      Ran 14 shell commands
       """
     And the current branch is still "branch"
     And branch "branch" is now a feature branch

@@ -63,8 +63,6 @@ func EmptyBranchChanges() BranchChanges {
 // 	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
 // 	s.WriteString("\n  OmniChanged: ")
 // 	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  InconsistentlyChanged: ")
-// 	s.WriteString(strings.Join(self.InconsistentlyChanged.BranchNames().Strings(), ", "))
 // 	s.WriteRune('\n')
 // 	return s.String()
 // }
