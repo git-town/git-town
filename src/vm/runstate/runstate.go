@@ -67,12 +67,12 @@ func (self *RunState) HasRunProgram() bool {
 
 // IsFinished returns whether or not the run state is unfinished.
 func (self *RunState) IsFinished() bool {
-	return self.UnfinishedDetails == nil
+	return self.UnfinishedDetails.IsNone()
 }
 
 // MarkAsFinished updates the run state to be marked as finished.
 func (self *RunState) MarkAsFinished() {
-	self.UnfinishedDetails = nil
+	self.UnfinishedDetails = NoneP[UnfinishedRunStateDetails]()
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
