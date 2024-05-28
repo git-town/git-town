@@ -340,7 +340,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 			}
 			isOmni, _, _ := give.IsOmniBranch()
-			must.True(t, isOmni)
+			must.False(t, isOmni)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
@@ -352,7 +352,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
 			isOmni, _, _ := give.IsOmniBranch()
-			must.True(t, isOmni)
+			must.False(t, isOmni)
 		})
 	})
 }
