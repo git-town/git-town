@@ -11,20 +11,6 @@ import (
 func TestLocalBranchName(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsEmpty", func(t *testing.T) {
-		t.Parallel()
-		t.Run("branch is empty", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.EmptyLocalBranchName()
-			must.True(t, branch.IsEmpty())
-		})
-		t.Run("branch is not empty", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.NewLocalBranchName("branch")
-			must.False(t, branch.IsEmpty())
-		})
-	})
-
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch-1")
