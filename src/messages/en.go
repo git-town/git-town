@@ -184,6 +184,7 @@ nd will be removed in future versions of Git Town.`
 	SkipNothingToDo                = "nothing to skip"
 	SkipNoInitialBranchInfo        = "found no information about branch %q in the initial snapshot"
 	SkipNoFinalBranchInfo          = "found no information about branch %q in the final snapshot"
+	SkipNoFinalSnapshot            = "found no final snapshot"
 	SquashCannotReadFile           = "cannot read squash message file %q: %w"
 	SquashCommitAuthorQuery        = "Please choose an author for the squash commit:"
 	SquashCommitAuthorProblem      = "error getting squash commit author: %w"

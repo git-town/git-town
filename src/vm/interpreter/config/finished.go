@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -35,7 +36,7 @@ func Finished(args FinishedArgs) error {
 		BeginStashSize:           0,
 		Command:                  args.Command,
 		DryRun:                   false,
-		EndBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
+		EndBranchesSnapshot:      None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:        configSnapshot,
 		EndStashSize:             0,
 		FinalUndoProgram:         program.Program{},

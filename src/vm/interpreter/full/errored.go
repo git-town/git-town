@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/vm/shared"
@@ -14,11 +15,11 @@ import (
 
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
-	var err error
-	args.RunState.EndBranchesSnapshot, err = args.Backend.BranchesSnapshot()
+	endBranchesSnapshot, err := args.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
+	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
