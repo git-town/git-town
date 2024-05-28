@@ -33,10 +33,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})
-	args.RunState.EndStashSize, err = args.Backend.StashSize()
+	endStashSize, err := args.Backend.StashSize()
 	if err != nil {
 		return err
 	}
+	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	if failedOpcode.ShouldAutomaticallyUndoOnError() {
 		return autoUndo(failedOpcode, runErr, args)
