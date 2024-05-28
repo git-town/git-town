@@ -36,8 +36,8 @@ func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdo
 }
 
 func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
-	beforeHasLocalBranch, _, _ := self.Before.HasLocalBranch2()
-	afterHasLocalBranch, afterLocalBranch, afterSHA := self.After.HasLocalBranch2()
+	beforeHasLocalBranch, _, _ := self.Before.HasLocalBranch()
+	afterHasLocalBranch, afterLocalBranch, afterSHA := self.After.HasLocalBranch()
 	isLocalAdded = !beforeHasLocalBranch && afterHasLocalBranch
 	return isLocalAdded, afterLocalBranch, afterSHA
 }
@@ -49,15 +49,15 @@ func (self BranchSpan) LocalChanged() bool {
 }
 
 func (self BranchSpan) LocalChanged2() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
-	hasLocalBranchBefore, beforeBranch, beforeSHA := self.Before.HasLocalBranch2()
-	hasLocalBranchAfter, _, afterSHA := self.After.HasLocalBranch2()
+	hasLocalBranchBefore, beforeBranch, beforeSHA := self.Before.HasLocalBranch()
+	hasLocalBranchAfter, _, afterSHA := self.After.HasLocalBranch()
 	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
 	return localChanged, beforeBranch, beforeSHA, afterSHA
 }
 
 func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
-	hasBeforeBranch, branchName, beforeSHA := self.Before.HasLocalBranch2()
-	hasAfterBranch, _, _ := self.After.HasLocalBranch2()
+	hasBeforeBranch, branchName, beforeSHA := self.Before.HasLocalBranch()
+	hasAfterBranch, _, _ := self.After.HasLocalBranch()
 	localRemoved = hasBeforeBranch && !hasAfterBranch
 	return localRemoved, branchName, beforeSHA
 }
