@@ -28,8 +28,8 @@ type RunState struct {
 	EndStashSize             Option[gitdomain.StashSize]
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
-	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"` // NOTE: cannot be an Option because of JSON serialization
+	UndoablePerennialCommits []gitdomain.SHA                    `exhaustruct:"optional"`
+	UnfinishedDetails        OptionP[UnfinishedRunStateDetails] `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
