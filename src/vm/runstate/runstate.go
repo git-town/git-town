@@ -81,11 +81,11 @@ func (self *RunState) MarkAsUnfinished(backend git.BackendCommands) error {
 	if err != nil {
 		return err
 	}
-	self.UnfinishedDetails = &UnfinishedRunStateDetails{
+	self.UnfinishedDetails = SomeP(&UnfinishedRunStateDetails{
 		CanSkip:   false,
 		EndBranch: currentBranch,
 		EndTime:   time.Now(),
-	}
+	})
 	return nil
 }
 
