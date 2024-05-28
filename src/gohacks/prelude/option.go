@@ -115,3 +115,10 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 	self.value = &value
 	return json.Unmarshal(b, &self.value)
 }
+
+func NewStringOption(content string) Option[string] {
+	if len(content) > 0 {
+		return Some(content)
+	}
+	return None[string]()
+}
