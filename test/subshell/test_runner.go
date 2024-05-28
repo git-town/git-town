@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"strings"
 
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/git-town/git-town/v14/test/asserts"
@@ -37,7 +38,7 @@ type TestRunner struct {
 	WorkingDir string
 
 	// name of the binary to use as the custom editor during "git commit"
-	gitEditor string `exhaustruct:"optional"`
+	gitEditor Option[string] `exhaustruct:"optional"`
 
 	// optional content of the GIT_TOWN_REMOTE environment variable
 	testOrigin string `exhaustruct:"optional"`
@@ -68,8 +69,9 @@ func (self *TestRunner) MockCommand(name string) {
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
 func (self *TestRunner) MockCommitMessage(message string) {
-	self.gitEditor = "git_editor"
-	self.createMockBinary(self.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+	editorPath := "git_editor"
+	self.gitEditor = Some(editorPath)
+	self.createMockBinary(editorPath, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
@@ -203,8 +205,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		opts.Env = envvars.PrependPath(opts.Env, self.BinDir)
 	}
 	// add the custom GIT_EDITOR
-	if self.gitEditor != "" {
-		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, "git_editor"))
+	if gitEditor, hasGitEditor := self.gitEditor.Get(); hasGitEditor {
+		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, gitEditor))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
