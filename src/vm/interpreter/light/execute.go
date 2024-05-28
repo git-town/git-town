@@ -16,7 +16,7 @@ func Execute(args ExecuteArgs) {
 	for _, opcode := range args.Prog {
 		err := opcode.Run(shared.RunArgs{
 			Backend:                         args.Backend,
-			Config:                          &args.Config,
+			Config:                          args.Config,
 			Connector:                       nil,
 			DialogTestInputs:                components.NewTestInputs(),
 			FinalMessages:                   args.FinalMessages,
