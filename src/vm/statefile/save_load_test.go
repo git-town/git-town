@@ -185,10 +185,7 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "DryRun": true,
   "EndBranchesSnapshot": null,
-  "EndConfigSnapshot": {
-    "Global": {},
-    "Local": {}
-  },
+  "EndConfigSnapshot": null,
   "EndStashSize": 1,
   "FinalUndoProgram": [],
   "RunProgram": [

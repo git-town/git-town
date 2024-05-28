@@ -105,10 +105,7 @@ func TestRunState(t *testing.T) {
       }
     ]
   },
-  "EndConfigSnapshot": {
-    "Global": {},
-    "Local": {}
-  },
+  "EndConfigSnapshot": null,
   "EndStashSize": 1,
   "FinalUndoProgram": [],
   "RunProgram": [
