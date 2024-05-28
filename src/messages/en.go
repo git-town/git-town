@@ -59,7 +59,7 @@ const (
 	ContinueNothingToDo                = "nothing to continue"
 	ContinueUnresolvedConflicts        = "you must resolve the conflicts before continuing"
 	ContinueUntrackedChanges           = "please stage or commit the untracked changes first"
-	CurrentBranchCannotDetermine       = "cannot determine current branch"
+	CurrentBranchCannotDetermine       = "cannot determine the current branch"
 	DialogUnexpectedResponse           = "unexpected response: %s"
 	DiffParentNoFeatureBranch          = "you can only diff-parent feature branches"
 	DiffProblem                        = "cannot list diff of %q and %q: %w"
