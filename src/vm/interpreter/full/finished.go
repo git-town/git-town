@@ -27,10 +27,10 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.EndConfigSnapshot = undoconfig.ConfigSnapshot{
+	args.RunState.EndConfigSnapshot = Some(undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
-	}
+	})
 	args.RunState.EndStashSize, err = args.Backend.StashSize()
 	if err != nil {
 		return err
