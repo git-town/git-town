@@ -41,7 +41,7 @@ type TestRunner struct {
 	gitEditor Option[string] `exhaustruct:"optional"`
 
 	// optional content of the GIT_TOWN_REMOTE environment variable
-	testOrigin string `exhaustruct:"optional"`
+	testOrigin Option[string] `exhaustruct:"optional"`
 
 	// indicates whether the current test has created the binDir
 	usesBinDir bool `exhaustruct:"optional"`
@@ -197,8 +197,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
 	// add the custom origin
-	if self.testOrigin != "" {
-		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", self.testOrigin)
+	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {
@@ -264,7 +264,7 @@ func (self *TestRunner) RunMany(commands [][]string) error {
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
 func (self *TestRunner) SetTestOrigin(content string) {
-	self.testOrigin = content
+	self.testOrigin = Some(content)
 }
 
 // createBinDir creates the directory that contains mock executables.
