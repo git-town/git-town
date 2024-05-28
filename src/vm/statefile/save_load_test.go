@@ -43,7 +43,7 @@ func TestLoadSave(t *testing.T) {
 			Command:               "command",
 			DryRun:                true,
 			EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 			EndStashSize:          1,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
