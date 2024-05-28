@@ -40,7 +40,7 @@ type TestRunner struct {
 	// name of the binary to use as the custom editor during "git commit"
 	gitEditor Option[string]
 
-	// optional content of the GIT_TOWN_REMOTE environment variable
+	// content of the GIT_TOWN_REMOTE environment variable
 	testOrigin Option[string]
 
 	// indicates whether the current test has created the binDir
