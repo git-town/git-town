@@ -190,10 +190,9 @@ func TestBackendCommands(t *testing.T) {
 			branch2 := gitdomain.NewLocalBranchName("b2")
 			runtime.CreateBranch(branch1, initial)
 			runtime.CreateBranch(branch2, initial)
-			branchNames := gitdomain.LocalBranchNames{branch1, branch2}
-			have := runtime.Backend.FirstExistingBranch(branchNames, gitdomain.NewLocalBranchName("main"))
-			want := branch1
-			must.EqOp(t, want, have)
+			have := runtime.Backend.FirstExistingBranch(branch1, branch2)
+			want := Some(branch1)
+			must.Eq(t, want, have)
 		})
 		t.Run("second branch matches", func(t *testing.T) {
 			t.Parallel()
@@ -201,20 +200,17 @@ func TestBackendCommands(t *testing.T) {
 			branch1 := gitdomain.NewLocalBranchName("b1")
 			branch2 := gitdomain.NewLocalBranchName("b2")
 			runtime.CreateBranch(branch2, initial)
-			branchNames := gitdomain.LocalBranchNames{branch1, branch2}
-			have := runtime.Backend.FirstExistingBranch(branchNames, gitdomain.NewLocalBranchName("main"))
-			want := branch2
-			must.EqOp(t, want, have)
+			have := runtime.Backend.FirstExistingBranch(branch1, branch2)
+			want := Some(branch2)
+			must.Eq(t, want, have)
 		})
 		t.Run("no branch matches", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("b1")
 			branch2 := gitdomain.NewLocalBranchName("b2")
-			main := gitdomain.NewLocalBranchName("main")
-			branchNames := gitdomain.LocalBranchNames{branch1, branch2}
-			have := runtime.Backend.FirstExistingBranch(branchNames, main)
-			want := main
+			have := runtime.Backend.FirstExistingBranch(branch1, branch2)
+			want := None[gitdomain.LocalBranchName]()
 			must.EqOp(t, want, have)
 		})
 	})
