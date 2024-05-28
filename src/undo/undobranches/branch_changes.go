@@ -1,8 +1,6 @@
 package undobranches
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -72,7 +70,6 @@ func EmptyBranchChanges() BranchChanges {
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
-	fmt.Println("222222222222222222222", self)
 	omniChangedPerennials, omniChangedFeatures := CategorizeLocalBranchChange(self.OmniChanged, args.Config)
 
 	// revert omni-changed perennial branches
