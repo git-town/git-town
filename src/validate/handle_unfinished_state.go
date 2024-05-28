@@ -31,80 +31,81 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	if !hasRunState || runState.IsFinished() {
 		return false, nil
 	}
-	if unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		response, exit, err := dialog.AskHowToHandleUnfinishedRunState(
-			runState.Command,
-			unfinishedDetails.EndBranch,
-			unfinishedDetails.EndTime,
-			unfinishedDetails.CanSkip,
-			args.DialogTestInputs.Next(),
-		)
+	unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get()
+	if !hasUnfinishedDetails {
+		return false, nil
+	}
+	response, exit, err := dialog.AskHowToHandleUnfinishedRunState(
+		runState.Command,
+		unfinishedDetails.EndBranch,
+		unfinishedDetails.EndTime,
+		unfinishedDetails.CanSkip,
+		args.DialogTestInputs.Next(),
+	)
+	if err != nil {
+		return false, err
+	}
+	if exit {
+		return exit, errors.New("user aborted")
+	}
+	switch response {
+	case dialog.ResponseDiscard:
+		return discardRunstate(args.RootDir)
+	case dialog.ResponseContinue:
+		return continueRunstate(runState, args)
+	case dialog.ResponseUndo:
+		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+			backend:      args.Backend,
+			dialogInputs: args.DialogTestInputs,
+			unvalidated:  args.UnvalidatedConfig,
+		})
+		if err != nil || exit {
+			return exit, err
+		}
+		return true, undo.Execute(undo.ExecuteArgs{
+			Backend:          args.Backend,
+			CommandsCounter:  args.CommandsCounter,
+			Config:           validatedConfig,
+			FinalMessages:    args.FinalMessages,
+			Frontend:         args.Frontend,
+			HasOpenChanges:   args.HasOpenChanges,
+			InitialStashSize: runState.BeginStashSize,
+			RootDir:          args.RootDir,
+			RunState:         runState,
+			Verbose:          args.Verbose,
+		})
+	case dialog.ResponseSkip:
+		// TODO: extract into function
+		currentBranch, err := args.Backend.CurrentBranch()
 		if err != nil {
 			return false, err
 		}
-		if exit {
-			return exit, errors.New("user aborted")
+		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+			backend:      args.Backend,
+			dialogInputs: args.DialogTestInputs,
+			unvalidated:  args.UnvalidatedConfig,
+		})
+		if err != nil || exit {
+			return exit, err
 		}
-		switch response {
-		case dialog.ResponseDiscard:
-			return discardRunstate(args.RootDir)
-		case dialog.ResponseContinue:
-			return continueRunstate(runState, args)
-		case dialog.ResponseUndo:
-			validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-				backend:      args.Backend,
-				dialogInputs: args.DialogTestInputs,
-				unvalidated:  args.UnvalidatedConfig,
-			})
-			if err != nil || exit {
-				return exit, err
-			}
-			return true, undo.Execute(undo.ExecuteArgs{
-				Backend:          args.Backend,
-				CommandsCounter:  args.CommandsCounter,
-				Config:           validatedConfig,
-				FinalMessages:    args.FinalMessages,
-				Frontend:         args.Frontend,
-				HasOpenChanges:   args.HasOpenChanges,
-				InitialStashSize: runState.BeginStashSize,
-				RootDir:          args.RootDir,
-				RunState:         runState,
-				Verbose:          args.Verbose,
-			})
-		case dialog.ResponseSkip:
-			// TODO: extract into function
-			currentBranch, err := args.Backend.CurrentBranch()
-			if err != nil {
-				return false, err
-			}
-			validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-				backend:      args.Backend,
-				dialogInputs: args.DialogTestInputs,
-				unvalidated:  args.UnvalidatedConfig,
-			})
-			if err != nil || exit {
-				return exit, err
-			}
-			return true, skip.Execute(skip.ExecuteArgs{
-				Backend:         args.Backend,
-				CommandsCounter: args.CommandsCounter,
-				Config:          validatedConfig,
-				Connector:       args.Connector,
-				FinalMessages:   args.FinalMessages,
-				Frontend:        args.Frontend,
-				HasOpenChanges:  args.HasOpenChanges,
-				InitialBranch:   currentBranch,
-				RootDir:         args.RootDir,
-				RunState:        runState,
-				TestInputs:      args.DialogTestInputs,
-				Verbose:         args.Verbose,
-			})
-		case dialog.ResponseQuit:
-			return true, nil
-		}
-		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
+		return true, skip.Execute(skip.ExecuteArgs{
+			Backend:         args.Backend,
+			CommandsCounter: args.CommandsCounter,
+			Config:          validatedConfig,
+			Connector:       args.Connector,
+			FinalMessages:   args.FinalMessages,
+			Frontend:        args.Frontend,
+			HasOpenChanges:  args.HasOpenChanges,
+			InitialBranch:   currentBranch,
+			RootDir:         args.RootDir,
+			RunState:        runState,
+			TestInputs:      args.DialogTestInputs,
+			Verbose:         args.Verbose,
+		})
+	case dialog.ResponseQuit:
+		return true, nil
 	}
-	return false, nil
+	return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 }
 
 type UnfinishedStateArgs struct {
