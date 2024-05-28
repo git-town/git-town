@@ -31,11 +31,15 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	if !hasRunState || runState.IsFinished() {
 		return false, nil
 	}
+	unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get()
+	if !hasUnfinishedDetails {
+		return false, nil
+	}
 	response, exit, err := dialog.AskHowToHandleUnfinishedRunState(
 		runState.Command,
-		runState.UnfinishedDetails.EndBranch,
-		runState.UnfinishedDetails.EndTime,
-		runState.UnfinishedDetails.CanSkip,
+		unfinishedDetails.EndBranch,
+		unfinishedDetails.EndTime,
+		unfinishedDetails.CanSkip,
 		args.DialogTestInputs.Next(),
 	)
 	if err != nil {

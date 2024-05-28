@@ -103,8 +103,10 @@ func executeSkip(verbose bool) error {
 	if !hasRunState || runState.IsFinished() {
 		return errors.New(messages.SkipNothingToDo)
 	}
-	if !runState.UnfinishedDetails.CanSkip {
-		return errors.New(messages.SkipBranchHasConflicts)
+	if unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+		if !unfinishedDetails.CanSkip {
+			return errors.New(messages.SkipBranchHasConflicts)
+		}
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {

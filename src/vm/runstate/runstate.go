@@ -28,8 +28,8 @@ type RunState struct {
 	EndStashSize             Option[gitdomain.StashSize]
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
-	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"` // NOTE: cannot be an Option because of JSON serialization
+	UndoablePerennialCommits []gitdomain.SHA                    `exhaustruct:"optional"`
+	UnfinishedDetails        OptionP[UnfinishedRunStateDetails] `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
@@ -67,12 +67,12 @@ func (self *RunState) HasRunProgram() bool {
 
 // IsFinished returns whether or not the run state is unfinished.
 func (self *RunState) IsFinished() bool {
-	return self.UnfinishedDetails == nil
+	return self.UnfinishedDetails.IsNone()
 }
 
 // MarkAsFinished updates the run state to be marked as finished.
 func (self *RunState) MarkAsFinished() {
-	self.UnfinishedDetails = nil
+	self.UnfinishedDetails = NoneP[UnfinishedRunStateDetails]()
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
@@ -81,11 +81,11 @@ func (self *RunState) MarkAsUnfinished(backend git.BackendCommands) error {
 	if err != nil {
 		return err
 	}
-	self.UnfinishedDetails = &UnfinishedRunStateDetails{
+	self.UnfinishedDetails = SomeP(&UnfinishedRunStateDetails{
 		CanSkip:   false,
 		EndBranch: currentBranch,
 		EndTime:   time.Now(),
-	}
+	})
 	return nil
 }
 
@@ -116,9 +116,9 @@ func (self *RunState) String() string {
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
-	if self.UnfinishedDetails != nil {
+	if unfinishedDetails, hasUnfinishedDetails := self.UnfinishedDetails.Get(); hasUnfinishedDetails {
 		result.WriteString("  UnfineshedDetails: ")
-		result.WriteString(self.UnfinishedDetails.String())
+		result.WriteString(unfinishedDetails.String())
 	}
 	return result.String()
 }

@@ -42,7 +42,7 @@ func Finished(args FinishedArgs) error {
 		FinalUndoProgram:         program.Program{},
 		RunProgram:               program.Program{},
 		UndoablePerennialCommits: gitdomain.SHAs{},
-		UnfinishedDetails:        nil,
+		UnfinishedDetails:        NoneP[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
 	return statefile.Save(runState, args.RootDir)

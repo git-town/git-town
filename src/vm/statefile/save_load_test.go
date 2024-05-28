@@ -162,11 +162,11 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
-			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
+			UnfinishedDetails: SomeP(&runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
-			},
+			}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 

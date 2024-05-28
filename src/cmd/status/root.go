@@ -90,16 +90,21 @@ func displayStatus(data displayStatusData) {
 }
 
 func displayUnfinishedStatus(state runstate.RunState) {
-	timeDiff := time.Since(state.UnfinishedDetails.EndTime)
-	fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	unfinishedDetails, hasUnfinishedDetails := state.UnfinishedDetails.Get()
+	if hasUnfinishedDetails {
+		timeDiff := time.Since(unfinishedDetails.EndTime)
+		fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	}
 	if state.HasAbortProgram() {
 		fmt.Println(messages.UndoMessage)
 	}
 	if state.HasRunProgram() {
 		fmt.Println(messages.ContinueMessage)
 	}
-	if state.UnfinishedDetails.CanSkip {
-		fmt.Println(messages.SkipMessage)
+	if hasUnfinishedDetails {
+		if unfinishedDetails.CanSkip {
+			fmt.Println(messages.SkipMessage)
+		}
 	}
 }
 

@@ -56,7 +56,9 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.Config.IsMainBranch(currentBranch)) {
-		args.RunState.UnfinishedDetails.CanSkip = true
+		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+			unfinishedDetails.CanSkip = true
+		}
 	}
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
@@ -65,8 +67,10 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
 	message := runErr.Error()
 	message += messages.UndoContinueGuidance
-	if args.RunState.UnfinishedDetails.CanSkip {
-		message += messages.ContinueSkipGuidance
+	if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+		if unfinishedDetails.CanSkip {
+			message += messages.ContinueSkipGuidance
+		}
 	}
 	message += "\n"
 	return errors.New(message)
