@@ -275,13 +275,13 @@ func (self *BackendCommands) DefaultBranch() Option[gitdomain.LocalBranchName] {
 	return Some(gitdomain.LocalBranchName(name))
 }
 
-func (self *BackendCommands) FirstExistingBranch(branches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
+func (self *BackendCommands) FirstExistingBranch(branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(branch) {
-			return branch
+			return Some(branch)
 		}
 	}
-	return mainBranch
+	return None[gitdomain.LocalBranchName]()
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.

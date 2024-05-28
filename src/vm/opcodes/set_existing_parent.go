@@ -13,6 +13,9 @@ type SetExistingParent struct {
 }
 
 func (self *SetExistingParent) Run(args shared.RunArgs) error {
-	nearestAncestor := args.Backend.FirstExistingBranch(self.Ancestors, args.Config.Config.MainBranch)
+	nearestAncestor, hasNearestAncestor := args.Backend.FirstExistingBranch(self.Ancestors...).Get()
+	if !hasNearestAncestor {
+		nearestAncestor = args.Config.Config.MainBranch
+	}
 	return args.Config.SetParent(self.Branch, nearestAncestor)
 }
