@@ -42,7 +42,7 @@ func TestLoadSave(t *testing.T) {
 			BeginStashSize:        0,
 			Command:               "command",
 			DryRun:                true,
-			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+			EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 			EndStashSize:          1,
 			RunProgram: program.Program{
