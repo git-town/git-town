@@ -1,6 +1,7 @@
 package prelude
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -41,6 +42,14 @@ func (self OptionP[T]) IsSome() bool {
 	return self.Value != nil
 }
 
+// MarshalJSON is used when serializing this Option to JSON.
+func (self OptionP[T]) MarshalJSON() ([]byte, error) {
+	if value, hasValue := self.Get(); hasValue {
+		return json.Marshal(*value)
+	}
+	return json.Marshal(nil)
+}
+
 // String provides the string serialization of the contained value.
 // If this option contains nothing, you get an empty string.
 func (self OptionP[T]) String() string {
@@ -54,4 +63,15 @@ func (self OptionP[T]) StringOr(other string) string {
 		return fmt.Sprint(self.Value)
 	}
 	return other
+}
+
+// UnmarshalJSON is used when de-serializing JSON into an Option.
+func (self *OptionP[T]) UnmarshalJSON(b []byte) error {
+	if string(b) == "null" {
+		self.Value = nil
+		return nil
+	}
+	var value T
+	self.Value = &value
+	return json.Unmarshal(b, &self.Value)
 }
