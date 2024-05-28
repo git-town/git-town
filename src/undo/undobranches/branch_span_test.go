@@ -566,27 +566,37 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("changes to a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			sha1 := gitdomain.NewSHA("111111")
+			sha2 := gitdomain.NewSHA("222222")
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(branch1),
+					RemoteSHA:  Some(sha1),
 				},
 				After: gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+					RemoteName: Some(branch1),
+					RemoteSHA:  Some(sha2),
 				},
 			}
-			must.True(t, bs.RemoteChanged())
+			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
+			must.True(t, remoteChanged)
+			must.Eq(t, branch1, branch)
+			must.Eq(t, sha1, beforeSHA)
+			must.Eq(t, sha2, afterSHA)
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			sha1 := gitdomain.NewSHA("111111")
+			sha2 := gitdomain.NewSHA("222222")
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
@@ -602,11 +612,15 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			}
-			must.True(t, bs.RemoteChanged())
+			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
+			must.True(t, remoteChanged)
+			must.Eq(t, branch1, branch)
+			must.Eq(t, sha1, beforeSHA)
+			must.Eq(t, sha2, afterSHA)
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undobranches.BranchSpan{
+			branchSpan := undobranches.BranchSpan{
 				Before: gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
@@ -622,7 +636,8 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
-			must.False(t, bs.RemoteChanged())
+			remoteChanged, _, _, _ := branchSpan.RemoteChanged()
+			must.False(t, remoteChanged)
 		})
 	})
 

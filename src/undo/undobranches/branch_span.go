@@ -11,7 +11,8 @@ type BranchSpan struct {
 func (self BranchSpan) IsInconsistentChange() bool {
 	isOmniChange, _, _, _ := self.IsOmniChange()
 	localChanged, _, _, _ := self.LocalChanged()
-	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && localChanged && self.RemoteChanged() && !isOmniChange
+	remoteChanged, _, _, _ := self.RemoteChanged()
+	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
@@ -59,7 +60,8 @@ func (self BranchSpan) NoChanges() bool {
 	remoteAdded, _, _ := self.RemoteAdded()
 	remoteRemoved, _, _ := self.RemoteRemoved()
 	localChanged, _, _, _ := self.LocalChanged()
-	return !localAdded && !localRemoved && !localChanged && !remoteAdded && !remoteRemoved && !self.RemoteChanged()
+	remoteChanged, _, _, _ := self.RemoteChanged()
+	return !localAdded && !localRemoved && !localChanged && !remoteAdded && !remoteRemoved && !remoteChanged
 }
 
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
@@ -69,13 +71,7 @@ func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gi
 	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
 }
 
-func (self BranchSpan) RemoteChanged() bool {
-	beforeSHA, hasBeforeSHA := self.Before.RemoteSHA.Get()
-	afterSHA, hasAfterSHA := self.After.RemoteSHA.Get()
-	return hasBeforeSHA && hasAfterSHA && beforeSHA != afterSHA
-}
-
-func (self BranchSpan) RemoteChanged2() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := self.Before.HasRemoteBranch()
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := self.After.HasRemoteBranch()
 	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
