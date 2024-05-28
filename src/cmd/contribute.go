@@ -134,7 +134,11 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
-		branchesToMark.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
+		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+		if !hasCurrentBranch {
+			return contributeData{}, errors.New(messages.CurrentBranchCannotDetermine)
+		}
+		branchesToMark.Add(currentBranch, *repo.UnvalidatedConfig.Config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])

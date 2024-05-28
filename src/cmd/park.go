@@ -117,8 +117,12 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	if len(args) == 0 {
-		branchesToPark.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
+		branchesToPark.Add(currentBranch, *repo.UnvalidatedConfig.Config)
 	} else {
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
 	}

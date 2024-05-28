@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"slices"
@@ -83,6 +84,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -147,10 +149,14 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		return emptyPrependData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyPrependData(), branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchesSnapshot.Active},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		LocalBranches:      localBranches,
@@ -161,9 +167,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return emptyPrependData(), branchesSnapshot, stashSize, exit, err
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
-	parent, hasParent := validatedConfig.Config.Lineage.Parent(branchesSnapshot.Active).Get()
+	parent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	if !hasParent {
 		return emptyPrependData(), branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
@@ -176,7 +182,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
-		initialBranch:             branchesSnapshot.Active,
+		initialBranch:             initialBranch,
 		newBranchParentCandidates: parentAndAncestors,
 		parentBranch:              parent,
 		previousBranch:            previousBranch,

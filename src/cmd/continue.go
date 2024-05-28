@@ -70,6 +70,7 @@ func executeContinue(verbose bool) error {
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -126,6 +127,13 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector hostingdomain.Connector
+	initialBranch, hasInitialBranch := initialBranchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		initialBranch, err = repo.Backend.CurrentBranch()
+		if err != nil {
+			return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+		}
+	}
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *repo.UnvalidatedConfig.Config,
@@ -139,6 +147,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    initialBranch,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
@@ -147,6 +156,7 @@ type continueData struct {
 	connector        hostingdomain.Connector
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
+	initialBranch    gitdomain.LocalBranchName
 }
 
 func emptyContinueData() continueData {

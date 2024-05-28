@@ -23,12 +23,13 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
 	result.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, args.RunState.EndStashSize))
 	result.AddProgram(args.RunState.FinalUndoProgram)
-	result.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
+	initialBranch, _ := args.RunState.BeginBranchesSnapshot.Active.Get()
+	result.Add(&opcodes.Checkout{Branch: initialBranch})
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeginBranchesSnapshot.Active},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{initialBranch},
 	})
 	return result
 }

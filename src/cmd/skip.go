@@ -73,8 +73,8 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch := initialBranchesSnapshot.Active
-	if currentBranch.IsEmpty() {
+	currentBranch, hasCurrentBranch := initialBranchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
 		currentBranch, err = repo.Backend.CurrentBranch()
 		if err != nil {
 			return err
@@ -123,10 +123,10 @@ func executeSkip(verbose bool) error {
 		CommandsCounter: repo.CommandsCounter,
 		Config:          validatedConfig,
 		Connector:       connector,
-		CurrentBranch:   currentBranch,
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 		HasOpenChanges:  repoStatus.OpenChanges,
+		InitialBranch:   currentBranch,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
 		TestInputs:      dialogTestInputs,
