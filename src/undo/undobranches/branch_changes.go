@@ -116,9 +116,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemote()
-		afterLocalSHA, hasAfterLocalSHA := inconsistentChange.After.LocalSHA.Get()
-		afterRemoteSHA, hasAfterRemoteSHA := inconsistentChange.After.RemoteSHA.Get()
-		if hasBeforeLocal && hasBeforeRemote && hasAfterLocalSHA && hasAfterRemoteSHA {
+		hasAfterSHAs, afterLocalSHA, afterRemoteSHA := inconsistentChange.After.GetSHAs()
+		if hasBeforeLocal && hasBeforeRemote && hasAfterSHAs {
 			result.Add(&opcodes.Checkout{Branch: beforeLocalName})
 			result.Add(&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: afterLocalSHA,

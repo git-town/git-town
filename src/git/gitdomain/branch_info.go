@@ -46,6 +46,12 @@ func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 	return hasName && hasSHA, name, sha
 }
 
+func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
+	local, hasLocal := self.LocalSHA.Get()
+	remote, hasRemote := self.RemoteSHA.Get()
+	return hasLocal && hasRemote, local, remote
+}
+
 // TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
