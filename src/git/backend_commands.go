@@ -76,7 +76,7 @@ func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, err
 	}
 	return gitdomain.BranchesSnapshot{
 		Branches: branches,
-		Active:   currentBranch,
+		Active:   currentBranchOpt,
 	}, nil
 }
 

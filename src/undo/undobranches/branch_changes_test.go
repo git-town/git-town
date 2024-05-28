@@ -20,7 +20,7 @@ func TestChanges(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   gitdomain.NewLocalBranchName("main"),
+			Active:   Some(gitdomain.NewLocalBranchName("main")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -32,7 +32,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("branch-1"),
+			Active: Some(gitdomain.NewLocalBranchName("branch-1")),
 		}
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
@@ -79,9 +79,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -104,11 +104,11 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("branch-1"),
+			Active: Some(gitdomain.NewLocalBranchName("branch-1")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   gitdomain.NewLocalBranchName("main"),
+			Active:   Some(gitdomain.NewLocalBranchName("main")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -135,9 +135,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -170,7 +170,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -189,7 +189,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -226,9 +226,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -268,7 +268,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -287,7 +287,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -318,9 +318,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -354,7 +354,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("main"),
+			Active: Some(gitdomain.NewLocalBranchName("main")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -373,7 +373,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("main"),
+			Active: Some(gitdomain.NewLocalBranchName("main")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -404,9 +404,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -421,7 +421,7 @@ func TestChanges(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   gitdomain.NewLocalBranchName("main"),
+			Active:   Some(gitdomain.NewLocalBranchName("main")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -440,7 +440,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -474,9 +474,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -513,7 +513,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -532,7 +532,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -569,9 +569,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -611,7 +611,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -630,7 +630,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
@@ -702,9 +702,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -746,7 +746,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -772,7 +772,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -813,9 +813,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch: before.Active,
+			BeginBranch: before.Active.GetOrPanic(),
 			Config:      config,
-			EndBranch:   after.Active,
+			EndBranch:   after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -861,7 +861,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -880,7 +880,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("main"),
+			Active: Some(gitdomain.NewLocalBranchName("main")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -915,9 +915,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch: before.Active,
+			BeginBranch: before.Active.GetOrPanic(),
 			Config:      config,
-			EndBranch:   after.Active,
+			EndBranch:   after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -955,7 +955,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -974,7 +974,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1035,9 +1035,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1077,7 +1077,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -1096,7 +1096,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1133,9 +1133,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1175,7 +1175,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -1194,7 +1194,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1231,9 +1231,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1267,7 +1267,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -1286,7 +1286,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("main"),
+			Active: Some(gitdomain.NewLocalBranchName("main")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1317,9 +1317,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1355,7 +1355,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -1374,7 +1374,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1405,9 +1405,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrDefault(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1434,7 +1434,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("main"),
+			Active: Some(gitdomain.NewLocalBranchName("main")),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -1453,7 +1453,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: gitdomain.NewLocalBranchName("feature-branch"),
+			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1488,9 +1488,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch:              before.Active,
+			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active,
+			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{

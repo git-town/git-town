@@ -174,7 +174,7 @@ func TestLoadSave(t *testing.T) {
 {
   "AbortProgram": [],
   "BeginBranchesSnapshot": {
-    "Active": "",
+    "Active": null,
     "Branches": []
   },
   "BeginConfigSnapshot": {
@@ -185,7 +185,7 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "DryRun": true,
   "EndBranchesSnapshot": {
-    "Active": "",
+    "Active": null,
     "Branches": []
   },
   "EndConfigSnapshot": {

@@ -131,9 +131,13 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
 	checkout := None[gitdomain.LocalBranchName]()
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return observeData{}, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	switch len(args) {
 	case 0:
-		branchesToObserve.Add(branchesSnapshot.Active, *repo.UnvalidatedConfig.Config)
+		branchesToObserve.Add(currentBranch, *repo.UnvalidatedConfig.Config)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToObserve.Add(branch, *repo.UnvalidatedConfig.Config)

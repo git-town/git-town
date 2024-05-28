@@ -95,8 +95,12 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	if branch != branchesSnapshot.Active {
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
+	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}

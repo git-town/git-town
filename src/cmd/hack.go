@@ -128,6 +128,7 @@ func createBranch(args createBranchArgs) error {
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
+		InitialBranch:           args.appendData.initialBranch,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
@@ -182,11 +183,16 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
 	var branchesToValidate gitdomain.LocalBranchNames
 	shouldCreateBranch := len(targetBranches) == 1 && !slice.Contains(localBranchNames, targetBranches[0])
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		err = errors.New(messages.CurrentBranchCannotDetermine)
+		return
+	}
 	if shouldCreateBranch {
 		branchesToValidate = gitdomain.LocalBranchNames{}
 	} else {
 		if len(targetBranches) == 0 {
-			branchesToValidate = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+			branchesToValidate = gitdomain.LocalBranchNames{initialBranch}
 		} else {
 			branchesToValidate = targetBranches
 		}
@@ -240,7 +246,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
-		initialBranch:             branchesSnapshot.Active,
+		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
 		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
