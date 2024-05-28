@@ -34,9 +34,15 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
-func (self BranchInfo) GetLocalBranch() (bool, LocalBranchName, SHA) {
+func (self BranchInfo) GetLocal() (bool, LocalBranchName, SHA) {
 	name, hasName := self.LocalName.Get()
 	sha, hasSHA := self.LocalSHA.Get()
+	return hasName && hasSHA, name, sha
+}
+
+func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
+	name, hasName := self.RemoteName.Get()
+	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
 }
 
