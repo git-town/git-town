@@ -316,14 +316,19 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
 			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			sha1 := gitdomain.NewSHA("111111")
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-				LocalSHA:   Some(gitdomain.NewSHA("111111")),
+				LocalName:  Some(branch1),
+				LocalSHA:   Some(sha1),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+				RemoteSHA:  Some(sha1),
 			}
-			must.True(t, give.IsOmniBranch())
+			isOmni, name, sha := give.IsOmniBranch()
+			must.True(t, isOmni)
+			must.EqOp(t, branch1, name)
+			must.EqOp(t, sha1, sha)
 		})
 		t.Run("not an omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -334,7 +339,8 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 				RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 			}
-			must.False(t, give.IsOmniBranch())
+			isOmni, _, _ := give.IsOmniBranch()
+			must.False(t, isOmni)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
@@ -345,7 +351,8 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
-			must.False(t, give.IsOmniBranch())
+			isOmni, _, _ := give.IsOmniBranch()
+			must.False(t, isOmni)
 		})
 	})
 }
