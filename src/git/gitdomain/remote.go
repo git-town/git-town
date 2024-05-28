@@ -14,10 +14,6 @@ func NewRemote(id string) Remote {
 	panic(fmt.Sprintf("unknown remote: %q", id))
 }
 
-func (self Remote) IsEmpty() bool {
-	return self == ""
-}
-
 // Implementation of the fmt.Stringer interface.
 func (self Remote) String() string {
 	return string(self)
