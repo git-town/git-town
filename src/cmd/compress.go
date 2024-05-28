@@ -97,6 +97,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

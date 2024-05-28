@@ -51,6 +51,7 @@ type ExecuteArgs struct {
 	FinalMessages           stringslice.Collector
 	Frontend                git.FrontendCommands
 	HasOpenChanges          bool
+	InitialBranch           gitdomain.LocalBranchName
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize

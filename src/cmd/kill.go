@@ -89,6 +89,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,

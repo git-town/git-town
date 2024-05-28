@@ -27,6 +27,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
 			HasOpenChanges:    args.RepoStatus.OpenChanges,
+			InitialBranch:     args.InitialBranch,
 			PushHook:          args.UnvalidatedConfig.Config.PushHook,
 			RepoStatus:        args.RepoStatus,
 			RootDir:           args.Repo.RootDir,
@@ -77,6 +78,7 @@ type LoadRepoSnapshotArgs struct {
 	FinalMessages         stringslice.Collector
 	Frontend              git.FrontendCommands
 	HandleUnfinishedState bool
+	InitialBranch         gitdomain.LocalBranchName
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	RootDir               gitdomain.RepoRootDir

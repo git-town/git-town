@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"os"
 	"slices"
 
@@ -83,6 +82,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -140,10 +140,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
-	}
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return nil, branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,

@@ -42,6 +42,7 @@ func Execute(args ExecuteArgs) error {
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		HasOpenChanges:          args.HasOpenChanges,
+		InitialBranch:           args.InitialBranch,
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
@@ -56,7 +57,7 @@ type ExecuteArgs struct {
 	CommandsCounter gohacks.Counter
 	Config          config.ValidatedConfig
 	Connector       hostingdomain.Connector
-	CurrentBranch   gitdomain.LocalBranchName
+	InitialBranch   gitdomain.LocalBranchName
 	FinalMessages   stringslice.Collector
 	Frontend        git.FrontendCommands
 	HasOpenChanges  bool
@@ -83,13 +84,13 @@ func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
 }
 
 func revertChangesToCurrentBranch(args ExecuteArgs) error {
-	before, hasBefore := args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch).Get()
+	before, hasBefore := args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.InitialBranch).Get()
 	if !hasBefore {
-		return fmt.Errorf(messages.SkipNoInitialBranchInfo, args.CurrentBranch)
+		return fmt.Errorf(messages.SkipNoInitialBranchInfo, args.InitialBranch)
 	}
-	after, hasAfter := args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch).Get()
+	after, hasAfter := args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.InitialBranch).Get()
 	if !hasAfter {
-		return fmt.Errorf(messages.SkipNoFinalBranchInfo, args.CurrentBranch)
+		return fmt.Errorf(messages.SkipNoFinalBranchInfo, args.InitialBranch)
 	}
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
@@ -98,9 +99,9 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		},
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		BeginBranch:              args.CurrentBranch,
+		BeginBranch:              args.InitialBranch,
 		Config:                   args.Config.Config,
-		EndBranch:                args.CurrentBranch,
+		EndBranch:                args.InitialBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{

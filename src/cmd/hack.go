@@ -128,6 +128,7 @@ func createBranch(args createBranchArgs) error {
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
+		InitialBranch:           args.appendData.initialBranch,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,

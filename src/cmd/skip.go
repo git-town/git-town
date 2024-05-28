@@ -123,7 +123,7 @@ func executeSkip(verbose bool) error {
 		CommandsCounter: repo.CommandsCounter,
 		Config:          validatedConfig,
 		Connector:       connector,
-		CurrentBranch:   currentBranch,
+		InitialBranch:   currentBranch,
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 		HasOpenChanges:  repoStatus.OpenChanges,
