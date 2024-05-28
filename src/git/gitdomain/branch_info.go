@@ -34,18 +34,21 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+// provides both the name and SHA of the local branch
 func (self BranchInfo) GetLocal() (bool, LocalBranchName, SHA) {
 	name, hasName := self.LocalName.Get()
 	sha, hasSHA := self.LocalSHA.Get()
 	return hasName && hasSHA, name, sha
 }
 
+// provides both the name and SHA of the remote branch
 func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
 }
 
+// provides the SHAs of the local and remote branch
 func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
 	local, hasLocal := self.LocalSHA.Get()
 	remote, hasRemote := self.RemoteSHA.Get()
