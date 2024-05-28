@@ -42,7 +42,7 @@ func (self OptionP[T]) IsSome() bool {
 	return self.Value != nil
 }
 
-// MarshalJSON is used when serializing this Option to JSON.
+// MarshalJSON is used when serializing this OptionP to JSON.
 func (self OptionP[T]) MarshalJSON() ([]byte, error) {
 	if value, hasValue := self.Get(); hasValue {
 		return json.Marshal(*value)
@@ -65,7 +65,7 @@ func (self OptionP[T]) StringOr(other string) string {
 	return other
 }
 
-// UnmarshalJSON is used when de-serializing JSON into an Option.
+// UnmarshalJSON is used when de-serializing JSON into an OptionP.
 func (self *OptionP[T]) UnmarshalJSON(b []byte) error {
 	if string(b) == "null" {
 		self.Value = nil
