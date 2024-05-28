@@ -72,7 +72,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		Command:               "prepend",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            prependProgram(data),
 	}

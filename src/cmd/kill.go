@@ -75,7 +75,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		Command:               "kill",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            steps,
 		FinalUndoProgram:      finalUndoProgram,

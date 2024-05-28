@@ -24,7 +24,7 @@ type RunState struct {
 	Command                  string
 	DryRun                   bool
 	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]
-	EndConfigSnapshot        undoconfig.ConfigSnapshot
+	EndConfigSnapshot        Option[undoconfig.ConfigSnapshot]
 	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program

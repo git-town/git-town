@@ -115,7 +115,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		Command:               syncCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            runProgram,
 	}

@@ -83,7 +83,7 @@ func executePropose(dryRun, verbose bool) error {
 		Command:               proposeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            proposeProgram(data),
 	}

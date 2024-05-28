@@ -115,7 +115,7 @@ func createBranch(args createBranchArgs) error {
 		Command:               "hack",
 		DryRun:                args.dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            appendProgram(args.appendData),
 	}

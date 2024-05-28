@@ -54,7 +54,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			}),
-			EndConfigSnapshot:        undoconfig.EmptyConfigSnapshot(),
+			EndConfigSnapshot:        None[undoconfig.ConfigSnapshot](),
 			EndStashSize:             1,
 			BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
 			BeginConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
@@ -105,10 +105,7 @@ func TestRunState(t *testing.T) {
       }
     ]
   },
-  "EndConfigSnapshot": {
-    "Global": {},
-    "Local": {}
-  },
+  "EndConfigSnapshot": null,
   "EndStashSize": 1,
   "FinalUndoProgram": [],
   "RunProgram": [

@@ -22,7 +22,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config))
 	}
-	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
+	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
+		result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
+	}
 	result.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, args.RunState.EndStashSize))
 	result.AddProgram(args.RunState.FinalUndoProgram)
 	initialBranch, _ := args.RunState.BeginBranchesSnapshot.Active.Get()
