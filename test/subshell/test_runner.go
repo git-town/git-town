@@ -32,19 +32,19 @@ type TestRunner struct {
 	HomeDir string
 
 	// whether to log the output of subshell commands
-	Verbose bool `exhaustruct:"optional"`
+	Verbose bool
 
 	// the directory in which this runner executes shell commands
 	WorkingDir string
 
 	// name of the binary to use as the custom editor during "git commit"
-	gitEditor Option[string] `exhaustruct:"optional"`
+	gitEditor Option[string]
 
-	// optional content of the GIT_TOWN_REMOTE environment variable
-	testOrigin Option[string] `exhaustruct:"optional"`
+	// content of the GIT_TOWN_REMOTE environment variable
+	testOrigin Option[string]
 
 	// indicates whether the current test has created the binDir
-	usesBinDir bool `exhaustruct:"optional"`
+	usesBinDir bool
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
