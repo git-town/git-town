@@ -71,7 +71,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		Command:               "append",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            appendProgram(*data),
 	}

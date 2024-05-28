@@ -83,7 +83,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		Command:               "rename-branch",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            renameBranchProgram(data),
 	}

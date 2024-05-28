@@ -84,7 +84,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		Command:               compressCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            program,
 	}

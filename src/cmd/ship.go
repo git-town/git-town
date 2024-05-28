@@ -102,7 +102,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 		Command:               shipCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          0,
 		RunProgram:            shipProgram(data, message),
 	}
