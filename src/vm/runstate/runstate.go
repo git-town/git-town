@@ -25,7 +25,7 @@ type RunState struct {
 	DryRun                   bool
 	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]
 	EndConfigSnapshot        Option[undoconfig.ConfigSnapshot]
-	EndStashSize             gitdomain.StashSize
+	EndStashSize             Option[gitdomain.StashSize]
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
