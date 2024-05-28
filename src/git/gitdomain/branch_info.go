@@ -34,6 +34,12 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+func (self BranchInfo) GetLocalBranch() (bool, LocalBranchName, SHA) {
+	name, hasName := self.LocalName.Get()
+	sha, hasSHA := self.LocalSHA.Get()
+	return hasName && hasSHA, name, sha
+}
+
 // TODO: delete and replace with destructuring the LocalName property
 func (self BranchInfo) HasLocalBranch() bool {
 	return self.LocalName.IsSome() && self.LocalSHA.IsSome()
