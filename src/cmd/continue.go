@@ -86,7 +86,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	if err != nil {
 		return emptyContinueData(), false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{ // TODO: rename all instances to branchesSnapshot for consistency across commands
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
