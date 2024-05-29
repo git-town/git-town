@@ -87,13 +87,6 @@ func (self BranchInfo) HasTrackingBranch() bool {
 	return hasLocalBranch && hasRemoteBranch
 }
 
-// IsEmpty indicates whether this BranchInfo is completely empty, i.e. not a single branch contains something.
-func (self BranchInfo) IsEmpty() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
-	return !hasLocalBranch && !hasRemoteBranch
-}
-
 // TODO: delete and replace with destructuring the LocalName property
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {

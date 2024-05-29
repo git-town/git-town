@@ -275,43 +275,6 @@ func TestBranchInfo(t *testing.T) {
 		})
 	})
 
-	t.Run("IsEmpty", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is empty", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.BranchInfo{
-				LocalName:  None[gitdomain.LocalBranchName](),
-				LocalSHA:   None[gitdomain.SHA](),
-				SyncStatus: gitdomain.SyncStatusUpToDate,
-				RemoteName: None[gitdomain.RemoteBranchName](),
-				RemoteSHA:  None[gitdomain.SHA](),
-			}
-			must.True(t, give.IsEmpty())
-		})
-		t.Run("has local branch", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-				LocalSHA:   Some(gitdomain.NewSHA("111111")),
-				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: None[gitdomain.RemoteBranchName](),
-				RemoteSHA:  None[gitdomain.SHA](),
-			}
-			must.False(t, give.IsEmpty())
-		})
-		t.Run("has remote branch", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.BranchInfo{
-				LocalName:  None[gitdomain.LocalBranchName](),
-				LocalSHA:   None[gitdomain.SHA](),
-				SyncStatus: gitdomain.SyncStatusRemoteOnly,
-				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-			}
-			must.False(t, give.IsEmpty())
-		})
-	})
-
 	t.Run("IsOmniBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
