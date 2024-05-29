@@ -127,8 +127,8 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 
 type shipData struct {
 	allBranches              gitdomain.BranchInfos
-	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchToShip             gitdomain.BranchInfo
+	branchesSnapshot         gitdomain.BranchesSnapshot
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
@@ -262,8 +262,8 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
-		branchesSnapshot:         branchesSnapshot,
 		branchToShip:             branchToShip,
+		branchesSnapshot:         branchesSnapshot,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
 		config:                   validatedConfig,

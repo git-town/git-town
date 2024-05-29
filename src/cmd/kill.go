@@ -100,10 +100,10 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killData struct {
-	branchesSnapshot gitdomain.BranchesSnapshot
 	branchToKillInfo gitdomain.BranchInfo
 	branchToKillType configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
+	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
@@ -187,10 +187,10 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
 	return &killData{
-		branchesSnapshot: branchesSnapshot,
 		branchToKillInfo: branchToKill,
 		branchToKillType: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
+		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
