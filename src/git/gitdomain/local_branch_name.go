@@ -7,11 +7,6 @@ import . "github.com/git-town/git-town/v14/src/gohacks/prelude"
 // i.e. a local branch name that is unknown or not configured.
 type LocalBranchName string
 
-// TODO: delete this method and replace all calls with None
-func EmptyLocalBranchName() LocalBranchName {
-	return ""
-}
-
 func NewLocalBranchName(id string) LocalBranchName {
 	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")

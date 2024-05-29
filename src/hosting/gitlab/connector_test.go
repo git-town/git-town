@@ -28,7 +28,7 @@ func TestGitlabConnector(t *testing.T) {
 		give := hostingdomain.Proposal{
 			Number:       1,
 			MergeWithAPI: true,
-			Target:       gitdomain.EmptyLocalBranchName(),
+			Target:       "",
 			Title:        "my title",
 		}
 		have := config.DefaultProposalMessage(give)

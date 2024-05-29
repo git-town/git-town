@@ -70,7 +70,7 @@ func (self *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
 func (self *CommitTableBuilder) Table(fields []string) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
-	lastBranch := gitdomain.EmptyLocalBranchName()
+	var lastBranch gitdomain.LocalBranchName
 	lastLocation := ""
 	for _, branch := range self.branches() {
 		SHAs := self.commitsInBranch[branch]
