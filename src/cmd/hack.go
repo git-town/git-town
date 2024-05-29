@@ -64,7 +64,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, branchesSnapshot, stashSize, exit, err := determineHackData(args, repo, dryRun, verbose)
+	data, exit, err := determineHackData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -73,9 +73,9 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
 			backend:               repo.Backend,
-			beginBranchesSnapshot: branchesSnapshot,
+			beginBranchesSnapshot: appendData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        stashSize,
+			beginStashSize:        appendData.stashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
@@ -152,7 +152,7 @@ type createBranchArgs struct {
 	verbose               bool
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, branchesSnapshot gitdomain.BranchesSnapshot, stashSize gitdomain.StashSize, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -161,7 +161,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil {
 		return
 	}
-	branchesSnapshot, stashSize, exit, err = execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -209,7 +209,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return data, branchesSnapshot, stashSize, exit, err
+		return data, exit, err
 	}
 	if !shouldCreateBranch {
 		data = Right[appendData, makeFeatureData](makeFeatureData{
@@ -241,6 +241,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
 	data = Left[appendData, makeFeatureData](appendData{
 		allBranches:               branchesSnapshot.Branches,
+		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
@@ -251,6 +252,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
+		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
 	return
