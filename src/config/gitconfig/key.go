@@ -185,11 +185,6 @@ const (
 	LineageKeySuffix = ".parent"
 )
 
-// TODO: merge with NewParentKey
-func createLineageKey(branch gitdomain.LocalBranchName) Key {
-	return Key(LineageKeyPrefix + branch.String() + LineageKeySuffix)
-}
-
 func parseLineageKey(key string) *Key {
 	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
 		result := Key(key)
