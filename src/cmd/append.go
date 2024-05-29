@@ -104,7 +104,7 @@ type appendData struct {
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	parentBranch              gitdomain.LocalBranchName
-	previousBranch            gitdomain.LocalBranchName
+	previousBranch            Option[gitdomain.LocalBranchName]
 	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
@@ -206,11 +206,15 @@ func appendProgram(data appendData) program.Program {
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
+	previousBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
+	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.initialBranch, data.previousBranch},
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog
 }
