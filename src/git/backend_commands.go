@@ -323,15 +323,15 @@ func (self *BackendCommands) OriginHead() Option[gitdomain.LocalBranchName] {
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
+func (self *BackendCommands) PreviouslyCheckedOutBranch() Option[gitdomain.LocalBranchName] {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName()
+		return None[gitdomain.LocalBranchName]()
 	}
 	if output == "" {
-		return gitdomain.EmptyLocalBranchName()
+		return None[gitdomain.LocalBranchName]()
 	}
-	return gitdomain.NewLocalBranchName(output)
+	return Some(gitdomain.NewLocalBranchName(output))
 }
 
 // Remotes provides the names of all Git remotes in this repository.

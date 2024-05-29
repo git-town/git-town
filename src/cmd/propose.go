@@ -115,7 +115,7 @@ type proposeData struct {
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
-	previousBranch   gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
 	remotes          gitdomain.Remotes
 }
 
@@ -215,11 +215,15 @@ func proposeProgram(data proposeData) program.Program {
 			PushBranch:    true,
 		})
 	}
+	previousBranchCandidates := gitdomain.LocalBranchNames{}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
+	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	prog.Add(&opcodes.CreateProposal{
 		Branch:     data.initialBranch,
