@@ -24,16 +24,6 @@ type BranchInfo struct {
 	SyncStatus SyncStatus
 }
 
-func EmptyBranchInfo() BranchInfo {
-	return BranchInfo{
-		LocalName:  None[LocalBranchName](),
-		LocalSHA:   None[SHA](),
-		RemoteName: None[RemoteBranchName](),
-		RemoteSHA:  None[SHA](),
-		SyncStatus: SyncStatusUpToDate,
-	}
-}
-
 // provides both the name and SHA of the local branch
 func (self BranchInfo) GetLocal() (bool, LocalBranchName, SHA) {
 	name, hasName := self.LocalName.Get()
