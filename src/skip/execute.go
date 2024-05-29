@@ -93,11 +93,10 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	if !hasAfterSnapshot {
 		return errors.New(messages.SkipNoFinalSnapshot)
 	}
-	after := afterSnapshot.Branches.FindByLocalName(args.InitialBranch)
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
 			Before: before,
-			After:  after,
+			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch),
 		},
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
