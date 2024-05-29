@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 )
 
@@ -18,10 +19,10 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot gitdomain.BranchesSnapshot) Br
 		})
 	}
 	for _, after := range afterSnapshot.Branches {
-		if beforeSnapshot.Branches.FindMatchingRecord(after).IsEmpty() {
+		if beforeSnapshot.Branches.FindMatchingRecord(after).IsNone() {
 			result = append(result, BranchSpan{
 				Before: gitdomain.EmptyBranchInfo(),
-				After:  after,
+				After:  Some(after),
 			})
 		}
 	}
@@ -46,10 +47,11 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
-		if branchSpan.IsInconsistentChange() {
+		isInconsistentChange, after := branchSpan.IsInconsistentChange()
+		if isInconsistentChange {
 			result.InconsistentlyChanged = append(result.InconsistentlyChanged, undodomain.InconsistentChange{
 				Before: branchSpan.Before,
-				After:  branchSpan.After,
+				After:  after,
 			})
 			continue
 		}
