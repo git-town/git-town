@@ -54,26 +54,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-			backend:      args.Backend,
-			dialogInputs: args.DialogTestInputs,
-			unvalidated:  args.UnvalidatedConfig,
-		})
-		if err != nil || exit {
-			return exit, err
-		}
-		return true, undo.Execute(undo.ExecuteArgs{
-			Backend:          args.Backend,
-			CommandsCounter:  args.CommandsCounter,
-			Config:           validatedConfig,
-			FinalMessages:    args.FinalMessages,
-			Frontend:         args.Frontend,
-			HasOpenChanges:   args.HasOpenChanges,
-			InitialStashSize: runState.BeginStashSize,
-			RootDir:          args.RootDir,
-			RunState:         runState,
-			Verbose:          args.Verbose,
-		})
+		return undoRunState(args, runState)
 	case dialog.ResponseSkip:
 		return skipRunstate(args, runState)
 	case dialog.ResponseQuit:
@@ -194,6 +175,29 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 		RunState:        runState,
 		TestInputs:      args.DialogTestInputs,
 		Verbose:         args.Verbose,
+	})
+}
+
+func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, error) {
+	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+		backend:      args.Backend,
+		dialogInputs: args.DialogTestInputs,
+		unvalidated:  args.UnvalidatedConfig,
+	})
+	if err != nil || exit {
+		return exit, err
+	}
+	return true, undo.Execute(undo.ExecuteArgs{
+		Backend:          args.Backend,
+		CommandsCounter:  args.CommandsCounter,
+		Config:           validatedConfig,
+		FinalMessages:    args.FinalMessages,
+		Frontend:         args.Frontend,
+		HasOpenChanges:   args.HasOpenChanges,
+		InitialStashSize: runState.BeginStashSize,
+		RootDir:          args.RootDir,
+		RunState:         runState,
+		Verbose:          args.Verbose,
 	})
 }
 
