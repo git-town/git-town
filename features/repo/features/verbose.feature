@@ -15,12 +15,11 @@ Feature: display all executed Git commands
       |        | backend  | which garcon-url-handler                  |
       |        | backend  | which xdg-open                            |
       |        | backend  | which open                                |
-      |        | backend  | git status --long --ignore-submodules     |
       |        | backend  | git rev-parse --abbrev-ref HEAD           |
       | <none> | frontend | open https://github.com/git-town/git-town |
     And it prints:
       """
-      Ran 11 shell commands.
+      Ran 10 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """
