@@ -32,8 +32,8 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
 			have := bis.FindMatchingRecord(give)
-			want := bis[0]
-			must.EqOp(t, want, have)
+			want := Some(bis[0])
+			must.Eq(t, want, have)
 		})
 		t.Run("has matching remote name", func(t *testing.T) {
 			t.Parallel()
@@ -54,8 +54,8 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			}
 			have := bis.FindMatchingRecord(give)
-			want := bis[0]
-			must.EqOp(t, want, have)
+			want := Some(bis[0])
+			must.Eq(t, want, have)
 		})
 	})
 

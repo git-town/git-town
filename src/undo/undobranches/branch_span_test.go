@@ -27,13 +27,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(branch1),
 					LocalSHA:   Some(sha2),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha2),
-				},
+				}),
 			}
 			isOmni, name, beforeSHA, afterSHA := bs.IsOmniChange()
 			must.True(t, isOmni)
@@ -51,13 +51,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			isOmni, _, _, _ := bs.IsOmniChange()
 			must.False(t, isOmni)
@@ -78,13 +78,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				After: None[gitdomain.BranchInfo](),
 			}
 			isOmniRemove, beforeBranchName, beforeSHA := branchSpan.IsOmniRemove()
 			must.True(t, isOmniRemove)
@@ -103,13 +97,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(branch1),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
-				},
+				}),
 			}
 			isOmniRemove, _, _ := bs.IsOmniRemove()
 			must.False(t, isOmniRemove)
@@ -128,15 +122,17 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
-				},
+				}),
 			}
-			must.True(t, bs.IsInconsistentChange())
+			isInconsistentChange, after := bs.IsInconsistentChange()
+			must.True(t, isInconsistentChange)
+			must.Eq(t, bs.After.GetOrPanic(), after)
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
@@ -148,15 +144,16 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
-				},
+				}),
 			}
-			must.False(t, bs.IsInconsistentChange())
+			isInconsistentChange, _ := bs.IsInconsistentChange()
+			must.False(t, isInconsistentChange)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -168,15 +165,16 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
-				},
+				}),
 			}
-			must.False(t, bs.IsInconsistentChange())
+			isInconsistentChange, _ := bs.IsInconsistentChange()
+			must.False(t, isInconsistentChange)
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -188,15 +186,16 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
-				},
+				}),
 			}
-			must.False(t, bs.IsInconsistentChange())
+			isInconsistentChange, _ := bs.IsInconsistentChange()
+			must.False(t, isInconsistentChange)
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -208,15 +207,16 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				}),
 			}
-			must.False(t, bs.IsInconsistentChange())
+			isInconsistentChange, _ := bs.IsInconsistentChange()
+			must.False(t, isInconsistentChange)
 		})
 	})
 
@@ -233,13 +233,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(branch1),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				}),
 			}
 			isLocalAdded, afterBranchName, afterSHA := bs.LocalAdded()
 			must.True(t, isLocalAdded)
@@ -257,13 +257,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(branch1),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
-				},
+				}),
 			}
 			isLocalAdded, branchName, afterSHA := bs.LocalAdded()
 			must.True(t, isLocalAdded)
@@ -279,13 +279,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				After: None[gitdomain.BranchInfo](),
 			}
 			isLocalAdded, _, _ := bs.LocalAdded()
 			must.False(t, isLocalAdded)
@@ -307,13 +301,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(sha2),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				}),
 			}
 			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
 			must.True(t, localChanged)
@@ -334,13 +328,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-				},
+				}),
 			}
 			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
 			must.True(t, localChanged)
@@ -358,13 +352,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			localChanged, _, _, _ := branchSpan.LocalChanged()
 			must.False(t, localChanged)
@@ -384,13 +378,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				After: None[gitdomain.BranchInfo](),
 			}
 			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
 			must.True(t, isLocalRemoved)
@@ -408,13 +396,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(sha1),
-				},
+				}),
 			}
 			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
 			must.True(t, isLocalRemoved)
@@ -430,13 +418,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				}),
 			}
 			isLocalRemoved, _, _ := bs.LocalRemoved()
 			must.False(t, isLocalRemoved)
@@ -455,13 +443,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-				},
+				}),
 			}
 			must.True(t, bs.NoChanges())
 		})
@@ -475,13 +463,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			must.False(t, bs.NoChanges())
 		})
@@ -501,13 +489,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha1),
-				},
+				}),
 			}
 			isRemoteAdded, addedRemoteBranchName, addedRemoteSHA := bs.RemoteAdded()
 			must.True(t, isRemoteAdded)
@@ -526,13 +514,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha1),
-				},
+				}),
 			}
 			isRemoteAdded, addedRemoteBranchName, addedRemoteSHA := bs.RemoteAdded()
 			must.True(t, isRemoteAdded)
@@ -549,13 +537,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			isRemoteAdded, _, _ := bs.RemoteAdded()
 			must.False(t, isRemoteAdded)
@@ -577,13 +565,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha2),
-				},
+				}),
 			}
 			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
 			must.True(t, remoteChanged)
@@ -604,13 +592,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
 			must.True(t, remoteChanged)
@@ -628,13 +616,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-				},
+				}),
 			}
 			remoteChanged, _, _, _ := branchSpan.RemoteChanged()
 			must.False(t, remoteChanged)
@@ -655,13 +643,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				After: None[gitdomain.BranchInfo](),
 			}
 			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
 			must.True(t, isRemoteRemoved)
@@ -680,13 +662,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha1),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(sha1),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				}),
 			}
 			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
 			must.True(t, isRemoteRemoved)
@@ -704,13 +686,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
+				}),
 			}
 			isRemoteRemoved, _, _ := bs.RemoteRemoved()
 			must.False(t, isRemoteRemoved)
@@ -726,13 +708,13 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: Some(gitdomain.NewRemoteBranchName("upstream/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
-				After: gitdomain.BranchInfo{
+				After: Some(gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("upstream/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-				},
+				}),
 			}
 			isRemoteRemoved, _, _ := bs.RemoteRemoved()
 			must.False(t, isRemoteRemoved)

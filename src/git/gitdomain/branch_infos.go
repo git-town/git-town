@@ -37,20 +37,20 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchI
 	return nil
 }
 
-func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
+func (self BranchInfos) FindMatchingRecord(other BranchInfo) Option[BranchInfo] {
 	for _, bi := range self {
 		biLocalName, hasBiLocalName := bi.LocalName.Get()
 		otherLocalName, hasOtherLocalName := other.LocalName.Get()
 		if hasBiLocalName && hasOtherLocalName && biLocalName == otherLocalName {
-			return bi
+			return Some(bi)
 		}
 		biRemoteName, hasBiRemoteName := bi.RemoteName.Get()
 		otherRemoteName, hasOtherRemoteName := other.RemoteName.Get()
 		if hasBiRemoteName && hasOtherRemoteName && biRemoteName == otherRemoteName {
-			return bi
+			return Some(bi)
 		}
 	}
-	return EmptyBranchInfo()
+	return None[BranchInfo]()
 }
 
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
