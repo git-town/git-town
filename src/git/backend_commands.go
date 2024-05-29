@@ -463,7 +463,6 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-// TODO: return Option for checkedoutBranch
 func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gitdomain.LocalBranchName]) {
 	result := gitdomain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
