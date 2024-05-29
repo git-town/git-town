@@ -31,17 +31,25 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot gitdomain.BranchesSnapshot) Br
 
 // Changes describes the specific changes made in this BranchSpans.
 func (self BranchSpans) Changes() BranchChanges {
-	result := EmptyBranchChanges()
+	inconsistentlyChanged := undodomain.InconsistentChanges{}
+	localAdded := gitdomain.LocalBranchNames{}
+	localChanged := LocalBranchChange{}
+	localRemoved := LocalBranchesSHAs{}
+	omniChanged := LocalBranchChange{}
+	omniRemoved := LocalBranchesSHAs{}
+	remoteAdded := gitdomain.RemoteBranchNames{}
+	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
+	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	for _, branchSpan := range self {
 		if branchSpan.NoChanges() {
 			continue
 		}
 		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
-			result.OmniRemoved[beforeLocalBranch] = beforeLocalSHA
+			omniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
 		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange(); isOmniChange {
-			result.OmniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
+			omniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
 				Before: beforeSHA,
 				After:  afterSHA,
 			}
@@ -49,32 +57,42 @@ func (self BranchSpans) Changes() BranchChanges {
 		}
 		isInconsistentChange, before, after := branchSpan.IsInconsistentChange()
 		if isInconsistentChange {
-			result.InconsistentlyChanged = append(result.InconsistentlyChanged, undodomain.InconsistentChange{
+			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
 				Before: before,
 				After:  after,
 			})
 			continue
 		}
-		if localAdded, afterBranch, _ := branchSpan.LocalAdded(); localAdded {
-			result.LocalAdded = append(result.LocalAdded, afterBranch)
-		} else if localRemoved, beforeBranch, beforeSHA := branchSpan.LocalRemoved(); localRemoved {
-			result.LocalRemoved[beforeBranch] = beforeSHA
-		} else if localChanged, branch, beforeSHA, afterSHA := branchSpan.LocalChanged(); localChanged {
-			result.LocalChanged[branch] = undodomain.Change[gitdomain.SHA]{
+		if isLocalAdded, afterBranch, _ := branchSpan.LocalAdded(); isLocalAdded {
+			localAdded = append(localAdded, afterBranch)
+		} else if isLocalRemoved, beforeBranch, beforeSHA := branchSpan.LocalRemoved(); isLocalRemoved {
+			localRemoved[beforeBranch] = beforeSHA
+		} else if isLocalChanged, branch, beforeSHA, afterSHA := branchSpan.LocalChanged(); isLocalChanged {
+			localChanged[branch] = undodomain.Change[gitdomain.SHA]{
 				Before: beforeSHA,
 				After:  afterSHA,
 			}
 		}
-		if remoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); remoteAdded {
-			result.RemoteAdded = append(result.RemoteAdded, remoteBranchName)
-		} else if remoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved(); remoteRemoved {
-			result.RemoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
-		} else if remoteChanged, remoteBranchName, beforeSHA, afterSHA := branchSpan.RemoteChanged(); remoteChanged {
-			result.RemoteChanged[remoteBranchName] = undodomain.Change[gitdomain.SHA]{
+		if isRemoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); isRemoteAdded {
+			remoteAdded = append(remoteAdded, remoteBranchName)
+		} else if isRemoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved(); isRemoteRemoved {
+			remoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
+		} else if isRemoteChanged, remoteBranchName, beforeSHA, afterSHA := branchSpan.RemoteChanged(); isRemoteChanged {
+			remoteChanged[remoteBranchName] = undodomain.Change[gitdomain.SHA]{
 				Before: beforeSHA,
 				After:  afterSHA,
 			}
 		}
 	}
-	return result
+	return BranchChanges{
+		InconsistentlyChanged: inconsistentlyChanged,
+		LocalAdded:            localAdded,
+		LocalChanged:          localChanged,
+		LocalRemoved:          localRemoved,
+		OmniChanged:           omniChanged,
+		OmniRemoved:           omniRemoved,
+		RemoteAdded:           remoteAdded,
+		RemoteChanged:         remoteChanged,
+		RemoteRemoved:         remoteRemoved,
+	}
 }
