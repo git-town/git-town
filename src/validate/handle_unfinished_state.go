@@ -75,33 +75,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 			Verbose:          args.Verbose,
 		})
 	case dialog.ResponseSkip:
-		// TODO: extract into function
-		currentBranch, err := args.Backend.CurrentBranch()
-		if err != nil {
-			return false, err
-		}
-		validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-			backend:      args.Backend,
-			dialogInputs: args.DialogTestInputs,
-			unvalidated:  args.UnvalidatedConfig,
-		})
-		if err != nil || exit {
-			return exit, err
-		}
-		return true, skip.Execute(skip.ExecuteArgs{
-			Backend:         args.Backend,
-			CommandsCounter: args.CommandsCounter,
-			Config:          validatedConfig,
-			Connector:       args.Connector,
-			FinalMessages:   args.FinalMessages,
-			Frontend:        args.Frontend,
-			HasOpenChanges:  args.HasOpenChanges,
-			InitialBranch:   currentBranch,
-			RootDir:         args.RootDir,
-			RunState:        runState,
-			TestInputs:      args.DialogTestInputs,
-			Verbose:         args.Verbose,
-		})
+		return skipRunstate(args, runState)
 	case dialog.ResponseQuit:
 		return true, nil
 	}
@@ -192,6 +166,35 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		},
 		UnvalidatedConfig: &args.unvalidated,
 	}, false, nil
+}
+
+func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, error) {
+	currentBranch, err := args.Backend.CurrentBranch()
+	if err != nil {
+		return false, err
+	}
+	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
+		backend:      args.Backend,
+		dialogInputs: args.DialogTestInputs,
+		unvalidated:  args.UnvalidatedConfig,
+	})
+	if err != nil || exit {
+		return exit, err
+	}
+	return true, skip.Execute(skip.ExecuteArgs{
+		Backend:         args.Backend,
+		CommandsCounter: args.CommandsCounter,
+		Config:          validatedConfig,
+		Connector:       args.Connector,
+		FinalMessages:   args.FinalMessages,
+		Frontend:        args.Frontend,
+		HasOpenChanges:  args.HasOpenChanges,
+		InitialBranch:   currentBranch,
+		RootDir:         args.RootDir,
+		RunState:        runState,
+		TestInputs:      args.DialogTestInputs,
+		Verbose:         args.Verbose,
+	})
 }
 
 type quickValidateConfigArgs struct {
