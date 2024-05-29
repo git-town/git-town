@@ -778,7 +778,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature1"))
 		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature2"))
 		have := runtime.Backend.PreviouslyCheckedOutBranch()
-		must.EqOp(t, gitdomain.NewLocalBranchName("feature1"), have)
+		must.EqOp(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 	})
 
 	t.Run("Remotes", func(t *testing.T) {
