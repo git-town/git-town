@@ -37,13 +37,7 @@ func TestChanges(t *testing.T) {
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
 			undobranches.BranchSpan{
-				Before: gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
+				Before: None[gitdomain.BranchInfo](),
 				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
@@ -635,13 +629,13 @@ func TestChanges(t *testing.T) {
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
 			undobranches.BranchSpan{
-				Before: gitdomain.BranchInfo{
+				Before: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-				},
+				}),
 				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
@@ -651,13 +645,13 @@ func TestChanges(t *testing.T) {
 				}),
 			},
 			undobranches.BranchSpan{
-				Before: gitdomain.BranchInfo{
+				Before: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
-				},
+				}),
 				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),

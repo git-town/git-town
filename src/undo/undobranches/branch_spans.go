@@ -14,14 +14,14 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot gitdomain.BranchesSnapshot) Br
 	for _, before := range beforeSnapshot.Branches {
 		after := afterSnapshot.Branches.FindMatchingRecord(before)
 		result = append(result, BranchSpan{
-			Before: before,
+			Before: Some(before),
 			After:  after,
 		})
 	}
 	for _, after := range afterSnapshot.Branches {
 		if beforeSnapshot.Branches.FindMatchingRecord(after).IsNone() {
 			result = append(result, BranchSpan{
-				Before: gitdomain.EmptyBranchInfo(),
+				Before: None[gitdomain.BranchInfo](),
 				After:  Some(after),
 			})
 		}
@@ -47,10 +47,10 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
-		isInconsistentChange, after := branchSpan.IsInconsistentChange()
+		isInconsistentChange, before, after := branchSpan.IsInconsistentChange()
 		if isInconsistentChange {
 			result.InconsistentlyChanged = append(result.InconsistentlyChanged, undodomain.InconsistentChange{
-				Before: branchSpan.Before,
+				Before: before,
 				After:  after,
 			})
 			continue
