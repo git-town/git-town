@@ -27,9 +27,9 @@ func TestChanges(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				},
 			},
 			Active: Some(gitdomain.NewLocalBranchName("branch-1")),
@@ -41,9 +41,9 @@ func TestChanges(t *testing.T) {
 				After: Some(gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			},
 		}
