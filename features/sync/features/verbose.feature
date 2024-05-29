@@ -41,6 +41,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                     |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 26 shell commands.
       """
     And all branches are now synchronized
