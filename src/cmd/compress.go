@@ -72,15 +72,15 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 	if err != nil {
 		return err
 	}
-	data, initialBranchesSnapshot, initialStashSize, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
+	data, branchesSnapshot, stashSize, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
 	if err != nil || exit {
 		return err
 	}
 	program := compressProgram(data)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginBranchesSnapshot: branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        initialStashSize,
+		BeginStashSize:        stashSize,
 		Command:               compressCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -98,9 +98,9 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialBranchesSnapshot: branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
+		InitialStashSize:        stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,

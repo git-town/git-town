@@ -53,7 +53,7 @@ func executeContinue(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueData(repo, verbose)
+	data, branchesSnapshot, stashSize, exit, err := determineContinueData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -71,9 +71,9 @@ func executeContinue(verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialBranchesSnapshot: branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
+		InitialStashSize:        stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
@@ -86,7 +86,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	if err != nil {
 		return emptyContinueData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
-	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{ // TODO: rename all instances to branchesSnapshot for consistency across commands
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{ // TODO: rename all instances to branchesSnapshot for consistency across commands
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -103,12 +103,12 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, exit, err
+		return emptyContinueData(), branchesSnapshot, stashSize, exit, err
 	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesSnapshot:   initialBranchesSnapshot,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
@@ -118,20 +118,20 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, exit, err
+		return emptyContinueData(), branchesSnapshot, stashSize, exit, err
 	}
 	if repoStatus.Conflicts {
-		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
+		return emptyContinueData(), branchesSnapshot, stashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
+		return emptyContinueData(), branchesSnapshot, stashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector hostingdomain.Connector
-	initialBranch, hasInitialBranch := initialBranchesSnapshot.Active.Get()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		initialBranch, err = repo.Backend.CurrentBranch()
 		if err != nil {
-			return emptyContinueData(), initialBranchesSnapshot, initialStashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+			return emptyContinueData(), branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 	}
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -148,7 +148,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
-	}, initialBranchesSnapshot, initialStashSize, false, err
+	}, branchesSnapshot, stashSize, false, err
 }
 
 type continueData struct {
