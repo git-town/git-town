@@ -64,7 +64,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, initialBranchesSnapshot, initialStashSize, exit, err := determineHackData(args, repo, dryRun, verbose)
+	data, branchesSnapshot, stashSize, exit, err := determineHackData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -73,9 +73,9 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
 			backend:               repo.Backend,
-			beginBranchesSnapshot: initialBranchesSnapshot,
+			beginBranchesSnapshot: branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        initialStashSize,
+			beginStashSize:        stashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,

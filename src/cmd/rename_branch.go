@@ -72,14 +72,14 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, initialBranchesSnapshot, initialStashSize, exit, err := determineRenameBranchData(args, force, repo, dryRun, verbose)
+	data, branchesSnapshot, stashSize, exit, err := determineRenameBranchData(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginBranchesSnapshot: branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        initialStashSize,
+		BeginStashSize:        stashSize,
 		Command:               "rename-branch",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -97,9 +97,9 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialBranchesSnapshot: branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
+		InitialStashSize:        stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
