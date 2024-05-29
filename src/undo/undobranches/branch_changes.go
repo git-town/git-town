@@ -28,21 +28,6 @@ type BranchChanges struct {
 	RemoteRemoved RemoteBranchesSHAs
 }
 
-// EmptyBranchChanges provides a properly initialized empty Changes instance.
-func EmptyBranchChanges() BranchChanges {
-	return BranchChanges{
-		InconsistentlyChanged: undodomain.InconsistentChanges{},
-		LocalAdded:            gitdomain.LocalBranchNames{},
-		LocalChanged:          LocalBranchChange{},
-		LocalRemoved:          LocalBranchesSHAs{},
-		OmniChanged:           LocalBranchChange{},
-		OmniRemoved:           LocalBranchesSHAs{},
-		RemoteAdded:           gitdomain.RemoteBranchNames{},
-		RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
-		RemoteRemoved:         map[gitdomain.RemoteBranchName]gitdomain.SHA{},
-	}
-}
-
 // uncomment when debugging the undo logic
 // func (self BranchChanges) String() string {
 // 	s := strings.Builder{}
