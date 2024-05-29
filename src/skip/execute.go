@@ -85,8 +85,8 @@ func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
 }
 
 func revertChangesToCurrentBranch(args ExecuteArgs) error {
-	before, hasBefore := args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.InitialBranch).Get()
-	if !hasBefore {
+	before := args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.InitialBranch)
+	if before.IsNone() {
 		return fmt.Errorf(messages.SkipNoInitialBranchInfo, args.InitialBranch)
 	}
 	afterSnapshot, hasAfterSnapshot := args.RunState.EndBranchesSnapshot.Get()
