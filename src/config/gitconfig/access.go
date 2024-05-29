@@ -268,7 +268,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		for child, parent := range config.Lineage {
 			if child == parent {
 				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
-				_ = self.RemoveLocalConfigValue(createLineageKey(child))
+				_ = self.RemoveLocalConfigValue(NewParentKey(child))
 			}
 		}
 	}
