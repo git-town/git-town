@@ -14,7 +14,6 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git status --long --ignore-submodules                              |
       |         | backend  | git remote                                                         |
-      |         | backend  | git status --long --ignore-submodules                              |
       |         | backend  | git rev-parse --abbrev-ref HEAD                                    |
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git stash list                                                     |
@@ -39,7 +38,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """
