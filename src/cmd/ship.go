@@ -87,7 +87,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 	if err != nil {
 		return err
 	}
-	data, branchesSnapshot, stashSize, exit, err := determineShipData(args, repo, dryRun, verbose)
+	data, exit, err := determineShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -96,9 +96,9 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 		return err
 	}
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: branchesSnapshot,
+		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        stashSize,
+		BeginStashSize:        data.stashSize,
 		Command:               shipCommand,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -116,9 +116,9 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: branchesSnapshot,
+		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        stashSize,
+		InitialStashSize:        data.stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
@@ -127,6 +127,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 
 type shipData struct {
 	allBranches              gitdomain.BranchInfos
+	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchToShip             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
@@ -142,14 +143,15 @@ type shipData struct {
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
 	remotes                  gitdomain.Remotes
+	stashSize                gitdomain.StashSize
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -168,25 +170,25 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return nil, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+		return nil, false, err
 	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return nil, branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !hasBranchToShip {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -201,22 +203,22 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return nil, exit, err
 	}
 	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+		return nil, false, err
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
 	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
+		return nil, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
@@ -230,7 +232,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, branchesSnapshot, stashSize, false, err
+			return nil, false, err
 		}
 	}
 	canShipViaAPI := false
@@ -239,7 +241,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		if branchToShip.HasTrackingBranch() {
 			proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
-				return nil, branchesSnapshot, stashSize, false, err
+				return nil, false, err
 			}
 			proposal, hasProposal := proposalOpt.Get()
 			if hasProposal {
@@ -250,7 +252,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		for _, childBranch := range childBranches {
 			childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
-				return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
 			childProposal, hasChildProposal := childProposalOpt.Get()
 			if hasChildProposal {
@@ -260,6 +262,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
+		branchesSnapshot:         branchesSnapshot,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
@@ -275,8 +278,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
+		stashSize:                stashSize,
 		targetBranch:             targetBranch,
-	}, branchesSnapshot, stashSize, false, nil
+	}, false, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config configdomain.ValidatedConfig, lineage configdomain.Lineage) error {

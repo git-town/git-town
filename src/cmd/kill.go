@@ -59,7 +59,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, branchesSnapshot, stashSize, exit, err := determineKillData(args, repo, dryRun, verbose)
+	data, exit, err := determineKillData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -69,9 +69,9 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	}
 	steps, finalUndoProgram := killProgram(data)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: branchesSnapshot,
+		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        stashSize,
+		BeginStashSize:        data.stashSize,
 		Command:               "kill",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -90,9 +90,9 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: branchesSnapshot,
+		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        stashSize,
+		InitialStashSize:        data.stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
@@ -100,6 +100,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killData struct {
+	branchesSnapshot gitdomain.BranchesSnapshot
 	branchToKillInfo gitdomain.BranchInfo
 	branchToKillType configdomain.BranchType
 	branchWhenDone   gitdomain.LocalBranchName
@@ -110,13 +111,14 @@ type killData struct {
 	initialBranch    gitdomain.LocalBranchName
 	parentBranch     Option[gitdomain.LocalBranchName]
 	previousBranch   gitdomain.LocalBranchName
+	stashSize        gitdomain.StashSize
 }
 
-func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return nil, gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -135,15 +137,15 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return nil, exit, err
 	}
 	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToKill, hasBranchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill).Get()
 	if !hasBranchToKill {
-		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
 	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, branchesSnapshot, stashSize, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
+		return nil, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
@@ -159,13 +161,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSize, exit, err
+		return nil, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
 	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return nil, branchesSnapshot, stashSize, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == initialBranch {
@@ -185,6 +187,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
 	return &killData{
+		branchesSnapshot: branchesSnapshot,
 		branchToKillInfo: branchToKill,
 		branchToKillType: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
@@ -195,7 +198,8 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		initialBranch:    initialBranch,
 		parentBranch:     parentBranch,
 		previousBranch:   previousBranch,
-	}, branchesSnapshot, stashSize, false, nil
+		stashSize:        stashSize,
+	}, false, nil
 }
 
 func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) {

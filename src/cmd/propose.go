@@ -69,7 +69,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, branchesSnapshot, stashSize, exit, err := determineProposeData(repo, dryRun, verbose)
+	data, exit, err := determineProposeData(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -77,9 +77,9 @@ func executePropose(dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: branchesSnapshot,
+		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        stashSize,
+		BeginStashSize:        data.stashSize,
 		Command:               proposeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -97,9 +97,9 @@ func executePropose(dryRun, verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: branchesSnapshot,
+		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        stashSize,
+		InitialStashSize:        data.stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
@@ -108,6 +108,7 @@ func executePropose(dryRun, verbose bool) error {
 
 type proposeData struct {
 	allBranches      gitdomain.BranchInfos
+	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToSync   gitdomain.BranchInfos
 	config           config.ValidatedConfig
 	connector        hostingdomain.Connector
@@ -117,17 +118,18 @@ type proposeData struct {
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   Option[gitdomain.LocalBranchName]
 	remotes          gitdomain.Remotes
+	stashSize        gitdomain.StashSize
 }
 
 func emptyProposeData() proposeData {
 	return proposeData{} //exhaustruct:ignore
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (proposeData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (proposeData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return emptyProposeData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptyProposeData(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -146,17 +148,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyProposeData(), branchesSnapshot, stashSize, exit, err
+		return emptyProposeData(), exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
-		return emptyProposeData(), branchesSnapshot, stashSize, false, err
+		return emptyProposeData(), false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return emptyProposeData(), branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyProposeData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -170,7 +172,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyProposeData(), branchesSnapshot, stashSize, exit, err
+		return emptyProposeData(), exit, err
 	}
 	var connector hostingdomain.Connector
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -181,16 +183,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return emptyProposeData(), branchesSnapshot, stashSize, false, err
+			return emptyProposeData(), false, err
 		}
 	}
 	if connector == nil {
-		return emptyProposeData(), branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
+		return emptyProposeData(), false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	return proposeData{
 		allBranches:      branchesSnapshot.Branches,
+		branchesSnapshot: branchesSnapshot,
 		branchesToSync:   branchesToSync,
 		config:           validatedConfig,
 		connector:        connector,
@@ -200,7 +203,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		initialBranch:    initialBranch,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
-	}, branchesSnapshot, stashSize, false, err
+		stashSize:        stashSize,
+	}, false, err
 }
 
 func proposeProgram(data proposeData) program.Program {
