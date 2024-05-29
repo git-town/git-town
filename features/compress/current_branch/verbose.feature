@@ -20,7 +20,6 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git status --long --ignore-submodules              |
       |         | git remote                                         |
-      |         | git status --long --ignore-submodules              |
       |         | git rev-parse --abbrev-ref HEAD                    |
       | feature | git fetch --prune --tags                           |
       | <none>  | git stash list                                     |
@@ -40,7 +39,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git stash list                                     |
     And it prints:
       """
-      Ran 25 shell commands
+      Ran 24 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
