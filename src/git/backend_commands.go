@@ -239,19 +239,13 @@ func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) 
 
 // CurrentBranch provides the currently checked out branch.
 func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName, error) {
-	// TODO: try the normal way of determining the Git branch first, only if that doesn't work assume a rebase is going and determine the current branch during a rebase
-	repoStatus, err := self.RepoStatus()
-	if err != nil {
-		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
-	}
-	if repoStatus.RebaseInProgress {
-		return self.currentBranchDuringRebase()
-	}
+	// first try to detect the current branch the normal way
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
-	if err != nil {
-		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
+	if err == nil {
+		return gitdomain.NewLocalBranchName(output), nil
 	}
-	return gitdomain.NewLocalBranchName(output), nil
+	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
+	return self.currentBranchDuringRebase()
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
