@@ -21,7 +21,7 @@ type FrontendDryRunner struct {
 func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 	var currentBranch gitdomain.LocalBranchName
 	if self.OmitBranchNames {
-		currentBranch = gitdomain.EmptyLocalBranchName()
+		currentBranch = ""
 	} else {
 		var err error
 		currentBranch, err = self.GetCurrentBranch()

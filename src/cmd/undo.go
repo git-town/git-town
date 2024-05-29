@@ -97,7 +97,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 	if err != nil {
 		return emptyUndoData(), 0, false, err
 	}
-	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -114,12 +114,12 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyUndoData(), initialStashSize, false, err
+		return emptyUndoData(), stashSize, false, err
 	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesSnapshot:   initialBranchesSnapshot,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
@@ -129,7 +129,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyUndoData(), initialStashSize, exit, err
+		return emptyUndoData(), stashSize, exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var connector hostingdomain.Connector
@@ -141,7 +141,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return emptyUndoData(), initialStashSize, false, err
+			return emptyUndoData(), stashSize, false, err
 		}
 	}
 	return undoData{
@@ -149,7 +149,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, git
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
-		initialBranchesSnapshot: initialBranchesSnapshot,
+		initialBranchesSnapshot: branchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, false, nil
+	}, stashSize, false, nil
 }

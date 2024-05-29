@@ -260,7 +260,7 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	lastBranch := gitdomain.EmptyLocalBranchName()
+	var lastBranch gitdomain.LocalBranchName
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {

@@ -36,7 +36,7 @@ func TestLocalBranchName(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
-		have := gitdomain.EmptyLocalBranchName()
+		var have gitdomain.LocalBranchName
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchName("branch-1")

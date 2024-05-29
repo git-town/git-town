@@ -54,7 +54,7 @@ func executeSkip(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	initialBranchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -73,17 +73,17 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, hasCurrentBranch := initialBranchesSnapshot.Active.Get()
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
 		currentBranch, err = repo.Backend.CurrentBranch()
 		if err != nil {
 			return err
 		}
 	}
-	localBranches := initialBranchesSnapshot.Branches.LocalBranches().Names()
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesSnapshot:   initialBranchesSnapshot,
+		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,

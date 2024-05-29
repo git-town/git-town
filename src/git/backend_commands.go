@@ -242,14 +242,14 @@ func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName,
 	// TODO: try the normal way of determining the Git branch first, only if that doesn't work assume a rebase is going and determine the current branch during a rebase
 	repoStatus, err := self.RepoStatus()
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if repoStatus.RebaseInProgress {
 		return self.currentBranchDuringRebase()
 	}
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	return gitdomain.NewLocalBranchName(output), nil
 }
@@ -326,7 +326,7 @@ func (self *BackendCommands) OriginHead() Option[gitdomain.LocalBranchName] {
 func (self *BackendCommands) PreviouslyCheckedOutBranch() Option[gitdomain.LocalBranchName] {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return None[gitdomain.LocalBranchName]()
+		return ""
 	}
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
@@ -436,12 +436,12 @@ func (self *BackendCommands) Version() (major int, minor int, err error) {
 func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchName, error) {
 	output, err := self.Runner.QueryTrim("git", "branch", "--list")
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), err
+		return "", err
 	}
 	lines := stringslice.Lines(output)
 	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
 	if len(linesWithStar) == 0 {
-		return gitdomain.EmptyLocalBranchName(), err
+		return "", err
 	}
 	if len(linesWithStar) > 1 {
 		panic("multiple lines with star found:\n " + output)

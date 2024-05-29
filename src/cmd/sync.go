@@ -77,7 +77,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncData(all, repo, verbose)
+	data, branchesSnapshot, stashSize, exit, err := determineSyncData(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -109,7 +109,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	})
 	runProgram = optimizer.Optimize(runProgram)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginBranchesSnapshot: branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               syncCommand,
@@ -129,9 +129,9 @@ func executeSync(all, dryRun, verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialBranchesSnapshot: branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
+		InitialStashSize:        stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,

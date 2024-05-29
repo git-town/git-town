@@ -44,7 +44,7 @@ func TestJSON(t *testing.T) {
 }`[1:]
 		have := program.JSON{
 			Opcode: &opcodes.Checkout{
-				Branch: gitdomain.EmptyLocalBranchName(),
+				Branch: "",
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
