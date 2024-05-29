@@ -245,11 +245,7 @@ func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName,
 		return gitdomain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if repoStatus.RebaseInProgress {
-		currentBranch, err := self.currentBranchDuringRebase()
-		if err != nil {
-			return gitdomain.EmptyLocalBranchName(), err
-		}
-		return currentBranch, nil
+		return self.currentBranchDuringRebase()
 	}
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
