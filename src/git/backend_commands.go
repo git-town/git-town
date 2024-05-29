@@ -241,7 +241,7 @@ func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) 
 func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
-	if err == nil {
+	if err == nil && output != "HEAD" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
