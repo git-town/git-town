@@ -23,10 +23,9 @@ type UnvalidatedConfig struct {
 	Config          *configdomain.UnvalidatedConfig    // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
-	GitConfig       gitconfig.Access            // access to the Git configuration settings
-	GlobalGitConfig configdomain.PartialConfig  // content of the global Git configuration
-	LocalGitConfig  configdomain.PartialConfig  // content of the local Git configuration
-	originURLCache  configdomain.OriginURLCache // TODO: remove if unused
+	GitConfig       gitconfig.Access           // access to the Git configuration settings
+	GlobalGitConfig configdomain.PartialConfig // content of the global Git configuration
+	LocalGitConfig  configdomain.PartialConfig // content of the local Git configuration
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
@@ -39,7 +38,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 		GitConfig:       args.Access,
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
-		originURLCache:  configdomain.OriginURLCache{},
 	}, finalMessages
 }
 
@@ -69,7 +67,7 @@ func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
 	if text == "" {
 		return None[giturl.Parts]()
 	}
-	return confighelpers.DetermineOriginURL(text, self.Config.HostingOriginHostname, self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.Config.HostingOriginHostname)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
