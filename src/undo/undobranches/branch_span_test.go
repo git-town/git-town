@@ -378,13 +378,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
-				After: Some(gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				}),
+				After: None[gitdomain.BranchInfo](),
 			}
 			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
 			must.True(t, isLocalRemoved)
