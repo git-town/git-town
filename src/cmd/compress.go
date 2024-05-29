@@ -116,7 +116,7 @@ type compressBranchesData struct {
 	dryRun              bool
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
-	previousBranch      gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
 	stashSize           gitdomain.StashSize
 }
 
@@ -248,11 +248,15 @@ func compressProgram(data *compressBranchesData) program.Program {
 		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
 	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
+	previousBranchCandidates := gitdomain.LocalBranchNames{}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
+	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog
 }

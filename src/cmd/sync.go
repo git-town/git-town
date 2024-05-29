@@ -181,15 +181,19 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	if err != nil || exit {
 		return emptySyncData(), exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
-	if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
-		switch previousBranchInfo.SyncStatus {
-		case gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusUpToDate:
-			previousBranchOpt = previousBranchInfo.LocalName
-		case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
-			previousBranchOpt = None[gitdomain.LocalBranchName]()
+	if hasPreviousBranch {
+		if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
+			switch previousBranchInfo.SyncStatus {
+			case gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusUpToDate:
+				previousBranchOpt = previousBranchInfo.LocalName
+			case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+				previousBranchOpt = None[gitdomain.LocalBranchName]()
+			}
 		}
+	} else {
+		previousBranchOpt = None[gitdomain.LocalBranchName]()
 	}
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {

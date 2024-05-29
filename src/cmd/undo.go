@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -83,7 +84,7 @@ type undoData struct {
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
-	previousBranch          gitdomain.LocalBranchName
+	previousBranch          Option[gitdomain.LocalBranchName]
 	stashSize               gitdomain.StashSize
 }
 

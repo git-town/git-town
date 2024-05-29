@@ -115,7 +115,7 @@ type renameBranchData struct {
 	initialBranch    gitdomain.LocalBranchName
 	newBranch        gitdomain.LocalBranchName
 	oldBranch        gitdomain.BranchInfo
-	previousBranch   gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
 	stashSize        gitdomain.StashSize
 }
 
@@ -244,11 +244,15 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			}
 		}
 		result.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
+		previousBranchCandidates := gitdomain.LocalBranchNames{data.newBranch}
+		if previousBranch, hasPrepreviousBranch := data.previousBranch.Get(); hasPrepreviousBranch {
+			previousBranchCandidates = append(gitdomain.LocalBranchNames{previousBranch}, previousBranchCandidates...)
+		}
 		cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
 			RunInGitRoot:             false,
 			StashOpenChanges:         false,
-			PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.newBranch},
+			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
 	return result

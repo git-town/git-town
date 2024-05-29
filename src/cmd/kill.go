@@ -164,14 +164,14 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return nil, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == initialBranch {
-		if previousBranch == initialBranch {
+		if !hasPreviousBranch || previousBranch == initialBranch {
 			branchWhenDone = validatedConfig.Config.MainBranch
 		} else {
 			branchWhenDone = previousBranch

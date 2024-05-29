@@ -138,7 +138,7 @@ type shipData struct {
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
-	previousBranch           gitdomain.LocalBranchName
+	previousBranch           Option[gitdomain.LocalBranchName]
 	proposal                 Option[hostingdomain.Proposal]
 	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
@@ -364,11 +364,15 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	if !data.isShippingInitialBranch {
 		prog.Add(&opcodes.Checkout{Branch: data.initialBranch})
 	}
+	previousBranchCandidates := gitdomain.LocalBranchNames{}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
+	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !data.isShippingInitialBranch && data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch},
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog
 }
