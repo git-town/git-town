@@ -12,18 +12,6 @@ import (
 func TestRemoteBranchName(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsEmpty", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is empty", func(t *testing.T) {
-			give := gitdomain.RemoteBranchName("")
-			must.True(t, give.IsEmpty())
-		})
-		t.Run("is not empty", func(t *testing.T) {
-			give := gitdomain.NewRemoteBranchName("origin/branch-1")
-			must.False(t, give.IsEmpty())
-		})
-	})
-
 	t.Run("LocalBranchName", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is at the origin remote", func(t *testing.T) {

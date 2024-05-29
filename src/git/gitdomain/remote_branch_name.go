@@ -30,11 +30,6 @@ func (self RemoteBranchName) BranchName() BranchName {
 	return BranchName(string(self))
 }
 
-// TODO: remove because this should be obsolete with Option
-func (self RemoteBranchName) IsEmpty() bool {
-	return self == ""
-}
-
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 	_, localBranch := self.Parts()
