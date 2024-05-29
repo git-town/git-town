@@ -84,7 +84,7 @@ func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName
 func (self BranchInfos) LocalBranches() BranchInfos {
 	result := BranchInfos{}
 	for _, bi := range self {
-		if bi.IsLocal() {
+		if bi.LocalName.IsSome() {
 			result = append(result, bi)
 		}
 	}

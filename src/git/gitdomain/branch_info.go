@@ -77,12 +77,6 @@ func (self BranchInfo) HasTrackingBranch() bool {
 	return hasLocalBranch && hasRemoteBranch
 }
 
-// TODO: delete and replace with destructuring the LocalName property
-// IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
-func (self BranchInfo) IsLocal() bool {
-	return self.LocalName.IsSome()
-}
-
 // Indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
