@@ -326,7 +326,7 @@ func (self *BackendCommands) OriginHead() Option[gitdomain.LocalBranchName] {
 func (self *BackendCommands) PreviouslyCheckedOutBranch() Option[gitdomain.LocalBranchName] {
 	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return ""
+		return None[gitdomain.LocalBranchName]()
 	}
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
