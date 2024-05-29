@@ -77,7 +77,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, branchesSnapshot, stashSize, exit, err := determineSyncData(all, repo, verbose)
+	data, exit, err := determineSyncData(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -109,7 +109,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	})
 	runProgram = optimizer.Optimize(runProgram)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: branchesSnapshot,
+		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               syncCommand,
@@ -129,9 +129,9 @@ func executeSync(all, dryRun, verbose bool) error {
 		Frontend:                repo.Frontend,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: branchesSnapshot,
+		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        stashSize,
+		InitialStashSize:        data.stashSize,
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
@@ -140,6 +140,7 @@ func executeSync(all, dryRun, verbose bool) error {
 
 type syncData struct {
 	allBranches      gitdomain.BranchInfos
+	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToSync   gitdomain.BranchInfos
 	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
@@ -148,17 +149,18 @@ type syncData struct {
 	previousBranch   Option[gitdomain.LocalBranchName]
 	remotes          gitdomain.Remotes
 	shouldPushTags   bool
+	stashSize        gitdomain.StashSize
 }
 
 func emptySyncData() syncData {
 	return syncData{} //exhaustruct:ignore
 }
 
-func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Backend.RepoStatus()
 	if err != nil {
-		return emptySyncData(), gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return emptySyncData(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -177,7 +179,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptySyncData(), branchesSnapshot, stashSize, exit, err
+		return emptySyncData(), exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
@@ -191,11 +193,11 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	}
 	remotes, err := repo.Backend.Remotes()
 	if err != nil {
-		return emptySyncData(), branchesSnapshot, stashSize, false, err
+		return emptySyncData(), false, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return emptySyncData(), branchesSnapshot, stashSize, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptySyncData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
@@ -216,7 +218,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptySyncData(), branchesSnapshot, stashSize, exit, err
+		return emptySyncData(), exit, err
 	}
 	var shouldPushTags bool
 	if allFlag {
@@ -228,6 +230,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	return syncData{
 		allBranches:      branchesSnapshot.Branches,
+		branchesSnapshot: branchesSnapshot,
 		branchesToSync:   branchesToSync,
 		config:           validatedConfig,
 		dialogTestInputs: dialogTestInputs,
@@ -236,7 +239,8 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		previousBranch:   previousBranchOpt,
 		remotes:          remotes,
 		shouldPushTags:   shouldPushTags,
-	}, branchesSnapshot, stashSize, false, err
+		stashSize:        stashSize,
+	}, false, err
 }
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.
