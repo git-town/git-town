@@ -34,10 +34,6 @@ func validateSHA(content string) bool {
 	return true
 }
 
-func (self SHA) IsEmpty() bool {
-	return self == ""
-}
-
 // Location widens the type of this SHA to a more generic Location.
 func (self SHA) Location() Location {
 	return Location(string(self))
