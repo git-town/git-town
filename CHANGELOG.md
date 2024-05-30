@@ -4,6 +4,8 @@
 
 This release brings substantial stability improvements due to much stronger type checking and removing unnecessary optionality and mutability from the codebase.
 
+Big thanks to @breml, @bryanlarsen, @edwarbudiman, @FirelightFlagboy, @kevgo, @shiv19, @SophiaSaiada for contributing code, ideas, and feedback to 191 shipped pull requests and 9 resolved issues!
+
 #### Bug Fixes
 
 - fixes a panic during git town propose ([#3539](https://github.com/git-town/git-town/issues/3539))
