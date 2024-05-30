@@ -208,6 +208,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(name, url string) error {
+		newRemote := gitdomain.Remote(name)
+		state.fixture.DevRepo.AddRemote(newRemote, url)
+		return nil
+	})
+
 	suite.Step(`^branch "([^"]+)" is active in another worktree`, func(branch string) error {
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 		return nil

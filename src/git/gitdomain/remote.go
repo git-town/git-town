@@ -1,7 +1,5 @@
 package gitdomain
 
-import "fmt"
-
 // Remote represents a Git remote.
 type Remote string
 
@@ -11,7 +9,7 @@ func NewRemote(id string) Remote {
 			return remote
 		}
 	}
-	panic(fmt.Sprintf("unknown remote: %q", id))
+	return RemoteOther
 }
 
 // Implementation of the fmt.Stringer interface.
@@ -22,11 +20,13 @@ func (self Remote) String() string {
 const (
 	RemoteNone     = Remote("")
 	RemoteOrigin   = Remote("origin")
+	RemoteOther    = Remote("other")
 	RemoteUpstream = Remote("upstream")
 )
 
 var AllRemotes = []Remote{ //nolint:gochecknoglobals
 	RemoteNone,
 	RemoteOrigin,
+	RemoteOther,
 	RemoteUpstream,
 }
