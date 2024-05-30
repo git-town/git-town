@@ -1,5 +1,17 @@
 # Git Town Changelog
 
+## 14.2.1 (2024-05-30)
+
+This release brings substantial stability improvements due to much stronger type checking and removing unnecessary optionality and mutability from the codebase.
+
+#### Bug Fixes
+
+- fixes a panic during git town propose ([#3539](https://github.com/git-town/git-town/issues/3539))
+- fixes a panic when additional Git remotes are present ([#3537](https://github.com/git-town/git-town/issues/3537))
+- fixes a panic when encountering invalid lineage entries ([#3453](https://github.com/git-town/git-town/issues/3453))
+- fixes a panic if the previous Git branch is checked out in another worktree ([#3297](https://github.com/git-town/git-town/issues/3297))
+
+
 ## 14.2.0 (2024-04-24)
 
 #### New Features
