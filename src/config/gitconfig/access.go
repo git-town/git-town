@@ -34,11 +34,11 @@ func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
-	if strings.HasPrefix(key.String(), "git-town-branch.") {
+	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
 		if config.Lineage == nil {
 			config.Lineage = configdomain.Lineage{}
 		}
-		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
 		parent := gitdomain.NewLocalBranchName(value)
 		config.Lineage[child] = parent
 		return nil
