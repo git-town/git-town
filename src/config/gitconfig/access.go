@@ -38,7 +38,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		if config.Lineage == nil {
 			config.Lineage = configdomain.Lineage{}
 		}
-		childName := strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent")
+		childName := strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix)
 		child := gitdomain.NewLocalBranchName(childName)
 		parent := gitdomain.NewLocalBranchName(value)
 		config.Lineage[child] = parent
