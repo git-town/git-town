@@ -23,22 +23,16 @@ type Access struct {
 	Runner
 }
 
-// LoadLocal reads the global Git Town configuration that applies to the entire machine.
-func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(true, updateOutdated)
-}
-
-// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
-func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(false, updateOutdated)
-}
-
-func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
+func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
 		if config.Lineage == nil {
 			config.Lineage = configdomain.Lineage{}
 		}
-		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
+		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
+		if childName == "" {
+			return self.RemoveLocalConfigValue(key)
+		}
+		child := gitdomain.NewLocalBranchName(childName)
 		parent := gitdomain.NewLocalBranchName(value)
 		config.Lineage[child] = parent
 		return nil
@@ -132,6 +126,16 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
 	}
 	return err
+}
+
+// LoadLocal reads the global Git Town configuration that applies to the entire machine.
+func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(true, updateOutdated)
+}
+
+// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
+func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(false, updateOutdated)
 }
 
 func (self *Access) OriginRemote() string {
@@ -258,7 +262,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 			}
 		}
 		snapshot[configKey] = value
-		err := AddKeyToPartialConfig(configKey, value, &config)
+		err := self.AddKeyToPartialConfig(configKey, value, &config)
 		if err != nil {
 			return snapshot, config, err
 		}
