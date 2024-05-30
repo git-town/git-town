@@ -209,8 +209,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(name, url string) error {
-		newRemote := gitdomain.Remote(name)
-		state.fixture.DevRepo.AddRemote(newRemote, url)
+		state.fixture.DevRepo.AddRemote(gitdomain.Remote(name), url)
 		return nil
 	})
 
