@@ -23,16 +23,6 @@ type Access struct {
 	Runner
 }
 
-// LoadLocal reads the global Git Town configuration that applies to the entire machine.
-func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(true, updateOutdated)
-}
-
-// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
-func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(false, updateOutdated)
-}
-
 func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
 		if config.Lineage == nil {
@@ -40,8 +30,7 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		}
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
 		if childName == "" {
-			self.RemoveLocalConfigValue(key)
-			return nil
+			return self.RemoveLocalConfigValue(key)
 		}
 		child := gitdomain.NewLocalBranchName(childName)
 		parent := gitdomain.NewLocalBranchName(value)
@@ -137,6 +126,16 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
 	}
 	return err
+}
+
+// LoadLocal reads the global Git Town configuration that applies to the entire machine.
+func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(true, updateOutdated)
+}
+
+// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
+func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(false, updateOutdated)
 }
 
 func (self *Access) OriginRemote() string {
