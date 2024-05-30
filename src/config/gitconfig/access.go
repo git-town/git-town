@@ -30,9 +30,15 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		}
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
 		if childName == "" {
+			// empty lineage entries are invalid --> delete it
 			return self.RemoveLocalConfigValue(key)
 		}
 		child := gitdomain.NewLocalBranchName(childName)
+		value = strings.TrimSpace(value)
+		if value == "" {
+			// empty lineage entries are invalid --> delete it
+			return self.RemoveLocalConfigValue(key)
+		}
 		parent := gitdomain.NewLocalBranchName(value)
 		config.Lineage[child] = parent
 		return nil
