@@ -13,7 +13,6 @@ Big thanks to @breml, @bryanlarsen, @edwarbudiman, @FirelightFlagboy, @kevgo, @s
 - fixes a panic when encountering invalid lineage entries ([#3453](https://github.com/git-town/git-town/issues/3453))
 - fixes a panic if the previous Git branch is checked out in another worktree ([#3297](https://github.com/git-town/git-town/issues/3297))
 
-
 ## 14.2.0 (2024-04-24)
 
 #### New Features
