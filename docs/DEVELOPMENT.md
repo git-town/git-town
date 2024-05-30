@@ -13,8 +13,9 @@ works.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run all tests: <code type="make/command">make test</code>
-4. install the tool locally: <code type="make/command">make build</code>
+3. run all tests: <code type="make/command" dir="..">make test</code>
+4. install the tool locally: <code type="make/command" dir="..">make
+   build</code>
 5. run a quick test suite during development: `make test-go`
 
 ## dependencies
@@ -35,7 +36,7 @@ go get <path>
 
 Update all external Go modules:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make update
@@ -47,7 +48,7 @@ make update
 
 Run all unit tests:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make unit-all
@@ -57,7 +58,7 @@ make unit-all
 
 Run all unit tests with race detection:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make unit-race
@@ -67,7 +68,7 @@ make unit-race
 
 Run unit tests for packages containing changes:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make unit
@@ -94,7 +95,7 @@ It ain't pretty but its better than nothing.
 
 Run all end-to-end tests:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make cuke
@@ -146,6 +147,12 @@ Inspect more complex variables:
 import "github.com/davecgh/go-spew/spew"
 
 spew.Dump(variable)
+```
+
+See a complex diff:
+
+```go
+pretty.LDiff(t, var1, var2)
 ```
 
 ## debug end-to-end tests
@@ -210,7 +217,7 @@ make lint-all
 
 Format all code, auto-fix all fixable issues:
 
-<a type="make/command">
+<a type="make/command" dir="..">
 
 ```
 make fix
@@ -231,10 +238,10 @@ the code architecture.
 ## website
 
 The source code for the [website](https://www.git-town.com) is in the
-[website](website) folder. This folder contains its own
-[Makefile](website/Makefile) for activities related to working on the website.
-To work on the website, cd into the `website` folder and run
-<code type="make/command" dir="website">make serve</code> to start a local
+[website](../website) folder. This folder contains its own
+[Makefile](../website/Makefile) for activities related to working on the
+website. To work on the website, cd into the `website` folder and run
+<code type="make/command" dir="../website">make serve</code> to start a local
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
-configuration is in [netlify.toml](netlify.toml).
+configuration is in [netlify.toml](../netlify.toml).
