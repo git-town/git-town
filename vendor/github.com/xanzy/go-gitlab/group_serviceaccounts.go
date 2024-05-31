@@ -62,8 +62,9 @@ func (s *GroupsService) CreateServiceAccount(gid interface{}, options ...Request
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/groups.html#create-personal-access-token-for-service-account-user
 type CreateServiceAccountPersonalAccessTokenOptions struct {
-	Scopes *[]string `url:"scopes,omitempty" json:"scopes,omitempty"`
-	Name   *string   `url:"name,omitempty" json:"name,omitempty"`
+	Scopes    *[]string `url:"scopes,omitempty" json:"scopes,omitempty"`
+	Name      *string   `url:"name,omitempty" json:"name,omitempty"`
+	ExpiresAt *ISOTime  `url:"expires_at,omitempty" json:"expires_at,omitempty"`
 }
 
 // CreateServiceAccountPersonalAccessToken add a new Personal Access Token for a

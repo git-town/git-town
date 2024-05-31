@@ -1054,6 +1054,29 @@ func FileModeFS(system fs.FS, path string, permissions fs.FileMode) (s string) {
 	return
 }
 
+func DirModeFS(system fs.FS, path string, permissions fs.FileMode) (s string) {
+	info, err := fs.Stat(system, path)
+	if err != nil {
+		s = "expected to stat path\n"
+		s += bullet(" name: %s\n", path)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	if !info.IsDir() {
+		s = "expected to stat a directory\n"
+		s += bullet("name: %s\n", path)
+		return
+	}
+	mode := info.Mode()
+	if permissions != mode {
+		s = "expected different file permissions\n"
+		s += bullet("name: %s\n", path)
+		s += bullet(" exp: %s\n", permissions)
+		s += bullet(" got: %s\n", mode)
+	}
+	return
+}
+
 func FileContainsFS(system fs.FS, file, content string) (s string) {
 	b, err := fs.ReadFile(system, file)
 	if err != nil {

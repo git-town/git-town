@@ -21,10 +21,8 @@ import (
 	"sync/atomic"
 	"syscall"
 
-	"github.com/containerd/console"
-	isatty "github.com/mattn/go-isatty"
+	"github.com/charmbracelet/x/term"
 	"github.com/muesli/cancelreader"
-	"github.com/muesli/termenv"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -81,7 +79,7 @@ func (i inputType) String() string {
 // generally set with ProgramOptions.
 //
 // The options here are treated as bits.
-type startupOptions byte
+type startupOptions int16
 
 func (s startupOptions) has(option startupOptions) bool {
 	return s&option != 0
@@ -93,26 +91,27 @@ const (
 	withMouseAllMotion
 	withANSICompressor
 	withoutSignalHandler
-
 	// Catching panics is incredibly useful for restoring the terminal to a
 	// usable state after a panic occurs. When this is set, Bubble Tea will
 	// recover from panics, print the stack trace, and disable raw mode. This
 	// feature is on by default.
 	withoutCatchPanics
+	withoutBracketedPaste
 )
 
-// handlers manages series of channels returned by various processes. It allows
-// us to wait for those processes to terminate before exiting the program.
-type handlers []chan struct{}
+// channelHandlers manages the series of channels returned by various processes.
+// It allows us to wait for those processes to terminate before exiting the
+// program.
+type channelHandlers []chan struct{}
 
 // Adds a channel to the list of handlers. We wait for all handlers to terminate
 // gracefully on shutdown.
-func (h *handlers) add(ch chan struct{}) {
+func (h *channelHandlers) add(ch chan struct{}) {
 	*h = append(*h, ch)
 }
 
 // shutdown waits for all handlers to terminate.
-func (h handlers) shutdown() {
+func (h channelHandlers) shutdown() {
 	var wg sync.WaitGroup
 	for _, ch := range h {
 		wg.Add(1)
@@ -132,6 +131,10 @@ type Program struct {
 	// treated as bits. These options can be set via various ProgramOptions.
 	startupOptions startupOptions
 
+	// startupTitle is the title that will be set on the terminal when the
+	// program starts.
+	startupTitle string
+
 	inputType inputType
 
 	ctx    context.Context
@@ -142,28 +145,25 @@ type Program struct {
 	finished chan struct{}
 
 	// where to send output, this will usually be os.Stdout.
-	output        *termenv.Output
-	restoreOutput func() error
-	renderer      renderer
+	output io.Writer
+	// ttyOutput is null if output is not a TTY.
+	ttyOutput           term.File
+	previousOutputState *term.State
+	renderer            renderer
 
 	// where to read inputs from, this will usually be os.Stdin.
-	input        io.Reader
-	cancelReader cancelreader.CancelReader
-	readLoopDone chan struct{}
-	console      console.Console
+	input io.Reader
+	// ttyInput is null if input is not a TTY.
+	ttyInput              term.File
+	previousTtyInputState *term.State
+	cancelReader          cancelreader.CancelReader
+	readLoopDone          chan struct{}
 
 	// was the altscreen active before releasing the terminal?
 	altScreenWasActive bool
 	ignoreSignals      uint32
 
-	// Stores the original reference to stdin for cases where input is not a
-	// TTY on windows and we've automatically opened CONIN$ to receive input.
-	// When the program exits this will be restored.
-	//
-	// Lint ignore note: the linter will find false positive on unix systems
-	// as this value only comes into play on Windows, hence the ignore comment
-	// below.
-	windowsStdin *os.File //nolint:golint,structcheck,unused
+	bpWasActive bool // was the bracketed paste mode active before releasing the terminal?
 
 	filter func(Model, Msg) Msg
 
@@ -203,13 +203,8 @@ func NewProgram(model Model, opts ...ProgramOption) *Program {
 
 	// if no output was set, set it to stdout
 	if p.output == nil {
-		p.output = termenv.DefaultOutput()
-
-		// cache detected color values
-		termenv.WithColorCache(true)(p.output)
+		p.output = os.Stdout
 	}
-
-	p.restoreOutput, _ = termenv.EnableVirtualTerminalProcessing(p.output)
 
 	return p
 }
@@ -254,7 +249,7 @@ func (p *Program) handleSignals() chan struct{} {
 func (p *Program) handleResize() chan struct{} {
 	ch := make(chan struct{})
 
-	if f, ok := p.output.TTY().(*os.File); ok && isatty.IsTerminal(f.Fd()) {
+	if p.ttyOutput != nil {
 		// Get the initial terminal size and send it to the program.
 		go p.checkResize()
 
@@ -360,6 +355,12 @@ func (p *Program) eventLoop(model Model, cmds chan Cmd) (Model, error) {
 			case hideCursorMsg:
 				p.renderer.hideCursor()
 
+			case enableBracketedPasteMsg:
+				p.renderer.enableBracketedPaste()
+
+			case disableBracketedPasteMsg:
+				p.renderer.disableBracketedPaste()
+
 			case execMsg:
 				// NB: this blocks.
 				p.exec(msg.cmd, msg.fn)
@@ -419,7 +420,7 @@ func (p *Program) eventLoop(model Model, cmds chan Cmd) (Model, error) {
 // terminated by either [Program.Quit], [Program.Kill], or its signal handler.
 // Returns the final model.
 func (p *Program) Run() (Model, error) {
-	handlers := handlers{}
+	handlers := channelHandlers{}
 	cmds := make(chan Cmd)
 	p.errs = make(chan error)
 	p.finished = make(chan struct{}, 1)
@@ -436,11 +437,11 @@ func (p *Program) Run() (Model, error) {
 		// piped in or redirected to the application.
 		//
 		// To disable input entirely pass nil to the [WithInput] program option.
-		f, isFile := p.input.(*os.File)
+		f, isFile := p.input.(term.File)
 		if !isFile {
 			break
 		}
-		if isatty.IsTerminal(f.Fd()) {
+		if term.IsTerminal(f.Fd()) {
 			break
 		}
 
@@ -493,8 +494,14 @@ func (p *Program) Run() (Model, error) {
 	}
 
 	// Honor program startup options.
+	if p.startupTitle != "" {
+		p.renderer.setWindowTitle(p.startupTitle)
+	}
 	if p.startupOptions&withAltScreen != 0 {
 		p.renderer.enterAltScreen()
+	}
+	if p.startupOptions&withoutBracketedPaste == 0 {
+		p.renderer.enableBracketedPaste()
 	}
 	if p.startupOptions&withMouseCellMotion != 0 {
 		p.renderer.enableMouseCellMotion()
@@ -503,6 +510,9 @@ func (p *Program) Run() (Model, error) {
 		p.renderer.enableMouseAllMotion()
 		p.renderer.enableMouseSGRMode()
 	}
+
+	// Start the renderer.
+	p.renderer.start()
 
 	// Initialize the program.
 	model := p.initialModel
@@ -519,9 +529,6 @@ func (p *Program) Run() (Model, error) {
 			}
 		}()
 	}
-
-	// Start the renderer.
-	p.renderer.start()
 
 	// Render the initial view.
 	p.renderer.write(model.View())
@@ -638,9 +645,6 @@ func (p *Program) shutdown(kill bool) {
 	}
 
 	_ = p.restoreTerminalState()
-	if p.restoreOutput != nil {
-		_ = p.restoreOutput()
-	}
 	p.finished <- struct{}{}
 }
 
@@ -656,6 +660,7 @@ func (p *Program) ReleaseTerminal() error {
 	}
 
 	p.altScreenWasActive = p.renderer.altScreen()
+	p.bpWasActive = p.renderer.bracketedPasteActive()
 	return p.restoreTerminalState()
 }
 
@@ -671,7 +676,6 @@ func (p *Program) RestoreTerminal() error {
 	if err := p.initCancelReader(); err != nil {
 		return err
 	}
-
 	if p.altScreenWasActive {
 		p.renderer.enterAltScreen()
 	} else {
@@ -680,6 +684,9 @@ func (p *Program) RestoreTerminal() error {
 	}
 	if p.renderer != nil {
 		p.renderer.start()
+	}
+	if p.bpWasActive {
+		p.renderer.enableBracketedPaste()
 	}
 
 	// If the output is a terminal, it may have been resized while another
