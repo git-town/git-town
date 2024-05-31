@@ -5,7 +5,7 @@ linters:
     - depguard # we review our dependencies in pull requests
     - dogsled # nothing we can do about this one
     - dupl # too many false positives
-    # - execingquery # deprecated
+    - execinquery # deprecated
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
     - forbidigo # Git Town prints a lot to the CLI
     - funlen # we keep track of this via code reviews
