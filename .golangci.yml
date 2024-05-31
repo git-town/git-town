@@ -18,6 +18,7 @@ linters:
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - lll # we aren't enforcing a line length at this point
     - maintidx # we keep complexity under check with code reviews
+    - mnd # we keep track of magic numbers through code reviews
     - musttag # we document JSON serialization via unit tests
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
