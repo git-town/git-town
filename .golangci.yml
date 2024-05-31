@@ -23,6 +23,7 @@ linters:
     - musttag # we document JSON serialization via unit tests
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
+    - nilnil # in our code returning nil, nil makes sense
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
     - typecheck # seems buggy
