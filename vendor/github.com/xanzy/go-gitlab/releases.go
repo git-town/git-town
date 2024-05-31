@@ -187,10 +187,11 @@ type ReleaseAssetsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/releases/index.html#create-a-release
 type ReleaseAssetLinkOptions struct {
-	Name     *string        `url:"name,omitempty" json:"name,omitempty"`
-	URL      *string        `url:"url,omitempty" json:"url,omitempty"`
-	FilePath *string        `url:"filepath,omitempty" json:"filepath,omitempty"`
-	LinkType *LinkTypeValue `url:"link_type,omitempty" json:"link_type,omitempty"`
+	Name            *string        `url:"name,omitempty" json:"name,omitempty"`
+	URL             *string        `url:"url,omitempty" json:"url,omitempty"`
+	FilePath        *string        `url:"filepath,omitempty" json:"filepath,omitempty"`
+	DirectAssetPath *string        `url:"direct_asset_path,omitempty" json:"direct_asset_path,omitempty"`
+	LinkType        *LinkTypeValue `url:"link_type,omitempty" json:"link_type,omitempty"`
 }
 
 // CreateRelease creates a release.

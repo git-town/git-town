@@ -62,7 +62,7 @@ func AccessControl(v AccessControlValue) *AccessControlValue {
 // GitLab API docs: https://docs.gitlab.com/ee/user/permissions.html
 type AccessLevelValue int
 
-// List of available access levels
+// List of available access levels.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/user/permissions.html
 const (
@@ -113,7 +113,7 @@ func ApproverIDs(v interface{}) *ApproverIDsValue {
 	}
 }
 
-// EncodeValues implements the query.Encoder interface
+// EncodeValues implements the query.Encoder interface.
 func (a *ApproverIDsValue) EncodeValues(key string, v *url.Values) error {
 	switch value := a.value.(type) {
 	case UserIDValue:
@@ -128,12 +128,12 @@ func (a *ApproverIDsValue) EncodeValues(key string, v *url.Values) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface
+// MarshalJSON implements the json.Marshaler interface.
 func (a ApproverIDsValue) MarshalJSON() ([]byte, error) {
 	return json.Marshal(a.value)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (a *ApproverIDsValue) UnmarshalJSON(bytes []byte) error {
 	return json.Unmarshal(bytes, a.value)
 }
@@ -153,7 +153,7 @@ func AssigneeID(v interface{}) *AssigneeIDValue {
 	}
 }
 
-// EncodeValues implements the query.Encoder interface
+// EncodeValues implements the query.Encoder interface.
 func (a *AssigneeIDValue) EncodeValues(key string, v *url.Values) error {
 	switch value := a.value.(type) {
 	case UserIDValue:
@@ -164,12 +164,12 @@ func (a *AssigneeIDValue) EncodeValues(key string, v *url.Values) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface
+// MarshalJSON implements the json.Marshaler interface.
 func (a AssigneeIDValue) MarshalJSON() ([]byte, error) {
 	return json.Marshal(a.value)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (a *AssigneeIDValue) UnmarshalJSON(bytes []byte) error {
 	return json.Unmarshal(bytes, a.value)
 }
@@ -189,7 +189,7 @@ func ReviewerID(v interface{}) *ReviewerIDValue {
 	}
 }
 
-// EncodeValues implements the query.Encoder interface
+// EncodeValues implements the query.Encoder interface.
 func (a *ReviewerIDValue) EncodeValues(key string, v *url.Values) error {
 	switch value := a.value.(type) {
 	case UserIDValue:
@@ -200,12 +200,12 @@ func (a *ReviewerIDValue) EncodeValues(key string, v *url.Values) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface
+// MarshalJSON implements the json.Marshaler interface.
 func (a ReviewerIDValue) MarshalJSON() ([]byte, error) {
 	return json.Marshal(a.value)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (a *ReviewerIDValue) UnmarshalJSON(bytes []byte) error {
 	return json.Unmarshal(bytes, a.value)
 }
@@ -256,6 +256,22 @@ func BuildState(v BuildStateValue) *BuildStateValue {
 	return Ptr(v)
 }
 
+// ContainerRegistryStatus represents the status of a Container Registry.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/container_registry.html#list-registry-repositories
+type ContainerRegistryStatus string
+
+// ContainerRegistryStatus represents all valid statuses of a Container Registry.
+//
+// Undocumented, see code at:
+// https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/container_repository.rb?ref_type=heads#L35
+const (
+	ContainerRegistryStatusDeleteScheduled ContainerRegistryStatus = "delete_scheduled"
+	ContainerRegistryStatusDeleteFailed    ContainerRegistryStatus = "delete_failed"
+	ContainerRegistryStatusDeleteOngoing   ContainerRegistryStatus = "delete_ongoing"
+)
+
 // DeploymentApprovalStatus represents a Gitlab deployment approval status.
 type DeploymentApprovalStatus string
 
@@ -285,12 +301,43 @@ func DeploymentStatus(v DeploymentStatusValue) *DeploymentStatusValue {
 	return Ptr(v)
 }
 
-// EventTypeValue represents actions type for contribution events
+// DORAMetricType represents all valid DORA metrics types.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/dora/metrics.html
+type DORAMetricType string
+
+// List of available DORA metric type names.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/dora/metrics.html
+const (
+	DORAMetricDeploymentFrequency  DORAMetricType = "deployment_frequency"
+	DORAMetricLeadTimeForChanges   DORAMetricType = "lead_time_for_changes"
+	DORAMetricTimeToRestoreService DORAMetricType = "time_to_restore_service"
+	DORAMetricChangeFailureRate    DORAMetricType = "change_failure_rate"
+)
+
+// DORAMetricInterval represents the time period over which the
+// metrics are aggregated.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/dora/metrics.html
+type DORAMetricInterval string
+
+// List of available DORA metric interval types.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/dora/metrics.html
+const (
+	DORAMetricIntervalDaily   DORAMetricInterval = "daily"
+	DORAMetricIntervalMonthly DORAMetricInterval = "monthly"
+	DORAMetricIntervalAll     DORAMetricInterval = "all"
+)
+
+// EventTypeValue represents actions type for contribution events.
 type EventTypeValue string
 
-// List of available action type
+// List of available action type.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/user/profile/contributions_calendar.html#user-contribution-events
+// GitLab API docs:
+// https://docs.gitlab.com/ee/user/profile/contributions_calendar.html#user-contribution-events
 const (
 	CreatedEventType   EventTypeValue = "created"
 	UpdatedEventType   EventTypeValue = "updated"
@@ -305,10 +352,10 @@ const (
 	ExpiredEventType   EventTypeValue = "expired"
 )
 
-// EventTargetTypeValue represents actions type value for contribution events
+// EventTargetTypeValue represents actions type value for contribution events.
 type EventTargetTypeValue string
 
-// List of available action type
+// List of available action type.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/events.html#target-types
 const (
@@ -323,7 +370,8 @@ const (
 
 // FileActionValue represents the available actions that can be performed on a file.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/commits.html#create-a-commit-with-multiple-files-and-actions
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/commits.html#create-a-commit-with-multiple-files-and-actions
 type FileActionValue string
 
 // The available file actions.
@@ -379,7 +427,7 @@ func GenericPackageStatus(v GenericPackageStatusValue) *GenericPackageStatusValu
 // ISOTime represents an ISO 8601 formatted date.
 type ISOTime time.Time
 
-// ISO 8601 date format
+// ISO 8601 date format.
 const iso8601 = "2006-01-02"
 
 // ParseISOTime parses an ISO 8601 formatted date.
@@ -457,7 +505,7 @@ func (l *LabelOptions) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, (*alias)(l))
 }
 
-// EncodeValues implements the query.EncodeValues interface
+// EncodeValues implements the query.EncodeValues interface.
 func (l *LabelOptions) EncodeValues(key string, v *url.Values) error {
 	v.Set(key, strings.Join(*l, ","))
 	return nil
@@ -654,7 +702,8 @@ const (
 	DisabledAndOverridableSharedRunnersSettingValue   SharedRunnersSettingValue = "disabled_and_overridable"
 	DisabledAndUnoverridableSharedRunnersSettingValue SharedRunnersSettingValue = "disabled_and_unoverridable"
 
-	// Deprecated: DisabledWithOverrideSharedRunnersSettingValue is deprecated in favor of DisabledAndOverridableSharedRunnersSettingValue
+	// Deprecated: DisabledWithOverrideSharedRunnersSettingValue is deprecated
+	// in favor of DisabledAndOverridableSharedRunnersSettingValue.
 	DisabledWithOverrideSharedRunnersSettingValue SharedRunnersSettingValue = "disabled_with_override"
 )
 

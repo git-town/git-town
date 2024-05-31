@@ -175,12 +175,16 @@ func (s *EpicsService) GetEpicLinks(gid interface{}, epic int, options ...Reques
 // GitLab API docs: https://docs.gitlab.com/ee/api/epics.html#new-epic
 type CreateEpicOptions struct {
 	Title            *string       `url:"title,omitempty" json:"title,omitempty"`
-	Description      *string       `url:"description,omitempty" json:"description,omitempty"`
 	Labels           *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
+	Description      *string       `url:"description,omitempty" json:"description,omitempty"`
+	Color            *string       `url:"color,omitempty" json:"color,omitempty"`
+	Confidential     *bool         `url:"confidential,omitempty" json:"confidential,omitempty"`
+	CreatedAt        *time.Time    `url:"created_at,omitempty" json:"created_at,omitempty"`
 	StartDateIsFixed *bool         `url:"start_date_is_fixed,omitempty" json:"start_date_is_fixed,omitempty"`
 	StartDateFixed   *ISOTime      `url:"start_date_fixed,omitempty" json:"start_date_fixed,omitempty"`
 	DueDateIsFixed   *bool         `url:"due_date_is_fixed,omitempty" json:"due_date_is_fixed,omitempty"`
 	DueDateFixed     *ISOTime      `url:"due_date_fixed,omitempty" json:"due_date_fixed,omitempty"`
+	ParentID         *int          `url:"parent_id,omitempty" json:"parent_id,omitempty"`
 }
 
 // CreateEpic creates a new group epic.
@@ -211,15 +215,20 @@ func (s *EpicsService) CreateEpic(gid interface{}, opt *CreateEpicOptions, optio
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/epics.html#update-epic
 type UpdateEpicOptions struct {
-	Title            *string       `url:"title,omitempty" json:"title,omitempty"`
+	AddLabels        *LabelOptions `url:"add_labels,omitempty" json:"add_labels,omitempty"`
 	Confidential     *bool         `url:"confidential,omitempty" json:"confidential,omitempty"`
 	Description      *string       `url:"description,omitempty" json:"description,omitempty"`
-	Labels           *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
-	StartDateIsFixed *bool         `url:"start_date_is_fixed,omitempty" json:"start_date_is_fixed,omitempty"`
-	StartDateFixed   *ISOTime      `url:"start_date_fixed,omitempty" json:"start_date_fixed,omitempty"`
-	DueDateIsFixed   *bool         `url:"due_date_is_fixed,omitempty" json:"due_date_is_fixed,omitempty"`
 	DueDateFixed     *ISOTime      `url:"due_date_fixed,omitempty" json:"due_date_fixed,omitempty"`
+	DueDateIsFixed   *bool         `url:"due_date_is_fixed,omitempty" json:"due_date_is_fixed,omitempty"`
+	Labels           *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
+	ParentID         *int          `url:"parent_id,omitempty" json:"parent_id,omitempty"`
+	RemoveLabels     *LabelOptions `url:"remove_labels,omitempty" json:"remove_labels,omitempty"`
+	StartDateFixed   *ISOTime      `url:"start_date_fixed,omitempty" json:"start_date_fixed,omitempty"`
+	StartDateIsFixed *bool         `url:"start_date_is_fixed,omitempty" json:"start_date_is_fixed,omitempty"`
 	StateEvent       *string       `url:"state_event,omitempty" json:"state_event,omitempty"`
+	Title            *string       `url:"title,omitempty" json:"title,omitempty"`
+	UpdatedAt        *time.Time    `url:"updated_at,omitempty" json:"updated_at,omitempty"`
+	Color            *string       `url:"color,omitempty" json:"color,omitempty"`
 }
 
 // UpdateEpic updates an existing group epic. This function is also used

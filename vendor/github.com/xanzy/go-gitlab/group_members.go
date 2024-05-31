@@ -56,6 +56,7 @@ type GroupMember struct {
 	AccessLevel       AccessLevelValue         `json:"access_level"`
 	Email             string                   `json:"email,omitempty"`
 	GroupSAMLIdentity *GroupMemberSAMLIdentity `json:"group_saml_identity"`
+	MemberRole        *MemberRole              `json:"member_role"`
 }
 
 // ListGroupMembersOptions represents the available ListGroupMembers() and

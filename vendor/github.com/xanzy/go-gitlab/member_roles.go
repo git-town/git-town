@@ -22,12 +22,18 @@ type MemberRole struct {
 	Description              string           `json:"description,omitempty"`
 	GroupId                  int              `json:"group_id"`
 	BaseAccessLevel          AccessLevelValue `json:"base_access_level"`
-	AdminMergeRequests       bool             `json:"admin_merge_requests,omitempty"`
+	AdminCICDVariables       bool             `json:"admin_cicd_variables,omitempty"`
+	AdminMergeRequests       bool             `json:"admin_merge_request,omitempty"`
+	AdminTerraformState      bool             `json:"admin_terraform_state,omitempty"`
 	AdminVulnerability       bool             `json:"admin_vulnerability,omitempty"`
 	ReadCode                 bool             `json:"read_code,omitempty"`
 	ReadDependency           bool             `json:"read_dependency,omitempty"`
 	ReadVulnerability        bool             `json:"read_vulnerability,omitempty"`
-	ManageProjectAccessToken bool             `json:"manage_project_access_token,omitempty"`
+	AdminGroupMembers        bool             `json:"admin_group_member,omitempty"`
+	ManageProjectAccessToken bool             `json:"manage_project_access_tokens,omitempty"`
+	ArchiveProject           bool             `json:"archive_project,omitempty"`
+	RemoveProject            bool             `json:"remove_project,omitempty"`
+	ManageGroupAccesToken    bool             `json:"manage_group_access_tokens,omitempty"`
 }
 
 // ListMemberRoles gets a list of member roles for a specified group.

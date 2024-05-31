@@ -682,19 +682,20 @@ func (s *MergeRequestsService) GetIssuesClosedOnMerge(pid interface{}, mergeRequ
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
 type CreateMergeRequestOptions struct {
-	Title              *string       `url:"title,omitempty" json:"title,omitempty"`
-	Description        *string       `url:"description,omitempty" json:"description,omitempty"`
-	SourceBranch       *string       `url:"source_branch,omitempty" json:"source_branch,omitempty"`
-	TargetBranch       *string       `url:"target_branch,omitempty" json:"target_branch,omitempty"`
-	Labels             *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
-	AssigneeID         *int          `url:"assignee_id,omitempty" json:"assignee_id,omitempty"`
-	AssigneeIDs        *[]int        `url:"assignee_ids,omitempty" json:"assignee_ids,omitempty"`
-	ReviewerIDs        *[]int        `url:"reviewer_ids,omitempty" json:"reviewer_ids,omitempty"`
-	TargetProjectID    *int          `url:"target_project_id,omitempty" json:"target_project_id,omitempty"`
-	MilestoneID        *int          `url:"milestone_id,omitempty" json:"milestone_id,omitempty"`
-	RemoveSourceBranch *bool         `url:"remove_source_branch,omitempty" json:"remove_source_branch,omitempty"`
-	Squash             *bool         `url:"squash,omitempty" json:"squash,omitempty"`
-	AllowCollaboration *bool         `url:"allow_collaboration,omitempty" json:"allow_collaboration,omitempty"`
+	Title                *string       `url:"title,omitempty" json:"title,omitempty"`
+	Description          *string       `url:"description,omitempty" json:"description,omitempty"`
+	SourceBranch         *string       `url:"source_branch,omitempty" json:"source_branch,omitempty"`
+	TargetBranch         *string       `url:"target_branch,omitempty" json:"target_branch,omitempty"`
+	Labels               *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
+	AssigneeID           *int          `url:"assignee_id,omitempty" json:"assignee_id,omitempty"`
+	AssigneeIDs          *[]int        `url:"assignee_ids,omitempty" json:"assignee_ids,omitempty"`
+	ReviewerIDs          *[]int        `url:"reviewer_ids,omitempty" json:"reviewer_ids,omitempty"`
+	TargetProjectID      *int          `url:"target_project_id,omitempty" json:"target_project_id,omitempty"`
+	MilestoneID          *int          `url:"milestone_id,omitempty" json:"milestone_id,omitempty"`
+	RemoveSourceBranch   *bool         `url:"remove_source_branch,omitempty" json:"remove_source_branch,omitempty"`
+	Squash               *bool         `url:"squash,omitempty" json:"squash,omitempty"`
+	AllowCollaboration   *bool         `url:"allow_collaboration,omitempty" json:"allow_collaboration,omitempty"`
+	ApprovalsBeforeMerge *int          `url:"approvals_before_merge,omitempty" json:"approvals_before_merge,omitempty"`
 }
 
 // CreateMergeRequest creates a new merge request.
@@ -860,20 +861,29 @@ func (s *MergeRequestsService) CancelMergeWhenPipelineSucceeds(pid interface{}, 
 	return m, resp, nil
 }
 
+// RebaseMergeRequestOptions represents the available RebaseMergeRequest()
+// options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/merge_requests.html#rebase-a-merge-request
+type RebaseMergeRequestOptions struct {
+	SkipCI *bool `url:"skip_ci,omitempty" json:"skip_ci,omitempty"`
+}
+
 // RebaseMergeRequest automatically rebases the source_branch of the merge
 // request against its target_branch. If you don’t have permissions to push
 // to the merge request’s source branch, you’ll get a 403 Forbidden response.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/merge_requests.html#rebase-a-merge-request
-func (s *MergeRequestsService) RebaseMergeRequest(pid interface{}, mergeRequest int, options ...RequestOptionFunc) (*Response, error) {
+func (s *MergeRequestsService) RebaseMergeRequest(pid interface{}, mergeRequest int, opt *RebaseMergeRequestOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
 	}
 	u := fmt.Sprintf("projects/%s/merge_requests/%d/rebase", PathEscape(project), mergeRequest)
 
-	req, err := s.client.NewRequest(http.MethodPut, u, nil, options)
+	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
 	if err != nil {
 		return nil, err
 	}

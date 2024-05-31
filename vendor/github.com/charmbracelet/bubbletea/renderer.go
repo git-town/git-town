@@ -56,6 +56,20 @@ type renderer interface {
 
 	// disableMouseSGRMode disables mouse extended mode (SGR).
 	disableMouseSGRMode()
+
+	// enableBracketedPaste enables bracketed paste, where characters
+	// inside the input are not interpreted when pasted as a whole.
+	enableBracketedPaste()
+
+	// disableBracketedPaste disables bracketed paste.
+	disableBracketedPaste()
+
+	// bracketedPasteActive reports whether bracketed paste mode is
+	// currently enabled.
+	bracketedPasteActive() bool
+
+	// setWindowTitle sets the terminal window title.
+	setWindowTitle(string)
 }
 
 // repaintMsg forces a full repaint.

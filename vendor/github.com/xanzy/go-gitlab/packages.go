@@ -89,14 +89,15 @@ func (s PackageTag) String() string {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/packages.html
 type PackageFile struct {
-	ID        int         `json:"id"`
-	PackageID int         `json:"package_id"`
-	CreatedAt *time.Time  `json:"created_at"`
-	FileName  string      `json:"file_name"`
-	Size      int         `json:"size"`
-	FileMD5   string      `json:"file_md5"`
-	FileSHA1  string      `json:"file_sha1"`
-	Pipeline  *[]Pipeline `json:"pipelines"`
+	ID         int         `json:"id"`
+	PackageID  int         `json:"package_id"`
+	CreatedAt  *time.Time  `json:"created_at"`
+	FileName   string      `json:"file_name"`
+	Size       int         `json:"size"`
+	FileMD5    string      `json:"file_md5"`
+	FileSHA1   string      `json:"file_sha1"`
+	FileSHA256 string      `json:"file_sha256"`
+	Pipeline   *[]Pipeline `json:"pipelines"`
 }
 
 func (s PackageFile) String() string {

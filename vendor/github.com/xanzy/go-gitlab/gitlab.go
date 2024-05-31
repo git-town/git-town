@@ -124,6 +124,8 @@ type Client struct {
 	Deployments                  *DeploymentsService
 	Discussions                  *DiscussionsService
 	DockerfileTemplate           *DockerfileTemplatesService
+	DORAMetrics                  *DORAMetricsService
+	DraftNotes                   *DraftNotesService
 	Environments                 *EnvironmentsService
 	EpicIssues                   *EpicIssuesService
 	Epics                        *EpicsService
@@ -357,6 +359,8 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.Deployments = &DeploymentsService{client: c}
 	c.Discussions = &DiscussionsService{client: c}
 	c.DockerfileTemplate = &DockerfileTemplatesService{client: c}
+	c.DORAMetrics = &DORAMetricsService{client: c}
+	c.DraftNotes = &DraftNotesService{client: c}
 	c.Environments = &EnvironmentsService{client: c}
 	c.EpicIssues = &EpicIssuesService{client: c}
 	c.Epics = &EpicsService{client: c}

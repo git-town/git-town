@@ -131,7 +131,7 @@ type CommitCommentEvent struct {
 	} `json:"commit"`
 }
 
-// DeploymentEvent represents a deployment event
+// DeploymentEvent represents a deployment event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#deployment-events
@@ -171,7 +171,7 @@ type DeploymentEvent struct {
 	CommitTitle string     `json:"commit_title"`
 }
 
-// FeatureFlagEvent represents a feature flag event
+// FeatureFlagEvent represents a feature flag event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#feature-flag-events
@@ -202,6 +202,30 @@ type FeatureFlagEvent struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
 		Active      bool   `json:"active"`
+	} `json:"object_attributes"`
+}
+
+// GroupResourceAccessTokenEvent represents a resource access token event for a
+// group.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#project-and-group-access-token-events
+type GroupResourceAccessTokenEvent struct {
+	EventName  string `json:"event_name"`
+	ObjectKind string `json:"object_kind"`
+	GroupID    int    `json:"group_id"`
+	Group      struct {
+		GroupID   int    `json:"group_id"`
+		GroupName string `json:"group_name"`
+		GroupPath string `json:"group_path"`
+		FullPath  string `json:"full_path"`
+	} `json:"group"`
+	ObjectAttributes struct {
+		ID        int        `json:"id"`
+		UserID    int        `json:"user_id"`
+		Name      string     `json:"name"`
+		CreatedAt *time.Time `json:"created_at"`
+		ExpiresAt *ISOTime   `json:"expires_at"`
 	} `json:"object_attributes"`
 }
 
@@ -512,7 +536,7 @@ type MergeCommentEvent struct {
 		System           bool          `json:"system"`
 		Type             string        `json:"type"`
 		UpdatedAt        string        `json:"updated_at"`
-		UpdatedByID      string        `json:"updated_by_id"`
+		UpdatedByID      int           `json:"updated_by_id"`
 		Description      string        `json:"description"`
 		URL              string        `json:"url"`
 	} `json:"object_attributes"`
@@ -737,7 +761,8 @@ type MergeEvent struct {
 	Reviewers []*EventUser `json:"reviewers"`
 }
 
-// EventUser represents a user record in an event and is used as an even initiator or a merge assignee.
+// EventUser represents a user record in an event and is used as an even
+// initiator or a merge assignee.
 type EventUser struct {
 	ID        int    `json:"id"`
 	Name      string `json:"name"`
@@ -753,7 +778,8 @@ type MergeParams struct {
 
 // UnmarshalJSON decodes the merge parameters
 //
-// This allows support of ForceRemoveSourceBranch for both type bool (>11.9) and string (<11.9)
+// This allows support of ForceRemoveSourceBranch for both type
+// bool (>11.9) and string (<11.9)
 func (p *MergeParams) UnmarshalJSON(b []byte) error {
 	type Alias MergeParams
 	raw := struct {
@@ -897,6 +923,42 @@ type PipelineEvent struct {
 			DeploymentTier string `json:"deployment_tier"`
 		} `json:"environment"`
 	} `json:"builds"`
+}
+
+// ProjectResourceAccessTokenEvent represents a resource access token event for
+// a project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#project-and-group-access-token-events
+type ProjectResourceAccessTokenEvent struct {
+	EventName  string `json:"event_name"`
+	ObjectKind string `json:"object_kind"`
+	ProjectID  int    `json:"project_id"`
+	Project    struct {
+		ID                int    `json:"id"`
+		Name              string `json:"name"`
+		Description       string `json:"description"`
+		WebURL            string `json:"web_url"`
+		AvatarURL         string `json:"avatar_url"`
+		GitSSHURL         string `json:"git_ssh_url"`
+		GitHTTPURL        string `json:"git_http_url"`
+		Namespace         string `json:"namespace"`
+		VisibilityLevel   int    `json:"visibility_level"`
+		PathWithNamespace string `json:"path_with_namespace"`
+		DefaultBranch     string `json:"default_branch"`
+		CIConfigPath      string `json:"ci_config_path"`
+		Homepage          string `json:"homepage"`
+		URL               string `json:"url"`
+		SSHURL            string `json:"ssh_url"`
+		HTTPURL           string `json:"http_url"`
+	} `json:"project"`
+	ObjectAttributes struct {
+		ID        int        `json:"id"`
+		UserID    int        `json:"user_id"`
+		Name      string     `json:"name"`
+		CreatedAt *time.Time `json:"created_at"`
+		ExpiresAt *ISOTime   `json:"expires_at"`
+	} `json:"object_attributes"`
 }
 
 // PushEvent represents a push event.

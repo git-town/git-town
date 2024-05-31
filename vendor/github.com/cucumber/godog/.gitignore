@@ -6,3 +6,6 @@ Gopkg.toml
 
 .DS_Store
 .idea
+.vscode
+
+_artifacts
