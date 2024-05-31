@@ -78,6 +78,6 @@ Town users. `git town help [command]` shows help on the CLI.
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
 [pull request](https://help.github.com/articles/using-pull-requests)! Our
-[developer documentation](DEVELOPMENT.md) helps you get started.
+[developer documentation](docs/DEVELOPMENT.md) helps you get started.
 
 [![Stargazers over time](https://starchart.cc/git-town/git-town.svg)](https://starchart.cc/git-town/git-town)
