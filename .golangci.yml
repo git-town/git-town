@@ -2,12 +2,10 @@ linters:
   enable-all: true
   disable:
     - cyclop # we keep a tab on function length ourselves
-    - deadcode # deprecated
     - depguard # we review our dependencies in pull requests
     - dogsled # nothing we can do about this one
     - dupl # too many false positives
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
-    - exhaustivestruct # abandoned
     - forbidigo # Git Town prints a lot to the CLI
     - funlen # we keep track of this via code reviews
     - gci # we prefer keeping import statements as one blocks without empty lines
@@ -16,23 +14,15 @@ linters:
     - gocyclo # we keep track of this via code reviews
     - godot # comments don't really need to read like prose, we don't use the godoc web UI
     - godox # we allow todo comments
-    - golint # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
-    - ifshort # this enforces less readable code
-    - interfacer # deprecated
     - lll # we aren't enforcing a line length at this point
-    - maligned # deprecated
     - maintidx # we keep complexity under check with code reviews
     - musttag # we document JSON serialization via unit tests
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
     - nonamedreturns # they are useful in too many situations
-    - nosnakecase # deprecated
     - nlreturn # this forces unnecessary empty lines in function bodies
-    - scopelint # deprecated
-    - structcheck # deprecated
     - typecheck # seems buggy
-    - varcheck # deprecated
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
