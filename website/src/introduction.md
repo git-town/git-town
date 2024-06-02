@@ -1,9 +1,9 @@
 # High-level CLI for Git
 
 Git Town provides additional Git commands that automate the creation,
-synchronization, and cleanup of Git branches. Compatible with all major Git
-workflows including Git Flow, GitHub Flow, GitLab Flow, and trunk-based
-development. Supports mono-repos and stacked changes.
+synchronization, shipping, and cleanup of Git branches. Compatible with all
+major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and
+trunk-based development. Supports mono-repos and stacked changes.
 
 <br>
 <p align="center">
