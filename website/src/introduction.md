@@ -19,9 +19,9 @@ can make using the vanilla Git CLI repetitive in real life. As the screencast
 above demonstrates, typical development activities like creating, synchronizing,
 or shipping a feature branch can require running dozens of Git commands.
 
-Git Town adds higher-level Git commands that implement typical steps in the
-lifecycle of Git branches as a single command. Git Town's commands are
-compatible with most common branching models like
+Git Town adds higher-level Git commands that perform typical steps in the
+lifecycle of Git branches as a single step. Git Town's commands are compatible
+with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
