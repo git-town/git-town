@@ -13,9 +13,10 @@
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
-Git Town makes it easy to create and synchronize Git branches. Compatible with
-all major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and
-trunk-based development. Supports mono-repos and stacked changes. Check out
+Git Town provides additional Git commands that automate the creation,
+synchronization, and cleanup of Git branches. Compatible with all major Git
+workflows including Git Flow, GitHub Flow, GitLab Flow, and trunk-based
+development. Supports mono-repos and stacked changes. Check out
 [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
