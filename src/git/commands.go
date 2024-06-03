@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -134,6 +136,93 @@ func (self *Commands) CommitStagedChanges(runner Runner, message string) error {
 		return runner.Run("git", "commit", "-m", message)
 	}
 	return runner.Run("git", "commit", "--no-edit")
+}
+
+// ContinueRebase continues the currently ongoing rebase.
+func (self *Commands) ContinueRebase(runner Runner) error {
+	return runner.Run("git", "rebase", "--continue")
+}
+
+// CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *Commands) CreateAndCheckoutBranch(runner Runner, name gitdomain.LocalBranchName) error {
+	err := runner.Run("git", "checkout", "-b", name.String())
+	self.CurrentBranchCache.Set(name)
+	return err
+}
+
+// CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *Commands) CreateAndCheckoutBranchWithParent(runner Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+	err := runner.Run("git", "checkout", "-b", name.String(), parent.String())
+	self.CurrentBranchCache.Set(name)
+	return err
+}
+
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *Commands) CreateBranch(runner Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+	return runner.Run("git", "branch", name.String(), parent.String())
+}
+
+// CreateRemoteBranch creates a remote branch from the given local SHA.
+func (self *Commands) CreateRemoteBranch(runner Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, gitdomain.RemoteOrigin.String(), localSHA.String()+":refs/heads/"+branch.String())
+	return runner.Run("git", args...)
+}
+
+// PushBranch pushes the branch with the given name to origin.
+func (self *Commands) CreateTrackingBranch(runner Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", remote.String())
+	args = append(args, branch.String())
+	return runner.Run("git", args...)
+}
+
+// DeleteHostingPlatform removes the hosting platform config entry.
+func (self *Commands) DeleteHostingPlatform(runner Runner) error {
+	return runner.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
+}
+
+// DeleteLastCommit resets HEAD to the previous commit.
+func (self *Commands) DeleteLastCommit(runner Runner) error {
+	return runner.Run("git", "reset", "--hard", "HEAD~1")
+}
+
+// DeleteLocalBranch removes the local branch with the given name.
+func (self *Commands) DeleteLocalBranch(runner Runner, name gitdomain.LocalBranchName) error {
+	return runner.Run("git", "branch", "-D", name.String())
+}
+
+// DeleteOriginHostname removes the origin hostname override
+func (self *Commands) DeleteOriginHostname(runner Runner) error {
+	return runner.Run("git", "config", "--unset", gitconfig.KeyHostingOriginHostname.String())
+}
+
+// DeleteTrackingBranch removes the tracking branch of the given local branch.
+func (self *Commands) DeleteTrackingBranch(runner Runner, name gitdomain.RemoteBranchName) error {
+	remote, localBranchName := name.Parts()
+	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
+}
+
+// DiffParent displays the diff between the given branch and its given parent branch.
+func (self *Commands) DiffParent(runner Runner, branch, parentBranch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
+}
+
+// DiscardOpenChanges deletes all uncommitted changes.
+func (self *Commands) DiscardOpenChanges(runner Runner) error {
+	return runner.Run("git", "reset", "--hard")
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
