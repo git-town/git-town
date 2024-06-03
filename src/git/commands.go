@@ -620,7 +620,7 @@ func (self *Commands) StartCommit(runner Runner) error {
 }
 
 // Stash adds the current files to the Git stash.
-func (self *Commands) Stash(runner Runner) error {
+func (self *Commands) Stash(runner ManyRunner) error {
 	return runner.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
@@ -631,6 +631,10 @@ func (self *Commands) Stash(runner Runner) error {
 func (self *Commands) StashSize(querier Querier) (gitdomain.StashSize, error) {
 	output, err := querier.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
+}
+
+func (self *Commands) UndoLastCommit(runner Runner) error {
+	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
 // Version indicates whether the needed Git version is installed.
