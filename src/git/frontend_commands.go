@@ -14,23 +14,6 @@ type FrontendRunner interface {
 	RunMany(commands [][]string) error
 }
 
-// Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *FrontendCommands) Commit(message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
-	gitArgs := []string{"commit"}
-	if messageContent, has := message.Get(); has {
-		gitArgs = append(gitArgs, "-m", messageContent.String())
-	}
-	if author != "" {
-		gitArgs = append(gitArgs, "--author", author.String())
-	}
-	return self.Runner.Run("git", gitArgs...)
-}
-
-// CommitNoEdit commits all staged files with the default commit message.
-func (self *FrontendCommands) CommitNoEdit() error {
-	return self.Runner.Run("git", "commit", "--no-edit")
-}
-
 // CommitStagedChanges commits the currently staged changes.
 func (self *FrontendCommands) CommitStagedChanges(message string) error {
 	if message != "" {

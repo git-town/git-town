@@ -111,6 +111,31 @@ func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.Local
 	return nil
 }
 
+// Commit performs a commit of the staged changes with an optional custom message and author.
+func (self *Commands) Commit(runner Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
+	gitArgs := []string{"commit"}
+	if messageContent, has := message.Get(); has {
+		gitArgs = append(gitArgs, "-m", messageContent.String())
+	}
+	if author != "" {
+		gitArgs = append(gitArgs, "--author", author.String())
+	}
+	return runner.Run("git", gitArgs...)
+}
+
+// CommitNoEdit commits all staged files with the default commit message.
+func (self *Commands) CommitNoEdit(runner Runner) error {
+	return runner.Run("git", "commit", "--no-edit")
+}
+
+// CommitStagedChanges commits the currently staged changes.
+func (self *Commands) CommitStagedChanges(runner Runner, message string) error {
+	if message != "" {
+		return runner.Run("git", "commit", "-m", message)
+	}
+	return runner.Run("git", "commit", "--no-edit")
+}
+
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
