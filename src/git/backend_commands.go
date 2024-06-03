@@ -432,8 +432,8 @@ func (self *Commands) Version(querier Querier) (major int, minor int, err error)
 	return majorVersion, minorVersion, nil
 }
 
-func (self *Commands) currentBranchDuringRebase() (gitdomain.LocalBranchName, error) {
-	output, err := self.Runner.QueryTrim("git", "branch", "--list")
+func (self *Commands) currentBranchDuringRebase(querier Querier) (gitdomain.LocalBranchName, error) {
+	output, err := querier.QueryTrim("git", "branch", "--list")
 	if err != nil {
 		return "", err
 	}
