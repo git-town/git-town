@@ -79,7 +79,7 @@ func executeObserve(args []string, verbose bool) error {
 	}
 	printObservedBranches(branchNames)
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
-		if err = repo.Frontend.CheckoutBranch(checkout, false); err != nil {
+		if err = repo.Git.CheckoutBranch(repo.Frontend, checkout, false); err != nil {
 			return err
 		}
 	}
@@ -125,7 +125,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 }
 
 func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return observeData{}, err
 	}

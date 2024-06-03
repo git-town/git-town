@@ -127,7 +127,7 @@ func emptyProposeData() proposeData {
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (proposeData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyProposeData(), false, err
 	}
@@ -150,8 +150,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	if err != nil || exit {
 		return emptyProposeData(), exit, err
 	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Git.Remotes()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return emptyProposeData(), false, err
 	}

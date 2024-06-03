@@ -117,7 +117,7 @@ type killData struct {
 
 func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -165,7 +165,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return nil, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch().Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)

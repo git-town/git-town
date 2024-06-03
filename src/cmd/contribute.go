@@ -80,7 +80,7 @@ func executeContribute(args []string, verbose bool) error {
 	printContributeBranches(branchNames)
 	branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get()
 	if hasBranchToCheckout {
-		if err = repo.Frontend.CheckoutBranch(branchToCheckout, false); err != nil {
+		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, false); err != nil {
 			return err
 		}
 	}
@@ -126,7 +126,7 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 }
 
 func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return contributeData{}, err
 	}

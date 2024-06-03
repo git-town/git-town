@@ -119,7 +119,7 @@ func emptyPrependData() prependData {
 
 func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (prependData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyPrependData(), false, err
 	}
@@ -143,8 +143,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return emptyPrependData(), exit, err
 	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Git.Remotes())
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return emptyPrependData(), false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)

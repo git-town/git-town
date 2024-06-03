@@ -73,7 +73,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if doAppend {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
-			backend:               repo.Git,
+			backend:               repo.Backend,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        appendData.stashSize,
@@ -81,6 +81,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
+			git:                   repo.Git,
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
 		})
@@ -141,24 +142,25 @@ func createBranch(args createBranchArgs) error {
 
 type createBranchArgs struct {
 	appendData            appendData
-	backend               git.BackendCommands
+	backend               git.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       gohacks.Counter
 	dryRun                bool
 	finalMessages         stringslice.Collector
-	frontend              git.FrontendCommands
+	frontend              git.Runner
+	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
 	verbose               bool
 }
 
 func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
-	repoStatus, err = repo.Git.RepoStatus()
+	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return
 	}
@@ -225,7 +227,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
-	remotes, err = repo.Git.Remotes()
+	remotes, err = repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return
 	}

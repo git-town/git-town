@@ -125,9 +125,9 @@ func emptyRenameBranchData() renameBranchData {
 }
 
 func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (renameBranchData, bool, error) {
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyRenameBranchData(), false, err
 	}

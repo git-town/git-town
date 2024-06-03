@@ -83,7 +83,7 @@ func executeContinue(verbose bool) error {
 
 func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyContinueData(), false, err
 	}
@@ -130,7 +130,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		initialBranch, err = repo.Git.CurrentBranch()
+		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return emptyContinueData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
