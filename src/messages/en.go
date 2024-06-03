@@ -45,6 +45,7 @@ const (
 	ConfigSyncFeatureStrategyUnknown   = "unknown sync-feature strategy: %q"
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
+	ConnectorUnknown                   = "Cannot determine the hosting connector to use"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git town skip\"."
 	ContributeBranchIsNowContribution  = "branch %q is now a contribution branch\n"
