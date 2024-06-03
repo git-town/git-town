@@ -14,16 +14,6 @@ type FrontendRunner interface {
 	RunMany(commands [][]string) error
 }
 
-// Fetch retrieves the updates from the origin repo.
-func (self *FrontendCommands) Fetch() error {
-	return self.Runner.Run("git", "fetch", "--prune", "--tags")
-}
-
-// FetchUpstream fetches updates from the upstream remote.
-func (self *FrontendCommands) FetchUpstream(branch gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
-}
-
 // PushBranch pushes the branch with the given name to origin.
 func (self *FrontendCommands) ForcePushBranchSafely(noPushHook configdomain.NoPushHook) error {
 	args := []string{"push", "--force-with-lease", "--force-if-includes"}
