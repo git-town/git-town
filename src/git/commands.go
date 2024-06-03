@@ -335,13 +335,13 @@ func (self *Commands) DiscardOpenChanges(runner Runner) error {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (self *FrontendCommands) Fetch() error {
-	return self.Runner.Run("git", "fetch", "--prune", "--tags")
+func (self *Commands) Fetch(runner Runner) error {
+	return runner.Run("git", "fetch", "--prune", "--tags")
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (self *FrontendCommands) FetchUpstream(branch gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
+func (self *Commands) FetchUpstream(runner Runner, branch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
 func (self *Commands) FirstExistingBranch(runner Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
