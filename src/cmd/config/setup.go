@@ -62,16 +62,16 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.UnvalidatedConfig, repo.Backend, &data)
+	aborted, err := enterData(repo.UnvalidatedConfig, repo.Git, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, repo.UnvalidatedConfig, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, repo.Git, repo.Frontend)
 	if err != nil {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
+		Backend:             repo.Git,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "setup",
 		CommandsCounter:     repo.CommandsCounter,
@@ -109,7 +109,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.HostingPlatform]()
 }
 
-func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, data *setupData) (aborted bool, err error) {
+func enterData(config config.UnvalidatedConfig, git git.Commands, backend git.RunnerQuerier, data *setupData) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -120,10 +120,10 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 	}
 	existingMainBranch := config.Config.MainBranch
 	if existingMainBranch.IsNone() {
-		existingMainBranch = backend.DefaultBranch()
+		existingMainBranch = git.DefaultBranch(backend)
 	}
 	if existingMainBranch.IsNone() {
-		existingMainBranch = backend.OriginHead()
+		existingMainBranch = git.OriginHead(backend)
 	}
 	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
@@ -204,12 +204,12 @@ func enterData(config config.UnvalidatedConfig, backend git.BackendCommands, dat
 
 func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptySetupData(), false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -233,20 +233,20 @@ func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, 
 	}, exit, err
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, frontend git.FrontendCommands) error {
-	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, frontend)
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, git git.Commands, frontend git.Runner) error {
+	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, git, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(oldConfig.Config.GiteaToken, userInput.config.GiteaToken, frontend)
+	err = saveGiteaToken(oldConfig.Config.GiteaToken, userInput.config.GiteaToken, git, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(oldConfig.Config.GitHubToken, userInput.config.GitHubToken, frontend)
+	err = saveGitHubToken(oldConfig.Config.GitHubToken, userInput.config.GitHubToken, git, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(oldConfig.Config.GitLabToken, userInput.config.GitLabToken, frontend)
+	err = saveGitLabToken(oldConfig.Config.GitLabToken, userInput.config.GitLabToken, git, frontend)
 	if err != nil {
 		return err
 	}
@@ -254,15 +254,15 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, frontend g
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, oldConfig, frontend)
+		return saveToGit(userInput, oldConfig, git, frontend)
 	}
 	panic("unknown configStorage: " + userInput.configStorage)
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, frontend git.FrontendCommands) error {
+func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, git git.Commands, frontend git.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, frontend))
-	fc.Check(saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, frontend))
+	fc.Check(saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, git, frontend))
+	fc.Check(saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, git, frontend))
 	fc.Check(saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
 	fc.Check(savePerennialBranches(oldConfig.Config.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
 	fc.Check(savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
@@ -276,15 +276,15 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, frontend
 	return fc.Err
 }
 
-func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.FrontendCommands) (err error) {
+func saveAliases(oldAliases, newAliases configdomain.Aliases, git git.Commands, frontend git.Runner) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := oldAliases[aliasableCommand]
 		newAlias, hasNew := newAliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
-			err = frontend.RemoveGitAlias(aliasableCommand)
+			err = git.RemoveGitAlias(frontend, aliasableCommand)
 		case newAlias != oldAlias:
-			err = frontend.SetGitAlias(aliasableCommand)
+			err = git.SetGitAlias(frontend, aliasableCommand)
 		}
 		if err != nil {
 			return err
@@ -293,37 +293,37 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, frontend git.Front
 	return nil
 }
 
-func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], frontend git.FrontendCommands) error {
+func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], git git.Commands, frontend git.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return frontend.SetGiteaToken(value)
+		return git.SetGiteaToken(frontend, value)
 	}
-	return frontend.RemoveGiteaToken()
+	return git.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], frontend git.FrontendCommands) error {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], git git.Commands, frontend git.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return frontend.SetGitHubToken(value)
+		return git.SetGitHubToken(frontend, value)
 	}
-	return frontend.RemoveGitHubToken()
+	return git.RemoveGitHubToken(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], frontend git.FrontendCommands) error {
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], git git.Commands, frontend git.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return frontend.SetGitLabToken(value)
+		return git.SetGitLabToken(frontend, value)
 	}
-	return frontend.RemoveGitLabToken()
+	return git.RemoveGitLabToken(frontend)
 }
 
-func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.HostingPlatform], frontend git.FrontendCommands) (err error) {
+func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.HostingPlatform], git git.Commands, frontend git.Runner) (err error) {
 	oldValue, oldHas := oldHostingPlatform.Get()
 	newValue, newHas := newHostingPlatform.Get()
 	if !oldHas && !newHas {
@@ -333,9 +333,9 @@ func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdom
 		return nil
 	}
 	if newHas {
-		return frontend.SetHostingPlatform(newValue)
+		return git.SetHostingPlatform(frontend, newValue)
 	}
-	return frontend.DeleteHostingPlatform()
+	return git.DeleteHostingPlatform(frontend)
 }
 
 func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
@@ -345,14 +345,14 @@ func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdoma
 	return config.SetMainBranch(newValue)
 }
 
-func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], frontend git.FrontendCommands) error {
+func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], git git.Commands, frontend git.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return frontend.SetOriginHostname(value)
+		return git.SetOriginHostname(frontend, value)
 	}
-	return frontend.DeleteOriginHostname()
+	return git.DeleteOriginHostname(frontend)
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {

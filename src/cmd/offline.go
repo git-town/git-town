@@ -60,7 +60,7 @@ func executeOffline(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
+		Backend:             repo.Git,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
 		CommandsCounter:     repo.CommandsCounter,

@@ -85,7 +85,7 @@ func executeContribute(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
+		Backend:             repo.Git,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "contribute",
 		CommandsCounter:     repo.CommandsCounter,
@@ -126,7 +126,7 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 }
 
 func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot()
 	if err != nil {
 		return contributeData{}, err
 	}

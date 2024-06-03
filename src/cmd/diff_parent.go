@@ -72,12 +72,12 @@ type diffParentData struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -108,7 +108,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	branchesToDiff := gitdomain.LocalBranchNames{branch}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToDiff,
 		DialogTestInputs:   dialogTestInputs,

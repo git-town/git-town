@@ -107,7 +107,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 		RunProgram:            shipProgram(data, message),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
+		Backend:                 repo.Git,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
@@ -149,12 +149,12 @@ type shipData struct {
 
 func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -172,8 +172,8 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Backend.Remotes()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
+	remotes, err := repo.Git.Remotes()
 	if err != nil {
 		return nil, false, err
 	}
@@ -192,7 +192,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		DialogTestInputs:   dialogTestInputs,

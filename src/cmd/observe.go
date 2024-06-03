@@ -84,7 +84,7 @@ func executeObserve(args []string, verbose bool) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
+		Backend:             repo.Git,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "observe",
 		CommandsCounter:     repo.CommandsCounter,
@@ -125,7 +125,7 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 }
 
 func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot()
 	if err != nil {
 		return observeData{}, err
 	}

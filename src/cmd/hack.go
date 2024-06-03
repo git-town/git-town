@@ -73,7 +73,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if doAppend {
 		return createBranch(createBranchArgs{
 			appendData:            appendData,
-			backend:               repo.Backend,
+			backend:               repo.Git,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        appendData.stashSize,
@@ -155,15 +155,15 @@ type createBranchArgs struct {
 
 func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
-	repoStatus, err = repo.Backend.RepoStatus()
+	repoStatus, err = repo.Git.RepoStatus()
 	if err != nil {
 		return
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -199,7 +199,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToValidate,
 		DialogTestInputs:   dialogTestInputs,
@@ -225,7 +225,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
-	remotes, err = repo.Backend.Remotes()
+	remotes, err = repo.Git.Remotes()
 	if err != nil {
 		return
 	}
@@ -281,7 +281,7 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             args.repo.Backend,
+		Backend:             args.repo.Git,
 		BeginConfigSnapshot: args.beginConfigSnapshot,
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,

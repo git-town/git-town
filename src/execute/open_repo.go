@@ -94,11 +94,11 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	return OpenRepoResult{
-		BackendRunner:     backendRunner,
+		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
-		FrontendRunner:    frontEndRunner,
+		Frontend:          frontEndRunner,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
@@ -115,11 +115,11 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	BackendRunner     git.RunnerQuerier
+	Backend           git.RunnerQuerier
 	CommandsCounter   gohacks.Counter
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
-	FrontendRunner    git.Runner
+	Frontend          git.Runner
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir

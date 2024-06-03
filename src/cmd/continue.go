@@ -63,7 +63,7 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
+		Backend:                 repo.Git,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
@@ -83,12 +83,12 @@ func executeContinue(verbose bool) error {
 
 func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return emptyContinueData(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -108,7 +108,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
@@ -130,7 +130,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		initialBranch, err = repo.Backend.CurrentBranch()
+		initialBranch, err = repo.Git.CurrentBranch()
 		if err != nil {
 			return emptyContinueData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 		}

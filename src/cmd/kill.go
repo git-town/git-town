@@ -82,7 +82,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:      finalUndoProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
+		Backend:                 repo.Git,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[hostingdomain.Connector](),
@@ -117,12 +117,12 @@ type killData struct {
 
 func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -151,7 +151,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToKill,
 		DialogTestInputs:   dialogTestInputs,
@@ -165,7 +165,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return nil, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch().Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)

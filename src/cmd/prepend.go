@@ -78,7 +78,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
+		Backend:                 repo.Git,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[hostingdomain.Connector](),
@@ -119,13 +119,13 @@ func emptyPrependData() prependData {
 
 func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (prependData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return emptyPrependData(), false, err
 	}
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -143,8 +143,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return emptyPrependData(), exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Backend.Remotes())
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
+	remotes := fc.Remotes(repo.Git.Remotes())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return emptyPrependData(), false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -158,7 +158,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		return emptyPrependData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,

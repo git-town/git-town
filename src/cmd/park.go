@@ -72,7 +72,7 @@ func executePark(args []string, verbose bool) error {
 	}
 	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
+		Backend:             repo.Git,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "park",
 		CommandsCounter:     repo.CommandsCounter,
@@ -112,7 +112,7 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 }
 
 func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot()
 	if err != nil {
 		return parkData{}, err
 	}

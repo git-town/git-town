@@ -121,7 +121,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
+		Backend:                 repo.Git,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[hostingdomain.Connector](),
@@ -159,12 +159,12 @@ func emptySyncData() syncData {
 
 func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return emptySyncData(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -182,7 +182,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	if err != nil || exit {
 		return emptySyncData(), exit, err
 	}
-	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch().Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
 	if hasPreviousBranch {
 		if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
@@ -196,7 +196,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	} else {
 		previousBranchOpt = None[gitdomain.LocalBranchName]()
 	}
-	remotes, err := repo.Backend.Remotes()
+	remotes, err := repo.Git.Remotes()
 	if err != nil {
 		return emptySyncData(), false, err
 	}
@@ -212,7 +212,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
 		DialogTestInputs:   dialogTestInputs,

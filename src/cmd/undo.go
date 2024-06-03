@@ -65,7 +65,7 @@ func executeUndo(verbose bool) error {
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		Backend:          repo.Backend,
+		Backend:          repo.Git,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
 		FinalMessages:    repo.FinalMessages,
@@ -94,12 +94,12 @@ func emptyUndoData() undoData {
 
 func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus()
 	if err != nil {
 		return emptyUndoData(), false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
+		Backend:               repo.Git,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
@@ -119,7 +119,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            repo.Git,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,
@@ -132,7 +132,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 	if err != nil || exit {
 		return emptyUndoData(), exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch()
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
