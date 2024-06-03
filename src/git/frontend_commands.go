@@ -12,51 +12,6 @@ type FrontendRunner interface {
 	RunMany(commands [][]string) error
 }
 
-// PushCurrentBranch pushes the current branch to its tracking branch.
-func (self *FrontendCommands) PushCurrentBranch(noPushHook configdomain.NoPushHook) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	return self.Runner.Run("git", args...)
-}
-
-// PushTags pushes new the Git tags to origin.
-func (self *FrontendCommands) PushTags() error {
-	return self.Runner.Run("git", "push", "--tags")
-}
-
-// Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *FrontendCommands) Rebase(target gitdomain.BranchName) error {
-	return self.Runner.Run("git", "rebase", target.String())
-}
-
-// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *FrontendCommands) RemoveCommitsInCurrentBranch(parent gitdomain.LocalBranchName) error {
-	return self.Runner.Run("git", "reset", "--soft", parent.String())
-}
-
-// RemoveGitAlias removes the given Git alias.
-func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.AliasableCommand) error {
-	aliasKey := gitconfig.KeyForAliasableCommand(aliasableCommand)
-	return self.Runner.Run("git", "config", "--global", "--unset", aliasKey.String())
-}
-
-// RemoveHubToken removes the stored token for the GitHub API.
-func (self *FrontendCommands) RemoveGitHubToken() error {
-	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGithubToken.String())
-}
-
-// RemoveHubToken removes the stored token for the GitHub API.
-func (self *FrontendCommands) RemoveGitLabToken() error {
-	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGitlabToken.String())
-}
-
-// RemoveHubToken removes the stored token for the GitHub API.
-func (self *FrontendCommands) RemoveGiteaToken() error {
-	return self.Runner.Run("git", "config", "--unset", gitconfig.KeyGiteaToken.String())
-}
-
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
 func (self *FrontendCommands) ResetCurrentBranchToSHA(sha gitdomain.SHA, hard bool) error {
 	args := []string{"reset"}

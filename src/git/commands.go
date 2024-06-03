@@ -446,6 +446,16 @@ func (self *Commands) PushCurrentBranch(runner Runner, noPushHook configdomain.N
 	return runner.Run("git", args...)
 }
 
+// PushTags pushes new the Git tags to origin.
+func (self *Commands) PushTags(runner Runner) error {
+	return runner.Run("git", "push", "--tags")
+}
+
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (self *Commands) Rebase(runner Runner, target gitdomain.BranchName) error {
+	return runner.Run("git", "rebase", target.String())
+}
+
 // Remotes provides the names of all Git remotes in this repository.
 func (self *Commands) Remotes(querier Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
@@ -468,6 +478,32 @@ func (self *Commands) RemotesUncached(querier Querier) (gitdomain.Remotes, error
 		return gitdomain.Remotes{}, nil
 	}
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
+}
+
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *Commands) RemoveCommitsInCurrentBranch(runner Runner, parent gitdomain.LocalBranchName) error {
+	return runner.Run("git", "reset", "--soft", parent.String())
+}
+
+// RemoveGitAlias removes the given Git alias.
+func (self *Commands) RemoveGitAlias(runner Runner, aliasableCommand configdomain.AliasableCommand) error {
+	aliasKey := gitconfig.KeyForAliasableCommand(aliasableCommand)
+	return runner.Run("git", "config", "--global", "--unset", aliasKey.String())
+}
+
+// RemoveHubToken removes the stored token for the GitHub API.
+func (self *Commands) RemoveGitHubToken(runner Runner) error {
+	return runner.Run("git", "config", "--unset", gitconfig.KeyGithubToken.String())
+}
+
+// RemoveHubToken removes the stored token for the GitHub API.
+func (self *Commands) RemoveGitLabToken(runner Runner) error {
+	return runner.Run("git", "config", "--unset", gitconfig.KeyGitlabToken.String())
+}
+
+// RemoveHubToken removes the stored token for the GitHub API.
+func (self *Commands) RemoveGiteaToken(runner Runner) error {
+	return runner.Run("git", "config", "--unset", gitconfig.KeyGiteaToken.String())
 }
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
