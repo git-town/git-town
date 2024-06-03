@@ -12,21 +12,6 @@ type FrontendRunner interface {
 	RunMany(commands [][]string) error
 }
 
-// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *FrontendCommands) ResetCurrentBranchToSHA(sha gitdomain.SHA, hard bool) error {
-	args := []string{"reset"}
-	if hard {
-		args = append(args, "--hard")
-	}
-	args = append(args, sha.String())
-	return self.Runner.Run("git", args...)
-}
-
-// ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
-func (self *FrontendCommands) ResetRemoteBranchToSHA(branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
-	return self.Runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
-}
-
 // RevertCommit reverts the commit with the given SHA.
 func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 	return self.Runner.Run("git", "revert", sha.String())

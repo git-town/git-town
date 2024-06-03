@@ -524,6 +524,21 @@ func (self *Commands) RepoStatus(querier Querier) (gitdomain.RepoStatus, error) 
 	}, nil
 }
 
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *Commands) ResetCurrentBranchToSHA(runner Runner, sha gitdomain.SHA, hard bool) error {
+	args := []string{"reset"}
+	if hard {
+		args = append(args, "--hard")
+	}
+	args = append(args, sha.String())
+	return runner.Run("git", args...)
+}
+
+// ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
+func (self *Commands) ResetRemoteBranchToSHA(runner Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
+	return runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
+}
+
 // RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDir] {
