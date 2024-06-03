@@ -12,36 +12,6 @@ type FrontendRunner interface {
 	RunMany(commands [][]string) error
 }
 
-// RevertCommit reverts the commit with the given SHA.
-func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
-	return self.Runner.Run("git", "revert", sha.String())
-}
-
-// SetGitAlias sets the given Git alias.
-func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
-	return self.Runner.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
-}
-
-// SetGitHubToken sets the given API token for the GitHub API.
-func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
-	return self.Runner.Run("git", "config", gitconfig.KeyGithubToken.String(), value.String())
-}
-
-// SetGitLabToken sets the given API token for the GitHub API.
-func (self *FrontendCommands) SetGitLabToken(value configdomain.GitLabToken) error {
-	return self.Runner.Run("git", "config", gitconfig.KeyGitlabToken.String(), value.String())
-}
-
-// SetGiteaToken sets the given API token for the Gitea API.
-func (self *FrontendCommands) SetGiteaToken(value configdomain.GiteaToken) error {
-	return self.Runner.Run("git", "config", gitconfig.KeyGiteaToken.String(), value.String())
-}
-
-// SetHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
-	return self.Runner.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
-}
-
 // SetHostingPlatform sets the given code hosting platform.
 func (self *FrontendCommands) SetOriginHostname(hostname configdomain.HostingOriginHostname) error {
 	return self.Runner.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())

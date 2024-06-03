@@ -539,6 +539,11 @@ func (self *Commands) ResetRemoteBranchToSHA(runner Runner, branch gitdomain.Rem
 	return runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
+// RevertCommit reverts the commit with the given SHA.
+func (self *Commands) RevertCommit(runner Runner, sha gitdomain.SHA) error {
+	return runner.Run("git", "revert", sha.String())
+}
+
 // RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDir] {
@@ -547,6 +552,31 @@ func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDi
 		return None[gitdomain.RepoRootDir]()
 	}
 	return Some(gitdomain.NewRepoRootDir(filepath.FromSlash(output)))
+}
+
+// SetGitAlias sets the given Git alias.
+func (self *Commands) SetGitAlias(runner Runner, aliasableCommand configdomain.AliasableCommand) error {
+	return runner.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
+}
+
+// SetGitHubToken sets the given API token for the GitHub API.
+func (self *Commands) SetGitHubToken(runner Runner, value configdomain.GitHubToken) error {
+	return runner.Run("git", "config", gitconfig.KeyGithubToken.String(), value.String())
+}
+
+// SetGitLabToken sets the given API token for the GitHub API.
+func (self *Commands) SetGitLabToken(runner Runner, value configdomain.GitLabToken) error {
+	return runner.Run("git", "config", gitconfig.KeyGitlabToken.String(), value.String())
+}
+
+// SetGiteaToken sets the given API token for the Gitea API.
+func (self *Commands) SetGiteaToken(runner Runner, value configdomain.GiteaToken) error {
+	return runner.Run("git", "config", gitconfig.KeyGiteaToken.String(), value.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *Commands) SetHostingPlatform(runner Runner, platform configdomain.HostingPlatform) error {
+	return runner.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.
