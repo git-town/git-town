@@ -353,6 +353,15 @@ func (self *Commands) FirstExistingBranch(runner Runner, branches ...gitdomain.L
 	return None[gitdomain.LocalBranchName]()
 }
 
+// PushBranch pushes the branch with the given name to origin.
+func (self *Commands) ForcePushBranchSafely(runner Runner, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push", "--force-with-lease", "--force-if-includes"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return runner.Run("git", args...)
+}
+
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (self *Commands) HasLocalBranch(runner Runner, name gitdomain.LocalBranchName) bool {
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
@@ -383,6 +392,17 @@ func (self *Commands) LastCommitMessage(querier Querier) (gitdomain.CommitMessag
 	return gitdomain.CommitMessage(out), nil
 }
 
+// MergeBranchNoEdit merges the given branch into the current branch,
+// using the default commit message.
+func (self *Commands) MergeBranchNoEdit(runner Runner, branch gitdomain.BranchName) error {
+	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
+}
+
+// NavigateToDir changes into the root directory of the current repository.
+func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
+	return os.Chdir(dir.String())
+}
+
 func (self *Commands) OriginHead(querier Querier) Option[gitdomain.LocalBranchName] {
 	output, err := querier.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
 	if err != nil {
@@ -395,6 +415,16 @@ func (self *Commands) OriginHead(querier Querier) Option[gitdomain.LocalBranchNa
 	return Some(gitdomain.LocalBranchName(LastBranchInRef(output)))
 }
 
+// PopStash restores stashed-away changes into the workspace.
+func (self *Commands) PopStash(runner Runner) error {
+	return runner.Run("git", "stash", "pop")
+}
+
+// Pull fetches updates from origin and updates the currently checked out branch.
+func (self *Commands) Pull(runner Runner) error {
+	return runner.Run("git", "pull")
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *Commands) PreviouslyCheckedOutBranch(querier Querier) Option[gitdomain.LocalBranchName] {
 	output, err := querier.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -405,6 +435,15 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier Querier) Option[gitdoma
 		return None[gitdomain.LocalBranchName]()
 	}
 	return Some(gitdomain.NewLocalBranchName(output))
+}
+
+// PushCurrentBranch pushes the current branch to its tracking branch.
+func (self *Commands) PushCurrentBranch(runner Runner, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return runner.Run("git", args...)
 }
 
 // Remotes provides the names of all Git remotes in this repository.

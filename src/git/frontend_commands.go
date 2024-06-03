@@ -1,8 +1,6 @@
 package git
 
 import (
-	"os"
-
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -12,36 +10,6 @@ import (
 type FrontendRunner interface {
 	Run(executable string, args ...string) error
 	RunMany(commands [][]string) error
-}
-
-// PushBranch pushes the branch with the given name to origin.
-func (self *FrontendCommands) ForcePushBranchSafely(noPushHook configdomain.NoPushHook) error {
-	args := []string{"push", "--force-with-lease", "--force-if-includes"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	return self.Runner.Run("git", args...)
-}
-
-// MergeBranchNoEdit merges the given branch into the current branch,
-// using the default commit message.
-func (self *FrontendCommands) MergeBranchNoEdit(branch gitdomain.BranchName) error {
-	return self.Runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
-}
-
-// NavigateToDir changes into the root directory of the current repository.
-func (self *FrontendCommands) NavigateToDir(dir gitdomain.RepoRootDir) error {
-	return os.Chdir(dir.String())
-}
-
-// PopStash restores stashed-away changes into the workspace.
-func (self *FrontendCommands) PopStash() error {
-	return self.Runner.Run("git", "stash", "pop")
-}
-
-// Pull fetches updates from origin and updates the currently checked out branch.
-func (self *FrontendCommands) Pull() error {
-	return self.Runner.Run("git", "pull")
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
