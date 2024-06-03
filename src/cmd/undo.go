@@ -80,7 +80,7 @@ func executeUndo(verbose bool) error {
 
 type undoData struct {
 	config                  config.ValidatedConfig
-	connector               hostingdomain.Connector
+	connector               Option[hostingdomain.Connector]
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
@@ -133,7 +133,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 		return emptyUndoData(), exit, err
 	}
 	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	var connector hostingdomain.Connector
+	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *repo.UnvalidatedConfig.Config,
