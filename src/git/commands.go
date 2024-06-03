@@ -579,6 +579,11 @@ func (self *Commands) SetHostingPlatform(runner Runner, platform configdomain.Ho
 	return runner.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
+// SetHostingPlatform sets the given code hosting platform.
+func (self *Commands) SetOriginHostname(runner Runner, hostname configdomain.HostingOriginHostname) error {
+	return runner.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
+}
+
 // SHAForBranch provides the SHA for the local branch with the given name.
 func (self *Commands) SHAForBranch(querier Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
@@ -596,6 +601,30 @@ func (self *Commands) ShouldPushBranch(querier Querier, branch gitdomain.LocalBr
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
 	return out != "", nil
+}
+
+// SquashMerge squash-merges the given branch into the current branch.
+func (self *Commands) SquashMerge(runner Runner, branch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "merge", "--squash", "--ff", branch.String())
+}
+
+// StageFiles adds the file with the given name to the Git index.
+func (self *Commands) StageFiles(runner Runner, names ...string) error {
+	args := append([]string{"add"}, names...)
+	return runner.Run("git", args...)
+}
+
+// StartCommit starts a commit and stops at asking the user for the commit message.
+func (self *Commands) StartCommit(runner Runner) error {
+	return runner.Run("git", "commit")
+}
+
+// Stash adds the current files to the Git stash.
+func (self *Commands) Stash(runner Runner) error {
+	return runner.RunMany([][]string{
+		{"git", "add", "-A"},
+		{"git", "stash"},
+	})
 }
 
 // StashSize provides the number of stashes in this repository.
