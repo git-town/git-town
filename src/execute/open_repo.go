@@ -121,7 +121,7 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Backend           git.BackendCommands
+	Git               git.Commands
 	CommandsCounter   gohacks.Counter
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector

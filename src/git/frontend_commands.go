@@ -1,54 +1,17 @@
 package git
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 type FrontendRunner interface {
 	Run(executable string, args ...string) error
 	RunMany(commands [][]string) error
-}
-
-// FrontendCommands are Git commands that Git Town executes for the user to change the user's repository.
-// They can take a while to execute (fetch, push) and stream their output to the user.
-// Git Town only needs to know the exit code of frontend commands.
-type FrontendCommands struct {
-	Runner                 FrontendRunner
-	SetCachedCurrentBranch SetCachedCurrentBranchFunc
-}
-
-type SetCachedCurrentBranchFunc func(gitdomain.LocalBranchName)
-
-// AbortMerge cancels a currently ongoing Git merge operation.
-func (self *FrontendCommands) AbortMerge() error {
-	return self.Runner.Run("git", "merge", "--abort")
-}
-
-// AbortRebase cancels a currently ongoing Git rebase operation.
-func (self *FrontendCommands) AbortRebase() error {
-	return self.Runner.Run("git", "rebase", "--abort")
-}
-
-// CheckoutBranch checks out the Git branch with the given name in this repo,
-// optionally using a three-way merge.
-func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName, merge bool) error {
-	args := []string{"checkout", name.String()}
-	if merge {
-		args = append(args, "-m")
-	}
-	err := self.Runner.Run("git", args...)
-	self.SetCachedCurrentBranch(name)
-	if err != nil {
-		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
-	}
-	return nil
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.

@@ -15,19 +15,6 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-type Runner interface {
-	Run(executable string, args ...string) error
-}
-
-type ManyRunner interface {
-	RunMany(commands [][]string) error
-}
-
-type Querier interface {
-	Query(executable string, args ...string) (string, error)
-	QueryTrim(executable string, args ...string) (string, error)
-}
-
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
@@ -35,6 +22,16 @@ type Commands struct {
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
+}
+
+// AbortMerge cancels a currently ongoing Git merge operation.
+func (self *Commands) AbortMerge(runner Runner) error {
+	return runner.Run("git", "merge", "--abort")
+}
+
+// AbortRebase cancels a currently ongoing Git rebase operation.
+func (self *Commands) AbortRebase(runner Runner) error {
+	return runner.Run("git", "rebase", "--abort")
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
@@ -86,9 +83,9 @@ func (self *Commands) BranchesSnapshot(querier Querier) (gitdomain.BranchesSnaps
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranch(name gitdomain.LocalBranchName) error {
+func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchName) error {
 	if !self.DryRun {
-		err := self.CheckoutBranchUncached(name)
+		err := self.CheckoutBranchUncached(runner, name)
 		if err != nil {
 			return err
 		}
@@ -97,6 +94,30 @@ func (self *Commands) CheckoutBranch(name gitdomain.LocalBranchName) error {
 		self.CurrentBranchCache.Set(name)
 	} else {
 		self.CurrentBranchCache.Invalidate()
+	}
+	return nil
+}
+
+// CheckoutBranch checks out the Git branch with the given name.
+func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName) error {
+	err := runner.Run("git", "checkout", name.String())
+	if err != nil {
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
+	}
+	return nil
+}
+
+// CheckoutBranch checks out the Git branch with the given name in this repo,
+// optionally using a three-way merge.
+func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName, merge bool) error {
+	args := []string{"checkout", name.String()}
+	if merge {
+		args = append(args, "-m")
+	}
+	err := self.Runner.Run("git", args...)
+	self.SetCachedCurrentBranch(name)
+	if err != nil {
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
 	return nil
 }
@@ -152,15 +173,6 @@ func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteB
 	return false, None[gitdomain.RemoteBranchName]()
 }
 
-// CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName) error {
-	err := runner.Run("git", "checkout", name.String())
-	if err != nil {
-		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
-	}
-	return nil
-}
-
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -177,11 +189,11 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (self *Commands) CommitsInBranch(branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInBranch(querier Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
-		return self.CommitsInFeatureBranch(branch, parent)
+		return self.CommitsInFeatureBranch(querier, branch, parent)
 	}
-	return self.CommitsInPerennialBranch()
+	return self.CommitsInPerennialBranch(querier)
 }
 
 func (self *Commands) CommitsInFeatureBranch(querier Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
@@ -231,9 +243,9 @@ func (self *Commands) CommitsInPerennialBranch(querier Querier) (gitdomain.Commi
 }
 
 // CurrentBranch provides the name of the currently checked out branch.
-func (self *Commands) CurrentBranch() (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranch(querier Querier) (gitdomain.LocalBranchName, error) {
 	if !self.CurrentBranchCache.Initialized() {
-		currentBranch, err := self.CurrentBranchUncached()
+		currentBranch, err := self.CurrentBranchUncached(querier)
 		if err != nil {
 			return currentBranch, err
 		}
@@ -250,12 +262,12 @@ func (self *Commands) CurrentBranchUncached(querier Querier) (gitdomain.LocalBra
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
-	return self.currentBranchDuringRebase()
+	return self.currentBranchDuringRebase(querier)
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
-func (self *Commands) CurrentSHA() (gitdomain.SHA, error) {
-	return self.SHAForBranch(gitdomain.NewBranchName("HEAD"))
+func (self *Commands) CurrentSHA(querier Querier) (gitdomain.SHA, error) {
+	return self.SHAForBranch(querier, gitdomain.NewBranchName("HEAD"))
 }
 
 func (self *Commands) DefaultBranch(querier Querier) Option[gitdomain.LocalBranchName] {
