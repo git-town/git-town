@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 )
@@ -12,7 +13,7 @@ import (
 type RunArgs struct {
 	Backend                         git.BackendCommands
 	Config                          config.ValidatedConfig
-	Connector                       hostingdomain.Connector
+	Connector                       Option[hostingdomain.Connector]
 	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        git.FrontendCommands

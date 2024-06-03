@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -20,7 +21,10 @@ func (self *UpdateProposalTarget) CreateAutomaticUndoError() error {
 }
 
 func (self *UpdateProposalTarget) Run(args shared.RunArgs) error {
-	return args.Connector.UpdateProposalTarget(self.ProposalNumber, self.NewTarget)
+	if connector, hasConnector := args.Connector.Get(); hasConnector {
+		return connector.UpdateProposalTarget(self.ProposalNumber, self.NewTarget)
+	}
+	return hostingdomain.UnsupportedServiceError()
 }
 
 func (self *UpdateProposalTarget) ShouldAutomaticallyUndoOnError() bool {

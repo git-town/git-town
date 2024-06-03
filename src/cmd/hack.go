@@ -18,6 +18,7 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -123,7 +124,7 @@ func createBranch(args createBranchArgs) error {
 		Backend:                 args.backend,
 		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
-		Connector:               nil,
+		Connector:               None[hostingdomain.Connector](),
 		DialogTestInputs:        args.appendData.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,

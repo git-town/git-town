@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -66,7 +67,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 type UnfinishedStateArgs struct {
 	Backend           git.BackendCommands
 	CommandsCounter   gohacks.Counter
-	Connector         hostingdomain.Connector
+	Connector         Option[hostingdomain.Connector]
 	DialogTestInputs  components.TestInputs
 	FinalMessages     stringslice.Collector
 	Frontend          git.FrontendCommands

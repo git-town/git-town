@@ -132,7 +132,7 @@ type shipData struct {
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
-	connector                hostingdomain.Connector
+	connector                Option[hostingdomain.Connector]
 	dialogTestInputs         components.TestInputs
 	dryRun                   bool
 	hasOpenChanges           bool
@@ -223,9 +223,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
-	var connector hostingdomain.Connector
+	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
@@ -237,26 +237,28 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	if !repo.IsOffline.Bool() && connector != nil {
-		if branchToShip.HasTrackingBranch() {
-			proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
-			if err != nil {
-				return nil, false, err
+	if connector, hasConnector := connectorOpt.Get(); hasConnector {
+		if !repo.IsOffline.Bool() {
+			if branchToShip.HasTrackingBranch() {
+				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
+				if err != nil {
+					return nil, false, err
+				}
+				proposal, hasProposal := proposalOpt.Get()
+				if hasProposal {
+					canShipViaAPI = true
+					proposalMessage = connector.DefaultProposalMessage(proposal)
+				}
 			}
-			proposal, hasProposal := proposalOpt.Get()
-			if hasProposal {
-				canShipViaAPI = true
-				proposalMessage = connector.DefaultProposalMessage(proposal)
-			}
-		}
-		for _, childBranch := range childBranches {
-			childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
-			if err != nil {
-				return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
-			}
-			childProposal, hasChildProposal := childProposalOpt.Get()
-			if hasChildProposal {
-				proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
+			for _, childBranch := range childBranches {
+				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
+				if err != nil {
+					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				}
+				childProposal, hasChildProposal := childProposalOpt.Get()
+				if hasChildProposal {
+					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
+				}
 			}
 		}
 	}
@@ -267,7 +269,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
-		connector:                connector,
+		connector:                connectorOpt,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,

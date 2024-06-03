@@ -22,10 +22,11 @@ func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
 
 func (self *CreateProposal) Run(args shared.RunArgs) error {
 	parentBranch := args.Config.Config.Lineage[self.Branch]
-	if args.Connector == nil {
+	connector, hasConnector := args.Connector.Get()
+	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
 	}
-	prURL, err := args.Connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch)
+	prURL, err := connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch)
 	if err != nil {
 		return err
 	}
