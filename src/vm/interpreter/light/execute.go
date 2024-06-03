@@ -7,7 +7,9 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/git"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/vm/program"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -17,7 +19,7 @@ func Execute(args ExecuteArgs) {
 		err := opcode.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			Config:                          args.Config,
-			Connector:                       nil,
+			Connector:                       None[hostingdomain.Connector](),
 			DialogTestInputs:                components.NewTestInputs(),
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
