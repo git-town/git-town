@@ -96,6 +96,15 @@ func (self *BackendCommands) CheckoutBranch(name gitdomain.LocalBranchName) erro
 	return nil
 }
 
+// CheckoutBranch checks out the Git branch with the given name.
+func (self *BackendCommands) CheckoutBranchUncached(name gitdomain.LocalBranchName) error {
+	err := self.Runner.Run("git", "checkout", name.String())
+	if err != nil {
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
+	}
+	return nil
+}
+
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
@@ -145,15 +154,6 @@ func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteB
 		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
 	}
 	return false, None[gitdomain.RemoteBranchName]()
-}
-
-// CheckoutBranch checks out the Git branch with the given name.
-func (self *BackendCommands) CheckoutBranchUncached(name gitdomain.LocalBranchName) error {
-	err := self.Runner.Run("git", "checkout", name.String())
-	if err != nil {
-		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
-	}
-	return nil
 }
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
