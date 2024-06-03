@@ -153,8 +153,8 @@ func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteB
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranchUncached(name gitdomain.LocalBranchName) error {
-	err := self.Runner.Run("git", "checkout", name.String())
+func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName) error {
+	err := runner.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
@@ -184,8 +184,8 @@ func (self *Commands) CommitsInBranch(branch gitdomain.LocalBranchName, parent O
 	return self.CommitsInPerennialBranch()
 }
 
-func (self *Commands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
-	output, err := self.Runner.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
+func (self *Commands) CommitsInFeatureBranch(querier Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
+	output, err := querier.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
@@ -207,8 +207,8 @@ func (self *Commands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranc
 	return result, nil
 }
 
-func (self *Commands) CommitsInPerennialBranch() (gitdomain.Commits, error) {
-	output, err := self.Runner.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
+func (self *Commands) CommitsInPerennialBranch(querier Querier) (gitdomain.Commits, error) {
+	output, err := querier.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
@@ -243,9 +243,9 @@ func (self *Commands) CurrentBranch() (gitdomain.LocalBranchName, error) {
 }
 
 // CurrentBranch provides the currently checked out branch.
-func (self *Commands) CurrentBranchUncached() (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranchUncached(querier Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
-	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := querier.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err == nil && output != "HEAD" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
@@ -258,8 +258,8 @@ func (self *Commands) CurrentSHA() (gitdomain.SHA, error) {
 	return self.SHAForBranch(gitdomain.NewBranchName("HEAD"))
 }
 
-func (self *Commands) DefaultBranch() Option[gitdomain.LocalBranchName] {
-	name, err := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
+func (self *Commands) DefaultBranch(querier Querier) Option[gitdomain.LocalBranchName] {
+	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
@@ -270,9 +270,9 @@ func (self *Commands) DefaultBranch() Option[gitdomain.LocalBranchName] {
 	return Some(gitdomain.LocalBranchName(name))
 }
 
-func (self *Commands) FirstExistingBranch(branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
+func (self *Commands) FirstExistingBranch(runner Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
-		if self.BranchExists(branch) {
+		if self.BranchExists(runner, branch) {
 			return Some(branch)
 		}
 	}
@@ -280,20 +280,20 @@ func (self *Commands) FirstExistingBranch(branches ...gitdomain.LocalBranchName)
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
-func (self *Commands) HasLocalBranch(name gitdomain.LocalBranchName) bool {
-	return self.Runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
+func (self *Commands) HasLocalBranch(runner Runner, name gitdomain.LocalBranchName) bool {
+	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (self *Commands) HasMergeInProgress() bool {
-	err := self.Runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (self *Commands) HasMergeInProgress(runner Runner) bool {
+	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
-func (self *Commands) HasShippableChanges(branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
-	out, err := self.Runner.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
+func (self *Commands) HasShippableChanges(querier Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
@@ -301,16 +301,16 @@ func (self *Commands) HasShippableChanges(branch, mainBranch gitdomain.LocalBran
 }
 
 // LastCommitMessage provides the commit message for the last commit.
-func (self *Commands) LastCommitMessage() (gitdomain.CommitMessage, error) {
-	out, err := self.Runner.QueryTrim("git", "log", "-1", "--format=%B")
+func (self *Commands) LastCommitMessage(querier Querier) (gitdomain.CommitMessage, error) {
+	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
 	return gitdomain.CommitMessage(out), nil
 }
 
-func (self *Commands) OriginHead() Option[gitdomain.LocalBranchName] {
-	output, err := self.Runner.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
+func (self *Commands) OriginHead(querier Querier) Option[gitdomain.LocalBranchName] {
+	output, err := querier.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
@@ -322,8 +322,8 @@ func (self *Commands) OriginHead() Option[gitdomain.LocalBranchName] {
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (self *Commands) PreviouslyCheckedOutBranch() Option[gitdomain.LocalBranchName] {
-	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+func (self *Commands) PreviouslyCheckedOutBranch(querier Querier) Option[gitdomain.LocalBranchName] {
+	output, err := querier.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
@@ -334,9 +334,9 @@ func (self *Commands) PreviouslyCheckedOutBranch() Option[gitdomain.LocalBranchN
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (self *Commands) Remotes() (gitdomain.Remotes, error) {
+func (self *Commands) Remotes(querier Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
-		remotes, err := self.RemotesUncached()
+		remotes, err := self.RemotesUncached(querier)
 		if err != nil {
 			return remotes, err
 		}
@@ -346,8 +346,8 @@ func (self *Commands) Remotes() (gitdomain.Remotes, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (self *Commands) RemotesUncached() (gitdomain.Remotes, error) {
-	out, err := self.Runner.QueryTrim("git", "remote")
+func (self *Commands) RemotesUncached(querier Querier) (gitdomain.Remotes, error) {
+	out, err := querier.QueryTrim("git", "remote")
 	if err != nil {
 		return gitdomain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
 	}
@@ -358,8 +358,8 @@ func (self *Commands) RemotesUncached() (gitdomain.Remotes, error) {
 }
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
-func (self *Commands) RepoStatus() (gitdomain.RepoStatus, error) {
-	output, err := self.Runner.QueryTrim("git", "status", "--long", "--ignore-submodules")
+func (self *Commands) RepoStatus(querier Querier) (gitdomain.RepoStatus, error) {
+	output, err := querier.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -377,8 +377,8 @@ func (self *Commands) RepoStatus() (gitdomain.RepoStatus, error) {
 
 // RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (self *Commands) RootDirectory() Option[gitdomain.RepoRootDir] {
-	output, err := self.Runner.QueryTrim("git", "rev-parse", "--show-toplevel")
+func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDir] {
+	output, err := querier.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return None[gitdomain.RepoRootDir]()
 	}
@@ -386,8 +386,8 @@ func (self *Commands) RootDirectory() Option[gitdomain.RepoRootDir] {
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.
-func (self *Commands) SHAForBranch(name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := self.Runner.QueryTrim("git", "rev-parse", "--short", name.String())
+func (self *Commands) SHAForBranch(querier Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
@@ -396,8 +396,8 @@ func (self *Commands) SHAForBranch(name gitdomain.BranchName) (gitdomain.SHA, er
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
-	out, err := self.Runner.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
+func (self *Commands) ShouldPushBranch(querier Querier, branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
@@ -405,15 +405,15 @@ func (self *Commands) ShouldPushBranch(branch gitdomain.LocalBranchName, trackin
 }
 
 // StashSize provides the number of stashes in this repository.
-func (self *Commands) StashSize() (gitdomain.StashSize, error) {
-	output, err := self.Runner.QueryTrim("git", "stash", "list")
+func (self *Commands) StashSize(querier Querier) (gitdomain.StashSize, error) {
+	output, err := querier.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
 // Version indicates whether the needed Git version is installed.
-func (self *Commands) Version() (major int, minor int, err error) {
+func (self *Commands) Version(querier Querier) (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
-	output, err := self.Runner.QueryTrim("git", "version")
+	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
 		return 0, 0, fmt.Errorf(messages.GitVersionProblem, err)
 	}
