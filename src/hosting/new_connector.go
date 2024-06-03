@@ -42,13 +42,15 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		})
 		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
-		return gitlab.NewConnector(gitlab.NewConnectorArgs{
+		var err error
+		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  args.Config.GitLabToken,
 			Log:       args.Log,
 			OriginURL: args.OriginURL,
 		})
+		return Some(connector), err
 	}
-	return nil, nil
+	return None[hostingdomain.Connector](), nil
 }
 
 type NewConnectorArgs struct {
