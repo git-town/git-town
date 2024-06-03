@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -72,7 +73,7 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 	if connector, hasConnector := args.Connector.Get(); hasConnector {
 		self.mergeError = connector.SquashMergeProposal(self.ProposalNumber, commitMessage)
 	} else {
-		return errors.New(messages.ConnectorUnknown)
+		return hostingdomain.UnsupportedServiceError()
 	}
 	return self.mergeError
 }
