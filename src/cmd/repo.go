@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/spf13/cobra"
@@ -59,7 +60,7 @@ func executeRepo(verbose bool) error {
 
 func determineRepoData(repo execute.OpenRepoResult) (repoData, error) {
 	var err error
-	var connector hostingdomain.Connector
+	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *repo.UnvalidatedConfig.Config,
@@ -71,11 +72,12 @@ func determineRepoData(repo execute.OpenRepoResult) (repoData, error) {
 			return emptyRepoData(), err
 		}
 	}
-	if connector == nil {
+	connectorInstance, hasConnector := connector.Get()
+	if !hasConnector {
 		return emptyRepoData(), hostingdomain.UnsupportedServiceError()
 	}
 	return repoData{
-		connector: connector,
+		connector: connectorInstance,
 	}, err
 }
 
