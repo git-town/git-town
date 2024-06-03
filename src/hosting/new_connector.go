@@ -13,17 +13,18 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
+func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
 	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
 	if !hasPlatform {
-		return nil, nil
+		return None[hostingdomain.Connector](), nil
 	}
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
-		return bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+		var conn hostingdomain.Connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
 			OriginURL:       args.OriginURL,
-		}), nil
+		})
+		return Some(conn), nil
 	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.Config.GiteaToken,
