@@ -617,6 +617,22 @@ func FileMode(t T, path string, permissions fs.FileMode, settings ...Setting) {
 	invoke(t, assertions.FileModeFS(os.DirFS(brokenfs.Root), path, permissions), settings...)
 }
 
+// DirModeFS asserts the directory at path on fs.FS has exactly the given permission bits.
+//
+// Example,
+// DirModeFS(t, os.DirFS("/"), "bin", 0655)
+func DirModeFS(t T, system fs.FS, path string, permissions fs.FileMode, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.DirModeFS(system, path, permissions), settings...)
+}
+
+// DirMode asserts the directory at path on the OS filesystem has exactly the given permission bits.
+func DirMode(t T, path string, permissions fs.FileMode, settings ...Setting) {
+	t.Helper()
+	path = strings.TrimPrefix(path, "/")
+	invoke(t, assertions.DirModeFS(os.DirFS(brokenfs.Root), path, permissions), settings...)
+}
+
 // FileContainsFS asserts the file on fs.FS contains content as a substring.
 //
 // Often os.DirFS is used to interact with the host filesystem.

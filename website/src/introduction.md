@@ -1,8 +1,8 @@
 # High-level CLI for Git
 
-Git Town adds Git commands that make software development more efficient by
-keeping Git branches better in sync with each other. This reduces merge
-conflicts and the number of Git commands you need to run.
+Git Town provides additional Git commands that make creating, synchronizing,
+shipping, and cleanup of Git branches more efficient. Supports mono-repos and
+stacked changes.
 
 <br>
 <p align="center">
@@ -12,16 +12,15 @@ conflicts and the number of Git commands you need to run.
 </p>
 <br>
 
-Git is a flexible source code management system. The Git CLI (correctly)
-supports all possible ways of using Git equally well. It provides basic commands
-out of which Git users can implement their particular Git workflows. This
-generic design can make using the Git CLI repetitive in real life. As the
-screencast above demonstrates, typical development activities like creating,
-synchronizing, or shipping a feature branch require running multiple, sometimes
-dozens of Git commands.
+Git is a very flexible source code management system. The Git CLI (rightfully)
+supports all possible ways of using Git equally well. Git commands are generic
+building blocks for implementing your specific Git workflow. This generic design
+can make using the vanilla Git CLI repetitive in real life. As the screencast
+above demonstrates, typical development activities like creating, synchronizing,
+or shipping a feature branch can require running dozens of Git commands.
 
-Git Town adds additional Git commands for these activities. These commands are
-compatible with most common branching models like
+Git Town adds commands to Git that implement these activities in one step. Git
+Town's commands are compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),

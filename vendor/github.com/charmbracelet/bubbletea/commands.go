@@ -20,11 +20,15 @@ func Batch(cmds ...Cmd) Cmd {
 		}
 		validCmds = append(validCmds, c)
 	}
-	if len(validCmds) == 0 {
+	switch len(validCmds) {
+	case 0:
 		return nil
-	}
-	return func() Msg {
-		return BatchMsg(validCmds)
+	case 1:
+		return validCmds[0]
+	default:
+		return func() Msg {
+			return BatchMsg(validCmds)
+		}
 	}
 }
 
@@ -90,11 +94,16 @@ type sequenceMsg []Cmd
 //
 // Every is analogous to Tick in the Elm Architecture.
 func Every(duration time.Duration, fn func(time.Time) Msg) Cmd {
+	n := time.Now()
+	d := n.Truncate(duration).Add(duration).Sub(n)
+	t := time.NewTimer(d)
 	return func() Msg {
-		n := time.Now()
-		d := n.Truncate(duration).Add(duration).Sub(n)
-		t := time.NewTimer(d)
-		return fn(<-t.C)
+		ts := <-t.C
+		t.Stop()
+		for len(t.C) > 0 {
+			<-t.C
+		}
+		return fn(ts)
 	}
 }
 
@@ -137,9 +146,14 @@ func Every(duration time.Duration, fn func(time.Time) Msg) Cmd {
 //	    return m, nil
 //	}
 func Tick(d time.Duration, fn func(time.Time) Msg) Cmd {
+	t := time.NewTimer(d)
 	return func() Msg {
-		t := time.NewTimer(d)
-		return fn(<-t.C)
+		ts := <-t.C
+		t.Stop()
+		for len(t.C) > 0 {
+			<-t.C
+		}
+		return fn(ts)
 	}
 }
 

@@ -111,7 +111,7 @@ type proposeData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToSync   gitdomain.BranchInfos
 	config           config.ValidatedConfig
-	connector        hostingdomain.Connector
+	connector        Option[hostingdomain.Connector]
 	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
@@ -174,7 +174,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 	if err != nil || exit {
 		return emptyProposeData(), exit, err
 	}
-	var connector hostingdomain.Connector
+	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
@@ -186,7 +186,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 			return emptyProposeData(), false, err
 		}
 	}
-	if connector == nil {
+	if connector.IsNone() {
 		return emptyProposeData(), false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)

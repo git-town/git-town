@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -54,6 +55,7 @@ type Key struct {
 	Type  KeyType
 	Runes []rune
 	Alt   bool
+	Paste bool
 }
 
 // String returns a friendly string representation for a key. It's safe (and
@@ -63,15 +65,28 @@ type Key struct {
 //	fmt.Println(k)
 //	// Output: enter
 func (k Key) String() (str string) {
+	var buf strings.Builder
 	if k.Alt {
-		str += "alt+"
+		buf.WriteString("alt+")
 	}
 	if k.Type == KeyRunes {
-		str += string(k.Runes)
-		return str
+		if k.Paste {
+			// Note: bubbles/keys bindings currently do string compares to
+			// recognize shortcuts. Since pasted text should never activate
+			// shortcuts, we need to ensure that the binding code doesn't
+			// match Key events that result from pastes. We achieve this
+			// here by enclosing pastes in '[...]' so that the string
+			// comparison in Matches() fails in that case.
+			buf.WriteByte('[')
+		}
+		buf.WriteString(string(k.Runes))
+		if k.Paste {
+			buf.WriteByte(']')
+		}
+		return buf.String()
 	} else if s, ok := keyNames[k.Type]; ok {
-		str += s
-		return str
+		buf.WriteString(s)
+		return buf.String()
 	}
 	return ""
 }
@@ -538,9 +553,9 @@ func (u unknownCSISequenceMsg) String() string {
 
 var spaceRunes = []rune{' '}
 
-// readInputs reads keypress and mouse inputs from a TTY and produces messages
+// readAnsiInputs reads keypress and mouse inputs from a TTY and produces messages
 // containing information about the key or mouse events accordingly.
-func readInputs(ctx context.Context, msgs chan<- Msg, input io.Reader) error {
+func readAnsiInputs(ctx context.Context, msgs chan<- Msg, input io.Reader) error {
 	var buf [256]byte
 
 	var leftOverFromPrevIteration []byte
@@ -566,7 +581,7 @@ loop:
 		canHaveMoreData := numBytes == len(buf)
 
 		var i, w int
-		for i, w = 0, 07; i < len(b); i += w {
+		for i, w = 0, 0; i < len(b); i += w {
 			var msg Msg
 			w, msg = detectOneMsg(b[i:], canHaveMoreData)
 			if w == 0 {
@@ -607,10 +622,17 @@ func detectOneMsg(b []byte, canHaveMoreData bool) (w int, msg Msg) {
 		case '<':
 			if matchIndices := mouseSGRRegex.FindSubmatchIndex(b[3:]); matchIndices != nil {
 				// SGR mouse events length is the length of the match plus the length of the escape sequence
-				mouseEventSGRLen := matchIndices[1] + 3
+				mouseEventSGRLen := matchIndices[1] + 3 //nolint:gomnd
 				return mouseEventSGRLen, MouseMsg(parseSGRMouseEvent(b))
 			}
 		}
+	}
+
+	// Detect bracketed paste.
+	var foundbp bool
+	foundbp, w, msg = detectBracketedPaste(b)
+	if foundbp {
+		return w, msg
 	}
 
 	// Detect escape sequence and control characters other than NUL,
@@ -619,7 +641,7 @@ func detectOneMsg(b []byte, canHaveMoreData bool) (w int, msg Msg) {
 	var foundSeq bool
 	foundSeq, w, msg = detectSequence(b)
 	if foundSeq {
-		return
+		return w, msg
 	}
 
 	// No non-NUL control character or escape sequence.

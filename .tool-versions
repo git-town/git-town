@@ -1,14 +1,14 @@
-actionlint 1.6.27
+actionlint 1.7.1
 alphavet 0.1.0
-exhaustruct 3.2.0
+exhaustruct 3.3.0
 deadcode 0.16.1
 ireturn 0.3.0
-ghokin 3.5.0
+ghokin 3.6.0
 depth 1.2.1
-dprint 0.45.0
+dprint 0.46.1
 gofumpt 0.6.0
-golangci-lint 1.57.1
-goreleaser 1.24.0
-scc 3.2.0
+golangci-lint 1.59.0
+goreleaser 1.26.2
+scc 3.3.4
 shellcheck system 0.10.0
 shfmt 3.8.0

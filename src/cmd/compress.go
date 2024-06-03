@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
@@ -92,7 +93,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               nil,
+		Connector:               None[hostingdomain.Connector](),
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
