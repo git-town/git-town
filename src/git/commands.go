@@ -83,9 +83,9 @@ func (self *Commands) BranchesSnapshot(querier Querier) (gitdomain.BranchesSnaps
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchName) error {
+func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchName, merge bool) error {
 	if !self.DryRun {
-		err := self.CheckoutBranchUncached(runner, name)
+		err := self.CheckoutBranchUncached(runner, name, merge)
 		if err != nil {
 			return err
 		}
@@ -99,23 +99,12 @@ func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchNa
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName) error {
-	err := runner.Run("git", "checkout", name.String())
-	if err != nil {
-		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
-	}
-	return nil
-}
-
-// CheckoutBranch checks out the Git branch with the given name in this repo,
-// optionally using a three-way merge.
-func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName, merge bool) error {
+func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName, merge bool) error {
 	args := []string{"checkout", name.String()}
 	if merge {
 		args = append(args, "-m")
 	}
-	err := self.Runner.Run("git", args...)
-	self.SetCachedCurrentBranch(name)
+	err := runner.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
