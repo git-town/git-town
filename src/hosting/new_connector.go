@@ -18,25 +18,29 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 	if !hasPlatform {
 		return None[hostingdomain.Connector](), nil
 	}
+	var connector hostingdomain.Connector
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
-		var conn hostingdomain.Connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
 			OriginURL:       args.OriginURL,
 		})
-		return Some(conn), nil
+		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
-		return gitea.NewConnector(gitea.NewConnectorArgs{
+		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.Config.GiteaToken,
 			Log:       args.Log,
 			OriginURL: args.OriginURL,
 		})
+		return Some(connector), nil
 	case configdomain.HostingPlatformGitHub:
-		return github.NewConnector(github.NewConnectorArgs{
+		var err error
+		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
 			Log:       args.Log,
 			OriginURL: args.OriginURL,
 		})
+		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  args.Config.GitLabToken,
