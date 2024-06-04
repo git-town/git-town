@@ -4,7 +4,7 @@
     "textWrap": "always"
   },
   "includes": ["**/*.{json,md}"],
-  "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "tools/videos/scripts", "website/book/**"],
+  "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "tools/videos/", "website/book/**"],
   "plugins": [
     "https://plugins.dprint.dev/json-0.14.0.wasm",
     "https://plugins.dprint.dev/markdown-0.12.0.wasm"
