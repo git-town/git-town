@@ -31,7 +31,6 @@ Feature: merge conflict
     And the current branch is still "feature"
     And a merge is now in progress
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
