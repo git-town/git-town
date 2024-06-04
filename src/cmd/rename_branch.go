@@ -96,6 +96,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -125,9 +126,9 @@ func emptyRenameBranchData() renameBranchData {
 }
 
 func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (renameBranchData, bool, error) {
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyRenameBranchData(), false, err
 	}
@@ -139,6 +140,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -174,6 +176,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

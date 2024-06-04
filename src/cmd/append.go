@@ -84,6 +84,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -115,7 +116,7 @@ type appendData struct {
 func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun, verbose bool) (*appendData, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -127,6 +128,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -138,8 +140,8 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Backend.Remotes())
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -156,6 +158,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

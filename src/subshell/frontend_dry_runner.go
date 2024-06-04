@@ -11,6 +11,7 @@ import (
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
 // but does not execute them.
 type FrontendDryRunner struct {
+	Backend          gitdomain.Querier
 	CommandsCounter  gohacks.Counter
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
@@ -24,7 +25,7 @@ func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 		currentBranch = ""
 	} else {
 		var err error
-		currentBranch, err = self.GetCurrentBranch()
+		currentBranch, err = self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}

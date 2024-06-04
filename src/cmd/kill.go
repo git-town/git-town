@@ -89,6 +89,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -117,7 +118,7 @@ type killData struct {
 
 func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -129,6 +130,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -156,6 +158,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: branchesToKill,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
@@ -165,7 +168,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return nil, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)

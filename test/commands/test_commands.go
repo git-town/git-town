@@ -24,7 +24,7 @@ const ConfigFileCommitMessage = "persisted config file"
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	*subshell.TestRunner
-	*prodgit.BackendCommands
+	*prodgit.Commands
 	Config config.ValidatedConfig
 }
 
@@ -46,7 +46,7 @@ func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchN
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
-	asserts.NoError(self.BackendCommands.CheckoutBranch(branch))
+	asserts.NoError(self.Commands.CheckoutBranch(self.TestRunner, branch, false))
 }
 
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {

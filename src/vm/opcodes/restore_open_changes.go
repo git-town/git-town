@@ -13,14 +13,14 @@ type RestoreOpenChanges struct {
 }
 
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
-	stashSize, err := args.Backend.StashSize()
+	stashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {
 		return err
 	}
 	if stashSize == 0 && !args.Config.DryRun {
 		return nil
 	}
-	err = args.Frontend.PopStash()
+	err = args.Git.PopStash(args.Frontend)
 	if err != nil {
 		return errors.New(messages.DiffConflictWithMain)
 	}

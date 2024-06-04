@@ -48,7 +48,7 @@ func executeRemoveConfig(verbose bool) error {
 	slices.Sort(aliasNames)
 	for _, aliasName := range aliasNames {
 		if strings.HasPrefix(repo.UnvalidatedConfig.Config.Aliases[aliasName], "town ") {
-			err = repo.Frontend.RemoveGitAlias(aliasName)
+			err = repo.Git.RemoveGitAlias(repo.Frontend, aliasName)
 			if err != nil {
 				return err
 			}

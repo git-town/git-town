@@ -114,6 +114,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -149,7 +150,7 @@ type shipData struct {
 
 func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -161,6 +162,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -172,8 +174,8 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes, err := repo.Backend.Remotes()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -197,6 +199,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

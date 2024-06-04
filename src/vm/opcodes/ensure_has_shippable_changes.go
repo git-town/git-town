@@ -20,7 +20,7 @@ func (self *EnsureHasShippableChanges) CreateAutomaticUndoError() error {
 }
 
 func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
-	hasShippableChanges, err := args.Backend.HasShippableChanges(self.Branch, self.Parent)
+	hasShippableChanges, err := args.Git.HasShippableChanges(args.Backend, self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}

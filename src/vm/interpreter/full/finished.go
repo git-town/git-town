@@ -13,12 +13,12 @@ import (
 
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
-	endBranchesSnapshot, err := args.Backend.BranchesSnapshot()
+	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
-	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})
-	endStashSize, err := args.Backend.StashSize()
+	endStashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {
 		return err
 	}

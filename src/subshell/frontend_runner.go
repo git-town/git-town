@@ -17,13 +17,14 @@ import (
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
+	Backend          gitdomain.Querier
 	CommandsCounter  gohacks.Counter
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	PrintCommands    bool
 }
 
-type GetCurrentBranchFunc func() (gitdomain.LocalBranchName, error)
+type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
 
 func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
 	var result string
@@ -58,7 +59,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	self.CommandsCounter.Register()
 	var branchName gitdomain.LocalBranchName
 	if !self.OmitBranchNames {
-		branchName, err = self.GetCurrentBranch()
+		branchName, err = self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}

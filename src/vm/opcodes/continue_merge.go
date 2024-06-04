@@ -15,8 +15,8 @@ func (self *ContinueMerge) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
-	if args.Backend.HasMergeInProgress() {
-		return args.Frontend.CommitNoEdit()
+	if args.Git.HasMergeInProgress(args.Backend) {
+		return args.Git.CommitNoEdit(args.Frontend)
 	}
 	return nil
 }

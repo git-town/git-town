@@ -51,7 +51,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return err
 	}
@@ -63,6 +63,7 @@ func executeSkip(verbose bool) error {
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -76,7 +77,7 @@ func executeSkip(verbose bool) error {
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		currentBranch, err = repo.Backend.CurrentBranch()
+		currentBranch, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
 		}
@@ -88,6 +89,7 @@ func executeSkip(verbose bool) error {
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
@@ -128,6 +130,7 @@ func executeSkip(verbose bool) error {
 		Connector:       connector,
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
+		Git:             repo.Git,
 		HasOpenChanges:  repoStatus.OpenChanges,
 		InitialBranch:   currentBranch,
 		RootDir:         repo.RootDir,

@@ -56,7 +56,7 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = repo.Frontend.DiffParent(data.branch, data.parentBranch)
+	err = repo.Git.DiffParent(repo.Frontend, data.branch, data.parentBranch)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ type diffParentData struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -84,6 +84,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -113,6 +114,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		BranchesToValidate: branchesToDiff,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

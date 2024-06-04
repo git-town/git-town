@@ -3,6 +3,7 @@ package undo
 import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/undo/undostash"
@@ -20,7 +21,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config))
 	}
-	finalStashSize, err := args.Backend.StashSize()
+	finalStashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -29,9 +30,10 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 }
 
 type CreateUndoProgramArgs struct {
-	Backend        git.BackendCommands
+	Backend        gitdomain.RunnerQuerier
 	Config         configdomain.ValidatedConfig
 	DryRun         bool
+	Git            git.Commands
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook
 	RunState       runstate.RunState

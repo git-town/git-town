@@ -112,7 +112,7 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 }
 
 func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, error) {
-	branchesSnapshot, err := repo.Backend.BranchesSnapshot()
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return parkData{}, err
 	}

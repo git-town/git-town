@@ -20,8 +20,9 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	mainBranch, hasMain := args.Unvalidated.Config.MainBranch.Get()
 	if !hasMain {
 		validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
+			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
-			GetDefaultBranch:      args.Backend.DefaultBranch,
+			GetDefaultBranch:      args.Git.DefaultBranch,
 			HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),
 			LocalBranches:         args.LocalBranches,
 			UnvalidatedMain:       args.Unvalidated.Config.MainBranch,
@@ -81,11 +82,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 }
 
 type ConfigArgs struct {
-	Backend            git.BackendCommands
+	Backend            gitdomain.RunnerQuerier
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	DialogTestInputs   components.TestInputs
-	Frontend           git.FrontendCommands
+	Frontend           gitdomain.Runner
+	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus
 	TestInputs         components.TestInputs
