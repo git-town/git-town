@@ -29,6 +29,7 @@ func Execute(args ExecuteArgs) error {
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
+	fmt.Println("444444444444444444", program)
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
