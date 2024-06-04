@@ -1623,7 +1623,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Git.PreviouslyCheckedOutBranch(state.fixture.DevRepo.TestRunner)
+		have := state.fixture.DevRepo.Commands.PreviouslyCheckedOutBranch(state.fixture.DevRepo.TestRunner)
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}

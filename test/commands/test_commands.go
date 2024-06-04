@@ -22,7 +22,6 @@ import (
 const ConfigFileCommitMessage = "persisted config file"
 
 // TestCommands defines Git commands used only in test code.
-// TODO: merge into git.Commands
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
