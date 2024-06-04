@@ -35,7 +35,7 @@ func TestBackendCommands(t *testing.T) {
 			FileName:    "file2",
 			Message:     "second commit",
 		})
-		authors, err := runtime.Git.BranchAuthors(runtime.TestRunner, branch, initial)
+		authors, err := runtime.TestCommands.BranchAuthors(runtime.TestRunner, branch, initial)
 		must.NoError(t, err)
 		must.Eq(t, []gitdomain.Author{"user <email@example.com>"}, authors)
 	})
@@ -47,7 +47,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
-			have, err := runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
+			have, err := runtime.TestCommands.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
 			must.NoError(t, err)
 			must.False(t, have)
 		})
@@ -68,7 +68,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				Message:     "commit 2",
 			})
-			have, err := runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
+			have, err := runtime.TestCommands.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
@@ -77,7 +77,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				Message:     "commit 3",
 			})
-			have, err = runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
+			have, err = runtime.TestCommands.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
 			must.NoError(t, err)
 			must.False(t, have, must.Sprint("branch with commits that make no changes"))
 		})
@@ -88,7 +88,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		branch := gitdomain.NewLocalBranchName("branch1")
 		runtime.CreateBranch(branch, initial)
-		must.NoError(t, runtime.Git.CheckoutBranch(runtime.TestRunner, branch, false))
+		runtime.TestCommands.CheckoutBranch(branch)
 		currentBranch, err := runtime.CurrentBranch(runtime.TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, branch, currentBranch)
@@ -115,7 +115,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.Git.CommitsInBranch(runtime.TestCommands, branch, Some(gitdomain.NewLocalBranchName("initial")))
+			commits := runtime.TestCommands.CommitsInBranch(runtime.TestCommands, branch, Some(gitdomain.NewLocalBranchName("initial")))
 			must.NoError(t, err)
 			haveMessages := commits.Messages()
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
@@ -126,7 +126,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
 			runtime.CreateBranch(branch, initial)
-			commits, err := runtime.Git.CommitsInBranch(runtime.TestCommands, branch, Some(gitdomain.NewLocalBranchName("initial")))
+			commits, err := runtime.TestCommands.CommitsInBranch(runtime.TestCommands, branch, Some(gitdomain.NewLocalBranchName("initial")))
 			must.NoError(t, err)
 			must.EqOp(t, 0, len(commits))
 		})
@@ -143,7 +143,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits, err := runtime.Git.CommitsInBranch(runtime.TestCommands, initial, None[gitdomain.LocalBranchName]())
+			commits := runtime.TestCommands.CommitsInBranch(runtime.TestCommands, initial, None[gitdomain.LocalBranchName]())
 			must.NoError(t, err)
 			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
