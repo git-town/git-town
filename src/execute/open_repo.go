@@ -28,7 +28,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Verbose:         args.Verbose,
 	}
 	gitCommands := git.Commands{
-		DryRun:             args.DryRun,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}

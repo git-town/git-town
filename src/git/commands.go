@@ -22,8 +22,7 @@ import (
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
-	DryRun             bool
-	RemotesCache       *cache.Remotes // caches Git remotes
+	RemotesCache       *cache.Remotes                 // caches Git remotes
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -86,11 +85,9 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 
 // CheckoutBranch checks out the Git branch with the given name.
 func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge bool) error {
-	if !self.DryRun {
-		err := self.CheckoutBranchUncached(runner, name, merge)
-		if err != nil {
-			return err
-		}
+	err := self.CheckoutBranchUncached(runner, name, merge)
+	if err != nil {
+		return err
 	}
 	if name.String() != "-" {
 		self.CurrentBranchCache.Set(name)

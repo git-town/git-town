@@ -808,7 +808,6 @@ func TestBackendCommands(t *testing.T) {
 				CommandsCounter: gohacks.NewCounter(),
 			}
 			cmds := git.Commands{
-				DryRun:             false,
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 				RemotesCache:       &cache.Remotes{},
 			}

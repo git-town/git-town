@@ -82,7 +82,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		DryRun:             false,
 		RemotesCache:       &cache.Remotes{},
 	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
