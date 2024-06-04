@@ -420,11 +420,6 @@ func (self *Commands) PopStash(runner gitdomain.Runner) error {
 	return runner.Run("git", "stash", "pop")
 }
 
-// Pull fetches updates from origin and updates the currently checked out branch.
-func (self *Commands) Pull(runner gitdomain.Runner) error {
-	return runner.Run("git", "pull")
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
 	output, err := querier.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -435,6 +430,11 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Opti
 		return None[gitdomain.LocalBranchName]()
 	}
 	return Some(gitdomain.NewLocalBranchName(output))
+}
+
+// Pull fetches updates from origin and updates the currently checked out branch.
+func (self *Commands) Pull(runner gitdomain.Runner) error {
+	return runner.Run("git", "pull")
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
@@ -554,6 +554,15 @@ func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.
 	return Some(gitdomain.NewRepoRootDir(filepath.FromSlash(output)))
 }
 
+// SHAForBranch provides the SHA for the local branch with the given name.
+func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
+	if err != nil {
+		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
+	}
+	return gitdomain.NewSHA(output), nil
+}
+
 // SetGitAlias sets the given Git alias.
 func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
@@ -582,15 +591,6 @@ func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform confi
 // SetHostingPlatform sets the given code hosting platform.
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
-}
-
-// SHAForBranch provides the SHA for the local branch with the given name.
-func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
-	if err != nil {
-		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
-	}
-	return gitdomain.NewSHA(output), nil
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
@@ -675,6 +675,57 @@ func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitd
 	}
 	lineWithStar := linesWithStar[0]
 	return ParseActiveBranchDuringRebase(lineWithStar), nil
+}
+
+func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
+	}
+	return false, None[gitdomain.RemoteBranchName]()
+}
+
+func IsAheadAndBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
+	}
+	return false, None[gitdomain.RemoteBranchName]()
+}
+
+func IsBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
+	}
+	return false, None[gitdomain.RemoteBranchName]()
+}
+
+func IsInSync(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
+	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
+	}
+	return false, None[gitdomain.RemoteBranchName]()
+}
+
+// IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
+func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
+	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
+	}
+	return false, None[gitdomain.RemoteBranchName]()
 }
 
 func LastBranchInRef(output string) string {
@@ -815,55 +866,4 @@ func outputIndicatesRebaseInProgress(output string) bool {
 
 func outputIndicatesUntrackedChanges(output string) bool {
 	return strings.Contains(output, "Untracked files:")
-}
-
-func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsAheadAndBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsInSync(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-// IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
-func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
 }

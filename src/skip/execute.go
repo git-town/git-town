@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -27,6 +28,7 @@ func Execute(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
+		Git:           args.Git,
 		Prog:          args.RunState.AbortProgram,
 	})
 	err := revertChangesToCurrentBranch(args)
@@ -42,6 +44,7 @@ func Execute(args ExecuteArgs) error {
 		DialogTestInputs:        args.TestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
+		Git:                     args.Git,
 		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranch:           args.InitialBranch,
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
@@ -60,6 +63,7 @@ type ExecuteArgs struct {
 	Connector       Option[hostingdomain.Connector]
 	FinalMessages   stringslice.Collector
 	Frontend        gitdomain.Runner
+	Git             git.Commands
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
@@ -110,6 +114,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
+		Git:           args.Git,
 		Prog:          undoCurrentBranchProgram,
 	})
 	return nil

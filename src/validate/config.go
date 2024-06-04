@@ -20,6 +20,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	mainBranch, hasMain := args.Unvalidated.Config.MainBranch.Get()
 	if !hasMain {
 		validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
+			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
 			GetDefaultBranch:      args.Git.DefaultBranch,
 			HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),

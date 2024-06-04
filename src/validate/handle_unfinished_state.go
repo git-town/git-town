@@ -87,6 +87,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:      args.Backend,
 		dialogInputs: args.DialogTestInputs,
+		git:          args.Git,
 		unvalidated:  args.UnvalidatedConfig,
 	})
 	if err != nil || exit {
@@ -100,6 +101,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		DialogTestInputs:        args.DialogTestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
+		Git:                     args.Git,
 		HasOpenChanges:          args.RepoStatus.OpenChanges,
 		InitialBranch:           runState.BeginBranchesSnapshot.Active.GetOrPanic(),
 		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
@@ -159,6 +161,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:      args.Backend,
 		dialogInputs: args.DialogTestInputs,
+		git:          args.Git,
 		unvalidated:  args.UnvalidatedConfig,
 	})
 	if err != nil || exit {
@@ -171,6 +174,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 		Connector:       args.Connector,
 		FinalMessages:   args.FinalMessages,
 		Frontend:        args.Frontend,
+		Git:             args.Git,
 		HasOpenChanges:  args.HasOpenChanges,
 		InitialBranch:   currentBranch,
 		RootDir:         args.RootDir,
@@ -184,6 +188,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:      args.Backend,
 		dialogInputs: args.DialogTestInputs,
+		git:          args.Git,
 		unvalidated:  args.UnvalidatedConfig,
 	})
 	if err != nil || exit {
@@ -195,6 +200,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 		Config:           validatedConfig,
 		FinalMessages:    args.FinalMessages,
 		Frontend:         args.Frontend,
+		Git:              args.Git,
 		HasOpenChanges:   args.HasOpenChanges,
 		InitialStashSize: runState.BeginStashSize,
 		RootDir:          args.RootDir,

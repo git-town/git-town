@@ -33,6 +33,7 @@ func Execute(args ExecuteArgs) error {
 			DialogTestInputs:                args.DialogTestInputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
+			Git:                             args.Git,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,

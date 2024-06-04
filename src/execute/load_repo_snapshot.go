@@ -28,6 +28,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
+			Git:               args.Git,
 			HasOpenChanges:    args.RepoStatus.OpenChanges,
 			PushHook:          args.UnvalidatedConfig.Config.PushHook,
 			RepoStatus:        args.RepoStatus,
