@@ -35,7 +35,7 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.GetOrPanic().CurrentBranch(result.DevRepo.TestRunner)
 		must.NoError(t, err)
-		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
+		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		assertHasGitConfiguration(t, gitEnvRootDir)
