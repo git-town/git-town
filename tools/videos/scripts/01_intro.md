@@ -3,15 +3,15 @@
 ## Part 1: summarize and take-aways
 
 Git Town is a free and open-source tool that adds a few missing commands to Git.
-These new Git commands allow you to work with Git branches
+These new Git commands allow you to manage Git branches
 much more efficiently than is possible with the standard Git commands.
 
-While automating your branch management,
+While executing Git commands for you,
 Git Town stays true to Git's nature
 as a flexible and powerful tool
 that doesn't force you into one particular way of using it.
 
-Git Town is already super useful when using it just by yourself
+Git Town is useful when using it just by yourself
 And it really shines in collaborative scenarios
 where you write code together with lots of other developers.
 
