@@ -124,20 +124,18 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		HomeDir:    self.DevRepo.HomeDir,
 		WorkingDir: workTreePath,
 	}
-	backendCommands := git.BackendCommands{
-		Runner:             &runner,
+	gitCommands := git.Commands{
 		DryRun:             false,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
 	self.SecondWorktree = SomeP(&testruntime.TestRuntime{
 		TestCommands: commands.TestCommands{
-			TestRunner:      &runner,
-			BackendCommands: &backendCommands,
-			Config:          self.DevRepo.Config,
+			TestRunner: &runner,
+			Commands:   &gitCommands,
+			Config:     self.DevRepo.Config,
 		},
-		Backend: backendCommands,
-		Config:  self.DevRepo.Config,
+		Config: self.DevRepo.Config,
 	})
 }
 
