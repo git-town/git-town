@@ -134,7 +134,7 @@ func emptyOpenRepoResult() OpenRepoResult {
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner {
+func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:ireturn
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
 			Backend:          args.backend,
