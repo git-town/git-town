@@ -19,7 +19,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 		return unvalidatedMain, args.UnvalidatedPerennials, false, errors.New(messages.ConfigMainbranchInConfigFile)
 	}
 	fmt.Print(messages.ConfigNeeded)
-	mainBranch, aborted, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(), args.DialogInputs.Next())
+	mainBranch, aborted, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs.Next())
 	if err != nil || aborted {
 		return mainBranch, args.UnvalidatedPerennials, aborted, err
 	}
@@ -28,8 +28,9 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 }
 
 type MainAndPerennialsArgs struct {
+	Backend               gitdomain.RunnerQuerier
 	DialogInputs          components.TestInputs
-	GetDefaultBranch      func() Option[gitdomain.LocalBranchName]
+	GetDefaultBranch      func(gitdomain.Querier) Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
 	LocalBranches         gitdomain.LocalBranchNames
 	UnvalidatedMain       Option[gitdomain.LocalBranchName]

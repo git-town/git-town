@@ -85,6 +85,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -119,7 +120,7 @@ func emptyPrependData() prependData {
 
 func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (prependData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyPrependData(), false, err
 	}
@@ -132,6 +133,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -143,8 +145,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return emptyPrependData(), exit, err
 	}
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
-	remotes := fc.Remotes(repo.Backend.Remotes())
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return emptyPrependData(), false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -163,6 +165,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

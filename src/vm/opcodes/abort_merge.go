@@ -8,5 +8,5 @@ type AbortMerge struct {
 }
 
 func (self *AbortMerge) Run(args shared.RunArgs) error {
-	return args.Frontend.AbortMerge()
+	return args.Git.AbortMerge(args.Frontend)
 }

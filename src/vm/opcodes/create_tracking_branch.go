@@ -19,5 +19,5 @@ func (self *CreateTrackingBranch) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CreateTrackingBranch) Run(args shared.RunArgs) error {
-	return args.Frontend.CreateTrackingBranch(self.Branch, gitdomain.RemoteOrigin, args.Config.Config.NoPushHook())
+	return args.Git.CreateTrackingBranch(args.Frontend, self.Branch, gitdomain.RemoteOrigin, args.Config.Config.NoPushHook())
 }

@@ -128,6 +128,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -159,7 +160,7 @@ func emptySyncData() syncData {
 
 func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptySyncData(), false, err
 	}
@@ -171,6 +172,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -182,7 +184,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	if err != nil || exit {
 		return emptySyncData(), exit, err
 	}
-	previousBranch, hasPreviousBranch := repo.Backend.PreviouslyCheckedOutBranch().Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
 	if hasPreviousBranch {
 		if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
@@ -196,7 +198,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	} else {
 		previousBranchOpt = None[gitdomain.LocalBranchName]()
 	}
-	remotes, err := repo.Backend.Remotes()
+	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return emptySyncData(), false, err
 	}
@@ -217,6 +219,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		BranchesToValidate: branchNamesToSync,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

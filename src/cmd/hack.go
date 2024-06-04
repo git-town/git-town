@@ -81,6 +81,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
+			git:                   repo.Git,
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
 		})
@@ -128,6 +129,7 @@ func createBranch(args createBranchArgs) error {
 		DialogTestInputs:        args.appendData.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
+		Git:                     args.git,
 		HasOpenChanges:          args.appendData.hasOpenChanges,
 		InitialBranch:           args.appendData.initialBranch,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
@@ -141,24 +143,25 @@ func createBranch(args createBranchArgs) error {
 
 type createBranchArgs struct {
 	appendData            appendData
-	backend               git.BackendCommands
+	backend               gitdomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       gohacks.Counter
 	dryRun                bool
 	finalMessages         stringslice.Collector
-	frontend              git.FrontendCommands
+	frontend              gitdomain.Runner
+	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
 	verbose               bool
 }
 
 func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
-	repoStatus, err = repo.Backend.RepoStatus()
+	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return
 	}
@@ -170,6 +173,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -204,6 +208,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		BranchesToValidate: branchesToValidate,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranchNames,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
@@ -225,7 +230,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
-	remotes, err = repo.Backend.Remotes()
+	remotes, err = repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return
 	}

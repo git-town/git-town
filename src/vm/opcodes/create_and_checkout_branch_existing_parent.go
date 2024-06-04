@@ -19,16 +19,16 @@ func (self *CreateAndCheckoutBranchExistingParent) CreateContinueProgram() []sha
 }
 
 func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Backend.CurrentBranch()
+	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
-	nearestAncestor, hasNearestAncestor := args.Backend.FirstExistingBranch(self.Ancestors...).Get()
+	nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get()
 	if !hasNearestAncestor {
 		nearestAncestor = args.Config.Config.MainBranch
 	}
 	if nearestAncestor == currentBranch {
-		return args.Frontend.CreateAndCheckoutBranch(self.Branch)
+		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)
 	}
-	return args.Frontend.CreateAndCheckoutBranchWithParent(self.Branch, nearestAncestor.Location())
+	return args.Git.CreateAndCheckoutBranchWithParent(args.Frontend, self.Branch, nearestAncestor.Location())
 }

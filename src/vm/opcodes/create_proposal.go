@@ -30,6 +30,6 @@ func (self *CreateProposal) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, args.Frontend.Runner, args.Backend.Runner)
+	browser.Open(prURL, args.Frontend, args.Backend)
 	return nil
 }

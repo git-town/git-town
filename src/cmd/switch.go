@@ -61,7 +61,7 @@ func executeSwitch(verbose, merge bool) error {
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	err = repo.Frontend.CheckoutBranch(branchToCheckout, merge)
+	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
@@ -89,7 +89,7 @@ func emptySwitchData() switchData {
 
 func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptySwitchData(), false, err
 	}
@@ -101,6 +101,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -123,6 +124,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

@@ -30,11 +30,11 @@ func (self *SquashMerge) CreateAutomaticUndoError() error {
 }
 
 func (self *SquashMerge) Run(args shared.RunArgs) error {
-	err := args.Frontend.SquashMerge(self.Branch)
+	err := args.Git.SquashMerge(args.Frontend, self.Branch)
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := args.Backend.BranchAuthors(self.Branch, self.Parent)
+	branchAuthors, err := args.Git.BranchAuthors(args.Backend, self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
@@ -47,18 +47,18 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	}
 	repoAuthor := args.Config.Author()
 	if !args.Config.DryRun {
-		if err = args.Backend.CommentOutSquashCommitMessage(""); err != nil {
+		if err = args.Git.CommentOutSquashCommitMessage(""); err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 	}
 	if repoAuthor == author {
 		author = ""
 	}
-	err = args.Frontend.Commit(self.CommitMessage, author)
+	err = args.Git.Commit(args.Frontend, self.CommitMessage, author)
 	if err != nil {
 		return err
 	}
-	squashedCommitSHA, err := args.Backend.SHAForBranch(self.Parent.BranchName())
+	squashedCommitSHA, err := args.Git.SHAForBranch(args.Backend, self.Parent.BranchName())
 	if err != nil {
 		return err
 	}

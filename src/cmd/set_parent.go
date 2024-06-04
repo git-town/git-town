@@ -98,6 +98,7 @@ func executeSetParent(verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -126,7 +127,7 @@ func emptySetParentData() setParentData {
 
 func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParentData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptySetParentData(), false, err
 	}
@@ -138,6 +139,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -156,6 +158,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (setParen
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,

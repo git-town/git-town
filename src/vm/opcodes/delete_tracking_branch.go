@@ -12,5 +12,5 @@ type DeleteTrackingBranch struct {
 }
 
 func (self *DeleteTrackingBranch) Run(args shared.RunArgs) error {
-	return args.Frontend.DeleteTrackingBranch(self.Branch)
+	return args.Git.DeleteTrackingBranch(args.Frontend, self.Branch)
 }

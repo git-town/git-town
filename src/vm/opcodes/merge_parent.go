@@ -35,5 +35,5 @@ func (self *MergeParent) Run(args shared.RunArgs) error {
 	} else {
 		branchToMerge = parent.BranchName()
 	}
-	return args.Frontend.MergeBranchNoEdit(branchToMerge)
+	return args.Git.MergeBranchNoEdit(args.Frontend, branchToMerge)
 }

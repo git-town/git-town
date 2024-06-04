@@ -97,6 +97,7 @@ func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessag
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -131,9 +132,9 @@ type compressBranchData struct {
 }
 
 func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (*compressBranchesData, bool, error) {
-	previousBranch := repo.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return nil, false, err
 	}
@@ -145,6 +146,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -167,6 +169,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
@@ -195,7 +198,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 			return nil, exit, err
 		}
 		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
-		commits, err := repo.Backend.CommitsInBranch(branchNameToCompress.BranchName().LocalName(), parent)
+		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return nil, exit, err
 		}

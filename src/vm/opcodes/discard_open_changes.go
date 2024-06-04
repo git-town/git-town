@@ -8,5 +8,5 @@ type DiscardOpenChanges struct {
 }
 
 func (self *DiscardOpenChanges) Run(args shared.RunArgs) error {
-	return args.Frontend.DiscardOpenChanges()
+	return args.Git.DiscardOpenChanges(args.Frontend)
 }

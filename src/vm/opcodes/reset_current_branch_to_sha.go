@@ -18,7 +18,7 @@ type ResetCurrentBranchToSHA struct {
 }
 
 func (self *ResetCurrentBranchToSHA) Run(args shared.RunArgs) error {
-	currentSHA, err := args.Backend.CurrentSHA()
+	currentSHA, err := args.Git.CurrentSHA(args.Backend)
 	if err != nil {
 		return err
 	}
@@ -27,11 +27,11 @@ func (self *ResetCurrentBranchToSHA) Run(args shared.RunArgs) error {
 		return nil
 	}
 	if currentSHA != self.MustHaveSHA {
-		currentBranchName, err := args.Backend.CurrentBranch()
+		currentBranchName, err := args.Git.CurrentBranch(args.Backend)
 		if err != nil {
 			return err
 		}
 		return fmt.Errorf(messages.BranchHasWrongSHA, currentBranchName, self.SetToSHA, self.MustHaveSHA, currentSHA)
 	}
-	return args.Frontend.ResetCurrentBranchToSHA(self.SetToSHA, self.Hard)
+	return args.Git.ResetCurrentBranchToSHA(args.Frontend, self.SetToSHA, self.Hard)
 }

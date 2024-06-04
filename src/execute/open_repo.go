@@ -27,13 +27,11 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		CommandsCounter: commandsCounter,
 		Verbose:         args.Verbose,
 	}
-	backendCommands := git.BackendCommands{
-		Runner:             backendRunner,
-		DryRun:             args.DryRun,
+	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	gitVersionMajor, gitVersionMinor, err := backendCommands.Version()
+	gitVersionMajor, gitVersionMinor, err := gitCommands.Version(backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -66,17 +64,14 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		LocalConfig:  localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
+		backend:          backendRunner,
 		counter:          commandsCounter,
 		dryRun:           args.DryRun,
-		getCurrentBranch: backendCommands.CurrentBranch,
+		getCurrentBranch: gitCommands.CurrentBranch,
 		omitBranchNames:  args.OmitBranchNames,
 		printCommands:    args.PrintCommands,
 	})
-	frontEndCommands := git.FrontendCommands{
-		Runner:                 frontEndRunner,
-		SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
-	}
-	rootDir, hasRootDir := backendCommands.RootDirectory().Get()
+	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
 	if args.ValidateGitRepo {
 		if !hasRootDir {
 			err = errors.New(messages.RepoOutside)
@@ -96,15 +91,16 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), err
 		}
 		if currentDirectory != rootDir.String() {
-			err = frontEndCommands.NavigateToDir(rootDir)
+			err = gitCommands.NavigateToDir(rootDir)
 		}
 	}
 	return OpenRepoResult{
-		Backend:           backendCommands,
+		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
-		Frontend:          frontEndCommands,
+		Frontend:          frontEndRunner,
+		Git:               gitCommands,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
@@ -121,11 +117,12 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Backend           git.BackendCommands
+	Backend           gitdomain.RunnerQuerier
 	CommandsCounter   gohacks.Counter
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
-	Frontend          git.FrontendCommands
+	Frontend          gitdomain.Runner
+	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
 	UnvalidatedConfig config.UnvalidatedConfig
@@ -136,9 +133,10 @@ func emptyOpenRepoResult() OpenRepoResult {
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
+func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:ireturn
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
+			Backend:          args.backend,
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
 			PrintCommands:    args.printCommands,
@@ -146,6 +144,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 		}
 	}
 	return &subshell.FrontendRunner{
+		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
 		OmitBranchNames:  args.omitBranchNames,
 		PrintCommands:    args.printCommands,
@@ -154,6 +153,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 }
 
 type newFrontendRunnerArgs struct {
+	backend          gitdomain.Querier
 	counter          gohacks.Counter
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc

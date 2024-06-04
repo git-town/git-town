@@ -13,14 +13,14 @@ type CheckoutIfExists struct {
 }
 
 func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
-	existingBranch, err := args.Backend.CurrentBranch()
+	existingBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
 	if existingBranch == self.Branch {
 		return nil
 	}
-	if !args.Backend.HasLocalBranch(self.Branch) {
+	if !args.Git.HasLocalBranch(args.Backend, self.Branch) {
 		return nil
 	}
 	return (&Checkout{Branch: self.Branch}).Run(args)

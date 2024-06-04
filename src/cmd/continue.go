@@ -70,6 +70,7 @@ func executeContinue(verbose bool) error {
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
@@ -83,7 +84,7 @@ func executeContinue(verbose bool) error {
 
 func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Backend.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyContinueData(), false, err
 	}
@@ -95,6 +96,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -113,6 +115,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
@@ -130,7 +133,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		initialBranch, err = repo.Backend.CurrentBranch()
+		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return emptyContinueData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 		}

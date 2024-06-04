@@ -11,12 +11,13 @@ import (
 )
 
 type RunArgs struct {
-	Backend                         git.BackendCommands
+	Backend                         gitdomain.RunnerQuerier
 	Config                          config.ValidatedConfig
 	Connector                       Option[hostingdomain.Connector]
 	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
-	Frontend                        git.FrontendCommands
+	Frontend                        gitdomain.Runner
+	Git                             git.Commands
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error

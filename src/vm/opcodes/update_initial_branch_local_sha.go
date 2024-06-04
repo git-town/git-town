@@ -11,7 +11,7 @@ type UpdateInitialBranchLocalSHA struct {
 }
 
 func (self *UpdateInitialBranchLocalSHA) Run(args shared.RunArgs) error {
-	newSHA, err := args.Backend.SHAForBranch(self.Branch.BranchName())
+	newSHA, err := args.Git.SHAForBranch(args.Backend, self.Branch.BranchName())
 	if err != nil {
 		return err
 	}

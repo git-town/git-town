@@ -24,6 +24,7 @@ func Execute(args ExecuteArgs) error {
 		Backend:        args.Backend,
 		Config:         args.Config.Config,
 		DryRun:         args.RunState.DryRun,
+		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
@@ -33,6 +34,7 @@ func Execute(args ExecuteArgs) error {
 		Config:        args.Config,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
+		Git:           args.Git,
 		Prog:          program,
 	})
 	err := statefile.Delete(args.RootDir)
@@ -44,11 +46,12 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	Backend          git.BackendCommands
+	Backend          gitdomain.RunnerQuerier
 	CommandsCounter  gohacks.Counter
 	Config           config.ValidatedConfig
 	FinalMessages    stringslice.Collector
-	Frontend         git.FrontendCommands
+	Frontend         gitdomain.Runner
+	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
