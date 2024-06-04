@@ -19,7 +19,7 @@ func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	if !hasParent {
 		return nil
 	}
-	hasUnmergedChanges, err := args.Backend.BranchHasUnmergedChanges(self.Branch, parent)
+	hasUnmergedChanges, err := args.Git.BranchHasUnmergedChanges(args.Backend, self.Branch, parent)
 	if err != nil {
 		return err
 	}

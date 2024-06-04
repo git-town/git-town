@@ -16,17 +16,17 @@ type RevertCommit struct {
 }
 
 func (self *RevertCommit) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Backend.CurrentBranch()
+	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
 	parent := args.Config.Config.Lineage.Parent(currentBranch)
-	commitsInCurrentBranch, err := args.Backend.CommitsInBranch(currentBranch, parent)
+	commitsInCurrentBranch, err := args.Git.CommitsInBranch(args.Backend, currentBranch, parent)
 	if err != nil {
 		return err
 	}
 	if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
 		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
 	}
-	return args.Frontend.RevertCommit(self.SHA)
+	return args.Git.RevertCommit(args.Frontend, self.SHA)
 }

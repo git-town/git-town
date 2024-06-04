@@ -12,5 +12,5 @@ type ResetCommitsInCurrentBranch struct {
 }
 
 func (self *ResetCommitsInCurrentBranch) Run(args shared.RunArgs) error {
-	return args.Frontend.RemoveCommitsInCurrentBranch(self.Parent)
+	return args.Git.RemoveCommitsInCurrentBranch(args.Frontend, self.Parent)
 }

@@ -8,5 +8,5 @@ type PushTags struct {
 }
 
 func (self *PushTags) Run(args shared.RunArgs) error {
-	return args.Frontend.PushTags()
+	return args.Git.PushTags(args.Frontend)
 }

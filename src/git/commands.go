@@ -620,11 +620,12 @@ func (self *Commands) StartCommit(runner gitdomain.Runner) error {
 }
 
 // Stash adds the current files to the Git stash.
-func (self *Commands) Stash(runner gitdomain.ManyRunner) error {
-	return runner.RunMany([][]string{
-		{"git", "add", "-A"},
-		{"git", "stash"},
-	})
+func (self *Commands) Stash(runner gitdomain.Runner) error {
+	err := runner.Run("git", "add", "-A")
+	if err != nil {
+		return err
+	}
+	return runner.Run("git", "stash")
 }
 
 // StashSize provides the number of stashes in this repository.

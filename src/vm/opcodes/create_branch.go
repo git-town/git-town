@@ -13,5 +13,5 @@ type CreateBranch struct {
 }
 
 func (self *CreateBranch) Run(args shared.RunArgs) error {
-	return args.Frontend.CreateBranch(self.Branch, self.StartingPoint)
+	return args.Git.CreateBranch(args.Frontend, self.Branch, self.StartingPoint)
 }

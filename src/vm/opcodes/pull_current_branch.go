@@ -8,5 +8,5 @@ type PullCurrentBranch struct {
 }
 
 func (self *PullCurrentBranch) Run(args shared.RunArgs) error {
-	return args.Frontend.Pull()
+	return args.Git.Pull(args.Frontend)
 }

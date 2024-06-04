@@ -117,7 +117,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
-		if !state.fixture.DevRepo.HasMergeInProgress() {
+		if !state.fixture.DevRepo.HasMergeInProgress(state.fixture.DevRepo.TestRunner) {
 			return errors.New("expected merge in progress")
 		}
 		return nil
@@ -149,7 +149,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
-		repoStatus, err := state.fixture.DevRepo.RepoStatus()
+		repoStatus, err := state.fixture.DevRepo.RepoStatus(state.fixture.DevRepo.TestRunner)
 		asserts.NoError(err)
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
@@ -293,7 +293,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^display "([^"]+)"$`, func(command string) error {
 		parts := strings.Split(command, " ")
-		output, err := state.fixture.DevRepo.Runner.Query(parts[0], parts[1:]...)
+		output, err := state.fixture.DevRepo.TestRunner.Query(parts[0], parts[1:]...)
 		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 		fmt.Println(output)
 		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " END XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
@@ -1118,14 +1118,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no merge is in progress$`, func() error {
-		if state.fixture.DevRepo.HasMergeInProgress() {
+		if state.fixture.DevRepo.HasMergeInProgress(state.fixture.DevRepo.TestRunner) {
 			return errors.New("expected no merge in progress")
 		}
 		return nil
 	})
 
 	suite.Step(`^no rebase is in progress$`, func() error {
-		repoStatus, err := state.fixture.DevRepo.RepoStatus()
+		repoStatus, err := state.fixture.DevRepo.RepoStatus(state.fixture.DevRepo.TestRunner)
 		if err != nil {
 			return err
 		}
@@ -1316,7 +1316,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
-		if !state.fixture.DevRepo.BranchExists(branch) {
+		if !state.fixture.DevRepo.BranchExists(state.fixture.DevRepo.TestRunner, branch) {
 			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
 		state.fixture.DevRepo.CheckoutBranch(branch)
@@ -1406,7 +1406,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
 		state.fixture.DevRepo.CurrentBranchCache.Invalidate()
-		actual, err := state.fixture.DevRepo.CurrentBranch()
+		actual, err := state.fixture.DevRepo.CurrentBranch(state.fixture.DevRepo.TestRunner)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
@@ -1419,7 +1419,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.CurrentBranch()
+		actual, err := secondWorkTree.CurrentBranch(state.fixture.DevRepo.TestRunner)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
@@ -1623,7 +1623,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.BackendCommands.PreviouslyCheckedOutBranch()
+		have := state.fixture.DevRepo.Git.PreviouslyCheckedOutBranch(state.fixture.DevRepo.TestRunner)
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
@@ -1700,7 +1700,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSize, err := state.fixture.DevRepo.StashSize()
+		stashSize, err := state.fixture.DevRepo.StashSize(state.fixture.DevRepo.TestRunner)
 		if err != nil {
 			return err
 		}

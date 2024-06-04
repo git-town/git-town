@@ -7,5 +7,5 @@ type UndoLastCommit struct {
 }
 
 func (self *UndoLastCommit) Run(args shared.RunArgs) error {
-	return args.Frontend.UndoLastCommit()
+	return args.Git.UndoLastCommit(args.Frontend)
 }

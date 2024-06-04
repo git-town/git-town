@@ -24,5 +24,5 @@ func (self *Merge) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *Merge) Run(args shared.RunArgs) error {
-	return args.Frontend.MergeBranchNoEdit(self.Branch)
+	return args.Git.MergeBranchNoEdit(args.Frontend, self.Branch)
 }
