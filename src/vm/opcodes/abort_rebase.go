@@ -9,5 +9,5 @@ type AbortRebase struct {
 }
 
 func (self *AbortRebase) Run(args shared.RunArgs) error {
-	return args.Frontend.AbortRebase()
+	return args.Git.AbortRebase(args.Frontend)
 }

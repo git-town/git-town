@@ -12,12 +12,12 @@ type Checkout struct {
 }
 
 func (self *Checkout) Run(args shared.RunArgs) error {
-	existingBranch, err := args.Backend.CurrentBranch()
+	existingBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
 	if existingBranch == self.Branch {
 		return nil
 	}
-	return args.Frontend.CheckoutBranch(self.Branch, false)
+	return args.Git.CheckoutBranch(args.Frontend, self.Branch, false)
 }

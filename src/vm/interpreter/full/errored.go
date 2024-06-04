@@ -43,7 +43,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return autoUndo(failedOpcode, runErr, args)
 	}
 	args.RunState.RunProgram.Prepend(failedOpcode.CreateContinueProgram()...)
-	err = args.RunState.MarkAsUnfinished(args.Backend)
+	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend)
 	if err != nil {
 		return err
 	}

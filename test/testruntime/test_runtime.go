@@ -20,8 +20,9 @@ import (
 // TestRuntime provides Git functionality for test code (unit and end-to-end tests).
 type TestRuntime struct {
 	commands.TestCommands
-	Backend git.BackendCommands
+	Backend gitdomain.RunnerQuerier
 	Config  config.ValidatedConfig
+	Git     git.Commands
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
@@ -81,8 +82,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Verbose:    false,
 		WorkingDir: workingDir,
 	}
-	backendCommands := git.BackendCommands{
-		Runner:             &testRunner,
+	gitCommands := git.Commands{
 		DryRun:             false,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
