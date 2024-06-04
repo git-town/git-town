@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
@@ -20,9 +19,8 @@ import (
 // TestRuntime provides Git functionality for test code (unit and end-to-end tests).
 type TestRuntime struct {
 	commands.TestCommands
-	Backend gitdomain.RunnerQuerier
-	Config  config.ValidatedConfig
-	Git     git.Commands
+	Config config.ValidatedConfig
+	Git    git.Commands
 }
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
@@ -82,11 +80,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Verbose:    false,
 		WorkingDir: workingDir,
 	}
-	gitCommands := git.Commands{
-		DryRun:             false,
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
-	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
 			Runner: &testRunner,
@@ -106,12 +99,10 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		UnvalidatedConfig: &unvalidatedConfig,
 	}
 	testCommands := commands.TestCommands{
-		BackendCommands: &backendCommands,
-		Config:          validatedConfig,
-		TestRunner:      &testRunner,
+		Config:     validatedConfig,
+		TestRunner: &testRunner,
 	}
 	return TestRuntime{
-		Backend:      backendCommands,
 		Config:       validatedConfig,
 		TestCommands: testCommands,
 	}
