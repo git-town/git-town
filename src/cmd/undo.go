@@ -51,7 +51,6 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("22222222222", repo.Frontend)
 	data, exit, err := determineUndoData(repo, verbose)
 	if err != nil || exit {
 		return err
@@ -65,7 +64,6 @@ func executeUndo(verbose bool) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	fmt.Println("111111111111111", runState)
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
