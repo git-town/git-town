@@ -33,13 +33,13 @@ func TestFixture(t *testing.T) {
 		result := fixture.NewStandardFixture(gitEnvRootDir)
 		// verify the origin repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
-		branch, err := result.OriginRepo.GetOrPanic().CurrentBranch()
+		branch, err := result.OriginRepo.GetOrPanic().CurrentBranch(result.DevRepo.TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		assertHasGitConfiguration(t, gitEnvRootDir)
-		branch, err = result.DevRepo.CurrentBranch()
+		branch, err = result.DevRepo.CurrentBranch(result.DevRepo.TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
 	})
@@ -132,7 +132,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "origin-file", commits[1].FileName)
 		must.EqOp(t, "origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
-		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch()
+		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
 	})
