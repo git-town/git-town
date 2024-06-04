@@ -65,10 +65,12 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		LocalConfig:  localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
-		counter:         commandsCounter,
-		dryRun:          args.DryRun,
-		omitBranchNames: args.OmitBranchNames,
-		printCommands:   args.PrintCommands,
+		backend:          backendRunner,
+		counter:          commandsCounter,
+		dryRun:           args.DryRun,
+		getCurrentBranch: gitCommands.CurrentBranch,
+		omitBranchNames:  args.OmitBranchNames,
+		printCommands:    args.PrintCommands,
 	})
 	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
 	if args.ValidateGitRepo {
@@ -99,6 +101,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,
+		Git:               gitCommands,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
@@ -134,6 +137,7 @@ func emptyOpenRepoResult() OpenRepoResult {
 func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner {
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
+			Backend:          args.backend,
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
 			PrintCommands:    args.printCommands,
@@ -141,6 +145,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner {
 		}
 	}
 	return &subshell.FrontendRunner{
+		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
 		OmitBranchNames:  args.omitBranchNames,
 		PrintCommands:    args.printCommands,
@@ -149,6 +154,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner {
 }
 
 type newFrontendRunnerArgs struct {
+	backend          gitdomain.Querier
 	counter          gohacks.Counter
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc

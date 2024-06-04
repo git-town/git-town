@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/cache"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
@@ -80,6 +81,11 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Verbose:    false,
 		WorkingDir: workingDir,
 	}
+	gitCommands := git.Commands{
+		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
+		DryRun:             false,
+		RemotesCache:       &cache.Remotes{},
+	}
 	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
 			Runner: &testRunner,
@@ -99,6 +105,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		UnvalidatedConfig: &unvalidatedConfig,
 	}
 	testCommands := commands.TestCommands{
+		Commands:   &gitCommands,
 		Config:     validatedConfig,
 		TestRunner: &testRunner,
 	}

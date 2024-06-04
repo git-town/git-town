@@ -114,6 +114,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		BranchesToValidate: branchesToDiff,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
+		Git:                repo.Git,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
