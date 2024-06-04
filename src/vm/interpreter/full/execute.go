@@ -44,13 +44,14 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	Backend                 git.BackendCommands
+	Backend                 gitdomain.RunnerQuerier
 	CommandsCounter         gohacks.Counter
 	Config                  config.ValidatedConfig
 	Connector               Option[hostingdomain.Connector]
 	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector
-	Frontend                git.FrontendCommands
+	Frontend                gitdomain.Runner
+	Git                     git.Commands
 	HasOpenChanges          bool
 	InitialBranch           gitdomain.LocalBranchName
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot

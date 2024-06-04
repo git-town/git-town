@@ -78,7 +78,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunProgram:            prependProgram(data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Git,
+		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[hostingdomain.Connector](),
@@ -125,13 +125,14 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 	}
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Git,
+		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -158,7 +159,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		return emptyPrependData(), false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Git,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,

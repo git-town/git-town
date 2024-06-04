@@ -77,7 +77,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:            appendProgram(*data),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Git,
+		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[hostingdomain.Connector](),
@@ -120,13 +120,14 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return nil, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Git,
+		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -151,7 +152,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Git,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,

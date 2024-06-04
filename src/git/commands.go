@@ -27,18 +27,18 @@ type Commands struct {
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
-func (self *Commands) AbortMerge(runner Runner) error {
+func (self *Commands) AbortMerge(runner gitdomain.Runner) error {
 	return runner.Run("git", "merge", "--abort")
 }
 
 // AbortRebase cancels a currently ongoing Git rebase operation.
-func (self *Commands) AbortRebase(runner Runner) error {
+func (self *Commands) AbortRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "rebase", "--abort")
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
-func (self *Commands) BranchAuthors(querier Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
+func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
 	output, err := querier.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
 		return []gitdomain.Author{}, err
@@ -52,14 +52,14 @@ func (self *Commands) BranchAuthors(querier Querier, branch, parent gitdomain.Lo
 	return result, nil
 }
 
-func (self *Commands) BranchExists(runner Runner, branch gitdomain.LocalBranchName) bool {
+func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
 	err := runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
 	return err == nil
 }
 
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
-func (self *Commands) BranchHasUnmergedChanges(querier Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
 	out, err := querier.QueryTrim("git", "diff", parent.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
@@ -68,7 +68,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier Querier, branch, parent g
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *Commands) BranchesSnapshot(querier Querier) (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
+func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
@@ -85,7 +85,7 @@ func (self *Commands) BranchesSnapshot(querier Querier) (gitdomain.BranchesSnaps
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchName, merge bool) error {
+func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge bool) error {
 	if !self.DryRun {
 		err := self.CheckoutBranchUncached(runner, name, merge)
 		if err != nil {
@@ -101,7 +101,7 @@ func (self *Commands) CheckoutBranch(runner Runner, name gitdomain.LocalBranchNa
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranchUncached(runner Runner, name gitdomain.LocalBranchName, merge bool) error {
+func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge bool) error {
 	args := []string{"checkout", name.String()}
 	if merge {
 		args = append(args, "-m")
@@ -130,7 +130,7 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *Commands) Commit(runner Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
+func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
@@ -142,26 +142,26 @@ func (self *Commands) Commit(runner Runner, message Option[gitdomain.CommitMessa
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
-func (self *Commands) CommitNoEdit(runner Runner) error {
+func (self *Commands) CommitNoEdit(runner gitdomain.Runner) error {
 	return runner.Run("git", "commit", "--no-edit")
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (self *Commands) CommitStagedChanges(runner Runner, message string) error {
+func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message string) error {
 	if message != "" {
 		return runner.Run("git", "commit", "-m", message)
 	}
 	return runner.Run("git", "commit", "--no-edit")
 }
 
-func (self *Commands) CommitsInBranch(querier Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)
 	}
 	return self.CommitsInPerennialBranch(querier)
 }
 
-func (self *Commands) CommitsInFeatureBranch(querier Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
 	output, err := querier.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.Commits{}, err
@@ -184,7 +184,7 @@ func (self *Commands) CommitsInFeatureBranch(querier Querier, branch, parent git
 	return result, nil
 }
 
-func (self *Commands) CommitsInPerennialBranch(querier Querier) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdomain.Commits, error) {
 	output, err := querier.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
 	if err != nil {
 		return gitdomain.Commits{}, err
@@ -208,14 +208,14 @@ func (self *Commands) CommitsInPerennialBranch(querier Querier) (gitdomain.Commi
 }
 
 // ContinueRebase continues the currently ongoing rebase.
-func (self *Commands) ContinueRebase(runner Runner) error {
+func (self *Commands) ContinueRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "rebase", "--continue")
 }
 
 // CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateAndCheckoutBranch(runner Runner, name gitdomain.LocalBranchName) error {
+func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
 	err := runner.Run("git", "checkout", "-b", name.String())
 	self.CurrentBranchCache.Set(name)
 	return err
@@ -224,7 +224,7 @@ func (self *Commands) CreateAndCheckoutBranch(runner Runner, name gitdomain.Loca
 // CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateAndCheckoutBranchWithParent(runner Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	err := runner.Run("git", "checkout", "-b", name.String(), parent.String())
 	self.CurrentBranchCache.Set(name)
 	return err
@@ -233,12 +233,12 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner Runner, name gitd
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateBranch(runner Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	return runner.Run("git", "branch", name.String(), parent.String())
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (self *Commands) CreateRemoteBranch(runner Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -248,7 +248,7 @@ func (self *Commands) CreateRemoteBranch(runner Runner, localSHA gitdomain.SHA, 
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (self *Commands) CreateTrackingBranch(runner Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateTrackingBranch(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -259,7 +259,7 @@ func (self *Commands) CreateTrackingBranch(runner Runner, branch gitdomain.Local
 }
 
 // CurrentBranch provides the name of the currently checked out branch.
-func (self *Commands) CurrentBranch(querier Querier) (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	if !self.CurrentBranchCache.Initialized() {
 		currentBranch, err := self.CurrentBranchUncached(querier)
 		if err != nil {
@@ -271,7 +271,7 @@ func (self *Commands) CurrentBranch(querier Querier) (gitdomain.LocalBranchName,
 }
 
 // CurrentBranch provides the currently checked out branch.
-func (self *Commands) CurrentBranchUncached(querier Querier) (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
 	output, err := querier.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err == nil && output != "HEAD" {
@@ -282,11 +282,11 @@ func (self *Commands) CurrentBranchUncached(querier Querier) (gitdomain.LocalBra
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
-func (self *Commands) CurrentSHA(querier Querier) (gitdomain.SHA, error) {
+func (self *Commands) CurrentSHA(querier gitdomain.Querier) (gitdomain.SHA, error) {
 	return self.SHAForBranch(querier, gitdomain.NewBranchName("HEAD"))
 }
 
-func (self *Commands) DefaultBranch(querier Querier) Option[gitdomain.LocalBranchName] {
+func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
 	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
@@ -299,52 +299,52 @@ func (self *Commands) DefaultBranch(querier Querier) Option[gitdomain.LocalBranc
 }
 
 // DeleteHostingPlatform removes the hosting platform config entry.
-func (self *Commands) DeleteHostingPlatform(runner Runner) error {
+func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (self *Commands) DeleteLastCommit(runner Runner) error {
+func (self *Commands) DeleteLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard", "HEAD~1")
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (self *Commands) DeleteLocalBranch(runner Runner, name gitdomain.LocalBranchName) error {
+func (self *Commands) DeleteLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "-D", name.String())
 }
 
 // DeleteOriginHostname removes the origin hostname override
-func (self *Commands) DeleteOriginHostname(runner Runner) error {
+func (self *Commands) DeleteOriginHostname(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", gitconfig.KeyHostingOriginHostname.String())
 }
 
 // DeleteTrackingBranch removes the tracking branch of the given local branch.
-func (self *Commands) DeleteTrackingBranch(runner Runner, name gitdomain.RemoteBranchName) error {
+func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (self *Commands) DiffParent(runner Runner, branch, parentBranch gitdomain.LocalBranchName) error {
+func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
-func (self *Commands) DiscardOpenChanges(runner Runner) error {
+func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (self *Commands) Fetch(runner Runner) error {
+func (self *Commands) Fetch(runner gitdomain.Runner) error {
 	return runner.Run("git", "fetch", "--prune", "--tags")
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (self *Commands) FetchUpstream(runner Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FirstExistingBranch(runner Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
+func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(runner, branch) {
 			return Some(branch)
@@ -354,7 +354,7 @@ func (self *Commands) FirstExistingBranch(runner Runner, branches ...gitdomain.L
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (self *Commands) ForcePushBranchSafely(runner Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push", "--force-with-lease", "--force-if-includes"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -363,19 +363,19 @@ func (self *Commands) ForcePushBranchSafely(runner Runner, noPushHook configdoma
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
-func (self *Commands) HasLocalBranch(runner Runner, name gitdomain.LocalBranchName) bool {
+func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (self *Commands) HasMergeInProgress(runner Runner) bool {
+func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
-func (self *Commands) HasShippableChanges(querier Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
+func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
 	out, err := querier.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
@@ -384,7 +384,7 @@ func (self *Commands) HasShippableChanges(querier Querier, branch, mainBranch gi
 }
 
 // LastCommitMessage provides the commit message for the last commit.
-func (self *Commands) LastCommitMessage(querier Querier) (gitdomain.CommitMessage, error) {
+func (self *Commands) LastCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
 	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
@@ -394,7 +394,7 @@ func (self *Commands) LastCommitMessage(querier Querier) (gitdomain.CommitMessag
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (self *Commands) MergeBranchNoEdit(runner Runner, branch gitdomain.BranchName) error {
+func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
@@ -403,7 +403,7 @@ func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())
 }
 
-func (self *Commands) OriginHead(querier Querier) Option[gitdomain.LocalBranchName] {
+func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
 	output, err := querier.QueryTrim("git", "symbolic-ref", "refs/remotes/origin/HEAD")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
@@ -416,17 +416,17 @@ func (self *Commands) OriginHead(querier Querier) Option[gitdomain.LocalBranchNa
 }
 
 // PopStash restores stashed-away changes into the workspace.
-func (self *Commands) PopStash(runner Runner) error {
+func (self *Commands) PopStash(runner gitdomain.Runner) error {
 	return runner.Run("git", "stash", "pop")
 }
 
 // Pull fetches updates from origin and updates the currently checked out branch.
-func (self *Commands) Pull(runner Runner) error {
+func (self *Commands) Pull(runner gitdomain.Runner) error {
 	return runner.Run("git", "pull")
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (self *Commands) PreviouslyCheckedOutBranch(querier Querier) Option[gitdomain.LocalBranchName] {
+func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
 	output, err := querier.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
@@ -438,7 +438,7 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier Querier) Option[gitdoma
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
-func (self *Commands) PushCurrentBranch(runner Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -447,17 +447,17 @@ func (self *Commands) PushCurrentBranch(runner Runner, noPushHook configdomain.N
 }
 
 // PushTags pushes new the Git tags to origin.
-func (self *Commands) PushTags(runner Runner) error {
+func (self *Commands) PushTags(runner gitdomain.Runner) error {
 	return runner.Run("git", "push", "--tags")
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner Runner, target gitdomain.BranchName) error {
+func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
 	return runner.Run("git", "rebase", target.String())
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (self *Commands) Remotes(querier Querier) (gitdomain.Remotes, error) {
+func (self *Commands) Remotes(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
 		remotes, err := self.RemotesUncached(querier)
 		if err != nil {
@@ -469,7 +469,7 @@ func (self *Commands) Remotes(querier Querier) (gitdomain.Remotes, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (self *Commands) RemotesUncached(querier Querier) (gitdomain.Remotes, error) {
+func (self *Commands) RemotesUncached(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	out, err := querier.QueryTrim("git", "remote")
 	if err != nil {
 		return gitdomain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
@@ -481,33 +481,33 @@ func (self *Commands) RemotesUncached(querier Querier) (gitdomain.Remotes, error
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *Commands) RemoveCommitsInCurrentBranch(runner Runner, parent gitdomain.LocalBranchName) error {
+func (self *Commands) RemoveCommitsInCurrentBranch(runner gitdomain.Runner, parent gitdomain.LocalBranchName) error {
 	return runner.Run("git", "reset", "--soft", parent.String())
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (self *Commands) RemoveGitAlias(runner Runner, aliasableCommand configdomain.AliasableCommand) error {
+func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	aliasKey := gitconfig.KeyForAliasableCommand(aliasableCommand)
 	return runner.Run("git", "config", "--global", "--unset", aliasKey.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
-func (self *Commands) RemoveGitHubToken(runner Runner) error {
+func (self *Commands) RemoveGitHubToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", gitconfig.KeyGithubToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
-func (self *Commands) RemoveGitLabToken(runner Runner) error {
+func (self *Commands) RemoveGitLabToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", gitconfig.KeyGitlabToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
-func (self *Commands) RemoveGiteaToken(runner Runner) error {
+func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", gitconfig.KeyGiteaToken.String())
 }
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
-func (self *Commands) RepoStatus(querier Querier) (gitdomain.RepoStatus, error) {
+func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
 	output, err := querier.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
@@ -525,7 +525,7 @@ func (self *Commands) RepoStatus(querier Querier) (gitdomain.RepoStatus, error) 
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *Commands) ResetCurrentBranchToSHA(runner Runner, sha gitdomain.SHA, hard bool) error {
+func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdomain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
@@ -535,18 +535,18 @@ func (self *Commands) ResetCurrentBranchToSHA(runner Runner, sha gitdomain.SHA, 
 }
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
-func (self *Commands) ResetRemoteBranchToSHA(runner Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
+func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
 	return runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (self *Commands) RevertCommit(runner Runner, sha gitdomain.SHA) error {
+func (self *Commands) RevertCommit(runner gitdomain.Runner, sha gitdomain.SHA) error {
 	return runner.Run("git", "revert", sha.String())
 }
 
 // RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDir] {
+func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.RepoRootDir] {
 	output, err := querier.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return None[gitdomain.RepoRootDir]()
@@ -555,37 +555,37 @@ func (self *Commands) RootDirectory(querier Querier) Option[gitdomain.RepoRootDi
 }
 
 // SetGitAlias sets the given Git alias.
-func (self *Commands) SetGitAlias(runner Runner, aliasableCommand configdomain.AliasableCommand) error {
+func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
 }
 
 // SetGitHubToken sets the given API token for the GitHub API.
-func (self *Commands) SetGitHubToken(runner Runner, value configdomain.GitHubToken) error {
+func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain.GitHubToken) error {
 	return runner.Run("git", "config", gitconfig.KeyGithubToken.String(), value.String())
 }
 
 // SetGitLabToken sets the given API token for the GitHub API.
-func (self *Commands) SetGitLabToken(runner Runner, value configdomain.GitLabToken) error {
+func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken) error {
 	return runner.Run("git", "config", gitconfig.KeyGitlabToken.String(), value.String())
 }
 
 // SetGiteaToken sets the given API token for the Gitea API.
-func (self *Commands) SetGiteaToken(runner Runner, value configdomain.GiteaToken) error {
+func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken) error {
 	return runner.Run("git", "config", gitconfig.KeyGiteaToken.String(), value.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
-func (self *Commands) SetHostingPlatform(runner Runner, platform configdomain.HostingPlatform) error {
+func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.HostingPlatform) error {
 	return runner.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
-func (self *Commands) SetOriginHostname(runner Runner, hostname configdomain.HostingOriginHostname) error {
+func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.
-func (self *Commands) SHAForBranch(querier Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
+func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
@@ -595,7 +595,7 @@ func (self *Commands) SHAForBranch(querier Querier, name gitdomain.BranchName) (
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier Querier, branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
+func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
 	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
@@ -604,23 +604,23 @@ func (self *Commands) ShouldPushBranch(querier Querier, branch gitdomain.LocalBr
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (self *Commands) SquashMerge(runner Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "merge", "--squash", "--ff", branch.String())
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (self *Commands) StageFiles(runner Runner, names ...string) error {
+func (self *Commands) StageFiles(runner gitdomain.Runner, names ...string) error {
 	args := append([]string{"add"}, names...)
 	return runner.Run("git", args...)
 }
 
 // StartCommit starts a commit and stops at asking the user for the commit message.
-func (self *Commands) StartCommit(runner Runner) error {
+func (self *Commands) StartCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "commit")
 }
 
 // Stash adds the current files to the Git stash.
-func (self *Commands) Stash(runner ManyRunner) error {
+func (self *Commands) Stash(runner gitdomain.ManyRunner) error {
 	return runner.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
@@ -628,17 +628,17 @@ func (self *Commands) Stash(runner ManyRunner) error {
 }
 
 // StashSize provides the number of stashes in this repository.
-func (self *Commands) StashSize(querier Querier) (gitdomain.StashSize, error) {
+func (self *Commands) StashSize(querier gitdomain.Querier) (gitdomain.StashSize, error) {
 	output, err := querier.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
-func (self *Commands) UndoLastCommit(runner Runner) error {
+func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
 // Version indicates whether the needed Git version is installed.
-func (self *Commands) Version(querier Querier) (major int, minor int, err error) {
+func (self *Commands) Version(querier gitdomain.Querier) (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
@@ -659,7 +659,7 @@ func (self *Commands) Version(querier Querier) (major int, minor int, err error)
 	return majorVersion, minorVersion, nil
 }
 
-func (self *Commands) currentBranchDuringRebase(querier Querier) (gitdomain.LocalBranchName, error) {
+func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	output, err := querier.QueryTrim("git", "branch", "--list")
 	if err != nil {
 		return "", err

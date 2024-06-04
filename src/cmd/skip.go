@@ -51,18 +51,19 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus()
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Git,
+		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -76,14 +77,14 @@ func executeSkip(verbose bool) error {
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		currentBranch, err = repo.Git.CurrentBranch()
+		currentBranch, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Git,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		DialogTestInputs:   dialogTestInputs,
@@ -122,7 +123,7 @@ func executeSkip(verbose bool) error {
 		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
-		Backend:         repo.Git,
+		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
 		Config:          validatedConfig,
 		Connector:       connector,

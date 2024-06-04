@@ -48,22 +48,22 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
-		remotes, err := args.Backend.Remotes()
+		remotes, err := args.Git.Remotes(args.Repo.Backend)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
-			err = args.Frontend.Fetch()
+			err = args.Git.Fetch(args.Frontend)
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
 		}
 	}
-	stashSize, err := args.Repo.Backend.StashSize()
+	stashSize, err := args.Repo.Git.StashSize(args.Repo.Backend)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 	}
-	branchesSnapshot, err := args.Repo.Backend.BranchesSnapshot()
+	branchesSnapshot, err := args.Repo.Git.BranchesSnapshot(args.Repo.Backend)
 	if err != nil {
 		return branchesSnapshot, stashSize, false, err
 	}
@@ -71,13 +71,14 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 }
 
 type LoadRepoSnapshotArgs struct {
-	Backend               git.BackendCommands
+	Backend               gitdomain.RunnerQuerier
 	CommandsCounter       gohacks.Counter
 	ConfigSnapshot        undoconfig.ConfigSnapshot
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
-	Frontend              git.FrontendCommands
+	Frontend              gitdomain.Runner
+	Git                   git.Commands
 	HandleUnfinishedState bool
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus

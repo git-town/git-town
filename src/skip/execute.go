@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -55,12 +54,12 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	Backend         git.BackendCommands
+	Backend         gitdomain.RunnerQuerier
 	CommandsCounter gohacks.Counter
 	Config          config.ValidatedConfig
 	Connector       Option[hostingdomain.Connector]
 	FinalMessages   stringslice.Collector
-	Frontend        git.FrontendCommands
+	Frontend        gitdomain.Runner
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir

@@ -65,12 +65,13 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 }
 
 type UnfinishedStateArgs struct {
-	Backend           git.BackendCommands
+	Backend           gitdomain.RunnerQuerier
 	CommandsCounter   gohacks.Counter
 	Connector         Option[hostingdomain.Connector]
 	DialogTestInputs  components.TestInputs
 	FinalMessages     stringslice.Collector
-	Frontend          git.FrontendCommands
+	Frontend          gitdomain.Runner
+	Git               git.Commands
 	HasOpenChanges    bool
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
@@ -121,12 +122,12 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, bool, error) {
 	mainBranch, hasMain := args.unvalidated.Config.MainBranch.Get()
 	if !hasMain {
-		branchesSnapshot, err := args.backend.BranchesSnapshot()
+		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)
 		if err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(localBranches, args.backend.DefaultBranch(), args.dialogInputs.Next())
+		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Next())
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -151,7 +152,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 }
 
 func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, error) {
-	currentBranch, err := args.Backend.CurrentBranch()
+	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return false, err
 	}
@@ -203,7 +204,8 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 }
 
 type quickValidateConfigArgs struct {
-	backend      git.BackendCommands
+	backend      gitdomain.RunnerQuerier
 	dialogInputs components.TestInputs
+	git          git.Commands
 	unvalidated  config.UnvalidatedConfig
 }

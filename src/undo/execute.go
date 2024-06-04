@@ -44,11 +44,12 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	Backend          git.BackendCommands
+	Backend          gitdomain.RunnerQuerier
 	CommandsCounter  gohacks.Counter
 	Config           config.ValidatedConfig
 	FinalMessages    stringslice.Collector
-	Frontend         git.FrontendCommands
+	Frontend         gitdomain.Runner
+	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir

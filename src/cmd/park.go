@@ -72,7 +72,7 @@ func executePark(args []string, verbose bool) error {
 	}
 	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Git,
+		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "park",
 		CommandsCounter:     repo.CommandsCounter,

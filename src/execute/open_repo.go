@@ -115,11 +115,11 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Backend           git.RunnerQuerier
+	Backend           gitdomain.RunnerQuerier
 	CommandsCounter   gohacks.Counter
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
-	Frontend          git.Runner
+	Frontend          gitdomain.Runner
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
@@ -131,7 +131,7 @@ func emptyOpenRepoResult() OpenRepoResult {
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func newFrontendRunner(args newFrontendRunnerArgs) git.Runner {
+func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner {
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: args.getCurrentBranch,

@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
-	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -16,7 +15,7 @@ import (
 
 // Finished is called when a Git Town command that only changes configuration has finished successfully.
 func Finished(args FinishedArgs) error {
-	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
@@ -49,7 +48,7 @@ func Finished(args FinishedArgs) error {
 }
 
 type FinishedArgs struct {
-	Backend             git.BackendCommands
+	Backend             gitdomain.RunnerQuerier
 	BeginConfigSnapshot undoconfig.ConfigSnapshot
 	Command             string
 	CommandsCounter     gohacks.Counter

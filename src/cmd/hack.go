@@ -142,14 +142,14 @@ func createBranch(args createBranchArgs) error {
 
 type createBranchArgs struct {
 	appendData            appendData
-	backend               git.RunnerQuerier
+	backend               gitdomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       gohacks.Counter
 	dryRun                bool
 	finalMessages         stringslice.Collector
-	frontend              git.Runner
+	frontend              gitdomain.Runner
 	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
 	verbose               bool
@@ -165,13 +165,14 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Git,
+		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
@@ -201,7 +202,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		}
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Git,
+		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToValidate,
 		DialogTestInputs:   dialogTestInputs,
@@ -283,7 +284,7 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             args.repo.Git,
+		Backend:             args.repo.Backend,
 		BeginConfigSnapshot: args.beginConfigSnapshot,
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,

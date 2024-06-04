@@ -15,12 +15,12 @@ import (
 
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
-	endBranchesSnapshot, err := args.Backend.BranchesSnapshot()
+	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
-	configGitAccess := gitconfig.Access{Runner: args.Backend.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})
-	endStashSize, err := args.Backend.StashSize()
+	endStashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {
 		return err
 	}
@@ -47,11 +47,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	currentBranch, err := args.Backend.CurrentBranch()
+	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
-	repoStatus, err := args.Backend.RepoStatus()
+	repoStatus, err := args.Git.RepoStatus(args.Backend)
 	if err != nil {
 		return err
 	}

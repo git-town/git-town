@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/git"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -34,9 +34,9 @@ func Execute(args ExecuteArgs) {
 }
 
 type ExecuteArgs struct {
-	Backend       git.BackendCommands
+	Backend       gitdomain.RunnerQuerier
 	Config        config.ValidatedConfig
 	FinalMessages stringslice.Collector
-	Frontend      git.FrontendCommands
+	Frontend      gitdomain.Runner
 	Prog          program.Program
 }
