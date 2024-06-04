@@ -56,7 +56,6 @@ func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string,
 
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
-	fmt.Println("33333333333333333", cmd)
 	self.CommandsCounter.Register()
 	var branchName gitdomain.LocalBranchName
 	if !self.OmitBranchNames {
