@@ -1419,7 +1419,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(expected string) error {
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.CurrentBranch(state.fixture.DevRepo.TestRunner)
+		actual, err := secondWorkTree.CurrentBranch(secondWorkTree.TestCommands)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
