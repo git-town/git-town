@@ -62,11 +62,11 @@ It then cuts the feature branch off the now up-to-date main branch.
 
 ## Part 3: synchronizing feature branches
 
-<!-- 
+``` 
 prep the codebase:
 - create files "other_file_1" and "other_file_2" on the main branch
 - create file "my_file_2" on the tracking branch
--->
+```
 
 Let's start building the feature.
 
