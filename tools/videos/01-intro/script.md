@@ -64,8 +64,10 @@ It then cuts the feature branch off the now up-to-date main branch.
 
 ``` 
 prep the codebase:
+- sync the feature branch
 - create files "other_file_1" and "other_file_2" on the main branch
-- create file "my_file_2" on the tracking branch
+- create file "my_file_2" on the tracking branch of the feature branch
+- create a local file my_file_1 on the feature branch
 ```
 
 Let's start building the feature.
