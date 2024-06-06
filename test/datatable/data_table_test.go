@@ -97,8 +97,8 @@ func TestDataTable(t *testing.T) {
 		want := `
 | BRANCH | TYPE     | COMMAND                                   |
 |        | backend  | git version                               |
-|        | backend  | git config -lz --includes --global                   |
-|        | backend  | git config -lz --includes --local                    |
+|        | backend  | git config -lz --includes --global        |
+|        | backend  | git config -lz --includes --local         |
 |        | backend  | git rev-parse --show-toplevel             |
 |        | backend  | git stash list                            |
 |        | backend  | git branch -vva                           |
@@ -117,8 +117,8 @@ func TestDataTable(t *testing.T) {
 |        | backend  | git rev-parse --verify --abbrev-ref @{-1} |
 |        | backend  | git checkout main                         |
 |        | backend  | git checkout main                         |
-|        | backend  | git config -lz --includes --global                   |
-|        | backend  | git config -lz --includes --local                    |
+|        | backend  | git config -lz --includes --global        |
+|        | backend  | git config -lz --includes --local         |
 |        | backend  | git branch -vva                           |
 |        | backend  | git stash list                            |
 `[1:]
