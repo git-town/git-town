@@ -9,8 +9,8 @@ Feature: display all executed Git commands
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       |         | backend  | git version                                                        |
-      |         | backend  | git config -lz --global                                            |
-      |         | backend  | git config -lz --local                                             |
+      |         | backend  | git config -lz --includes --global                                 |
+      |         | backend  | git config -lz --includes --local                                  |
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git status --long --ignore-submodules                              |
       |         | backend  | git remote                                                         |
@@ -33,8 +33,8 @@ Feature: display all executed Git commands
       |         | backend  | which open                                                         |
       | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
       |         | backend  | git branch -vva --sort=refname                                     |
-      |         | backend  | git config -lz --global                                            |
-      |         | backend  | git config -lz --local                                             |
+      |         | backend  | git config -lz --includes --global                                 |
+      |         | backend  | git config -lz --includes --local                                  |
       |         | backend  | git stash list                                                     |
     And it prints:
       """
