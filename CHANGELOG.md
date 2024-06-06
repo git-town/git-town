@@ -11,7 +11,6 @@ Massive thanks to @breml, @bryanlarsen, @edwarbudiman, @FirelightFlagboy, @kelby
 - follows include directives in the Git configuration ([#3614](https://github.com/git-town/git-town/issues/3614))
 - fixes a panic during git town propose ([#3539](https://github.com/git-town/git-town/issues/3539))
 
-
 ## 14.2.1 (2024-05-30)
 
 This release brings substantial stability improvements due to much stronger type checking and removing unnecessary optionality and mutability from the codebase.
