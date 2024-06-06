@@ -14,8 +14,8 @@ Feature: compress the commits on a feature branch verbosely
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
-      |         | git config -lz --global                            |
-      |         | git config -lz --local                             |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
       |         | git rev-parse --show-toplevel                      |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git status --long --ignore-submodules              |
@@ -34,8 +34,8 @@ Feature: compress the commits on a feature branch verbosely
       | <none>  | git stash list                                     |
       | feature | git stash pop                                      |
       | <none>  | git branch -vva --sort=refname                     |
-      |         | git config -lz --global                            |
-      |         | git config -lz --local                             |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
       |         | git stash list                                     |
     And it prints:
       """
@@ -56,8 +56,8 @@ Feature: compress the commits on a feature branch verbosely
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
-      |         | git config -lz --global                            |
-      |         | git config -lz --local                             |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
       |         | git rev-parse --show-toplevel                      |
       |         | git status --long --ignore-submodules              |
       |         | git stash list                                     |

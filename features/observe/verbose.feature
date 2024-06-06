@@ -9,13 +9,13 @@ Feature: observe a branch verbosely
     Then it runs the commands
       | BRANCH | COMMAND                                      |
       |        | git version                                  |
-      |        | git config -lz --global                      |
-      |        | git config -lz --local                       |
+      |        | git config -lz --includes --global           |
+      |        | git config -lz --includes --local            |
       |        | git rev-parse --show-toplevel                |
       |        | git branch -vva --sort=refname               |
       |        | git config git-town.observed-branches branch |
-      |        | git config -lz --global                      |
-      |        | git config -lz --local                       |
+      |        | git config -lz --includes --global           |
+      |        | git config -lz --includes --local            |
     And it prints:
       """
       Ran 8 shell commands
@@ -33,8 +33,8 @@ Feature: observe a branch verbosely
     Then it runs the commands
       | BRANCH | COMMAND                                       |
       |        | git version                                   |
-      |        | git config -lz --global                       |
-      |        | git config -lz --local                        |
+      |        | git config -lz --includes --global            |
+      |        | git config -lz --includes --local             |
       |        | git rev-parse --show-toplevel                 |
       |        | git status --long --ignore-submodules         |
       |        | git stash list                                |

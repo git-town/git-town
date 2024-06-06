@@ -1429,6 +1429,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the home directory contains file "([^"]+)" with content$`, func(filename string, docString *messages.PickleStepArgument_PickleDocString) error {
+		filePath := filepath.Join(state.fixture.DevRepo.HomeDir, filename)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(docString.Content), 0o700)
+	})
+
 	suite.Step(`^the initial lineage exists$`, func() error {
 		have := state.fixture.DevRepo.LineageTable()
 		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
