@@ -1430,10 +1430,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the home directory contains file "([^"]+)" with content$`, func(filename string, docString *messages.PickleStepArgument_PickleDocString) error {
-		content := docString.Content
 		filePath := filepath.Join(state.fixture.DevRepo.HomeDir, filename)
 		//nolint:gosec // need permission 700 here in order for tests to work
-		asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
+		asserts.NoError(os.WriteFile(filePath, []byte(docString.Content), 0o700))
 		return nil
 	})
 
