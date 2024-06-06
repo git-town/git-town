@@ -4,10 +4,13 @@
 
 This release fixes a few bugs that now get correctly surfaced thanks to stronger type checking introduced in v14.2.1.
 
+Massive thanks to @breml, @bryanlarsen, @edwarbudiman, @FirelightFlagboy, @kelbyers, @kevgo for contributing code, ideas, and feedback to 13 shipped pull requests and 9 resolved issues!
+
 #### Bug Fixes
 
 - follows include directives in the Git configuration ([#3614](https://github.com/git-town/git-town/issues/3614))
 - fixes a panic during git town propose ([#3539](https://github.com/git-town/git-town/issues/3539))
+
 
 ## 14.2.1 (2024-05-30)
 
