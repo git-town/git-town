@@ -68,7 +68,7 @@ prep the codebase:
 - create files "other_file_1" and "other_file_2" on the main branch
 - create file "my_file_2" on the tracking branch of the feature branch
 - create a local file my_file_1 on the feature branch
-- delete the command history: rm ~/.local/share/fish/fish_history
+- delete the shell command history to avoid displaying unrelated commands: rm ~/.local/share/fish/fish_history
 ```
 
 Let's start building the feature.
