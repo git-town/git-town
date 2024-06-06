@@ -11,8 +11,8 @@ Feature: display all executed Git commands
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
-      |        | backend  | git config -lz --global                       |
-      |        | backend  | git config -lz --local                        |
+      |        | backend  | git config -lz --includes --global            |
+      |        | backend  | git config -lz --includes --local             |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
@@ -29,8 +29,8 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.new.parent main    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git config -lz --global                       |
-      |        | backend  | git config -lz --local                        |
+      |        | backend  | git config -lz --includes --global            |
+      |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
     And it prints:
       """
@@ -44,8 +44,8 @@ Feature: display all executed Git commands
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
-      |        | backend  | git config -lz --global                       |
-      |        | backend  | git config -lz --local                        |
+      |        | backend  | git config -lz --includes --global            |
+      |        | backend  | git config -lz --includes --local             |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
