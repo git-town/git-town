@@ -232,7 +232,7 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey Key, value string, gl
 func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := SingleSnapshot{}
 	config := configdomain.EmptyPartialConfig()
-	cmdArgs := []string{"config", "-lz"}
+	cmdArgs := []string{"config", "-lz", "--includes"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
 	} else {
