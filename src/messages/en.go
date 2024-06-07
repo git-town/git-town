@@ -138,6 +138,7 @@ END OUTPUT FROM 'git branch -vva'
 	PreviousCommandProblem                = "The last Git Town command (%s) hit a problem %v ago.\n"
 	ProposalMultipleFound                 = "found %d proposals from branch %q to branch %q"
 	ProposalNoNumberGiven                 = "no proposal number given"
+	ProposalNoParent                      = "branch %q has no parent and can therefore not be proposed"
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"

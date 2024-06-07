@@ -53,7 +53,7 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *UnvalidatedConfig) ContainsLineage() bool {
-	return len(self.Lineage) > 0
+	return self.Lineage.Len() > 0
 }
 
 func (self *UnvalidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
@@ -109,8 +109,8 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
 		self.Aliases[key] = value
 	}
-	for child, parent := range other.Lineage {
-		self.Lineage[child] = parent
+	for _, entry := range other.Lineage.Entries() {
+		self.Lineage.AddParent(entry.Child, entry.Parent)
 	}
 	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
 	if other.HostingOriginHostname.IsSome() {
@@ -197,7 +197,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
-		Lineage:                  Lineage{},
+		Lineage:                  NewLineage(),
 		MainBranch:               None[gitdomain.LocalBranchName](),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,

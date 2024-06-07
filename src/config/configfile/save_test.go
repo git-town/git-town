@@ -44,7 +44,7 @@ func TestSave(t *testing.T) {
 		give := configdomain.UnvalidatedConfig{
 			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 			HostingPlatform:          None[configdomain.HostingPlatform](),
-			Lineage:                  map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},
+			Lineage:                  configdomain.NewLineage(),
 			MainBranch:               None[gitdomain.LocalBranchName](),
 			ObservedBranches:         gitdomain.LocalBranchNames{},
 			Offline:                  false,

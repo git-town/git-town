@@ -10,7 +10,7 @@ import (
 // Prompts missing lineage information from the user.
 // Returns the new lineage and perennial branches to add to the config storage.
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
-	additionalLineage = make(configdomain.Lineage)
+	additionalLineage = configdomain.NewLineage()
 	branchesToVerify := args.BranchesToVerify
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
@@ -38,7 +38,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		case ParentOutcomeSelectedParent:
-			additionalLineage[branchToVerify] = selectedBranch
+			additionalLineage.AddParent(branchToVerify, selectedBranch)
 			branchesToVerify = append(branchesToVerify, selectedBranch)
 		}
 	}
