@@ -3,3 +3,8 @@ body:
   - type: markdown
     attributes:
       value: Thanks for taking the time to provide feedback!
+  - type: textarea
+    attributes:
+      label: Text
+    validations:
+      required: true
