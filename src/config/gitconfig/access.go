@@ -25,9 +25,6 @@ type Access struct {
 
 func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
-		if config.Lineage.IsEmpty() {
-			config.Lineage = configdomain.NewLineage()
-		}
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
 		if childName == "" {
 			// empty lineage entries are invalid --> delete it
