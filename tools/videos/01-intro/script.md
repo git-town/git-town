@@ -153,7 +153,7 @@ When running "git propose",
 Git Town opens the form to submit a pull request in my browser
 and populates it with the data it knows.
 
-I can fill in the missing information.
+I can fill additional information now.
 
 (( fill in the request title and body, select a reviewer ))
 
@@ -169,11 +169,13 @@ Merging it deletes the remote part of my feature branch.
 I still need to delete my local copy.
 Let's do that now.
 I am already working on the next feature.
+But no problem.
 
 (( run "git sync --all" ))
-When I sync the next time,
+When I sync all local feature branches,
 
 (( highlight "removed branch my-feature" ))
 Git Town removes the shipped branch from my workspace.
-It syncs it locally again to verify
-that my local copy of the feature branch does not contain any unshipped changes.
+It syncs it locally again
+to verify that my local copy of the feature branch
+does not contain any unshipped changes.
