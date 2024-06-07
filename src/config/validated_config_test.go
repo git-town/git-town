@@ -70,9 +70,8 @@ func TestValidatedConfig(t *testing.T) {
 			branch := gitdomain.NewLocalBranchName("branch-1")
 			repo.CreateFeatureBranch(branch)
 			repo.Config.Reload()
-			want := configdomain.Lineage{
-				branch: gitdomain.NewLocalBranchName("main"),
-			}
+			want := configdomain.NewLineage()
+			want.AddParent(branch, gitdomain.NewLocalBranchName("main"))
 			must.Eq(t, want, repo.Config.Config.Lineage)
 		})
 	})

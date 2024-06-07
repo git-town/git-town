@@ -61,9 +61,8 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
-		}
+		lineage := configdomain.NewLineage()
+		lineage.AddParent(gitdomain.NewLocalBranchName("branch-1"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
