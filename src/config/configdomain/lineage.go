@@ -15,8 +15,8 @@ type Lineage struct {
 }
 
 type LineageEntry struct {
-	child  gitdomain.LocalBranchName
-	parent gitdomain.LocalBranchName
+	Child  gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 }
 
 func NewLineage() Lineage {
@@ -111,12 +111,16 @@ func (self Lineage) Descendants(branch gitdomain.LocalBranchName) gitdomain.Loca
 	return result
 }
 
+func (self Lineage) IsEmpty() bool {
+	return self.data == nil || self.Len() == 0
+}
+
 func (self Lineage) Entries() []LineageEntry {
 	result := make([]LineageEntry, 0, self.Len())
 	for branch, parent := range self.data {
 		result = append(result, LineageEntry{
-			child:  branch,
-			parent: parent,
+			Child:  branch,
+			Parent: parent,
 		})
 	}
 	return result

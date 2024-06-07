@@ -110,7 +110,7 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		self.Aliases[key] = value
 	}
 	for _, entry := range other.Lineage.Entries() {
-		self.Lineage.AddParent(entry.child, entry.parent)
+		self.Lineage.AddParent(entry.Child, entry.Parent)
 	}
 	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
 	if other.HostingOriginHostname.IsSome() {

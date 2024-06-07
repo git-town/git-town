@@ -25,7 +25,7 @@ type Access struct {
 
 func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
-		if config.Lineage == nil {
+		if config.Lineage.IsEmpty() {
 			config.Lineage = configdomain.Lineage{}
 		}
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
@@ -40,7 +40,7 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 			return self.RemoveLocalConfigValue(key)
 		}
 		parent := gitdomain.NewLocalBranchName(value)
-		config.Lineage[child] = parent
+		config.Lineage.AddParent(child, parent)
 		return nil
 	}
 	var err error
@@ -177,8 +177,8 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) er
 		}
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
-	for child := range lineage {
-		key := fmt.Sprintf("git-town-branch.%s.parent", child)
+	for _, entry := range lineage.Entries() {
+		key := fmt.Sprintf("git-town-branch.%s.parent", entry.Child)
 		err = self.Run("git", "config", "--unset", key)
 		if err != nil {
 			return fmt.Errorf(messages.ConfigRemoveError, err)
@@ -274,11 +274,11 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		}
 	}
 	// verify lineage
-	if updateOutdated && config.Lineage != nil {
-		for child, parent := range config.Lineage {
-			if child == parent {
-				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
-				_ = self.RemoveLocalConfigValue(NewParentKey(child))
+	if updateOutdated {
+		for _, entry := range config.Lineage.Entries() {
+			if entry.Child == entry.Parent {
+				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, entry.Child)))
+				_ = self.RemoveLocalConfigValue(NewParentKey(entry.Child))
 			}
 		}
 	}
