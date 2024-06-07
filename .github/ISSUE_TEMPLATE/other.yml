@@ -3,10 +3,9 @@ description: Any other feedback
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to provide feedback!
+      value:
   - type: textarea
     attributes:
-      label: Text
-      description: Your message to us
+      label: Your message to us
     validations:
       required: true
