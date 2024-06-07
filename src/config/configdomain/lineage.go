@@ -14,6 +14,16 @@ type Lineage struct {
 	data map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
 }
 
+func NewLineage() Lineage {
+	return Lineage{
+		data: make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName),
+	}
+}
+
+func (self *Lineage) AddParent(branch, parent gitdomain.LocalBranchName) {
+	self.data[branch] = parent
+}
+
 // Ancestors provides the names of all parent branches of the branch with the given name.
 func (self Lineage) Ancestors(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	current := branch
@@ -57,6 +67,11 @@ func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames(maps.Keys(self.data))
 	result.Sort()
 	return result
+}
+
+// provides all branches for which the parent is known
+func (self Lineage) Branches() gitdomain.LocalBranchNames {
+	return maps.Keys(self.data)
 }
 
 // BranchesAndAncestors provides the full lineage for the branches with the given names,
@@ -114,6 +129,10 @@ func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
 		}
 		current = parent
 	}
+}
+
+func (self Lineage) Len() int {
+	return len(self.data)
 }
 
 // OrderHierarchically provides the given branches sorted so that ancestor branches come before their descendants.
