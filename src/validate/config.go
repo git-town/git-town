@@ -55,8 +55,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	if err != nil || exit {
 		return config.EmptyValidatedConfig(), exit, err
 	}
-	for branch, parent := range additionalLineage {
-		if err = args.Unvalidated.SetParent(branch, parent); err != nil {
+	for _, entry := range additionalLineage.Entries() {
+		if err = args.Unvalidated.SetParent(entry.Child, entry.Parent); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
