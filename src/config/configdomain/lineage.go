@@ -133,12 +133,6 @@ func (self Lineage) HasParents(branch gitdomain.LocalBranchName) bool {
 	return false
 }
 
-func (self *Lineage) initializeIfNeeded() {
-	if self.data == nil {
-		self.data = make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
-	}
-}
-
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
 func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
 	current := other
@@ -214,5 +208,11 @@ func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames
 	}
 	for _, child := range self.Children(currentBranch) {
 		self.addChildrenHierarchically(result, child, allBranches)
+	}
+}
+
+func (self *Lineage) initializeIfNeeded() {
+	if self.data == nil {
+		self.data = make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
 	}
 }
