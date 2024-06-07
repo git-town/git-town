@@ -104,11 +104,11 @@ func (self *UnvalidatedConfig) RemoveMainBranch() {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *UnvalidatedConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.Config.Lineage {
-		hasChildBranch := localBranches.Contains(child)
-		hasParentBranch := localBranches.Contains(parent)
+	for _, entry := range self.Config.Lineage.Entries() {
+		hasChildBranch := localBranches.Contains(entry.Child)
+		hasParentBranch := localBranches.Contains(entry.Parent)
 		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(child)
+			self.RemoveParent(entry.Child)
 		}
 	}
 	return nil
@@ -116,9 +116,7 @@ func (self *UnvalidatedConfig) RemoveOutdatedConfiguration(localBranches gitdoma
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *UnvalidatedConfig) RemoveParent(branch gitdomain.LocalBranchName) {
-	if self.LocalGitConfig.Lineage != nil {
-		self.LocalGitConfig.Lineage.RemoveBranch(branch)
-	}
+	self.LocalGitConfig.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
 }
 
@@ -189,7 +187,7 @@ func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBra
 	if self.DryRun {
 		return nil
 	}
-	self.Config.Lineage[branch] = parentBranch
+	self.Config.Lineage.AddParent(branch, parentBranch)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
 }
 

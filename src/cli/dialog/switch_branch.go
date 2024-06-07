@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/muesli/termenv"
-	"golang.org/x/exp/maps"
 )
 
 type SwitchBranchEntry struct {
@@ -164,14 +163,14 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
 func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) []SwitchBranchEntry {
-	entries := make([]SwitchBranchEntry, 0, len(lineage))
+	entries := make([]SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(&entries, root, "", lineage, allBranches)
 	}
 	// add missing local branches
-	branchesInLineage := maps.Keys(lineage)
+	branchesInLineage := lineage.Branches()
 	for _, localBranch := range localBranches {
 		if slices.Contains(roots, localBranch) {
 			continue
