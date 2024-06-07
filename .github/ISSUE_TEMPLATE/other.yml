@@ -1,4 +1,5 @@
-name: Other feedback
+name: Other
+description: Any other feedback
 body:
   - type: markdown
     attributes:
