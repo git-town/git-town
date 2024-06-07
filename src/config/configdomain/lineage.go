@@ -14,11 +14,6 @@ type Lineage struct {
 	data map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
 }
 
-type LineageEntry struct {
-	Child  gitdomain.LocalBranchName
-	Parent gitdomain.LocalBranchName
-}
-
 func NewLineage() Lineage {
 	return Lineage{
 		data: make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName),
