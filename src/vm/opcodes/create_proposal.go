@@ -1,9 +1,12 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v14/src/browser"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
@@ -21,7 +24,10 @@ func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CreateProposal) Run(args shared.RunArgs) error {
-	parentBranch := args.Config.Config.Lineage[self.Branch]
+	parentBranch, hasParentBranch := args.Config.Config.Lineage.Parent(self.Branch).Get()
+	if !hasParentBranch {
+		return fmt.Errorf(messages.ProposalNoParent, self.Branch)
+	}
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
