@@ -1,0 +1,5 @@
+name: Other feedback
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to provide feedback!
