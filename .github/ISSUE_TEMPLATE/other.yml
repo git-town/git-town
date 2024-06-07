@@ -6,5 +6,6 @@ body:
   - type: textarea
     attributes:
       label: Text
+      description: Your message to us
     validations:
       required: true
