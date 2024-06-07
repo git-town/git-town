@@ -1,9 +1,6 @@
 name: Other
 description: Any other feedback
 body:
-  - type: markdown
-    attributes:
-      value:
   - type: textarea
     attributes:
       label: Your message to us
