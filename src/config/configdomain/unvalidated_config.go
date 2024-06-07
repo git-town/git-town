@@ -197,7 +197,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
-		Lineage:                  Lineage{},
+		Lineage:                  NewLineage(),
 		MainBranch:               None[gitdomain.LocalBranchName](),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,

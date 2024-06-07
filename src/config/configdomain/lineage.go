@@ -111,10 +111,6 @@ func (self Lineage) Descendants(branch gitdomain.LocalBranchName) gitdomain.Loca
 	return result
 }
 
-func (self Lineage) IsEmpty() bool {
-	return self.data == nil || self.Len() == 0
-}
-
 func (self Lineage) Entries() []LineageEntry {
 	result := make([]LineageEntry, 0, self.Len())
 	for branch, parent := range self.data {
@@ -149,6 +145,10 @@ func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
 		}
 		current = parent
 	}
+}
+
+func (self Lineage) IsEmpty() bool {
+	return self.data == nil || self.Len() == 0
 }
 
 func (self Lineage) Len() int {
