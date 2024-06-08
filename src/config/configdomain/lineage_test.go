@@ -268,21 +268,6 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
-	t.Run("Contains", func(t *testing.T) {
-		t.Parallel()
-		t.Run("has a parent", func(t *testing.T) {
-			t.Parallel()
-			lineage := configdomain.NewLineage()
-			lineage.AddParent(two, one)
-			must.True(t, lineage.HasParents(two))
-		})
-		t.Run("has no parent", func(t *testing.T) {
-			t.Parallel()
-			lineage := configdomain.Lineage{}
-			must.False(t, lineage.HasParents(main))
-		})
-	})
-
 	t.Run("Descendants", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch has no children", func(t *testing.T) {
@@ -333,6 +318,54 @@ func TestLineage(t *testing.T) {
 			have := lineage.Descendants(branch)
 			want := gitdomain.LocalBranchNames{child1, child1a, child1b, child2, child2a, child2b}
 			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("Entries", func(t *testing.T) {
+		t.Parallel()
+		t.Run("populated", func(t *testing.T) {
+			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch2 := gitdomain.NewLocalBranchName("branch-2")
+			branch3 := gitdomain.NewLocalBranchName("branch-3")
+			branch4 := gitdomain.NewLocalBranchName("branch-4")
+			lineage := configdomain.NewLineage()
+			lineage.AddParent(branch1, branch2)
+			lineage.AddParent(branch3, branch4)
+			have := lineage.Entries()
+			want := []configdomain.LineageEntry{
+				{
+					Child:  branch1,
+					Parent: branch2,
+				},
+				{
+					Child:  branch3,
+					Parent: branch4,
+				},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			have := lineage.Entries()
+			want := []configdomain.LineageEntry{}
+			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("HasParent", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has a parent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			lineage.AddParent(two, one)
+			must.True(t, lineage.HasParents(two))
+		})
+		t.Run("has no parent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			must.False(t, lineage.HasParents(main))
 		})
 	})
 
