@@ -16,6 +16,32 @@ func TestLineage(t *testing.T) {
 	two := gitdomain.NewLocalBranchName("two")
 	three := gitdomain.NewLocalBranchName("three")
 
+	t.Run("AddParent", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			branch := gitdomain.NewLocalBranchName("branch")
+			parent := gitdomain.NewLocalBranchName("parent")
+			lineage.AddParent(branch, parent)
+			have, has := lineage.Parent(branch).Get()
+			must.True(t, has)
+			must.Eq(t, parent, have)
+		})
+		t.Run("entry already exists", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			branch := gitdomain.NewLocalBranchName("branch")
+			parent := gitdomain.NewLocalBranchName("parent")
+			lineage.AddParent(branch, parent)
+			lineage.AddParent(branch, parent)
+			must.EqOp(t, 1, lineage.Len())
+			have, has := lineage.Parent(branch).Get()
+			must.True(t, has)
+			must.Eq(t, parent, have)
+		})
+	})
+
 	t.Run("Ancestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
