@@ -130,17 +130,8 @@ func (self Lineage) HasParents(branch gitdomain.LocalBranchName) bool {
 
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
 func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
-	current := other
-	for {
-		parent, found := self.data[current]
-		if !found {
-			return false
-		}
-		if parent == ancestor {
-			return true
-		}
-		current = parent
-	}
+	ancestors := self.Ancestors(other)
+	return ancestors.Contains(ancestor)
 }
 
 func (self Lineage) IsEmpty() bool {
