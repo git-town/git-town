@@ -62,7 +62,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("branch-1"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("branch-1"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -208,7 +208,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -299,7 +299,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -384,7 +384,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -453,7 +453,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -547,7 +547,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -679,7 +679,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -789,7 +789,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -890,7 +890,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1009,7 +1009,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1106,7 +1106,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1203,7 +1203,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1288,7 +1288,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1375,7 +1375,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
@@ -1457,7 +1457,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
-		lineage.AddParent(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
+		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
