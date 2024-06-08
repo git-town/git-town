@@ -354,7 +354,7 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
-	t.Run("HasParent", func(t *testing.T) {
+	t.Run("HasParents", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a parent", func(t *testing.T) {
 			t.Parallel()
@@ -391,6 +391,21 @@ func TestLineage(t *testing.T) {
 			lineage.AddParent(two, one)
 			lineage.AddParent(three, one)
 			must.False(t, lineage.IsAncestor(two, three))
+		})
+	})
+
+	t.Run("IsEmpty", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			must.True(t, lineage.IsEmpty())
+		})
+		t.Run("populated", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			lineage.AddParent("branch-1", "branch-2")
+			must.False(t, lineage.IsEmpty())
 		})
 	})
 
