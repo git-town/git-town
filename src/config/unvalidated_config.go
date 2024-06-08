@@ -187,7 +187,7 @@ func (self *UnvalidatedConfig) SetParent(branch, parentBranch gitdomain.LocalBra
 	if self.DryRun {
 		return nil
 	}
-	self.Config.Lineage.AddParent(branch, parentBranch)
+	self.Config.Lineage.Add(branch, parentBranch)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
 }
 

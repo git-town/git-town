@@ -37,8 +37,8 @@ func TestValidatedConfig(t *testing.T) {
 		repo.Config.Reload()
 		have := repo.Config.Config.Lineage
 		want := configdomain.NewLineage()
-		want.AddParent(gitdomain.NewLocalBranchName("feature1"), gitdomain.NewLocalBranchName("main"))
-		want.AddParent(gitdomain.NewLocalBranchName("feature2"), gitdomain.NewLocalBranchName("main"))
+		want.Add(gitdomain.NewLocalBranchName("feature1"), gitdomain.NewLocalBranchName("main"))
+		want.Add(gitdomain.NewLocalBranchName("feature2"), gitdomain.NewLocalBranchName("main"))
 		must.Eq(t, want, have)
 	})
 
@@ -71,7 +71,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo.CreateFeatureBranch(branch)
 			repo.Config.Reload()
 			want := configdomain.NewLineage()
-			want.AddParent(branch, gitdomain.NewLocalBranchName("main"))
+			want.Add(branch, gitdomain.NewLocalBranchName("main"))
 			must.Eq(t, want, repo.Config.Config.Lineage)
 		})
 	})

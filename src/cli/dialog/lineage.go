@@ -38,7 +38,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		case ParentOutcomeSelectedParent:
-			additionalLineage.AddParent(branchToVerify, selectedBranch)
+			additionalLineage.Add(branchToVerify, selectedBranch)
 			branchesToVerify = append(branchesToVerify, selectedBranch)
 		}
 	}
