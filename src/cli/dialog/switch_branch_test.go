@@ -51,8 +51,8 @@ func TestSwitchBranch(t *testing.T) {
 			beta := gitdomain.NewLocalBranchName("beta")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.NewLineage()
-			lineage.AddParent(alpha, main)
-			lineage.AddParent(beta, main)
+			lineage.Add(alpha, main)
+			lineage.Add(beta, main)
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -73,8 +73,8 @@ func TestSwitchBranch(t *testing.T) {
 			beta := gitdomain.NewLocalBranchName("beta")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.NewLineage()
-			lineage.AddParent(alpha, main)
-			lineage.AddParent(beta, main)
+			lineage.Add(alpha, main)
+			lineage.Add(beta, main)
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -96,8 +96,8 @@ func TestSwitchBranch(t *testing.T) {
 			perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.NewLineage()
-			lineage.AddParent(alpha, main)
-			lineage.AddParent(beta, main)
+			lineage.Add(alpha, main)
+			lineage.Add(beta, main)
 			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -120,8 +120,8 @@ func TestSwitchBranch(t *testing.T) {
 			grandchild := gitdomain.NewLocalBranchName("grandchild")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.NewLineage()
-			lineage.AddParent(child, main)
-			lineage.AddParent(grandchild, child)
+			lineage.Add(child, main)
+			lineage.Add(grandchild, child)
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			allBranches := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.BranchName().RemoteName()), SyncStatus: gitdomain.SyncStatusRemoteOnly},
