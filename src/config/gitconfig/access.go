@@ -37,7 +37,7 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 			return self.RemoveLocalConfigValue(key)
 		}
 		parent := gitdomain.NewLocalBranchName(value)
-		config.Lineage.AddParent(child, parent)
+		config.Lineage.Add(child, parent)
 		return nil
 	}
 	var err error

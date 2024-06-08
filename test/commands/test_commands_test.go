@@ -160,7 +160,7 @@ func TestTestCommands(t *testing.T) {
 		must.False(t, runtime.Config.Config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Config.Lineage
 		lineageWant := configdomain.NewLineage()
-		lineageWant.AddParent(gitdomain.NewLocalBranchName("f1"), gitdomain.NewLocalBranchName("main"))
+		lineageWant.Add(gitdomain.NewLocalBranchName("f1"), gitdomain.NewLocalBranchName("main"))
 		must.Eq(t, lineageWant, lineageHave)
 	})
 
