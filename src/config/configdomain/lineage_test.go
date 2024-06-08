@@ -409,6 +409,22 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("Len", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			must.EqOp(t, 0, lineage.Len())
+		})
+		t.Run("populated", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			lineage.AddParent("branch-1", "branch-2")
+			lineage.AddParent("branch-3", "branch-4")
+			must.EqOp(t, 2, lineage.Len())
+		})
+	})
+
 	t.Run("OrderHierarchically", func(t *testing.T) {
 		t.Run("multiple lineages", func(t *testing.T) {
 			t.Parallel()
