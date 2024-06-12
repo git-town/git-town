@@ -53,10 +53,10 @@ type Fixture struct {
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) Fixture {
 	filesystem.CopyDirectory(original.Dir, dir)
-	binDir := filepath.Join(dir, "bin")
-	originDir := filepath.Join(dir, gitdomain.RemoteOrigin.String())
+	binDir := binPath(dir)
+	originDir := originRepoPath(dir)
 	originRepo := testruntime.New(originDir, dir, "")
-	developerDir := filepath.Join(dir, "developer")
+	developerDir := developerRepoPath(dir)
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	result := Fixture{
 		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
