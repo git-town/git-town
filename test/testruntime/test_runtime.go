@@ -41,7 +41,6 @@ func Create(t *testing.T) TestRuntime {
 	err = os.Mkdir(homeDir, 0o744)
 	must.NoError(t, err)
 	runtime := Initialize(workingDir, homeDir, homeDir)
-	err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	must.NoError(t, err)
 	return runtime
 }
@@ -66,6 +65,7 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 	runtime.MustRun("git", "init", "--initial-branch=initial")
 	runtime.MustRun("git", "config", "--global", "user.name", "user")
 	runtime.MustRun("git", "config", "--global", "user.email", "email@example.com")
+	runtime.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
 	return runtime
 }
 
