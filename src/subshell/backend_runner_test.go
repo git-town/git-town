@@ -2,9 +2,7 @@ package subshell_test
 
 import (
 	"errors"
-	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
@@ -65,21 +63,5 @@ OUTPUT END
 			must.NoError(t, err)
 			must.EqOp(t, "hello world", output)
 		})
-	})
-
-	t.Run("RunMany", func(t *testing.T) {
-		t.Parallel()
-		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: gohacks.NewCounter()}
-		err := runner.RunMany([][]string{
-			{"mkdir", "tmp"},
-			{"touch", "tmp/first"},
-			{"touch", "tmp/second"},
-		})
-		must.NoError(t, err)
-		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
-		must.NoError(t, err)
-		must.EqOp(t, "first", entries[0].Name())
-		must.EqOp(t, "second", entries[1].Name())
 	})
 }
