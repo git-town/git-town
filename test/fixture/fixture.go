@@ -147,7 +147,6 @@ func (self *Fixture) AddSubmoduleRepo() {
 	}
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
-	submoduleRepo.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
 	self.SubmoduleRepo = SomeP(&submoduleRepo)
 }
 
