@@ -91,10 +91,11 @@ func NewStandardFixture(dir string) Fixture {
 	}
 	// initialize the repo in the folder
 	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
-	err = originRepo.RunMany([][]string{
-		{"git", "commit", "--allow-empty", "-m", "initial commit"},
-		{"git", "branch", "main", "initial"},
-	})
+	err = originRepo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
+	if err != nil {
+		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
+	}
+	err = originRepo.Run("git", "branch", "main", "initial")
 	if err != nil {
 		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
 	}
@@ -145,10 +146,8 @@ func (self *Fixture) AddSubmoduleRepo() {
 		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
 	}
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
-	submoduleRepo.MustRunMany([][]string{
-		{"git", "config", "--global", "protocol.file.allow", "always"},
-		{"git", "commit", "--allow-empty", "-m", "initial commit"},
-	})
+	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
+	submoduleRepo.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
 	self.SubmoduleRepo = SomeP(&submoduleRepo)
 }
 
@@ -284,12 +283,10 @@ func (self Fixture) developerRepoPath() string {
 func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
 	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
 	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
-	repo.MustRunMany([][]string{
-		{"git", "checkout", "main"},
-		// NOTE: the developer repos receives the initial branch from origin
-		//       but we don't want it here because it isn't used in tests.
-		{"git", "branch", "-d", "initial"},
-	})
+	repo.MustRun("git", "checkout", "main")
+	// NOTE: the developer repos receives the initial branch from origin
+	//       but we don't want it here because it isn't used in tests.
+	repo.MustRun("git", "branch", "-d", "initial")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.

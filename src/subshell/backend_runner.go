@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -37,19 +36,6 @@ func (self BackendRunner) QueryTrim(executable string, args ...string) (string, 
 func (self BackendRunner) Run(executable string, args ...string) error {
 	_, err := self.execute(executable, args...)
 	return err
-}
-
-// RunMany runs all given commands in current directory.
-// Commands are provided as a list of argv-style strings.
-// Failed commands abort immediately with the encountered error.
-func (self BackendRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		err := self.Run(argv[0], argv[1:]...)
-		if err != nil {
-			return fmt.Errorf(messages.RunCommandProblem, argv, err)
-		}
-	}
-	return nil
 }
 
 func (self BackendRunner) execute(executable string, args ...string) ([]byte, error) {
