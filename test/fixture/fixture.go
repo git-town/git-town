@@ -58,7 +58,14 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	originRepo := testruntime.New(originDir, dir, "")
 	developerDir := developerRepoPath(dir)
 	devRepo := testruntime.New(developerDir, dir, binDir)
-	result := Fixture{
+	// Since we copied the files from the memoized directory,
+	// we have to set the "origin" remote to the copied origin repo here.
+	devRepo.MustRun("git", "remote", "remove", gitdomain.RemoteOrigin.String())
+	devRepo.AddRemote(gitdomain.RemoteOrigin, originDir)
+	devRepo.Fetch()
+	// and connect the main branches again
+	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
+	return Fixture{
 		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
 		DevRepo:        devRepo,
 		Dir:            dir,
@@ -67,14 +74,6 @@ func CloneFixture(original Fixture, dir string) Fixture {
 		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
 		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
 	}
-	// Since we copied the files from the memoized directory,
-	// we have to set the "origin" remote to the copied origin repo here.
-	result.DevRepo.MustRun("git", "remote", "remove", gitdomain.RemoteOrigin.String())
-	result.DevRepo.AddRemote(gitdomain.RemoteOrigin, result.originRepoPath())
-	result.DevRepo.Fetch()
-	// and connect the main branches again
-	result.DevRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
-	return result
 }
 
 // NewStandardFixture provides a Fixture in the given directory,
@@ -302,11 +301,6 @@ func initializeWorkspace(repo *testruntime.TestRuntime) {
 	// NOTE: the developer repos receives the initial branch from origin
 	//       but we don't want it here because it isn't used in tests.
 	repo.MustRun("git", "branch", "-d", "initial")
-}
-
-// originRepoPath provides the full path to the Git repository with the given name.
-func (self Fixture) originRepoPath() string {
-	return originRepoPath(self.Dir)
 }
 
 func originRepoPath(rootDir string) string {
