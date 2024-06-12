@@ -284,7 +284,6 @@ func (self *Fixture) binPath() string {
 
 func binPath(rootDir string) string {
 	return filepath.Join(rootDir, "bin")
-
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
