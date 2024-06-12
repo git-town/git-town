@@ -147,13 +147,8 @@ func (self *TestCommands) CreateContributionBranches(names ...gitdomain.LocalBra
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) {
-	err := self.RunMany([][]string{
-		{"git", "branch", name.String(), "main"},
-		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
-	})
-	if err != nil {
-		panic(err)
-	}
+	self.MustRun("git", "branch", name.String(), "main")
+	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", "main")
 }
 
 // CreateFile creates a file with the given name and content in this repository.
@@ -441,10 +436,8 @@ func (self *TestCommands) StageFiles(names ...string) {
 
 // StashOpenFiles stashes the open files away.
 func (self *TestCommands) StashOpenFiles() {
-	self.MustRunMany([][]string{
-		{"git", "add", "-A"},
-		{"git", "stash"},
-	})
+	self.MustRun("git", "add", "-A")
+	self.MustRun("git", "stash")
 }
 
 // Tags provides a list of the tags in this repository.

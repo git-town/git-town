@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // FrontendRunner executes frontend shell commands.
@@ -93,17 +92,4 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 		}
 	}()
 	return subProcess.Wait()
-}
-
-// RunMany runs all given commands in current directory.
-// Commands are provided as a list of argv-style strings.
-// Failed commands abort immediately with the encountered error.
-func (self *FrontendRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		err := self.Run(argv[0], argv[1:]...)
-		if err != nil {
-			return fmt.Errorf(messages.RunCommandProblem, argv, err)
-		}
-	}
-	return nil
 }
