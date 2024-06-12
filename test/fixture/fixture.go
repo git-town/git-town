@@ -23,10 +23,10 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
+	CoworkerRepo OptionP[testruntime.TestRuntime]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
+	DevRepo testruntime.TestRuntime
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
@@ -35,18 +35,18 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
+	OriginRepo OptionP[testruntime.TestRuntime]
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
-	SecondWorktree OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
+	SecondWorktree OptionP[testruntime.TestRuntime]
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
+	SubmoduleRepo OptionP[testruntime.TestRuntime]
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo OptionP[testruntime.TestRuntime] `exhaustruct:"optional"`
+	UpstreamRepo OptionP[testruntime.TestRuntime]
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -59,9 +59,13 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	result := Fixture{
-		DevRepo:    devRepo,
-		Dir:        dir,
-		OriginRepo: SomeP(&originRepo),
+		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		DevRepo:        devRepo,
+		Dir:            dir,
+		OriginRepo:     SomeP(&originRepo),
+		SecondWorktree: NoneP[testruntime.TestRuntime](),
+		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -83,36 +87,45 @@ func CloneFixture(original Fixture, dir string) Fixture {
 func NewStandardFixture(dir string) Fixture {
 	// create the folder
 	// create the fixture
-	gitEnv := Fixture{Dir: dir}
+	originPath := originRepoPath(dir)
+	binPath := binPath(dir)
+	devRepoPath := developerRepoPath(dir)
 	// create the origin repo
-	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
+	err := os.MkdirAll(originPath, 0o744)
 	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", originPath, err)
 	}
 	// initialize the repo in the folder
-	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo := testruntime.Initialize(originPath, dir, binPath)
 	err = originRepo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
 	}
 	err = originRepo.Run("git", "branch", "main", "initial")
 	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
 	}
-	gitEnv.OriginRepo = SomeP(&originRepo)
 	// clone the "developer" repo
-	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
-	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	devRepo := testruntime.Clone(originRepo.TestRunner, devRepoPath)
+	initializeWorkspace(&devRepo)
+	devRepo.RemoveUnnecessaryFiles()
 	originRepo.RemoveUnnecessaryFiles()
-	return gitEnv
+	return Fixture{
+		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		DevRepo:        devRepo,
+		Dir:            dir,
+		OriginRepo:     SomeP(&originRepo),
+		SecondWorktree: NoneP[testruntime.TestRuntime](),
+		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+	}
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
 	self.CoworkerRepo = SomeP(&coworkerRepo)
-	self.initializeWorkspace(&coworkerRepo)
+	initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.Verbose
 }
 
@@ -266,7 +279,11 @@ func (self Fixture) TagTable() datatable.DataTable {
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
 func (self *Fixture) binPath() string {
-	return filepath.Join(self.Dir, "bin")
+	return binPath(self.Dir)
+}
+
+func binPath(rootDir string) string {
+	return filepath.Join(rootDir, "bin")
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
@@ -274,12 +291,11 @@ func (self Fixture) coworkerRepoPath() string {
 	return filepath.Join(self.Dir, "coworker")
 }
 
-// developerRepoPath provides the full path to the Git repository with the given name.
-func (self Fixture) developerRepoPath() string {
-	return filepath.Join(self.Dir, "developer")
+func developerRepoPath(rootDir string) string {
+	return filepath.Join(rootDir, "developer")
 }
 
-func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
+func initializeWorkspace(repo *testruntime.TestRuntime) {
 	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
 	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
@@ -290,7 +306,11 @@ func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (self Fixture) originRepoPath() string {
-	return filepath.Join(self.Dir, gitdomain.RemoteOrigin.String())
+	return originRepoPath(self.Dir)
+}
+
+func originRepoPath(rootDir string) string {
+	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
