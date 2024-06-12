@@ -83,36 +83,45 @@ func CloneFixture(original Fixture, dir string) Fixture {
 func NewStandardFixture(dir string) Fixture {
 	// create the folder
 	// create the fixture
-	gitEnv := Fixture{Dir: dir}
+	originPath := originRepoPath(dir)
+	binPath := binPath(dir)
+	devRepoPath := developerRepoPath(dir)
 	// create the origin repo
-	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
+	err := os.MkdirAll(originPath, 0o744)
 	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", originPath, err)
 	}
 	// initialize the repo in the folder
-	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo := testruntime.Initialize(originPath, dir, binPath)
 	err = originRepo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
 	}
 	err = originRepo.Run("git", "branch", "main", "initial")
 	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
 	}
-	gitEnv.OriginRepo = SomeP(&originRepo)
 	// clone the "developer" repo
-	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
-	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	devRepo := testruntime.Clone(originRepo.TestRunner, devRepoPath)
+	initializeWorkspace(&devRepo)
+	devRepo.RemoveUnnecessaryFiles()
 	originRepo.RemoveUnnecessaryFiles()
-	return gitEnv
+	return Fixture{
+		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		DevRepo:        devRepo,
+		Dir:            dir,
+		OriginRepo:     SomeP(&originRepo),
+		SecondWorktree: NoneP[testruntime.TestRuntime](),
+		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+	}
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
 	self.CoworkerRepo = SomeP(&coworkerRepo)
-	self.initializeWorkspace(&coworkerRepo)
+	initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.Verbose
 }
 
@@ -266,7 +275,12 @@ func (self Fixture) TagTable() datatable.DataTable {
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
 func (self *Fixture) binPath() string {
-	return filepath.Join(self.Dir, "bin")
+	return binPath(self.Dir)
+}
+
+func binPath(rootDir string) string {
+	return filepath.Join(rootDir, "bin")
+
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
@@ -276,10 +290,14 @@ func (self Fixture) coworkerRepoPath() string {
 
 // developerRepoPath provides the full path to the Git repository with the given name.
 func (self Fixture) developerRepoPath() string {
-	return filepath.Join(self.Dir, "developer")
+	return developerRepoPath(self.Dir)
 }
 
-func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
+func developerRepoPath(rootDir string) string {
+	return filepath.Join(rootDir, "developer")
+}
+
+func initializeWorkspace(repo *testruntime.TestRuntime) {
 	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
 	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
@@ -290,7 +308,11 @@ func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (self Fixture) originRepoPath() string {
-	return filepath.Join(self.Dir, gitdomain.RemoteOrigin.String())
+	return originRepoPath(self.Dir)
+}
+
+func originRepoPath(rootDir string) string {
+	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
