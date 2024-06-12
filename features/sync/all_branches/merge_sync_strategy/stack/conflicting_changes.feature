@@ -65,18 +65,18 @@ Feature: sync a stack that makes conflicting changes
       |        |               | Merge branch 'alpha' into beta |           |               |
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                          |
-      | alpha  | git add -A                                                       |
-      |        | git stash                                                        |
-      |        | git reset --hard {{ sha-before-run 'alpha commit' }}             |
-      |        | git push --force-with-lease --force-if-includes                  |
-      |        | git checkout beta                                                |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}              |
-      |        | git push --force-with-lease --force-if-includes                  |
-      |        | git checkout main                                                |
-      | main   | git reset --hard {{ sha-in-origin-before-run 'initial commit' }} |
-      |        | git checkout alpha                                               |
-      | alpha  | git stash pop                                                    |
+      | BRANCH | COMMAND                                               |
+      | alpha  | git add -A                                            |
+      |        | git stash                                             |
+      |        | git reset --hard {{ sha-before-run 'alpha commit' }}  |
+      |        | git push --force-with-lease --force-if-includes       |
+      |        | git checkout beta                                     |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
+      |        | git push --force-with-lease --force-if-includes       |
+      |        | git checkout main                                     |
+      | main   | git reset --hard {{ sha-in-origin 'initial commit' }} |
+      |        | git checkout alpha                                    |
+      | alpha  | git stash pop                                         |
     And the current branch is still "alpha"
     And the uncommitted file still exists
     And the initial commits exist
