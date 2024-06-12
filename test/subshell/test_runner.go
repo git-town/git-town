@@ -138,10 +138,6 @@ func (self *TestRunner) MustRun(name string, arguments ...string) {
 	}
 }
 
-func (self *TestRunner) MustRunMany(commands [][]string) {
-	asserts.NoError(self.RunMany(commands))
-}
-
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
@@ -250,16 +246,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 func (self *TestRunner) Run(name string, arguments ...string) error {
 	_, err := self.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
 	return err
-}
-
-func (self *TestRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		err := self.Run(argv[0], argv[1:]...)
-		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
-		}
-	}
-	return nil
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
