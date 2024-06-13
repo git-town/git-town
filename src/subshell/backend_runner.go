@@ -24,13 +24,12 @@ type BackendRunner struct {
 }
 
 func (self BackendRunner) Query(executable string, args ...string) (string, error) {
-	output, err := self.execute(executable, args...)
-	return string(output), err
+	return self.execute(executable, args...)
 }
 
 func (self BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
 	output, err := self.execute(executable, args...)
-	return strings.TrimSpace(stripansi.Strip(string(output))), err
+	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
 func (self BackendRunner) Run(executable string, args ...string) error {
@@ -38,7 +37,7 @@ func (self BackendRunner) Run(executable string, args ...string) error {
 	return err
 }
 
-func (self BackendRunner) execute(executable string, args ...string) ([]byte, error) {
+func (self BackendRunner) execute(executable string, args ...string) (string, error) {
 	self.CommandsCounter.Register()
 	if self.Verbose {
 		printHeader(executable, args...)
@@ -55,7 +54,7 @@ func (self BackendRunner) execute(executable string, args ...string) ([]byte, er
 	if self.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
-	return outputBytes, err
+	return string(outputBytes), err
 }
 
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
