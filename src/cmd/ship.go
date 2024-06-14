@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
+	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -37,6 +38,8 @@ const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
 
 Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
+
+Ships direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 
@@ -291,31 +294,31 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := program.Program{}
+	if data.config.Config.SyncBeforeShip {
+		// sync the parent branch
+		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
+			BranchInfos:   data.allBranches,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
+			Program:       &prog,
+			PushBranch:    true,
+		})
+		// sync the branch to ship (local sync only)
+		sync.BranchProgram(data.branchToShip, sync.BranchProgramArgs{
+			BranchInfos:   data.allBranches,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
+			Program:       &prog,
+			PushBranch:    false,
+		})
+	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
 		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
 		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
-	}
-	if data.config.Config.Online().Bool() {
-		if trackingBranchName, hasTrackingBranch := data.branchToShip.RemoteName.Get(); hasTrackingBranch {
-			if data.branchToShip.SyncStatus == gitdomain.SyncStatusNotInSync {
-				if data.canShipViaAPI {
-					// shipping a branch via API --> push missing local commits to the tracking branch
-					prog.Add(&opcodes.PushCurrentBranch{
-						CurrentBranch: localBranchToShip,
-					})
-				} else {
-					// shipping a local branch --> pull missing commits from the tracking branch
-					switch data.config.Config.SyncFeatureStrategy {
-					case configdomain.SyncFeatureStrategyMerge:
-						prog.Add(&opcodes.Merge{Branch: trackingBranchName.BranchName()})
-					case configdomain.SyncFeatureStrategyRebase:
-						prog.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranchName})
-					}
-				}
-			}
-		}
 	}
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
@@ -357,6 +360,9 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	for _, child := range data.childBranches {
 		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
+	if !data.isShippingInitialBranch {
+		prog.Add(&opcodes.Checkout{Branch: data.initialBranch})
+	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
@@ -364,7 +370,7 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         false,
+		StashOpenChanges:         !data.isShippingInitialBranch && data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog
