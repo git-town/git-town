@@ -23,8 +23,8 @@ sync by running [git town undo](undo.md).
 By default this command syncs only the current branch. The `--all` parameter
 makes Git Town sync all local branches.
 
-The `--dry-run` parameter allows to test-drive this command safely. It prints
-the Git commands that would be run but doesn't execute them.
+The `--dry-run` parameter allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
 
 ### Configuration
 
