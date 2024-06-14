@@ -10,7 +10,7 @@ with what happened in the rest of the repository.
 - pulls updates from the tracking and all parent branches
 - does not modify local branches checked out in other Git worktrees
 - deletes branches whose tracking branch was deleted at the remote if they don't
-  contain no unshipped changes
+  contain unshipped changes
 
 If you experience too many merge conflicts, sync more often. You can run "git
 sync" without thinking (and should do so dozens of times per day) because it
