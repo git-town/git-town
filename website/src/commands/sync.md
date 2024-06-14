@@ -14,7 +14,9 @@ with what happened in the rest of the repository.
 
 If you experience too many merge conflicts, sync more often. You can run "git
 sync" without thinking (and should do so dozens of times per day) because it
-guarantees that it never loses any of your changes, even in edge cases.
+guarantees that it never loses any of your changes, even in edge cases. And if a
+sync goes wrong, you can safely go back to where you repo was before by running
+[git town undo](undo.md).
 
 ### Arguments
 
