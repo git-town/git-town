@@ -52,11 +52,11 @@ func shipCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   shipCommand,
-		Args:  cobra.NoArgs,
+		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeShip(readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -65,7 +65,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(message Option[gitdomain.CommitMessage], dryRun, verbose bool) error {
+func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
