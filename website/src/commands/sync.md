@@ -12,9 +12,9 @@ with what happened in the rest of the repository.
 - deletes branches whose tracking branch was deleted at the remote if they don't
   contain no unshipped changes
 
-You can run "git sync" without thinking (and should do so dozens of times per
-day) because it guarantees that it never deletes information, even in edge
-cases.
+If you experience too many merge conflicts, sync more often. You can run "git
+sync" without thinking (and should do so dozens of times per day) because it
+guarantees that it never loses any of your changes, even in edge cases.
 
 ### Arguments
 
