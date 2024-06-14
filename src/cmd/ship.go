@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
@@ -77,7 +78,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineShipData(repo, dryRun, verbose)
+	data, exit, err := determineShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -137,7 +138,7 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -157,7 +158,7 @@ func determineShipData(repo execute.OpenRepoResult, dryRun, verbose bool) (*ship
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: true,
+		ValidateNoOpenChanges: len(args) == 0,
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
@@ -168,13 +169,18 @@ func determineShipData(repo execute.OpenRepoResult, dryRun, verbose bool) (*ship
 	if err != nil {
 		return nil, false, err
 	}
+	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
+	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchToShip, _ := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
-	if branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, initialBranch)
+	isShippingInitialBranch := branchNameToShip == initialBranch
+	if !hasBranchToShip {
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
