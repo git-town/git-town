@@ -10,7 +10,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |

@@ -288,7 +288,9 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 			if data.branchToShip.SyncStatus == gitdomain.SyncStatusNotInSync {
 				if data.canShipViaAPI {
 					// shipping a branch via API --> push missing local commits to the tracking branch
-					prog.Add(&opcodes.PushCurrentBranch{})
+					prog.Add(&opcodes.PushCurrentBranch{
+						CurrentBranch: data.initialBranch,
+					})
 				} else {
 					// shipping a local branch --> pull missing commits from the tracking branch
 					switch data.config.Config.SyncFeatureStrategy {
