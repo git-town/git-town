@@ -291,13 +291,19 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := program.Program{}
+	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
+	localTargetBranch, _ := data.targetBranch.LocalName.Get()
+	if hasLocalBranchToShip {
+		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
+		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
+	}
 	if data.config.Config.Online().Bool() {
 		if trackingBranchName, hasTrackingBranch := data.branchToShip.RemoteName.Get(); hasTrackingBranch {
 			if data.branchToShip.SyncStatus == gitdomain.SyncStatusNotInSync {
 				if data.canShipViaAPI {
 					// shipping a branch via API --> push missing local commits to the tracking branch
 					prog.Add(&opcodes.PushCurrentBranch{
-						CurrentBranch: data.initialBranch,
+						CurrentBranch: localBranchToShip,
 					})
 				} else {
 					// shipping a local branch --> pull missing commits from the tracking branch
@@ -310,12 +316,6 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 				}
 			}
 		}
-	}
-	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
-	localTargetBranch, _ := data.targetBranch.LocalName.Get()
-	if hasLocalBranchToShip {
-		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
-		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
 	}
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
