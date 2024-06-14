@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
-	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -294,32 +293,12 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := program.Program{}
-	if data.config.Config.SyncBeforeShip {
-		// sync the parent branch
-		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       &prog,
-			PushBranch:    true,
-		})
-		// sync the branch to ship (local sync only)
-		sync.BranchProgram(data.branchToShip, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       &prog,
-			PushBranch:    false,
-		})
-	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
 		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
-		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
 	}
+	prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range data.proposalsOfChildBranches {
