@@ -22,7 +22,6 @@ Feature: change existing information in Git metadata
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
-      | sync-before-ship                          | down enter             |
       | save config to Git metadata               | down enter             |
 
   Scenario: result
@@ -69,7 +68,6 @@ Feature: change existing information in Git metadata
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
-    And local Git Town setting "sync-before-ship" is now "true"
 
   Scenario: undo
     When I run "git-town undo"
@@ -96,4 +94,3 @@ Feature: change existing information in Git metadata
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
-    And local Git Town setting "sync-before-ship" now doesn't exist

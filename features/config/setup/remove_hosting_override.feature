@@ -17,7 +17,6 @@ Feature: remove an existing code hosting override
       | push-new-branches           | enter          |                                             |
       | push-hook                   | enter          |                                             |
       | ship-delete-tracking-branch | enter          |                                             |
-      | sync-before-ship            | enter          |                                             |
       | save config to Git metadata | down enter     |                                             |
 
   Scenario: result

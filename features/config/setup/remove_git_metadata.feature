@@ -26,7 +26,6 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "push-new-branches" is "true"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
-    And local Git Town setting "sync-before-ship" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
       | welcome                                 | enter                                         |
@@ -42,7 +41,6 @@ Feature: remove existing configuration in Git metadata
       | enable push-new-branches                | down enter                                    |
       | disable the push hook                   | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
-      | sync-before-ship                        | down enter                                    |
       | save config to Git metadata             | down enter                                    |
 
   Scenario: result
@@ -84,7 +82,6 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
-    And local Git Town setting "sync-before-ship" is now "false"
 
   Scenario: undo
     When I run "git-town undo"
@@ -112,4 +109,3 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
-    And local Git Town setting "sync-before-ship" is now "true"

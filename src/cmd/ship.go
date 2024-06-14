@@ -15,12 +15,10 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
-	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -37,15 +35,7 @@ const shipDesc = "Deliver a completed feature branch"
 const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
 
-- syncs the main branch
-- pulls updates for <branch_name>
-- merges the main branch into <branch_name>
-- squash-merges <branch_name> into the main branch
-  with commit message specified by the user
-- pushes the main branch to the origin repository
-- deletes <branch_name> from the local and origin repositories
-
-Ships direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
+Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 
@@ -62,11 +52,11 @@ func shipCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   shipCommand,
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.NoArgs,
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executeShip(readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -75,7 +65,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun, verbose bool) error {
+func executeShip(message Option[gitdomain.CommitMessage], dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -87,7 +77,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineShipData(args, repo, dryRun, verbose)
+	data, exit, err := determineShipData(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -138,7 +128,6 @@ type shipData struct {
 	dryRun                   bool
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
-	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposal                 Option[hostingdomain.Proposal]
 	proposalMessage          string
@@ -148,7 +137,7 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
+func determineShipData(repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -168,7 +157,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: len(args) == 0,
+		ValidateNoOpenChanges: true,
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
@@ -179,24 +168,19 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil {
 		return nil, false, err
 	}
-	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
-	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
-	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	isShippingInitialBranch := branchNameToShip == initialBranch
-	if !hasBranchToShip {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+	branchToShip, _ := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, initialBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -208,23 +192,23 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
+	if err = validateShippableBranchType(validatedConfig.Config.BranchType(initialBranch)); err != nil {
 		return nil, false, err
 	}
-	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	if !hasTargetBranch {
-		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, initialBranch)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
 		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(initialBranch, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
 	if err != nil {
 		return nil, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
+	childBranches := validatedConfig.Config.Lineage.Children(initialBranch)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -243,7 +227,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
 		if !repo.IsOffline.Bool() {
 			if branchToShip.HasTrackingBranch() {
-				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
+				proposalOpt, err = connector.FindProposal(initialBranch, targetBranchName)
 				if err != nil {
 					return nil, false, err
 				}
@@ -254,9 +238,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 				}
 			}
 			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
+				childProposalOpt, err := connector.FindProposal(childBranch, initialBranch)
 				if err != nil {
-					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, initialBranch, err)
 				}
 				childProposal, hasChildProposal := childProposalOpt.Get()
 				if hasChildProposal {
@@ -277,7 +261,6 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
-		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposalOpt,
 		proposalMessage:          proposalMessage,
@@ -300,25 +283,23 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := program.Program{}
-	if data.config.Config.SyncBeforeShip {
-		// sync the parent branch
-		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       &prog,
-			PushBranch:    true,
-		})
-		// sync the branch to ship (local sync only)
-		sync.BranchProgram(data.branchToShip, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       &prog,
-			PushBranch:    false,
-		})
+	if data.config.Config.Online().Bool() {
+		if trackingBranchName, hasTrackingBranch := data.branchToShip.RemoteName.Get(); hasTrackingBranch {
+			if data.branchToShip.SyncStatus == gitdomain.SyncStatusNotInSync {
+				if data.canShipViaAPI {
+					// shipping a branch via API --> push missing local commits to the tracking branch
+					// TODO
+				} else {
+					// shipping a local branch --> pull missing commits from the tracking branch
+					switch data.config.Config.SyncFeatureStrategy {
+					case configdomain.SyncFeatureStrategyMerge:
+						prog.Add(&opcodes.Merge{Branch: trackingBranchName.BranchName()})
+					case configdomain.SyncFeatureStrategyRebase:
+						prog.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranchName})
+					}
+				}
+			}
+		}
 	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
@@ -366,9 +347,6 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	for _, child := range data.childBranches {
 		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
-	if !data.isShippingInitialBranch {
-		prog.Add(&opcodes.Checkout{Branch: data.initialBranch})
-	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
@@ -376,7 +354,7 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         !data.isShippingInitialBranch && data.hasOpenChanges,
+		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog

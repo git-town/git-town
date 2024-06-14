@@ -6,11 +6,11 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And Git Town setting "sync-before-ship" is "true"
     And the current branch is "other"
     And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |

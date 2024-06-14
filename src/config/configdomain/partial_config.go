@@ -26,7 +26,6 @@ type PartialConfig struct {
 	PushHook                 Option[PushHook]
 	PushNewBranches          Option[PushNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
-	SyncBeforeShip           Option[SyncBeforeShip]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncUpstream             Option[SyncUpstream]

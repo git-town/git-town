@@ -27,7 +27,6 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: no
 
       Hosting:
         hosting platform override: (not set)
@@ -75,7 +74,6 @@ Feature: show the configuration
         sync-feature strategy: rebase
         sync-perennial strategy: merge
         sync with upstream: yes
-        sync before shipping: no
 
       Hosting:
         hosting platform override: github
@@ -134,7 +132,6 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: merge
         sync with upstream: no
-        sync before shipping: no
 
       Hosting:
         hosting platform override: github
@@ -167,7 +164,6 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: no
 
       Hosting:
         hosting platform override: (not set)
@@ -206,7 +202,6 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: no
 
       Hosting:
         hosting platform override: (not set)

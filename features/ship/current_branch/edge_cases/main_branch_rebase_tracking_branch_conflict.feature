@@ -7,7 +7,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
-    And Git Town setting "sync-before-ship" is "true"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

@@ -29,7 +29,6 @@ type UnvalidatedConfig struct {
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
-	SyncBeforeShip           SyncBeforeShip
 	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncPerennialStrategy    SyncPerennialStrategy
 	SyncUpstream             SyncUpstream
@@ -155,9 +154,6 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if value, has := other.ShipDeleteTrackingBranch.Get(); has {
 		self.ShipDeleteTrackingBranch = value
 	}
-	if value, has := other.SyncBeforeShip.Get(); has {
-		self.SyncBeforeShip = value
-	}
 	if value, has := other.SyncFeatureStrategy.Get(); has {
 		self.SyncFeatureStrategy = value
 	}
@@ -207,7 +203,6 @@ func DefaultConfig() UnvalidatedConfig {
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
-		SyncBeforeShip:           false,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
 		SyncUpstream:             true,

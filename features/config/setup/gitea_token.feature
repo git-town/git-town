@@ -18,7 +18,6 @@ Feature: enter the Gitea API token
       | push-new-branches             | enter             |                                             |
       | push-hook                     | enter             |                                             |
       | ship-delete-tracking-branch   | enter             |                                             |
-      | sync-before-ship              | enter             |                                             |
       | save config to Git metadata   | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                |
@@ -43,7 +42,6 @@ Feature: enter the Gitea API token
       | push-new-branches           | enter             |                                             |
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
-      | sync-before-ship            | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                    |

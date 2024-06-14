@@ -54,7 +54,6 @@ func TestSave(t *testing.T) {
 			PushHook:                 true,
 			PushNewBranches:          false,
 			ShipDeleteTrackingBranch: true,
-			SyncBeforeShip:           false,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
 			SyncUpstream:             true,
