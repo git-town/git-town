@@ -94,19 +94,6 @@ push-new-branches = false
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
 
-# Should "git ship" sync branches before shipping them?
-#
-# Guidance: enable when shipping branches locally on your machine
-# and disable when shipping feature branches via the code hosting
-# API or web UI.
-#
-# When enabled, branches are always fully up to date when shipped
-# and you get a chance to resolve merge conflicts
-# between the feature branch to ship and the main development branch
-# on the feature branch. This helps keep the main branch green.
-# But this also triggers another CI run and delays shipping.
-sync-before-ship = false
-
 # Should "git sync" also fetch updates from the upstream remote?
 #
 # If an "upstream" remote exists, and this setting is enabled,
@@ -211,19 +198,6 @@ push-new-branches = false
 # (GitHub, GitLab, etc) deletes head branches when
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
-
-# Should "git ship" sync branches before shipping them?
-#
-# Guidance: enable when shipping branches locally on your machine
-# and disable when shipping feature branches via the code hosting
-# API or web UI.
-#
-# When enabled, branches are always fully up to date when shipped
-# and you get a chance to resolve merge conflicts
-# between the feature branch to ship and the main development branch
-# on the feature branch. This helps keep the main branch green.
-# But this also triggers another CI run and delays shipping.
-sync-before-ship = false
 
 # Should "git sync" also fetch updates from the upstream remote?
 #

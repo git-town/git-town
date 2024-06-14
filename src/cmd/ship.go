@@ -55,7 +55,7 @@ func shipCmd() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, gitconfig.KeyGithubToken, gitconfig.KeyShipDeleteTrackingBranch)),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeShip(readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
