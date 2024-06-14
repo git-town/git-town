@@ -129,6 +129,7 @@ type shipData struct {
 	dryRun                   bool
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposal                 Option[hostingdomain.Proposal]
 	proposalMessage          string
@@ -186,7 +187,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
