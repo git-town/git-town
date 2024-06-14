@@ -199,23 +199,23 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	if err = validateShippableBranchType(validatedConfig.Config.BranchType(initialBranch)); err != nil {
+	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
 		return nil, false, err
 	}
-	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
-		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, initialBranch)
+		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
 		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(initialBranch, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
 	if err != nil {
 		return nil, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
-	childBranches := validatedConfig.Config.Lineage.Children(initialBranch)
+	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -234,7 +234,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
 		if !repo.IsOffline.Bool() {
 			if branchToShip.HasTrackingBranch() {
-				proposalOpt, err = connector.FindProposal(initialBranch, targetBranchName)
+				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 				if err != nil {
 					return nil, false, err
 				}
@@ -245,9 +245,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 				}
 			}
 			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, initialBranch)
+				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
 				if err != nil {
-					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, initialBranch, err)
+					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 				}
 				childProposal, hasChildProposal := childProposalOpt.Get()
 				if hasChildProposal {
@@ -268,6 +268,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposalOpt,
 		proposalMessage:          proposalMessage,
