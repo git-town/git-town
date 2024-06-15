@@ -297,8 +297,14 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
 		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
+		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
 	}
-	prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
+	// TODO: distinguish the various scenarios here:
+	// 1. ship the current branch without API: pull tracking branch, then ship locally
+	// 2. ship the current branch with API: verify the branch is not behind its tracking branch, if ahead or out of sync abort with error, if in sync or behind ship via API
+	// 3. ship the given branch without API: check out the branch, pull from tracking, ship locally
+	// 4. ship the given branch with API and branch exists locally: verify the local branch is not ahead or out of sync with its tracking branch, if behind or in sync ship via API, if ahead or out of sync abort with error
+	// 5. ship the given branch with API and branch does not exist locally: ship via API
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range data.proposalsOfChildBranches {

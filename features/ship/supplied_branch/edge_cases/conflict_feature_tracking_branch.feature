@@ -10,17 +10,21 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                 |
-      | other   | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash                               |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | BRANCH | COMMAND                         |
+      | other  | git fetch --prune --tags        |
+      |        | git add -A                      |
+      |        | git stash                       |
+      |        | git checkout main               |
+      | main   | git merge --squash --ff feature |
+      |        | git commit -m "feature done"    |
+      |        | git push                        |
+      |        | git push origin :feature        |
+      |        | git branch -D feature           |
+      |        | git checkout other              |
+      | other  | git stash pop                   |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
