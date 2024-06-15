@@ -26,15 +26,15 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) Option[Branc
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
+func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) Option[BranchInfo] {
 	for b, bi := range self {
 		if remoteName, hasRemoteName := bi.RemoteName.Get(); hasRemoteName {
 			if remoteName == remoteBranch {
-				return &self[b]
+				return Some(self[b])
 			}
 		}
 	}
-	return nil
+	return None[BranchInfo]()
 }
 
 func (self BranchInfos) FindMatchingRecord(other BranchInfo) Option[BranchInfo] {
@@ -77,7 +77,7 @@ func (self BranchInfos) HasLocalBranches(branches LocalBranchNames) bool {
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
 func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName) bool {
-	return self.FindByRemoteName(localBranch.TrackingBranch()) != nil
+	return self.FindByRemoteName(localBranch.TrackingBranch()).IsSome()
 }
 
 // LocalBranches provides only the branches that exist on the local machine.
