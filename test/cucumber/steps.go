@@ -378,15 +378,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		if aliasableCommand == nil {
-			return fmt.Errorf("aliasableCommand not found for key %q", *key)
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return fmt.Errorf("aliasableCommand not found for key %q", key)
 		}
-		have := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
+		have := state.fixture.DevRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -394,18 +394,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		if configKey == nil {
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
 			return fmt.Errorf("unknown configuration key: %q", name)
 		}
-		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
-		if newValue != nil {
-			return fmt.Errorf("should not have global %q anymore but has value %q", name, *newValue)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		newValue, hasNewValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(configKey).Get()
+		if hasNewValue {
+			return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 		}
 		return nil
 	})
