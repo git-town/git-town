@@ -826,16 +826,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(*configKey)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(configKey)
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		if configKey == nil {
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
