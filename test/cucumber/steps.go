@@ -350,28 +350,31 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(name, value string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		if aliasableCommand == nil {
-			return fmt.Errorf("no aliasableCommand found for key %q", *key)
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return fmt.Errorf("no aliasableCommand found for key %q", key)
 		}
-		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
+		return state.fixture.DevRepo.SetGitAlias(aliasableCommand, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(name string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		command, has := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			panic("unknown alias: " + key)
+		}
+		command, has := state.fixture.DevRepo.Config.Config.Aliases[aliasableCommand]
 		if !has {
 			return nil
 		}
-		return fmt.Errorf("unexpected aliasableCommand %q: %q", *key, command)
+		return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
