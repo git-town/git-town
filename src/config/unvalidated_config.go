@@ -20,6 +20,7 @@ type Runner interface {
 }
 
 type UnvalidatedConfig struct {
+	// TODO: remove the pointer here?
 	Config          *configdomain.UnvalidatedConfig    // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          bool
@@ -32,7 +33,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
-		Config:          config,
+		Config:          &config,
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
 		GitConfig:       args.Access,
