@@ -2,11 +2,13 @@ package gitdomain
 
 import (
 	"fmt"
+
+	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
-type SHA string
+type SHA gohacks.NonEmptyString
 
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.

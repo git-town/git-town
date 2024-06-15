@@ -1,7 +1,9 @@
 package gitdomain
 
+import "github.com/git-town/git-town/v14/src/gohacks"
+
 // Remote represents a Git remote.
-type Remote string
+type Remote gohacks.NonEmptyString
 
 func NewRemote(id string) Remote {
 	for _, remote := range AllRemotes {

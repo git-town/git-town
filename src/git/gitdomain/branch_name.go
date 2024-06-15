@@ -3,10 +3,12 @@ package gitdomain
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
 // BranchName is the name of a local or remote Git branch.
-type BranchName string
+type BranchName gohacks.NonEmptyString
 
 func NewBranchName(id string) BranchName {
 	if !isValidBranchName(id) {

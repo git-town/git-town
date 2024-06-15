@@ -1,11 +1,14 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v14/src/gohacks/prelude"
+import (
+	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+)
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
-type LocalBranchName string
+type LocalBranchName gohacks.NonEmptyString
 
 func NewLocalBranchName(id string) LocalBranchName {
 	if !isValidLocalBranchName(id) {
@@ -32,7 +35,7 @@ func (self LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
 
 // BranchName widens the type of this LocalBranchName to a more generic BranchName.
 func (self LocalBranchName) BranchName() BranchName {
-	return BranchName(string(self))
+	return BranchName(gohacks.NonEmptyString(self))
 }
 
 // Location widens the type of this LocalBranchName to a more generic Location.
