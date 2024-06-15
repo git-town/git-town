@@ -38,8 +38,6 @@ Squash-merges the current branch, or <branch_name> if given, into the main branc
 
 Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
 
-Ships direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
-
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 
 1. Get a GitHub personal access token with the "repo" scope
