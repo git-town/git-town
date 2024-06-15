@@ -814,10 +814,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
-		if newValue != nil {
-			return fmt.Errorf("should not have local %q anymore but has value %q", name, *newValue)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		newValue, hasNewValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(configKey).Get()
+		if hasNewValue {
+			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 		}
 		return nil
 	})
