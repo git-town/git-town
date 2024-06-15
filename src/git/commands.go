@@ -785,8 +785,8 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 			})
 		default:
 			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
-			if existingBranchWithTracking != nil {
+			existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get()
+			if hasExistingBranchWithTracking {
 				existingBranchWithTracking.RemoteSHA = Some(sha)
 			} else {
 				result = append(result, gitdomain.BranchInfo{
