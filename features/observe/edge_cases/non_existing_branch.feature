@@ -1,10 +1,9 @@
 Feature: cannot observe non-existing branches
 
   Background:
-    Given the current branch is a feature branch "feature"
-    And an uncommitted file
-    When I run "git-town observe feature non-existing"
+    When I run "git-town observe non-existing"
 
+  @this
   Scenario: result
     Then it runs no commands
     And it prints the error:
