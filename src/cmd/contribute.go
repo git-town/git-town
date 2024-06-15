@@ -143,9 +143,10 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToMark.Add(branch, *repo.UnvalidatedConfig.Config)
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
+		trackingBranchName := branch.TrackingBranch()
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
 		if !hasBranchInfo {
-			return contributeData{}, fmt.Errorf(messages.RemoteBranchNotFound, branch.TrackingBranch().String())
+			return contributeData{}, fmt.Errorf(messages.RemoteBranchNotFound, trackingBranchName.String())
 		}
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
