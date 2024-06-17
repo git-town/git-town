@@ -368,7 +368,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
 		if !hasAliasableCommand {
-			panic("unknown alias: " + key)
+			return errors.New("unknown alias: " + key.String())
 		}
 		command, has := state.fixture.DevRepo.Config.Config.Aliases[aliasableCommand]
 		if !has {
