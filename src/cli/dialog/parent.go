@@ -17,7 +17,7 @@ const (
 	parentBranchTitleTemplate = `Parent branch for %s`
 	parentBranchHelpTemplate  = `
 Please select the parent of branch %q or enter its number.
-Most of the time this is the main development branch (%v).
+Most of the time this is the main branch (%v).
 
 
 `
