@@ -433,7 +433,7 @@ Version 7.4.0 sports a vastly overhauled internal architecture that provides mor
 #### New Features
 
 - `git town config`: print perennial branch trees
-- `git town hack`: add `-p` option which prompts for the parent branch instead of using the main development branch
+- `git town hack`: add `-p` option which prompts for the parent branch instead of using the main branch
 - when fetching the origin repository, fetch tags that are not attached to pulled commits
 
 #### Changes

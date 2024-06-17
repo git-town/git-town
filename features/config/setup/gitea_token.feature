@@ -6,7 +6,7 @@ Feature: enter the Gitea API token
       | DIALOG                        | KEYS              | DESCRIPTION                                 |
       | welcome                       | enter             |                                             |
       | aliases                       | enter             |                                             |
-      | main development branch       | enter             |                                             |
+      | main branch                   | enter             |                                             |
       | perennial branches            |                   | no input here since the dialog doesn't show |
       | perennial regex               | enter             |                                             |
       | hosting platform: auto-detect | enter             |                                             |
@@ -30,7 +30,7 @@ Feature: enter the Gitea API token
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
-      | main development branch     | enter             |                                             |
+      | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | hosting platform            | down down enter   |                                             |

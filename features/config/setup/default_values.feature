@@ -8,7 +8,7 @@ Feature: Accepting all default values leads to a working setup
       | DIALOG                      | KEYS  |
       | welcome                     | enter |
       | aliases                     | enter |
-      | main development branch     | enter |
+      | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
       | hosting platform            | enter |
