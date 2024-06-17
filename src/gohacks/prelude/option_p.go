@@ -65,6 +65,13 @@ func (self OptionP[T]) StringOr(other string) string {
 	return other
 }
 
+func (self OptionP[T]) ToOption() Option[T] {
+	if value, hasValue := self.Get(); hasValue {
+		return Some(*value)
+	}
+	return None[T]()
+}
+
 // UnmarshalJSON is used when de-serializing JSON into an OptionP.
 func (self *OptionP[T]) UnmarshalJSON(b []byte) error {
 	if string(b) == "null" {
