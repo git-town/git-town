@@ -21,7 +21,7 @@ API or web UI.
 
 When enabled, branches are always fully up to date when shipped
 and you get a chance to resolve merge conflicts
-between the feature branch to ship and the main development branch
+between the feature branch to ship and the main branch
 on the feature branch. This helps keep the main branch green.
 But this also triggers another CI run and delays shipping.
 
