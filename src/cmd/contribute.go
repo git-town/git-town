@@ -146,7 +146,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		trackingBranchName := branch.TrackingBranch()
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
 		if !hasBranchInfo {
-			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, trackingBranchName.String())
+			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
 		}
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
