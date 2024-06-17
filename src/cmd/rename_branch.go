@@ -213,7 +213,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		newBranch:        newBranchName,
-		oldBranch:        oldBranch,
+		oldBranch:        *oldBranch,
 		previousBranch:   previousBranch,
 		stashSize:        stashSize,
 	}, false, err

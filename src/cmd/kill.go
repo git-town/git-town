@@ -191,7 +191,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
 	return &killData{
-		branchToKillInfo: branchToKill,
+		branchToKillInfo: *branchToKill,
 		branchToKillType: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
 		branchesSnapshot: branchesSnapshot,

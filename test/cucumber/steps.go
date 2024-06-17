@@ -350,40 +350,43 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(name, value string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		if aliasableCommand == nil {
-			return fmt.Errorf("no aliasableCommand found for key %q", *key)
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return fmt.Errorf("no aliasableCommand found for key %q", key)
 		}
-		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
+		return state.fixture.DevRepo.SetGitAlias(aliasableCommand, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(name string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		command, has := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return errors.New("unknown alias: " + key.String())
+		}
+		command, has := state.fixture.DevRepo.Config.Config.Aliases[aliasableCommand]
 		if !has {
 			return nil
 		}
-		return fmt.Errorf("unexpected aliasableCommand %q: %q", *key, command)
+		return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		key := gitconfig.ParseKey("alias." + name)
-		if key == nil {
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		if aliasableCommand == nil {
-			return fmt.Errorf("aliasableCommand not found for key %q", *key)
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return fmt.Errorf("aliasableCommand not found for key %q", key)
 		}
-		have := state.fixture.DevRepo.Config.Config.Aliases[*aliasableCommand]
+		have := state.fixture.DevRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -391,18 +394,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		if configKey == nil {
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
 			return fmt.Errorf("unknown configuration key: %q", name)
 		}
-		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
-		if newValue != nil {
-			return fmt.Errorf("should not have global %q anymore but has value %q", name, *newValue)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		newValue, hasNewValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(configKey).Get()
+		if hasNewValue {
+			return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 		}
 		return nil
 	})
@@ -808,25 +814,31 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
-		if newValue != nil {
-			return fmt.Errorf("should not have local %q anymore but has value %q", name, *newValue)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		newValue, hasNewValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(configKey).Get()
+		if hasNewValue {
+			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 		}
 		return nil
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(name string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(*configKey)
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
+			return errors.New("unknown config key: " + name)
+		}
+		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(configKey)
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := gitconfig.ParseKey("git-town." + name)
-		if configKey == nil {
+		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasConfigKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
