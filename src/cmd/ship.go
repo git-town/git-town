@@ -267,7 +267,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}
 	return &shipData{
 		allBranches:              branchesSnapshot.Branches,
-		branchToShip:             branchToShip,
+		branchToShip:             *branchToShip,
 		branchesSnapshot:         branchesSnapshot,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
@@ -284,7 +284,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
 		stashSize:                stashSize,
-		targetBranch:             targetBranch,
+		targetBranch:             *targetBranch,
 	}, false, nil
 }
 

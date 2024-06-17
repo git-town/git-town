@@ -214,12 +214,12 @@ func DefaultConfig() UnvalidatedConfig {
 	}
 }
 
-func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) *UnvalidatedConfig {
+func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
 	result := DefaultConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result.Merge(configFile)
 	}
 	result.Merge(globalGitConfig)
 	result.Merge(localGitConfig)
-	return &result
+	return result
 }
