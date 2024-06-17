@@ -65,6 +65,7 @@ func (self OptionP[T]) StringOr(other string) string {
 	return other
 }
 
+// converts this OptionP to an Option
 func (self OptionP[T]) ToOption() Option[T] {
 	if value, hasValue := self.Get(); hasValue {
 		return Some(*value)
