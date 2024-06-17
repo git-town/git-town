@@ -144,7 +144,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		trackingBranchName := branch.TrackingBranch()
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
 		if !hasBranchInfo {
-			return observeData{}, fmt.Errorf(messages.RemoteBranchNotFound, trackingBranchName.String())
+			return observeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
 		}
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = Some(branch)
