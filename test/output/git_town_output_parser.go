@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // ExecutedGitCommand describes a Git command that was executed by Git Town during testing.
@@ -32,9 +33,8 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	result := []ExecutedGitCommand{}
 	for _, line := range strings.Split(output, "\n") {
 		if lineContainsFrontendCommand(line) {
-			line := parseFrontendLine(line)
-			if line != nil {
-				result = append(result, *line)
+			if line, hasLine := parseFrontendLine(line).Get(); hasLine {
+				result = append(result, line)
 			}
 		} else if lineContainsBackendCommand(line) {
 			result = append(result, parseBackendLine(line))
@@ -65,10 +65,10 @@ func parseBackendLine(line string) ExecutedGitCommand {
 	}
 }
 
-func parseFrontendLine(line string) *ExecutedGitCommand {
+func parseFrontendLine(line string) Option[ExecutedGitCommand] {
 	line = stripansi.Strip(line)
 	if line == "" {
-		return nil
+		return None[ExecutedGitCommand]()
 	}
 	// extract branch name if it exists
 	branch := ""
@@ -78,9 +78,9 @@ func parseFrontendLine(line string) *ExecutedGitCommand {
 		branch = line[1:closingParent]
 		line = line[closingParent+2:]
 	}
-	return &ExecutedGitCommand{
+	return Some(ExecutedGitCommand{
 		Branch:      branch,
 		Command:     line,
 		CommandType: CommandTypeFrontend,
-	}
+	})
 }

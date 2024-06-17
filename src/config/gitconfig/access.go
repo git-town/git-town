@@ -248,11 +248,10 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKeyPtr := ParseKey(key)
-		if configKeyPtr == nil {
+		configKey, hasConfigKey := ParseKey(key).Get()
+		if !hasConfigKey {
 			continue
 		}
-		configKey := *configKeyPtr
 		if updateOutdated {
 			newKey, keyIsDeprecated := DeprecatedKeys[configKey]
 			if keyIsDeprecated {

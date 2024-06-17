@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.
@@ -112,13 +113,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
+func AliasableCommandForKey(key Key) Option[configdomain.AliasableCommand] {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		if KeyForAliasableCommand(aliasableCommand) == key {
-			return &aliasableCommand
+			return Some(aliasableCommand)
 		}
 	}
-	return nil
+	return None[configdomain.AliasableCommand]()
 }
 
 func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key {
@@ -161,23 +162,22 @@ func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }
 
-func ParseKey(name string) *Key {
+func ParseKey(name string) Option[Key] {
 	for _, configKey := range keys {
 		if configKey.String() == name {
-			return &configKey
+			return Some(configKey)
 		}
 	}
-	lineageKey := parseLineageKey(name)
-	if lineageKey != nil {
-		return lineageKey
+	if lineageKey, hasLineageKey := parseLineageKey(name).Get(); hasLineageKey {
+		return Some(lineageKey)
 	}
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		key := KeyForAliasableCommand(aliasableCommand)
 		if key.String() == name {
-			return &key
+			return Some(key)
 		}
 	}
-	return nil
+	return None[Key]()
 }
 
 const (
@@ -185,12 +185,12 @@ const (
 	LineageKeySuffix = ".parent"
 )
 
-func parseLineageKey(key string) *Key {
+func parseLineageKey(key string) Option[Key] {
 	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
 		result := Key(key)
-		return &result
+		return Some(result)
 	}
-	return nil
+	return None[Key]()
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
