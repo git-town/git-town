@@ -15,7 +15,7 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot gitdomain.BranchesSnapshot) Br
 		after := afterSnapshot.Branches.FindMatchingRecord(before)
 		result = append(result, BranchSpan{
 			Before: Some(before),
-			After:  after,
+			After:  after.ToOption(),
 		})
 	}
 	for _, after := range afterSnapshot.Branches {

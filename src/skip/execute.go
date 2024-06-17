@@ -99,8 +99,8 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
-			Before: before,
-			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch),
+			Before: before.ToOption(),
+			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch).ToOption(),
 		},
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{

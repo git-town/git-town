@@ -149,6 +149,7 @@ nd will be removed in future versions of Git Town.`
 	PushHook                       = "Push hook: %s\n"
 	PushNewBranches                = "Push new branches: %s\n"
 	RebaseProblem                  = "cannot determine rebase in progress: %w"
+	RemoteBranchNotFound           = "remote branch %q doesn't seem to exist"
 	RemoteExistsProblem            = "cannot determine if remote %q exists: %w"
 	RemotesProblem                 = "cannot determine remotes: %w"
 	RenameBranchNotInSync          = "%q is not in sync with its tracking branch, please sync the branches before renaming"
