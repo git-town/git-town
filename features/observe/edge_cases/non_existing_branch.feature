@@ -7,7 +7,7 @@ Feature: cannot observe non-existing branches
     Then it runs no commands
     And it prints the error:
       """
-      remote branch "origin/non-existing" doesn't seem to exist
+      there is no branch "non-existing"
       """
     And the current branch is still "main"
     And there are still no observed branches
