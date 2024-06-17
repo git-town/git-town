@@ -32,7 +32,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
-		Config:          config,
+		Config:          &config,
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
 		GitConfig:       args.Access,
