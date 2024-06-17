@@ -3,8 +3,8 @@ Feature: missing configuration
   Background: running unconfigured
     Given Git Town is not configured
     When I run "git-town hack feature" and enter into the dialog:
-      | DIALOG                  | KEYS  |
-      | main development branch | enter |
+      | DIALOG      | KEYS  |
+      | main branch | enter |
 
   Scenario: result
     And it runs the commands

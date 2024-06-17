@@ -8,7 +8,7 @@ Feature: Accepting all default values leads to a working setup
       | DIALOG                      | KEYS  |
       | welcome                     | enter |
       | aliases                     | enter |
-      | main development branch     | enter |
+      | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
       | hosting platform            | enter |
@@ -78,7 +78,7 @@ Feature: Accepting all default values leads to a working setup
       #
       # When enabled, branches are always fully up to date when shipped
       # and you get a chance to resolve merge conflicts
-      # between the feature branch to ship and the main development branch
+      # between the feature branch to ship and the main branch
       # on the feature branch. This helps keep the main branch green.
       # But this also triggers another CI run and delays shipping.
       sync-before-ship = false
