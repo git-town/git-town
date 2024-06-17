@@ -32,12 +32,12 @@ func TestKey(t *testing.T) {
 			t.Run("lineage key without suffix", func(t *testing.T) {
 				t.Parallel()
 				have := gitconfig.ParseKey("git-town-branch.branch-1")
-				must.Nil(t, have)
+				must.True(t, have.IsNone())
 			})
 			t.Run("lineage key without prefix", func(t *testing.T) {
 				t.Parallel()
 				have := gitconfig.ParseKey("git-town.branch-1.parent")
-				must.Nil(t, have)
+				must.True(t, have.IsNone())
 			})
 		})
 		t.Run("alias key", func(t *testing.T) {
@@ -48,19 +48,18 @@ func TestKey(t *testing.T) {
 				must.True(t, has)
 				must.NotNil(t, have)
 				want := gitconfig.KeyAliasAppend
-				must.NotNil(t, want)
 				must.EqOp(t, want, have)
 			})
 			t.Run("invalid alias", func(t *testing.T) {
 				t.Parallel()
 				have := gitconfig.ParseKey("alias.zonk")
-				must.Nil(t, have)
+				must.True(t, have.IsNone())
 			})
 		})
 		t.Run("unknown key", func(t *testing.T) {
 			t.Parallel()
 			have := gitconfig.ParseKey("zonk")
-			must.Nil(t, have)
+			must.True(t, have.IsNone())
 		})
 	})
 }
