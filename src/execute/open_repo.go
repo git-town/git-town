@@ -21,7 +21,7 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
-	commandsCounter := gohacks.NewCounter()
+	commandsCounter := NewMutable[gohacks.Counter]()
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
@@ -118,7 +118,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Backend           gitdomain.RunnerQuerier
-	CommandsCounter   gohacks.Counter
+	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          gitdomain.Runner
@@ -154,7 +154,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 
 type newFrontendRunnerArgs struct {
 	backend          gitdomain.Querier
-	counter          gohacks.Counter
+	counter          Mutable[gohacks.Counter]
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	omitBranchNames  bool

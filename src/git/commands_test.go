@@ -805,7 +805,7 @@ func TestBackendCommands(t *testing.T) {
 			runner := subshell.BackendRunner{
 				Dir:             Some(dir),
 				Verbose:         false,
-				CommandsCounter: gohacks.NewCounter(),
+				CommandsCounter: NewMutable[gohacks.Counter](),
 			}
 			cmds := git.Commands{
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},

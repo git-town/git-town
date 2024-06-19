@@ -66,7 +66,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 
 type UnfinishedStateArgs struct {
 	Backend           gitdomain.RunnerQuerier
-	CommandsCounter   gohacks.Counter
+	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[hostingdomain.Connector]
 	DialogTestInputs  components.TestInputs
 	FinalMessages     stringslice.Collector

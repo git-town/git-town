@@ -64,7 +64,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
 	message := runErr.Error()
 	message += messages.UndoContinueGuidance
 	if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {

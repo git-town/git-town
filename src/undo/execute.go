@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/messages"
 	lightInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/light"
@@ -41,13 +42,13 @@ func Execute(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
 	return nil
 }
 
 type ExecuteArgs struct {
 	Backend          gitdomain.RunnerQuerier
-	CommandsCounter  gohacks.Counter
+	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
 	FinalMessages    stringslice.Collector
 	Frontend         gitdomain.Runner

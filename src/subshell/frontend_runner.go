@@ -12,12 +12,13 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
 	Backend          gitdomain.Querier
-	CommandsCounter  gohacks.Counter
+	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	PrintCommands    bool
@@ -55,7 +56,7 @@ func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string,
 
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
-	self.CommandsCounter.Register()
+	*self.CommandsCounter.Value++
 	var branchName gitdomain.LocalBranchName
 	if !self.OmitBranchNames {
 		branchName, err = self.GetCurrentBranch(self.Backend)

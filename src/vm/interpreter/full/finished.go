@@ -44,7 +44,7 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
 	return nil
 }
 
@@ -54,6 +54,6 @@ func finishedDryRunCommand(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
 	return nil
 }
