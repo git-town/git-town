@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v14/src/validate"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -132,9 +133,12 @@ type appendPrototypeData struct {
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
 type makePrototypeData struct {
+	configSnapshot undoconfig.ConfigSnapshot
 	config         config.ValidatedConfig
 	repo           execute.OpenRepoResult
+	rootDir        gitdomain.RepoRootDir
 	targetBranches commandconfig.BranchesAndTypes
+	verbose        bool
 }
 
 func createPrototypeBranch(args appendPrototypeData) error {
@@ -153,7 +157,7 @@ func createPrototypeBranch(args appendPrototypeData) error {
 		stashSize:                 args.beginStashSize,
 		targetBranch:              args.targetBranch,
 	})
-	program.Add(&opcode.Make)
+	program.Add(&opcodes.AddToPrototypeBranches{})
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -168,14 +172,14 @@ func createPrototypeBranch(args appendPrototypeData) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.backend,
 		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
+		Config:                  args.config,
 		Connector:               None[hostingdomain.Connector](),
-		DialogTestInputs:        args.appendData.dialogTestInputs,
+		DialogTestInputs:        args.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		Git:                     args.git,
-		HasOpenChanges:          args.appendData.hasOpenChanges,
-		InitialBranch:           args.appendData.initialBranch,
+		HasOpenChanges:          args.hasOpenChanges,
+		InitialBranch:           args.initialBranch,
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
@@ -253,10 +257,6 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 		})
 		return
 	}
-	if len(targetBranches) > 1 {
-		err = errors.New(messages.PrototypeTooManyArguments)
-		return
-	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
 	remotes, err = repo.Git.Remotes(repo.Backend)
@@ -274,9 +274,11 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendData, makeFeatureData](appendData{
+	data = Left[appendPrototypeData, makePrototypeData](appendPrototypeData{
 		allBranches:               branchesSnapshot.Branches,
-		branchesSnapshot:          branchesSnapshot,
+		beginBranchesSnapshot:     branchesSnapshot,
+		beginStashSize:            stashSize,
+		beginConfigSnapshot:       repo.ConfigSnapshot,
 		branchesToSync:            branchesToSync,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
@@ -284,10 +286,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
-		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
-		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
 	return
@@ -316,7 +316,7 @@ func makePrototypeBranch(args makePrototypeData) error {
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:             args.repo.Backend,
-		BeginConfigSnapshot: args.beginConfigSnapshot,
+		BeginConfigSnapshot: args.configSnapshot,
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
