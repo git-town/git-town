@@ -11,6 +11,7 @@ const (
 	BranchTypeParkedBranch
 	BranchTypeContributionBranch
 	BranchTypeObservedBranch
+	BranchTypePrototypeBranch
 )
 
 func NewBranchType(name string) BranchType {
@@ -27,6 +28,8 @@ func NewBranchType(name string) BranchType {
 		return BranchTypeParkedBranch
 	case "perennial":
 		return BranchTypePerennialBranch
+	case "prototype":
+		return BranchTypePrototypeBranch
 	}
 	panic("unhandled branch type: " + name)
 }
@@ -36,7 +39,7 @@ func (self BranchType) ShouldPush(currentBranch, initialBranch gitdomain.LocalBr
 	switch self {
 	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeContributionBranch:
 		return true
-	case BranchTypeObservedBranch:
+	case BranchTypeObservedBranch, BranchTypePrototypeBranch:
 		return false
 	case BranchTypeParkedBranch:
 		return currentBranch == initialBranch
@@ -58,6 +61,8 @@ func (self BranchType) String() string {
 		return "contribution branch"
 	case BranchTypeObservedBranch:
 		return "observed branch"
+	case BranchTypePrototypeBranch:
+		return "prototype branch"
 	}
 	panic("unhandled branch type")
 }

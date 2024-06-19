@@ -59,6 +59,12 @@ func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBr
 	return self.SetParkedBranches(append(self.Config.ParkedBranches, branches...))
 }
 
+// AddToObservedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetPrototypeBranches(append(self.Config.PrototypeBranches, branches...))
+}
+
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -207,6 +213,12 @@ func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBran
 func (self *UnvalidatedConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
 	self.Config.PerennialRegex = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
+}
+
+// SetContributionBranches marks the given branches as contribution branches.
+func (self *UnvalidatedConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.PrototypeBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPrototypeBranches, branches.Join(" "))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.

@@ -17,6 +17,7 @@ const (
 	BranchHasWrongSHA                  = "cannot reset branch %q to %q because it received additional commits in the meantime. It should have SHA %q but has %q"
 	BranchIsAlreadyContribution        = "branch %q is already a contribution branch"
 	BranchIsAlreadyObserved            = "branch %q is already observed"
+	BranchIsAlreadyPrototype           = "branch %q is already a prototype branch"
 	BranchIsAlreadyParked              = "branch %q is already parked"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
@@ -113,6 +114,7 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranch                            = "Main branch: %s\n"
 	MainBranchCannotMakeContribution      = "cannot make the main branch a contribution branch"
 	MainBranchCannotObserve               = "cannot observe the main branch"
+	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotPark                  = "cannot park the main branch"
 	MainBranchCannotPropose               = "cannot propose the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
@@ -128,6 +130,7 @@ END OUTPUT FROM 'git branch -vva'
 	ParkedBranchIsNowParked               = "branch %q is now parked\n"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
+	PerennialBranchCannotPrototype        = "cannot prototype perennial branches"
 	PerennialBranchCannotPark             = "cannot park perennial branches"
 	PerennialBranchCannotPropose          = "cannot propose perennial branches"
 	PerennialBranchCannotShip             = "cannot ship perennial branches"
@@ -142,6 +145,7 @@ END OUTPUT FROM 'git branch -vva'
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
+	PrototypeBranchIsNowPrototype         = "branch %q is now a prototype branch\n"
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 
 This command has been renamed to "git town propose"
