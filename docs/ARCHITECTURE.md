@@ -67,8 +67,9 @@ To undo a previously run Git Town command (requirement 3), Git Town:
 ### Code style
 
 The Git Town codebase deviates in some areas from the "official" Go coding
-style. The decisions to make these deviations wasn't easy. Here is some
-background what is different and why.
+style. The decisions to make these deviations wasn't easy but necessary after
+trying the regular Go style for years. Here is some background what is different
+and why.
 
 #### Favor descriptive naming over brevity
 
@@ -141,3 +142,10 @@ Optionality is expressed via a dedicated `Option` value with naming matching the
 same concepts in Rust. Git Town doesn't utilize pointers for performance
 optimizations. This makes all remaining occurrences of pointers express
 mutability.
+
+#### One concept per file
+
+Go recommends a programming style where each Go file contains many different
+concepts (type definitions, functions, constants). In contrast, in the Git Town
+codebase each concept is located in its own file. This allows finding concepts
+by filename.
