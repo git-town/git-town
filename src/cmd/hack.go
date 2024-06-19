@@ -71,7 +71,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	}
 	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
 	if doAppend {
-		return createBranch(createBranchArgs{
+		return createFeatureBranch(createBranchArgs{
 			appendData:            appendData,
 			backend:               repo.Backend,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
@@ -109,7 +109,7 @@ type makeFeatureData struct {
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createBranch(args createBranchArgs) error {
+func createFeatureBranch(args createBranchArgs) error {
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
