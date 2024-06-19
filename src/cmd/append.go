@@ -96,7 +96,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	})
 }
 
-type appendData struct {
+type appendFeatureData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            gitdomain.BranchInfos
@@ -113,7 +113,7 @@ type appendData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun, verbose bool) (*appendData, bool, error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun, verbose bool) (*appendFeatureData, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -171,7 +171,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
 	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
-	return &appendData{
+	return &appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
@@ -189,7 +189,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}, false, fc.Err
 }
 
-func appendProgram(data appendData) program.Program {
+func appendProgram(data appendFeatureData) program.Program {
 	prog := program.Program{}
 	if !data.hasOpenChanges {
 		for _, branch := range data.branchesToSync {
