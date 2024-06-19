@@ -255,7 +255,6 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
-		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
