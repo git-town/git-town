@@ -107,17 +107,37 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 type prototypeData = Either[appendPrototypeData, makePrototypeData]
 
 type appendPrototypeData struct {
-	appendFeatureData
-	makePrototypeData
+	allBranches               gitdomain.BranchInfos
+	backend                   gitdomain.RunnerQuerier
+	beginBranchesSnapshot     gitdomain.BranchesSnapshot
+	beginConfigSnapshot       undoconfig.ConfigSnapshot
+	beginStashSize            gitdomain.StashSize
+	branchesToSync            gitdomain.BranchInfos
+	commandsCounter           gohacks.Counter
+	config                    config.ValidatedConfig
+	dialogTestInputs          components.TestInputs
+	dryRun                    bool
+	finalMessages             stringslice.Collector
+	frontend                  gitdomain.Runner
+	git                       git.Commands
+	hasOpenChanges            bool
+	initialBranch             gitdomain.LocalBranchName
+	newBranchParentCandidates gitdomain.LocalBranchNames
+	previousBranch            Option[gitdomain.LocalBranchName]
+	remotes                   gitdomain.Remotes
+	rootDir                   gitdomain.RepoRootDir
+	targetBranch              gitdomain.LocalBranchName
+	verbose                   bool
 }
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
 type makePrototypeData struct {
 	config         config.ValidatedConfig
+	repo           execute.OpenRepoResult
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createPrototypeBranch(args createPrototypeBranchArgs) error {
+func createPrototypeBranch(args appendPrototypeData) error {
 	program := appendProgram(appendFeatureData{
 		allBranches:               args.allBranches,
 		branchesSnapshot:          args.beginBranchesSnapshot,
@@ -128,7 +148,6 @@ func createPrototypeBranch(args createPrototypeBranchArgs) error {
 		hasOpenChanges:            args.hasOpenChanges,
 		initialBranch:             args.initialBranch,
 		newBranchParentCandidates: args.newBranchParentCandidates,
-		parentBranch:              args.parentBranch,
 		previousBranch:            args.previousBranch,
 		remotes:                   args.remotes,
 		stashSize:                 args.beginStashSize,
@@ -164,20 +183,6 @@ func createPrototypeBranch(args createPrototypeBranchArgs) error {
 		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
-}
-
-type createPrototypeBranchArgs struct {
-	backend               gitdomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.ConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	commandsCounter       gohacks.Counter
-	dryRun                bool
-	finalMessages         stringslice.Collector
-	frontend              gitdomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
-	verbose               bool
 }
 
 func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data prototypeData, exit bool, err error) {
@@ -242,7 +247,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendData, makeFeatureData](makeFeatureData{
+		data = Right[appendPrototypeData, makePrototypeData](makePrototypeData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
@@ -288,12 +293,12 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	return
 }
 
-func makePrototypeBranch(args makePrototypeBranchArgs) error {
-	err := validateMakePrototypeData(args.makeFeatureData)
+func makePrototypeBranch(args makePrototypeData) error {
+	err := validateMakePrototypeData(args)
 	if err != nil {
 		return err
 	}
-	for branchName, branchType := range args.makeFeatureData.targetBranches {
+	for branchName, branchType := range args.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
 			err = args.config.RemoveFromContributionBranches(branchName)
@@ -307,7 +312,7 @@ func makePrototypeBranch(args makePrototypeBranchArgs) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf(messages.PrototypeBranchIsNowFeature, branchName)
+		fmt.Printf(messages.PrototypeBranchIsNowPrototype, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:             args.repo.Backend,
