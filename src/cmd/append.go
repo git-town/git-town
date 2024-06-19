@@ -106,7 +106,6 @@ type appendFeatureData struct {
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	parentBranch              gitdomain.LocalBranchName
 	previousBranch            Option[gitdomain.LocalBranchName]
 	remotes                   gitdomain.Remotes
 	stashSize                 gitdomain.StashSize
@@ -181,7 +180,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		parentBranch:              initialBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
