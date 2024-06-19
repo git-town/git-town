@@ -71,7 +71,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 	appendData, doAppend, makePrototypeBranchData, doMakePrototypeBranch := data.Get()
 	if doAppend {
 		err := createFeatureBranch(createFeatureBranchArgs{
-			appendData:            appendData,
+			appendData:            appendData.appendFeatureData,
 			backend:               repo.Backend,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
@@ -87,7 +87,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 		if err != nil {
 			return err
 		}
-		return makePrototypeBranch(makePrototypeBranchData{})
+		return makePrototypeBranch(makePrototypeBranchArgs{})
 	}
 	if doMakePrototypeBranch {
 		return makePrototypeBranch(makePrototypeBranchArgs{
@@ -102,17 +102,39 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// If set to appendData, the user wants to append a new branch to an existing branch.
-// If set to makeFeatureData, the user wants to make an existing branch a feature branch.
-type prototypeData = Either[appendFeatureData, makePrototypeData]
+// If set to appendPrototypeData, the user wants to append a new prototype branch to an existing branch.
+// If set to makePrototypeData, the user wants to make an existing branch a prototype branch.
+type prototypeData = Either[appendPrototypeData, makePrototypeData]
 
-// this configuration is for when "git prototype" is used to make contribution, observed, or parked branches feature branches
+type appendPrototypeData struct {
+	appendFeatureData
+	makePrototypeData
+}
+
+// this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
 type makePrototypeData struct {
 	config         config.ValidatedConfig
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createPrototypeBranch(args createBranchArgs) error {
+func createPrototypeBranch(args createPrototypeBranchArgs) error {
+	program := appendProgram(appendFeatureData{
+		allBranches:               args.allBranches,
+		branchesSnapshot:          args.beginBranchesSnapshot,
+		branchesToSync:            args.branchesToSync,
+		config:                    args.config,
+		dialogTestInputs:          args.dialogTestInputs,
+		dryRun:                    args.dryRun,
+		hasOpenChanges:            args.hasOpenChanges,
+		initialBranch:             args.initialBranch,
+		newBranchParentCandidates: args.newBranchParentCandidates,
+		parentBranch:              args.parentBranch,
+		previousBranch:            args.previousBranch,
+		remotes:                   args.remotes,
+		stashSize:                 args.beginStashSize,
+		targetBranch:              args.targetBranch,
+	})
+	program.Add(&opcode.Make)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -122,7 +144,7 @@ func createPrototypeBranch(args createBranchArgs) error {
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            appendProgram(args.appendData),
+		RunProgram:            program,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.backend,
@@ -144,8 +166,7 @@ func createPrototypeBranch(args createBranchArgs) error {
 	})
 }
 
-type createBranchArgs struct {
-	appendData            appendData
+type createPrototypeBranchArgs struct {
 	backend               gitdomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
@@ -267,8 +288,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	return
 }
 
-func makeFeatureBranch(args makeFeatureBranchArgs) error {
-	err := validateMakeFeatureData(args.makeFeatureData)
+func makePrototypeBranch(args makePrototypeBranchArgs) error {
+	err := validateMakePrototypeData(args.makeFeatureData)
 	if err != nil {
 		return err
 	}
