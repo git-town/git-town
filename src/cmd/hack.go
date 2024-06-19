@@ -71,7 +71,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	}
 	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
 	if doAppend {
-		return createBranch(createBranchArgs{
+		return createFeatureBranch(createFeatureBranchArgs{
 			appendData:            appendData,
 			backend:               repo.Backend,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
@@ -101,7 +101,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 
 // If set to appendData, the user wants to append a new branch to an existing branch.
 // If set to makeFeatureData, the user wants to make an existing branch a feature branch.
-type hackData = Either[appendData, makeFeatureData]
+type hackData = Either[appendFeatureData, makeFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type makeFeatureData struct {
@@ -109,7 +109,7 @@ type makeFeatureData struct {
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createBranch(args createBranchArgs) error {
+func createFeatureBranch(args createFeatureBranchArgs) error {
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -141,8 +141,8 @@ func createBranch(args createBranchArgs) error {
 	})
 }
 
-type createBranchArgs struct {
-	appendData            appendData
+type createFeatureBranchArgs struct {
+	appendData            appendFeatureData
 	backend               gitdomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
@@ -218,7 +218,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendData, makeFeatureData](makeFeatureData{
+		data = Right[appendFeatureData, makeFeatureData](makeFeatureData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
@@ -245,7 +245,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendData, makeFeatureData](appendData{
+	data = Left[appendFeatureData, makeFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
