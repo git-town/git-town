@@ -141,11 +141,10 @@ Git Town avoids this problem by separating the various meanings of pointers.
 Optionality is expressed via a dedicated `Option` value with naming matching the
 same concepts in Rust. Git Town doesn't utilize pointers for performance
 optimizations. This makes all remaining occurrences of pointers express
-mutability.
+mutability. <<<<<<< HEAD
 
 #### One concept per file
 
-Go recommends a programming style where each Go file contains many different
-concepts (type definitions, functions, constants). In contrast, in the Git Town
-codebase each concept is located in its own file. This allows finding concepts
-by filename.
+# Go recommends a programming style where each Go file contains many different concepts (type definitions, functions, constants). In contrast, in the Git Town codebase each concept is located in its own file. This allows finding concepts by filename.
+
+> main
