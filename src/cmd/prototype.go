@@ -88,7 +88,8 @@ func executePrototype(args []string, verbose bool) error {
 	})
 }
 
-type prototypeData struct {
+type prototypeData = Either[appendData, makePrototypeData]
+type makePrototypeData struct {
 	allBranches         gitdomain.BranchInfos
 	branchesToPrototype commandconfig.BranchesAndTypes
 	checkout            Option[gitdomain.LocalBranchName]
@@ -154,9 +155,6 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 
 func validatePrototypeData(data prototypeData) error {
 	for branchName, branchType := range data.branchesToPrototype {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotPrototype)
