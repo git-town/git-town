@@ -69,35 +69,39 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, makePrototypeBranchData, doMakePrototypeBranch := data.Get()
-	if doAppend {
-		err := createFeatureBranch(createFeatureBranchArgs{
-			appendData:            appendData.appendFeatureData,
-			backend:               repo.Backend,
-			beginBranchesSnapshot: appendData.branchesSnapshot,
-			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        appendData.stashSize,
-			commandsCounter:       repo.CommandsCounter,
-			dryRun:                dryRun,
-			finalMessages:         repo.FinalMessages,
-			frontend:              repo.Frontend,
-			git:                   repo.Git,
-			rootDir:               repo.RootDir,
-			verbose:               verbose,
+	createData, doCreate, makePrototypeBranchData, doMakePrototypeBranch := data.Get()
+	if doCreate {
+		return createPrototypeBranch(appendPrototypeData{
+			allBranches:               createData.allBranches,
+			backend:                   repo.Backend,
+			beginBranchesSnapshot:     createData.beginBranchesSnapshot,
+			beginConfigSnapshot:       createData.beginConfigSnapshot,
+			beginStashSize:            createData.beginStashSize,
+			branchesToSync:            createData.branchesToSync,
+			commandsCounter:           repo.CommandsCounter,
+			config:                    config.ValidatedConfig{},
+			dialogTestInputs:          components.TestInputs{},
+			dryRun:                    dryRun,
+			finalMessages:             stringslice.Collector{},
+			frontend:                  nil,
+			git:                       git.Commands{},
+			hasOpenChanges:            false,
+			initialBranch:             "",
+			newBranchParentCandidates: []gitdomain.LocalBranchName{},
+			previousBranch:            Option{},
+			remotes:                   []gitdomain.Remote{},
+			rootDir:                   "",
+			targetBranch:              "",
+			verbose:                   verbose,
 		})
-		if err != nil {
-			return err
-		}
-		return makePrototypeBranch(makePrototypeBranchArgs{})
 	}
 	if doMakePrototypeBranch {
-		return makePrototypeBranch(makePrototypeBranchArgs{
-			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              makePrototypeBranchData.config,
-			makeFeatureData:     makePrototypeBranchData,
-			repo:                repo,
-			rootDir:             repo.RootDir,
-			verbose:             verbose,
+		return makePrototypeBranch(makePrototypeData{
+			configSnapshot: repo.ConfigSnapshot,
+			config:         makePrototypeBranchData.config,
+			repo:           repo,
+			rootDir:        repo.RootDir,
+			verbose:        verbose,
 		})
 	}
 	panic("both config arms were nil")
