@@ -321,7 +321,7 @@ func makePrototypeBranch(args makePrototypeBranchArgs) error {
 	})
 }
 
-type makeFeatureBranchArgs struct {
+type makePrototypeBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              config.ValidatedConfig
 	makeFeatureData     makeFeatureData
@@ -330,7 +330,7 @@ type makeFeatureBranchArgs struct {
 	verbose             bool
 }
 
-func validateMakeFeatureData(data makeFeatureData) error {
+func validateMakePrototypeData(data makePrototypeData) error {
 	for branchName, branchType := range data.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
