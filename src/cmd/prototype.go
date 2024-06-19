@@ -28,19 +28,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prototypeDesc = "Create a new feature branch off the main branch"
+const prototypeDesc = "Creates prototype branches"
 
 const prototypeHelp = `
-Syncs the main branch, forks a new feature branch with the given name off the main branch, pushes the new feature branch to origin (if and only if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
-
-See "sync" for information regarding upstream remotes.`
+A prototype branch is a local-only feature branch that incorporates updates from its parent branch but is not pushed to the remote repository.
+`
 
 func prototypeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "prototype <branch>",
-		GroupID: "basic",
+		GroupID: "types",
 		Args:    cobra.ArbitraryArgs,
 		Short:   prototypeDesc,
 		Long:    cmdhelpers.Long(prototypeDesc, prototypeHelp),
@@ -69,9 +68,9 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
+	appendData, doAppend, makePrototypeBranchData, doMakePrototypeBranch := data.Get()
 	if doAppend {
-		return createBranch(createBranchArgs{
+		err := createFeatureBranch(createFeatureBranchArgs{
 			appendData:            appendData,
 			backend:               repo.Backend,
 			beginBranchesSnapshot: appendData.branchesSnapshot,
@@ -85,12 +84,16 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			rootDir:               repo.RootDir,
 			verbose:               verbose,
 		})
+		if err != nil {
+			return err
+		}
+		return makePrototypeBranch(makePrototypeBranchData{})
 	}
-	if doMakeFeatureBranch {
-		return makeFeatureBranch(makeFeatureBranchArgs{
+	if doMakePrototypeBranch {
+		return makePrototypeBranch(makePrototypeBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              makeFeatureBranchData.config,
-			makeFeatureData:     makeFeatureBranchData,
+			config:              makePrototypeBranchData.config,
+			makeFeatureData:     makePrototypeBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
 			verbose:             verbose,
@@ -101,15 +104,15 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 
 // If set to appendData, the user wants to append a new branch to an existing branch.
 // If set to makeFeatureData, the user wants to make an existing branch a feature branch.
-type prototypeData = Either[appendData, makeFeatureData]
+type prototypeData = Either[appendFeatureData, makePrototypeData]
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches feature branches
-type makeFeatureData struct {
+type makePrototypeData struct {
 	config         config.ValidatedConfig
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createBranch(args createBranchArgs) error {
+func createPrototypeBranch(args createBranchArgs) error {
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
