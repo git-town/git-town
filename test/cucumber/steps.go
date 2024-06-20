@@ -7,12 +7,16 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/cucumber/godog"
 
 	"github.com/git-town/git-town/v14/src/cli/print"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
@@ -204,7 +208,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		repoStatus, err := state.fixture.DevRepo.RepoStatus(state.fixture.DevRepo.TestRunner)
-		asserts.NoError(err)
+		if err != nil {
+			return err
+		}
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
 		}
