@@ -1786,7 +1786,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the main branch is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
-		state := ctx.Value(keyState).(*ScenarioState)
 		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
 		if branch, has := have.Get(); has {
 			return fmt.Errorf("unexpected main branch setting %q", branch)

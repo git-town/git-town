@@ -1,10 +1,16 @@
 package cucumber
 
 import (
+	"errors"
+	"fmt"
+
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
+	"github.com/git-town/git-town/v14/test/helpers"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -73,14 +79,14 @@ func (self *ScenarioState) CaptureState() {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-// func (self *ScenarioState) compareGherkinTable(table *messages.PickleStepArgument_PickleTable) error {
-// 	fields := helpers.TableFields(table)
-// 	commitTable := self.fixture.CommitTable(fields)
-// 	diff, errorCount := commitTable.EqualGherkin(table)
-// 	if errorCount != 0 {
-// 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
-// 		fmt.Println(diff)
-// 		return errors.New("mismatching commits found, see diff above")
-// 	}
-// 	return nil
-// }
+func (self *ScenarioState) compareGherkinTable(table *godog.Table) error {
+	fields := helpers.TableFields(table)
+	commitTable := self.fixture.CommitTable(fields)
+	diff, errorCount := commitTable.EqualGherkin(table)
+	if errorCount != 0 {
+		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
+		fmt.Println(diff)
+		return errors.New("mismatching commits found, see diff above")
+	}
+	return nil
+}
