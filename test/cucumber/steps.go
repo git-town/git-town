@@ -900,7 +900,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		table := output.RenderExecutedGitCommands(commands, input)
