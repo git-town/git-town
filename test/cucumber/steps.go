@@ -13,6 +13,7 @@ import (
 
 	// . "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/fixture"
+	"github.com/git-town/git-town/v14/test/helpers"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -30,10 +31,8 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		fmt.Println("BEFORE SCENARIO")
 		// create a Fixture for the scenario
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
-		for _, tag := range scenario.Tags {
-			if tag.Name == "@debug" {
-				fixture.DevRepo.Verbose = true
-			}
+		if helpers.HasTag(scenario.Tags, "@debug") {
+			fixture.DevRepo.Verbose = true
 		}
 		return context.WithValue(ctx, keyFixture, fixture), nil
 	})
