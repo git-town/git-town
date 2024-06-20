@@ -44,11 +44,8 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
 type key int
 
-// keyGodogs is the key used to store the available godogs in the context.Context.
-const (
-	keyGodogs key = iota
-	keyState
-)
+// the key for storing the state in the context.Context
+const keyState key = iota
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
@@ -123,33 +120,6 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	sc.Given(`^there are (\d+) godogs$`, func(ctx context.Context, available int) (context.Context, error) {
-		return context.WithValue(ctx, keyGodogs, available), nil
-	})
-
-	sc.When(`^I eat (\d+)$`, func(ctx context.Context, num int) (context.Context, error) {
-		available, ok := ctx.Value(keyGodogs).(int)
-		if !ok {
-			return ctx, errors.New("there are no godogs available")
-		}
-		if available < num {
-			return ctx, fmt.Errorf("you cannot eat %d godogs, there are %d available", num, available)
-		}
-		available -= num
-		return context.WithValue(ctx, keyGodogs, available), nil
-	})
-
-	sc.Then(`^there should be (\d+) remaining$`, func(ctx context.Context, remaining int) error {
-		available, has := ctx.Value(keyGodogs).(int)
-		if !has {
-			return errors.New("there are no godogs available")
-		}
-		if available != remaining {
-			return fmt.Errorf("expected %d godogs to be remaining, but there is %d", remaining, available)
-		}
-		return nil
-	})
-
 	sc.Step(`^a branch "([^"]*)"$`, func(ctx context.Context, branch string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), gitdomain.NewLocalBranchName("main"))
