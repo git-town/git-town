@@ -659,7 +659,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		commit := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))[0]
 		state.fixture.DevRepo.CreateFile(commit.FileName, commit.FileContent)
