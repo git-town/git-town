@@ -41,6 +41,7 @@ var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
+// storing data in context.Context requires keys to have their own type
 type key int
 
 // the key for storing the state in the context.Context
