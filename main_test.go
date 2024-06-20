@@ -53,5 +53,7 @@ func TestGodog(t *testing.T) {
 		Options:              &options,
 	}
 	status := suite.Run()
-	os.Exit(status)
+	if status > 0 {
+		t.FailNow()
+	}
 }
