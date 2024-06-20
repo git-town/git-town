@@ -26,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/helpers"
+	"github.com/git-town/git-town/v14/test/subshell"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
