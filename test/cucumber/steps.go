@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -861,7 +862,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints something like:$`, func(ctx context.Context, expected *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^it prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		regex := regexp.MustCompile(expected.Content)
 		have := stripansi.Strip(state.runOutput)
