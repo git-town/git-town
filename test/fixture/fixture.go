@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
@@ -243,24 +245,24 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 }
 
 // CreateTags creates tags from the given gherkin table.
-// func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
-// 	columnNames := helpers.TableFields(table)
-// 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
-// 		log.Fatalf("tag table must have columns NAME and LOCATION")
-// 	}
-// 	for _, row := range table.Rows[1:] {
-// 		name := row.Cells[0].Value
-// 		location := row.Cells[1].Value
-// 		switch location {
-// 		case "local":
-// 			self.DevRepo.CreateTag(name)
-// 		case "origin":
-// 			self.OriginRepo.GetOrPanic().CreateTag(name)
-// 		default:
-// 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
-// 		}
-// 	}
-// }
+func (self Fixture) CreateTags(table *godog.Table) {
+	columnNames := helpers.TableFields(table)
+	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
+		log.Fatalf("tag table must have columns NAME and LOCATION")
+	}
+	for _, row := range table.Rows[1:] {
+		name := row.Cells[0].Value
+		location := row.Cells[1].Value
+		switch location {
+		case "local":
+			self.DevRepo.CreateTag(name)
+		case "origin":
+			self.OriginRepo.GetOrPanic().CreateTag(name)
+		default:
+			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
+		}
+	}
+}
 
 func (self Fixture) Delete() {
 	os.RemoveAll(self.Dir)
