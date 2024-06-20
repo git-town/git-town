@@ -10,8 +10,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-//nolint:paralleltest
-func TestMain(m *testing.M) {
+func TestMain(_ *testing.M) {
 	options := godog.Options{
 		// DefaultContext: ,
 		// Format:        "progress",

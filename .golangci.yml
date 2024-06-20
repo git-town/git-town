@@ -9,6 +9,7 @@ linters:
     - execinquery # deprecated
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
     - forbidigo # Git Town prints a lot to the CLI
+    - forcetypeassert
     - funlen # we keep track of this via code reviews
     - gci # we prefer keeping import statements as one blocks without empty lines
     - gocognit # we keep track of this via code reviews

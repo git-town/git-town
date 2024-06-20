@@ -42,10 +42,12 @@ var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
+type key int
+
 // keyGodogs is the key used to store the available godogs in the context.Context.
 const (
-	keyGodogs = "123"
-	keyState  = "state"
+	keyGodogs key = iota
+	keyState
 )
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
