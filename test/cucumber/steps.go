@@ -872,7 +872,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints the error:$`, func(ctx context.Context, expected *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^it prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.runExitCodeChecked = true
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
