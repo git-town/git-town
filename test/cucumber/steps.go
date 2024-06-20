@@ -15,8 +15,6 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
-	"github.com/google/go-cmp/cmp"
-
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -34,6 +32,7 @@ import (
 	"github.com/git-town/git-town/v14/test/output"
 	"github.com/git-town/git-town/v14/test/subshell"
 	"github.com/git-town/git-town/v14/test/testruntime"
+	"github.com/google/go-cmp/cmp"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
