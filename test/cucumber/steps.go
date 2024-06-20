@@ -66,7 +66,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    map[string]gitdomain.SHA{},
 			initialWorktreeSHAs:  map[string]gitdomain.SHA{},
-			insideGitRepo:        false,
+			insideGitRepo:        true,
 			runExitCode:          0,
 			runExitCodeChecked:   false,
 			runOutput:            "",
