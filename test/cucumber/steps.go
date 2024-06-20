@@ -31,6 +31,7 @@ import (
 	"github.com/git-town/git-town/v14/test/helpers"
 	"github.com/git-town/git-town/v14/test/output"
 	"github.com/git-town/git-town/v14/test/subshell"
+	"github.com/git-town/git-town/v14/test/testruntime"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
