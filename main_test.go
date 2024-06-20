@@ -10,16 +10,6 @@ import (
 	"github.com/spf13/pflag"
 )
 
-// func FeatureContext(suite *godog.Suite) {
-// 	// The current Godog implementation only provides a FeatureContext,
-// 	// no SuiteContext nor ScenarioContext.
-// 	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
-// 	// and register the steps here.
-// 	// It is initialized in SuiteSteps.BeforeScenario.
-// 	state := cucumber.ScenarioState{}
-// 	cucumber.Steps(suite, &state)
-// }
-
 //nolint:paralleltest
 func TestMain(m *testing.M) {
 	var options = godog.Options{

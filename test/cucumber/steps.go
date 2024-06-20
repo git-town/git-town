@@ -11,7 +11,10 @@ import (
 
 	"github.com/cucumber/godog"
 
-	// . "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/cli/print"
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/helpers"
 )
@@ -24,7 +27,7 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
 // keyGodogs is the key used to store the available godogs in the context.Context.
 const keyGodogs = "123"
-const keyFixture = "fixture"
+const keyState = "state"
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
@@ -33,12 +36,37 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		if helpers.HasTag(scenario.Tags, "@debug") {
 			fixture.DevRepo.Verbose = true
 		}
-		return context.WithValue(ctx, keyFixture, &fixture), nil
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       map[string]gitdomain.SHA{},
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    map[string]gitdomain.SHA{},
+			initialWorktreeSHAs:  map[string]gitdomain.SHA{},
+			insideGitRepo:        false,
+			runExitCode:          0,
+			runExitCodeChecked:   false,
+			runOutput:            "",
+			uncommittedContent:   "",
+			uncommittedFileName:  "",
+		}
+		return context.WithValue(ctx, keyState, &state), nil
 	})
-	scenarioContext.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+
+	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
+		state := ctx.Value(keyState).(*ScenarioState)
+		if err != nil {
+			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
+		}
+		if state.runExitCode != 0 && !state.runExitCodeChecked {
+			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, state.runExitCode))
+			os.Exit(1)
+		}
 		if err == nil {
-			if fixture := ctx.Value(keyFixture).(*fixture.Fixture); fixture != nil {
-				fixture.Delete()
+			if state != nil {
+				state.fixture.Delete()
 			}
 		}
 		return ctx, err
@@ -105,17 +133,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 // // Steps defines Cucumber step implementations around Git workspace management.
 // func Steps(suite *godog.Suite, state *ScenarioState) {
-// 	suite.BeforeScenario(func(scenario *messages.Pickle) {
-// 	})
-
 // 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
-// 		if e != nil {
-// 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
-// 		}
-// 		if state.runExitCode != 0 && !state.runExitCodeChecked {
-// 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
-// 			os.Exit(1)
-// 		}
 // 	})
 
 // 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {

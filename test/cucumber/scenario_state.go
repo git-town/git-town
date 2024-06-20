@@ -71,22 +71,6 @@ func (self *ScenarioState) CaptureState() {
 	}
 }
 
-// Reset restores the null value of this ScenarioState.
-func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	self.fixture = gitEnv
-	self.initialBranches = None[datatable.DataTable]()
-	self.initialDevSHAs = map[string]gitdomain.SHA{}
-	self.initialOriginSHAs = map[string]gitdomain.SHA{}
-	self.initialLineage = None[datatable.DataTable]()
-	self.initialCurrentBranch = None[gitdomain.LocalBranchName]()
-	self.insideGitRepo = true
-	self.runOutput = ""
-	self.runExitCode = 0
-	self.runExitCodeChecked = false
-	self.uncommittedFileName = ""
-	self.uncommittedContent = ""
-}
-
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
 // func (self *ScenarioState) compareGherkinTable(table *messages.PickleStepArgument_PickleTable) error {
