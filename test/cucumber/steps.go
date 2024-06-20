@@ -1367,7 +1367,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the branches are now$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^the branches are now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		existing := state.fixture.Branches()
 		diff, errCount := existing.EqualGherkin(table)
@@ -1379,7 +1379,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the commits$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		initialTable := datatable.FromGherkin(table)
 		state.initialCommits = Some(initialTable)
@@ -1443,7 +1443,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
-	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
@@ -1561,7 +1561,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(ctx context.Context, branchTypeName, name string, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(ctx context.Context, branchTypeName, name string, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		branchName := gitdomain.NewLocalBranchName(name)
 		switch configdomain.NewBranchType(branchTypeName) {
@@ -1588,7 +1588,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(ctx context.Context, name, parent string, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(ctx context.Context, name, parent string, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(name)
 		parentBranch := gitdomain.NewLocalBranchName(parent)
@@ -1901,7 +1901,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		fileTable := state.fixture.DevRepo.FilesInBranches(gitdomain.NewLocalBranchName("main"))
 		diff, errorCount := fileTable.EqualGherkin(table)
@@ -1913,12 +1913,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		return state.compareGherkinTable(table)
 	})
 
-	sc.Step(`^these tags exist$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
@@ -1930,7 +1930,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the tags$`, func(ctx context.Context, table *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^the tags$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.fixture.CreateTags(table)
 		return nil
@@ -1964,7 +1964,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		currentBranches := state.fixture.Branches()
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
@@ -1977,7 +1977,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		table := state.fixture.DevRepo.LineageTable()
 		diff, errCount := table.EqualGherkin(input)
