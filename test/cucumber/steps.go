@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/cucumber/godog"
@@ -32,12 +35,30 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 }
 
 func InitializeSuite(ctx *godog.TestSuiteContext) {
-	// ctx.BeforeSuite(func() {
-	// 	fmt.Println("BEFORE SUITE")
-	// })
-	// ctx.AfterSuite(func() {
-	// 	fmt.Println("AFTER SUITE")
-	// })
+	ctx.BeforeSuite(func() {
+		fmt.Println("BEFORE SUITE")
+		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
+		// TODO: verify if this method is called only once, and if so, remove the mutex
+		beforeSuiteMux.Lock()
+		defer beforeSuiteMux.Unlock()
+		if fixtureFactory == nil {
+			baseDir, err := os.MkdirTemp("", "")
+			if err != nil {
+				log.Fatalf("cannot create base directory for feature specs: %s", err)
+			}
+			// Evaluate symlinks as Mac temp dir is symlinked
+			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
+			if err != nil {
+				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
+			}
+			gm := fixture.NewFactory(evalBaseDir)
+			fixtureFactory = &gm
+		}
+	})
+	ctx.AfterSuite(func() {
+		fmt.Println("AFTER SUITE")
+		fixtureFactory.Remove()
+	})
 	defineSteps(ctx.ScenarioContext())
 }
 
@@ -84,25 +105,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 // 		state.Reset(fixture)
 // 		if helpers.HasTag(scenario, "@debug") {
 // 			state.fixture.DevRepo.Verbose = true
-// 		}
-// 	})
-
-// 	suite.BeforeSuite(func() {
-// 		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
-// 		beforeSuiteMux.Lock()
-// 		defer beforeSuiteMux.Unlock()
-// 		if fixtureFactory == nil {
-// 			baseDir, err := os.MkdirTemp("", "")
-// 			if err != nil {
-// 				log.Fatalf("cannot create base directory for feature specs: %s", err)
-// 			}
-// 			// Evaluate symlinks as Mac temp dir is symlinked
-// 			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
-// 			if err != nil {
-// 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
-// 			}
-// 			gm := fixture.NewFactory(evalBaseDir)
-// 			fixtureFactory = &gm
 // 		}
 // 	})
 

@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/git-town/git-town/v14/test/filesystem"
@@ -39,4 +40,8 @@ func (self *Factory) CreateFixture(scenarioName string) Fixture {
 	envDirName := filesystem.FolderName(scenarioName) + "_" + self.counter.ToString()
 	envPath := filepath.Join(self.dir, envDirName)
 	return CloneFixture(self.memoized, envPath)
+}
+
+func (self *Factory) Remove() {
+	os.RemoveAll(self.dir)
 }
