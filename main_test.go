@@ -19,9 +19,10 @@ func TestMain(_ *testing.M) {
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
-	cukethis := os.Getenv("cukethis") != ""
+	flagThis := os.Getenv("cukethis") != ""
+	flagSmoke := os.Getenv("smoke") != ""
 	switch {
-	case cukethis:
+	case flagThis:
 		options.Format = "pretty"
 	case len(options.Paths) == 0:
 		options.Format = "progress"
@@ -36,10 +37,10 @@ func TestMain(_ *testing.M) {
 	} else {
 		options.Concurrency = runtime.NumCPU() * 4
 	}
-	if os.Getenv("smoke") != "" {
+	if flagSmoke {
 		options.Tags = "@smoke"
 	}
-	if cukethis {
+	if flagThis {
 		options.Tags = "@this"
 	}
 	suite := godog.TestSuite{
