@@ -15,6 +15,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/google/go-cmp/cmp"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
