@@ -20,7 +20,10 @@ func TestMain(_ *testing.M) {
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
+	cukethis := os.Getenv("cukethis") != ""
 	switch {
+	case cukethis:
+		options.Format = "pretty"
 	case len(options.Paths) == 0:
 		options.Format = "progress"
 	case strings.HasSuffix(options.Paths[0], ".feature"):
@@ -37,7 +40,7 @@ func TestMain(_ *testing.M) {
 	if os.Getenv("smoke") != "" {
 		options.Tags = "@smoke"
 	}
-	if os.Getenv("cukethis") != "" {
+	if cukethis {
 		options.Tags = "@this"
 	}
 	suite := godog.TestSuite{
