@@ -754,7 +754,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.CaptureState()
 		updateInitialSHAs(state)
