@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/helpers"
@@ -210,9 +211,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		repoStatus, err := state.fixture.DevRepo.RepoStatus(state.fixture.DevRepo.TestRunner)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
 		}
@@ -410,9 +409,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town is not configured$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		err := state.fixture.DevRepo.RemovePerennialBranchConfiguration()
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		state.fixture.DevRepo.RemoveMainBranchConfiguration()
 		return nil
 	})
@@ -534,9 +531,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		wantBool, err := gohacks.ParseBool(wantStr)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		want := configdomain.Offline(wantBool)
 		have, exists := state.fixture.DevRepo.Config.GlobalGitConfig.Offline.Get()
 		if !exists {
@@ -762,9 +757,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		answers, err := helpers.TableToInputEnv(input)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
@@ -779,9 +772,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		answers, err := helpers.TableToInputEnv(input)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s%d=%s", components.TestInputKey, dialogNumber, answer))
 		}
@@ -1306,9 +1297,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no rebase is in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		repoStatus, err := state.fixture.DevRepo.RepoStatus(state.fixture.DevRepo.TestRunner)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		if repoStatus.RebaseInProgress {
 			return errors.New("expected no rebase in progress")
 		}
@@ -1355,9 +1344,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
 		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 		return nil
 	})
@@ -1500,9 +1487,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 		return nil
 	})
@@ -1951,9 +1936,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			}
 		}
 		stashSize, err := state.fixture.DevRepo.StashSize(state.fixture.DevRepo.TestRunner)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		if stashSize != 1 {
 			return fmt.Errorf("expected 1 stash but found %d", stashSize)
 		}
