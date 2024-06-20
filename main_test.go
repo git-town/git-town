@@ -13,9 +13,8 @@ import (
 
 func TestMain(_ *testing.M) {
 	options := godog.Options{
-		// DefaultContext: ,
 		StopOnFailure: true,
-		// Strict:        true,
+		Strict:        true,
 	}
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()

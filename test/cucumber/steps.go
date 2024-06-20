@@ -93,7 +93,6 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 
 func InitializeSuite(ctx *godog.TestSuiteContext) {
 	ctx.BeforeSuite(func() {
-		fmt.Println("BEFORE SUITE")
 		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
 		// TODO: verify if this method is called only once, and if so, remove the mutex
 		beforeSuiteMux.Lock()
@@ -113,7 +112,6 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 		}
 	})
 	ctx.AfterSuite(func() {
-		fmt.Println("AFTER SUITE")
 		fixtureFactory.Remove()
 	})
 	defineSteps(ctx.ScenarioContext())
