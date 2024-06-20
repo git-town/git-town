@@ -12,7 +12,7 @@ import (
 
 //nolint:paralleltest
 func TestMain(m *testing.M) {
-	var options = godog.Options{
+	options := godog.Options{
 		// DefaultContext: ,
 		// Format:        "progress",
 		StopOnFailure: true,

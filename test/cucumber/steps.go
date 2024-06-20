@@ -43,8 +43,10 @@ var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
 // keyGodogs is the key used to store the available godogs in the context.Context.
-const keyGodogs = "123"
-const keyState = "state"
+const (
+	keyGodogs = "123"
+	keyState  = "state"
+)
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
@@ -119,7 +121,6 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-
 	sc.Given(`^there are (\d+) godogs$`, func(ctx context.Context, available int) (context.Context, error) {
 		return context.WithValue(ctx, keyGodogs, available), nil
 	})
