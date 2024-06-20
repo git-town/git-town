@@ -3,6 +3,7 @@ package main_test
 import (
 	"os"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -13,19 +14,18 @@ import (
 func TestMain(_ *testing.M) {
 	options := godog.Options{
 		// DefaultContext: ,
-		// Format:        "progress",
 		StopOnFailure: true,
 		// Strict:        true,
 	}
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
-	if options.Format == "" {
-		if len(options.Paths) == 0 {
-			options.Format = "progress"
-		} else {
-			options.Format = "pretty"
-		}
+	if len(options.Paths) == 0 {
+		options.Format = "progress"
+	} else if strings.HasSuffix(options.Paths[0], ".feature") {
+		options.Format = "pretty"
+	} else {
+		options.Format = "progress"
 	}
 	if runtime.GOOS == "windows" {
 		options.Tags = "~@skipWindows"
