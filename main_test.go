@@ -21,18 +21,22 @@ import (
 // }
 
 //nolint:paralleltest
-func TestGodog(t *testing.T) {
+func TestMain(m *testing.M) {
 	var options = godog.Options{
 		// DefaultContext: ,
-		Format:        "progress",
+		// Format:        "progress",
 		StopOnFailure: true,
 		// Strict:        true,
 	}
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
-	if len(options.Paths) > 0 {
-		options.Format = "pretty"
+	if options.Format == "" {
+		if len(options.Paths) == 0 {
+			options.Format = "progress"
+		} else {
+			options.Format = "pretty"
+		}
 	}
 	if runtime.GOOS == "windows" {
 		options.Tags = "~@skipWindows"
@@ -47,13 +51,10 @@ func TestGodog(t *testing.T) {
 		options.Tags = "@this"
 	}
 	suite := godog.TestSuite{
-		Name:                 "godogs",
-		TestSuiteInitializer: cucumber.InitializeSuite,
-		ScenarioInitializer:  cucumber.InitializeScenario,
 		Options:              &options,
+		ScenarioInitializer:  cucumber.InitializeScenario,
+		TestSuiteInitializer: cucumber.InitializeSuite,
 	}
 	status := suite.Run()
-	if status > 0 {
-		t.FailNow()
-	}
+	os.Exit(status)
 }
