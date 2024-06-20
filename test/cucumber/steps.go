@@ -1202,7 +1202,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sscStep(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
+	sc.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
 		asserts.NoError(err)
