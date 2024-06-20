@@ -38,7 +38,10 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 	// ctx.AfterSuite(func() {
 	// 	fmt.Println("AFTER SUITE")
 	// })
-	sc := ctx.ScenarioContext()
+	defineSteps(ctx.ScenarioContext())
+}
+
+func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Given(`^there are (\d+) godogs$`, func(ctx context.Context, available int) (context.Context, error) {
 		return context.WithValue(ctx, keyGodogs, available), nil
