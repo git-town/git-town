@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
@@ -770,7 +771,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(ctx context.Context, cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	sc.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(ctx context.Context, cmd string, input *godog.Table) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.CaptureState()
 		updateInitialSHAs(state)
