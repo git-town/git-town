@@ -20,11 +20,12 @@ func TestMain(_ *testing.M) {
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
-	if len(options.Paths) == 0 {
+	switch {
+	case len(options.Paths) == 0:
 		options.Format = "progress"
-	} else if strings.HasSuffix(options.Paths[0], ".feature") {
+	case strings.HasSuffix(options.Paths[0], ".feature"):
 		options.Format = "pretty"
-	} else {
+	default:
 		options.Format = "progress"
 	}
 	if runtime.GOOS == "windows" {
