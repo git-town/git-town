@@ -8,6 +8,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
@@ -22,17 +24,17 @@ type DataTable struct {
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
-// func FromGherkin(table *messages.PickleStepArgument_PickleTable) DataTable {
-// 	result := DataTable{}
-// 	for _, tableRow := range table.Rows {
-// 		resultRow := make([]string, len(tableRow.Cells))
-// 		for t, tableCell := range tableRow.Cells {
-// 			resultRow[t] = tableCell.Value
-// 		}
-// 		result.AddRow(resultRow...)
-// 	}
-// 	return result
-// }
+func FromGherkin(table *godog.Table) DataTable {
+	result := DataTable{}
+	for _, tableRow := range table.Rows {
+		resultRow := make([]string, len(tableRow.Cells))
+		for t, tableCell := range tableRow.Cells {
+			resultRow[t] = tableCell.Value
+		}
+		result.AddRow(resultRow...)
+	}
+	return result
+}
 
 // AddRow adds the given row of table data to this table.
 func (self *DataTable) AddRow(elements ...string) {

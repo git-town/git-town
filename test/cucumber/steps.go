@@ -930,7 +930,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
@@ -942,7 +942,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sscStep(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+	sc.Step(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
 		if !hasConfigKey {
