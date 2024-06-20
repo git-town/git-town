@@ -57,13 +57,13 @@ func (self DataTable) EqualDataTable(other DataTable) (diff string, errorCount i
 
 // EqualGherkin compares this DataTable instance to the given Gherkin self.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-// func (self *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
-// 	if len(self.Cells) == 0 {
-// 		return "your data is empty", 1
-// 	}
-// 	dataTable := FromGherkin(other)
-// 	return self.EqualDataTable(dataTable)
-// }
+func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount int) {
+	if len(self.Cells) == 0 {
+		return "your data is empty", 1
+	}
+	dataTable := FromGherkin(other)
+	return self.EqualDataTable(dataTable)
+}
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
 func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAs map[string]gitdomain.SHA, initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {

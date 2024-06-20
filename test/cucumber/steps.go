@@ -26,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
+	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
@@ -1400,7 +1401,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the committed configuration file:$`, func(ctx context.Context, content *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^the committed configuration file:$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 		state.fixture.DevRepo.StageFiles(configfile.FileName)
@@ -1409,13 +1410,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the configuration file:$`, func(ctx context.Context, content *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^the configuration file:$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 		return nil
 	})
 
-	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err != nil {
@@ -1633,7 +1634,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the home directory contains file "([^"]+)" with content$`, func(ctx context.Context, filename string, docString *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^the home directory contains file "([^"]+)" with content$`, func(ctx context.Context, filename string, docString *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		filePath := filepath.Join(state.fixture.DevRepo.HomeDir, filename)
 		//nolint:gosec // need permission 700 here in order for tests to work
