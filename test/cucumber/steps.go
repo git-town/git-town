@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/godog"
+
 	// . "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/fixture"
 )
@@ -22,12 +23,20 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
 // keyGodogs is the key used to store the available godogs in the context.Context.
 const keyGodogs = "123"
+const keyFixture = "fixture"
 
-func InitializeScenario(ctx *godog.ScenarioContext) {
-	// ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-	// 	fmt.Println("BEFORE SCENARIO")
-	// 	return context.Background(), nil
-	// })
+func InitializeScenario(scenarioContext *godog.ScenarioContext) {
+	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
+		fmt.Println("BEFORE SCENARIO")
+		// create a Fixture for the scenario
+		fixture := fixtureFactory.CreateFixture(scenario.Name)
+		for _, tag := range scenario.Tags {
+			if tag.Name == "@debug" {
+				fixture.DevRepo.Verbose = true
+			}
+		}
+		return context.WithValue(ctx, keyFixture, fixture), nil
+	})
 	// ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
 	// 	fmt.Println("AFTER SCENARIO")
 	// 	return context.Background(), nil
@@ -95,17 +104,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 // // Steps defines Cucumber step implementations around Git workspace management.
 // func Steps(suite *godog.Suite, state *ScenarioState) {
 // 	suite.BeforeScenario(func(scenario *messages.Pickle) {
-// 		// create a Fixture for the scenario
-// 		fixture := fixtureFactory.CreateFixture(scenario.GetName())
-// 		// Godog only provides state for the entire feature.
-// 		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
-// 		// This is a limitation of the current Godog implementation, which doesn't have a `ScenarioContext` method,
-// 		// only a `FeatureContext` method.
-// 		// See main_test.go for additional details.
-// 		state.Reset(fixture)
-// 		if helpers.HasTag(scenario, "@debug") {
-// 			state.fixture.DevRepo.Verbose = true
-// 		}
 // 	})
 
 // 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {

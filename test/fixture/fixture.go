@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
@@ -15,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/filesystem"
 	testgit "github.com/git-town/git-town/v14/test/git"
-	"github.com/git-town/git-town/v14/test/helpers"
 	"github.com/git-town/git-town/v14/test/subshell"
 	"github.com/git-town/git-town/v14/test/testruntime"
 )
@@ -245,24 +243,24 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
-	columnNames := helpers.TableFields(table)
-	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
-		log.Fatalf("tag table must have columns NAME and LOCATION")
-	}
-	for _, row := range table.Rows[1:] {
-		name := row.Cells[0].Value
-		location := row.Cells[1].Value
-		switch location {
-		case "local":
-			self.DevRepo.CreateTag(name)
-		case "origin":
-			self.OriginRepo.GetOrPanic().CreateTag(name)
-		default:
-			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
-		}
-	}
-}
+// func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
+// 	columnNames := helpers.TableFields(table)
+// 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
+// 		log.Fatalf("tag table must have columns NAME and LOCATION")
+// 	}
+// 	for _, row := range table.Rows[1:] {
+// 		name := row.Cells[0].Value
+// 		location := row.Cells[1].Value
+// 		switch location {
+// 		case "local":
+// 			self.DevRepo.CreateTag(name)
+// 		case "origin":
+// 			self.OriginRepo.GetOrPanic().CreateTag(name)
+// 		default:
+// 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
+// 		}
+// 	}
+// }
 
 // TagTable provides a table for all tags in this Git environment.
 func (self Fixture) TagTable() datatable.DataTable {

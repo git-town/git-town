@@ -56,9 +56,6 @@ github.com/cucumber/godog/internal/parser
 github.com/cucumber/godog/internal/storage
 github.com/cucumber/godog/internal/tags
 github.com/cucumber/godog/internal/utils
-# github.com/cucumber/messages-go/v10 v10.0.3
-## explicit; go 1.13
-github.com/cucumber/messages-go/v10
 # github.com/cucumber/messages/go/v21 v21.0.1
 ## explicit; go 1.19
 github.com/cucumber/messages/go/v21
@@ -80,9 +77,6 @@ github.com/go-fed/httpsig
 # github.com/gofrs/uuid v4.4.0+incompatible
 ## explicit
 github.com/gofrs/uuid
-# github.com/gogo/protobuf v1.3.2
-## explicit; go 1.15
-github.com/gogo/protobuf/proto
 # github.com/google/go-cmp v0.6.0
 ## explicit; go 1.13
 github.com/google/go-cmp/cmp
