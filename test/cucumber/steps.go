@@ -28,18 +28,21 @@ const keyFixture = "fixture"
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
-		fmt.Println("BEFORE SCENARIO")
 		// create a Fixture for the scenario
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
 		if helpers.HasTag(scenario.Tags, "@debug") {
 			fixture.DevRepo.Verbose = true
 		}
-		return context.WithValue(ctx, keyFixture, fixture), nil
+		return context.WithValue(ctx, keyFixture, &fixture), nil
 	})
-	// ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
-	// 	fmt.Println("AFTER SCENARIO")
-	// 	return context.Background(), nil
-	// })
+	scenarioContext.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		if err == nil {
+			if fixture := ctx.Value(keyFixture).(*fixture.Fixture); fixture != nil {
+				fixture.Delete()
+			}
+		}
+		return ctx, err
+	})
 }
 
 func InitializeSuite(ctx *godog.TestSuiteContext) {

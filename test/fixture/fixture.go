@@ -262,6 +262,10 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 // 	}
 // }
 
+func (self Fixture) Delete() {
+	os.RemoveAll(self.Dir)
+}
+
 // TagTable provides a table for all tags in this Git environment.
 func (self Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
