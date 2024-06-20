@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/google/go-cmp/cmp"
 
@@ -824,7 +825,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints:$`, func(ctx context.Context, expected *messages.PickleStepArgument_PickleDocString) error {
+	sc.Step(`^it prints:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		if state.runExitCode != 0 {
 			return fmt.Errorf("unexpected exit code %d", state.runExitCode)
