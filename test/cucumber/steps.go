@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/godog"
+	"github.com/google/go-cmp/cmp"
 
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -532,7 +533,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		wantBool, err := gohacks.ParseBool(wantStr)
-		asserts.NoError(err)
+		if err != nil {
+			return err
+		}
 		want := configdomain.Offline(wantBool)
 		have, exists := state.fixture.DevRepo.Config.GlobalGitConfig.Offline.Get()
 		if !exists {
