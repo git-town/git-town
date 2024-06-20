@@ -136,10 +136,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	// 	sc.Step(`^a coworker clones the repository$`, func() error {
-	// 		state.fixture.AddCoworkerRepo()
-	// 		return nil
-	// 	})
+	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) error {
+		state := ctx.Value(keyState).(*ScenarioState)
+		state.fixture.AddCoworkerRepo()
+		return nil
+	})
 
 	// 	sc.Given(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branchText, parentBranch string) error {
 	// 		branch := gitdomain.NewLocalBranchName(branchText)
