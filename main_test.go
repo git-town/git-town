@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"testing"
@@ -35,9 +36,10 @@ func TestGodog(t *testing.T) {
 	if os.Getenv("cukethis") != "" {
 		tags = "@this"
 	}
+	fmt.Println(concurrency)
 	status := godog.RunWithOptions("godog", FeatureContext, godog.Options{
-		Format:        "progress",
-		Concurrency:   runtime.NumCPU() * concurrency,
+		Format:        "pretty",
+		Concurrency:   1,
 		StopOnFailure: true,
 		Strict:        true,
 		Paths:         []string{"features/"},
