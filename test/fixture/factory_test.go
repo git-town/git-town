@@ -13,9 +13,9 @@ func TestFixtureFactory(t *testing.T) {
 
 	t.Run("CreateFixture", func(t *testing.T) {
 		t.Parallel()
-		gm := fixture.CreateFactory()
-		defer gm.Remove()
-		result := gm.CreateFixture("foo")
+		factory := fixture.CreateFactory()
+		defer factory.Remove()
+		result := factory.CreateFixture("foo")
 		_, err := os.Stat(result.DevRepo.WorkingDir)
 		must.False(t, os.IsNotExist(err))
 	})
