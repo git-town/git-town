@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/acarl005/stripansi"
@@ -35,9 +33,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// beforeSuiteMux ensures that we run BeforeSuite only once globally.
-var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
-
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
@@ -49,23 +44,8 @@ const keyState key = iota
 
 func InitializeSuite(ctx *godog.TestSuiteContext) {
 	ctx.BeforeSuite(func() {
-		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
-		// TODO: verify if this method is called only once, and if so, remove the mutex
-		beforeSuiteMux.Lock()
-		defer beforeSuiteMux.Unlock()
-		if fixtureFactory == nil {
-			baseDir, err := os.MkdirTemp("", "")
-			if err != nil {
-				log.Fatalf("cannot create base directory for feature specs: %s", err)
-			}
-			// Evaluate symlinks as Mac temp dir is symlinked
-			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
-			if err != nil {
-				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
-			}
-			gm := fixture.NewFactory(evalBaseDir)
-			fixtureFactory = &gm
-		}
+		factory := fixture.CreateFactory()
+		fixtureFactory = &factory
 	})
 	ctx.AfterSuite(func() {
 		fixtureFactory.Remove()

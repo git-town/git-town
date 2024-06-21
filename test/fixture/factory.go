@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 
@@ -24,6 +25,20 @@ type Factory struct {
 
 	// the memoized environment
 	memoized Fixture
+}
+
+// creates a new FixtureFactory instance
+func CreateFactory() Factory {
+	baseDir, err := os.MkdirTemp("", "")
+	if err != nil {
+		log.Fatalf("cannot create base directory for feature specs: %s", err)
+	}
+	// Evaluate symlinks as Mac temp dir is symlinked
+	evalBaseDir, err := filepath.EvalSymlinks(baseDir)
+	if err != nil {
+		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
+	}
+	return NewFactory(evalBaseDir)
 }
 
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
