@@ -82,17 +82,16 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		state := ctx.Value(keyState).(*ScenarioState)
 		if err != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
+			return ctx, err
 		}
 		if state.runExitCode != 0 && !state.runExitCodeChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, state.runExitCode))
 			os.Exit(1)
 		}
-		if err == nil {
-			if state != nil {
-				state.fixture.Delete()
-			}
+		if state != nil {
+			state.fixture.Delete()
 		}
-		return ctx, err
+		return ctx, nil
 	})
 }
 
