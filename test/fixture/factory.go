@@ -1,6 +1,8 @@
 package fixture
 
 import (
+	"log"
+	"os"
 	"path/filepath"
 
 	"github.com/git-town/git-town/v14/test/filesystem"
@@ -25,12 +27,21 @@ type Factory struct {
 	memoized Fixture
 }
 
-// NewFactory provides a new FixtureFactory instance operating in the given directory.
-func NewFactory(dir string) Factory {
+// creates a new FixtureFactory instance
+func CreateFactory() Factory {
+	baseDir, err := os.MkdirTemp("", "")
+	if err != nil {
+		log.Fatalf("cannot create base directory for feature specs: %s", err)
+	}
+	// Evaluate symlinks as Mac temp dir is symlinked
+	evalBaseDir, err := filepath.EvalSymlinks(baseDir)
+	if err != nil {
+		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
+	}
 	return Factory{
 		counter:  helpers.AtomicCounter{},
-		dir:      dir,
-		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
+		dir:      evalBaseDir,
+		memoized: NewStandardFixture(filepath.Join(evalBaseDir, "memoized")),
 	}
 }
 
@@ -39,4 +50,8 @@ func (self *Factory) CreateFixture(scenarioName string) Fixture {
 	envDirName := filesystem.FolderName(scenarioName) + "_" + self.counter.ToString()
 	envPath := filepath.Join(self.dir, envDirName)
 	return CloneFixture(self.memoized, envPath)
+}
+
+func (self *Factory) Remove() {
+	os.RemoveAll(self.dir)
 }

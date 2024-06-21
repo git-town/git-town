@@ -3,47 +3,51 @@ package main_test
 import (
 	"os"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v14/test/cucumber"
+	"github.com/spf13/pflag"
 )
 
-func FeatureContext(suite *godog.Suite) {
-	// The current Godog implementation only provides a FeatureContext,
-	// no SuiteContext nor ScenarioContext.
-	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
-	// and register the steps here.
-	// It is initialized in SuiteSteps.BeforeScenario.
-	state := cucumber.ScenarioState{}
-	cucumber.Steps(suite, &state)
-}
-
-//nolint:paralleltest
-func TestGodog(t *testing.T) {
-	tags := ""
-	var concurrency int
-	if runtime.GOOS == "windows" {
-		tags = "~@skipWindows"
-		concurrency = 1
-	} else {
-		concurrency = 4
-	}
-	if os.Getenv("smoke") != "" {
-		tags = "@smoke"
-	}
-	if os.Getenv("cukethis") != "" {
-		tags = "@this"
-	}
-	status := godog.RunWithOptions("godog", FeatureContext, godog.Options{
-		Format:        "progress",
-		Concurrency:   runtime.NumCPU() * concurrency,
+func TestMain(_ *testing.M) {
+	options := godog.Options{
 		StopOnFailure: true,
 		Strict:        true,
-		Paths:         []string{"features/"},
-		Tags:          tags,
-	})
-	if status > 0 {
-		t.FailNow()
 	}
+	godog.BindCommandLineFlags("godog.", &options)
+	pflag.Parse()
+	options.Paths = pflag.Args()
+	flagThis := os.Getenv("cukethis") != ""
+	flagSmoke := os.Getenv("smoke") != ""
+	switch {
+	case flagThis:
+		options.Format = "pretty"
+	case len(options.Paths) == 0:
+		options.Format = "progress"
+	case strings.HasSuffix(options.Paths[0], ".feature"):
+		options.Format = "pretty"
+	default:
+		options.Format = "progress"
+	}
+	if runtime.GOOS == "windows" {
+		options.Tags = "~@skipWindows"
+		options.Concurrency = runtime.NumCPU()
+	} else {
+		options.Concurrency = runtime.NumCPU() * 4
+	}
+	if flagSmoke {
+		options.Tags = "@smoke"
+	}
+	if flagThis {
+		options.Tags = "@this"
+	}
+	suite := godog.TestSuite{
+		Options:              &options,
+		ScenarioInitializer:  cucumber.InitializeScenario,
+		TestSuiteInitializer: cucumber.InitializeSuite,
+	}
+	status := suite.Run()
+	os.Exit(status)
 }
