@@ -75,10 +75,8 @@ func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
 
 // provides all branches for which the parent is known
 func (self Lineage) Branches() gitdomain.LocalBranchNames {
-	result := maps.Keys(self.data)
-	slices.SortFunc(result, func(a, b gitdomain.LocalBranchName) int {
-		return cmp.Compare(a.String(), b.String())
-	})
+	var result gitdomain.LocalBranchNames = maps.Keys(self.data)
+	result.Sort()
 	return result
 }
 
