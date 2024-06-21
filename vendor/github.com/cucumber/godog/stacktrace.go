@@ -48,15 +48,15 @@ func (f stackFrame) line() int {
 
 // Format formats the frame according to the fmt.Formatter interface.
 //
-//    %s    source file
-//    %d    source line
-//    %n    function name
-//    %v    equivalent to %s:%d
+//	%s    source file
+//	%d    source line
+//	%n    function name
+//	%v    equivalent to %s:%d
 //
 // Format accepts flags that alter the printing of some verbs, as follows:
 //
-//    %+s   path of source file relative to the compile time GOPATH
-//    %+v   equivalent to %+s:%d
+//	%+s   path of source file relative to the compile time GOPATH
+//	%+v   equivalent to %+s:%d
 func (f stackFrame) Format(s fmt.State, verb rune) {
 	funcname := func(name string) string {
 		i := strings.LastIndex(name, "/")

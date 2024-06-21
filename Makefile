@@ -12,7 +12,7 @@ clear: tools/rta@${RTA_VERSION}  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
 cuke: build  # runs all end-to-end tests
-	@env $(GO_BUILD_ARGS) go test . -v -count=1
+	@env $(GO_BUILD_ARGS) go test -v
 
 cukethis: build  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
