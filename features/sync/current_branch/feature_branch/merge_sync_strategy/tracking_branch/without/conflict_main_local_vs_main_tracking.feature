@@ -41,6 +41,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And no rebase is in progress
     And the initial commits exist
 
+  @messyoutput
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG            | KEYS    |
