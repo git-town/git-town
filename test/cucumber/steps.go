@@ -47,6 +47,32 @@ type key int
 // the key for storing the state in the context.Context
 const keyState key = iota
 
+func InitializeSuite(ctx *godog.TestSuiteContext) {
+	ctx.BeforeSuite(func() {
+		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
+		// TODO: verify if this method is called only once, and if so, remove the mutex
+		beforeSuiteMux.Lock()
+		defer beforeSuiteMux.Unlock()
+		if fixtureFactory == nil {
+			baseDir, err := os.MkdirTemp("", "")
+			if err != nil {
+				log.Fatalf("cannot create base directory for feature specs: %s", err)
+			}
+			// Evaluate symlinks as Mac temp dir is symlinked
+			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
+			if err != nil {
+				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
+			}
+			gm := fixture.NewFactory(evalBaseDir)
+			fixtureFactory = &gm
+		}
+	})
+	ctx.AfterSuite(func() {
+		fixtureFactory.Remove()
+	})
+	defineSteps(ctx.ScenarioContext())
+}
+
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
@@ -88,32 +114,6 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		}
 		return ctx, err
 	})
-}
-
-func InitializeSuite(ctx *godog.TestSuiteContext) {
-	ctx.BeforeSuite(func() {
-		// NOTE: we want to create only one global FixtureFactory instance with one global memoized environment.
-		// TODO: verify if this method is called only once, and if so, remove the mutex
-		beforeSuiteMux.Lock()
-		defer beforeSuiteMux.Unlock()
-		if fixtureFactory == nil {
-			baseDir, err := os.MkdirTemp("", "")
-			if err != nil {
-				log.Fatalf("cannot create base directory for feature specs: %s", err)
-			}
-			// Evaluate symlinks as Mac temp dir is symlinked
-			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
-			if err != nil {
-				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
-			}
-			gm := fixture.NewFactory(evalBaseDir)
-			fixtureFactory = &gm
-		}
-	})
-	ctx.AfterSuite(func() {
-		fixtureFactory.Remove()
-	})
-	defineSteps(ctx.ScenarioContext())
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
