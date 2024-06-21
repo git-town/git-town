@@ -42,17 +42,6 @@ type key int
 // the key for storing the state in the context.Context
 const keyState key = iota
 
-func InitializeSuite(ctx *godog.TestSuiteContext) {
-	ctx.BeforeSuite(func() {
-		factory := fixture.CreateFactory()
-		fixtureFactory = &factory
-	})
-	ctx.AfterSuite(func() {
-		fixtureFactory.Remove()
-	})
-	defineSteps(ctx.ScenarioContext())
-}
-
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
@@ -93,6 +82,17 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		}
 		return ctx, nil
 	})
+}
+
+func InitializeSuite(ctx *godog.TestSuiteContext) {
+	ctx.BeforeSuite(func() {
+		factory := fixture.CreateFactory()
+		fixtureFactory = &factory
+	})
+	ctx.AfterSuite(func() {
+		fixtureFactory.Remove()
+	})
+	defineSteps(ctx.ScenarioContext())
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
