@@ -5,7 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/cucumber/messages-go/v10"
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
@@ -245,7 +246,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
+func (self Fixture) CreateTags(table *godog.Table) {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
 		log.Fatalf("tag table must have columns NAME and LOCATION")
@@ -262,6 +263,10 @@ func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
 	}
+}
+
+func (self Fixture) Delete() {
+	os.RemoveAll(self.Dir)
 }
 
 // TagTable provides a table for all tags in this Git environment.

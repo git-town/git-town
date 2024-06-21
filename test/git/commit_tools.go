@@ -1,7 +1,7 @@
 package git
 
 import (
-	"github.com/cucumber/messages-go/v10"
+	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/test/helpers"
 )
@@ -18,7 +18,7 @@ func DefaultCommit(filenameSuffix string) Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable, branchName gitdomain.LocalBranchName) []Commit {
+func FromGherkinTable(table *godog.Table, branchName gitdomain.LocalBranchName) []Commit {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""

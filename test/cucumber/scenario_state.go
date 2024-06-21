@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cucumber/messages-go/v10"
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -76,25 +77,9 @@ func (self *ScenarioState) CaptureState() {
 	}
 }
 
-// Reset restores the null value of this ScenarioState.
-func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	self.fixture = gitEnv
-	self.initialBranches = None[datatable.DataTable]()
-	self.initialDevSHAs = map[string]gitdomain.SHA{}
-	self.initialOriginSHAs = map[string]gitdomain.SHA{}
-	self.initialLineage = None[datatable.DataTable]()
-	self.initialCurrentBranch = None[gitdomain.LocalBranchName]()
-	self.insideGitRepo = true
-	self.runOutput = ""
-	self.runExitCode = 0
-	self.runExitCodeChecked = false
-	self.uncommittedFileName = ""
-	self.uncommittedContent = ""
-}
-
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareGherkinTable(table *messages.PickleStepArgument_PickleTable) error {
+func (self *ScenarioState) compareGherkinTable(table *godog.Table) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
