@@ -1,8 +1,6 @@
 package configdomain_test
 
 import (
-	"cmp"
-	"slices"
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -335,9 +333,6 @@ func TestLineage(t *testing.T) {
 			lineage.Add(branch1, branch2)
 			lineage.Add(branch3, branch4)
 			have := lineage.Entries()
-			slices.SortFunc(have, func(a, b configdomain.LineageEntry) int {
-				return cmp.Compare(a.Child, b.Child)
-			})
 			want := []configdomain.LineageEntry{
 				{
 					Child:  branch1,
