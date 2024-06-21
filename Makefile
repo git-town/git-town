@@ -12,7 +12,7 @@ clear: tools/rta@${RTA_VERSION}  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
 cuke: build  # runs all end-to-end tests except the ones that mess up the output, best for development
-	@env $(GO_BUILD_ARGS) skipmessy=1 go test -v
+	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
 
 cukeall: build  # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test -v

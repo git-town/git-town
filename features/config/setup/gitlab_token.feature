@@ -1,4 +1,4 @@
-@messy
+@messyoutput
 Feature: enter the GitLab API token
 
   Scenario: auto-detected GitLab platform

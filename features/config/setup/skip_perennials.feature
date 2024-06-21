@@ -1,4 +1,4 @@
-@messy
+@messyoutput
 Feature: don't ask for perennial branches if no branches that could be perennial exist
 
   Background:

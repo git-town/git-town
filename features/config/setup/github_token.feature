@@ -1,4 +1,4 @@
-@messy
+@messyoutput
 Feature: enter the GitHub API token
 
   Scenario: auto-detected GitHub platform

@@ -1,4 +1,4 @@
-@messy
+@messyoutput
 @skipWindows
 Feature: ship a coworker's feature branch
 
