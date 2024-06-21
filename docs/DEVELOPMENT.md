@@ -103,7 +103,13 @@ make cuke
 
 </a>
 
-To run individual Cucumber tests, add a `@this` flag to the test you want to
+Run all tests in the `features/append` folder or file:
+
+```
+go test -- features/append
+```
+
+To run individual Cucumber scenarios, add a `@this` flag to the test you want to
 run. Example:
 
 ```cucumber

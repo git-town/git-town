@@ -1,0 +1,17 @@
+.built
+.compared
+.deps
+.dist
+.dist-compressed
+.go-get
+.gofmt
+.linted
+.tested*
+acceptance/
+bin/
+dist/
+dist_compressed/
+*.bin
+*.iml
+# upx dist/cucumber-gherkin-openbsd-386 fails with a core dump
+core.*.!usr!bin!upx-ucl

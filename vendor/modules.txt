@@ -40,16 +40,25 @@ github.com/charmbracelet/x/term
 # github.com/charmbracelet/x/windows v0.1.2
 ## explicit; go 1.18
 github.com/charmbracelet/x/windows
-# github.com/cucumber/gherkin-go/v11 v11.0.0
-## explicit; go 1.13
-github.com/cucumber/gherkin-go/v11
-# github.com/cucumber/godog v0.9.0
-## explicit; go 1.13
+# github.com/cucumber/gherkin/go/v26 v26.2.0
+## explicit; go 1.19
+github.com/cucumber/gherkin/go/v26
+# github.com/cucumber/godog v0.14.1
+## explicit; go 1.16
 github.com/cucumber/godog
 github.com/cucumber/godog/colors
-# github.com/cucumber/messages-go/v10 v10.0.3
-## explicit; go 1.13
-github.com/cucumber/messages-go/v10
+github.com/cucumber/godog/formatters
+github.com/cucumber/godog/internal/builder
+github.com/cucumber/godog/internal/flags
+github.com/cucumber/godog/internal/formatters
+github.com/cucumber/godog/internal/models
+github.com/cucumber/godog/internal/parser
+github.com/cucumber/godog/internal/storage
+github.com/cucumber/godog/internal/tags
+github.com/cucumber/godog/internal/utils
+# github.com/cucumber/messages/go/v21 v21.0.1
+## explicit; go 1.19
+github.com/cucumber/messages/go/v21
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -68,10 +77,6 @@ github.com/go-fed/httpsig
 # github.com/gofrs/uuid v4.4.0+incompatible
 ## explicit
 github.com/gofrs/uuid
-# github.com/gogo/protobuf v1.3.2
-## explicit; go 1.15
-github.com/gogo/protobuf/io
-github.com/gogo/protobuf/proto
 # github.com/google/go-cmp v0.6.0
 ## explicit; go 1.13
 github.com/google/go-cmp/cmp
@@ -88,12 +93,21 @@ github.com/google/go-querystring/query
 # github.com/hashicorp/go-cleanhttp v0.5.2
 ## explicit; go 1.13
 github.com/hashicorp/go-cleanhttp
+# github.com/hashicorp/go-immutable-radix v1.3.1
+## explicit
+github.com/hashicorp/go-immutable-radix
+# github.com/hashicorp/go-memdb v1.3.4
+## explicit; go 1.13
+github.com/hashicorp/go-memdb
 # github.com/hashicorp/go-retryablehttp v0.7.7
 ## explicit; go 1.19
 github.com/hashicorp/go-retryablehttp
 # github.com/hashicorp/go-version v1.7.0
 ## explicit
 github.com/hashicorp/go-version
+# github.com/hashicorp/golang-lru v0.5.4
+## explicit; go 1.12
+github.com/hashicorp/golang-lru/simplelru
 # github.com/inconshreveable/mousetrap v1.1.0
 ## explicit; go 1.18
 github.com/inconshreveable/mousetrap
@@ -152,8 +166,6 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.8.2
-## explicit; go 1.13
 # github.com/xanzy/go-gitlab v0.105.0
 ## explicit; go 1.19
 github.com/xanzy/go-gitlab
