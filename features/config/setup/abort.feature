@@ -1,3 +1,4 @@
+@messy
 Feature: aborting the setup assistant
 
   Background:

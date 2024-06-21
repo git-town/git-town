@@ -1,3 +1,4 @@
+@messy
 Feature: remove existing configuration in Git metadata
 
   Background:

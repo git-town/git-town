@@ -1,3 +1,4 @@
+@messy
 Feature: override an existing Git alias
 
   Background:

@@ -1,3 +1,4 @@
+@messy
 Feature: ask for missing parent
 
   Scenario: on feature branch without parent

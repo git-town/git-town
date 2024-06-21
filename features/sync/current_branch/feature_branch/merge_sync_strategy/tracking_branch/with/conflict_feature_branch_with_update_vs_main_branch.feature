@@ -53,6 +53,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | origin        | feature commit             | feature_file     | feature content |
     And the initial branches and lineage exist
 
+  @messy
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG            | KEYS    |

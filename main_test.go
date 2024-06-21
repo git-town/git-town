@@ -21,6 +21,7 @@ func TestMain(_ *testing.M) {
 	options.Paths = pflag.Args()
 	flagThis := os.Getenv("cukethis") != ""
 	flagSmoke := os.Getenv("smoke") != ""
+	flagSkipMessy := os.Getenv("skipmessy") != ""
 	switch {
 	case flagThis:
 		options.Format = "pretty"
@@ -31,11 +32,15 @@ func TestMain(_ *testing.M) {
 	default:
 		options.Format = "progress"
 	}
+	// options.Format = "pretty"
 	if runtime.GOOS == "windows" {
 		options.Tags = "~@skipWindows"
 		options.Concurrency = runtime.NumCPU()
 	} else {
 		options.Concurrency = runtime.NumCPU() * 4
+	}
+	if flagSkipMessy {
+		options.Tags = "~@messy"
 	}
 	if flagSmoke {
 		options.Tags = "@smoke"

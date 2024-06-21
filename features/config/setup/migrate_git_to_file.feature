@@ -1,3 +1,4 @@
+@messy
 Feature: migrate existing configuration in Git metadata to a config file
 
   Background:
