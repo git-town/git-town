@@ -38,15 +38,10 @@ func CreateFactory() Factory {
 	if err != nil {
 		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 	}
-	return NewFactory(evalBaseDir)
-}
-
-// NewFactory provides a new FixtureFactory instance operating in the given directory.
-func NewFactory(dir string) Factory {
 	return Factory{
 		counter:  helpers.AtomicCounter{},
-		dir:      dir,
-		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
+		dir:      evalBaseDir,
+		memoized: NewStandardFixture(filepath.Join(evalBaseDir, "memoized")),
 	}
 }
 
