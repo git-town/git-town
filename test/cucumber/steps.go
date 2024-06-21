@@ -49,7 +49,6 @@ const keyState key = iota
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
-		// create a Fixture for the scenario
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
 		if helpers.HasTag(scenario.Tags, "@debug") {
 			fixture.DevRepo.Verbose = true
@@ -59,16 +58,16 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       map[string]gitdomain.SHA{},
+			initialDevSHAs:       map[string]gitdomain.SHA{}, // TODO: make Option
 			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    map[string]gitdomain.SHA{},
-			initialWorktreeSHAs:  map[string]gitdomain.SHA{},
+			initialOriginSHAs:    map[string]gitdomain.SHA{}, // TODO: make Option
+			initialWorktreeSHAs:  map[string]gitdomain.SHA{}, // TODO: make Option
 			insideGitRepo:        true,
-			runExitCode:          0,
+			runExitCode:          0, // TODO: make Option
 			runExitCodeChecked:   false,
-			runOutput:            "",
-			uncommittedContent:   "",
-			uncommittedFileName:  "",
+			runOutput:            "", // TODO: make Option
+			uncommittedContent:   "", // TODO: make Option
+			uncommittedFileName:  "", // TODO: make Option
 		}
 		return context.WithValue(ctx, keyState, &state), nil
 	})
