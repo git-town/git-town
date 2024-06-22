@@ -11,6 +11,7 @@ import (
 
 func TestMutable(t *testing.T) {
 	t.Parallel()
+
 	t.Run("modify the encapsulated value directly", func(t *testing.T) {
 		t.Parallel()
 		branchNames := gitdomain.LocalBranchNames{}
@@ -21,6 +22,7 @@ func TestMutable(t *testing.T) {
 		must.Eq(t, &want, mutable.Value)
 		must.Eq(t, want, branchNames)
 	})
+
 	t.Run("remains mutable when called by value", func(t *testing.T) {
 		t.Parallel()
 		counter := gohacks.Counter(0)
