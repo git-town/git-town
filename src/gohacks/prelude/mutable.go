@@ -1,7 +1,7 @@
 package prelude
 
 // Mutable respresents a mutable value.
-// A value wrapped in Mutable is always mutable, even if passed by reference.
+// A Mutable always correctly mutates its encapsulated value, even if the Mutable gets copied or passed by reference.
 type Mutable[T any] struct {
 	Value *T
 }
