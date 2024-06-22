@@ -12,4 +12,6 @@ func TestCounter(t *testing.T) {
 	counter := gohacks.Counter(0)
 	counter.Inc()
 	must.EqOp(t, 1, counter)
+	counter.Inc()
+	must.EqOp(t, 2, counter)
 }
