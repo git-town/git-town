@@ -73,11 +73,13 @@ and why.
 
 #### Favor descriptive naming over brevity
 
-Many Go codebases, including Go's standard library, use heavily abbreviated
-identifier names. Git Town's code base favors expressive, self-describing
-identifier names over short ones because only this creates a self-describing
-codebase. This is especially true for an open-source codebase maintained
-part-time, that most readers and contributors aren't familiar with. See
+There is a somewhat widespread convention in the Go community to use extremely
+abbreviated names for variables, types, and functions. While we are not against
+this, having short names has the lowest priority of all code quality best
+practices in our book. Making code self-describing is way more important than
+brevity. The Git Town codebase therefore uses self-describing varible names
+whenever it helps. As an open-source codebase, we don't assume any familiarity
+of any reader with the codebase. See
 https://michaelwhatcott.com/familiarity-admits-brevity for more background.
 
 #### Use `self` for method receivers
