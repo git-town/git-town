@@ -158,7 +158,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
+		DialogTestInputs:      NewMutable(&dialogTestInputs),
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

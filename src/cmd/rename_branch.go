@@ -136,7 +136,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
+		DialogTestInputs:      NewMutable(&dialogTestInputs),
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

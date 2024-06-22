@@ -68,7 +68,7 @@ type UnfinishedStateArgs struct {
 	Backend           gitdomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[hostingdomain.Connector]
-	DialogTestInputs  components.TestInputs
+	DialogTestInputs  Mutable[components.TestInputs]
 	FinalMessages     stringslice.Collector
 	Frontend          gitdomain.Runner
 	Git               git.Commands
@@ -211,7 +211,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 
 type quickValidateConfigArgs struct {
 	backend      gitdomain.RunnerQuerier
-	dialogInputs components.TestInputs
+	dialogInputs Mutable[components.TestInputs]
 	git          git.Commands
 	unvalidated  config.UnvalidatedConfig
 }

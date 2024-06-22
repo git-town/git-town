@@ -169,7 +169,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
+		DialogTestInputs:      NewMutable(&dialogTestInputs),
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

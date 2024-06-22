@@ -15,7 +15,7 @@ func enterGitLabToken() *cobra.Command {
 		Use: "gitlab-token",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.GitLabToken(None[configdomain.GitLabToken](), dialogInputs.Next())
+			_, _, err := dialog.GitLabToken(None[configdomain.GitLabToken](), dialogInputs.Value.Next())
 			return err
 		},
 	}

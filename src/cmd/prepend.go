@@ -129,7 +129,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
+		DialogTestInputs:      NewMutable(&dialogTestInputs),
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

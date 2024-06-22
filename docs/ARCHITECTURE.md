@@ -121,34 +121,31 @@ https://michaelwhatcott.com/receiver-names-in-go and
 https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f provide more
 background.
 
-#### Use Option structs to express optionality
+#### Dedicated generic types for Optionality and Mutablitity
 
-Go gives pointers several orthogonal meanings. In Go, pointers are used to:
+Go gives pointers several orthogonal meanings. In Go, pointers can be used to
+express optionality. The easiest way to have a variable that can sometimes have
+a value and sometimes not is making it a pointer. In this case, `nil` means
+there is no value and not-nil means there is a value. The problem with this is
+that Go doesn't help with checking for absent values in any way. This leads to
+runtime panics when trying to use a variable that contains nothing.
 
-- express optionality: The easiest way to have a variable that can sometimes
-  have a value and sometimes not is making it a pointer. In this case, `nil`
-  means there is no value and not-nil means there is a value.
-- express mutability: If you want to mutate function arguments, you must provide
-  them as a pointer.
-- a performance optimizations: very large data structures can be passed around
-  by a pointer to avoid copying all the data around
+The Git Town codebase therefore wraps optional values inside a generic `Option`
+type. This makes clear that a type is optional, and enforces an optionality
+check.
 
-It is typically not obvious which meaning a pointer variable has in Go and there
-is zero help from the type system here. This means either plenty of
-Nil-pointer-derefences or plenty of unnecessary `nil`-checks.
+Another function of pointers in Go is a performance optimizations: If a variable
+is too large to pass by value, one can pass it by reference. The Git Town
+codebase doesn't use this performance optimization because it isn't needed.
 
-Git Town avoids this problem by separating the various meanings of pointers.
-Optionality is expressed via a dedicated `Option` value with naming matching the
-same concepts in Rust. Git Town doesn't utilize pointers for performance
-optimizations. This makes all remaining occurrences of pointers express
-mutability.
-
-#### Use Mutable to express mutability
-
-With similar reasoning for using `Option` express optionality unambiguously in
-the type system, `Mut` expresses mutability unambiguously in the type system. An
-advantage of using `Mut` is that a value encapsulated by `Mut` remains correct
-mutability even if its enclosing container is copied or passed by value.
+The final function of pointers in Go is to express mutability. If you want to
+mutate variables provided as function arguments, you must provide them as a
+pointer. The problem with this approach is that it's not obvious why a function
+argument was provided as a pointer. Is it optional? Is it mutable? Is it merely
+too heavy to pass by value? The Git Town codebase uses the generic `Mutable`
+type to express whether a variable is mutable or not. Any struct field or
+function argument that isn't wrapped in a `Mutable` should be considered
+immutable.
 
 #### One concept per file
 

@@ -101,7 +101,7 @@ type appendFeatureData struct {
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            gitdomain.BranchInfos
 	config                    config.ValidatedConfig
-	dialogTestInputs          components.TestInputs
+	dialogTestInputs          Mutable[components.TestInputs]
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName

@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // Lineage validates that the given lineage contains the ancestry for all given branches.
@@ -24,7 +25,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		outcome, selectedBranch, err := Parent(ParentArgs{
 			Branch:          branchToVerify,
 			DefaultChoice:   args.DefaultChoice,
-			DialogTestInput: args.DialogTestInputs.Next(),
+			DialogTestInput: args.DialogTestInputs.Value.Next(),
 			Lineage:         args.Config.Lineage,
 			LocalBranches:   args.LocalBranches,
 			MainBranch:      args.MainBranch,
@@ -49,7 +50,7 @@ type LineageArgs struct {
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           configdomain.UnvalidatedConfig
 	DefaultChoice    gitdomain.LocalBranchName
-	DialogTestInputs components.TestInputs
+	DialogTestInputs Mutable[components.TestInputs]
 	LocalBranches    gitdomain.LocalBranchNames
 	MainBranch       gitdomain.LocalBranchName
 }
