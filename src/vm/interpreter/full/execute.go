@@ -46,7 +46,7 @@ func Execute(args ExecuteArgs) error {
 
 type ExecuteArgs struct {
 	Backend                 gitdomain.RunnerQuerier
-	CommandsCounter         gohacks.Counter
+	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
 	Connector               Option[hostingdomain.Connector]
 	DialogTestInputs        components.TestInputs
