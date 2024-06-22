@@ -2,6 +2,7 @@ package gohacks
 
 type Counter int
 
+// creates a new Counter instance with the given value
 func NewCounter(value int) Counter {
 	return Counter(value)
 }
