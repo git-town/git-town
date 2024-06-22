@@ -11,7 +11,7 @@ func NewMutable[T any](value *T) Mutable[T] {
 	return Mutable[T]{value}
 }
 
-// provides an immutable copy of the current value
+// provides an immutable copy of the enclosed mutable value
 func (self Mutable[T]) Get() T { //nolint:ireturn
 	return *self.Value
 }
