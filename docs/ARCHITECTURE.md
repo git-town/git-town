@@ -149,6 +149,12 @@ type to express whether a variable is mutable or not. Any struct field or
 function argument that isn't wrapped in a `Mutable` should be considered
 immutable.
 
+These elements help make invalid states unrepresentable in the typesystem. This
+helps prevent dozens, if not hundreds of bugs in the Git Town codebase and is
+therefore worth the small amount of additional complexity. We follow the naming
+of equivalent concepts in Rust since that community has figured all of this out
+before and it works very well there.
+
 #### One concept per file
 
 Go recommends a programming style where each Go file contains many different
