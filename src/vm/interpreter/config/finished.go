@@ -43,7 +43,7 @@ func Finished(args FinishedArgs) error {
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UnfinishedDetails:        NoneP[runstate.UnfinishedRunStateDetails](),
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Count(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
 	return statefile.Save(runState, args.RootDir)
 }
 
@@ -51,7 +51,7 @@ type FinishedArgs struct {
 	Backend             gitdomain.RunnerQuerier
 	BeginConfigSnapshot undoconfig.ConfigSnapshot
 	Command             string
-	CommandsCounter     gohacks.Counter
+	CommandsCounter     Mutable[gohacks.Counter]
 	EndConfigSnapshot   undoconfig.ConfigSnapshot
 	FinalMessages       stringslice.Collector
 	RootDir             gitdomain.RepoRootDir
