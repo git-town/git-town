@@ -1,3 +1,4 @@
+@messyoutput
 Feature: enter the Gitea API token
 
   Scenario: auto-detected Gitea platform

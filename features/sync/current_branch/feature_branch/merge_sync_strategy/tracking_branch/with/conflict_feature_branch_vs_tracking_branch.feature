@@ -45,6 +45,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the initial commits exist
     And the initial branches and lineage exist
 
+  @messyoutput
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG            | KEYS    |
