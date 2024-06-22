@@ -1,3 +1,4 @@
+@messyoutput
 Feature: override an existing Git alias
 
   Background:

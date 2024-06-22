@@ -1,3 +1,4 @@
+@messyoutput
 Feature: change existing information in Git metadata
 
   Background:

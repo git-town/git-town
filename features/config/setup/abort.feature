@@ -1,3 +1,4 @@
+@messyoutput
 Feature: aborting the setup assistant
 
   Background:

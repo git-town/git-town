@@ -1,3 +1,4 @@
+@messyoutput
 Feature: Accepting all default values leads to a working setup
 
   Background:
