@@ -59,7 +59,7 @@ func executeSkip(verbose bool) error {
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -13,7 +13,7 @@ func enterShipDeleteTrackingBranch() *cobra.Command {
 		Use: "ship-delete-tracking-branch",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.ShipDeleteTrackingBranch(true, dialogTestInputs.Next())
+			_, _, err := dialog.ShipDeleteTrackingBranch(true, dialogTestInputs.Value.Next())
 			return err
 		},
 	}

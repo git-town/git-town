@@ -134,7 +134,7 @@ type shipData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[hostingdomain.Connector]
-	dialogTestInputs         components.TestInputs
+	dialogTestInputs         Mutable[components.TestInputs]
 	dryRun                   bool
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
@@ -158,7 +158,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -113,7 +113,7 @@ type proposeData struct {
 	branchesToSync   gitdomain.BranchInfos
 	config           config.ValidatedConfig
 	connector        Option[hostingdomain.Connector]
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -136,7 +136,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -126,7 +126,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

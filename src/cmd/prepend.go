@@ -102,7 +102,7 @@ type prependData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      gitdomain.BranchInfos
 	config              config.ValidatedConfig
-	dialogTestInputs    components.TestInputs
+	dialogTestInputs    Mutable[components.TestInputs]
 	dryRun              bool
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
@@ -129,7 +129,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
@@ -98,7 +97,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

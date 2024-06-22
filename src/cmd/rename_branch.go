@@ -111,7 +111,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 type renameBranchData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -136,7 +136,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
