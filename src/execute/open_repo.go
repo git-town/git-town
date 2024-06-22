@@ -21,7 +21,7 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
-	commandsCounter := NewMutable[gohacks.Counter]()
+	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,

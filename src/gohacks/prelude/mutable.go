@@ -6,8 +6,7 @@ type Mutable[T any] struct {
 	Value *T
 }
 
-func NewMutable[T any]() Mutable[T] {
-	value := new(T)
+func NewMutable[T any](value *T) Mutable[T] {
 	return Mutable[T]{value}
 }
 
