@@ -9,7 +9,7 @@ import (
 
 func TestCounter(t *testing.T) {
 	t.Parallel()
-	counter := gohacks.NewCounter(0)
+	counter := gohacks.Counter(0)
 	counter.Inc()
 	must.EqOp(t, 1, counter)
 }

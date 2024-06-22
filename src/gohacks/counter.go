@@ -1,11 +1,8 @@
 package gohacks
 
+// Counter is a special type used for counting things.
+// The zero value is a valid empty counter.
 type Counter int
-
-// creates a new Counter instance with the given value
-func NewCounter(value int) Counter {
-	return Counter(value)
-}
 
 // adds 1 to this counter
 func (self *Counter) Inc() {
