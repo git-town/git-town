@@ -60,7 +60,7 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
+	print.Footer(verbose, *repo.CommandsCounter.Value, repo.FinalMessages.Result())
 	return nil
 }
 

@@ -73,9 +73,9 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 
 type LoadRepoSnapshotArgs struct {
 	Backend               gitdomain.RunnerQuerier
-	CommandsCounter       gohacks.Counter
+	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
-	DialogTestInputs      components.TestInputs
+	DialogTestInputs      components.TestInputs // TODO: make mutable?
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              gitdomain.Runner
