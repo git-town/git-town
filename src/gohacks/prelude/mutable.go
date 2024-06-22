@@ -7,8 +7,8 @@ type Mutable[T any] struct {
 }
 
 func NewMutable[T any]() Mutable[T] {
-	var value T
-	return Mutable[T]{&value}
+	value := new(T)
+	return Mutable[T]{value}
 }
 
 // provides an immutable copy of the current value
