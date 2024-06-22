@@ -11,11 +11,10 @@ import (
 func TestMutable(t *testing.T) {
 	t.Parallel()
 	branchNames := gitdomain.LocalBranchNames{}
-	mutable := Mutable[gitdomain.LocalBranchNames]{&branchNames}
+	mutable := NewMutable(&branchNames)
 	mutable.Value.Prepend("branch-1")
 	mutable.Value.Prepend("branch-2")
-	have := mutable.Value
 	want := gitdomain.NewLocalBranchNames("branch-2", "branch-1")
-	must.Eq(t, &want, have)
+	must.Eq(t, &want, mutable.Value)
 	must.Eq(t, want, branchNames)
 }
