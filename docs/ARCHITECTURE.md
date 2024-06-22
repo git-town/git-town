@@ -143,6 +143,13 @@ same concepts in Rust. Git Town doesn't utilize pointers for performance
 optimizations. This makes all remaining occurrences of pointers express
 mutability.
 
+#### Use Mutable to express mutability
+
+With similar reasoning for using `Option` express optionality unambiguously in
+the type system, `Mut` expresses mutability unambiguously in the type system. An
+advantage of using `Mut` is that a value encapsulated by `Mut` remains correct
+mutability even if its enclosing container is copied or passed by value.
+
 #### One concept per file
 
 Go recommends a programming style where each Go file contains many different
