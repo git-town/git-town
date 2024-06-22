@@ -1,5 +1,5 @@
 {
-  "allowed-tags": [ "on", { "tags": [ "@skipWindows", "@smoke" ] } ],
+  "allowed-tags": [ "on", { "tags": [ "@messyoutput", "@skipWindows", "@smoke" ] } ],
   "file-name": [ "on", { "style": "snake_case" } ],
   "indentation": [
     "on",

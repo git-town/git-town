@@ -52,7 +52,7 @@ func executeStatus(verbose bool) error {
 		return err
 	}
 	displayStatus(*data)
-	print.Footer(verbose, repo.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
 	return nil
 }
 

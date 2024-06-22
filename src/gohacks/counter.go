@@ -1,22 +1,10 @@
 package gohacks
 
-// Counter is a Statistics implementation that counts how many commands were run.
-// This struct is always mutable, even if you provide or call it by value.
-type Counter struct {
-	count *int
-}
+// Counter is a special type used for counting things.
+// The zero value is a valid empty counter.
+type Counter int
 
-func NewCounter() Counter {
-	var count int
-	return Counter{
-		count: &count,
-	}
-}
-
-func (self *Counter) Count() int {
-	return *self.count
-}
-
-func (self *Counter) Register() {
-	*self.count++
+// adds 1 to this counter
+func (self *Counter) Inc() {
+	*self += 1
 }
