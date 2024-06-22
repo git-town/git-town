@@ -41,7 +41,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 		unfinishedDetails.EndBranch,
 		unfinishedDetails.EndTime,
 		unfinishedDetails.CanSkip,
-		args.DialogTestInputs.Next(),
+		args.DialogTestInputs.Value.Next(),
 	)
 	if err != nil {
 		return false, err
@@ -129,7 +129,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Next())
+		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Value.Next())
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}

@@ -82,7 +82,7 @@ func executeUndo(verbose bool) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[hostingdomain.Connector]
-	dialogTestInputs        components.TestInputs
+	dialogTestInputs        Mutable[components.TestInputs]
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          Option[gitdomain.LocalBranchName]
@@ -103,7 +103,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      NewMutable(&dialogTestInputs),
+		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
