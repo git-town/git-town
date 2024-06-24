@@ -62,7 +62,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			runExitCodeChecked:   false,
 			runOutput:            None[string](),
 			uncommittedContent:   None[string](),
-			uncommittedFileName:  "", // TODO: make Option
+			uncommittedFileName:  None[string](),
 		}
 		return context.WithValue(ctx, keyState, &state), nil
 	})
@@ -203,11 +203,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
-		state.uncommittedFileName = "uncommitted file"
+		filename := "uncommitted file"
+		state.uncommittedFileName = Some(filename)
 		content := "uncommitted content"
 		state.uncommittedContent = Some(content)
 		state.fixture.DevRepo.CreateFile(
-			state.uncommittedFileName,
+			filename,
 			content,
 		)
 		return nil
@@ -215,19 +216,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^an uncommitted file in folder "([^"]*)"$`, func(ctx context.Context, folder string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
-		state.uncommittedFileName = folder + "/uncommitted file"
+		fileName := folder + "/uncommitted file"
+		state.uncommittedFileName = Some(fileName)
 		content := "uncommitted content"
 		state.uncommittedContent = Some(content)
-		state.fixture.DevRepo.CreateFile(
-			state.uncommittedFileName,
-			content,
-		)
+		state.fixture.DevRepo.CreateFile(fileName, content)
 		return nil
 	})
 
 	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
-		state.uncommittedFileName = name
+		state.uncommittedFileName = Some(name)
 		state.uncommittedContent = Some(content)
 		state.fixture.DevRepo.CreateFile(name, content)
 		return nil
@@ -1937,7 +1936,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyState).(*ScenarioState)
 		uncommittedFiles := state.fixture.DevRepo.UncommittedFiles()
 		for _, ucf := range uncommittedFiles {
-			if ucf == state.uncommittedFileName {
+			if ucf == state.uncommittedFileName.GetOrPanic() {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
@@ -1952,7 +1951,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		hasFile := state.fixture.DevRepo.HasFile(
-			state.uncommittedFileName,
+			state.uncommittedFileName.GetOrPanic(),
 			state.uncommittedContent.GetOrPanic(),
 		)
 		if hasFile != "" {
