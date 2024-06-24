@@ -201,43 +201,43 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, ve
 }
 
 func prependProgram(data prependData) program.Program {
-	prog := program.Program{}
+	prog := NewMutable(&program.Program{})
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
 			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
-			Program:       &prog,
+			Program:       prog,
 			PushBranch:    true,
 			Remotes:       data.remotes,
 		})
 	}
-	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
+	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: data.newParentCandidates,
 		Branch:    data.targetBranch,
 	})
 	// set the parent of the newly created branch
-	prog.Add(&opcodes.SetExistingParent{
+	prog.Value.Add(&opcodes.SetExistingParent{
 		Branch:    data.targetBranch,
 		Ancestors: data.newParentCandidates,
 	})
 	// set the parent of the branch prepended to
-	prog.Add(&opcodes.SetParentIfBranchExists{
+	prog.Value.Add(&opcodes.SetParentIfBranchExists{
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
 	}
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog
+	return prog.Get()
 }

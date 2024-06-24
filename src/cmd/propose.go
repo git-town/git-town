@@ -218,7 +218,7 @@ func proposeProgram(data proposeData) program.Program {
 			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
-			Program:       &prog,
+			Program:       prog,
 			PushBranch:    true,
 		})
 	}
