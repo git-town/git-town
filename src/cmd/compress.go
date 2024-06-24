@@ -247,33 +247,33 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 }
 
 func compressProgram(data *compressBranchesData) program.Program {
-	prog := program.Program{}
+	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(&prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
+		compressBranchProgram(prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
-	prog.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
+	prog.Value.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
 	}
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog
+	return prog.Get()
 }
 
-func compressBranchProgram(prog *program.Program, data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
+func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
 	if !shouldCompressBranch(data.name, data.branchType, initialBranch) {
 		return
 	}
-	prog.Add(&opcodes.Checkout{Branch: data.name})
-	prog.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
-	prog.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
+	prog.Value.Add(&opcodes.Checkout{Branch: data.name})
+	prog.Value.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
+	prog.Value.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
 	if data.hasTracking && online.Bool() {
-		prog.Add(&opcodes.ForcePushCurrentBranch{})
+		prog.Value.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
 
