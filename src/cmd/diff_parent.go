@@ -60,7 +60,7 @@ func executeDiffParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, *repo.CommandsCounter.Value, repo.FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
 
@@ -70,11 +70,11 @@ type diffParentData struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose bool) (*diffParentData, bool, error) {
+func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose bool) (result diffParentData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return nil, false, err
+		return result, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -94,16 +94,16 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return result, exit, err
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return result, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
 	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
-			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
+			return result, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
 	branchesToDiff := gitdomain.LocalBranchNames{branch}
@@ -121,13 +121,13 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return result, exit, err
 	}
 	parentBranch, hasParent := validatedConfig.Config.Lineage.Parent(branch).Get()
 	if !hasParent {
-		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
+		return result, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
-	return &diffParentData{
+	return diffParentData{
 		branch:       branch,
 		parentBranch: parentBranch,
 	}, false, nil
