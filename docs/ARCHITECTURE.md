@@ -73,17 +73,15 @@ and why.
 
 #### Favor descriptive naming over brevity
 
-There is a somewhat widespread convention in the Go community to use extremely
-abbreviated names for the human-readable identifiers of variables, types, and
-functions. While we are not against brevity, having short identifier names has
-by far the lowest priority of all code quality best practices that we follow in
-this codebase. For example, code being self-describing is orders of magnitudes
-more important than brevity. As a relatively widely used open-source tool with a
-relatively small group of maintainers but many people who contribute just a
-single feature to the codebase, we cannot assume that anybody who reads our
-codebase has any familiarity with any part of it. The Git Town codebase
-therefore uses self-describing varible names everywhere. See
-https://michaelwhatcott.com/familiarity-admits-brevity for more background.
+The Go community often uses highly abbreviated names for variables, types, and
+functions, following the personal preference of some of Go's creators. While
+brevity can be useful, our primary focus for code quality in this codebase is
+clarity and ease of understanding, i.e. self-describing code. Our open-source
+tool has a wide user base and a small group of maintainers, with many
+contributors who only add a single feature. To ensure our code is accessible to
+everyone, we consistently use descriptive identifiers. For more context, please
+refer to
+[this article](https://michaelwhatcott.com/familiarity-admits-brevity)..
 
 #### Use `self` for method receivers
 
