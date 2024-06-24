@@ -53,7 +53,7 @@ type ScenarioState struct {
 	runExitCodeChecked bool
 
 	// the output of the last run of Git Town
-	runOutput string
+	runOutput Option[string]
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent string
