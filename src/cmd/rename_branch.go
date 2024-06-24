@@ -252,7 +252,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 		if previousBranch, hasPrepreviousBranch := data.previousBranch.Get(); hasPrepreviousBranch {
 			previousBranchCandidates = append(gitdomain.LocalBranchNames{previousBranch}, previousBranchCandidates...)
 		}
-		cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
+		cmdhelpers.Wrap(NewMutable(&result), cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
 			RunInGitRoot:             false,
 			StashOpenChanges:         false,

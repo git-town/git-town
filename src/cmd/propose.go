@@ -211,7 +211,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (pr
 }
 
 func proposeProgram(data proposeData) program.Program {
-	prog := program.Program{}
+	prog := NewMutable(&program.Program{})
 	for _, branch := range data.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:   data.allBranches,
@@ -226,17 +226,17 @@ func proposeProgram(data proposeData) program.Program {
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
 	}
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	prog.Add(&opcodes.CreateProposal{
+	prog.Value.Add(&opcodes.CreateProposal{
 		Branch:     data.initialBranch,
 		MainBranch: data.config.Config.MainBranch,
 	})
-	return prog
+	return prog.Get()
 }
 
 func validateProposeData(data proposeData) error {
