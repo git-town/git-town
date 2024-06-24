@@ -59,7 +59,7 @@ type ScenarioState struct {
 	uncommittedContent Option[string]
 
 	// name of the uncommitted file in the workspace
-	uncommittedFileName string
+	uncommittedFileName Option[string]
 }
 
 func (self *ScenarioState) CaptureState() {
