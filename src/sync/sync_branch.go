@@ -8,6 +8,7 @@ import (
 )
 
 // BranchProgram syncs the given branch.
+// TODO: wrap the args.Program argument in a Mutable
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentOtherWorktree := false
 	localName, hasLocalName := branch.LocalName.Get()

@@ -31,7 +31,7 @@ func switchBranch() *cobra.Command {
 			}
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage, branchInfos, true, dialogTestInputs.Next())
+			_, _, err = dialog.SwitchBranch(localBranches, gitdomain.NewLocalBranchName("branch-2"), lineage, branchInfos, true, dialogTestInputs.Value.Next())
 			return err
 		},
 	}

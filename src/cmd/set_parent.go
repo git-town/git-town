@@ -67,7 +67,7 @@ func executeSetParent(verbose bool) error {
 	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
 		Branch:          data.initialBranch,
 		DefaultChoice:   data.defaultChoice,
-		DialogTestInput: data.dialogTestInputs.Next(),
+		DialogTestInput: data.dialogTestInputs.Value.Next(),
 		Lineage:         data.config.Config.Lineage,
 		LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      data.mainBranch,
@@ -114,7 +114,7 @@ type setParentData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	defaultChoice    gitdomain.LocalBranchName
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName

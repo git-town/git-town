@@ -82,7 +82,7 @@ func executeUndo(verbose bool) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[hostingdomain.Connector]
-	dialogTestInputs        components.TestInputs
+	dialogTestInputs        Mutable[components.TestInputs]
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          Option[gitdomain.LocalBranchName]

@@ -16,7 +16,7 @@ func selectCommitAuthorCmd() *cobra.Command {
 			branch := gitdomain.NewLocalBranchName("feature-branch")
 			authors := []gitdomain.Author{"Jean-Luc Picard <captain@enterprise.com>", "William Riker <numberone@enterprise.com>"}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.SelectSquashCommitAuthor(branch, authors, dialogTestInputs.Next())
+			_, _, err := dialog.SelectSquashCommitAuthor(branch, authors, dialogTestInputs.Value.Next())
 			return err
 		},
 	}
