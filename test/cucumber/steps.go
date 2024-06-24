@@ -58,7 +58,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
 			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
 			insideGitRepo:        true,
-			runExitCode:          Some(0),
+			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
 			runOutput:            "", // TODO: make Option
 			uncommittedContent:   "", // TODO: make Option
