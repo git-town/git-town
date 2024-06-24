@@ -90,10 +90,6 @@ type setupData struct {
 	userInput     userInput
 }
 
-func emptySetupData() setupData {
-	return setupData{} //exhaustruct:ignore
-}
-
 type userInput struct {
 	config        configdomain.UnvalidatedConfig
 	configStorage dialog.ConfigStorageOption
@@ -202,11 +198,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	return false, nil
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose bool) (data setupData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptySetupData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
