@@ -40,14 +40,14 @@ func executeRemoveConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = repo.UnvalidatedConfig.GitConfig.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.Config.Lineage)
+	err = repo.UnvalidatedConfig.GitConfig.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.Config.Value.Lineage)
 	if err != nil {
 		return err
 	}
-	aliasNames := maps.Keys(repo.UnvalidatedConfig.Config.Aliases)
+	aliasNames := maps.Keys(repo.UnvalidatedConfig.Config.Value.Aliases)
 	slices.Sort(aliasNames)
 	for _, aliasName := range aliasNames {
-		if strings.HasPrefix(repo.UnvalidatedConfig.Config.Aliases[aliasName], "town ") {
+		if strings.HasPrefix(repo.UnvalidatedConfig.Config.Value.Aliases[aliasName], "town ") {
 			err = repo.Git.RemoveGitAlias(repo.Frontend, aliasName)
 			if err != nil {
 				return err

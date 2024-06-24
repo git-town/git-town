@@ -138,11 +138,11 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		if !hasCurrentBranch {
 			return contributeData{}, errors.New(messages.CurrentBranchCannotDetermine)
 		}
-		branchesToMark.Add(currentBranch, *repo.UnvalidatedConfig.Config)
+		branchesToMark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, *repo.UnvalidatedConfig.Config)
+		branchesToMark.Add(branch, repo.UnvalidatedConfig.Config.Get())
 		trackingBranchName := branch.TrackingBranch()
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
 		if !hasBranchInfo {
@@ -154,7 +154,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
+		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{

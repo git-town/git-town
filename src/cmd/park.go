@@ -122,9 +122,9 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 		return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	if len(args) == 0 {
-		branchesToPark.Add(currentBranch, *repo.UnvalidatedConfig.Config)
+		branchesToPark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
 	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), *repo.UnvalidatedConfig.Config)
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
 	}
 	return parkData{
 		allBranches:    branchesSnapshot.Branches,

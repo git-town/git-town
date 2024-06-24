@@ -62,8 +62,8 @@ func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *repo.UnvalidatedConfig.Config,
-			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
+			Config:          repo.UnvalidatedConfig.Config.Get(),
+			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
