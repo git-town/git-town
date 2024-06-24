@@ -155,6 +155,67 @@ therefore worth the small amount of additional complexity. We follow the naming
 of equivalent concepts in Rust since that community has figured all of this out
 before and it works very well there.
 
+---
+
+In Go, pointers serve several purposes, each with distinct meanings. One common
+use is to express optionality. The simplest way to create a variable that can
+optionally hold a value is by using a pointer. In this context, `nil` signifies
+the absence of a value, while a non-nil pointer indicates the presence of a
+value. However, Go does not inherently support checks for absent values, which
+can lead to runtime panics when attempting to access an uninitialized variable.
+
+To address this, the Git Town codebase wraps optional values in a generic Option
+type. This approach clearly indicates when a type is optional and enforces
+checks for optionality.
+
+Another use of pointers in Go is for performance optimization: if a variable is
+too large to pass by value, it can be passed by reference. However, the Git Town
+codebase does not employ this optimization as it is not necessary for our needs.
+
+Pointers also indicate mutability. If you need to mutate variables passed as
+function arguments, you must pass them as pointers. The challenge here is that
+it can be unclear why a function argument is a pointer—whether it is optional,
+mutable, or simply too large to pass by value. To clarify this, the Git Town
+codebase uses the generic Mutable type to denote mutability. Any struct field or
+function argument not wrapped in a Mutable should be considered immutable.
+
+These practices help eliminate invalid states within the type system, preventing
+numerous potential bugs. While this introduces a small amount of additional
+complexity, it is justified by the increased robustness of the codebase. We have
+adopted the naming conventions from Rust, as they have proven effective in that
+community.
+
+---
+
+Pointers in Go serve various orthogonal purposes. One is expressing optionality.
+The simplest way to create a variable that can either have a value or not is
+with a pointer. Here, `nil` signifies the absence of a value, while a non-nil
+pointer indicates the presence of a value. However, Go does not enforce checks
+for absent values, which leads to runtime panics when attempting to access an
+uninitialized variable.
+
+The Git Town codebase wraps optional values in a generic Option type. This
+approach makes it explicit to both human and machine readers whether a type is
+optional. It also enforces optionality checks or at least makes their absence
+obvious.
+
+Another use of pointers in Go is for performance optimization: if a variable is
+too large to pass by value, it can be passed by reference. The Git Town codebase
+does not employ this optimization as it is not necessary in our use case.
+
+Pointers can also indicate mutability. If you need to mutate variables passed as
+function arguments, you must pass them as pointers. The challenge here is that
+it can be unclear why a function argument is a pointer—whether it is optional,
+mutable, or simply too large to pass by value. To clarify this, the Git Town
+codebase uses the generic Mutable type to denote mutability. Any struct field or
+function argument not wrapped in a Mutable should be considered immutable.
+
+These practices help eliminate invalid states within the type system, preventing
+numerous potential bugs. While this introduces a small amount of additional
+complexity, it is justified by the increased robustness of the codebase. We have
+adopted the naming conventions from Rust, as they have proven effective in that
+community.
+
 #### One concept per file
 
 Go recommends a programming style where each Go file contains many different
