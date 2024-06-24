@@ -78,10 +78,9 @@ functions, following the personal preference of some of Go's creators. While
 brevity can be useful, our primary focus for code quality in this codebase is
 clarity and ease of understanding, i.e. self-describing code. Our open-source
 tool has a wide user base and a small group of maintainers, with many
-contributors who only add a single feature. To ensure our code is accessible to
+contributors adding just a single feature. To ensure our code is accessible to
 everyone, we consistently use descriptive identifiers. For more context, please
-refer to
-[this article](https://michaelwhatcott.com/familiarity-admits-brevity)..
+refer to [this article](https://michaelwhatcott.com/familiarity-admits-brevity).
 
 #### Use `self` for method receivers
 
