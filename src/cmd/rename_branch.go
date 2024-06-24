@@ -220,44 +220,44 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 }
 
 func renameBranchProgram(data renameBranchData) program.Program {
-	result := program.Program{}
+	result := NewMutable(&program.Program{})
 	if oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get(); hasOldLocalBranch {
-		result.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: oldLocalBranch.Location()})
+		result.Value.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: oldLocalBranch.Location()})
 		if data.initialBranch == oldLocalBranch {
-			result.Add(&opcodes.Checkout{Branch: data.newBranch})
+			result.Value.Add(&opcodes.Checkout{Branch: data.newBranch})
 		}
 		if !data.dryRun {
 			if data.config.Config.IsPerennialBranch(data.initialBranch) {
-				result.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
-				result.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
+				result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
+				result.Value.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
 			} else {
-				result.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
+				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 				parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get()
 				if hasParent {
-					result.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
+					result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 				}
 			}
 		}
 		for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
-			result.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
+			result.Value.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
 		}
 		if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 			if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
-				result.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
-				result.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
+				result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+				result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
 			}
 		}
-		result.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
+		result.Value.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
 		previousBranchCandidates := gitdomain.LocalBranchNames{data.newBranch}
 		if previousBranch, hasPrepreviousBranch := data.previousBranch.Get(); hasPrepreviousBranch {
 			previousBranchCandidates = append(gitdomain.LocalBranchNames{previousBranch}, previousBranchCandidates...)
 		}
-		cmdhelpers.Wrap(NewMutable(&result), cmdhelpers.WrapOptions{
+		cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
 			RunInGitRoot:             false,
 			StashOpenChanges:         false,
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
-	return result
+	return result.Get()
 }
