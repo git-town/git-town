@@ -38,7 +38,7 @@ type ScenarioState struct {
 	initialLineage Option[datatable.DataTable]
 
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
-	initialOriginSHAs map[string]gitdomain.SHA
+	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
 	initialWorktreeSHAs map[string]gitdomain.SHA
