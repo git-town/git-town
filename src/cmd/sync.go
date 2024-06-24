@@ -154,15 +154,11 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func emptySyncData() syncData {
-	return syncData{} //exhaustruct:ignore
-}
-
-func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (syncData, bool, error) {
+func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (result syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptySyncData(), false, err
+		return result, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -182,7 +178,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptySyncData(), exit, err
+		return result, exit, err
 	}
 	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
@@ -200,11 +196,11 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 	}
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return emptySyncData(), false, err
+		return result, false, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return emptySyncData(), false, errors.New(messages.CurrentBranchCannotDetermine)
+		return result, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
@@ -226,7 +222,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) 
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptySyncData(), exit, err
+		return result, exit, err
 	}
 	var shouldPushTags bool
 	if allFlag {
