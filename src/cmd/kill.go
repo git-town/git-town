@@ -116,11 +116,11 @@ type killData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (result killData, exit bool, err error) {
+func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data killData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -140,15 +140,15 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToKill, hasBranchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill).Get()
 	if !hasBranchToKill {
-		return result, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
 	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return result, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
+		return data, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
@@ -165,13 +165,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
 	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return result, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == initialBranch {

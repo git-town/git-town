@@ -148,11 +148,11 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (result shipData, exit bool, err error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data shipData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -172,25 +172,25 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return result, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return result, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !hasBranchToShip {
-		return result, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -206,22 +206,22 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
-		return result, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
-		return result, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
@@ -235,7 +235,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return result, false, err
+			return data, false, err
 		}
 	}
 	canShipViaAPI := false
@@ -245,7 +245,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			if branchToShip.HasTrackingBranch() {
 				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 				if err != nil {
-					return result, false, err
+					return data, false, err
 				}
 				proposal, hasProposal := proposalOpt.Get()
 				if hasProposal {
@@ -256,7 +256,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			for _, childBranch := range childBranches {
 				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
 				if err != nil {
-					return result, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 				}
 				childProposal, hasChildProposal := childProposalOpt.Get()
 				if hasChildProposal {

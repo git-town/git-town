@@ -58,7 +58,7 @@ func executeRepo(verbose bool) error {
 	return nil
 }
 
-func determineRepoData(repo execute.OpenRepoResult) (result repoData, err error) {
+func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -68,12 +68,12 @@ func determineRepoData(repo execute.OpenRepoResult) (result repoData, err error)
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return result, err
+			return data, err
 		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return result, hostingdomain.UnsupportedServiceError()
+		return data, hostingdomain.UnsupportedServiceError()
 	}
 	return repoData{
 		connector: connector,

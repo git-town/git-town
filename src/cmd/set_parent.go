@@ -121,11 +121,11 @@ type setParentData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (result setParentData, exit bool, err error) {
+func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (data setParentData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -145,7 +145,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (result s
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -161,12 +161,12 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose bool) (result s
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	mainBranch := validatedConfig.Config.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return result, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	var defaultChoice gitdomain.LocalBranchName
@@ -194,22 +194,22 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (result program.Program, aborted bool) {
+func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (data program.Program, aborted bool) {
 	switch outcome {
 	case dialog.ParentOutcomeAborted:
-		return result, true
+		return data, true
 	case dialog.ParentOutcomePerennialBranch:
-		result.Add(&opcodes.AddToPerennialBranches{
+		data.Add(&opcodes.AddToPerennialBranches{
 			Branch: currentBranch,
 		})
-		result.Add(&opcodes.DeleteParentBranch{
+		data.Add(&opcodes.DeleteParentBranch{
 			Branch: currentBranch,
 		})
 	case dialog.ParentOutcomeSelectedParent:
-		result.Add(&opcodes.SetParent{
+		data.Add(&opcodes.SetParent{
 			Branch: currentBranch,
 			Parent: selectedBranch,
 		})
 	}
-	return result, false
+	return data, false
 }

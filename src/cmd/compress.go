@@ -131,12 +131,12 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (result compressBranchesData, exit bool, err error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (data compressBranchesData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -156,11 +156,11 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return result, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -176,7 +176,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
@@ -188,19 +188,19 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 	for _, branchNameToCompress := range branchNamesToCompress {
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress).Get()
 		if !hasBranchInfo {
-			return result, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
+			return data, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
 		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName())
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
-			return result, exit, err
+			return data, exit, err
 		}
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
-			return result, exit, err
+			return data, exit, err
 		}
 		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
-			return result, exit, err
+			return data, exit, err
 		}
 		commitCount := len(commits)
 		if commitCount == 0 {
@@ -214,7 +214,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		}
 		parentBranch, hasParent := parent.Get()
 		if !hasParent {
-			return result, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
+			return data, exit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		hasRemoteBranch, _, _ := branchInfo.HasRemoteBranch()
 		branchesToCompress = append(branchesToCompress, compressBranchData{
@@ -227,10 +227,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose 
 		})
 	}
 	if len(branchesToCompress) == 0 {
-		return result, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
+		return data, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
 	if len(branchesToCompress) == 1 && branchesToCompress[0].commitCount == 1 {
-		return result, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
+		return data, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
 	}
 	return compressBranchesData{
 		branchesSnapshot:    branchesSnapshot,

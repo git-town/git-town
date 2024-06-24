@@ -122,11 +122,11 @@ type proposeData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (result proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (data proposeData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -146,17 +146,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (re
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return result, false, err
+		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return result, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -171,7 +171,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (re
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return result, exit, err
+		return data, exit, err
 	}
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
@@ -182,11 +182,11 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (re
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return result, false, err
+			return data, false, err
 		}
 	}
 	if connector.IsNone() {
-		return result, false, hostingdomain.UnsupportedServiceError()
+		return data, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
