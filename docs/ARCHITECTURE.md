@@ -75,7 +75,7 @@ and why.
 
 There is a somewhat widespread convention in the Go community to use extremely
 abbreviated names for variables, types, and functions. While we are not against
-this, having short names has the lowest priority of all code quality best
+brevity, having short names has the lowest priority of all code quality best
 practices in our book. Making code self-describing is way more important than
 brevity. The Git Town codebase therefore uses self-describing varible names
 whenever it helps. As a relatively widely used open-source tool with a
