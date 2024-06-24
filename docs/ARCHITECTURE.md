@@ -74,14 +74,16 @@ and why.
 #### Favor descriptive naming over brevity
 
 There is a somewhat widespread convention in the Go community to use extremely
-abbreviated names for variables, types, and functions. While we are not against
-brevity, having short names has the lowest priority of all code quality best
-practices in our book. Making code self-describing is way more important than
-brevity. The Git Town codebase therefore uses self-describing varible names
-whenever it helps. As a relatively widely used open-source tool with a
-relatively small group of maintainers but many contributors, we cannot assume
-that anybody who reads our codebase has any familiarity with any part of it. See
-u https://michaelwhatcott.com/familiarity-admits-brevity for more background.
+abbreviated names for the human-readable identifiers of variables, types, and
+functions. While we are not against brevity, having short identifier names has
+by far the lowest priority of all code quality best practices that we follow in
+this codebase. For example, code being self-describing is orders of magnitudes
+more important than brevity. As a relatively widely used open-source tool with a
+relatively small group of maintainers but many people who contribute just a
+single feature to the codebase, we cannot assume that anybody who reads our
+codebase has any familiarity with any part of it. The Git Town codebase
+therefore uses self-describing varible names everywhere. See
+https://michaelwhatcott.com/familiarity-admits-brevity for more background.
 
 #### Use `self` for method receivers
 
