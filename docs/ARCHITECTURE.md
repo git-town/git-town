@@ -203,12 +203,12 @@ Another use of pointers in Go is for performance optimization: if a variable is
 too large to pass by value, it can be passed by reference. The Git Town codebase
 does not employ this optimization as it is not necessary in our use case.
 
-Pointers can also indicate mutability. If you need to mutate variables passed as
-function arguments, you must pass them as pointers. The challenge here is that
-it can be unclear why a function argument is a pointer—whether it is optional,
-mutable, or simply too large to pass by value. To clarify this, the Git Town
-codebase uses the generic Mutable type to denote mutability. Any struct field or
-function argument not wrapped in a Mutable should be considered immutable.
+Pointers can also indicate mutability. To mutate variables passed as function
+arguments they must be pointers. The challenge here is that it can be unclear
+why a function argument is a pointer: it is optional, mutable, or simply too
+large to pass by value? To clarify this, the Git Town codebase uses the generic
+Mutable type to denote mutability. Any struct field or function argument not
+wrapped in a Mutable should be considered immutable.
 
 These practices help eliminate invalid states within the type system, preventing
 numerous potential bugs. While this introduces a small amount of additional
