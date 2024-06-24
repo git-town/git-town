@@ -131,7 +131,7 @@ with a pointer. Here, `nil` signifies the absence of a value, while a non-nil
 pointer indicates the presence of a value. However, Go does not enforce checks
 for absent values, which leads to runtime panics when attempting to access an
 uninitialized variable. The Git Town codebase wraps optional values in a generic
-Option type. This approach makes it explicit to both human and machine readers
+`Option` type. This approach makes it explicit to both human and machine readers
 whether a type is optional. It also enforces optionality checks or at least
 makes their absence obvious.
 
