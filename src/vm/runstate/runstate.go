@@ -16,7 +16,6 @@ import (
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has been done so far.
-// TODO: remove the exhaustruct:optional from all fields
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
 	BeginBranchesSnapshot    gitdomain.BranchesSnapshot
