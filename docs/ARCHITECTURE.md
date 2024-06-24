@@ -206,15 +206,16 @@ does not employ this optimization as it is not necessary in our use case.
 Pointers can also indicate mutability. To mutate variables passed as function
 arguments they must be pointers. The challenge here is that it can be unclear
 why a function argument is a pointer: it is optional, mutable, or simply too
-large to pass by value? To clarify this, the Git Town codebase uses the generic
-Mutable type to denote mutability. Any struct field or function argument not
-wrapped in a Mutable should be considered immutable.
+large to pass by value? To clarify this, the Git Town codebase wraps mutable
+function arguments and struct fields in the generic `Mutable` type to denote
+mutability. Any variable not wrapped in a `Mutable` should be considered
+immutable.
 
-These practices help eliminate invalid states within the type system, preventing
-numerous potential bugs. While this introduces a small amount of additional
-complexity, it is justified by the increased robustness of the codebase. We have
-adopted the naming conventions from Rust, as they have proven effective in that
-community.
+While this practice introduces a small amount of additional complexity, it is
+justified by the increased robustness of the codebase. It has eliminated entire
+categories of bugs that occurred relatively frequently before. We have adopted
+the naming conventions from the Rust programming language as they have proven
+effective in that community.
 
 #### One concept per file
 
