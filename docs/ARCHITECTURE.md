@@ -146,11 +146,11 @@ function arguments and struct fields in the generic `Mutable` type to denote
 mutability. Any variable not wrapped in a `Mutable` should be considered
 immutable.
 
-While this practice introduces a small amount of additional complexity, it is
-justified by the increased robustness of the codebase. It has eliminated entire
-categories of bugs that occurred relatively frequently before. We have adopted
-the naming conventions from the Rust programming language as they have proven
-effective in that community.
+While this practice introduces a thin layer of additional complexity, this extra
+complexity is justified by drastically increased robustness of the codebase. It
+has eliminated entire categories of bugs that occurred relatively frequently
+before. We have adopted the naming conventions from the Rust programming
+language as they have proven effective in that community.
 
 #### One concept per file
 
