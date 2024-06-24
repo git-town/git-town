@@ -113,7 +113,7 @@ type proposeData struct {
 	branchesToSync   gitdomain.BranchInfos
 	config           config.ValidatedConfig
 	connector        Option[hostingdomain.Connector]
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

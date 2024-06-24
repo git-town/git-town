@@ -42,7 +42,7 @@ func TestTestInputs(t *testing.T) {
 			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		)
 		// request the first entry: A
-		haveNext := testInputs.Next()
+		haveNext := testInputs.Value.Next()
 		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining := components.NewTestInputs(
@@ -51,7 +51,7 @@ func TestTestInputs(t *testing.T) {
 		)
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: B
-		haveNext = testInputs.Next()
+		haveNext = testInputs.Value.Next()
 		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining = components.NewTestInputs(
@@ -59,15 +59,15 @@ func TestTestInputs(t *testing.T) {
 		)
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: C
-		haveNext = testInputs.Next()
+		haveNext = testInputs.Value.Next()
 		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
+		must.EqOp(t, 0, testInputs.Value.Len())
 		// request the next entry: empty
-		haveNext = testInputs.Next()
+		haveNext = testInputs.Value.Next()
 		wantNext = components.TestInput{}
 		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
+		must.EqOp(t, 0, testInputs.Value.Len())
 	})
 
 	t.Run("ParseTestInput", func(t *testing.T) {

@@ -38,7 +38,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, branchAuthors, args.DialogTestInputs.Next())
+	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, branchAuthors, args.DialogTestInputs.Value.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}

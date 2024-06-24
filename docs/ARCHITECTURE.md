@@ -73,12 +73,14 @@ and why.
 
 #### Favor descriptive naming over brevity
 
-Many Go codebases, including Go's standard library, use heavily abbreviated
-identifier names. Git Town's code base favors expressive, self-describing
-identifier names over short ones because only this creates a self-describing
-codebase. This is especially true for an open-source codebase maintained
-part-time, that most readers and contributors aren't familiar with. See
-https://michaelwhatcott.com/familiarity-admits-brevity for more background.
+The Go community often uses highly abbreviated names for variables, types, and
+functions, following the personal preference of some of Go's creators. While
+brevity can be useful, our primary focus for code quality in this codebase is
+clarity and ease of understanding, i.e. self-describing code. Our open-source
+tool has a wide user base and a small group of maintainers, with many
+contributors adding just a single feature. To ensure our code is accessible to
+everyone, we consistently use descriptive identifiers. For more context, please
+refer to [this article](https://michaelwhatcott.com/familiarity-admits-brevity).
 
 #### Use `self` for method receivers
 
@@ -121,38 +123,38 @@ https://michaelwhatcott.com/receiver-names-in-go and
 https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f provide more
 background.
 
-#### Use Option structs to express optionality
+#### Dedicated generic types for Optionality and Mutablitity
 
-Go gives pointers several orthogonal meanings. In Go, pointers are used to:
+Pointers in Go serve various orthogonal purposes. One is expressing optionality.
+The simplest way to create a variable that can either have a value or not is
+with a pointer. Here, `nil` signifies the absence of a value, while a non-nil
+pointer indicates the presence of a value. However, Go does not enforce checks
+for absent values, which leads to runtime panics when attempting to access an
+uninitialized variable. The Git Town codebase wraps optional values in a generic
+`Option` type. This approach makes it explicit to both human and machine readers
+whether a type is optional. It also enforces optionality checks.
 
-- express optionality: The easiest way to have a variable that can sometimes
-  have a value and sometimes not is making it a pointer. In this case, `nil`
-  means there is no value and not-nil means there is a value.
-- express mutability: If you want to mutate function arguments, you must provide
-  them as a pointer.
-- a performance optimizations: very large data structures can be passed around
-  by a pointer to avoid copying all the data around
+Another use of pointers in Go is for performance optimization: if a variable is
+too large to pass by value, it can be passed by reference. The Git Town codebase
+does not employ this optimization as it is not necessary in our use case.
 
-It is typically not obvious which meaning a pointer variable has in Go and there
-is zero help from the type system here. This means either plenty of
-Nil-pointer-derefences or plenty of unnecessary `nil`-checks.
+Pointers can also indicate mutability. To mutate variables passed as function
+arguments they must be pointers. The challenge here is that it can be unclear
+why a function argument is a pointer: it is optional, mutable, or simply too
+large to pass by value? To clarify this, the Git Town codebase wraps mutable
+function arguments and struct fields in the generic `Mutable` type to denote
+mutability. Any variable not wrapped in a `Mutable` should be considered
+immutable.
 
-Git Town avoids this problem by separating the various meanings of pointers.
-Optionality is expressed via a dedicated `Option` value with naming matching the
-same concepts in Rust. Git Town doesn't utilize pointers for performance
-optimizations. This makes all remaining occurrences of pointers express
-mutability.
-
-#### Use Mutable to express mutability
-
-With similar reasoning for using `Option` express optionality unambiguously in
-the type system, `Mut` expresses mutability unambiguously in the type system. An
-advantage of using `Mut` is that a value encapsulated by `Mut` remains correct
-mutability even if its enclosing container is copied or passed by value.
+While this practice introduces a thin layer of additional complexity, and more
+code to handle edge cases correctly, this complexity is justified by the
+drastically increased robustness of the codebase. It has eliminated entire
+categories of bugs that had occurred relatively frequently before. We have
+adopted the naming conventions from the Rust programming language as they have
+proven effective in that community.
 
 #### One concept per file
 
-Go recommends a programming style where each Go file contains many different
-concepts (type definitions, functions, constants). In contrast, in the Git Town
-codebase each concept is located in its own file. This allows finding concepts
-by filename.
+In the Git Town codebase each concept (such as type definitions, functions, or
+constants) is located in its own file. This organization simplifies the process
+of locating specific concepts by opening the file with the matching name.

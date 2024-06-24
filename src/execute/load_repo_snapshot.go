@@ -75,7 +75,7 @@ type LoadRepoSnapshotArgs struct {
 	Backend               gitdomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
-	DialogTestInputs      components.TestInputs // TODO: make mutable?
+	DialogTestInputs      Mutable[components.TestInputs]
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              gitdomain.Runner
