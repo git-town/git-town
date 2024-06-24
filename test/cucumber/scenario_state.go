@@ -56,7 +56,7 @@ type ScenarioState struct {
 	runOutput Option[string]
 
 	// content of the uncommitted file in the workspace
-	uncommittedContent string
+	uncommittedContent Option[string]
 
 	// name of the uncommitted file in the workspace
 	uncommittedFileName string
