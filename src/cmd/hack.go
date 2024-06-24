@@ -156,7 +156,7 @@ type createFeatureBranchArgs struct {
 	verbose               bool
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (result hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -215,10 +215,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return result, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendFeatureData, makeFeatureData](makeFeatureData{
+		result = Right[appendFeatureData, makeFeatureData](makeFeatureData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
@@ -245,7 +245,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendFeatureData, makeFeatureData](appendFeatureData{
+	result = Left[appendFeatureData, makeFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
