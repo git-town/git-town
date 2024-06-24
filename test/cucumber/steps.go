@@ -61,7 +61,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
 			runOutput:            None[string](),
-			uncommittedContent:   "", // TODO: make Option
+			uncommittedContent:   None[string](),
 			uncommittedFileName:  "", // TODO: make Option
 		}
 		return context.WithValue(ctx, keyState, &state), nil
@@ -204,10 +204,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.uncommittedFileName = "uncommitted file"
-		state.uncommittedContent = "uncommitted content"
+		content := "uncommitted content"
+		state.uncommittedContent = Some(content)
 		state.fixture.DevRepo.CreateFile(
 			state.uncommittedFileName,
-			state.uncommittedContent,
+			content,
 		)
 		return nil
 	})
@@ -215,9 +216,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an uncommitted file in folder "([^"]*)"$`, func(ctx context.Context, folder string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.uncommittedFileName = folder + "/uncommitted file"
+		content := "uncommitted content"
+		state.uncommittedContent = Some(content)
 		state.fixture.DevRepo.CreateFile(
 			state.uncommittedFileName,
-			state.uncommittedContent,
+			content,
 		)
 		return nil
 	})
@@ -225,7 +228,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.uncommittedFileName = name
-		state.uncommittedContent = content
+		state.uncommittedContent = Some(content)
 		state.fixture.DevRepo.CreateFile(name, content)
 		return nil
 	})
@@ -1950,7 +1953,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyState).(*ScenarioState)
 		hasFile := state.fixture.DevRepo.HasFile(
 			state.uncommittedFileName,
-			state.uncommittedContent,
+			state.uncommittedContent.GetOrPanic(),
 		)
 		if hasFile != "" {
 			return errors.New(hasFile)
