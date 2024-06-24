@@ -113,17 +113,17 @@ func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exit
 	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (string, int) {
+func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) {
 	parts, err := shellquote.Split(fullCmd)
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
-	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
+	output, exitCode, err = self.QueryWithCode(opts, cmd, args...)
 	asserts.NoError(err)
 	return output, exitCode
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
 	output, err := self.QueryWith(opts, cmd, args...)
 	asserts.NoError(err)
 	return output
@@ -140,20 +140,20 @@ func (self *TestRunner) MustRun(name string, arguments ...string) {
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
+func (self *TestRunner) Query(name string, arguments ...string) (output string, err error) {
 	return self.QueryWith(&Options{}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryString(fullCmd string) (string, error) {
+func (self *TestRunner) QueryString(fullCmd string) (output string, err error) {
 	return self.QueryStringWith(fullCmd, &Options{})
 }
 
 // QueryStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
+func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (output string, err error) {
 	parts, err := shellquote.Split(fullCmd)
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
@@ -162,13 +162,13 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := self.QueryWith(&Options{}, name, arguments...)
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (output string, err error) {
+	output, err = self.QueryWith(&Options{}, name, arguments...)
 	return strings.TrimSpace(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
-func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
+func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (output string, err error) {
 	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)
@@ -177,7 +177,7 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
+func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
 	currentBranchText := ""
 	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -214,23 +214,22 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if opts.Env != nil {
 		subProcess.Env = opts.Env
 	}
-	var output bytes.Buffer
-	subProcess.Stdout = &output
-	subProcess.Stderr = &output
-	err := subProcess.Run()
-	var exitCode int
+	var outputBuf bytes.Buffer
+	subProcess.Stdout = &outputBuf
+	subProcess.Stderr = &outputBuf
+	err = subProcess.Run()
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
-			err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
+			err = subshell.ErrorDetails(cmd, args, err, outputBuf.Bytes())
 		}
 	}
 	if self.Verbose {
 		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, stringslice.JoinArgs(args))
-		os.Stdout.Write(output.Bytes())
+		os.Stdout.Write(outputBuf.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
@@ -238,7 +237,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if opts.IgnoreOutput {
 		return "", exitCode, err
 	}
-	return strings.TrimSpace(output.String()), exitCode, err
+	return strings.TrimSpace(outputBuf.String()), exitCode, err
 }
 
 // Run runs the given command with the given arguments.
