@@ -47,7 +47,7 @@ type ScenarioState struct {
 	insideGitRepo bool
 
 	// the error of the last run of Git Town
-	runExitCode int
+	runExitCode Option[int]
 
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
