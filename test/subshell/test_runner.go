@@ -109,7 +109,7 @@ func (self *TestRunner) MustQuery(name string, arguments ...string) string {
 	return self.MustQueryWith(&Options{}, name, arguments...)
 }
 
-func (self *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
+func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exitCode int) {
 	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
