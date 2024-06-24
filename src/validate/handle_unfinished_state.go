@@ -122,7 +122,7 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
 func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, bool, error) {
-	mainBranch, hasMain := args.unvalidated.Config.MainBranch.Get()
+	mainBranch, hasMain := args.unvalidated.Config.Value.MainBranch.Get()
 	if !hasMain {
 		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)
 		if err != nil {
@@ -138,13 +138,13 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		}
 		mainBranch = validatedMain
 	}
-	gitUserEmail, gitUserName, err := GitUser(*args.unvalidated.Config)
+	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Config.Get())
 	if err != nil {
 		return config.EmptyValidatedConfig(), false, err
 	}
 	return config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
-			UnvalidatedConfig: args.unvalidated.Config,
+			UnvalidatedConfig: args.unvalidated.Config.Value,
 			GitUserEmail:      gitUserEmail,
 			GitUserName:       gitUserName,
 			MainBranch:        mainBranch,
