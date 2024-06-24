@@ -73,9 +73,9 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
 			return ctx, err
 		}
-		exitCode, hasExitCode := state.runExitCode.Get()
-		if hasExitCode && exitCode != 0 && !state.runExitCodeChecked {
-			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, state.runExitCode))
+		exitCode := state.runExitCode.GetOrPanic()
+		if exitCode != 0 && !state.runExitCodeChecked {
+			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
 			os.Exit(1)
 		}
 		if state != nil {
