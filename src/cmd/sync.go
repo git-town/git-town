@@ -98,7 +98,7 @@ func executeSync(all, dryRun, verbose bool) error {
 			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
-			Program:       &runProgram,
+			Program:       NewMutable(&runProgram),
 			PushBranch:    true,
 		},
 		BranchesToSync: data.branchesToSync,
