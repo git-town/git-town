@@ -53,7 +53,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       map[string]gitdomain.SHA{}, // TODO: make Option
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    map[string]gitdomain.SHA{}, // TODO: make Option
 			initialWorktreeSHAs:  map[string]gitdomain.SHA{}, // TODO: make Option
@@ -861,7 +861,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo.Value,
 			state.fixture.SecondWorktree.Value,
-			state.initialDevSHAs,
+			state.initialDevSHAs.GetOrPanic(),
 			state.initialOriginSHAs,
 			state.initialWorktreeSHAs,
 		)
@@ -1952,8 +1952,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 }
 
 func updateInitialSHAs(state *ScenarioState) {
-	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
-		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
+		state.initialDevSHAs = Some(state.fixture.DevRepo.TestCommands.CommitSHAs())
 	}
 	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); len(state.initialOriginSHAs) == 0 && state.insideGitRepo && hasOriginrepo {
 		state.initialOriginSHAs = originRepo.TestCommands.CommitSHAs()
