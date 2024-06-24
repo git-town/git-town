@@ -121,16 +121,12 @@ type renameBranchData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func emptyRenameBranchData() renameBranchData {
-	return renameBranchData{} //exhaustruct:ignore
-}
-
-func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (renameBranchData, bool, error) {
+func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun, verbose bool) (data renameBranchData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptyRenameBranchData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -150,11 +146,11 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyRenameBranchData(), exit, err
+		return data, exit, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return emptyRenameBranchData(), exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
@@ -167,7 +163,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
-		return emptyRenameBranchData(), false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -183,27 +179,27 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyRenameBranchData(), exit, err
+		return data, exit, err
 	}
 	if validatedConfig.Config.IsMainBranch(oldBranchName) {
-		return emptyRenameBranchData(), false, errors.New(messages.RenameMainBranch)
+		return data, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if validatedConfig.Config.IsPerennialBranch(oldBranchName) {
-			return emptyRenameBranchData(), false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return emptyRenameBranchData(), false, errors.New(messages.RenameToSameName)
+		return data, false, errors.New(messages.RenameToSameName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return emptyRenameBranchData(), false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
+		return data, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
-		return emptyRenameBranchData(), false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
-		return emptyRenameBranchData(), false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return renameBranchData{
 		branchesSnapshot: branchesSnapshot,
@@ -213,7 +209,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		newBranch:        newBranchName,
-		oldBranch:        *oldBranch,
+		oldBranch:        *oldBranch, // TODO: replace the *
 		previousBranch:   previousBranch,
 		stashSize:        stashSize,
 	}, false, err
