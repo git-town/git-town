@@ -15,7 +15,7 @@ func enterPerennialRegex() *cobra.Command {
 		Use: "perennial-regex",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.PerennialRegex(None[configdomain.PerennialRegex](), dialogInputs.Next())
+			_, _, err := dialog.PerennialRegex(None[configdomain.PerennialRegex](), dialogInputs.Value.Next())
 			return err
 		},
 	}

@@ -13,7 +13,7 @@ func enterPushNewBranches() *cobra.Command {
 		Use: "push-new-branches",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.PushNewBranches(true, dialogTestInputs.Next())
+			_, _, err := dialog.PushNewBranches(true, dialogTestInputs.Value.Next())
 			return err
 		},
 	}
