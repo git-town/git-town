@@ -862,7 +862,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.fixture.OriginRepo.Value,
 			state.fixture.SecondWorktree.Value,
 			state.initialDevSHAs.GetOrPanic(),
-			state.initialOriginSHAs.GetOrPanic(),
+			state.initialOriginSHAs,
 			state.initialWorktreeSHAs,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)

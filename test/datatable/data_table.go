@@ -11,6 +11,7 @@ import (
 	"github.com/cucumber/godog"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
@@ -66,7 +67,7 @@ func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAs map[string]gitdomain.SHA, initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAsOpt Option[map[string]gitdomain.SHA], initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -101,6 +102,10 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					}
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+					initialOriginSHAs, has := initialOriginSHAsOpt.Get()
+					if !has {
+						panic("no origin SHAs recorded")
+					}
 					commitName := match[29 : len(match)-4]
 					sha, found := initialOriginSHAs[commitName]
 					if !found {
