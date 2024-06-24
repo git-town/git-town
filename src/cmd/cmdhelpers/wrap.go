@@ -2,23 +2,24 @@ package cmdhelpers
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
 )
 
 // Wrap makes the given program perform housekeeping before and after it executes.
-func Wrap(program *program.Program, options WrapOptions) {
-	if program.IsEmpty() {
+func Wrap(program Mutable[program.Program], options WrapOptions) {
+	if program.Value.IsEmpty() {
 		return
 	}
 	if !options.DryRun {
-		program.Add(&opcodes.PreserveCheckoutHistory{
+		program.Value.Add(&opcodes.PreserveCheckoutHistory{
 			PreviousBranchCandidates: options.PreviousBranchCandidates,
 		})
 	}
 	if options.StashOpenChanges {
-		program.Prepend(&opcodes.StashOpenChanges{})
-		program.Add(&opcodes.RestoreOpenChanges{})
+		program.Value.Prepend(&opcodes.StashOpenChanges{})
+		program.Value.Add(&opcodes.RestoreOpenChanges{})
 	}
 }
 

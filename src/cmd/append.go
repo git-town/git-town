@@ -188,27 +188,27 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 }
 
 func appendProgram(data appendFeatureData) program.Program {
-	prog := program.Program{}
+	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		for _, branch := range data.branchesToSync {
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   data.allBranches,
 				Config:        data.config.Config,
 				InitialBranch: data.initialBranch,
-				Program:       &prog,
+				Program:       prog,
 				Remotes:       data.remotes,
 				PushBranch:    true,
 			})
 		}
 	}
-	prog.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
+	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
-	prog.Add(&opcodes.SetExistingParent{
+	prog.Value.Add(&opcodes.SetExistingParent{
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
@@ -216,11 +216,11 @@ func appendProgram(data appendFeatureData) program.Program {
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
 	}
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog
+	return prog.Get()
 }

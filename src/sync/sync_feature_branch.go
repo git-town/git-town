@@ -27,9 +27,9 @@ func FeatureBranchProgram(args featureBranchArgs) {
 
 type featureBranchArgs struct {
 	localName           gitdomain.LocalBranchName
-	offline             configdomain.Offline // whether offline mode is enabled
-	parentOtherWorktree bool                 // whether the parent of this branch exists on another worktre
-	program             *program.Program     // the program to update
+	offline             configdomain.Offline     // whether offline mode is enabled
+	parentOtherWorktree bool                     // whether the parent of this branch exists on another worktre
+	program             Mutable[program.Program] // the program to update
 	remoteName          Option[gitdomain.RemoteBranchName]
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
@@ -37,21 +37,21 @@ type featureBranchArgs struct {
 // syncs the given feature branch using the "merge" sync strategy
 func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
-		args.program.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
+		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	args.program.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 }
 
 // syncs the given feature branch using the "rebase" sync strategy
 func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 	// rebase against parent
-	args.program.Add(&opcodes.RebaseParent{
+	args.program.Value.Add(&opcodes.RebaseParent{
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		if !args.offline.Bool() {
-			args.program.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
+			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
 		}
 	}
 }
@@ -60,6 +60,6 @@ type syncFeatureBranchProgramArgs struct {
 	localName           gitdomain.LocalBranchName
 	offline             configdomain.Offline // whether offline mode is enabled
 	parentOtherWorktree bool
-	program             *program.Program
+	program             Mutable[program.Program]
 	remoteName          Option[gitdomain.RemoteBranchName]
 }
