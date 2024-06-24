@@ -219,7 +219,6 @@ effective in that community.
 
 #### One concept per file
 
-Go recommends a programming style where each Go file contains many different
-concepts (type definitions, functions, constants). In contrast, in the Git Town
-codebase each concept is located in its own file. This allows finding concepts
-by filename.
+In the Git Town codebase each concept (such as type definitions, functions, or
+constants) is located in its own file. This organization simplifies the process
+of locating specific concepts by opening the file with the matching name.
