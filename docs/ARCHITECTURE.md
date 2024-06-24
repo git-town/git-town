@@ -78,9 +78,10 @@ abbreviated names for variables, types, and functions. While we are not against
 this, having short names has the lowest priority of all code quality best
 practices in our book. Making code self-describing is way more important than
 brevity. The Git Town codebase therefore uses self-describing varible names
-whenever it helps. As an open-source codebase, we don't assume any familiarity
-of any reader with the codebase. See
-https://michaelwhatcott.com/familiarity-admits-brevity for more background.
+whenever it helps. As a relatively widely used open-source tool with a
+relatively small group of maintainers but many contributors, we cannot assume
+that anybody who reads our codebase has any familiarity with any part of it. See
+u https://michaelwhatcott.com/familiarity-admits-brevity for more background.
 
 #### Use `self` for method receivers
 
