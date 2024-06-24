@@ -32,7 +32,7 @@ type ScenarioState struct {
 	// because it might contain non-existing remote branches or miss existing remote branches.
 	// An example is when origin removes a branch. initialDevSHAs will still list it
 	// because the developer workspace hasn't fetched updates yet.
-	initialDevSHAs map[string]gitdomain.SHA
+	initialDevSHAs Option[map[string]gitdomain.SHA]
 
 	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage Option[datatable.DataTable]

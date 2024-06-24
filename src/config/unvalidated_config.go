@@ -20,7 +20,6 @@ type Runner interface {
 }
 
 type UnvalidatedConfig struct {
-	// TODO: replace the pointer with Mutable
 	Config          Mutable[configdomain.UnvalidatedConfig] // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig]      // content of git-town.toml, nil = no config file exists
 	DryRun          bool
