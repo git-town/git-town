@@ -41,7 +41,7 @@ type ScenarioState struct {
 	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
-	initialWorktreeSHAs map[string]gitdomain.SHA
+	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
 
 	// insideGitRepo indicates whether the developer workspace contains a Git repository
 	insideGitRepo bool
