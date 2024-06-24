@@ -228,7 +228,7 @@ func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) 
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(prog Mutable[program.Program], finalUndoProgram Mutable[program.Program], data *killData) {
+func killFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data *killData) {
 	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if data.branchToKillInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToKill && data.config.Config.IsOnline() {
 		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
