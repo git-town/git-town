@@ -56,7 +56,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			initialDevSHAs:       None[map[string]gitdomain.SHA](),
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
-			initialWorktreeSHAs:  map[string]gitdomain.SHA{}, // TODO: make Option
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
 			insideGitRepo:        true,
 			runExitCode:          0, // TODO: make Option
 			runExitCodeChecked:   false,
@@ -1958,7 +1958,7 @@ func updateInitialSHAs(state *ScenarioState) {
 	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
 		state.initialOriginSHAs = Some(originRepo.TestCommands.CommitSHAs())
 	}
-	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); len(state.initialWorktreeSHAs) == 0 && state.insideGitRepo && hasSecondWorkTree {
-		state.initialWorktreeSHAs = secondWorkTree.TestCommands.CommitSHAs()
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
+		state.initialWorktreeSHAs = Some(secondWorkTree.TestCommands.CommitSHAs())
 	}
 }

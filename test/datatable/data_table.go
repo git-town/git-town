@@ -67,7 +67,7 @@ func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAsOpt Option[map[string]gitdomain.SHA], initialWorktreeSHAs map[string]gitdomain.SHA) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAsOpt, initialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -123,6 +123,10 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-worktree-before-run "):
 					commitName := match[31 : len(match)-4]
+					initialWorktreeSHAs, has := initialWorktreeSHAsOpt.Get()
+					if !has {
+						panic("no initial worktree SHAs recorded")
+					}
 					sha, found := initialWorktreeSHAs[commitName]
 					if !found {
 						fmt.Printf("I cannot find the initial worktree commit %q.\n", commitName)
