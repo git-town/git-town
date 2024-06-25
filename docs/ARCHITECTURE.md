@@ -2,17 +2,19 @@
 
 ### Design goals
 
-Complexity in the Git Town codebase arises from multiple conflicting design
-goals:
+The complexity in the Git Town codebase stems from balancing several challenging
+design objectives:
 
-1. Execute a highly variable set of Git operations depending on the current
-   status of the repository. Git Town's business logic covers so many edge cases
-   that most Git Town commands aren't just a simple scripts, they are complex
-   programs.
-2. When a step in these programs fails, terminate to allow the end user to
-   resolve problems in the same terminal window and shell environment that they
-   ran Git Town in and then resume execution.
-3. Be able to reliably undo everything that Git Town has done.
+1. **Extreme configurability:** Execute a highly variable set of Git operations
+   depending on the current status of the repository. Git Town's business logic
+   covers so many edge cases that most Git Town commands aren't just a simple
+   hard-coded scripts, they are executable programs custom-built for your
+   specific use case.
+2. **Terminate and resume:** When any operation in these programs fails,
+   terminate the entire application to allow the end user to resolve problems in
+   the same terminal window and shell environment that they ran Git Town in, and
+   then resume execution.
+3. **Reliable undo:**Be able to reliably undo everything that Git Town has done.
 
 ### General structure
 
@@ -21,9 +23,9 @@ functionality into orthogonal, composable subsystems. Subsystems exist for
 parsing configuration data, syncing branches, calculating undo operations,
 interacting with the CLI, interacting with external hosting services, etc.
 
-Each subsystem defines its own domain concepts, types, business logic, and
-helper functions. To prevent cyclic package dependencies, subsystems define
-concepts and data types in dedicated `*domain` packages.
+Each subsystem defines its own data types, business logic, and helper functions.
+To prevent cyclic package dependencies, subsystems define concepts and data
+types in dedicated `*domain` packages.
 
 Higher-level subsystems like the business logic to sync branches use lower-level
 subsystems for executing Git and access configuration. Low-level subsystems
@@ -33,7 +35,7 @@ don't have access to high-level subsystems.
 
 Git Town addresses requirements 1 and 2 via an
 [interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing)) that
-executes Git-Town-specific programs consisting of using Git-related opcodes.
+executes Git-Town-specific _programs_ consisting of using Git-related _opcodes_.
 Each Git Town command:
 
 - Inspects the state of the Git repo.
@@ -158,3 +160,10 @@ proven effective in that community.
 In the Git Town codebase each concept (such as type definitions, functions, or
 constants) is located in its own file. This organization simplifies the process
 of locating specific concepts by opening the file with the matching name.
+
+#### Newtypes
+
+Git Town's domain model has several dozen meanings for `string` and other basic
+data types. Distinguishing them from each other eliminates an entire category of
+bugs. Git Town's codebase therefore makes copious use of the newtype pattern,
+i.e. it defines dedicated data types for each domain concepts.
