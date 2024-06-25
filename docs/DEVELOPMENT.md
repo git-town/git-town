@@ -1,8 +1,8 @@
 # Developing the Git Town source code
 
-This page helps you get started hacking on the Git Town codebase. See file
-[ARCHITECTURE.md](ARCHITECTURE.md) for an overview of how the Git Town engine
-works.
+This page provides guidance for contributing to the Git Town codebase. For a
+comprehensive understanding of the architecture, refer to
+[ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## setup
 
@@ -13,10 +13,10 @@ works.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run all tests: <code type="make/command" dir="..">make test</code>
-4. install the tool locally: <code type="make/command" dir="..">make
-   build</code>
-5. run a quick test suite during development: `make test-go`
+3. run all CI tests locally: <code type="make/command" dir="..">make test</code>
+4. faster smoke test during development: `make test-go`
+5. install Git Town locally into `~/go/bin`:
+   <code type="make/command" dir="..">make build</code>
 
 ## dependencies
 
