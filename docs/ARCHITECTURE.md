@@ -153,7 +153,8 @@ of locating specific concepts by opening the file with the matching name.
 
 #### Newtypes
 
-Git Town's domain model has several dozen meanings for `string` and other basic
-data types. Distinguishing them from each other eliminates an entire category of
-bugs. Git Town's codebase therefore makes copious use of the newtype pattern,
-i.e. it defines dedicated data types for each domain concepts.
+Git Town's domain model includes many distinct uses for string and other basic
+data types. Clearly distinguishing these uses helps eliminate a whole category
+of potential bugs. Consequently, Git Town's codebase extensively employs the
+newtype pattern, defining specific data types for each domain concept, even if
+they can be represented by a simple `string` or `int`.
