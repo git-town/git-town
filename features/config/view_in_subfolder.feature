@@ -1,6 +1,5 @@
 Feature: show the configuration from a subfolder
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given the configuration file:
       """
