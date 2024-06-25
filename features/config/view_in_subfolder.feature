@@ -1,6 +1,6 @@
 Feature: show the configuration from a subfolder
 
-  Scenario: all configured in Git, no stacked changes
+  Scenario: running in a subfolder
     Given the configuration file:
       """
       [branches]
