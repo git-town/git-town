@@ -69,9 +69,9 @@ func TestDataTable(t *testing.T) {
 		table := datatable.DataTable{}
 		table.AddRow("BRANCH", "TYPE", "COMMAND")
 		table.AddRow("", "backend", "git version")
+		table.AddRow("", "backend", "git rev-parse --show-toplevel")
 		table.AddRow("", "backend", "git config -lz --includes --global")
 		table.AddRow("", "backend", "git config -lz --includes --local")
-		table.AddRow("", "backend", "git rev-parse --show-toplevel")
 		table.AddRow("", "backend", "git stash list")
 		table.AddRow("", "backend", "git branch -vva")
 		table.AddRow("", "backend", "git remote")
@@ -97,9 +97,9 @@ func TestDataTable(t *testing.T) {
 		want := `
 | BRANCH | TYPE     | COMMAND                                   |
 |        | backend  | git version                               |
+|        | backend  | git rev-parse --show-toplevel             |
 |        | backend  | git config -lz --includes --global        |
 |        | backend  | git config -lz --includes --local         |
-|        | backend  | git rev-parse --show-toplevel             |
 |        | backend  | git stash list                            |
 |        | backend  | git branch -vva                           |
 |        | backend  | git remote                                |
