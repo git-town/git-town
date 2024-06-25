@@ -97,8 +97,8 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 	}
 	if doMakePrototypeBranch {
 		return makePrototypeBranch(makePrototypeData{
-			configSnapshot: repo.ConfigSnapshot,
 			config:         makePrototypeBranchData.config,
+			configSnapshot: repo.ConfigSnapshot,
 			repo:           repo,
 			rootDir:        repo.RootDir,
 			verbose:        verbose,
@@ -137,8 +137,8 @@ type appendPrototypeData struct {
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
 type makePrototypeData struct {
-	configSnapshot undoconfig.ConfigSnapshot
 	config         config.ValidatedConfig
+	configSnapshot undoconfig.ConfigSnapshot
 	repo           execute.OpenRepoResult
 	rootDir        gitdomain.RepoRootDir
 	targetBranches commandconfig.BranchesAndTypes
@@ -281,8 +281,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	data = Left[appendPrototypeData, makePrototypeData](appendPrototypeData{
 		allBranches:               branchesSnapshot.Branches,
 		beginBranchesSnapshot:     branchesSnapshot,
-		beginStashSize:            stashSize,
 		beginConfigSnapshot:       repo.ConfigSnapshot,
+		beginStashSize:            stashSize,
 		branchesToSync:            branchesToSync,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
