@@ -88,7 +88,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			hasOpenChanges:            false,
 			initialBranch:             "",
 			newBranchParentCandidates: []gitdomain.LocalBranchName{},
-			previousBranch:            Option{},
+			previousBranch:            createData.previousBranch,
 			remotes:                   []gitdomain.Remote{},
 			rootDir:                   "",
 			targetBranch:              "",
