@@ -1,6 +1,6 @@
 Feature: show the configuration from a subfolder
 
-  @debug @this
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the configuration file:
       """
@@ -15,10 +15,10 @@ Feature: show the configuration from a subfolder
       Branches:
         main branch: main
         perennial branches: public
-        perennial regex:
-        parked branches:
-        contribution branches:
-        observed branches:
+        perennial regex: (not set)
+        parked branches: (none)
+        contribution branches: (none)
+        observed branches: (none)
 
       Configuration:
         offline: no
