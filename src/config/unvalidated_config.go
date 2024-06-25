@@ -62,7 +62,7 @@ func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBr
 // AddToObservedBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPrototypeBranches(append(self.Config.PrototypeBranches, branches...))
+	return self.SetPrototypeBranches(append(self.Config.Value.PrototypeBranches, branches...))
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -217,7 +217,7 @@ func (self *UnvalidatedConfig) SetPerennialRegexLocally(value configdomain.Peren
 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *UnvalidatedConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
-	self.Config.PrototypeBranches = branches
+	self.Config.Value.PrototypeBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPrototypeBranches, branches.Join(" "))
 }
 

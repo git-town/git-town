@@ -118,9 +118,9 @@ type appendPrototypeData struct {
 	beginConfigSnapshot       undoconfig.ConfigSnapshot
 	beginStashSize            gitdomain.StashSize
 	branchesToSync            gitdomain.BranchInfos
-	commandsCounter           gohacks.Counter
+	commandsCounter           Mutable[gohacks.Counter]
 	config                    config.ValidatedConfig
-	dialogTestInputs          components.TestInputs
+	dialogTestInputs          Mutable[components.TestInputs]
 	dryRun                    bool
 	finalMessages             stringslice.Collector
 	frontend                  gitdomain.Runner
