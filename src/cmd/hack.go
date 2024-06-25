@@ -163,7 +163,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -183,15 +183,14 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return
+		return data, exit, err
 	}
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
 	var branchesToValidate gitdomain.LocalBranchNames
 	shouldCreateBranch := len(targetBranches) == 1 && !slice.Contains(localBranchNames, targetBranches[0])
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		err = errors.New(messages.CurrentBranchCannotDetermine)
-		return
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	if shouldCreateBranch {
 		branchesToValidate = gitdomain.LocalBranchNames{}
@@ -222,25 +221,22 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
-		return
+		return data, false, nil
 	}
 	if len(targetBranches) > 1 {
-		err = errors.New(messages.HackTooManyArguments)
-		return
+		return data, false, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
 	remotes, err = repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return
+		return data, false, err
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		err = fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
-		return
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
-		return
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
@@ -260,7 +256,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
-	return
+	return data, false, err
 }
 
 func makeFeatureBranch(args makeFeatureBranchArgs) error {
