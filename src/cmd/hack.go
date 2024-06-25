@@ -256,7 +256,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
-	return data, false, nil
+	return data, false, err
 }
 
 func makeFeatureBranch(args makeFeatureBranchArgs) error {
