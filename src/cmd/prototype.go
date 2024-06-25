@@ -80,7 +80,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			branchesToSync:            createData.branchesToSync,
 			commandsCounter:           repo.CommandsCounter,
 			config:                    config.ValidatedConfig{},
-			dialogTestInputs:          components.TestInputs{},
+			dialogTestInputs:          createData.dialogTestInputs,
 			dryRun:                    dryRun,
 			finalMessages:             stringslice.Collector{},
 			frontend:                  nil,
