@@ -222,7 +222,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
-		return
+		return data, false, nil
 	}
 	if len(targetBranches) > 1 {
 		err = errors.New(messages.HackTooManyArguments)
