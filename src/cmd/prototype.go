@@ -349,7 +349,7 @@ func validateMakePrototypeData(data makePrototypeData) error {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.PrototypeCannotPrototypeMainBranch)
 		case configdomain.BranchTypePerennialBranch:
-			return fmt.Errorf(messages.PrototypeCannotPrototypePerennialBranch, branchName)
+			return errors.New(messages.PrototypeCannotPrototypePerennialBranch)
 		}
 		panic(fmt.Sprintf("unhandled branch type: %s", branchType))
 	}
