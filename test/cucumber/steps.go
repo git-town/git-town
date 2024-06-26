@@ -834,7 +834,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("ACTUAL OUTPUT START ==============================================")
 			fmt.Println("==================================================================")
 			fmt.Println()
-			fmt.Println(state.runOutput)
+			fmt.Println(state.runOutput.GetOrPanic())
 			fmt.Println()
 			fmt.Println("==================================================================")
 			fmt.Println("ACTUAL OUTPUT END ================================================")

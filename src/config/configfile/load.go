@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -19,8 +20,9 @@ func Decode(text string) (*Data, error) {
 	return &result, err
 }
 
-func Load() (Option[configdomain.PartialConfig], error) {
-	file, err := os.Open(FileName)
+func Load(rootDir gitdomain.RepoRootDir) (Option[configdomain.PartialConfig], error) {
+	configPath := filepath.Join(rootDir.String(), FileName)
+	file, err := os.Open(configPath)
 	if err != nil {
 		return None[configdomain.PartialConfig](), nil //nolint:nilerr
 	}

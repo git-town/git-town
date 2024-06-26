@@ -6,9 +6,9 @@ Feature: display all executed Git commands
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                               |
       |         | backend  | git version                           |
+      |         | backend  | git rev-parse --show-toplevel         |
       |         | backend  | git config -lz --includes --global    |
       |         | backend  | git config -lz --includes --local     |
-      |         | backend  | git rev-parse --show-toplevel         |
       |         | backend  | git status --long --ignore-submodules |
       |         | backend  | git stash list                        |
       |         | backend  | git branch -vva --sort=refname        |
