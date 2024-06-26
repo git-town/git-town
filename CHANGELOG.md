@@ -1,5 +1,14 @@
 # Git Town Changelog
 
+## 14.2.3 (2024-06-25)
+
+Bug fixes and stability improvements.
+
+#### Bug Fixes
+
+- loads the configuration when calling Git Town from a subfolder in the Git repo ([#3688](https://github.com/git-town/git-town/pull/3688))
+- "git observe" no longer panics when given a non-existing branch name ([#3647](https://github.com/git-town/git-town/issues/3647))
+
 ## 14.2.2 (2024-06-06)
 
 This release fixes a few bugs that now get correctly surfaced thanks to stronger type checking introduced in v14.2.1.
