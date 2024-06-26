@@ -48,7 +48,7 @@ func rootCmd() cobra.Command {
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
 	if showVersion {
-		fmt.Println("Git Town 14.2.2")
+		fmt.Println("Git Town 14.2.3")
 		return nil
 	}
 	return cmd.Help()
