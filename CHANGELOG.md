@@ -4,7 +4,7 @@
 
 Another release with bug fixes and stability improvements.
 
-Thanks and cheers to @alexus37, @bb010g, @blaggacao, @bryanlarsen, @charlierudolph, @kelbyers, @kevgo, @kinyat, @ruudk, @stephenwade, @vectro for contributing code, ideas, and feedback to 54 shipped PRs and 9 resolved issues!
+Shoutout to @alexus37, @bb010g, @blaggacao, @bryanlarsen, @charlierudolph, @kelbyers, @kevgo, @kinyat, @ruudk, @stephenwade, @vectro for contributing code, ideas, and feedback to 54 shipped PRs and 9 resolved issues!
 
 #### Bug Fixes
 
