@@ -1,8 +1,8 @@
 # Developing the Git Town source code
 
-This page helps you get started hacking on the Git Town codebase. See file
-[ARCHITECTURE.md](ARCHITECTURE.md) for an overview of how the Git Town engine
-works.
+This page provides guidance for contributing to the Git Town codebase. For a
+comprehensive understanding of the architecture, refer to
+[ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## setup
 
@@ -13,18 +13,18 @@ works.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run all tests: <code type="make/command" dir="..">make test</code>
-4. install the tool locally: <code type="make/command" dir="..">make
-   build</code>
-5. run a quick test suite during development: `make test-go`
+3. run all CI tests locally: <code type="make/command" dir="..">make test</code>
+4. faster smoke test during development: `make test-go`
+5. install Git Town locally into `~/go/bin`:
+   <code type="make/command" dir="..">make build</code>
 
 ## dependencies
 
-Add an external Go module:
+Add an external Go dependency:
 
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
-- use the new dependency in the code
+- use the new dependency somewhere in the code
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
@@ -46,7 +46,17 @@ make update
 
 ## unit tests
 
-Run all unit tests:
+Run unit tests for packages containing changes:
+
+<a type="make/command" dir="..">
+
+```
+make unit
+```
+
+</a>
+
+Run all unit tests no matter what has changed:
 
 <a type="make/command" dir="..">
 
@@ -66,30 +76,12 @@ make unit-race
 
 </a>
 
-Run unit tests for packages containing changes:
-
-<a type="make/command" dir="..">
-
-```
-make unit
-```
-
-</a>
-
 Run an individual unit test:
 
 ```
 go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
-
-Diff complex data structures:
-
-```
-pretty.Ldiff(t, value1, value2)
-```
-
-It ain't pretty but its better than nothing.
 
 ## end-to-end tests
 
@@ -109,15 +101,15 @@ Run all tests in the `features/append` folder or file:
 go test -- features/append
 ```
 
-To run individual Cucumber scenarios, add a `@this` flag to the test you want to
-run. Example:
+To run individual Cucumber scenarios, add a `@this` flag to the scenario you
+want to run. Example:
 
 ```cucumber
 @this
-Scenario: foo bar
+Scenario: my awesome scenario
 ```
 
-Then run:
+Then run only the scenarios that have a `@this` tag:
 
 ```
 make cukethis
@@ -127,21 +119,24 @@ Certain tests require that the Git remote points to an actual GitHub, Gitea,
 GitLab or Bitbucket address. This causes `git push` operations in this test to
 also go to GitHub. To prevent this, set an environment variable
 `GIT_TOWN_REMOTE` with the desired value of the `origin` remote, and Git Town
-will use that value instead of what is in the repo.
+will use that value instead of what is configured in the repo.
 
 If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
-To inspect a repo during an E2E run, add the `And inspect the repo` step. The
-test runner will pause and print the path of the test workspace. You can cd into
-that path in a separate terminal window and inspect the repo there.
+To pause an end-to-end test so that you have time to inspect the status of the
+Git repository created by the test, add the step `And inspect the repo`. The
+test runner will pause and print the path of the test workspace. You can `cd`
+into that path in a separate terminal window and inspect the repos there. The
+developer's repo is in the `repo` folder. The origin repo is in the `origin`
+folder.
 
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
 
 ## inspecting variables
 
-Inspect basic variables:
+Inspect basic variables in a unit test:
 
 ```go
 fmt.Printf("%#v\n", variable)
@@ -155,7 +150,7 @@ import "github.com/davecgh/go-spew/spew"
 spew.Dump(variable)
 ```
 
-See a complex diff:
+- or -
 
 ```go
 pretty.LDiff(t, var1, var2)
@@ -169,14 +164,14 @@ Git commands that the Git Town test suite runs under the hood, add a tag
 
 ```cucumber
 @debug @this
-Scenario: A foo walks into a bar
+Scenario: my awesome scenario
 ```
 
-To see all Git commands that the test runner and the Git Town command execute,
-runs the Git Town command with the `--verbose` option. As an example, if the
+To see all Git commands that the test runner and the Git Town command run,
+execute the Git Town command with the `--verbose` option. As an example, if the
 step `When I run "git-town append new"` mysteriously fails, you could change it
-to `When I run "git-town append new -v"`. Also enable `@debug` to see the output
-on the console.
+to `When I run "git-town append new -v"`. Also add the tags `@debug @this` to
+see the CLI output on the console.
 
 To get a quick glance of which status the repo is at any point in time, insert
 the step `And display "<command_>"` running whatever command you want to execute
@@ -196,32 +191,29 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 ## triangulate a hanging end-to-end test
 
 End-to-end tests sometimes hang due to Git Town waiting for input that the test
-doesn't define. To find the hanging test:
+doesn't enter. To find the hanging test you can do a binary search by executing
+subsets of tests using `go test -- features/<path>` where path is either a
+subfolder or file inside the "features" folder.
 
-- open `main_test.go`
-- find the call to `godog.RunWithOptions` and adjust its arguments:
-  - Make the `Paths` field more specific, for example by changing it from
-    "features" to "features/sync/current_branch". Now it runs only the tests in
-    that subfolder.
-  - To see the executed steps in the output, change `Format` to `pretty` and
-    `Concurrency` to 1. This reduces the speed at which the end-to-end tests
-    execute.
+Alternatively, open `main_test.go`, change `Format` to `pretty` and
+`Concurrency` to 1, and run the entire test suite. The detailed output will give
+you hints at which test fails.
 
 ## run linters
 
-Lint the main codebase efficiently:
+Quick and efficient linter during development:
 
 ```
 make lint
 ```
 
-Lint all codebases in this monorepo:
+Run all linters reliably like on CI:
 
 ```
 make lint-all
 ```
 
-Format all code, auto-fix all fixable issues:
+Auto-fix all fixable issues, including code formatting:
 
 <a type="make/command" dir="..">
 
@@ -233,20 +225,20 @@ make fix
 
 ## debug the dialogs
 
-Run `git town debug` to see the commands to display Git Town's dialogs.
+Run `git town debug` to see the commands to manually test Git Town's dialogs.
 
 ## learn about the code and test architecture
 
-The source code contains
-[Godoc comments](https://pkg.go.dev/github.com/git-town/git-town) that explain
-the code architecture.
+See file [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## website
 
 The source code for the [website](https://www.git-town.com) is in the
 [website](../website) folder. This folder contains its own
 [Makefile](../website/Makefile) for activities related to working on the
-website. To work on the website, cd into the `website` folder and run
+website.
+
+To work on the website, cd into the `website` folder and run
 <code type="make/command" dir="../website">make serve</code> to start a local
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
