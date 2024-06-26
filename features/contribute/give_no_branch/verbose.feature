@@ -9,9 +9,9 @@ Feature: make a branch contribution verbosely
     Then it runs the commands
       | BRANCH | COMMAND                                          |
       |        | git version                                      |
+      |        | git rev-parse --show-toplevel                    |
       |        | git config -lz --includes --global               |
       |        | git config -lz --includes --local                |
-      |        | git rev-parse --show-toplevel                    |
       |        | git branch -vva --sort=refname                   |
       |        | git config git-town.contribution-branches branch |
       |        | git config -lz --includes --global               |
@@ -33,9 +33,9 @@ Feature: make a branch contribution verbosely
     Then it runs the commands
       | BRANCH | COMMAND                                           |
       |        | git version                                       |
+      |        | git rev-parse --show-toplevel                     |
       |        | git config -lz --includes --global                |
       |        | git config -lz --includes --local                 |
-      |        | git rev-parse --show-toplevel                     |
       |        | git status --long --ignore-submodules             |
       |        | git stash list                                    |
       |        | git branch -vva --sort=refname                    |

@@ -14,9 +14,9 @@ Feature: compress the commits on a feature branch verbosely
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
+      |         | git rev-parse --show-toplevel                      |
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
-      |         | git rev-parse --show-toplevel                      |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git status --long --ignore-submodules              |
       |         | git remote                                         |
@@ -56,9 +56,9 @@ Feature: compress the commits on a feature branch verbosely
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
+      |         | git rev-parse --show-toplevel                      |
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
-      |         | git rev-parse --show-toplevel                      |
       |         | git status --long --ignore-submodules              |
       |         | git stash list                                     |
       |         | git branch -vva --sort=refname                     |

@@ -15,8 +15,8 @@
 
 Git Town provides additional Git commands that automate the creation,
 synchronization, shipping, and cleanup of Git branches. Compatible with all
-major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and
-trunk-based development. Supports mono-repos and stacked changes. Check out
+popular Git workflows like Git Flow, GitHub Flow, GitLab Flow, and trunk-based
+development. Supports mono-repos and stacked changes. Check out
 [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
