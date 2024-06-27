@@ -1,7 +1,7 @@
 # git observe [branches]
 
 The _observe_ command makes some of your branches
-[observed](../advanced-syncing.md#observed-branches) branches.
+[observed](../branch-types.md#observed-branches) branches.
 
 ## Examples
 
