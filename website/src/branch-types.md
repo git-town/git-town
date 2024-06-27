@@ -1,20 +1,39 @@
-# Advanced Branch Syncing
+# Branch Types
 
-Git branches can be used in many different ways. When properly configured, you
-can run `git sync` or `git sync --all` at any time and each of your local
-branches will get synced in the specific ways it's supposed to get synced or not
-synced.
+Git Town supports many different types and configurations of Git branches. When
+properly configured, you can run `git sync` or `git sync --all` at any time and
+each of your local branches will get synced in the specific ways it's supposed
+to get synced or not synced.
+
+## Feature branches
+
+Feature branches are the branches on which you typically make changes. They are
+typically cut from the _main branch_ and get merged back into it. You can also
+cut feature branches from any other branch type if needed. Feature branches sync
+with their parent and tracking branch.
+
+## Main branch
+
+The main branch is a _perennial branch_ from which feature branches get cut by
+default.
+
+## Perennial branches
+
+Perennial branches are long-lived branches. They have no parent and are never
+shipped. Typical perennial branches are `main`, `master`, `development`,
+`production`, `staging`, etc. Perennial branches often correspond with a cloud
+environment with the same name.
 
 ## Contribution branches
 
 Contribution branches are for people who contribute commits to somebody else's
-branch. You cannot [propose](commands/propose.md) or [ship](commands/ship.md)
-contribution branches because those are responsibilities of the person owning
-the branch you contribute to. For the same reason `git sync` does not pull
-updates from the parent branch of a contribution branch and always
-[rebases](preferences/sync-feature-strategy.md#rebase) your local commits.
-Syncing removes contribution branches from your machine as soon as their
-tracking branch is gone, even if you have unpushed local commits.
+feature branch. You cannot [propose](commands/propose.md) or
+[ship](commands/ship.md) contribution branches because those are
+responsibilities of the person owning the branch you contribute to. For the same
+reason `git sync` does not pull updates from the parent branch of a contribution
+branch and always [rebases](preferences/sync-feature-strategy.md#rebase) your
+local commits. Syncing removes contribution branches from your machine as soon
+as their tracking branch is gone, even if you have unpushed local commits.
 [Killing](commands/kill.md) a contribution branch only deletes your local copy
 and not the tracking branch.
 
