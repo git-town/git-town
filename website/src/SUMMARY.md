@@ -20,7 +20,7 @@
     - [prepend](commands/prepend.md)
     - [set-parent](commands/set-parent.md)
     - [diff-parent](commands/diff-parent.md)
-  - [Advanced branch syncing](advanced-syncing.md)
+  - [Branch types](branch-types.md)
     - [contribute](commands/contribute.md)
     - [observe](commands/observe.md)
     - [park](commands/park.md)
