@@ -7,7 +7,6 @@ Feature: create a prototyping branch
     And the current branch is "main"
     When I run "git-town prototype new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
