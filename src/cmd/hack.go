@@ -69,14 +69,14 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
-	if doAppend {
+	createNewFeatureBranchData, doCreateNewFeatureBranch, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
+	if doCreateNewFeatureBranch {
 		return createFeatureBranch(createFeatureBranchArgs{
-			appendData:            appendData,
+			appendData:            createNewFeatureBranchData,
 			backend:               repo.Backend,
-			beginBranchesSnapshot: appendData.branchesSnapshot,
+			beginBranchesSnapshot: createNewFeatureBranchData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        appendData.stashSize,
+			beginStashSize:        createNewFeatureBranchData.stashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
@@ -99,8 +99,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// If set to appendData, the user wants to append a new branch to an existing branch.
-// If set to convertToFeatureData, the user wants to convert an existing branch into a feature branch.
+// If set to createNewFeatureData, the user wants to create a new feature branch.
+// If set to convertToFeatureData, the user wants to convert an already existing branch into a feature branch.
 type hackData = Either[appendFeatureData, convertToFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
