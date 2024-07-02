@@ -24,7 +24,7 @@ type Factory struct {
 	dir string
 
 	// the memoized environment
-	memoized Fixture
+	memoized Memoized
 }
 
 // creates a new FixtureFactory instance
@@ -41,7 +41,7 @@ func CreateFactory() Factory {
 	return Factory{
 		counter:  helpers.AtomicCounter{},
 		dir:      evalBaseDir,
-		memoized: NewStandardFixture(filepath.Join(evalBaseDir, "memoized")),
+		memoized: NewMemoized(filepath.Join(evalBaseDir, "memoized")),
 	}
 }
 
@@ -49,7 +49,7 @@ func CreateFactory() Factory {
 func (self *Factory) CreateFixture(scenarioName string) Fixture {
 	envDirName := filesystem.FolderName(scenarioName) + "_" + self.counter.ToString()
 	envPath := filepath.Join(self.dir, envDirName)
-	return CloneFixture(self.memoized, envPath)
+	return self.memoized.CloneInto(envPath)
 }
 
 func (self *Factory) Remove() {
