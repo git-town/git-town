@@ -50,7 +50,7 @@ func NewMemoized(dir string) Memoized {
 	return Memoized{dir}
 }
 
-// CloneInto provides a copy of this Memoized in the given directory.
+// provides a copy of this Memoized in the given directory
 func (self Memoized) CloneInto(dir string) Fixture {
 	filesystem.CopyDirectory(self.Dir, dir)
 	binDir := binPath(dir)
