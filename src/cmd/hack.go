@@ -69,7 +69,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
+	appendData, doAppend, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
 	if doAppend {
 		return createFeatureBranch(createFeatureBranchArgs{
 			appendData:            appendData,
@@ -86,11 +86,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			verbose:               verbose,
 		})
 	}
-	if doMakeFeatureBranch {
-		return makeFeatureBranch(makeFeatureBranchArgs{
+	if doConvertToFeatureBranch {
+		return convertToFeatureBranch(convertToFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              makeFeatureBranchData.config,
-			makeFeatureData:     makeFeatureBranchData,
+			config:              convertToFeatureBranchData.config,
+			makeFeatureData:     convertToFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
 			verbose:             verbose,
@@ -100,11 +100,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 }
 
 // If set to appendData, the user wants to append a new branch to an existing branch.
-// If set to makeFeatureData, the user wants to make an existing branch a feature branch.
-type hackData = Either[appendFeatureData, makeFeatureData]
+// If set to convertToFeatureData, the user wants to convert an existing branch into a feature branch.
+type hackData = Either[appendFeatureData, convertToFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
-type makeFeatureData struct {
+type convertToFeatureData struct {
 	config         config.ValidatedConfig
 	targetBranches commandconfig.BranchesAndTypes
 }
@@ -217,7 +217,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendFeatureData, makeFeatureData](makeFeatureData{
+		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
@@ -241,7 +241,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendFeatureData, makeFeatureData](appendFeatureData{
+	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
@@ -259,8 +259,8 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	return data, false, err
 }
 
-func makeFeatureBranch(args makeFeatureBranchArgs) error {
-	err := validateMakeFeatureData(args.makeFeatureData)
+func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
+	err := validateConvertToFeatureData(args.makeFeatureData)
 	if err != nil {
 		return err
 	}
@@ -292,16 +292,16 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 	})
 }
 
-type makeFeatureBranchArgs struct {
+type convertToFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              config.ValidatedConfig
-	makeFeatureData     makeFeatureData
+	makeFeatureData     convertToFeatureData
 	repo                execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
 	verbose             bool
 }
 
-func validateMakeFeatureData(data makeFeatureData) error {
+func validateConvertToFeatureData(data convertToFeatureData) error {
 	for branchName, branchType := range data.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
