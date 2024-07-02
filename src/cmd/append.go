@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"slices"
 
@@ -192,7 +191,6 @@ func appendProgram(data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		for _, branch := range data.branchesToSync {
-			fmt.Println("222222222222222222", branch)
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   data.allBranches,
 				Config:        data.config.Config,

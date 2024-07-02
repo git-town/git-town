@@ -91,8 +91,8 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			newBranchParentCandidates: createData.newBranchParentCandidates,
 			previousBranch:            createData.previousBranch,
 			remotes:                   createData.remotes,
-			rootDir:                   "",
-			targetBranch:              "",
+			rootDir:                   repo.RootDir,
+			targetBranch:              createData.targetBranch,
 			verbose:                   verbose,
 		})
 	}
