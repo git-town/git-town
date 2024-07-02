@@ -56,4 +56,43 @@ func TestParseBranchSetupTable(t *testing.T) {
 		}
 		must.Eq(t, want, have)
 	})
+	t.Run("no parents given", func(t *testing.T) {
+		t.Parallel()
+		give := &godog.Table{
+			Rows: []*messages.PickleTableRow{
+				{
+					Cells: []*messages.PickleTableCell{
+						{Value: "NAME"},
+						{Value: "TYPE"},
+					},
+				},
+				{
+					Cells: []*messages.PickleTableCell{
+						{Value: "main"},
+						{Value: "main"},
+					},
+				},
+				{
+					Cells: []*messages.PickleTableCell{
+						{Value: "staging"},
+						{Value: "perennial"},
+					},
+				},
+			},
+		}
+		have := datatable.ParseBranchSetupTable(give)
+		want := []datatable.BranchSetup{
+			{
+				Name:       "main",
+				BranchType: configdomain.BranchTypeMainBranch,
+				Parent:     None[gitdomain.LocalBranchName](),
+			},
+			{
+				Name:       "staging",
+				BranchType: configdomain.BranchTypePerennialBranch,
+				Parent:     None[gitdomain.LocalBranchName](),
+			},
+		}
+		must.Eq(t, want, have)
+	})
 }
