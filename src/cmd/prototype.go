@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
@@ -89,7 +90,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			initialBranch:             createData.initialBranch,
 			newBranchParentCandidates: []gitdomain.LocalBranchName{},
 			previousBranch:            createData.previousBranch,
-			remotes:                   []gitdomain.Remote{},
+			remotes:                   createData.remotes,
 			rootDir:                   "",
 			targetBranch:              "",
 			verbose:                   verbose,
@@ -161,6 +162,7 @@ func createPrototypeBranch(args createPrototypeData) error {
 		stashSize:                 args.beginStashSize,
 		targetBranch:              args.targetBranch,
 	})
+	fmt.Println("1111111", program)
 	program.Add(&opcodes.AddToPrototypeBranches{})
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
@@ -278,6 +280,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
+	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	slices.Reverse(initialAndAncestors)
 	data = Left[createPrototypeData, convertToPrototypeData](createPrototypeData{
 		allBranches:               branchesSnapshot.Branches,
 		beginBranchesSnapshot:     branchesSnapshot,
@@ -289,7 +293,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		newBranchParentCandidates: initialAndAncestors,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,

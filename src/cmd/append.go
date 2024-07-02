@@ -190,10 +190,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 
 func appendProgram(data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
-	fmt.Println("11111111111111111", data.hasOpenChanges)
 	if !data.hasOpenChanges {
 		for _, branch := range data.branchesToSync {
-			fmt.Println("222222222222222", branch.LocalName)
+			fmt.Println("222222222222222222", branch)
 			sync.BranchProgram(branch, sync.BranchProgramArgs{
 				BranchInfos:   data.allBranches,
 				Config:        data.config.Config,
