@@ -2,10 +2,13 @@
 Feature: append a new feature branch to an existing feature branch
 
   Background:
-    Given the current branch is a feature branch "existing"
+    Given the branches
+      | NAME | TYPE | PARENT |
+      | main | main |        |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result

@@ -1347,6 +1347,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) error {
+		branchTypes :=
+	})
+
 	sc.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
 		state := ctx.Value(keyState).(*ScenarioState)
 		for _, branchName := range []string{branch1, branch2} {
