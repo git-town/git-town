@@ -1351,16 +1351,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyState).(*ScenarioState)
 		branchSetups := datatable.ParseBranchSetupTable(table)
 		for _, branchSetup := range branchSetups {
-			parent, hasParent := branchSetup.Parent.Get()
 			switch branchSetup.BranchType {
 			case configdomain.BranchTypeMainBranch:
-				state.fixture.DevRepo.CreateBranch()
+				panic("main branch exists already")
+			case configdomain.BranchTypeFeatureBranch:
+				state.fixture.DevRepo.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+			case configdomain.BranchTypePerennialBranch:
+				state.fixture.DevRepo.CreatePerennialBranches(branchSetup.Name)
+			case configdomain.BranchTypeContributionBranch:
+				state.fixture.DevRepo.CreateContributionBranches(branchSetup.Name)
+			case configdomain.BranchTypeObservedBranch:
+				state.fixture.DevRepo.CreateObservedBranches(branchSetup.Name)
+			case configdomain.BranchTypeParkedBranch:
+				state.fixture.DevRepo.CreateParkedBranches(branchSetup.Name)
 			}
-			if !hasParent {
-				parent = gitdomain.NewLocalBranchName("main")
-			}
-			state.fixture.DevRepo.CreateBranch(branchSetup.Name, parent)
-			state.fixture.DevRepo.Config.SetParent(branchSetup.Name, bra)
 		}
 		return nil
 	})

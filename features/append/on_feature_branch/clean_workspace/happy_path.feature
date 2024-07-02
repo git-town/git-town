@@ -4,7 +4,6 @@ Feature: append a new feature branch to an existing feature branch
   Background:
     Given the branches
       | NAME     | TYPE    |
-      | main     | main    |
       | existing | feature |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
@@ -12,6 +11,7 @@ Feature: append a new feature branch to an existing feature branch
     And the current branch is "existing"
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
