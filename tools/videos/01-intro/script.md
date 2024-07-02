@@ -3,31 +3,25 @@
 ## Part 1: summarize and take-aways
 
 Git Town is a free and open-source application
-that adds a few missing commands to Git.
-
-These new Git commands allow you to manage Git branches
-much more efficiently than is possible with the standard Git commands
-and more accurately than when doing it manually.
+that makes using Git in large teams easier.
 
 Git Town reduces and often completely eliminates merge conflicts.
 It can also save you from losing work
-after accidentally running a wrong Git command.
+after accidentally running a wrong command.
 
-While executing Git commands for you,
-Git Town stays true to Git's nature
+It does that while staying true to Git's nature
 as a flexible and powerful tool
 that doesn't force you into one particular way of using it.
 
 Git Town is useful when using it just by yourself
-And it really shines in collaborative scenarios
-when you write code together with other developers.
+And it really shines when you write code together with other people.
 
-Let's see it in action!
+Let me show you how it works!
 
 ## Part 2: creating feature branches
 
 Here is a software project that I work on.
-Let's start hacking and build a new feature!
+Let's start hacking on a new feature!
 
 (( run 01.sh ))
 
@@ -51,8 +45,8 @@ In this case, that's my Github repo.
 Other developers have added things to the main branch since I last updated my local Git clone.
 
 As you can already tell by now,
-we want to cut our new feature branch from the up-to-date main branch
-not the outdated version of it we had locally.
+I want to cut the new feature branch from latest version of the main branch
+not the outdated version my local repo clone had.
 
 (( highlight "git rebase origin/main ))
 Git Town does that here.
@@ -77,10 +71,9 @@ prep the codebase:
 
 Okay, I have been hacking on this feature for some time now.
 
-I think I better sync my work with changes that other people made in the meantime.
+I think I better sync my work with changes that other people have made in the meantime.
 
-If there have been any changes,
-I better get them them into my feature branch before I move any further.
+I better get any new commits on the main branch into my feature branch before I move any further.
 
 Otherwise I run the risk of modifying something that was also changed on the main branch
 and then I have a merge conflict that will be frustrating and error-prone to resolve.
@@ -92,8 +85,8 @@ Git Town's "sync" command also ran a number of Git commands for me.
 What did it do this time?
 
 (( highlight "git fetch --prune" ))
-As always, it starts by downloading the latest updates
-from the remote repository into to the local repo.
+As always, it starts by fetching the latest updates
+from the remote repository.
 
 (( highlight "git stash -u" ))
 Because we ran "git sync" in the middle of ongoing work,
@@ -111,21 +104,21 @@ it pulls these updates down from the remote main branch into our local main bran
 
 (( highlight "git checkout my-feature" ))
 With the main branch up to date now
-it goes back to my feature branch.
+it can go back to my feature branch.
 
 (( highlight "Your branch is behind origin/my-feature by 1 commit" ))
-Some commits on this branch are not on this machine.
-I committed them on another computer and almost forgot about them.
+Some commits on this branch seem missing on this machine.
+Right, I committed them on another computer and almost forgot about them!
 
 (( highlight "git merge --no-edit origi/kg-feature-1" ))
 But Git Town doesn't and pulls these commits down to this machine as well.
 
 (( highlight "git merge --no-edit main" ))
 Next we merge the now up-to-date main branch into the now up-to-date feature branch.
-If you prefer to rebase your feature branches, that's configurable.
+If you prefer rebasing your feature branches, that's of course configurable.
 
 (( highlight "git push" ))
-Git Town pushes the new commits on my feature branch to the tracking branch
+Git Town pushes the new commits on my feature branch to its tracking branch
 to update the now outdated commits there.
 This is also a nice backup in case something happens to the local branch.
 
@@ -139,7 +132,7 @@ any changes we do now
 won't conflict with the latest commits on the main branch
 because our feature branch builds on top of these commits now.
 
-(( with the old output of "ls -1" displaying, run "ls -1" again)
+(( with the old output of "ls -1" displaying, run "ls -1" again ))
 Our feature branch now contains the new files that were just added on the main development branch.
 
 ## Part 4: submitting a proposal
