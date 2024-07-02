@@ -69,8 +69,8 @@ func TestFixture(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewMemoized(filepath.Join(dir, "memoized"))
-		cloned := memoizedGitEnv.CloneInto(filepath.Join(dir, "cloned"))
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the commits
 		mainBranch := gitdomain.NewLocalBranchName("main")
 		cloned.CreateCommits([]git.Commit{
