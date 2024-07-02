@@ -102,8 +102,8 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			configSnapshot: repo.ConfigSnapshot,
 			repo:           repo,
 			rootDir:        repo.RootDir,
-			// targetBranches: ,
-			verbose: verbose,
+			targetBranches: makePrototypeBranchData.targetBranches,
+			verbose:        verbose,
 		})
 	}
 	panic("both config arms were nil")
