@@ -1348,7 +1348,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) error {
-		branchTypes :=
+		branchSetup := datatable.ParseBranchSetupTable(table)
+		fmt.Println(branchSetup)
+		return nil
 	})
 
 	sc.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
