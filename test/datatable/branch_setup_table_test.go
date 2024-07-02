@@ -14,6 +14,7 @@ import (
 
 func TestParseBranchSetupTable(t *testing.T) {
 	t.Parallel()
+
 	t.Run("normal table", func(t *testing.T) {
 		t.Parallel()
 		give := &godog.Table{
@@ -56,6 +57,7 @@ func TestParseBranchSetupTable(t *testing.T) {
 		}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("no parents given", func(t *testing.T) {
 		t.Parallel()
 		give := &godog.Table{
