@@ -14,6 +14,7 @@ Feature: create a prototyping branch
       |        | git rebase origin/main   |
       |        | git checkout -b new      |
     And the current branch is now "new"
+    And branch "new" is now a prototype branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
