@@ -18,8 +18,8 @@ func TestFixture(t *testing.T) {
 	t.Run("CloneFixture", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
@@ -27,37 +27,20 @@ func TestFixture(t *testing.T) {
 		cloned.DevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
 	})
 
-	t.Run("NewStandardFixture", func(t *testing.T) {
-		t.Parallel()
-		gitEnvRootDir := t.TempDir()
-		result := fixture.NewStandardFixture(gitEnvRootDir)
-		// verify the origin repo
-		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
-		branch, err := result.OriginRepo.GetOrPanic().CurrentBranch(result.DevRepo.TestRunner)
-		must.NoError(t, err)
-		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
-		// verify the developer repo
-		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-		assertHasGitConfiguration(t, gitEnvRootDir)
-		branch, err = result.DevRepo.CurrentBranch(result.DevRepo.TestRunner)
-		must.NoError(t, err)
-		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
-	})
-
 	t.Run("Branches", func(t *testing.T) {
 		t.Run("different branches in dev and origin repo", func(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
 			dir := t.TempDir()
-			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
+			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
-			gitEnv.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewLocalBranchName("main"))
-			gitEnv.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewLocalBranchName("main"))
-			originRepo := gitEnv.OriginRepo.GetOrPanic()
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewLocalBranchName("main"))
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewLocalBranchName("main"))
+			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o1"), gitdomain.NewLocalBranchName("initial"))
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o2"), gitdomain.NewLocalBranchName("initial"))
 			// get branches
-			table := gitEnv.Branches()
+			table := fixture.Branches()
 			// verify
 			expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| origin     | main, o1, o2 |\n"
 			must.EqOp(t, expected, table.String())
@@ -67,15 +50,15 @@ func TestFixture(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
 			dir := t.TempDir()
-			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
+			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
-			gitEnv.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
-			gitEnv.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
-			originRepo := gitEnv.OriginRepo.GetOrPanic()
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
+			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
 			// get branches
-			table := gitEnv.Branches()
+			table := fixture.Branches()
 			// verify
 			expected := "| REPOSITORY    | BRANCHES     |\n| local, origin | main, b1, b2 |\n"
 			must.EqOp(t, expected, table.String())
@@ -86,8 +69,8 @@ func TestFixture(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the commits
 		mainBranch := gitdomain.NewLocalBranchName("main")
 		cloned.CreateCommits([]git.Commit{
@@ -141,8 +124,8 @@ func TestFixture(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the origin branch
 		cloned.OriginRepo.GetOrPanic().CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
 		// verify it is in the origin branches
@@ -160,8 +143,8 @@ func TestFixture(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
 			dir := t.TempDir()
-			memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
+			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
@@ -191,8 +174,8 @@ func TestFixture(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
 			dir := t.TempDir()
-			memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
+			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 			cloned.AddUpstream()
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
