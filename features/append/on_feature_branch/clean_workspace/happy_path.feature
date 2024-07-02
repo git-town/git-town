@@ -3,8 +3,9 @@ Feature: append a new feature branch to an existing feature branch
 
   Background:
     Given the branches
-      | NAME | TYPE | PARENT |
-      | main | main |        |
+      | NAME     | TYPE    |
+      | main     | main    |
+      | existing | feature |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |

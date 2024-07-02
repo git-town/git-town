@@ -1,7 +1,10 @@
 Feature: append a branch to a branch whose tracking branch was deleted
 
   Background:
-    Given a feature branch "shipped"
+    Given the branches
+      | NAME    | TYPE    |
+      | main    | main    |
+      | shipped | feature |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | shipped | local, origin | shipped commit |

@@ -1,8 +1,11 @@
 Feature: append a branch to a branch whose parent was shipped on the remote
 
   Background:
-    Given a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+    Given the branches
+      | NAME   | TYPE    | PARENT |
+      | main   | main    |        |
+      | parent | feature | main   |
+      | child  | feature | parent |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |

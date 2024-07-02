@@ -1,10 +1,13 @@
 Feature: auto-push the new branch to origin
 
   Background:
-    Given Git Town setting "push-new-branches" is "true"
+    Given the branches
+      | NAME | TYPE |
+      | main | main |
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
+    And Git Town setting "push-new-branches" is "true"
     And the current branch is "main"
     When I run "git-town append new"
 

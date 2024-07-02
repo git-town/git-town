@@ -2,7 +2,11 @@ Feature: in a local repo
 
   Background:
     Given my repo does not have an origin
-    And the current branch is a local feature branch "existing"
+    And the branches
+      | NAME     | TYPE    |
+      | main     | main    |
+      | existing | feature |
+    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |

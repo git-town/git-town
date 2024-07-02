@@ -1348,8 +1348,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) error {
-		branchSetup := datatable.ParseBranchSetupTable(table)
-		fmt.Println(branchSetup)
+		state := ctx.Value(keyState).(*ScenarioState)
+		branchSetups := datatable.ParseBranchSetupTable(table)
+		for _, branchSetup := range branchSetups {
+			parent, hasParent := branchSetup.Parent.Get()
+			switch branchSetup.BranchType {
+			case configdomain.BranchTypeMainBranch:
+				state.fixture.DevRepo.CreateBranch()
+			}
+			if !hasParent {
+				parent = gitdomain.NewLocalBranchName("main")
+			}
+			state.fixture.DevRepo.CreateBranch(branchSetup.Name, parent)
+			state.fixture.DevRepo.Config.SetParent(branchSetup.Name, bra)
+		}
 		return nil
 	})
 
