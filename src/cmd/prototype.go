@@ -88,7 +88,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			git:                       repo.Git,
 			hasOpenChanges:            createData.hasOpenChanges,
 			initialBranch:             createData.initialBranch,
-			newBranchParentCandidates: []gitdomain.LocalBranchName{},
+			newBranchParentCandidates: createData.newBranchParentCandidates,
 			previousBranch:            createData.previousBranch,
 			remotes:                   createData.remotes,
 			rootDir:                   "",
@@ -102,7 +102,8 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 			configSnapshot: repo.ConfigSnapshot,
 			repo:           repo,
 			rootDir:        repo.RootDir,
-			verbose:        verbose,
+			// targetBranches: ,
+			verbose: verbose,
 		})
 	}
 	panic("both config arms were nil")
