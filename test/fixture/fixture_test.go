@@ -18,8 +18,8 @@ func TestFixture(t *testing.T) {
 	t.Run("CloneFixture", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewMemoized(filepath.Join(dir, "memoized"))
-		cloned := memoizedGitEnv.CloneInto(filepath.Join(dir, "cloned"))
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
