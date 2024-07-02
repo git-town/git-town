@@ -164,7 +164,7 @@ func createPrototypeBranch(args createPrototypeData) error {
 		targetBranch:              args.targetBranch,
 	})
 	fmt.Println("1111111", program)
-	program.Add(&opcodes.AddToPrototypeBranches{})
+	program.Add(&opcodes.AddToPrototypeBranches{Branch: args.targetBranch})
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -260,7 +260,11 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	if !shouldCreateBranch {
 		data = Right[createPrototypeData, convertToPrototypeData](convertToPrototypeData{
 			config:         validatedConfig,
+			configSnapshot: repo.ConfigSnapshot,
+			repo:           repo,
+			rootDir:        repo.RootDir,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
+			verbose:        verbose,
 		})
 		return
 	}
