@@ -96,7 +96,7 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 		})
 	}
 	if doMakePrototypeBranch {
-		return makePrototypeBranch(makePrototypeData{
+		return convertToPrototypeBranch(convertToPrototypeData{
 			config:         makePrototypeBranchData.config,
 			configSnapshot: repo.ConfigSnapshot,
 			repo:           repo,
@@ -108,8 +108,8 @@ func executePrototype(args []string, dryRun, verbose bool) error {
 }
 
 // If set to appendPrototypeData, the user wants to append a new prototype branch to an existing branch.
-// If set to makePrototypeData, the user wants to make an existing branch a prototype branch.
-type prototypeData = Either[appendPrototypeData, makePrototypeData]
+// If set to convertToPrototypeData, the user wants to convert an existing branch to a prototype branch.
+type prototypeData = Either[appendPrototypeData, convertToPrototypeData]
 
 type appendPrototypeData struct {
 	allBranches               gitdomain.BranchInfos
@@ -136,7 +136,7 @@ type appendPrototypeData struct {
 }
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
-type makePrototypeData struct {
+type convertToPrototypeData struct {
 	config         config.ValidatedConfig
 	configSnapshot undoconfig.ConfigSnapshot
 	repo           execute.OpenRepoResult
@@ -255,7 +255,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendPrototypeData, makePrototypeData](makePrototypeData{
+		data = Right[appendPrototypeData, convertToPrototypeData](convertToPrototypeData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
@@ -278,7 +278,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendPrototypeData, makePrototypeData](appendPrototypeData{
+	data = Left[appendPrototypeData, convertToPrototypeData](appendPrototypeData{
 		allBranches:               branchesSnapshot.Branches,
 		beginBranchesSnapshot:     branchesSnapshot,
 		beginConfigSnapshot:       repo.ConfigSnapshot,
@@ -297,8 +297,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	return
 }
 
-func makePrototypeBranch(args makePrototypeData) error {
-	err := validateMakePrototypeData(args)
+func convertToPrototypeBranch(args convertToPrototypeData) error {
+	err := validateConvertToPrototypeData(args)
 	if err != nil {
 		return err
 	}
@@ -330,7 +330,7 @@ func makePrototypeBranch(args makePrototypeData) error {
 	})
 }
 
-type makePrototypeBranchArgs struct {
+type convertToPrototypeBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              config.ValidatedConfig
 	makeFeatureData     makeFeatureData
@@ -339,7 +339,7 @@ type makePrototypeBranchArgs struct {
 	verbose             bool
 }
 
-func validateMakePrototypeData(data makePrototypeData) error {
+func validateConvertToPrototypeData(data convertToPrototypeData) error {
 	for branchName, branchType := range data.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
