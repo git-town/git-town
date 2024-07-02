@@ -50,6 +50,24 @@ func NewMemoized(dir string) Memoized {
 	return Memoized{dir}
 }
 
+// allows using this memoized environment as a Fixture
+func (self Memoized) AsFixture() Fixture {
+	binDir := binPath(self.Dir)
+	developerDir := developerRepoPath(self.Dir)
+	originDir := originRepoPath(self.Dir)
+	originRepo := testruntime.New(originDir, self.Dir, "")
+	devRepo := testruntime.New(developerDir, self.Dir, binDir)
+	return Fixture{
+		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		DevRepo:        devRepo,
+		Dir:            self.Dir,
+		OriginRepo:     SomeP(&originRepo),
+		SecondWorktree: NoneP[testruntime.TestRuntime](),
+		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+	}
+}
+
 // provides a copy of this Memoized in the given directory
 func (self Memoized) CloneInto(dir string) Fixture {
 	filesystem.CopyDirectory(self.Dir, dir)
@@ -69,24 +87,6 @@ func (self Memoized) CloneInto(dir string) Fixture {
 		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
 		DevRepo:        devRepo,
 		Dir:            dir,
-		OriginRepo:     SomeP(&originRepo),
-		SecondWorktree: NoneP[testruntime.TestRuntime](),
-		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
-		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
-	}
-}
-
-// allows using this memoized environment as a Fixture
-func (self Memoized) AsFixture() Fixture {
-	binDir := binPath(self.Dir)
-	developerDir := developerRepoPath(self.Dir)
-	originDir := originRepoPath(self.Dir)
-	originRepo := testruntime.New(originDir, self.Dir, "")
-	devRepo := testruntime.New(developerDir, self.Dir, binDir)
-	return Fixture{
-		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
-		DevRepo:        devRepo,
-		Dir:            self.Dir,
 		OriginRepo:     SomeP(&originRepo),
 		SecondWorktree: NoneP[testruntime.TestRuntime](),
 		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
