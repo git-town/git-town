@@ -10,7 +10,9 @@ import (
 	"github.com/git-town/git-town/v14/test/testruntime"
 )
 
-// A fully populated standardized template for Git repos used by scenarios.
+// A fully populated Git repos template for testing.
+// This is just the template that can be efficiently cloned.
+// To perform Git operations, clone or derive a Fixture from it.
 type Memoized struct {
 	Dir string
 }
