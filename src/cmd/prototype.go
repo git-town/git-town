@@ -289,19 +289,26 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, 
 	slices.Reverse(initialAndAncestors)
 	data = Left[createPrototypeData, convertToPrototypeData](createPrototypeData{
 		allBranches:               branchesSnapshot.Branches,
+		backend:                   repo.Backend,
 		beginBranchesSnapshot:     branchesSnapshot,
 		beginConfigSnapshot:       repo.ConfigSnapshot,
 		beginStashSize:            stashSize,
 		branchesToSync:            branchesToSync,
+		commandsCounter:           repo.CommandsCounter,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
+		finalMessages:             repo.FinalMessages,
+		frontend:                  repo.Frontend,
+		git:                       repo.Git,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
+		rootDir:                   repo.RootDir,
 		targetBranch:              targetBranch,
+		verbose:                   verbose,
 	})
 	return
 }
