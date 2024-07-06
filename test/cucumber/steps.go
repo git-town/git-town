@@ -1355,7 +1355,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			case configdomain.BranchTypeMainBranch:
 				panic("main branch exists already")
 			case configdomain.BranchTypeFeatureBranch:
-				state.fixture.DevRepo.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+				state.fixture.DevRepo.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
 			case configdomain.BranchTypePerennialBranch:
 				state.fixture.DevRepo.CreatePerennialBranches(branchSetup.Name)
 			case configdomain.BranchTypeContributionBranch:
