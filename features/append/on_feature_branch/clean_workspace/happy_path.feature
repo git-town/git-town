@@ -2,9 +2,10 @@
 Feature: append a new feature branch to an existing feature branch
 
   Background:
-    Given the branches
-      | NAME     | TYPE    |
-      | existing | feature |
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE    | PARENT |
+      | existing | feature | main   |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |

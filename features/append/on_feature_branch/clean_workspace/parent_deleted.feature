@@ -1,9 +1,9 @@
 Feature: append a branch to a branch whose parent was shipped on the remote
 
   Background:
-    Given the branches
+    Given a Git repo with origin
+    And the branches
       | NAME   | TYPE    | PARENT |
-      | main   | main    |        |
       | parent | feature | main   |
       | child  | feature | parent |
     And the commits

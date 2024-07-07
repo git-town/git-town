@@ -1,11 +1,10 @@
 Feature: in a local repo
 
   Background:
-    Given my repo does not have an origin
+    Given a local Git repo
     And the branches
-      | NAME     | TYPE    |
-      | main     | main    |
-      | existing | feature |
+      | NAME     | TYPE    | PARENT |
+      | existing | feature | main   |
     And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |

@@ -1,10 +1,10 @@
 Feature: display all executed Git commands
 
   Background:
-    Given the branches
-      | NAME     | TYPE    |
-      | main     | main    |
-      | existing | feature |
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE    | PARENT |
+      | existing | feature | main   |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |

@@ -2,10 +2,10 @@
 Feature: ask for missing parent branch information
 
   Scenario:
-    Given the branches
-      | NAME    | TYPE    |
-      | main    | main    |
-      | feature | feature |
+    Given a Git repo with origin
+    And the branches
+      | NAME    | TYPE    | PARENT |
+      | feature | feature | main   |
     And the current branch is "feature"
     When I run "git-town append new" and enter into the dialog:
       | DIALOG                             | KEYS  |

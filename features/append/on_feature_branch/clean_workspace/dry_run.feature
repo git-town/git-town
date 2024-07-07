@@ -1,14 +1,14 @@
 Feature: dry run appending a new feature branch to an existing feature branch
 
   Background:
-    Given the branches
-      | NAME     | TYPE    |
-      | main     | main    |
-      | existing | feature |
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE    | PARENT |
+      | existing | feature | main   |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     When I run "git-town append new --dry-run"
 
   Scenario: result
