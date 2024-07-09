@@ -22,7 +22,7 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 		name := None[gitdomain.LocalBranchName]()
 		branchType := None[configdomain.BranchType]()
 		parent := None[gitdomain.LocalBranchName]()
-		locations := testgit.Locations{testgit.LocationLocal, testgit.LocationOrigin}
+		locations := testgit.Locations{}
 		for c, cell := range row.Cells {
 			switch headers.Cells[c].Value {
 			case "NAME":
@@ -35,7 +35,12 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 				}
 			case "LOCATIONS":
 				locations = testgit.NewLocations(cell.Value)
+			default:
+				panic("unknown branch table header: " + cell.Value)
 			}
+		}
+		if len(locations) == 0 {
+			panic("branch table doesn't define locations")
 		}
 		result = append(result, BranchSetup{
 			Name:       name.GetOrPanic(),
