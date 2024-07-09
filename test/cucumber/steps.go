@@ -1369,14 +1369,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 				panic("main branch exists already")
 			case configdomain.BranchTypeFeatureBranch:
 				state.fixture.DevRepo.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+				state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 			case configdomain.BranchTypePerennialBranch:
 				state.fixture.DevRepo.CreatePerennialBranches(branchSetup.Name)
+				state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 			case configdomain.BranchTypeContributionBranch:
 				state.fixture.DevRepo.CreateContributionBranches(branchSetup.Name)
+				state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 			case configdomain.BranchTypeObservedBranch:
 				state.fixture.DevRepo.CreateObservedBranches(branchSetup.Name)
+				state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 			case configdomain.BranchTypeParkedBranch:
 				state.fixture.DevRepo.CreateParkedBranches(branchSetup.Name)
+				state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 			}
 		}
 		return nil
