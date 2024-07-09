@@ -1,10 +1,10 @@
 Feature: dry run appending a new feature branch to an existing feature branch
 
   Background:
-    Given a Git repo with origin
+    Given a Git repo cloned from an origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS |
-      | existing | feature | main   |           |
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
