@@ -55,7 +55,11 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	})
 
 	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
-		state := ctx.Value(keyState).(*ScenarioState)
+		ctxValue := ctx.Value(keyState)
+		if ctxValue == nil {
+			panic("after-scenario hook has found no scenario state found to clean up")
+		}
+		state := ctxValue.(*ScenarioState)
 		if err != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
 			return ctx, err
