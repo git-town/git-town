@@ -5,12 +5,14 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	testgit "github.com/git-town/git-town/v14/test/git"
 )
 
 type BranchSetup struct {
 	Name       gitdomain.LocalBranchName
 	BranchType configdomain.BranchType
 	Parent     Option[gitdomain.LocalBranchName]
+	Locations  []testgit.Location
 }
 
 func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
@@ -20,6 +22,7 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 		name := None[gitdomain.LocalBranchName]()
 		branchType := None[configdomain.BranchType]()
 		parent := None[gitdomain.LocalBranchName]()
+		locations := testgit.Locations{testgit.LocationLocal, testgit.LocationOrigin}
 		for c, cell := range row.Cells {
 			switch headers.Cells[c].Value {
 			case "NAME":
@@ -30,12 +33,15 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 				if cell.Value != "" {
 					parent = Some(gitdomain.NewLocalBranchName(cell.Value))
 				}
+			case "LOCATIONS":
+				locations = testgit.NewLocations(cell.Value)
 			}
 		}
 		result = append(result, BranchSetup{
 			Name:       name.GetOrPanic(),
 			BranchType: branchType.GetOrPanic(),
 			Parent:     parent,
+			Locations:  locations,
 		})
 	}
 	return result
