@@ -13,6 +13,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
+	cukemessages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -40,31 +41,17 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 type key int
 
 // the key for storing the state in the context.Context
-const keyState key = iota
+const (
+	keyState key = iota
+	keyScenarioName
+	keyScenarioTags
+)
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
-		fixture := fixtureFactory.CreateFixture(scenario.Name)
-		if helpers.HasTag(scenario.Tags, "@debug") {
-			fixture.DevRepo.Verbose = true
-		}
-		state := ScenarioState{
-			fixture:              fixture,
-			initialBranches:      None[datatable.DataTable](),
-			initialCommits:       None[datatable.DataTable](),
-			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
-			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
-			insideGitRepo:        true,
-			runExitCode:          None[int](),
-			runExitCodeChecked:   false,
-			runOutput:            None[string](),
-			uncommittedContent:   None[string](),
-			uncommittedFileName:  None[string](),
-		}
-		return context.WithValue(ctx, keyState, &state), nil
+		ctx = context.WithValue(ctx, keyScenarioName, scenario.Name)
+		ctx = context.WithValue(ctx, keyScenarioTags, scenario.Tags)
+		return ctx, nil
 	})
 
 	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
@@ -121,6 +108,32 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyState).(*ScenarioState)
 		state.fixture.DevRepo.CreateFolder(name)
 		return nil
+	})
+
+	sc.Step("a Git repo with origin", func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		fixture := fixtureFactory.CreateFixture(scenarioName)
+		if helpers.HasTag(scenarioTags, "@debug") {
+			fixture.DevRepo.Verbose = true
+		}
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyState, &state), nil
 	})
 
 	sc.Step(`^a known remote branch "([^"]*)"$`, func(ctx context.Context, branchText string) error {
