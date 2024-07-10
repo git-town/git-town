@@ -1355,19 +1355,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
 	})
 
-	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) error {
+	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err != nil {
-			return errors.New("no configuration file found")
+			panic("no configuration file found")
 		}
 		have = strings.TrimSpace(have)
 		want := strings.TrimSpace(content.Content)
 		if have != want {
 			fmt.Println(cmp.Diff(want, have))
-			return errors.New("mismatching config file content")
+			panic("mismatching config file content")
 		}
-		return nil
 	})
 
 	sc.Step(`^a contribution branch "([^"]+)"$`, func(ctx context.Context, branch string) error {
@@ -1383,7 +1382,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
-	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
@@ -1391,40 +1390,35 @@ func defineSteps(sc *godog.ScenarioContext) {
 		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 		coworkerRepo.StageFiles(commit.FileName)
 		coworkerRepo.CommitStagedChanges(commit.Message)
-		return nil
 	})
 
-	sc.Step(`^the coworker fetches updates$`, func(ctx context.Context) error {
+	sc.Step(`^the coworker fetches updates$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.CoworkerRepo.GetOrPanic().Fetch()
-		return nil
 	})
 
-	sc.Step(`^the coworker is on the "([^"]*)" branch$`, func(ctx context.Context, branch string) error {
+	sc.Step(`^the coworker is on the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.CoworkerRepo.GetOrPanic().CheckoutBranch(gitdomain.NewLocalBranchName(branch))
-		return nil
 	})
 
-	sc.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) error {
+	sc.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateFile(filename, content)
 		coworkerRepo.StageFiles(filename)
-		return nil
 	})
 
-	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) error {
+	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		var exitCode int
 		var output string
 		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		return nil
 	})
 
-	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) error {
+	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		var exitCode int
@@ -1432,21 +1426,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		return nil
 	})
 
-	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) error {
+	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
-		return nil
 	})
 
-	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) error {
+	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
 		asserts.NoError(err)
 		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy)
-		return nil
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
@@ -1458,7 +1449,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) error {
+	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
@@ -1466,7 +1457,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.fixture.DevRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		}
 		state.fixture.DevRepo.CheckoutBranch(branch)
-		return nil
 	})
 
 	sc.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(ctx context.Context, localStr, branchType, branchName string) error {
