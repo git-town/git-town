@@ -1459,7 +1459,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.DevRepo.CheckoutBranch(branch)
 	})
 
-	sc.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(ctx context.Context, localStr, branchType, branchName string) error {
+	sc.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(ctx context.Context, localStr, branchType, branchName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
@@ -1486,20 +1486,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !state.fixture.DevRepo.CurrentBranchCache.Initialized() || state.fixture.DevRepo.CurrentBranchCache.Value() != branch {
 			state.fixture.DevRepo.CheckoutBranch(branch)
 		}
-		return nil
 	})
 
-	sc.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(ctx context.Context, currentText, previousText string) error {
+	sc.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(ctx context.Context, currentText, previousText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		current := gitdomain.NewLocalBranchName(currentText)
 		previous := gitdomain.NewLocalBranchName(previousText)
 		state.initialCurrentBranch = Some(current)
 		state.fixture.DevRepo.CheckoutBranch(previous)
 		state.fixture.DevRepo.CheckoutBranch(current)
-		return nil
 	})
 
-	sc.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(ctx context.Context, branchTypeName, name string, table *godog.Table) error {
+	sc.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(ctx context.Context, branchTypeName, name string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchName := gitdomain.NewLocalBranchName(name)
 		switch configdomain.NewBranchType(branchTypeName) {
@@ -1523,10 +1521,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 				state.fixture.DevRepo.PushBranch()
 			}
 		}
-		return nil
 	})
 
-	sc.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(ctx context.Context, name, parent string, table *godog.Table) error {
+	sc.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(ctx context.Context, name, parent string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(name)
 		parentBranch := gitdomain.NewLocalBranchName(parent)
@@ -1541,7 +1538,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 				state.fixture.DevRepo.PushBranch()
 			}
 		}
-		return nil
 	})
 
 	sc.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
@@ -1578,7 +1574,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return os.WriteFile(filePath, []byte(docString.Content), 0o700)
 	})
 
-	sc.Step(`^the initial lineage exists$`, func(ctx context.Context) error {
+	sc.Step(`^the initial lineage exists$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := state.fixture.DevRepo.LineageTable()
 		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
@@ -1587,12 +1583,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
 			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
 			fmt.Println(diff)
-			return errors.New("mismatching branches found, see the diff above")
+			panic("mismatching branches found, see the diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^the initial branches and lineage exist$`, func(ctx context.Context) error {
+	sc.Step(`^the initial branches and lineage exist$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
@@ -1602,7 +1597,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			return errors.New("mismatching branches found, see diff above")
+			panic("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
 		currentLineage := state.fixture.DevRepo.LineageTable()
@@ -1610,12 +1605,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
-			return errors.New("mismatching lineage found, see the diff above")
+			panic("mismatching lineage found, see the diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^the initial branches exist$`, func(ctx context.Context) error {
+	sc.Step(`^the initial branches exist$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := state.fixture.Branches()
 		want := state.initialBranches.GetOrPanic()
@@ -1625,30 +1619,28 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			return errors.New("mismatching branches found, see diff above")
+			panic("mismatching branches found, see diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^the initial commits exist$`, func(ctx context.Context) error {
+	sc.Step(`^the initial commits exist$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
 		if errCount == 0 {
-			return nil
+			return
 		}
 		fmt.Println(errDiff)
-		return errors.New("current commits are not the same as the initial commits")
+		panic("current commits are not the same as the initial commits")
 	})
 
-	sc.Step(`^the local feature branch "([^"]+)"$`, func(ctx context.Context, branch string) error {
+	sc.Step(`^the local feature branch "([^"]+)"$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchName := gitdomain.NewLocalBranchName(branch)
 		state.fixture.DevRepo.CreateFeatureBranch(branchName)
-		return nil
 	})
 
-	sc.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2 string) error {
+	sc.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2 string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2} {
@@ -1658,10 +1650,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
 		}
-		return nil
 	})
 
-	sc.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) error {
+	sc.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2, branch3} {
@@ -1671,17 +1662,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
 		}
-		return nil
 	})
 
-	sc.Step(`^the local observed branch "([^"]+)"$`, func(ctx context.Context, name string) error {
+	sc.Step(`^the local observed branch "([^"]+)"$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(name)
 		state.fixture.DevRepo.CreateObservedBranches(branch)
-		return nil
 	})
 
-	sc.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1Text, branch2Text string) error {
+	sc.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1Text, branch2Text string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch1 := gitdomain.NewLocalBranchName(branch1Text)
 		branch2 := gitdomain.NewLocalBranchName(branch2Text)
@@ -1691,10 +1680,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.fixture.DevRepo.PushBranchToRemote(branch1, gitdomain.RemoteOrigin)
 			state.fixture.DevRepo.PushBranchToRemote(branch2, gitdomain.RemoteOrigin)
 		}
-		return nil
 	})
 
-	sc.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) error {
+	sc.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2, branch3} {
@@ -1704,7 +1692,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 				state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			}
 		}
-		return nil
 	})
 
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
@@ -1743,10 +1730,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
-	sc.Step(`^the origin is "([^"]*)"$`, func(ctx context.Context, origin string) error {
+	sc.Step(`^the origin is "([^"]*)"$`, func(ctx context.Context, origin string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.DevRepo.SetTestOrigin(origin)
-		return nil
 	})
 
 	sc.Step(`^the parked branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
