@@ -1,8 +1,7 @@
-@this
 Feature: auto-push the new branch to origin
 
   Background:
-    Given a Git repo with origin
+    Given a Git repo clone
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
