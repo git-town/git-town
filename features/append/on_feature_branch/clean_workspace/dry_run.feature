@@ -1,7 +1,7 @@
 Feature: dry run appending a new feature branch to an existing feature branch
 
   Background:
-    Given a Git repo cloned from an origin
+    Given a Git repo clone
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
