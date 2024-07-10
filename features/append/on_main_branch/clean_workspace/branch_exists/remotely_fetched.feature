@@ -1,7 +1,10 @@
 Feature: already existing known remote branch
 
   Background:
-    Given a remote branch "existing"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | existing | feature | main   | origin    |
     And I run "git fetch"
     When I run "git-town append existing"
 
