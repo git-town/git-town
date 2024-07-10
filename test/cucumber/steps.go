@@ -1350,8 +1350,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchSetups := datatable.ParseBranchSetupTable(table)
-		for _, branchSetup := range branchSetups {
+		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			switch branchSetup.BranchType {
 			case configdomain.BranchTypeMainBranch:
 				panic("main branch exists already")
