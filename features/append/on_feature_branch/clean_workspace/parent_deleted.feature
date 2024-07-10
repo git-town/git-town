@@ -1,11 +1,11 @@
 Feature: append a branch to a branch whose parent was shipped on the remote
 
   Background:
-    Given a Git repo with origin
+    Given a Git repo clone
     And the branches
-      | NAME   | TYPE    | PARENT |
-      | parent | feature | main   |
-      | child  | feature | parent |
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent |               |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |

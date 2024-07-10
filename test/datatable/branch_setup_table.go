@@ -18,6 +18,7 @@ type BranchSetup struct {
 func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 	result := make([]BranchSetup, 0, len(table.Rows)-1)
 	headers := table.Rows[0]
+	lastLocations := testgit.Locations{}
 	for _, row := range table.Rows[1:] {
 		name := None[gitdomain.LocalBranchName]()
 		branchType := None[configdomain.BranchType]()
@@ -34,7 +35,17 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 					parent = Some(gitdomain.NewLocalBranchName(cell.Value))
 				}
 			case "LOCATIONS":
-				locations = testgit.NewLocations(cell.Value)
+				if cell.Value == "" {
+					if len(lastLocations) > 0 {
+						locations = lastLocations
+					} else {
+						panic("branch table does not provide locations")
+					}
+				} else {
+					locations = testgit.NewLocations(cell.Value)
+					lastLocations = locations
+				}
+
 			default:
 				panic("unknown branch table header: " + cell.Value)
 			}

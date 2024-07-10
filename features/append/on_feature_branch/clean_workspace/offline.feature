@@ -1,4 +1,3 @@
-@this
 Feature: append in offline mode
 
   Background:

@@ -1,3 +1,4 @@
+@this
 Feature: auto-push the new branch to origin
 
   Background:
