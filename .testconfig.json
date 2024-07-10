@@ -7,14 +7,26 @@
 
     {
       "type": "testFile",
-      "files": "\\.feature$",
-      "run": "make cuke"
+      "files": "**/*.feature",
+      "run": "go test -- {{file}}"
     },
 
     {
       "type": "testFileLine",
-      "files": "\\.feature$",
+      "files": "**/*.feature",
       "run": "make cukethis"
     }
-  ]
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true,
+      "newlines": 2
+    },
+    "afterRun": {
+      "newlines": 1,
+      "indicatorLines": 3,
+      "indicatorBackground": true,
+      "printResult": false
+    }
+  }
 }
