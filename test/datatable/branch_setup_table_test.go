@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
+	"github.com/git-town/git-town/v14/test/git"
 	"github.com/shoenig/test/must"
 )
 
@@ -24,13 +25,7 @@ func TestParseBranchSetupTable(t *testing.T) {
 						{Value: "NAME"},
 						{Value: "TYPE"},
 						{Value: "PARENT"},
-					},
-				},
-				{
-					Cells: []*messages.PickleTableCell{
-						{Value: "main"},
-						{Value: "main"},
-						{Value: ""},
+						{Value: "LOCATIONS"},
 					},
 				},
 				{
@@ -38,6 +33,15 @@ func TestParseBranchSetupTable(t *testing.T) {
 						{Value: "feature-1"},
 						{Value: "feature"},
 						{Value: "main"},
+						{Value: "local, origin"},
+					},
+				},
+				{
+					Cells: []*messages.PickleTableCell{
+						{Value: "feature-2"},
+						{Value: "feature"},
+						{Value: "main"},
+						{Value: ""},
 					},
 				},
 			},
@@ -45,14 +49,16 @@ func TestParseBranchSetupTable(t *testing.T) {
 		have := datatable.ParseBranchSetupTable(give)
 		want := []datatable.BranchSetup{
 			{
-				Name:       "main",
-				BranchType: configdomain.BranchTypeMainBranch,
-				Parent:     None[gitdomain.LocalBranchName](),
-			},
-			{
 				Name:       "feature-1",
 				BranchType: configdomain.BranchTypeFeatureBranch,
 				Parent:     Some(gitdomain.NewLocalBranchName("main")),
+				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
+			},
+			{
+				Name:       "feature-2",
+				BranchType: configdomain.BranchTypeFeatureBranch,
+				Parent:     Some(gitdomain.NewLocalBranchName("main")),
+				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
 			},
 		}
 		must.Eq(t, want, have)
@@ -66,18 +72,14 @@ func TestParseBranchSetupTable(t *testing.T) {
 					Cells: []*messages.PickleTableCell{
 						{Value: "NAME"},
 						{Value: "TYPE"},
-					},
-				},
-				{
-					Cells: []*messages.PickleTableCell{
-						{Value: "main"},
-						{Value: "main"},
+						{Value: "LOCATIONS"},
 					},
 				},
 				{
 					Cells: []*messages.PickleTableCell{
 						{Value: "staging"},
 						{Value: "perennial"},
+						{Value: "local, origin"},
 					},
 				},
 			},
@@ -85,14 +87,10 @@ func TestParseBranchSetupTable(t *testing.T) {
 		have := datatable.ParseBranchSetupTable(give)
 		want := []datatable.BranchSetup{
 			{
-				Name:       "main",
-				BranchType: configdomain.BranchTypeMainBranch,
-				Parent:     None[gitdomain.LocalBranchName](),
-			},
-			{
 				Name:       "staging",
 				BranchType: configdomain.BranchTypePerennialBranch,
 				Parent:     None[gitdomain.LocalBranchName](),
+				Locations:  git.Locations{git.LocationLocal, git.LocationOrigin},
 			},
 		}
 		must.Eq(t, want, have)
