@@ -3,8 +3,8 @@ Feature: in a local repo
   Background:
     Given a local Git repo
     And the branches
-      | NAME     | TYPE    | PARENT |
-      | existing | feature | main   |
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | existing | feature | main   | local     |
     And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
