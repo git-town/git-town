@@ -1824,16 +1824,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		fileTable := state.fixture.DevRepo.FilesInBranches(gitdomain.NewLocalBranchName("main"))
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
-			return errors.New("mismatching files found, see diff above")
+			panic("mismatching files found, see diff above")
 		}
-		return nil
 	})
 
 	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
@@ -1841,22 +1840,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return state.compareGherkinTable(table)
 	})
 
-	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
 			fmt.Println(diff)
-			return errors.New("mismatching tags found, see diff above")
+			panic("mismatching tags found, see diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^the tags$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^the tags$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.CreateTags(table)
-		return nil
 	})
 
 	sc.Step(`^the uncommitted file is stashed$`, func(ctx context.Context) error {
@@ -1875,19 +1872,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) error {
+	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		hasFile := state.fixture.DevRepo.HasFile(
 			state.uncommittedFileName.GetOrPanic(),
 			state.uncommittedContent.GetOrPanic(),
 		)
 		if hasFile != "" {
-			return errors.New(hasFile)
+			panic(hasFile)
 		}
-		return nil
 	})
 
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
+	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentBranches := state.fixture.Branches()
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
@@ -1895,33 +1891,29 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			return errors.New("mismatching branches found, see diff above")
+			panic("mismatching branches found, see diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
+	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		table := state.fixture.DevRepo.LineageTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
 			fmt.Println(diff)
-			return errors.New("mismatching branches found, see the diff above")
+			panic("mismatching branches found, see the diff above")
 		}
-		return nil
 	})
 
-	sc.Step(`^tool "([^"]*)" is broken$`, func(ctx context.Context, name string) error {
+	sc.Step(`^tool "([^"]*)" is broken$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.DevRepo.MockBrokenCommand(name)
-		return nil
 	})
 
-	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) error {
+	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.DevRepo.MockCommand(tool)
-		return nil
 	})
 }
 
