@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/flags"
+	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -42,10 +43,14 @@ func executeGetParent(args []string, verbose bool) error {
 	var branch gitdomain.LocalBranchName
 	if len(args) == 0 {
 		branch, err = repo.Git.CurrentBranch(repo.Backend)
+		if err != nil {
+			return err
+		}
 	} else {
 		branch = gitdomain.NewLocalBranchName(args[0])
 	}
 	parent := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(branch)
 	fmt.Println(parent)
+	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
