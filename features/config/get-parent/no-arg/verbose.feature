@@ -4,7 +4,6 @@ Feature: display the parent of a top-level feature branch
     Given the current branch is a feature branch "feature"
     When I run "git-town config get-parent --verbose"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                            |
