@@ -6,7 +6,4 @@ Feature: display the parent of a perennial branch
 
   Scenario: result
     Then it runs no commands
-    And it prints:
-      """
-
-      """
+    And it prints no output

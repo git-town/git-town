@@ -49,8 +49,10 @@ func executeGetParent(args []string, verbose bool) error {
 	} else {
 		branch = gitdomain.NewLocalBranchName(args[0])
 	}
-	parent := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(branch)
-	fmt.Println(parent)
+	parentOpt := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(branch)
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		fmt.Println(parent)
+	}
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
