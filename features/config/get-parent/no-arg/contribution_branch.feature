@@ -1,7 +1,7 @@
-Feature: display the parent of an observed branch
+Feature: display the parent of a contribution branch
 
   Background:
-    Given the current branch is an observed branch "observed"
+    Given the current branch is a contribution branch "contribution"
     When I run "git-town config get-parent"
 
   Scenario: result
