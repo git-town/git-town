@@ -64,6 +64,20 @@ func TestConnector(t *testing.T) {
 				body:   "my body",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title&body=my+body",
 			},
+			"provide title only": {
+				branch: gitdomain.NewLocalBranchName("feature-#"),
+				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "my title",
+				body:   "",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title",
+			},
+			"provide body only": {
+				branch: gitdomain.NewLocalBranchName("feature-#"),
+				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "",
+				body:   "my body",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&body=my+body",
+			},
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
