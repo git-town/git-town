@@ -34,8 +34,12 @@ Feature: syncing a top-level feature branch using --no-push
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
-      """
-      nothing to undo
-      """
-    And it runs no commands
+    Then it runs the commands
+      | BRANCH  | COMMAND                                           |
+      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      |         | git checkout main                                 |
+      | main    | git reset --hard {{ sha 'local main commit' }}    |
+      |         | git checkout feature                              |
+    And the current branch is still "feature"
+    And the initial commits exist
+    And the initial branches and lineage exist

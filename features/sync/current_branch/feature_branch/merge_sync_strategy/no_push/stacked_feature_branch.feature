@@ -49,7 +49,6 @@ Feature: syncing a stacked feature branch using --no-push
       |        |               | Merge branch 'main' into parent                          |
     And the initial branches and lineage exist
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
