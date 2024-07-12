@@ -708,7 +708,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		secondWorkTree.Config.Reload()
 	})
 
-	sc.Step(`^I (?:run|ran) "([^"]+)" with STDIN:$`, func(ctx context.Context, cmd string, input *godog.DocString) {
+	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.CaptureState()
 		updateInitialSHAs(state)

@@ -48,7 +48,7 @@ Feature: Prepopulate title and body
       """
 
   Scenario: provide title via CLI and body via STDIN
-    When I run "git-town propose --body-file -" with STDIN:
+    When I pipe the following text into "git-town propose --body-file -":
       """
       Proposal
       body
