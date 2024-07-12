@@ -15,8 +15,12 @@ You can create pull requests for repositories hosted on:
 
 ### Arguments
 
-On GitHub you can pre-populate the title of the pull request with the `--title`
-argument and the body text of the pull request with the `--body` argument.
+GitHub supports these additional command-line switches:
+
+- `--title` pre-populate the title of the pull request
+- `--body` pre-populates the body of the pull request
+- `--body-file` pre-populates the body of the pull request with the content of
+  the given file. The filename `-` makes Git Town read the body text from STDIN.
 
 ### Configuration
 
