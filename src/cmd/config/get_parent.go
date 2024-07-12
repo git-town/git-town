@@ -32,7 +32,7 @@ func executeGetParent(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
-		PrintCommands:    true,
+		PrintCommands:    false,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
 		Verbose:          verbose,
