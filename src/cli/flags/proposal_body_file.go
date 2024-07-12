@@ -28,5 +28,5 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	return addFlag, readFlag
 }
 
-// defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command
+// reads gitdomain.ProposalBodyFile from the CLI args
 type ReadProposalBodyFileFlagFunc func(*cobra.Command) gitdomain.ProposalBodyFile
