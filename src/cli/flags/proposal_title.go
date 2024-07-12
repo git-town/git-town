@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,7 @@ func ProposalTitle() (AddFunc, ReadProposalTitleFlagFunc) {
 	readFlag := func(cmd *cobra.Command) gitdomain.ProposalTitle {
 		value, err := cmd.Flags().GetString(titleLong)
 		if err != nil {
-			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), commitMessageLong))
+			panic(fmt.Sprintf(messages.FlagDoesntExist, cmd.Name(), commitMessageLong))
 		}
 		return gitdomain.ProposalTitle(value)
 	}
