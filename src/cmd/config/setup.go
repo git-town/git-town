@@ -84,14 +84,10 @@ func executeConfigSetup(verbose bool) error {
 
 type setupData struct {
 	config        config.UnvalidatedConfig
-	dialogInputs  components.TestInputs
+	dialogInputs  Mutable[components.TestInputs]
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	userInput     userInput
-}
-
-func emptySetupData() setupData {
-	return setupData{} //exhaustruct:ignore
 }
 
 type userInput struct {
@@ -110,35 +106,35 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 }
 
 func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, err error) {
-	aborted, err = dialog.Welcome(data.dialogInputs.Next())
+	aborted, err = dialog.Welcome(data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Aliases, data.dialogInputs.Next())
+	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	existingMainBranch := config.Config.MainBranch
+	existingMainBranch := config.Config.Value.MainBranch
 	if existingMainBranch.IsNone() {
 		existingMainBranch = gitCommands.DefaultBranch(backend)
 	}
 	if existingMainBranch.IsNone() {
 		existingMainBranch = gitCommands.OriginHead(backend)
 	}
-	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
+	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	data.userInput.config.MainBranch = Some(mainBranch)
-	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.PerennialBranches, mainBranch, data.dialogInputs.Next())
+	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.Value.PerennialBranches, mainBranch, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.PerennialRegex, data.dialogInputs.Next())
+	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.Value.PerennialRegex, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.HostingPlatform, data.dialogInputs.Next())
+	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.Value.HostingPlatform, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -147,66 +143,66 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
 		case configdomain.HostingPlatformGitea:
-			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.GiteaToken, data.dialogInputs.Next())
+			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.Value.GiteaToken, data.dialogInputs.Value.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.GitHubToken, data.dialogInputs.Next())
+			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.Value.GitHubToken, data.dialogInputs.Value.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.GitLabToken, data.dialogInputs.Next())
+			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.Value.GitLabToken, data.dialogInputs.Value.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.HostingOriginHostname, data.dialogInputs.Next())
+	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.Value.HostingOriginHostname, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.SyncFeatureStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.Value.SyncFeatureStrategy, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.SyncPerennialStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.Value.SyncPerennialStrategy, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.SyncUpstream, data.dialogInputs.Next())
+	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.Value.SyncUpstream, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.Value.PushNewBranches, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.PushHook, data.dialogInputs.Next())
+	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.Value.PushHook, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(config.Config.SyncBeforeShip, data.dialogInputs.Next())
+	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(config.Config.Value.SyncBeforeShip, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.Value.ShipDeleteTrackingBranch, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Next())
+	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Value.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return false, nil
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose bool) (data setupData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptySetupData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -235,19 +231,19 @@ func loadSetupData(repo execute.OpenRepoResult, verbose bool) (setupData, bool, 
 }
 
 func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	err := saveAliases(oldConfig.Config.Aliases, userInput.config.Aliases, gitCommands, frontend)
+	err := saveAliases(oldConfig.Config.Value.Aliases, userInput.config.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(oldConfig.Config.GiteaToken, userInput.config.GiteaToken, gitCommands, frontend)
+	err = saveGiteaToken(oldConfig.Config.Value.GiteaToken, userInput.config.GiteaToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(oldConfig.Config.GitHubToken, userInput.config.GitHubToken, gitCommands, frontend)
+	err = saveGitHubToken(oldConfig.Config.Value.GitHubToken, userInput.config.GitHubToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(oldConfig.Config.GitLabToken, userInput.config.GitLabToken, gitCommands, frontend)
+	err = saveGitLabToken(oldConfig.Config.Value.GitLabToken, userInput.config.GitLabToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -262,18 +258,18 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveHostingPlatform(oldConfig.Config.HostingPlatform, userInput.config.HostingPlatform, gitCommands, frontend))
-	fc.Check(saveOriginHostname(oldConfig.Config.HostingOriginHostname, userInput.config.HostingOriginHostname, gitCommands, frontend))
-	fc.Check(saveMainBranch(oldConfig.Config.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
-	fc.Check(savePerennialBranches(oldConfig.Config.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
-	fc.Check(savePerennialRegex(oldConfig.Config.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
-	fc.Check(savePushHook(oldConfig.Config.PushHook, userInput.config.PushHook, oldConfig))
-	fc.Check(savePushNewBranches(oldConfig.Config.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
-	fc.Check(saveShipDeleteTrackingBranch(oldConfig.Config.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
-	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
-	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
-	fc.Check(saveSyncUpstream(oldConfig.Config.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
-	fc.Check(saveSyncBeforeShip(oldConfig.Config.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig))
+	fc.Check(saveHostingPlatform(oldConfig.Config.Value.HostingPlatform, userInput.config.HostingPlatform, gitCommands, frontend))
+	fc.Check(saveOriginHostname(oldConfig.Config.Value.HostingOriginHostname, userInput.config.HostingOriginHostname, gitCommands, frontend))
+	fc.Check(saveMainBranch(oldConfig.Config.Value.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
+	fc.Check(savePerennialBranches(oldConfig.Config.Value.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
+	fc.Check(savePerennialRegex(oldConfig.Config.Value.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
+	fc.Check(savePushHook(oldConfig.Config.Value.PushHook, userInput.config.PushHook, oldConfig))
+	fc.Check(savePushNewBranches(oldConfig.Config.Value.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
+	fc.Check(saveShipDeleteTrackingBranch(oldConfig.Config.Value.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
+	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
+	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
+	fc.Check(saveSyncBeforeShip(oldConfig.Config.Value.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig))
 	return fc.Err
 }
 

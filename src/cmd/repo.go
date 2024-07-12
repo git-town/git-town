@@ -54,27 +54,26 @@ func executeRepo(verbose bool) error {
 		return err
 	}
 	browser.Open(data.connector.RepositoryURL(), repo.Frontend, repo.Backend)
-	print.Footer(verbose, repo.CommandsCounter.Count(), repo.FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
 
-func determineRepoData(repo execute.OpenRepoResult) (repoData, error) {
-	var err error
+func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *repo.UnvalidatedConfig.Config,
-			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
+			Config:          repo.UnvalidatedConfig.Config.Get(),
+			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return emptyRepoData(), err
+			return data, err
 		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return emptyRepoData(), hostingdomain.UnsupportedServiceError()
+		return data, hostingdomain.UnsupportedServiceError()
 	}
 	return repoData{
 		connector: connector,
@@ -83,8 +82,4 @@ func determineRepoData(repo execute.OpenRepoResult) (repoData, error) {
 
 type repoData struct {
 	connector hostingdomain.Connector
-}
-
-func emptyRepoData() repoData {
-	return repoData{} //exhaustruct:ignore
 }

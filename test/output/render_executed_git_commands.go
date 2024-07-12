@@ -1,13 +1,13 @@
 package output
 
 import (
-	"github.com/cucumber/messages-go/v10"
+	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v14/test/datatable"
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.
 // The DataTable table matches the structure of the given Gherkin table.
-func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.PickleStepArgument_PickleTable) datatable.DataTable {
+func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *godog.Table) datatable.DataTable {
 	tableHasBranches := table.Rows[0].Cells[0].Value == "BRANCH"
 	tableHasType := len(table.Rows[0].Cells) > 1 && table.Rows[0].Cells[1].Value == "TYPE"
 	result := datatable.DataTable{}

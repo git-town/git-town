@@ -3,6 +3,7 @@ package sync
 import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
 )
@@ -25,20 +26,20 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	default:
 		ExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
 	}
-	args.Program.Add(&opcodes.EndOfBranchProgram{})
+	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
 
 type BranchProgramArgs struct {
 	BranchInfos   gitdomain.BranchInfos
 	Config        configdomain.ValidatedConfig
 	InitialBranch gitdomain.LocalBranchName
-	Program       *program.Program
+	Program       Mutable[program.Program]
 	PushBranch    bool
 	Remotes       gitdomain.Remotes
 }
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
-func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
+func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
@@ -48,7 +49,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&opcodes.Checkout{Branch: localName})
+	list.Value.Add(&opcodes.Checkout{Branch: localName})
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
@@ -79,9 +80,9 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
-			list.Add(&opcodes.CreateTrackingBranch{Branch: localName})
+			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
-			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
+			list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
 		default:
 			pushFeatureBranchProgram(list, localName, args.Config.SyncFeatureStrategy)
 		}
@@ -92,34 +93,34 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Value.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	}
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch              gitdomain.LocalBranchName
 	parentOtherWorktree bool
-	program             *program.Program
+	program             Mutable[program.Program]
 	syncStrategy        configdomain.SyncFeatureStrategy
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
+func pushFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
+		list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
-		list.Add(&opcodes.ForcePushCurrentBranch{})
+		list.Value.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch gitdomain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
+func updateCurrentPerennialBranchOpcode(list Mutable[program.Program], otherBranch gitdomain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
 	switch strategy {
 	case configdomain.SyncPerennialStrategyMerge:
-		list.Add(&opcodes.Merge{Branch: otherBranch.BranchName()})
+		list.Value.Add(&opcodes.Merge{Branch: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyRebase:
-		list.Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
+		list.Value.Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
 	}
 }

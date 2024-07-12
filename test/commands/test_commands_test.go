@@ -236,8 +236,8 @@ func TestTestCommands(t *testing.T) {
 	t.Run("HasBranchesOutOfSync", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
-			env := fixture.NewStandardFixture(t.TempDir())
-			runner := env.DevRepo
+			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
+			runner := fixture.DevRepo
 			runner.CreateBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("main"))
 			runner.CheckoutBranch(gitdomain.NewLocalBranchName("branch1"))
 			runner.CreateFile("file1", "content")
@@ -250,29 +250,29 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
-			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("main"))
-			env.DevRepo.PushBranch()
-			env.DevRepo.CreateFile("file1", "content")
-			env.DevRepo.StageFiles("file1")
-			env.DevRepo.CommitStagedChanges("stuff")
-			have, _ := env.DevRepo.HasBranchesOutOfSync()
+			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("main"))
+			fixture.DevRepo.PushBranch()
+			fixture.DevRepo.CreateFile("file1", "content")
+			fixture.DevRepo.StageFiles("file1")
+			fixture.DevRepo.CommitStagedChanges("stuff")
+			have, _ := fixture.DevRepo.HasBranchesOutOfSync()
 			must.True(t, have)
 		})
 
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
-			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("main"))
-			env.DevRepo.PushBranch()
-			originRepo := env.OriginRepo.GetOrPanic()
+			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
+			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("main"))
+			fixture.DevRepo.PushBranch()
+			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
 			originRepo.CreateFile("file1", "content")
 			originRepo.StageFiles("file1")
 			originRepo.CommitStagedChanges("stuff")
 			originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
-			env.DevRepo.Fetch()
-			have, _ := env.DevRepo.HasBranchesOutOfSync()
+			fixture.DevRepo.Fetch()
+			have, _ := fixture.DevRepo.HasBranchesOutOfSync()
 			must.True(t, have)
 		})
 	})

@@ -13,9 +13,7 @@ type CreateTrackingBranch struct {
 }
 
 func (self *CreateTrackingBranch) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *CreateTrackingBranch) Run(args shared.RunArgs) error {

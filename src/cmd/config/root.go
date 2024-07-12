@@ -27,6 +27,7 @@ func RootCmd() *cobra.Command {
 		},
 	}
 	addVerboseFlag(&configCmd)
+	configCmd.AddCommand(getParentCommand())
 	configCmd.AddCommand(removeConfigCommand())
 	configCmd.AddCommand(SetupCommand())
 	return &configCmd
@@ -44,7 +45,7 @@ func executeDisplayConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	printConfig(*repo.UnvalidatedConfig.Config)
+	printConfig(repo.UnvalidatedConfig.Config.Get())
 	return nil
 }
 

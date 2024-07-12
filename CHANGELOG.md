@@ -1,5 +1,16 @@
 # Git Town Changelog
 
+## 14.2.3 (2024-06-25)
+
+Another release with bug fixes and stability improvements.
+
+Shoutout to @alexus37, @bb010g, @blaggacao, @bryanlarsen, @charlierudolph, @kelbyers, @kevgo, @kinyat, @ruudk, @stephenwade, @vectro for contributing code, ideas, and feedback to 54 shipped PRs and 9 resolved issues!
+
+#### Bug Fixes
+
+- loads the configuration when calling Git Town from a subfolder in the Git repo ([#3688](https://github.com/git-town/git-town/pull/3688))
+- "git observe" no longer panics when given a non-existing branch name ([#3647](https://github.com/git-town/git-town/issues/3647))
+
 ## 14.2.2 (2024-06-06)
 
 This release fixes a few bugs that now get correctly surfaced thanks to stronger type checking introduced in v14.2.1.
@@ -433,7 +444,7 @@ Version 7.4.0 sports a vastly overhauled internal architecture that provides mor
 #### New Features
 
 - `git town config`: print perennial branch trees
-- `git town hack`: add `-p` option which prompts for the parent branch instead of using the main development branch
+- `git town hack`: add `-p` option which prompts for the parent branch instead of using the main branch
 - when fetching the origin repository, fetch tags that are not attached to pulled commits
 
 #### Changes

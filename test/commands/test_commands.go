@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/test/asserts"
@@ -277,12 +278,12 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GlobalGitConfig(name gitconfig.Key) *string {
+func (self *TestCommands) GlobalGitConfig(name gitconfig.Key) Option[string] {
 	output, err := self.Query("git", "config", "--global", "--get", name.String())
 	if err != nil {
-		return nil
+		return None[string]()
 	}
-	return &output
+	return Some(output)
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
@@ -344,12 +345,12 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	return branches, nil
 }
 
-func (self *TestCommands) LocalGitConfig(name gitconfig.Key) *string {
+func (self *TestCommands) LocalGitConfig(name gitconfig.Key) Option[string] {
 	output, err := self.Query("git", "config", "--local", "--get", name.String())
 	if err != nil {
-		return nil
+		return None[string]()
 	}
-	return &output
+	return Some(output)
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {

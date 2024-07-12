@@ -14,7 +14,7 @@ type RunArgs struct {
 	Backend                         gitdomain.RunnerQuerier
 	Config                          config.ValidatedConfig
 	Connector                       Option[hostingdomain.Connector]
-	DialogTestInputs                components.TestInputs
+	DialogTestInputs                Mutable[components.TestInputs]
 	FinalMessages                   stringslice.Collector
 	Frontend                        gitdomain.Runner
 	Git                             git.Commands

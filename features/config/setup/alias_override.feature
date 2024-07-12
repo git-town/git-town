@@ -1,3 +1,4 @@
+@messyoutput
 Feature: override an existing Git alias
 
   Background:
@@ -6,7 +7,7 @@ Feature: override an existing Git alias
       | DIALOG                      | KEYS    |
       | welcome                     | enter   |
       | aliases                     | o enter |
-      | main development branch     | enter   |
+      | main branch                 | enter   |
       | perennial branches          | enter   |
       | perennial regex             | enter   |
       | hosting platform            | enter   |

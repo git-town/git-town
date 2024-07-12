@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cucumber/messages-go/v10"
+	"github.com/cucumber/godog"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -31,34 +32,34 @@ type ScenarioState struct {
 	// because it might contain non-existing remote branches or miss existing remote branches.
 	// An example is when origin removes a branch. initialDevSHAs will still list it
 	// because the developer workspace hasn't fetched updates yet.
-	initialDevSHAs map[string]gitdomain.SHA
+	initialDevSHAs Option[map[string]gitdomain.SHA]
 
 	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage Option[datatable.DataTable]
 
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
-	initialOriginSHAs map[string]gitdomain.SHA
+	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
-	initialWorktreeSHAs map[string]gitdomain.SHA
+	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
 
 	// insideGitRepo indicates whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
 	// the error of the last run of Git Town
-	runExitCode int
+	runExitCode Option[int]
 
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
 
 	// the output of the last run of Git Town
-	runOutput string
+	runOutput Option[string]
 
 	// content of the uncommitted file in the workspace
-	uncommittedContent string
+	uncommittedContent Option[string]
 
 	// name of the uncommitted file in the workspace
-	uncommittedFileName string
+	uncommittedFileName Option[string]
 }
 
 func (self *ScenarioState) CaptureState() {
@@ -76,25 +77,9 @@ func (self *ScenarioState) CaptureState() {
 	}
 }
 
-// Reset restores the null value of this ScenarioState.
-func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	self.fixture = gitEnv
-	self.initialBranches = None[datatable.DataTable]()
-	self.initialDevSHAs = map[string]gitdomain.SHA{}
-	self.initialOriginSHAs = map[string]gitdomain.SHA{}
-	self.initialLineage = None[datatable.DataTable]()
-	self.initialCurrentBranch = None[gitdomain.LocalBranchName]()
-	self.insideGitRepo = true
-	self.runOutput = ""
-	self.runExitCode = 0
-	self.runExitCodeChecked = false
-	self.uncommittedFileName = ""
-	self.uncommittedContent = ""
-}
-
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareGherkinTable(table *messages.PickleStepArgument_PickleTable) error {
+func (self *ScenarioState) compareGherkinTable(table *godog.Table) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)

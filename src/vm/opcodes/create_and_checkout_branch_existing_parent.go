@@ -13,9 +13,7 @@ type CreateAndCheckoutBranchExistingParent struct {
 }
 
 func (self *CreateAndCheckoutBranchExistingParent) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) error {

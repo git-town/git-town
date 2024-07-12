@@ -13,7 +13,7 @@ func welcome() *cobra.Command {
 		Use: "welcome",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, err := dialog.Welcome(dialogTestInputs.Next())
+			_, err := dialog.Welcome(dialogTestInputs.Value.Next())
 			return err
 		},
 	}

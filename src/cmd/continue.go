@@ -82,11 +82,11 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueData, bool, error) {
+func determineContinueData(repo execute.OpenRepoResult, verbose bool) (data continueData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptyContinueData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -106,7 +106,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyContinueData(), exit, err
+		return data, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -122,25 +122,25 @@ func determineContinueData(repo execute.OpenRepoResult, verbose bool) (continueD
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyContinueData(), exit, err
+		return data, exit, err
 	}
 	if repoStatus.Conflicts {
-		return emptyContinueData(), false, errors.New(messages.ContinueUnresolvedConflicts)
+		return data, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return emptyContinueData(), false, errors.New(messages.ContinueUntrackedChanges)
+		return data, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return emptyContinueData(), false, errors.New(messages.CurrentBranchCannotDetermine)
+			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 	}
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *repo.UnvalidatedConfig.Config,
+			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
@@ -161,14 +161,10 @@ type continueData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	connector        Option[hostingdomain.Connector]
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	stashSize        gitdomain.StashSize
-}
-
-func emptyContinueData() continueData {
-	return continueData{} //exhaustruct:ignore
 }
 
 func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, bool, error) {

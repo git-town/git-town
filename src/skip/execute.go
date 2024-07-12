@@ -58,7 +58,7 @@ func Execute(args ExecuteArgs) error {
 
 type ExecuteArgs struct {
 	Backend         gitdomain.RunnerQuerier
-	CommandsCounter gohacks.Counter
+	CommandsCounter Mutable[gohacks.Counter]
 	Config          config.ValidatedConfig
 	Connector       Option[hostingdomain.Connector]
 	FinalMessages   stringslice.Collector
@@ -68,7 +68,7 @@ type ExecuteArgs struct {
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	TestInputs      components.TestInputs
+	TestInputs      Mutable[components.TestInputs]
 	Verbose         bool
 }
 
@@ -99,8 +99,8 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
-			Before: before,
-			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch),
+			Before: before.ToOption(),
+			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch).ToOption(),
 		},
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{

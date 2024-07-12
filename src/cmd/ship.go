@@ -91,7 +91,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun,
 	if err != nil || exit {
 		return err
 	}
-	err = validateData(*data)
+	err = validateData(data)
 	if err != nil {
 		return err
 	}
@@ -134,7 +134,7 @@ type shipData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[hostingdomain.Connector]
-	dialogTestInputs         components.TestInputs
+	dialogTestInputs         Mutable[components.TestInputs]
 	dryRun                   bool
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
@@ -148,11 +148,11 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*shipData, bool, error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data shipData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return nil, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -172,25 +172,25 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return nil, false, err
+		return data, false, err
 	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return nil, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !hasBranchToShip {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -206,22 +206,22 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return data, exit, err
 	}
 	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
-		return nil, false, err
+		return data, false, err
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
-		return nil, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
 	if err != nil {
-		return nil, false, err
+		return data, false, err
 	}
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
@@ -235,7 +235,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return nil, false, err
+			return data, false, err
 		}
 	}
 	canShipViaAPI := false
@@ -245,7 +245,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			if branchToShip.HasTrackingBranch() {
 				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 				if err != nil {
-					return nil, false, err
+					return data, false, err
 				}
 				proposal, hasProposal := proposalOpt.Get()
 				if hasProposal {
@@ -256,7 +256,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			for _, childBranch := range childBranches {
 				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
 				if err != nil {
-					return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 				}
 				childProposal, hasChildProposal := childProposalOpt.Get()
 				if hasChildProposal {
@@ -265,9 +265,9 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 			}
 		}
 	}
-	return &shipData{
+	return shipData{
 		allBranches:              branchesSnapshot.Branches,
-		branchToShip:             branchToShip,
+		branchToShip:             *branchToShip,
 		branchesSnapshot:         branchesSnapshot,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
@@ -284,7 +284,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
 		stashSize:                stashSize,
-		targetBranch:             targetBranch,
+		targetBranch:             *targetBranch,
 	}, false, nil
 }
 
@@ -298,8 +298,8 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 	return nil
 }
 
-func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
-	prog := program.Program{}
+func shipProgram(data shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
+	prog := NewMutable(&program.Program{})
 	if data.config.Config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
@@ -307,7 +307,7 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
-			Program:       &prog,
+			Program:       prog,
 			PushBranch:    true,
 		})
 		// sync the branch to ship (local sync only)
@@ -316,37 +316,37 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 			Config:        data.config.Config,
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
-			Program:       &prog,
+			Program:       prog,
 			PushBranch:    false,
 		})
 	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
-		prog.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
-		prog.Add(&opcodes.Checkout{Branch: localTargetBranch})
+		prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: localBranchToShip, Parent: data.config.Config.MainBranch})
+		prog.Value.Add(&opcodes.Checkout{Branch: localTargetBranch})
 	}
 	if proposal, hasProposal := data.proposal.Get(); hasProposal && data.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range data.proposalsOfChildBranches {
-			prog.Add(&opcodes.UpdateProposalTarget{
+			prog.Value.Add(&opcodes.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      localTargetBranch,
 			})
 		}
-		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: localBranchToShip})
-		prog.Add(&opcodes.ConnectorMergeProposal{
+		prog.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: localBranchToShip})
+		prog.Value.Add(&opcodes.ConnectorMergeProposal{
 			Branch:          localBranchToShip,
 			ProposalNumber:  proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: data.proposalMessage,
 		})
-		prog.Add(&opcodes.PullCurrentBranch{})
+		prog.Value.Add(&opcodes.PullCurrentBranch{})
 	} else {
-		prog.Add(&opcodes.SquashMerge{Branch: localBranchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
+		prog.Value.Add(&opcodes.SquashMerge{Branch: localBranchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	}
 	if data.remotes.HasOrigin() && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: localTargetBranch})
+		prog.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: localTargetBranch})
 	}
 	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -355,31 +355,31 @@ func shipProgram(data *shipData, commitMessage Option[gitdomain.CommitMessage]) 
 	if branchToShipRemoteName, hasRemoteName := data.branchToShip.RemoteName.Get(); hasRemoteName {
 		if data.canShipViaAPI || (data.branchToShip.HasTrackingBranch() && len(data.childBranches) == 0 && data.config.Config.IsOnline()) {
 			if data.config.Config.ShipDeleteTrackingBranch {
-				prog.Add(&opcodes.DeleteTrackingBranch{Branch: branchToShipRemoteName})
+				prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: branchToShipRemoteName})
 			}
 		}
 	}
-	prog.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToShip})
+	prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToShip})
 	if !data.dryRun {
-		prog.Add(&opcodes.DeleteParentBranch{Branch: localBranchToShip})
+		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: localBranchToShip})
 	}
 	for _, child := range data.childBranches {
-		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
+		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
 	if !data.isShippingInitialBranch {
-		prog.Add(&opcodes.Checkout{Branch: data.initialBranch})
+		prog.Value.Add(&opcodes.Checkout{Branch: data.initialBranch})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
 	}
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !data.isShippingInitialBranch && data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog
+	return prog.Get()
 }
 
 func validateShippableBranchType(branchType configdomain.BranchType) error {

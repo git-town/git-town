@@ -1,3 +1,4 @@
+@messyoutput
 Feature: don't ask for perennial branches if no branches that could be perennial exist
 
   Background:
@@ -6,7 +7,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | DIALOG                      | KEYS       | DESCRIPTION                                 |
       | welcome                     | enter      |                                             |
       | aliases                     | enter      |                                             |
-      | main development branch     | down enter |                                             |
+      | main branch                 | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
       | perennial regex             | enter      |                                             |
       | hosting platform            | enter      |                                             |

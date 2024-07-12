@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const hackDesc = "Create a new feature branch off the main development branch"
+const hackDesc = "Create a new feature branch off the main branch"
 
 const hackHelp = `
 Syncs the main branch, forks a new feature branch with the given name off the main branch, pushes the new feature branch to origin (if and only if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
@@ -69,14 +69,14 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	appendData, doAppend, makeFeatureBranchData, doMakeFeatureBranch := data.Get()
-	if doAppend {
-		return createBranch(createBranchArgs{
-			appendData:            appendData,
+	createNewFeatureBranchData, doCreateNewFeatureBranch, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
+	if doCreateNewFeatureBranch {
+		return createFeatureBranch(createFeatureBranchArgs{
+			appendData:            createNewFeatureBranchData,
 			backend:               repo.Backend,
-			beginBranchesSnapshot: appendData.branchesSnapshot,
+			beginBranchesSnapshot: createNewFeatureBranchData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        appendData.stashSize,
+			beginStashSize:        createNewFeatureBranchData.stashSize,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
@@ -86,11 +86,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 			verbose:               verbose,
 		})
 	}
-	if doMakeFeatureBranch {
-		return makeFeatureBranch(makeFeatureBranchArgs{
+	if doConvertToFeatureBranch {
+		return convertToFeatureBranch(convertToFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              makeFeatureBranchData.config,
-			makeFeatureData:     makeFeatureBranchData,
+			config:              convertToFeatureBranchData.config,
+			makeFeatureData:     convertToFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
 			verbose:             verbose,
@@ -99,17 +99,17 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	panic("both config arms were nil")
 }
 
-// If set to appendData, the user wants to append a new branch to an existing branch.
-// If set to makeFeatureData, the user wants to make an existing branch a feature branch.
-type hackData = Either[appendData, makeFeatureData]
+// If set to createNewFeatureData, the user wants to create a new feature branch.
+// If set to convertToFeatureData, the user wants to convert an already existing branch into a feature branch.
+type hackData = Either[appendFeatureData, convertToFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
-type makeFeatureData struct {
+type convertToFeatureData struct {
 	config         config.ValidatedConfig
 	targetBranches commandconfig.BranchesAndTypes
 }
 
-func createBranch(args createBranchArgs) error {
+func createFeatureBranch(args createFeatureBranchArgs) error {
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -141,13 +141,13 @@ func createBranch(args createBranchArgs) error {
 	})
 }
 
-type createBranchArgs struct {
-	appendData            appendData
+type createFeatureBranchArgs struct {
+	appendData            appendFeatureData
 	backend               gitdomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
-	commandsCounter       gohacks.Counter
+	commandsCounter       Mutable[gohacks.Counter]
 	dryRun                bool
 	finalMessages         stringslice.Collector
 	frontend              gitdomain.Runner
@@ -163,7 +163,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -183,15 +183,14 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return
+		return data, exit, err
 	}
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
 	var branchesToValidate gitdomain.LocalBranchNames
 	shouldCreateBranch := len(targetBranches) == 1 && !slice.Contains(localBranchNames, targetBranches[0])
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		err = errors.New(messages.CurrentBranchCannotDetermine)
-		return
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	if shouldCreateBranch {
 		branchesToValidate = gitdomain.LocalBranchNames{}
@@ -218,34 +217,31 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendData, makeFeatureData](makeFeatureData{
+		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
 			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
-		return
+		return data, false, nil
 	}
 	if len(targetBranches) > 1 {
-		err = errors.New(messages.HackTooManyArguments)
-		return
+		return data, false, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
 	var remotes gitdomain.Remotes
 	remotes, err = repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return
+		return data, false, err
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		err = fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
-		return
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		err = fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
-		return
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	var branchesToSync gitdomain.BranchInfos
 	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendData, makeFeatureData](appendData{
+	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
@@ -255,17 +251,16 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
-		parentBranch:              validatedConfig.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
-	return
+	return data, false, err
 }
 
-func makeFeatureBranch(args makeFeatureBranchArgs) error {
-	err := validateMakeFeatureData(args.makeFeatureData)
+func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
+	err := validateConvertToFeatureData(args.makeFeatureData)
 	if err != nil {
 		return err
 	}
@@ -297,16 +292,16 @@ func makeFeatureBranch(args makeFeatureBranchArgs) error {
 	})
 }
 
-type makeFeatureBranchArgs struct {
+type convertToFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              config.ValidatedConfig
-	makeFeatureData     makeFeatureData
+	makeFeatureData     convertToFeatureData
 	repo                execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
 	verbose             bool
 }
 
-func validateMakeFeatureData(data makeFeatureData) error {
+func validateConvertToFeatureData(data convertToFeatureData) error {
 	for branchName, branchType := range data.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:

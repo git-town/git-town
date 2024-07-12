@@ -15,7 +15,7 @@ func enterGiteaToken() *cobra.Command {
 		Use: "gitea-token",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.GiteaToken(None[configdomain.GiteaToken](), dialogInputs.Next())
+			_, _, err := dialog.GiteaToken(None[configdomain.GiteaToken](), dialogInputs.Value.Next())
 			return err
 		},
 	}

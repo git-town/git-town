@@ -30,7 +30,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Frontend:          args.Repo.Frontend,
 			Git:               args.Git,
 			HasOpenChanges:    args.RepoStatus.OpenChanges,
-			PushHook:          args.UnvalidatedConfig.Config.PushHook,
+			PushHook:          args.UnvalidatedConfig.Config.Value.PushHook,
 			RepoStatus:        args.RepoStatus,
 			RootDir:           args.Repo.RootDir,
 			UnvalidatedConfig: args.UnvalidatedConfig,
@@ -73,9 +73,9 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 
 type LoadRepoSnapshotArgs struct {
 	Backend               gitdomain.RunnerQuerier
-	CommandsCounter       gohacks.Counter
+	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
-	DialogTestInputs      components.TestInputs
+	DialogTestInputs      Mutable[components.TestInputs]
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              gitdomain.Runner

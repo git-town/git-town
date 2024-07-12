@@ -13,9 +13,7 @@ type CommitOpenChanges struct {
 }
 
 func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {

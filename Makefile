@@ -2,7 +2,7 @@ RTA_VERSION = 0.6.1  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "14.2.2"
+RELEASE_VERSION := "14.2.3"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
@@ -11,8 +11,11 @@ build:  # builds for the current platform
 clear: tools/rta@${RTA_VERSION}  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
-cuke: build  # runs all end-to-end tests
-	@env $(GO_BUILD_ARGS) go test . -v -count=1
+cuke: build  # runs all end-to-end tests except the ones that mess up the output, best for development
+	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
+
+cukeall: build  # runs all end-to-end tests
+	@env $(GO_BUILD_ARGS) go test -v
 
 cukethis: build  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
@@ -49,18 +52,16 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	@make --no-print-dir lint-smoke &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	@make --no-print-directory deadcode &
-	@make --no-print-directory lint-structs-sorted &
-	@git diff --check &
-	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
-	@tools/rta actionlint &
-	@tools/ensure_no_files_with_dashes.sh &
-	@tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck &
-	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta golangci-lint run
+	make --no-print-dir lint-smoke
+	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	make --no-print-directory deadcode
+	make --no-print-directory lint-structs-sorted
+	git diff --check
+	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta actionlint
+	tools/ensure_no_files_with_dashes.sh
+	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self
@@ -126,7 +127,8 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v BranchExists \
+	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v Memoized.AsFixture \
+	                                                           | grep -v BranchExists \
 	                                                           | grep -v 'Create$$' \
 	                                                           | grep -v CreateFile \
 	                                                           | grep -v CreateGitTown \

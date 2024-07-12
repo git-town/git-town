@@ -21,7 +21,7 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
-	commandsCounter := gohacks.NewCounter()
+	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
@@ -39,6 +39,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
+	if args.ValidateGitRepo {
+		if !hasRootDir {
+			err = errors.New(messages.RepoOutside)
+			return emptyOpenRepoResult(), err
+		}
+	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
 	globalSnapshot, globalConfig, err := configGitAccess.LoadGlobal(true)
 	if err != nil {
@@ -52,7 +59,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	configFile, err := configfile.Load()
+	configFile, err := configfile.Load(rootDir)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -71,14 +78,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		omitBranchNames:  args.OmitBranchNames,
 		printCommands:    args.PrintCommands,
 	})
-	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
-	if args.ValidateGitRepo {
-		if !hasRootDir {
-			err = errors.New(messages.RepoOutside)
-			return emptyOpenRepoResult(), err
-		}
-	}
-	isOffline := unvalidatedConfig.Config.Offline
+	isOffline := unvalidatedConfig.Config.Value.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return emptyOpenRepoResult(), err
@@ -118,7 +118,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Backend           gitdomain.RunnerQuerier
-	CommandsCounter   gohacks.Counter
+	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          gitdomain.Runner
@@ -154,7 +154,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 
 type newFrontendRunnerArgs struct {
 	backend          gitdomain.Querier
-	counter          gohacks.Counter
+	counter          Mutable[gohacks.Counter]
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	omitBranchNames  bool

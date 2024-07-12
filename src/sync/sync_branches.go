@@ -18,12 +18,12 @@ func BranchesProgram(args BranchesProgramArgs) {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
 		previousbranchCandidates = append(previousbranchCandidates, previousBranch)
 	}
-	args.Program.Add(&opcodes.CheckoutFirstExisting{
+	args.Program.Value.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
 		MainBranch: args.Config.MainBranch,
 	})
 	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.Config.IsOnline() {
-		args.Program.Add(&opcodes.PushTags{})
+		args.Program.Value.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(args.Program, cmdhelpers.WrapOptions{
 		DryRun:                   args.DryRun,

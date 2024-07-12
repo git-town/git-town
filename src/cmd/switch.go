@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
@@ -54,7 +55,7 @@ func executeSwitch(verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Value.Next())
 	if err != nil || exit {
 		return err
 	}
@@ -77,21 +78,17 @@ type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.ValidatedConfig
-	dialogInputs       components.TestInputs
+	dialogInputs       Mutable[components.TestInputs]
 	initialBranch      gitdomain.LocalBranchName
 	lineage            configdomain.Lineage
 	uncommittedChanges bool
 }
 
-func emptySwitchData() switchData {
-	return switchData{} //exhaustruct:ignore
-}
-
-func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData, bool, error) {
+func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptySwitchData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -111,11 +108,11 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptySwitchData(), exit, err
+		return data, exit, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return emptySwitchData(), exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -131,7 +128,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (switchData,
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptySwitchData(), exit, err
+		return data, exit, err
 	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),

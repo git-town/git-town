@@ -82,22 +82,18 @@ func executeUndo(verbose bool) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[hostingdomain.Connector]
-	dialogTestInputs        components.TestInputs
+	dialogTestInputs        Mutable[components.TestInputs]
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          Option[gitdomain.LocalBranchName]
 	stashSize               gitdomain.StashSize
 }
 
-func emptyUndoData() undoData {
-	return undoData{} //exhaustruct:ignore
-}
-
-func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, bool, error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose bool) (data undoData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return emptyUndoData(), false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -117,7 +113,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return emptyUndoData(), false, err
+		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -133,19 +129,19 @@ func determineUndoData(repo execute.OpenRepoResult, verbose bool) (undoData, boo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return emptyUndoData(), exit, err
+		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *repo.UnvalidatedConfig.Config,
-			HostingPlatform: repo.UnvalidatedConfig.Config.HostingPlatform,
+			Config:          repo.UnvalidatedConfig.Config.Get(),
+			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
 			OriginURL:       originURL,
 		})
 		if err != nil {
-			return emptyUndoData(), false, err
+			return data, false, err
 		}
 	}
 	return undoData{

@@ -41,7 +41,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 		unfinishedDetails.EndBranch,
 		unfinishedDetails.EndTime,
 		unfinishedDetails.CanSkip,
-		args.DialogTestInputs.Next(),
+		args.DialogTestInputs.Value.Next(),
 	)
 	if err != nil {
 		return false, err
@@ -66,9 +66,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 
 type UnfinishedStateArgs struct {
 	Backend           gitdomain.RunnerQuerier
-	CommandsCounter   gohacks.Counter
+	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[hostingdomain.Connector]
-	DialogTestInputs  components.TestInputs
+	DialogTestInputs  Mutable[components.TestInputs]
 	FinalMessages     stringslice.Collector
 	Frontend          gitdomain.Runner
 	Git               git.Commands
@@ -122,14 +122,14 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
 func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, bool, error) {
-	mainBranch, hasMain := args.unvalidated.Config.MainBranch.Get()
+	mainBranch, hasMain := args.unvalidated.Config.Value.MainBranch.Get()
 	if !hasMain {
 		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)
 		if err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Next())
+		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Value.Next())
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -138,13 +138,13 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		}
 		mainBranch = validatedMain
 	}
-	gitUserEmail, gitUserName, err := GitUser(*args.unvalidated.Config)
+	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Config.Get())
 	if err != nil {
 		return config.EmptyValidatedConfig(), false, err
 	}
 	return config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
-			UnvalidatedConfig: args.unvalidated.Config,
+			UnvalidatedConfig: args.unvalidated.Config.Value,
 			GitUserEmail:      gitUserEmail,
 			GitUserName:       gitUserName,
 			MainBranch:        mainBranch,
@@ -211,7 +211,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 
 type quickValidateConfigArgs struct {
 	backend      gitdomain.RunnerQuerier
-	dialogInputs components.TestInputs
+	dialogInputs Mutable[components.TestInputs]
 	git          git.Commands
 	unvalidated  config.UnvalidatedConfig
 }

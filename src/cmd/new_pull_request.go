@@ -14,6 +14,9 @@ import (
 func newPullRequestCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
+	addBodyFlag, readBodyFlag := flags.ProposalBody()
+	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -23,13 +26,16 @@ func newPullRequestCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			printDeprecationNotice()
-			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
+			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 			printDeprecationNotice()
 			return result
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addTitleFlag(&cmd)
+	addBodyFlag(&cmd)
+	addBodyFileFlag(&cmd)
 	return &cmd
 }
 

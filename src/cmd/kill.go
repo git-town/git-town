@@ -107,7 +107,7 @@ type killData struct {
 	branchWhenDone   gitdomain.LocalBranchName
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	dialogTestInputs components.TestInputs
+	dialogTestInputs Mutable[components.TestInputs]
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -116,11 +116,11 @@ type killData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (*killData, bool, error) {
+func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data killData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return nil, false, err
+		return data, false, err
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -140,15 +140,15 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return data, exit, err
 	}
 	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToKill, hasBranchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill).Get()
 	if !hasBranchToKill {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
 	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
+		return data, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesToKill := gitdomain.LocalBranchNames{branchNameToKill}
@@ -165,13 +165,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 		Unvalidated:        repo.UnvalidatedConfig,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return data, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
 	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return nil, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == initialBranch {
@@ -190,8 +190,8 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	} else {
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
-	return &killData{
-		branchToKillInfo: branchToKill,
+	return killData{
+		branchToKillInfo: *branchToKill,
 		branchToKillType: branchTypeToKill,
 		branchWhenDone:   branchWhenDone,
 		branchesSnapshot: branchesSnapshot,
@@ -206,50 +206,51 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun, verbo
 	}, false, nil
 }
 
-func killProgram(data *killData) (runProgram, finalUndoProgram program.Program) {
-	prog := program.Program{}
+func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
+	prog := NewMutable(&program.Program{})
+	undoProg := NewMutable(&program.Program{})
 	switch data.branchToKillType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
-		killFeatureBranch(&prog, &finalUndoProgram, data)
+		killFeatureBranch(prog, undoProg, data)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch:
-		killLocalBranch(&prog, &finalUndoProgram, data)
+		killLocalBranch(prog, undoProg, data)
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToKillType))
 	}
 	localBranchNameToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get()
-	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         hasLocalBranchToKill && data.initialBranch != localBranchNameToKill && data.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.initialBranch},
 	})
-	return prog, finalUndoProgram
+	return prog.Get(), undoProg.Get()
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, data *killData) {
+func killFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data killData) {
 	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if data.branchToKillInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToKill && data.config.Config.IsOnline() {
-		prog.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
+		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
+func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killData) {
 	if localBranchToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get(); hasLocalBranchToKill {
 		if data.initialBranch == localBranchToKill {
 			if data.hasOpenChanges {
-				prog.Add(&opcodes.CommitOpenChanges{})
+				prog.Value.Add(&opcodes.CommitOpenChanges{})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
-				prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
+				prog.Value.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
 				// when undoing, manually undo the just committed changes so that they are uncommitted again
-				finalUndoProgram.Add(&opcodes.Checkout{Branch: localBranchToKill})
-				finalUndoProgram.Add(&opcodes.UndoLastCommit{})
+				finalUndoProgram.Value.Add(&opcodes.Checkout{Branch: localBranchToKill})
+				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
 			}
-			prog.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
+			prog.Value.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 		}
-		prog.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
+		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
 		if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && !data.dryRun {
 			sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 				Branch:  localBranchToKill,
@@ -261,7 +262,7 @@ func killLocalBranch(prog, finalUndoProgram *program.Program, data *killData) {
 	}
 }
 
-func validateKillData(data *killData) error {
+func validateKillData(data killData) error {
 	switch data.branchToKillType {
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 		return nil
