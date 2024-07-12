@@ -320,6 +320,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return err
 	})
 
+	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		filePath := filepath.Join(state.fixture.DevRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+	})
+
 	sc.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		content := state.fixture.DevRepo.FileContent(name)
