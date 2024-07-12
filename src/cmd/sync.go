@@ -51,7 +51,6 @@ func syncCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
-
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: "basic",
