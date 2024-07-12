@@ -61,8 +61,6 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	tools/rta actionlint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
 	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
