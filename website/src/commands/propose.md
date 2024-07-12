@@ -6,7 +6,7 @@ website to create a new proposal in your browser and pre-populates information
 like branch and source/target repository. It also [syncs](sync.md) the branch to
 merge before opening the pull request.
 
-You can create proposals for repositories hosted on:
+You can create pull requests for repositories hosted on:
 
 - [Bitbucket](https://bitbucket.org)
 - [Gitea](https://gitea.com)
