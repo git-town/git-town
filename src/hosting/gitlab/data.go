@@ -19,7 +19,7 @@ func (self Data) DefaultProposalMessage(proposal hostingdomain.Proposal) string 
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (self Data) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName) (string, error) {
+func (self Data) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch.String())
 	query.Add("merge_request[target_branch]", parentBranch.String())

@@ -32,22 +32,51 @@ func TestConnector(t *testing.T) {
 		tests := map[string]struct {
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
+			title  gitdomain.ProposalTitle
+			body   gitdomain.ProposalBody
 			want   string
 		}{
 			"top-level branch": {
 				branch: gitdomain.NewLocalBranchName("feature"),
 				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "",
+				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
 			"stacked change": {
 				branch: gitdomain.NewLocalBranchName("feature-3"),
 				parent: gitdomain.NewLocalBranchName("feature-2"),
+				title:  "",
+				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",
 			},
 			"special characters in branch name": {
 				branch: gitdomain.NewLocalBranchName("feature-#"),
 				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "",
+				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
+			},
+			"provide title and body": {
+				branch: gitdomain.NewLocalBranchName("feature-#"),
+				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "my title",
+				body:   "my body",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title&body=my+body",
+			},
+			"provide title only": {
+				branch: gitdomain.NewLocalBranchName("feature-#"),
+				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "my title",
+				body:   "",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title",
+			},
+			"provide body only": {
+				branch: gitdomain.NewLocalBranchName("feature-#"),
+				parent: gitdomain.NewLocalBranchName("main"),
+				title:  "",
+				body:   "my body",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&body=my+body",
 			},
 		}
 		for name, tt := range tests {
@@ -61,7 +90,7 @@ func TestConnector(t *testing.T) {
 					},
 					APIToken: configdomain.NewGitHubTokenOption("apiToken"),
 				}
-				have, err := connector.NewProposalURL(tt.branch, tt.parent, main)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent, main, tt.title, tt.body)
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})
