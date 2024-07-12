@@ -50,6 +50,8 @@ func syncCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
+	addNoPushFlag, readNoPushFlag := flags.Bool("no-push", "", "Do not push branches", flags.FlagTypeNonPersistent)
+
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: "basic",
@@ -57,16 +59,17 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, gitconfig.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addNoPushFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(all, dryRun, verbose bool) error {
+func executeSync(all, dryRun, verbose, noPush bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -99,7 +102,7 @@ func executeSync(all, dryRun, verbose bool) error {
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       NewMutable(&runProgram),
-			PushBranch:    true,
+			PushBranch:    !noPush,
 		},
 		BranchesToSync: data.branchesToSync,
 		DryRun:         dryRun,
