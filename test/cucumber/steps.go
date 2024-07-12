@@ -708,6 +708,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		secondWorkTree.Config.Reload()
 	})
 
+	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		answers, err := helpers.TableToInputEnv(input)
+		asserts.NoError(err)
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
+		}
+		var exitCode int
+		var output string
+		output, exitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		state.fixture.DevRepo.Config.Reload()
+	})
+
 	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.CaptureState()
