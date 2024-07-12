@@ -1,6 +1,6 @@
 package gitdomain
 
-// CommitMessage is the entire textual messages of a Git commit.
+// ProposalBody is the body of a proposal
 type ProposalBody string
 
 // String implements the fmt.Stringer interface.
