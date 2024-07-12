@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -217,7 +218,29 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
 	subProcess.Stderr = &outputBuf
-	err = subProcess.Run()
+	if input, hasInput := opts.Input.Get(); hasInput {
+		var stdin io.WriteCloser
+		stdin, err = subProcess.StdinPipe()
+		if err != nil {
+			return "", 0, fmt.Errorf("cannot create stdin pipe: %w", err)
+		}
+		if err = subProcess.Start(); err != nil {
+			return "", 0, fmt.Errorf("cannot start command: %w", err)
+		}
+		_, err = stdin.Write([]byte(input))
+		if err != nil {
+			return "", 0, fmt.Errorf("cannot write to stdin: %w", err)
+		}
+		if err = stdin.Close(); err != nil {
+			return "", 0, fmt.Errorf("cannot close stdin pipe: %w", err)
+		}
+		if err = subProcess.Wait(); err != nil {
+			fmt.Println("cannot wait for command to finish:", err)
+			return
+		}
+	} else {
+		err = subProcess.Run()
+	}
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -282,4 +305,7 @@ type Options struct {
 
 	// when set, captures the output and returns it
 	IgnoreOutput bool `exhaustruct:"optional"`
+
+	// input to pipe into STDIN
+	Input Option[string] `exhaustruct:"optional"`
 }

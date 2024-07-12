@@ -320,6 +320,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return err
 	})
 
+	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		filePath := filepath.Join(state.fixture.DevRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+	})
+
 	sc.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		content := state.fixture.DevRepo.FileContent(name)
@@ -617,6 +624,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.insideGitRepo = false
 		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir, ".git"))
+	})
+
+	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		output, exitCode := state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: Some(input.Content)})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		state.fixture.DevRepo.Config.Reload()
 	})
 
 	sc.Step(`^I resolve the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) {
