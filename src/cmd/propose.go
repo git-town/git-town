@@ -122,8 +122,8 @@ type proposeData struct {
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   Option[gitdomain.LocalBranchName]
-	proposalTitle    gitdomain.ProposalTitle
 	proposalBody     gitdomain.ProposalBody
+	proposalTitle    gitdomain.ProposalTitle
 	remotes          gitdomain.Remotes
 	stashSize        gitdomain.StashSize
 }
@@ -207,8 +207,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, tit
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		previousBranch:   previousBranch,
-		proposalTitle:    title,
 		proposalBody:     body,
+		proposalTitle:    title,
 		remotes:          remotes,
 		stashSize:        stashSize,
 	}, false, err

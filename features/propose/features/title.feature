@@ -4,7 +4,7 @@ Feature: Prepopulate title and body
   Background:
     Given tool "open" is installed
 
-  Scenario Outline: provide title and body
+  Scenario: provide title and body
     Given the current branch is a feature branch "feature"
     And the origin is "ssh://git@github.com/git-town/git-town.git"
     When I run "git-town propose --title=my_title --body=my_body"
@@ -13,7 +13,7 @@ Feature: Prepopulate title and body
       https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body
       """
 
-  Scenario Outline: provide title only
+  Scenario: provide title only
     Given the current branch is a feature branch "feature"
     And the origin is "ssh://git@github.com/git-town/git-town.git"
     When I run "git-town propose --title=my_title"
@@ -22,7 +22,7 @@ Feature: Prepopulate title and body
       https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title
       """
 
-  Scenario Outline: provide body only
+  Scenario: provide body only
     Given the current branch is a feature branch "feature"
     And the origin is "ssh://git@github.com/git-town/git-town.git"
     When I run "git-town propose --body=my_body"
