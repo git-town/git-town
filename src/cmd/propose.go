@@ -240,7 +240,7 @@ func proposeProgram(data proposeData) program.Program {
 		Branch:        data.initialBranch,
 		MainBranch:    data.config.Config.MainBranch,
 		ProposalTitle: data.proposalTitle,
-		ProposalBody:  "",
+		ProposalBody:  data.proposalBody,
 	})
 	return prog.Get()
 }
