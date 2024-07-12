@@ -626,6 +626,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir, ".git"))
 	})
 
+	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		output, exitCode := state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: Some(input.Content)})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		state.fixture.DevRepo.Config.Reload()
+	})
+
 	sc.Step(`^I resolve the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if content == "" {
@@ -721,17 +732,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		var exitCode int
 		var output string
 		output, exitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		state.fixture.DevRepo.Config.Reload()
-	})
-
-	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := os.Environ()
-		output, exitCode := state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: Some(input.Content)})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		state.fixture.DevRepo.Config.Reload()
