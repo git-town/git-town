@@ -52,16 +52,18 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	@make --no-print-dir lint-smoke &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@make --no-print-directory deadcode &
-	@make --no-print-directory lint-structs-sorted &
-	@git diff --check &
-	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
-	@tools/rta actionlint &
-	@tools/ensure_no_files_with_dashes.sh &
-	@tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck &
-	@tools/rta golangci-lint run
+	make --no-print-dir lint-smoke
+	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	make --no-print-directory deadcode
+	make --no-print-directory lint-structs-sorted
+	git diff --check
+	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta actionlint
+	tools/ensure_no_files_with_dashes.sh
+	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self
