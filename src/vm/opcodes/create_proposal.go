@@ -14,6 +14,8 @@ import (
 type CreateProposal struct {
 	Branch                  gitdomain.LocalBranchName
 	MainBranch              gitdomain.LocalBranchName
+	ProposalBody            gitdomain.ProposalBody
+	ProposalTitle           gitdomain.ProposalTitle
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -30,7 +32,7 @@ func (self *CreateProposal) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
 	}
-	prURL, err := connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch)
+	prURL, err := connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch, self.ProposalTitle, self.ProposalBody)
 	if err != nil {
 		return err
 	}
