@@ -68,7 +68,6 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	})
 
 	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
-		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", err)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if err != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
