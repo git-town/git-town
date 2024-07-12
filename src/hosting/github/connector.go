@@ -50,12 +50,19 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	return Some(proposal), nil
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != mainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare)), nil
+	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
+	if proposalTitle != "" {
+		result += "&title=" + url.QueryEscape(proposalTitle.String())
+	}
+	if proposalBody != "" {
+		result += "&body=" + url.QueryEscape(proposalBody.String())
+	}
+	return result, nil
 }
 
 func (self Connector) RepositoryURL() string {
