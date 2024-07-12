@@ -22,7 +22,7 @@ func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	readFlag := func(cmd *cobra.Command) Option[gitdomain.CommitMessage] {
 		value, err := cmd.Flags().GetString(commitMessageLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagDoesntExist, cmd.Name(), commitMessageLong))
+			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
 		}
 		if value == "" {
 			return None[gitdomain.CommitMessage]()

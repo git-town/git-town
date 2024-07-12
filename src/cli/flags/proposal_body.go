@@ -21,7 +21,7 @@ func ProposalBody() (AddFunc, ReadProposalBodyFlagFunc) {
 	readFlag := func(cmd *cobra.Command) gitdomain.ProposalBody {
 		value, err := cmd.Flags().GetString(bodyLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagDoesntExist, cmd.Name(), commitMessageLong))
+			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
 		}
 		return gitdomain.ProposalBody(value)
 	}

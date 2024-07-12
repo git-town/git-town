@@ -21,7 +21,7 @@ func ProposalTitle() (AddFunc, ReadProposalTitleFlagFunc) {
 	readFlag := func(cmd *cobra.Command) gitdomain.ProposalTitle {
 		value, err := cmd.Flags().GetString(titleLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagDoesntExist, cmd.Name(), commitMessageLong))
+			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
 		}
 		return gitdomain.ProposalTitle(value)
 	}
