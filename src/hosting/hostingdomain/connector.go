@@ -22,7 +22,7 @@ type Connector interface {
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
-	NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle, proposalBody string) (string, error)
+	NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string

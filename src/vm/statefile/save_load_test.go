@@ -248,8 +248,8 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "MainBranch": "main",
-        "ProposalTitle": "",
-        "ProposalBody": ""
+        "ProposalBody": "",
+        "ProposalTitle": ""
       },
       "type": "CreateProposal"
     },
