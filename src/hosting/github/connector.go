@@ -50,7 +50,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	return Some(proposal), nil
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle, proposalBody string) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != mainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
