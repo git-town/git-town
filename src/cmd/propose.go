@@ -206,7 +206,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, tit
 		if bodyFile.ShouldReadStdin() {
 			content, err := io.ReadAll(os.Stdin)
 			if err != nil {
-				return data, false, fmt.Errorf("cannot read STDIN: %v", err)
+				return data, false, fmt.Errorf("cannot read STDIN: %w", err)
 			}
 			bodyText = gitdomain.ProposalBody(content)
 		} else {

@@ -222,20 +222,20 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
 		if err != nil {
-			return "", 0, fmt.Errorf("Error creating stdin pipe: %w", err)
+			return "", 0, fmt.Errorf("cannot create stdin pipe: %w", err)
 		}
 		if err = subProcess.Start(); err != nil {
-			return "", 0, fmt.Errorf("Error starting command: %w", err)
+			return "", 0, fmt.Errorf("cannot start command: %w", err)
 		}
 		_, err = stdin.Write([]byte(input))
 		if err != nil {
-			return "", 0, fmt.Errorf("Error writing to stdin: %w", err)
+			return "", 0, fmt.Errorf("cannot write to stdin: %w", err)
 		}
 		if err = stdin.Close(); err != nil {
-			return "", 0, fmt.Errorf("Error closing stdin pipe: %v", err)
+			return "", 0, fmt.Errorf("cannot close stdin pipe: %w", err)
 		}
 		if err = subProcess.Wait(); err != nil {
-			fmt.Println("Error waiting for command to finish:", err)
+			fmt.Println("cannot wait for command to finish:", err)
 			return
 		}
 	} else {
@@ -307,5 +307,5 @@ type Options struct {
 	IgnoreOutput bool `exhaustruct:"optional"`
 
 	// input to pipe into STDIN
-	Input Option[string]
+	Input Option[string] `exhaustruct:"optional"`
 }
