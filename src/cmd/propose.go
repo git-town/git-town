@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
@@ -44,6 +45,7 @@ func proposeCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
+	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	cmd := cobra.Command{
 		Use:     proposeCmd,
 		GroupID: "basic",
@@ -51,17 +53,18 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd))
+			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addTitleFlag(&cmd)
 	addBodyFlag(&cmd)
+	addBodyFileFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody) error {
+func executePropose(dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -73,7 +76,7 @@ func executePropose(dryRun, verbose bool, title gitdomain.ProposalTitle, body gi
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, dryRun, verbose, title, body)
+	data, exit, err := determineProposeData(repo, dryRun, verbose, title, body, bodyFile)
 	if err != nil || exit {
 		return err
 	}
@@ -128,7 +131,7 @@ type proposeData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -196,6 +199,24 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, tit
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	var bodyText gitdomain.ProposalBody
+	if body != "" {
+		bodyText = body
+	} else if bodyFile != "" {
+		if bodyFile.ShouldReadStdin() {
+			content, err := io.ReadAll(os.Stdin)
+			if err != nil {
+				return data, false, fmt.Errorf("cannot read STDIN: %w", err)
+			}
+			bodyText = gitdomain.ProposalBody(content)
+		} else {
+			fileData, err := os.ReadFile(bodyFile.String())
+			if err != nil {
+				return data, false, err
+			}
+			bodyText = gitdomain.ProposalBody(fileData)
+		}
+	}
 	return proposeData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesSnapshot: branchesSnapshot,
@@ -207,7 +228,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, tit
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		previousBranch:   previousBranch,
-		proposalBody:     body,
+		proposalBody:     bodyText,
 		proposalTitle:    title,
 		remotes:          remotes,
 		stashSize:        stashSize,
