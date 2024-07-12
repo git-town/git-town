@@ -72,7 +72,7 @@ func TestGitlabConnector(t *testing.T) {
 						},
 					},
 				}
-				have, err := connector.NewProposalURL(tt.branch, tt.parent, main)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent, main, "", "")
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})

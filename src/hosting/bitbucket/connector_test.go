@@ -60,7 +60,7 @@ func TestBitbucketConnector(t *testing.T) {
 			OriginURL:       url,
 		})
 		main := gitdomain.NewLocalBranchName("main")
-		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"), main)
+		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"), main, "", "")
 		must.NoError(t, err)
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
 		must.EqOp(t, want, have)
