@@ -13,7 +13,7 @@ Feature: Prepopulate title and body
       https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body
       """
 
-  Scenario Outline: provide title only body
+  Scenario Outline: provide title only
     Given the current branch is a feature branch "feature"
     And the origin is "ssh://git@github.com/git-town/git-town.git"
     When I run "git-town propose --title=my_title"
