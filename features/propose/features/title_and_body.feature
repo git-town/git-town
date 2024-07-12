@@ -45,3 +45,18 @@ Feature: Prepopulate title and body
       """
       https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21
       """
+
+  @this
+  Scenario: provide title via CLI and body via STDIN
+    Given the current branch is a feature branch "feature"
+    And the origin is "ssh://git@github.com/git-town/git-town.git"
+    When I run "git-town propose --body-file -" with STDIN:
+      """
+      Proposal
+      body
+      text
+      """
+    Then "open" launches a new proposal with this url in my browser:
+      """
+      https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext
+      """
