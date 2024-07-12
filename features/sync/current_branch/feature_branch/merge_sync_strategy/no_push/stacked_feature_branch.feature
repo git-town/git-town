@@ -8,10 +8,10 @@ Feature: syncing a stacked feature branch using --no-push
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
       |        | origin   | origin main commit   |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
+      | parent | local    | local parent commit  |
+      |        | origin   | origin parent commit |
     When I run "git-town sync --no-push"
 
   Scenario: result
