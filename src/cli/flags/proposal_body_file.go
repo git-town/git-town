@@ -13,7 +13,7 @@ const (
 	bodyFileShort = "f"         // short form of the "body-file" CLI flag
 )
 
-// ProposalBodyFile provides type-safe access to the CLI arguments of type gitdomain.ProposalBodyFile.
+// provides type-safe access to the CLI arguments of type gitdomain.ProposalBodyFile
 func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(bodyFileLong, bodyFileShort, "", "Read the proposal body from the given file (use \"-\" to read from STDIN)")
@@ -28,5 +28,5 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
+// defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command
 type ReadProposalBodyFileFlagFunc func(*cobra.Command) gitdomain.ProposalBodyFile
