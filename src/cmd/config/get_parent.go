@@ -40,16 +40,16 @@ func executeGetParent(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	var branch gitdomain.LocalBranchName
+	var branchToCheck gitdomain.LocalBranchName
 	if len(args) == 0 {
-		branch, err = repo.Git.CurrentBranch(repo.Backend)
+		branchToCheck, err = repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
 		}
 	} else {
-		branch = gitdomain.NewLocalBranchName(args[0])
+		branchToCheck = gitdomain.NewLocalBranchName(args[0])
 	}
-	parentOpt := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(branch)
+	parentOpt := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(branchToCheck)
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		fmt.Println(parent)
 	}
