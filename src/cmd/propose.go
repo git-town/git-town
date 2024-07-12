@@ -229,8 +229,10 @@ func proposeProgram(data proposeData) program.Program {
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	prog.Value.Add(&opcodes.CreateProposal{
-		Branch:     data.initialBranch,
-		MainBranch: data.config.Config.MainBranch,
+		Branch:        data.initialBranch,
+		MainBranch:    data.config.Config.MainBranch,
+		ProposalTitle: "",
+		ProposalBody:  "",
 	})
 	return prog.Get()
 }

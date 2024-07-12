@@ -43,7 +43,7 @@ func (self Connector) FindProposal(_, _ gitdomain.LocalBranchName) (Option[hosti
 	return None[hostingdomain.Proposal](), errors.New(messages.HostingBitBucketNotImplemented)
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, proposalTitle, proposalBody string) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _, _ string) (string, error) {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 			self.RepositoryURL(),
 			url.QueryEscape(branch.String()),

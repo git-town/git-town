@@ -14,8 +14,8 @@ import (
 type CreateProposal struct {
 	Branch                  gitdomain.LocalBranchName
 	MainBranch              gitdomain.LocalBranchName
-	ProposalTitle           string
 	ProposalBody            string
+	ProposalTitle           string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

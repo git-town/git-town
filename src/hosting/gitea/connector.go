@@ -54,7 +54,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}), nil
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, proposalTitle, proposalBody string) (string, error) {
+func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _, _ string) (string, error) {
 	toCompare := parentBranch.String() + "..." + branch.String()
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
