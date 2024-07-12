@@ -36,9 +36,7 @@ func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 }
 
 func (self *ConnectorMergeProposal) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
