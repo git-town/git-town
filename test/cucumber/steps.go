@@ -71,7 +71,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if err != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
-			return ctx, nil
+			return ctx, nil //nolint:nilerr
 		}
 		exitCode := state.runExitCode.GetOrPanic()
 		if exitCode != 0 && !state.runExitCodeChecked {
