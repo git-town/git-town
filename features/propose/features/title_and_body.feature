@@ -40,8 +40,6 @@ Feature: Prepopulate title and body
       https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21
       """
 
-  @debug
-  @this
   Scenario: non-existing body file
     When I run "git-town propose --body-file=zonk.txt"
     Then it prints the error:
