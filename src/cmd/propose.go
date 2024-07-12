@@ -42,6 +42,8 @@ Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket. W
 func proposeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
+	addBodyFlag, readBodyFlag := flags.ProposalBody()
 	cmd := cobra.Command{
 		Use:     proposeCmd,
 		GroupID: "basic",
@@ -49,15 +51,17 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addTitleFlag(&cmd)
+	addBodyFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(dryRun, verbose bool) error {
+func executePropose(dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -69,7 +73,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, dryRun, verbose)
+	data, exit, err := determineProposeData(repo, dryRun, verbose, title, body)
 	if err != nil || exit {
 		return err
 	}
@@ -118,11 +122,13 @@ type proposeData struct {
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   Option[gitdomain.LocalBranchName]
+	proposalBody     gitdomain.ProposalBody
+	proposalTitle    gitdomain.ProposalTitle
 	remotes          gitdomain.Remotes
 	stashSize        gitdomain.StashSize
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, title gitdomain.ProposalTitle, body gitdomain.ProposalBody) (data proposeData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -201,6 +207,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool) (da
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		previousBranch:   previousBranch,
+		proposalBody:     body,
+		proposalTitle:    title,
 		remotes:          remotes,
 		stashSize:        stashSize,
 	}, false, err
@@ -229,8 +237,10 @@ func proposeProgram(data proposeData) program.Program {
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	prog.Value.Add(&opcodes.CreateProposal{
-		Branch:     data.initialBranch,
-		MainBranch: data.config.Config.MainBranch,
+		Branch:        data.initialBranch,
+		MainBranch:    data.config.Config.MainBranch,
+		ProposalBody:  data.proposalBody,
+		ProposalTitle: data.proposalTitle,
 	})
 	return prog.Get()
 }

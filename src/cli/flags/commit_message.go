@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +22,7 @@ func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	readFlag := func(cmd *cobra.Command) Option[gitdomain.CommitMessage] {
 		value, err := cmd.Flags().GetString(commitMessageLong)
 		if err != nil {
-			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), commitMessageLong))
+			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
 		}
 		if value == "" {
 			return None[gitdomain.CommitMessage]()
