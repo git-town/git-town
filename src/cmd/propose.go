@@ -214,7 +214,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun, verbose bool, tit
 			if err != nil {
 				return data, false, fmt.Errorf("cannot read file %q: %v", bodyFile, err)
 			}
-			fmt.Println("1111111111111111111", string(fileData))
 			bodyText = gitdomain.ProposalBody(fileData)
 		}
 	}
