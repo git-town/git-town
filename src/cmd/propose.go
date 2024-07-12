@@ -44,6 +44,7 @@ func proposeCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
+	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	cmd := cobra.Command{
 		Use:     proposeCmd,
 		GroupID: "basic",
