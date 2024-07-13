@@ -10,7 +10,7 @@ This guide is for maintainers who make releases of Git Town.
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `14.3.0`
-    - double-digits: `14.2`
+    - double-digits: `14.3`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
     - update `github.com/git-town/git-town/v14/` everywhere in this repo
