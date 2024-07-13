@@ -2,7 +2,7 @@
 
 ## 14.3.0 (2024-07-12)
 
-This release brings highly requested community features.
+This release ships a few of the most requested community features.
 
 #### New Features
 
