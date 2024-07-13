@@ -1,5 +1,20 @@
 # Git Town Changelog
 
+## 14.3.0 (2024-07-12)
+
+This release ships a few of the most requested community features.
+
+#### New Features
+
+- `git propose` now supports flags to pre-populate more fields of the pull requests to create:
+  - `--title=<value>` sets the title to the given value
+  - `--body=<value>` sets the body to the given value
+  - `--body-file=<file path>` sets the body to the content of the file with the given path. Providing `-` as the file path reads the body from STDIN ([#3207](https://github.com/git-town/git-town/issues/3207)).
+- a new command `git town config get-parent [branch]` prints the parent of the given branch, or the current branch if no branch is provided ([#3207](https://github.com/git-town/git-town/issues/3207)).
+- the new `--no-push` flag for `git sync` temporarily disables pushing local changes when [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) is `merge`. Please note that when sync-feature-strategy is `rebase`, it still force-pushes to avoid keeping outdated commits around, which avoids data loss in edge cases.
+
+Heartfelt thanks to @dannykingme, @defunctzombie, @kevgo, @marcosfelt, @nekitk, @opeik, @pcfreak30, @ruudk, @stephenwade for contributing code, ideas, and feedback to 29 shipped PRs and 9 resolved issues!
+
 ## 14.2.3 (2024-06-25)
 
 Another release with bug fixes and stability improvements.
