@@ -49,7 +49,7 @@ If the repository contains an "upstream" remote, syncs the main branch with its 
 func syncCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
+	addAllFlag, readAllFlag := flags.All()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	cmd := cobra.Command{
 		Use:     syncCommand,
