@@ -2,6 +2,7 @@ package sync
 
 import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
@@ -36,7 +37,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 type BranchesProgramArgs struct {
 	BranchProgramArgs
 	BranchesToSync gitdomain.BranchInfos
-	DryRun         bool
+	DryRun         configdomain.DryRun
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName
 	PreviousBranch Option[gitdomain.LocalBranchName]

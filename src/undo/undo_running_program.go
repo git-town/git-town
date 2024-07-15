@@ -32,7 +32,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 type CreateUndoProgramArgs struct {
 	Backend        gitdomain.RunnerQuerier
 	Config         configdomain.ValidatedConfig
-	DryRun         bool
+	DryRun         configdomain.DryRun
 	Git            git.Commands
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook
