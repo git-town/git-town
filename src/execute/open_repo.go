@@ -108,7 +108,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	DryRun           bool
+	DryRun           configdomain.DryRun
 	OmitBranchNames  bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
@@ -155,7 +155,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 type newFrontendRunnerArgs struct {
 	backend          gitdomain.Querier
 	counter          Mutable[gohacks.Counter]
-	dryRun           bool
+	dryRun           configdomain.DryRun
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	omitBranchNames  bool
 	printCommands    bool
