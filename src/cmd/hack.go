@@ -53,7 +53,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, dryRun configdomain.DryRun, verbose bool) error {
+func executeHack(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -153,10 +153,10 @@ type createFeatureBranchArgs struct {
 	frontend              gitdomain.Runner
 	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
-	verbose               bool
+	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -298,7 +298,7 @@ type convertToFeatureBranchArgs struct {
 	makeFeatureData     convertToFeatureData
 	repo                execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
-	verbose             bool
+	verbose             configdomain.Verbose
 }
 
 func validateConvertToFeatureData(data convertToFeatureData) error {

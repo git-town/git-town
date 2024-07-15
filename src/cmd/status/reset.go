@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/vm/statefile"
@@ -28,7 +29,7 @@ func resetRunstateCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatusReset(verbose bool) error {
+func executeStatusReset(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,
