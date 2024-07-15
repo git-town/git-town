@@ -62,7 +62,7 @@ func renameBranchCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRenameBranch(args []string, dryRun configdomain.DryRun, force, verbose bool) error {
+func executeRenameBranch(args []string, dryRun configdomain.DryRun, force bool, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -122,7 +122,7 @@ type renameBranchData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data renameBranchData, exit bool, err error) {
+func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameBranchData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

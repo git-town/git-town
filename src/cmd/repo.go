@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -37,7 +38,7 @@ func repoCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRepo(verbose bool) error {
+func executeRepo(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,

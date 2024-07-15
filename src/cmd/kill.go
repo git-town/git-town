@@ -48,7 +48,7 @@ func killCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeKill(args []string, dryRun configdomain.DryRun, verbose bool) error {
+func executeKill(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -116,7 +116,7 @@ type killData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineKillData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data killData, exit bool, err error) {
+func determineKillData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data killData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
