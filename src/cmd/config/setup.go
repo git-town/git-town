@@ -46,7 +46,7 @@ func defaultUserInput() userInput {
 	}
 }
 
-func executeConfigSetup(verbose bool) error {
+func executeConfigSetup(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -194,7 +194,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	return false, nil
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose bool) (data setupData, exit bool, err error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
