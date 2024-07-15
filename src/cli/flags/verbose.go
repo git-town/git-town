@@ -13,7 +13,7 @@ const (
 	verboseShort = "v"
 )
 
-// Verbose provides type-safe access to the CLI arguments of type gitdomain.ProposalTitle.
+// type-safe access to the CLI arguments of type configdomain.Verbose
 func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(verboseLong, verboseShort, false, "Display all Git commands run under the hood")
