@@ -50,7 +50,7 @@ func observeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeObserve(args []string, verbose bool) error {
+func executeObserve(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,

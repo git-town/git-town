@@ -68,7 +68,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(all bool, dryRun configdomain.DryRun, verbose, noPush bool) error {
+func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, noPush bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -156,7 +156,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose bool) (data syncData, exit bool, err error) {
+func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
