@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 14.3.1 (2024-07-15)
+
+#### Bug Fixes
+
+- `git town config get-parent` does not output an unnecessary extra line ([#3717](https://github.com/git-town/git-town/pull/3717))
+
 ## 14.3.0 (2024-07-12)
 
 This release ships a few of the most requested community features.
