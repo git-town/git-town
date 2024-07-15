@@ -22,7 +22,7 @@ type Runner interface {
 type UnvalidatedConfig struct {
 	Config          Mutable[configdomain.UnvalidatedConfig] // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig]      // content of git-town.toml, nil = no config file exists
-	DryRun          bool
+	DryRun          configdomain.DryRun
 	GitConfig       gitconfig.Access           // access to the Git configuration settings
 	GlobalGitConfig configdomain.PartialConfig // content of the global Git configuration
 	LocalGitConfig  configdomain.PartialConfig // content of the local Git configuration
@@ -278,7 +278,7 @@ func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, 
 type NewUnvalidatedConfigArgs struct {
 	Access       gitconfig.Access
 	ConfigFile   Option[configdomain.PartialConfig]
-	DryRun       bool
+	DryRun       configdomain.DryRun
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
 }
