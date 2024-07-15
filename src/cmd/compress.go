@@ -61,7 +61,7 @@ func compressCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCompress(dryRun, verbose bool, message Option[gitdomain.CommitMessage], stack bool) error {
+func executeCompress(dryRun configdomain.DryRun, verbose bool, message Option[gitdomain.CommitMessage], stack bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -115,7 +115,7 @@ type compressBranchesData struct {
 	compressEntireStack bool
 	config              config.ValidatedConfig
 	dialogTestInputs    Mutable[components.TestInputs]
-	dryRun              bool
+	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -131,7 +131,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (data compressBranchesData, exit bool, err error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool, message Option[gitdomain.CommitMessage], compressEntireStack bool) (data compressBranchesData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -50,7 +51,7 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, dryRun, verbose bool) error {
+func executePrepend(args []string, dryRun configdomain.DryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -103,7 +104,7 @@ type prependData struct {
 	branchesToSync      gitdomain.BranchInfos
 	config              config.ValidatedConfig
 	dialogTestInputs    Mutable[components.TestInputs]
-	dryRun              bool
+	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -114,7 +115,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data prependData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
