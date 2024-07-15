@@ -51,7 +51,7 @@ func executeGetParent(args []string, verbose bool) error {
 	}
 	parentOpt := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(childBranch)
 	if parent, hasParent := parentOpt.Get(); hasParent {
-		fmt.Println(parent)
+		fmt.Print(parent)
 	}
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
