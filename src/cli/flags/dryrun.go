@@ -25,5 +25,5 @@ func DryRun() (AddFunc, ReadDryRunFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
+// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
 type ReadDryRunFlagFunc func(*cobra.Command) configdomain.DryRun
