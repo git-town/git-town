@@ -9,12 +9,14 @@ import (
 
 func TestDryRun(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsTrue", func(t *testing.T) {
 		t.Parallel()
 		dryRun := configdomain.DryRun(true)
 		must.True(t, dryRun.IsTrue())
 		must.False(t, dryRun.IsFalse())
 	})
+
 	t.Run("IsFalse", func(t *testing.T) {
 		t.Parallel()
 		dryRun := configdomain.DryRun(false)
