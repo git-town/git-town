@@ -113,7 +113,7 @@ type OpenRepoArgs struct {
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
-	Verbose          bool
+	Verbose          configdomain.Verbose
 }
 
 type OpenRepoResult struct {

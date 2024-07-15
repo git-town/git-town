@@ -33,7 +33,7 @@ func RootCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeDisplayConfig(verbose bool) error {
+func executeDisplayConfig(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
