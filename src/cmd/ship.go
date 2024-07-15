@@ -75,7 +75,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose bool) error {
+func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -148,7 +148,7 @@ type shipData struct {
 	targetBranch             gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data shipData, exit bool, err error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data shipData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

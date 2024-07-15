@@ -8,6 +8,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
@@ -20,7 +21,7 @@ type BackendRunner struct {
 	// If not set, runs the commands in the current working directory.
 	Dir Option[string]
 	// whether to print the executed commands to the CLI
-	Verbose bool
+	Verbose configdomain.Verbose
 }
 
 func (self BackendRunner) Query(executable string, args ...string) (string, error) {

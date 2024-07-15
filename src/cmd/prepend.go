@@ -51,7 +51,7 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, dryRun configdomain.DryRun, verbose bool) error {
+func executePrepend(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -115,7 +115,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

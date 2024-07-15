@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -42,7 +43,7 @@ func continueCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeContinue(verbose bool) error {
+func executeContinue(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -82,7 +83,7 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose bool) (data continueData, exit bool, err error) {
+func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data continueData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
