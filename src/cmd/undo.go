@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -39,7 +40,7 @@ func undoCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeUndo(verbose bool) error {
+func executeUndo(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -89,7 +90,7 @@ type undoData struct {
 	stashSize               gitdomain.StashSize
 }
 
-func determineUndoData(repo execute.OpenRepoResult, verbose bool) (data undoData, exit bool, err error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

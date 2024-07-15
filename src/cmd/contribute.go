@@ -51,7 +51,7 @@ func contributeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeContribute(args []string, verbose bool) error {
+func executeContribute(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,

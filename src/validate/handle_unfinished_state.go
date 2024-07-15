@@ -77,7 +77,7 @@ type UnfinishedStateArgs struct {
 	RepoStatus        gitdomain.RepoStatus
 	RootDir           gitdomain.RepoRootDir
 	UnvalidatedConfig config.UnvalidatedConfig
-	Verbose           bool
+	Verbose           configdomain.Verbose
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
