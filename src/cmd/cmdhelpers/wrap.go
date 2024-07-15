@@ -1,6 +1,7 @@
 package cmdhelpers
 
 import (
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
@@ -25,7 +26,7 @@ func Wrap(program Mutable[program.Program], options WrapOptions) {
 
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
-	DryRun                   bool
+	DryRun                   configdomain.DryRun
 	PreviousBranchCandidates gitdomain.LocalBranchNames
 	RunInGitRoot             bool
 	StashOpenChanges         bool

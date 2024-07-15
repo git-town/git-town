@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -49,7 +50,7 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, dryRun, verbose bool) error {
+func executeAppend(arg string, dryRun configdomain.DryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -102,7 +103,7 @@ type appendFeatureData struct {
 	branchesToSync            gitdomain.BranchInfos
 	config                    config.ValidatedConfig
 	dialogTestInputs          Mutable[components.TestInputs]
-	dryRun                    bool
+	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
@@ -112,7 +113,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun, verbose bool) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

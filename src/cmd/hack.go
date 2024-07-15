@@ -53,7 +53,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, dryRun, verbose bool) error {
+func executeHack(args []string, dryRun configdomain.DryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -148,7 +148,7 @@ type createFeatureBranchArgs struct {
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                bool
+	dryRun                configdomain.DryRun
 	finalMessages         stringslice.Collector
 	frontend              gitdomain.Runner
 	git                   git.Commands
@@ -156,7 +156,7 @@ type createFeatureBranchArgs struct {
 	verbose               bool
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
