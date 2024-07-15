@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func Footer(verbose bool, commandsCount gohacks.Counter, finalMessages []string) {
+func Footer(verbose configdomain.Verbose, commandsCount gohacks.Counter, finalMessages []string) {
 	fmt.Println()
 	if verbose {
 		fmt.Printf(messages.CommandsRun, commandsCount)

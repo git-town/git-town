@@ -39,7 +39,7 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(verbose, merge bool) error {
+func executeSwitch(verbose configdomain.Verbose, merge bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -84,7 +84,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo execute.OpenRepoResult, verbose bool) (data switchData, exit bool, err error) {
+func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

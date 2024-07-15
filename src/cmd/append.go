@@ -50,7 +50,7 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, dryRun configdomain.DryRun, verbose bool) error {
+func executeAppend(arg string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -113,7 +113,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose bool) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

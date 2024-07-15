@@ -43,7 +43,7 @@ func parkCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePark(args []string, verbose bool) error {
+func executePark(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,

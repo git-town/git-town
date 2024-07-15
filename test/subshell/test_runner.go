@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/subshell"
@@ -33,7 +34,7 @@ type TestRunner struct {
 	HomeDir string
 
 	// whether to log the output of subshell commands
-	Verbose bool
+	Verbose configdomain.Verbose
 
 	// the directory in which this runner executes shell commands
 	WorkingDir string
