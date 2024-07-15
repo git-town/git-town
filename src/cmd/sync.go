@@ -68,7 +68,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(all, dryRun, verbose, noPush bool) error {
+func executeSync(all bool, dryRun configdomain.DryRun, verbose, noPush bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,

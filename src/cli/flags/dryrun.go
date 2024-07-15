@@ -1,6 +1,29 @@
 package flags
 
-// DryRun provides mistake-safe access to the "--dry-run" Cobra command-line flag.
-func DryRun() (AddFunc, ReadBoolFlagFunc) {
-	return Bool("dry-run", "", "Print but do not run the Git commands", FlagTypePersistent)
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/messages"
+	"github.com/spf13/cobra"
+)
+
+const dryRunLong = "dry-run"
+
+// ProposalTitle provides type-safe access to the CLI arguments of type gitdomain.ProposalTitle.
+func DryRun() (AddFunc, ReadDryRunFlagFunc) {
+	addFlag := func(cmd *cobra.Command) {
+		cmd.PersistentFlags().BoolP(dryRunLong, "", false, "Print but do not run the Git commands")
+	}
+	readFlag := func(cmd *cobra.Command) configdomain.DryRun {
+		value, err := cmd.Flags().GetBool(dryRunLong)
+		if err != nil {
+			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), dryRunLong))
+		}
+		return configdomain.DryRun(value)
+	}
+	return addFlag, readFlag
 }
+
+// ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
+type ReadDryRunFlagFunc func(*cobra.Command) configdomain.DryRun

@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -22,7 +23,7 @@ type RunState struct {
 	BeginConfigSnapshot      undoconfig.ConfigSnapshot
 	BeginStashSize           gitdomain.StashSize
 	Command                  string
-	DryRun                   bool
+	DryRun                   configdomain.DryRun
 	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]
 	EndConfigSnapshot        Option[undoconfig.ConfigSnapshot]
 	EndStashSize             Option[gitdomain.StashSize]
