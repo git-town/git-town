@@ -11,17 +11,16 @@ Feature: syncing a top-level feature branch using --no-push
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
-      |         | git checkout feature                            |
-      | feature | git rebase main                                 |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git checkout main         |
+      | main    | git rebase origin/main    |
+      |         | git checkout feature      |
+      | feature | git rebase main           |
+      |         | git rebase origin/feature |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

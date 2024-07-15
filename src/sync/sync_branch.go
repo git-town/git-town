@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -38,7 +40,7 @@ type BranchProgramArgs struct {
 	Remotes       gitdomain.Remotes
 }
 
-// ExistingBranchProgram provides the opcode to sync a particular branch.
+// ExistingBranchProgram provides the program to sync a particular branch.
 func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
@@ -77,6 +79,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	}
+	fmt.Println("11111111111111111111111 PUSHBRANCH", args.PushBranch)
 	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
