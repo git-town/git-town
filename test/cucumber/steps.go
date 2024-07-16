@@ -46,7 +46,8 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		fixture := fixtureFactory.CreateFixture(scenario.Name)
 		if helpers.HasTag(scenario.Tags, "@debug") {
-			fixture.DevRepo.Verbose = configdomain.Verbose(true)
+			devRepo := fixture.DevRepo.GetOrPanic()
+			devRepo.Verbose = configdomain.Verbose(true)
 		}
 		state := ScenarioState{
 			fixture:              fixture,
