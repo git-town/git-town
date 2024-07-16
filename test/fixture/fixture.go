@@ -26,7 +26,7 @@ type Fixture struct {
 	CoworkerRepo OptionP[testruntime.TestRuntime]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo testruntime.TestRuntime
+	DevRepo Option[testruntime.TestRuntime]
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
