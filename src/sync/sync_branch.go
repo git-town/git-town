@@ -58,6 +58,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
@@ -69,6 +70,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})

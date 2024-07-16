@@ -15,6 +15,7 @@ func FeatureBranchProgram(args featureBranchArgs) {
 		offline:             args.offline,
 		parentOtherWorktree: args.parentOtherWorktree,
 		program:             args.program,
+		pushBranches:        args.pushBranches,
 		remoteName:          args.remoteName,
 	}
 	switch args.syncStrategy {
@@ -30,6 +31,7 @@ type featureBranchArgs struct {
 	offline             configdomain.Offline     // whether offline mode is enabled
 	parentOtherWorktree bool                     // whether the parent of this branch exists on another worktre
 	program             Mutable[program.Program] // the program to update
+	pushBranches        configdomain.PushBranches
 	remoteName          Option[gitdomain.RemoteBranchName]
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
@@ -51,7 +53,7 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 	})
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		if !args.offline.Bool() {
-			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch})
+			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
 		}
 	}
 }
@@ -61,5 +63,6 @@ type syncFeatureBranchProgramArgs struct {
 	offline             configdomain.Offline // whether offline mode is enabled
 	parentOtherWorktree bool
 	program             Mutable[program.Program]
+	pushBranches        configdomain.PushBranches
 	remoteName          Option[gitdomain.RemoteBranchName]
 }
