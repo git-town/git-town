@@ -4,7 +4,7 @@ Feature: already existing known remote branch
     Given a Git repo clone
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
-      | existing | feature | main   | remote    |
+      | existing | feature | main   | origin    |
     And an uncommitted file
     And I run "git fetch"
     When I run "git-town append existing"
