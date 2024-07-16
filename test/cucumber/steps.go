@@ -110,6 +110,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Given(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(ctx context.Context, branchText, parentBranch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		devRepo.CreateChildFeatureBranch(branch, gitdomain.NewLocalBranchName(parentBranch))
 		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
@@ -117,12 +118,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a folder "([^"]*)"$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateFolder(name)
 	})
 
 	sc.Step(`^a known remote branch "([^"]*)"$`, func(ctx context.Context, branchText string) {
-		branch := gitdomain.NewLocalBranchName(branchText)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branch := gitdomain.NewLocalBranchName(branchText)
 		// we are creating a remote branch in the remote repo --> it is a local branch there
 		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 		devRepo.TestCommands.Fetch()
@@ -130,6 +133,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a merge is now in progress$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if !devRepo.HasMergeInProgress(devRepo.TestRunner) {
 			panic("expected merge in progress")
 		}
@@ -137,6 +141,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a (local )?feature branch "([^"]*)"$`, func(ctx context.Context, localStr, branchText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		isLocal := localStr != ""
 		devRepo.CreateFeatureBranch(branch)
@@ -148,6 +153,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a parked branch "([^"]+)"$`, func(ctx context.Context, branchText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		devRepo.CreateParkedBranches(branch)
 		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
@@ -155,6 +161,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a perennial branch "([^"]+)"$`, func(ctx context.Context, branchText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		devRepo.CreatePerennialBranches(branch)
 		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
@@ -162,6 +169,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
 		asserts.NoError(err)
 		if !repoStatus.RebaseInProgress {
@@ -183,6 +191,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
 		if branchesOutOfSync {
 			panic("unexpected out of sync:\n" + output)
@@ -191,6 +200,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		filename := "uncommitted file"
 		state.uncommittedFileName = Some(filename)
 		content := "uncommitted content"
@@ -203,6 +213,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^an uncommitted file in folder "([^"]*)"$`, func(ctx context.Context, folder string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		fileName := folder + "/uncommitted file"
 		state.uncommittedFileName = Some(fileName)
 		content := "uncommitted content"
@@ -212,6 +223,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.uncommittedFileName = Some(name)
 		state.uncommittedContent = Some(content)
 		devRepo.CreateFile(name, content)
@@ -224,6 +236,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(ctx context.Context, name, url string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.AddRemote(gitdomain.Remote(name), url)
 	})
 
@@ -234,6 +247,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is (?:now|still) a contribution branch`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if !devRepo.Config.Config.IsContributionBranch(branch) {
 			return fmt.Errorf(
@@ -247,6 +261,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if devRepo.Config.Config.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
 			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
@@ -256,6 +271,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if !devRepo.Config.Config.IsObservedBranch(branch) {
 			return fmt.Errorf(
@@ -269,6 +285,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is now parked`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if !devRepo.Config.Config.IsParkedBranch(branch) {
 			return fmt.Errorf(
@@ -282,6 +299,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if !devRepo.Config.Config.IsPerennialBranch(branch) {
 			return fmt.Errorf(
@@ -295,6 +313,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^branch "([^"]+)" is now a feature branch`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		if devRepo.Config.Config.IsParkedBranch(branch) {
 			return fmt.Errorf("branch %q is parked", branch)
@@ -313,6 +332,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parts := strings.Split(command, " ")
 		output, err := devRepo.TestRunner.Query(parts[0], parts[1:]...)
 		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
@@ -323,6 +343,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		filePath := filepath.Join(devRepo.WorkingDir, name)
 		//nolint:gosec // need permission 700 here in order for tests to work
 		return os.WriteFile(filePath, []byte(content.Content), 0o700)
@@ -330,6 +351,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		content := devRepo.FileContent(name)
 		if !strings.Contains(content, "<<<<<<<") {
 			return fmt.Errorf("file %q does not contain unresolved conflicts", name)
@@ -339,6 +361,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := devRepo.FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
@@ -348,19 +371,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.MockGit(version)
 	})
 
 	sc.Step(`^Git Town is no longer configured$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.VerifyNoGitTownConfiguration()
 	})
 
 	sc.Step(`^Git Town is not configured$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		err := devRepo.RemovePerennialBranchConfiguration()
 		asserts.NoError(err)
 		devRepo.RemoveMainBranchConfiguration()
@@ -368,13 +391,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.SetColorUI(value)
 	})
 
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := gitconfig.NewParentKey(branchName)
 		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
@@ -382,13 +405,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^local Git setting "init.defaultbranch" is "([^"]*)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.SetDefaultGitBranch(gitdomain.NewLocalBranchName(value))
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
@@ -402,7 +425,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
@@ -420,7 +443,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
@@ -438,7 +461,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
 		if !hasConfigKey {
 			return fmt.Errorf("unknown configuration key: %q", name)
@@ -448,7 +471,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
 		if !hasConfigKey {
 			return errors.New("unknown config key: " + name)
@@ -462,7 +485,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.GlobalGitConfig.HostingOriginHostname.String()
 		if have != want {
 			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, have)
@@ -472,7 +495,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "hosting-platform" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := devRepo.GetOrPanic()
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.GlobalGitConfig.HostingPlatform
 		if have.String() != want {
 			return fmt.Errorf(`expected global setting "hosting-platform" to be %q, but was %q`, want, have)
@@ -482,6 +505,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.GlobalGitConfig.MainBranch.String()
 		if have != want {
 			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, have)
@@ -491,6 +515,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		wantBool, err := gohacks.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.Offline(wantBool)
@@ -506,6 +531,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.GlobalGitConfig.PerennialBranches
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
 		if !cmp.Equal(have, want) {
@@ -516,6 +542,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.GlobalGitConfig.PushHook.String()
 		if !cmp.Equal(have, want) {
 			return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, have)
@@ -525,6 +552,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.GlobalGitConfig.PushNewBranches.Get()
 		if !has {
 			return errors.New(`expected global setting "push-new-branches" to exist but it doesn't`)
@@ -539,6 +567,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		have, has := devRepo.Config.GlobalGitConfig.ShipDeleteTrackingBranch.Get()
@@ -553,6 +582,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^global Git Town setting "sync-before-ship" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
 		want, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		have, has := devRepo.Config.GlobalGitConfig.SyncBeforeShip.Get()
