@@ -1,7 +1,11 @@
 Feature: display the parent of a perennial branch
 
   Background:
-    Given the current branch is a perennial branch "perennial"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE      | PARENT | LOCATIONS     |
+      | perennial | perennial |        | local, origin |
+    Given the current branch is "perennial"
     When I run "git-town config get-parent"
 
   Scenario: result

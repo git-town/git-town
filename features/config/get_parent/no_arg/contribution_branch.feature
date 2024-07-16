@@ -1,7 +1,11 @@
 Feature: display the parent of a contribution branch
 
   Background:
-    Given the current branch is a contribution branch "contribution"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | contribution | contribution |        | local, origin |
+    Given the current branch is "contribution"
     When I run "git-town config get-parent"
 
   Scenario: result
