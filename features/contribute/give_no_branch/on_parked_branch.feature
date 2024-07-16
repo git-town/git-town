@@ -1,7 +1,11 @@
 Feature: making a parked branch a contribution branch
 
   Background:
-    Given the current branch is a parked branch "branch"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE   | PARENT | LOCATIONS |
+      | branch | parked | main   | local     |
+    Given the current branch is "branch"
     And an uncommitted file
     When I run "git-town contribute"
 

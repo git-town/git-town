@@ -1,7 +1,11 @@
 Feature: cannot make perennial branches contribution branches
 
   Background:
-    Given the current branch is a perennial branch "perennial"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE      | LOCATIONS |
+      | perennial | perennial | local     |
+    Given the current branch is "perennial"
     And an uncommitted file
     When I run "git-town contribute"
 

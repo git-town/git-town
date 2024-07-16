@@ -1,7 +1,11 @@
 Feature: making an observed branch a contribution branch
 
   Background:
-    Given the current branch is an observed branch "branch"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE     | LOCATIONS |
+      | branch | observed | local     |
+    Given the current branch is "branch"
     And an uncommitted file
     When I run "git-town contribute"
 
