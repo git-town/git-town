@@ -26,6 +26,9 @@ makes Git Town sync all local branches.
 The `--dry-run` parameter allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
 
+The `--no-push` argument disables all pushes of local commits to their tracking
+branch.
+
 ### Configuration
 
 [sync-perennial-strategy](../preferences/sync-perennial-strategy.md) configures
