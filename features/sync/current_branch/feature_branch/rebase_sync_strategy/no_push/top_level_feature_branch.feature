@@ -13,22 +13,20 @@ Feature: syncing a top-level feature branch using --no-push
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
-      |         | git checkout feature                            |
-      | feature | git rebase main                                 |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git checkout main         |
+      | main    | git rebase origin/main    |
+      |         | git checkout feature      |
+      | feature | git rebase main           |
+      |         | git rebase origin/feature |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         | local         | local main commit     |
       | feature | local, origin | origin feature commit |
-      |         |               | origin main commit    |
+      |         | local         | origin main commit    |
       |         |               | local main commit     |
       |         |               | local feature commit  |
     And the initial branches and lineage exist
@@ -36,12 +34,11 @@ Feature: syncing a top-level feature branch using --no-push
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | git reset --hard {{ sha 'local feature commit' }}                            |
-      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
-      |         | git checkout main                                                            |
-      | main    | git reset --hard {{ sha 'local main commit' }}                               |
-      |         | git checkout feature                                                         |
+      | BRANCH  | COMMAND                                           |
+      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      |         | git checkout main                                 |
+      | main    | git reset --hard {{ sha 'local main commit' }}    |
+      |         | git checkout feature                              |
     And the current branch is still "feature"
     And the initial commits exist
     And the initial branches and lineage exist
