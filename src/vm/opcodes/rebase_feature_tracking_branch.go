@@ -15,21 +15,25 @@ type RebaseFeatureTrackingBranch struct {
 
 func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {
 	// Try to force-push the local branch with lease and includes to the remote branch.
-	err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Config.NoPushHook())
-	if err == nil {
-		// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
-		return nil
+	if !self.PushBranches {
+		args.PrependOpcodes(&RebaseBranch{Branch: self.RemoteBranch.BranchName()})
+	} else {
+		err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Config.NoPushHook())
+		if err == nil {
+			// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
+			return nil
+		}
+		// Here the force-push failed --> the remote branch contains new commits.
+		// We need to integrate them into the local branch.
+		args.PrependOpcodes(
+			// Rebase the local commits against the remote commits.
+			&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
+			// Now try force-pushing again.
+			&RebaseFeatureTrackingBranch{
+				PushBranches: self.PushBranches,
+				RemoteBranch: self.RemoteBranch,
+			},
+		)
 	}
-	// The force-push failed --> the remote branch contains new commits.
-	// We need to integrate them into the local branch.
-	args.PrependOpcodes(
-		// Rebase the local commits against the remote commits.
-		&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
-		// Now try force-pushing again.
-		&RebaseFeatureTrackingBranch{
-			PushBranches: self.PushBranches,
-			RemoteBranch: self.RemoteBranch,
-		},
-	)
 	return nil
 }
