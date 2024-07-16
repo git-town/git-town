@@ -4,6 +4,7 @@
 
 #### Bug Fixes
 
+- `git sync --no-push` now also doesn't push when the `rebase` sync-strategy is configured ([#3271](https://github.com/git-town/git-town/pull/3721))
 - `git town config get-parent` does not output an unnecessary extra line ([#3717](https://github.com/git-town/git-town/pull/3717))
 
 ## 14.3.0 (2024-07-12)
