@@ -24,7 +24,8 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		cloned.DevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
+		devRepo := cloned.DevRepo.GetOrPanic()
+		devRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
@@ -34,8 +35,9 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
-			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewLocalBranchName("main"))
-			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewLocalBranchName("main"))
+			devRepo := fixture.DevRepo.GetOrPanic()
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewLocalBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewLocalBranchName("main"))
 			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o1"), gitdomain.NewLocalBranchName("initial"))
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o2"), gitdomain.NewLocalBranchName("initial"))
@@ -52,8 +54,9 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
-			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
-			fixture.DevRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
+			devRepo := fixture.DevRepo.GetOrPanic()
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
 			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
 			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
