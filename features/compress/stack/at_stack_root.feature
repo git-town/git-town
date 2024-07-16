@@ -1,21 +1,31 @@
 Feature: compress the commits on an entire stack when at the stack root
 
   Background:
-    Given feature branch "alpha" with these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | alpha 1 | alpha_1   | alpha 1      |
-      |               | alpha 2 | alpha_2   | alpha 2      |
-      |               | alpha 3 | alpha_3   | alpha 3      |
-    And feature branch "beta" as a child of "alpha" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | beta 1  | beta_1    | beta 1       |
-      |               | beta 2  | beta_2    | beta 2       |
-      |               | beta 3  | beta_3    | beta 3       |
-    And feature branch "gamma" as a child of "beta" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | gamma 1 | gamma_1   | gamma 1      |
-      |               | gamma 2 | gamma_2   | gamma 2      |
-      |               | gamma 3 | gamma_3   | gamma 3      |
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
+      |        |               | alpha 2 | alpha_2   | alpha 2      |
+      |        |               | alpha 3 | alpha_3   | alpha 3      |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | beta 1  | beta_1    | beta 1       |
+      |        |               | beta 2  | beta_2    | beta 2       |
+      |        |               | beta 3  | beta_3    | beta 3       |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | gamma | feature | beta   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | gamma  | local, origin | gamma 1 | gamma_1   | gamma 1      |
+      |        |               | gamma 2 | gamma_2   | gamma 2      |
+      |        |               | gamma 3 | gamma_3   | gamma 3      |
     And the current branch is "alpha"
     And an uncommitted file
     When I run "git-town compress --stack"
