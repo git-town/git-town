@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
+	"github.com/git-town/git-town/v14/test/filesystem"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/helpers"
@@ -665,10 +666,41 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.insideGitRepo = false
-		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir, ".git"))
+	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.ToString()
+		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
+		asserts.NoError(os.Mkdir(envPath, 0o777))
+		fixture := fixture.Fixture{
+			CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+			DevRepo:        testruntime.New(envPath, envPath, envPath),
+			Dir:            envPath,
+			OriginRepo:     NoneP[testruntime.TestRuntime](),
+			SecondWorktree: NoneP[testruntime.TestRuntime](),
+			SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+			UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+		}
+		if helpers.HasTag(scenarioTags, "@debug") {
+			fixture.DevRepo.Verbose = true
+		}
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
 	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {

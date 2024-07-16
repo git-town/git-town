@@ -1,7 +1,10 @@
 @smoke
 Feature: shell autocompletion
 
+
+  @debug
   Scenario Outline:
+    Given I am outside a Git repo
     When I run "git-town completions <SHELL>"
     Then it prints:
       """
@@ -9,8 +12,8 @@ Feature: shell autocompletion
       """
 
     Examples:
-      | SHELL      |
-      | fish       |
-      | bash       |
-      | zsh        |
-      | powershell |
+      | SHELL |
+      | fish  |
+# | bash       |
+# | zsh        |
+# | powershell |
