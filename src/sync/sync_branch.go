@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -36,7 +34,7 @@ type BranchProgramArgs struct {
 	Config        configdomain.ValidatedConfig
 	InitialBranch gitdomain.LocalBranchName
 	Program       Mutable[program.Program]
-	PushBranch    bool
+	PushBranch    configdomain.PushBranches
 	Remotes       gitdomain.Remotes
 }
 
@@ -79,8 +77,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	}
-	fmt.Println("11111111111111111111111 PUSHBRANCH", args.PushBranch)
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
+	if args.PushBranch.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
