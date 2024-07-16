@@ -1,4 +1,4 @@
-Feature: syncing a top-level feature branch using --no-push
+Feature: syncing a local feature branch using --no-push
 
   Background:
     Given the current branch is a local feature branch "feature"
