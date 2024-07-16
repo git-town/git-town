@@ -1,4 +1,3 @@
-@this
 Feature: syncing a top-level feature branch using --no-push
 
   Background:
