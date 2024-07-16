@@ -1370,33 +1370,36 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
-			switch branchSetup.Locations.String() {
-			case "origin":
+			switch {
+			case branchSetup.Locations.Is(git.LocationLocal):
+				repoToCreateBranchIn = &state.fixture.DevRepo
+			case branchSetup.Locations.Is(git.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
+			case branchSetup.Locations.Is(git.LocationUpstream):
+				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
+			default:
+				panic("unhandled location to create the new branch: " + branchSetup.Locations.String())
 			}
 			switch branchSetup.BranchType {
 			case configdomain.BranchTypeMainBranch:
 				panic("main branch exists already")
 			case configdomain.BranchTypeFeatureBranch:
-				state.fixture.DevRepo.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+				repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
 			case configdomain.BranchTypePerennialBranch:
-				state.fixture.DevRepo.CreatePerennialBranches(branchSetup.Name)
+				repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
 			case configdomain.BranchTypeContributionBranch:
-				state.fixture.DevRepo.CreateContributionBranches(branchSetup.Name)
+				repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
 			case configdomain.BranchTypeObservedBranch:
-				state.fixture.DevRepo.CreateObservedBranches(branchSetup.Name)
+				repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
 			case configdomain.BranchTypeParkedBranch:
-				state.fixture.DevRepo.CreateParkedBranches(branchSetup.Name)
+				repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
 			}
-			for _, location := range branchSetup.Locations {
-				switch location {
-				case git.LocationLocal:
-				case git.LocationOrigin:
+			if len(branchSetup.Locations) > 1 {
+				switch {
+				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
 					state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
-				case git.LocationUpstream:
-					state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteUpstream)
-				case git.LocationCoworker:
-					panic("TODO: implement creating branch at the coworker repo")
+				default:
+					panic("unhandled location to push the new branch to: " + branchSetup.Locations.String())
 				}
 			}
 		}
@@ -2025,22 +2028,5 @@ func updateInitialSHAs(state *ScenarioState) {
 	}
 	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
 		state.initialWorktreeSHAs = Some(secondWorkTree.TestCommands.CommitSHAs())
-	}
-}
-
-func createBranch(repo testruntime.TestRuntime, name gitdomain.LocalBranchName, branchType configdomain.BranchType) {
-	switch branchType {
-	case configdomain.BranchTypeMainBranch:
-		panic("main branch exists already")
-	case configdomain.BranchTypeFeatureBranch:
-		repo.CreateChildFeatureBranch(name, branchSetup.Parent.GetOrElse("main"))
-	case configdomain.BranchTypePerennialBranch:
-		repo.CreatePerennialBranches(name)
-	case configdomain.BranchTypeContributionBranch:
-		repo.CreateContributionBranches(name)
-	case configdomain.BranchTypeObservedBranch:
-		repo.CreateObservedBranches(name)
-	case configdomain.BranchTypeParkedBranch:
-		repo.CreateParkedBranches(name)
 	}
 }

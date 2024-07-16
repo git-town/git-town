@@ -23,6 +23,19 @@ func (self Locations) Contains(location Location) bool {
 	return false
 }
 
+// indicates whetehr this Locations instance contains exactly the given elements
+func (self Locations) Is(locations ...Location) bool {
+	if len(self) != len(locations) {
+		return false
+	}
+	for l, location := range locations {
+		if self[l] != location {
+			return false
+		}
+	}
+	return true
+}
+
 // Matches indicates whether this Locations instance contains exactly the given elements.
 func (self Locations) Matches(elements ...Location) bool {
 	if len(self) != len(elements) {

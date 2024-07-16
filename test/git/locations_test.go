@@ -3,6 +3,7 @@ package git_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v14/test/git"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/shoenig/test/must"
 )
@@ -39,6 +40,35 @@ func TestLocations(t *testing.T) {
 			locations := testgit.Locations{testgit.LocationLocal}
 			have := locations.Contains(testgit.LocationOrigin)
 			must.False(t, have)
+		})
+	})
+
+	t.Run("Is", func(t *testing.T) {
+		t.Parallel()
+		t.Run("match with one element", func(t *testing.T) {
+			t.Parallel()
+			locations := git.Locations{git.LocationOrigin}
+			must.True(t, locations.Is(git.LocationOrigin))
+		})
+		t.Run("match with multiple elements", func(t *testing.T) {
+			t.Parallel()
+			locations := git.Locations{git.LocationLocal, git.LocationOrigin}
+			must.True(t, locations.Is(git.LocationLocal, git.LocationOrigin))
+		})
+		t.Run("wrong type", func(t *testing.T) {
+			t.Parallel()
+			locations := git.Locations{git.LocationOrigin}
+			must.False(t, locations.Is(git.LocationLocal))
+		})
+		t.Run("contains more elements", func(t *testing.T) {
+			t.Parallel()
+			locations := git.Locations{git.LocationLocal, git.LocationOrigin}
+			must.False(t, locations.Is(git.LocationLocal))
+		})
+		t.Run("contains fewer elements", func(t *testing.T) {
+			t.Parallel()
+			locations := git.Locations{git.LocationLocal}
+			must.False(t, locations.Is(git.LocationLocal, git.LocationOrigin))
 		})
 	})
 
