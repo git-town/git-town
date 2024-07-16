@@ -68,7 +68,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, noPush bool) error {
+func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -101,7 +101,7 @@ func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verb
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       NewMutable(&runProgram),
-			PushBranch:    !noPush,
+			PushBranch:    pushBranches,
 		},
 		BranchesToSync: data.branchesToSync,
 		DryRun:         dryRun,

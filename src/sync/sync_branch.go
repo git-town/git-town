@@ -36,7 +36,7 @@ type BranchProgramArgs struct {
 	Config        configdomain.ValidatedConfig
 	InitialBranch gitdomain.LocalBranchName
 	Program       Mutable[program.Program]
-	PushBranch    bool
+	PushBranch    configdomain.PushBranches
 	Remotes       gitdomain.Remotes
 }
 
@@ -81,7 +81,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
+	if args.PushBranch.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
