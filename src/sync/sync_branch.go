@@ -40,7 +40,7 @@ type BranchProgramArgs struct {
 	Remotes       gitdomain.Remotes
 }
 
-// ExistingBranchProgram provides the opcode to sync a particular branch.
+// ExistingBranchProgram provides the program to sync a particular branch.
 func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
@@ -62,6 +62,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
@@ -73,6 +74,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			offline:             args.Config.Offline,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
+			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})

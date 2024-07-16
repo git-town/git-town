@@ -359,6 +359,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "PushBranches": false,
         "RemoteBranch": "origin/branch"
       },
       "type": "RebaseFeatureTrackingBranch"
