@@ -26,7 +26,10 @@ func (self *RebaseFeatureTrackingBranch) Run(args shared.RunArgs) error {
 		// Rebase the local commits against the remote commits.
 		&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
 		// Now try force-pushing again.
-		&RebaseFeatureTrackingBranch{RemoteBranch: self.RemoteBranch, PushBranches: self.PushBranches},
+		&RebaseFeatureTrackingBranch{
+			PushBranches: self.PushBranches,
+			RemoteBranch: self.RemoteBranch,
+		},
 	)
 	return nil
 }
