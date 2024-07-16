@@ -100,7 +100,7 @@ func TestFixture(t *testing.T) {
 			},
 		})
 		// verify local commits
-		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
+		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
 		must.EqOp(t, "loc-rem-file", commits[0].FileName)
