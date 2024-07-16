@@ -1481,19 +1481,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 			default:
 				panic("unhandled location to create the new branch: " + branchSetup.Locations.String())
 			}
-			switch branchSetup.BranchType {
-			case configdomain.BranchTypeMainBranch:
-				panic("main branch exists already")
-			case configdomain.BranchTypeFeatureBranch:
-				repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
-			case configdomain.BranchTypePerennialBranch:
-				repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
-			case configdomain.BranchTypeContributionBranch:
-				repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
-			case configdomain.BranchTypeObservedBranch:
-				repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
-			case configdomain.BranchTypeParkedBranch:
-				repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+			branchType, hasBranchType := branchSetup.BranchType.Get()
+			if hasBranchType {
+				switch branchType {
+				case configdomain.BranchTypeMainBranch:
+					panic("main branch exists already")
+				case configdomain.BranchTypeFeatureBranch:
+					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+				case configdomain.BranchTypePerennialBranch:
+					repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
+				case configdomain.BranchTypeContributionBranch:
+					repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
+				case configdomain.BranchTypeObservedBranch:
+					repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
+				case configdomain.BranchTypeParkedBranch:
+					repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+				}
+			} else {
+				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
 			}
 			if len(branchSetup.Locations) > 1 {
 				switch {

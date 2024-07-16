@@ -9,7 +9,7 @@ import (
 )
 
 type BranchSetup struct {
-	BranchType configdomain.BranchType
+	BranchType Option[configdomain.BranchType]
 	Locations  testgit.Locations
 	Name       gitdomain.LocalBranchName
 	Parent     Option[gitdomain.LocalBranchName]
@@ -29,7 +29,7 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 			case "NAME":
 				name = Some(gitdomain.NewLocalBranchName(cell.Value))
 			case "TYPE":
-				branchType = Some(configdomain.NewBranchType(cell.Value))
+				branchType = configdomain.NewBranchType(cell.Value)
 			case "PARENT":
 				if cell.Value != "" {
 					parent = Some(gitdomain.NewLocalBranchName(cell.Value))
@@ -54,7 +54,7 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 			panic("branch table doesn't define locations")
 		}
 		result = append(result, BranchSetup{
-			BranchType: branchType.GetOrPanic(),
+			BranchType: branchType,
 			Locations:  locations,
 			Name:       name.GetOrPanic(),
 			Parent:     parent,

@@ -2,7 +2,8 @@
 Feature: override an existing Git alias
 
   Background:
-    Given I ran "git config --global alias.append checkout"
+    Given a Git repo clone
+    And I ran "git config --global alias.append checkout"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    |
       | welcome                     | enter   |

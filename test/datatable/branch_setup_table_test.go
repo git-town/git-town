@@ -50,13 +50,13 @@ func TestParseBranchSetupTable(t *testing.T) {
 		want := []datatable.BranchSetup{
 			{
 				Name:       "feature-1",
-				BranchType: configdomain.BranchTypeFeatureBranch,
+				BranchType: Some(configdomain.BranchTypeFeatureBranch),
 				Parent:     Some(gitdomain.NewLocalBranchName("main")),
 				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
 			},
 			{
 				Name:       "feature-2",
-				BranchType: configdomain.BranchTypeFeatureBranch,
+				BranchType: Some(configdomain.BranchTypeFeatureBranch),
 				Parent:     Some(gitdomain.NewLocalBranchName("main")),
 				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
 			},
@@ -88,7 +88,7 @@ func TestParseBranchSetupTable(t *testing.T) {
 		want := []datatable.BranchSetup{
 			{
 				Name:       "staging",
-				BranchType: configdomain.BranchTypePerennialBranch,
+				BranchType: Some(configdomain.BranchTypePerennialBranch),
 				Parent:     None[gitdomain.LocalBranchName](),
 				Locations:  git.Locations{git.LocationLocal, git.LocationOrigin},
 			},
