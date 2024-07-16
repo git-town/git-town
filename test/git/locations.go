@@ -35,3 +35,15 @@ func (self Locations) Matches(elements ...Location) bool {
 	}
 	return true
 }
+
+func (self Locations) String() string {
+	return strings.Join(self.Strings(), ", ")
+}
+
+func (self Locations) Strings() []string {
+	result := make([]string, len(self))
+	for l, location := range self {
+		result[l] = location.String()
+	}
+	return result
+}

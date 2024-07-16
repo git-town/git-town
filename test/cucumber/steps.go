@@ -1369,6 +1369,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
+			var repoToCreateBranchIn *testruntime.TestRuntime
+			switch branchSetup.Locations.String() {
+			case "origin":
+				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
+			}
 			switch branchSetup.BranchType {
 			case configdomain.BranchTypeMainBranch:
 				panic("main branch exists already")
@@ -2020,5 +2025,22 @@ func updateInitialSHAs(state *ScenarioState) {
 	}
 	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
 		state.initialWorktreeSHAs = Some(secondWorkTree.TestCommands.CommitSHAs())
+	}
+}
+
+func createBranch(repo testruntime.TestRuntime, name gitdomain.LocalBranchName, branchType configdomain.BranchType) {
+	switch branchType {
+	case configdomain.BranchTypeMainBranch:
+		panic("main branch exists already")
+	case configdomain.BranchTypeFeatureBranch:
+		repo.CreateChildFeatureBranch(name, branchSetup.Parent.GetOrElse("main"))
+	case configdomain.BranchTypePerennialBranch:
+		repo.CreatePerennialBranches(name)
+	case configdomain.BranchTypeContributionBranch:
+		repo.CreateContributionBranches(name)
+	case configdomain.BranchTypeObservedBranch:
+		repo.CreateObservedBranches(name)
+	case configdomain.BranchTypeParkedBranch:
+		repo.CreateParkedBranches(name)
 	}
 }

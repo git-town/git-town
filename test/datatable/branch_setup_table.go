@@ -10,7 +10,7 @@ import (
 
 type BranchSetup struct {
 	BranchType configdomain.BranchType
-	Locations  []testgit.Location
+	Locations  testgit.Locations
 	Name       gitdomain.LocalBranchName
 	Parent     Option[gitdomain.LocalBranchName]
 }
