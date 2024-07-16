@@ -1,14 +1,21 @@
 Feature: does not compress non-active parked branches in the stack
 
   Background:
-    Given parked branch "parked" with these commits
-      | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | local, origin | parked 1 | parked_1  | parked 1     |
-      |               | parked 2 | parked_2  | parked 2     |
-    And feature branch "child" as a child of "parked" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | child 1 | child_1   | child 1      |
-      |               | child 2 | child_2   | child 2      |
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | parked | parked |        | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | parked | local, origin | parked 1 | parked_1  | parked 1     |
+      |        |               | parked 2 | parked_2  | parked 2     |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | child | feature | parked | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | child  | local, origin | child 1 | child_1   | child 1      |
+      |        |               | child 2 | child_2   | child 2      |
     And the current branch is "child"
     And an uncommitted file
     When I run "git-town compress --stack"
