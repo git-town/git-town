@@ -26,7 +26,7 @@ type Fixture struct {
 	CoworkerRepo OptionP[testruntime.TestRuntime]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo testruntime.TestRuntime
+	DevRepo OptionP[testruntime.TestRuntime]
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
@@ -54,16 +54,17 @@ func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
 	self.CoworkerRepo = SomeP(&coworkerRepo)
 	initializeWorkspace(&coworkerRepo)
-	coworkerRepo.Verbose = self.DevRepo.Verbose
+	coworkerRepo.Verbose = self.DevRepo.GetOrPanic().Verbose
 }
 
 func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 	workTreePath := filepath.Join(self.Dir, "development_worktree")
-	self.DevRepo.AddWorktree(workTreePath, branch)
+	devRepo := self.DevRepo.GetOrPanic()
+	devRepo.AddWorktree(workTreePath, branch)
 	runner := subshell.TestRunner{
-		BinDir:     self.DevRepo.BinDir,
-		Verbose:    self.DevRepo.Verbose,
-		HomeDir:    self.DevRepo.HomeDir,
+		BinDir:     devRepo.BinDir,
+		Verbose:    devRepo.Verbose,
+		HomeDir:    devRepo.HomeDir,
 		WorkingDir: workTreePath,
 	}
 	gitCommands := git.Commands{
@@ -74,9 +75,9 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		TestCommands: commands.TestCommands{
 			TestRunner: &runner,
 			Commands:   &gitCommands,
-			Config:     self.DevRepo.Config,
+			Config:     devRepo.Config,
 		},
-		Config: self.DevRepo.Config,
+		Config: devRepo.Config,
 	})
 }
 
@@ -93,9 +94,10 @@ func (self *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (self *Fixture) AddUpstream() {
-	upstreamRepo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
+	devRepo := self.DevRepo.GetOrPanic()
+	upstreamRepo := testruntime.Clone(devRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
 	self.UpstreamRepo = SomeP(&upstreamRepo)
-	self.DevRepo.AddRemote(gitdomain.RemoteUpstream, upstreamRepo.WorkingDir)
+	devRepo.AddRemote(gitdomain.RemoteUpstream, upstreamRepo.WorkingDir)
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
@@ -104,7 +106,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches, err := self.DevRepo.LocalBranches()
+	localBranches, err := self.DevRepo.GetOrPanic().LocalBranches()
 	asserts.NoError(err)
 	localBranchesJoined := localBranches.RemoveWorktreeMarkers().Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()
@@ -127,7 +129,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits := self.DevRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
 		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
@@ -150,15 +152,16 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (self *Fixture) CreateCommits(commits []testgit.Commit) {
+	devRepo := self.DevRepo.GetOrPanic()
 	for _, commit := range commits {
 		switch {
 		case commit.Locations.Matches(testgit.LocationCoworker):
 			self.CoworkerRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal):
-			self.DevRepo.CreateCommit(commit)
+			devRepo.CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationLocal, testgit.LocationOrigin):
-			self.DevRepo.CreateCommit(commit)
-			self.DevRepo.PushBranch()
+			devRepo.CreateCommit(commit)
+			devRepo.PushBranch()
 		case commit.Locations.Matches(testgit.LocationOrigin):
 			self.OriginRepo.GetOrPanic().CreateCommit(commit)
 		case commit.Locations.Matches(testgit.LocationUpstream):
@@ -179,12 +182,13 @@ func (self Fixture) CreateTags(table *godog.Table) {
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
 		log.Fatalf("tag table must have columns NAME and LOCATION")
 	}
+	devRepo := self.DevRepo.GetOrPanic()
 	for _, row := range table.Rows[1:] {
 		name := row.Cells[0].Value
 		location := row.Cells[1].Value
 		switch location {
 		case "local":
-			self.DevRepo.CreateTag(name)
+			devRepo.CreateTag(name)
 		case "origin":
 			self.OriginRepo.GetOrPanic().CreateTag(name)
 		default:
@@ -200,7 +204,7 @@ func (self Fixture) Delete() {
 // TagTable provides a table for all tags in this Git environment.
 func (self Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
-	localTags := self.DevRepo.Tags()
+	localTags := self.DevRepo.GetOrPanic().Tags()
 	builder.AddMany(localTags, "local")
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originTags := originRepo.Tags()
