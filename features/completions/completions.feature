@@ -12,8 +12,8 @@ Feature: shell autocompletion
       """
 
     Examples:
-      | SHELL |
-      | fish  |
-# | bash       |
-# | zsh        |
-# | powershell |
+      | SHELL      |
+      | fish       |
+      | bash       |
+      | zsh        |
+      | powershell |

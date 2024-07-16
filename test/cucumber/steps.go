@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -33,6 +34,7 @@ import (
 	"github.com/git-town/git-town/v14/test/subshell"
 	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/google/go-cmp/cmp"
+	"github.com/kballard/go-shellquote"
 )
 
 // the global FixtureFactory instance.
@@ -119,7 +121,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
 		if helpers.HasTag(scenarioTags, "@debug") {
-			fixture.DevRepo.Verbose = true
+			fixture.DevRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
 			fixture:              fixture,
@@ -153,10 +155,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
+		devRepo := fixture.DevRepo.GetOrPanic()
 		if helpers.HasTag(scenarioTags, "@debug") {
-			fixture.DevRepo.Verbose = true
+			devRepo.Verbose = true
 		}
-		fixture.DevRepo.RemoveRemote(gitdomain.RemoteOrigin)
+		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
 		state := ScenarioState{
 			fixture:              fixture,
@@ -717,7 +720,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		// scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.ToString()
 		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
 		asserts.NoError(os.Mkdir(envPath, 0o777))
@@ -730,9 +733,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 			SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
 			UpstreamRepo:   NoneP[testruntime.TestRuntime](),
 		}
-		if helpers.HasTag(scenarioTags, "@debug") {
-			fixture.DevRepo.Verbose = true
-		}
+		// if helpers.HasTag(scenarioTags, "@debug") {
+		// 	fixture.DevRepo.Verbose = true
+		// }
 		state := ScenarioState{
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
@@ -784,15 +787,30 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
+		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+		if hasDevRepo {
+			state.CaptureState()
+			updateInitialSHAs(state)
+		}
 		var exitCode int
 		var runOutput string
-		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		if hasDevRepo {
+			runOutput, exitCode = devRepo.MustQueryStringCode(command)
+			devRepo.Config.Reload()
+		} else {
+			parts, err := shellquote.Split(command)
+			asserts.NoError(err)
+			cmd, args := parts[0], parts[1:]
+			subProcess := exec.Command(cmd, args...) // #nosec
+			subProcess.Dir = state.fixture.Dir
+			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+			outputBytes, err := subProcess.CombinedOutput()
+			asserts.NoError(err)
+			runOutput = string(outputBytes)
+			exitCode = subProcess.ProcessState.ExitCode()
+		}
 		state.runOutput = Some(runOutput)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -1505,7 +1523,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
 			switch {
 			case branchSetup.Locations.Is(git.LocationLocal), branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
-				repoToCreateBranchIn = &state.fixture.DevRepo
+				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
 			case branchSetup.Locations.Is(git.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
 			case branchSetup.Locations.Is(git.LocationUpstream):
@@ -1530,7 +1548,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			if len(branchSetup.Locations) > 1 {
 				switch {
 				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
-					state.fixture.DevRepo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 				default:
 					panic("unhandled location to push the new branch to: " + branchSetup.Locations.String())
 				}
