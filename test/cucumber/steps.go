@@ -941,7 +941,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
-			&devRepo,
+			devRepo,
 			state.fixture.OriginRepo.Value,
 			state.fixture.SecondWorktree.Value,
 			state.initialDevSHAs.GetOrPanic(),

@@ -16,7 +16,7 @@ func TestFixtureFactory(t *testing.T) {
 		factory := fixture.CreateFactory()
 		defer factory.Remove()
 		result := factory.CreateFixture("foo")
-		_, err := os.Stat(result.DevRepo.WorkingDir)
+		_, err := os.Stat(result.DevRepo.GetOrPanic().WorkingDir)
 		must.False(t, os.IsNotExist(err))
 	})
 }

@@ -118,7 +118,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "origin-file", commits[1].FileName)
 		must.EqOp(t, "origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
-		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.TestRunner)
+		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
 	})
@@ -136,7 +136,7 @@ func TestFixture(t *testing.T) {
 		must.NoError(t, err)
 		must.SliceContains(t, branches.Strings(), "b1")
 		// verify it isn't in the local branches
-		branches, err = cloned.DevRepo.LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
+		branches, err = cloned.DevRepo.GetOrPanic().LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
 		must.NoError(t, err)
 		must.SliceNotContains(t, branches.Strings(), "b1")
 	})
@@ -148,14 +148,15 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
 			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
+			clonedDevRepo := cloned.DevRepo.GetOrPanic()
 			// create a few commits
-			cloned.DevRepo.CreateCommit(git.Commit{
+			clonedDevRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
 				FileContent: "one",
 				FileName:    "local-origin.md",
 				Message:     "local-origin",
 			})
-			cloned.DevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
+			clonedDevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
 			cloned.OriginRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
 				FileContent: "two",
@@ -181,7 +182,7 @@ func TestFixture(t *testing.T) {
 			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 			cloned.AddUpstream()
 			// create a few commits
-			cloned.DevRepo.CreateCommit(git.Commit{
+			cloned.DevRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
 				FileContent: "one",
 				FileName:    "local.md",
