@@ -723,7 +723,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		asserts.NoError(os.Mkdir(envPath, 0o777))
 		fixture := fixture.Fixture{
 			CoworkerRepo:   NoneP[testruntime.TestRuntime](),
-			DevRepo:        testruntime.New(envPath, envPath, envPath),
+			DevRepo:        NoneP[testruntime.TestRuntime](),
 			Dir:            envPath,
 			OriginRepo:     NoneP[testruntime.TestRuntime](),
 			SecondWorktree: NoneP[testruntime.TestRuntime](),
