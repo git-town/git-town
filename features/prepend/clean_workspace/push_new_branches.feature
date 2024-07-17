@@ -1,8 +1,12 @@
 Feature: auto-push new branches
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
     Given Git Town setting "push-new-branches" is "true"
-    And the current branch is a feature branch "old"
+    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
