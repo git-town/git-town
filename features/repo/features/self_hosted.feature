@@ -1,6 +1,9 @@
 @skipWindows
 Feature: self hosted servie
 
+  Background:
+    Given a Git repo clone
+
   Scenario Outline:
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
