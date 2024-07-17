@@ -1,7 +1,11 @@
 Feature: observing the current branch
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | LOCATIONS |
+      | branch | feature | local     |
+    Given the current branch is "branch"
     And an uncommitted file
     When I run "git-town observe"
 

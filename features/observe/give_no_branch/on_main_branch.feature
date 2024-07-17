@@ -1,7 +1,8 @@
 Feature: cannot observe the main branch
 
   Background:
-    Given an uncommitted file
+    Given a Git repo clone
+    And an uncommitted file
     When I run "git-town observe"
 
   Scenario: result

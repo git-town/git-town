@@ -1,7 +1,11 @@
 Feature: observe a remote branch
 
   Background:
-    Given a known remote branch "remote-feature"
+    Given a Git repo clone
+    And the branches
+      | NAME           | TYPE    | PARENT | LOCATIONS |
+      | remote-feature | feature | main   | origin    |
+    And I run "git fetch"
     And an uncommitted file
     When I run "git-town observe remote-feature"
 
