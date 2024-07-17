@@ -1,5 +1,8 @@
 Feature: cannot set parent of perennial branches
 
+  Background:
+    Given a Git repo clone
+
   Scenario: on main branch
     When I run "git-town set-parent"
     Then it prints the error:
@@ -11,7 +14,10 @@ Feature: cannot set parent of perennial branches
     And the current branch is still "main"
 
   Scenario: on perennial branch
-    Given the current branch is a perennial branch "qa"
+    Given the branches
+      | NAME | TYPE      | LOCATIONS     |
+      | qa   | perennial | local, origin |
+    Given the current branch is "qa"
     When I run "git-town set-parent"
     Then it prints the error:
       """
