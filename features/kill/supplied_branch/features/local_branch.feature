@@ -1,8 +1,11 @@
 Feature: local branch
 
   Background:
-    Given my repo does not have an origin
-    And the local feature branches "dead" and "other"
+    Given a local Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | dead  | feature | main   | local     |
+      | other | feature | main   | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | dead   | local    | dead commit  |
