@@ -2,7 +2,11 @@
 Feature: print the URL when the browser crashes
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    Given the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town"
     And tool "open" is broken
     When I run "git-town propose"

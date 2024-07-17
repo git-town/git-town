@@ -1,8 +1,14 @@
 @skipWindows
 Feature: Bitbucket support
 
+  Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    Given the current branch is "feature"
+
   Scenario Outline: normal origin
-    Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town propose"
@@ -27,7 +33,6 @@ Feature: Bitbucket support
       | ssh://username@bitbucket.org/git-town/git-town       |
 
   Scenario Outline: origin includes path that looks like a URL
-    Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town propose"
