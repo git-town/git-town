@@ -1,8 +1,12 @@
 Feature: switch branches
 
   Scenario: switching to another branch while merging open changes
-    Given the current branch is a feature branch "current"
-    And a feature branch "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | current | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
+    Given the current branch is "current"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
