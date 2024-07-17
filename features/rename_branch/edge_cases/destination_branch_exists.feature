@@ -1,7 +1,13 @@
 Feature: destination branch exists
 
+  Background:
+    Given a Git repo clone
+
   Scenario: destination branch exists locally
-    Given the feature branches "alpha" and "beta"
+    Given the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
@@ -19,8 +25,11 @@ Feature: destination branch exists
     And the initial branches and lineage exist
 
   Scenario: destination branch exists in origin
-    Given the current branch is a feature branch "alpha"
-    And a remote branch "beta"
+    Given the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | origin        |
+    Given the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
