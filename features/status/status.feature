@@ -1,6 +1,9 @@
 @smoke
 Feature: describe the status of the current/last Git Town command
 
+  Background:
+    Given a Git repo clone
+
   Scenario: Git Town command ran successfully
     Given I ran "git-town sync"
     When I run "git-town status"
@@ -11,7 +14,10 @@ Feature: describe the status of the current/last Git Town command
       """
 
   Scenario: Git Town command in progress
-    Given the current branch is a feature branch "feature"
+    Given the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    Given the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
