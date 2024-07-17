@@ -1,7 +1,11 @@
 Feature: cannot ship observed branches
 
   Background:
-    Given the current branch is a observed branch "observed"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE     | LOCATIONS     |
+      | observed | observed | local, origin |
+    Given the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | observed | local, origin | observed commit |

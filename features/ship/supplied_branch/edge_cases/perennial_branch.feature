@@ -1,8 +1,10 @@
 Feature: does not ship perennial branches
 
   Background:
-    Given a perennial branch "production"
-    And the current branch is "main"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | PARENT | LOCATIONS     |
+      | production | perennial |        | local, origin |
     And an uncommitted file
     When I run "git-town ship production"
 

@@ -2,7 +2,11 @@
 Feature: shipping a parked branch
 
   Background:
-    Given the current branch is a parked branch "parked"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | parked | parked | main   | local, origin |
+    Given the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parked | local, origin | parked commit |

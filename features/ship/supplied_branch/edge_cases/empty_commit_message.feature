@@ -1,7 +1,11 @@
 Feature: abort the ship via empty commit message
 
   Background:
-    Given the feature branches "feature" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | main_file        | main content    |

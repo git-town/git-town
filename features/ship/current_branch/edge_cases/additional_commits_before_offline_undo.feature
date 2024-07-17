@@ -1,8 +1,12 @@
 Feature: undoing an offline ship with additional commits to main
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     Given offline mode is enabled
-    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

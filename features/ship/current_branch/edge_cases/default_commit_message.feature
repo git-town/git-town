@@ -1,7 +1,11 @@
 Feature: must provide a commit message
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    Given the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

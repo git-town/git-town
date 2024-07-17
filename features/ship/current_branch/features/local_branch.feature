@@ -1,7 +1,11 @@
 Feature: ship a local feature branch
 
   Background:
-    Given the current branch is a local feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+    Given the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

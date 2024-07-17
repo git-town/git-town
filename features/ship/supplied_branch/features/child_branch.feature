@@ -1,9 +1,13 @@
 Feature: does not ship a child branch
 
   Background:
-    Given the current branch is a feature branch "alpha"
-    And a feature branch "beta" as a child of "alpha"
-    And a feature branch "gamma" as a child of "beta"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
+      | gamma | feature | beta   | local, origin |
+    Given the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
