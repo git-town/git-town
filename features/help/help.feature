@@ -2,6 +2,7 @@
 Feature: help for commands
 
   Scenario Outline: known commands
+    Given I am outside a Git repo
     When I run "git-town help <COMMAND>"
     Then it prints:
       """
