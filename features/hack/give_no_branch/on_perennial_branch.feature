@@ -1,7 +1,11 @@
 Feature: cannot make the current perennial branch a feature branch
 
   Background:
-    Given the current branch is a perennial branch "perennial"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE      | LOCATIONS |
+      | perennial | perennial | local     |
+    Given the current branch is "perennial"
     When I run "git-town hack"
 
   Scenario: result

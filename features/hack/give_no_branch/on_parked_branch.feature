@@ -1,7 +1,11 @@
 Feature: making the current parked branch a feature branch
 
   Background:
-    Given the current branch is a parked branch "parked"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE   | PARENT | LOCATIONS |
+      | parked | parked | main   | local     |
+    Given the current branch is "parked"
     When I run "git-town hack"
 
   Scenario: result

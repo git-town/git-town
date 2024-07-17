@@ -1,7 +1,10 @@
 Feature: making a branch a feature branch
 
   Background:
-    Given a contribution branch "contribution"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | LOCATIONS |
+      | contribution | contribution | local     |
     When I run "git-town hack contribution"
 
   Scenario: result
