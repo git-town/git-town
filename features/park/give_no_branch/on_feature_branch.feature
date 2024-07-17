@@ -1,7 +1,11 @@
 Feature: parking the current branch
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
+    Given the current branch is "branch"
     And an uncommitted file
     When I run "git-town park"
 
