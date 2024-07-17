@@ -1,5 +1,8 @@
 Feature: undo changing offline mode
 
+  Background:
+    Given a Git repo clone
+
   Scenario: undo enabling offline mode
     Given I ran "git-town offline on"
     And global Git Town setting "offline" is now "true"
