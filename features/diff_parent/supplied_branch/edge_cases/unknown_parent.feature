@@ -2,7 +2,10 @@
 Feature: ask for missing parent
 
   Scenario: branch without parent
-    Given a branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     And the current branch is "main"
     When I run "git-town diff-parent feature" and enter into the dialog:
       | DIALOG                   | KEYS  |
