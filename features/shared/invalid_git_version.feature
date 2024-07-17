@@ -1,8 +1,11 @@
 @smoke
 Feature: require minimum Git version
 
+  Background:
+    Given a Git repo clone
+    And Git has version "2.29.2"
+
   Scenario Outline: using an unsupported Git Version
-    Given Git has version "2.29.2"
     When I run "git-town <COMMAND>"
     Then it prints the error:
       """
@@ -27,7 +30,6 @@ Feature: require minimum Git version
       | sync              |
 
   Scenario Outline: not requiring Git
-    Given Git has version "2.29.2"
     When I run "git-town <COMMAND>"
     Then it runs no commands
 

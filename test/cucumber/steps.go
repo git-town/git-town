@@ -748,7 +748,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			subProcess.Dir = state.fixture.Dir
 			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 			outputBytes, err := subProcess.CombinedOutput()
-			asserts.NoError(err)
 			runOutput = string(outputBytes)
 			exitCode = subProcess.ProcessState.ExitCode()
 		}
