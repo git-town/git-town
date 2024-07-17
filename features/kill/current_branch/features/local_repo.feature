@@ -1,8 +1,11 @@
 Feature: in a local repo
 
   Background:
-    Given my repo does not have an origin
-    And the local feature branches "feature" and "other"
+    Given a local Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

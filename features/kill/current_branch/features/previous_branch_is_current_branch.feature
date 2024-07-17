@@ -1,8 +1,12 @@
 Feature: killing a branch without a useful previous branch setting
 
   Background:
-    Given the current branch is a local feature branch "current"
-    And a local feature branch "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | current | feature | main   | local     |
+      | other   | feature | main   | local     |
+    Given the current branch is "current"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | current | local    | current commit |
