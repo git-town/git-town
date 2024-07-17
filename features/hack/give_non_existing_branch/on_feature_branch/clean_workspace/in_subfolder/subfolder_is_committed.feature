@@ -1,10 +1,14 @@
 Feature: inside a committed subfolder that exists only on the current feature branch
 
   Background:
-    Given the current branch is a feature branch "existing"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME              |
       | existing | local, origin | folder commit | committed_folder/file1 |
+    And the current branch is "existing"
     When I run "git-town hack new" in the "committed_folder" folder
 
   Scenario: result
