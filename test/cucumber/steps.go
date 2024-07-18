@@ -1478,15 +1478,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypeFeatureBranch:
 					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
 				case configdomain.BranchTypePerennialBranch:
-					repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreatePerennialBranch(branchSetup.Name)
 				case configdomain.BranchTypeContributionBranch:
-					repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateContributionBranch(branchSetup.Name)
 				case configdomain.BranchTypeObservedBranch:
-					repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateObservedBranch(branchSetup.Name)
 				case configdomain.BranchTypeParkedBranch:
-					repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateParkedBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
 				case configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreatePrototypeBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreatePrototypeBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
 				default:
 					panic("unhandled branch type: " + branchType.String())
 				}

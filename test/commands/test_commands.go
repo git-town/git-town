@@ -138,18 +138,15 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 }
 
 // CreateObservedBranches creates perennial branches with the given names in this repository.
-func (self *TestCommands) CreateContributionBranches(names ...gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	for _, name := range names {
-		self.CreateBranch(name, main)
-	}
-	asserts.NoError(self.Config.AddToContributionBranches(names...))
+func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
+	self.CreateBranch(name, "main")
+	asserts.NoError(self.Config.AddToContributionBranches(name))
 }
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
-func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) {
-	self.MustRun("git", "branch", name.String(), "main")
-	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", "main")
+func (self *TestCommands) CreateFeatureBranch(name, parent gitdomain.LocalBranchName) {
+	self.CreateBranch(name, parent)
+	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
 // CreateFile creates a file with the given name and content in this repository.
@@ -168,29 +165,21 @@ func (self *TestCommands) CreateFolder(name string) {
 }
 
 // CreateObservedBranches creates perennial branches with the given names in this repository.
-func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	for _, name := range names {
-		self.CreateBranch(name, main)
-	}
-	asserts.NoError(self.Config.AddToObservedBranches(names...))
+func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
+	self.CreateBranch(name, "main")
+	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
-// CreateParkedBranches creates parked branches with the given names in this repository.
-func (self *TestCommands) CreateParkedBranches(names ...gitdomain.LocalBranchName) {
-	for _, name := range names {
-		self.CreateFeatureBranch(name)
-	}
-	asserts.NoError(self.Config.AddToParkedBranches(names...))
+// CreateParkedBranches creates perennial branches with the given names in this repository.
+func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
+	self.CreateFeatureBranch(name, parent)
+	asserts.NoError(self.Config.AddToParkedBranches(name))
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	for _, name := range names {
-		self.CreateBranch(name, main)
-	}
-	asserts.NoError(self.Config.AddToPerennialBranches(names...))
+func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
+	self.CreateBranch(name, "main")
+	asserts.NoError(self.Config.AddToPerennialBranches(name))
 }
 
 // CreateParkedBranches creates perennial branches with the given names in this repository.
