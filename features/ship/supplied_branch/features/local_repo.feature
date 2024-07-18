@@ -1,12 +1,11 @@
 Feature: ship the supplied feature branch in a local repo
 
   Background:
-    Given a Git repo clone
+    Given a local Git repo clone
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-      | other   | feature | main   | local, origin |
-    And my repo does not have an origin
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |

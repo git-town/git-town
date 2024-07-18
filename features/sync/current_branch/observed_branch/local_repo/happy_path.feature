@@ -1,11 +1,10 @@
 Feature: sync the current observed branch in a local repo
 
   Background:
-    Given a Git repo clone
+    Given a local Git repo clone
     And the branches
-      | NAME  | TYPE     | LOCATIONS     |
-      | other | observed | local, origin |
-    And my repo does not have an origin
+      | NAME  | TYPE     | LOCATIONS |
+      | other | observed | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | main commit  | main_file  |
