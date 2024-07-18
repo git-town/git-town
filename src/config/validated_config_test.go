@@ -32,8 +32,8 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
-		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
+		repo.CreateFeatureBranch("feature1", "main")
+		repo.CreateFeatureBranch("feature2", "main")
 		repo.Config.Reload()
 		have := repo.Config.Config.Lineage
 		want := configdomain.NewLineage()
@@ -68,7 +68,7 @@ func TestValidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			branch := gitdomain.NewLocalBranchName("branch-1")
-			repo.CreateFeatureBranch(branch)
+			repo.CreateFeatureBranch(branch, "main")
 			repo.Config.Reload()
 			want := configdomain.NewLineage()
 			want.Add(branch, gitdomain.NewLocalBranchName("main"))
