@@ -676,9 +676,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
 			UpstreamRepo:   NoneP[testruntime.TestRuntime](),
 		}
-		// if helpers.HasTag(scenarioTags, "@debug") {
-		// 	fixture.DevRepo.Verbose = true
-		// }
 		state := ScenarioState{
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
