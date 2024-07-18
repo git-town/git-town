@@ -1,8 +1,7 @@
 Feature: sync the main branch in a local repo
 
   Background:
-    Given a Git repo clone
-    And my repo does not have an origin
+    Given a local Git repo clone
     And the current branch is "main"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |

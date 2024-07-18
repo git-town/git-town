@@ -1335,13 +1335,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^my repo does not have an origin$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		state.fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
-	})
-
 	sc.Step(`^my repo has a Git submodule$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
