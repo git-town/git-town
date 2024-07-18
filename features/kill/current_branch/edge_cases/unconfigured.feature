@@ -1,5 +1,6 @@
 Feature: ask for missing configuration
 
+  @this
   Scenario:
     Given Git Town is not configured
     When I run "git-town kill" and enter into the dialog:

@@ -19,6 +19,8 @@ type Commit struct {
 	SHA         gitdomain.SHA `exhaustruct:"optional"`
 }
 
+var counter helpers.AtomicCounter
+
 // Set assigns the given value to the property with the given Gherkin table name.
 func (self *Commit) Set(name, value string) {
 	switch name {
@@ -40,25 +42,24 @@ func (self *Commit) Set(name, value string) {
 }
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit(filenameSuffix string) Commit {
+func DefaultCommit() Commit {
 	return Commit{
 		Branch:      gitdomain.NewLocalBranchName("main"),
 		FileContent: "default file content",
-		FileName:    "default_file_name_" + filenameSuffix,
+		FileName:    "default_file_name_" + counter.ToString(),
 		Locations:   Locations{LocationLocal, LocationOrigin},
 		Message:     "default commit message",
 	}
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *godog.Table, branchName gitdomain.LocalBranchName) []Commit {
+func FromGherkinTable(table *godog.Table) []Commit {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""
 	result := []Commit{}
-	counter := helpers.AtomicCounter{}
 	for _, row := range table.Rows[1:] {
-		commit := DefaultCommit(branchName.String() + counter.ToString())
+		commit := DefaultCommit()
 		for cellNo, cell := range row.Cells {
 			columnName := columnNames[cellNo]
 			cellValue := cell.Value
