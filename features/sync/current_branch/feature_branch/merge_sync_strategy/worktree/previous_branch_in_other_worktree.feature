@@ -1,7 +1,11 @@
 Feature: sync a branch when the previous branch is active in another worktree
 
   Background:
-    Given the feature branches "current" and "previous"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | current  | feature | main   | local, origin |
+      | previous | feature | main   | local, origin |
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
     When I run "git-town sync"

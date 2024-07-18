@@ -1,8 +1,11 @@
 Feature: sync a branch whose parent is active in another worktree
 
   Background:
-    Given a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |

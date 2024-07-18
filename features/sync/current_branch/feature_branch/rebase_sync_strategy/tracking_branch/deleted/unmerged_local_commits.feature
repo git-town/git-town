@@ -1,8 +1,11 @@
 Feature: sync a branch with unshipped local changes whose tracking branch was deleted
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | shipped | feature | main   | local, origin |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And a feature branch "shipped"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE          |
       | shipped | local, origin | shipped commit   |

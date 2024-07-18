@@ -1,8 +1,12 @@
 Feature: sync the current feature branch without a tracking branch
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is a local feature branch "feature"
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |

@@ -1,9 +1,12 @@
 Feature: syncing a branch whose parent was shipped
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |

@@ -1,8 +1,12 @@
 Feature: display all executed Git commands
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | branch-1 | feature | main   | local, origin |
+      | branch-2 | feature | main   | local, origin |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And the feature branches "branch-1" and "branch-2"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |

@@ -1,9 +1,13 @@
 Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Background:
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE    | PARENT | LOCATIONS     |
+      | child      | feature | main   | local, origin |
+      | grandchild | feature | child  | local, origin |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is a feature branch "child"
-    And a feature branch "grandchild" as a child of "child"
+    And the current branch is "child"
     And the commits
       | BRANCH     | LOCATION | MESSAGE                       | FILE NAME        | FILE CONTENT       |
       | main       | local    | conflicting main commit       | conflicting_file | main content       |
