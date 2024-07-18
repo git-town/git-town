@@ -646,7 +646,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commit := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))[0]
+		commit := git.FromGherkinTable(table)[0]
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
 		devRepo.StageFiles(commit.FileName)
 		devRepo.CommitStagedChanges(commit.Message)
@@ -1532,8 +1532,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		// 	state.initialCommits = None[datatable.DataTable]()
 		// }
 		// create the commits
-		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
-		fmt.Printf("22222222222222222222222222222222222 %#v\n", commits)
+		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
@@ -1580,7 +1579,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
+		commits := git.FromGherkinTable(table)
 		commit := commits[0]
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
