@@ -166,8 +166,7 @@ func (self *TestCommands) CreateFolder(name string) {
 
 // CreateObservedBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	self.CreateBranch(name, main)
+	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
