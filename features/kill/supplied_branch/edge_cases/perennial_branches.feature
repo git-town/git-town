@@ -1,7 +1,13 @@
 Feature: does not kill perennial branches
 
+  Background:
+    Given a Git repo clone
+
   Scenario: main branch
-    Given the current branch is a feature branch "feature"
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    Given the current branch is "feature"
     When I run "git-town kill main"
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -14,7 +20,9 @@ Feature: does not kill perennial branches
     And the initial branches and lineage exist
 
   Scenario: perennial branch
-    Given a perennial branch "qa"
+    And the branches
+      | NAME | TYPE      | LOCATIONS     |
+      | qa   | perennial | local, origin |
     And the current branch is "main"
     When I run "git-town kill qa"
     Then it runs the commands

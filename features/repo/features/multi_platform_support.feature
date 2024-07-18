@@ -1,6 +1,9 @@
 @skipWindows
 Feature: multi-platform support
 
+  Background:
+    Given a Git repo clone
+
   Scenario Outline: supported tool installed
     Given the origin is "https://github.com/git-town/git-town.git"
     And tool "<TOOL>" is installed

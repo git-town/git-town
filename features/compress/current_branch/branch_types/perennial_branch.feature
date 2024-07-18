@@ -1,7 +1,11 @@
 Feature: does not compress perennial branches
 
-  Scenario: on main branch
-    Given the current branch is a perennial branch "perennial"
+  Scenario: on perennial branch
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE      | PARENT | LOCATIONS     |
+      | perennial | perennial |        | local, origin |
+    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | perennial | local, origin | commit 1 | file_1    | content 1    |
@@ -18,8 +22,9 @@ Feature: does not compress perennial branches
     And the initial commits exist
     And the initial branches and lineage exist
 
-  Scenario: on perennial branch
-    Given the commits
+  Scenario: on main branch
+    Given a Git repo clone
+    And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | main   | local, origin | commit 1 | file_1    | content 1    |
       |        |               | commit 2 | file_2    | content 2    |

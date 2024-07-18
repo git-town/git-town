@@ -1,7 +1,11 @@
 Feature: delete the current branch
 
   Background:
-    Given the feature branches "other" and "current"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | current | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |

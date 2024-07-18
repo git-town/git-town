@@ -1,8 +1,11 @@
 Feature: ship hotfixes
 
   Background:
-    Given a perennial branch "production"
-    And a feature branch "hotfix" as a child of "production"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | PARENT     | LOCATIONS     |
+      | production | perennial |            | local, origin |
+      | hotfix     | feature   | production | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | hotfix | local, origin | hotfix commit |

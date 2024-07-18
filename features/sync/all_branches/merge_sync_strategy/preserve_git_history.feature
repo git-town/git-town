@@ -1,7 +1,11 @@
 Feature: preserve the previous Git branch
 
   Background:
-    Given the feature branches "previous" and "current"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | previous | feature | main   | local, origin |
+      | current  | feature | main   | local, origin |
     And the current branch is "current" and the previous branch is "previous"
 
   Scenario: current branch gone, previous branch exists

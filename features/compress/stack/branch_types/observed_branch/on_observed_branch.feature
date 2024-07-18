@@ -1,14 +1,21 @@
 Feature: does not compress an active observed branch
 
   Background:
-    Given observed branch "observed" with these commits
-      | LOCATION      | MESSAGE    | FILE NAME  | FILE CONTENT |
-      | local, origin | observed 1 | observed_1 | observed 1   |
-      |               | observed 2 | observed_2 | observed 2   |
-    And feature branch "child" as a child of "observed" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | child 1 | child_1   | child 1      |
-      |               | child 2 | child_2   | child 2      |
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE     | PARENT | LOCATIONS     |
+      | observed | observed |        | local, origin |
+    And the commits
+      | BRANCH   | LOCATION      | MESSAGE    | FILE NAME  | FILE CONTENT |
+      | observed | local, origin | observed 1 | observed_1 | observed 1   |
+      |          |               | observed 2 | observed_2 | observed 2   |
+    And the branches
+      | NAME  | TYPE    | PARENT   | LOCATIONS     |
+      | child | feature | observed | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | child  | local, origin | child 1 | child_1   | child 1      |
+      |        |               | child 2 | child_2   | child 2      |
     And the current branch is "observed"
     And an uncommitted file
     When I run "git-town compress --stack"

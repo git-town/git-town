@@ -1,7 +1,8 @@
 Feature: two people with rebase strategy sync changes made by them
 
   Scenario: I and my coworker sync changes we both made to the same branch
-    Given the committed configuration file:
+    Given a Git repo clone
+    And the committed configuration file:
       """
       [sync-strategy]
       feature-branches = "rebase"
@@ -10,8 +11,11 @@ Feature: two people with rebase strategy sync changes made by them
       main = "main"
       perennials = []
       """
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
     And a coworker clones the repository
-    And the current branch is a feature branch "feature"
+    And the current branch is "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
     And the commits

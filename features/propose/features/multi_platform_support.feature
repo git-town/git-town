@@ -1,8 +1,14 @@
 @skipWindows
 Feature: support many browsers and operating systems
 
+  Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
+
   Scenario Outline:
-    Given the current branch is a feature branch "feature"
     And the origin is "https://github.com/git-town/git-town.git"
     And tool "<TOOL>" is installed
     When I run "git-town propose"
@@ -23,7 +29,6 @@ Feature: support many browsers and operating systems
       | netscape      |
 
   Scenario: no supported tool installed
-    Given the current branch is a feature branch "feature"
     And the origin is "https://github.com/git-town/git-town.git"
     And no tool to open browsers is installed
     When I run "git-town propose"

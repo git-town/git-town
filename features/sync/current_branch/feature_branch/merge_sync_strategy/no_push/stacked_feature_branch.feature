@@ -1,8 +1,12 @@
 Feature: syncing a stacked feature branch using --no-push
 
   Background:
-    Given a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | (none)  |        | local, origin |
+      | parent  | feature | main   | local, origin |
+      | child   | feature | parent | local, origin |
     And the current branch is "child"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |

@@ -1,5 +1,8 @@
 Feature: display the current offline status
 
+  Background:
+    Given a Git repo clone
+
   Scenario: default value
     When I run "git-town offline"
     Then it prints:

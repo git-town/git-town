@@ -1,7 +1,12 @@
 Feature: multiple shipped branches
 
   Background:
-    Given the feature branches "feature-1", "feature-2", and "feature-3"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+      | feature-3 | feature | main   | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |

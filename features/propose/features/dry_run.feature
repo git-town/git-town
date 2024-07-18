@@ -2,8 +2,12 @@
 Feature: dry-run proposing changes
 
   Scenario: proposing changes
-    Given tool "open" is installed
-    And the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And tool "open" is installed
+    And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose --dry-run"
     Then it runs the commands

@@ -1,7 +1,12 @@
 Feature: observing multiple branches
 
   Background:
-    Given the feature branches "feature-1", "feature-2", and "feature-3"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+      | feature-3 | feature | main   | local, origin |
     And an uncommitted file
     When I run "git-town observe feature-1 feature-2 feature-3"
 

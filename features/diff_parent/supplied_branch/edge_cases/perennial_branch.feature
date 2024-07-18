@@ -1,5 +1,8 @@
 Feature: does not diff perennial branches
 
+  Background:
+    Given a Git repo clone
+
   Scenario: main branch
     When I run "git-town diff-parent main"
     Then it runs no commands
@@ -9,7 +12,9 @@ Feature: does not diff perennial branches
       """
 
   Scenario: perennial branch
-    Given a perennial branch "qa"
+    Given the branches
+      | NAME | TYPE      | LOCATIONS |
+      | qa   | perennial | local     |
     When I run "git-town diff-parent qa"
     Then it runs no commands
     And it prints the error:

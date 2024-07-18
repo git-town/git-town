@@ -1,7 +1,11 @@
 Feature: skip deleting the remote branch when shipping another branch
 
   Background:
-    Given the feature branches "feature" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

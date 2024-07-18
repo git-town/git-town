@@ -1,7 +1,11 @@
 Feature: rename a branch to itself
 
   Background:
-    Given the current branch is a feature branch "old"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And the current branch is "old"
 
   Scenario: without force
     When I run "git-town rename-branch old"

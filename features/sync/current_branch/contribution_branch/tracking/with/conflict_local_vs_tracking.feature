@@ -1,7 +1,11 @@
 Feature: handle conflicts between the current contribution branch and its tracking branch
 
   Background:
-    Given the current branch is a contribution branch "contribution"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | LOCATIONS     |
+      | contribution | contribution | local, origin |
+    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | contribution | local    | conflicting local commit  | conflicting_file | local content  |

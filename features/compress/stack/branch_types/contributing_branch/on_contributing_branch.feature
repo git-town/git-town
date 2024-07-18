@@ -1,14 +1,21 @@
 Feature: does not compress the active contribution branch
 
   Background:
-    Given contribution branch "contribution" with these commits
-      | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT   |
-      | local, origin | contribution 1 | contribution_1 | contribution 1 |
-      |               | contribution 2 | contribution_2 | contribution 2 |
-    And feature branch "child" as a child of "contribution" has these commits
-      | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | local, origin | child 1 | child_1   | child 1      |
-      |               | child 2 | child_2   | child 2      |
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | contribution | contribution |        | local, origin |
+    And the commits
+      | BRANCH       | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT   |
+      | contribution | local, origin | contribution 1 | contribution_1 | contribution 1 |
+      |              |               | contribution 2 | contribution_2 | contribution 2 |
+    And the branches
+      | NAME  | TYPE    | PARENT       | LOCATIONS     |
+      | child | feature | contribution | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
+      | child  | local, origin | child 1 | child_1   | child 1      |
+      |        |               | child 2 | child_2   | child 2      |
     And the current branch is "contribution"
     And an uncommitted file
     When I run "git-town compress --stack"

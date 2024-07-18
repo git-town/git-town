@@ -1,7 +1,8 @@
 Feature: offline mode
 
   Background:
-    Given offline mode is enabled
+    Given a Git repo clone
+    And offline mode is enabled
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

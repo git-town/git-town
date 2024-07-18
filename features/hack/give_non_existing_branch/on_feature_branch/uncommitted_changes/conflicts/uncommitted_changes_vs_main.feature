@@ -1,7 +1,11 @@
 Feature: conflicts between uncommitted changes and the main branch
 
   Background:
-    Given the current branch is a feature branch "existing"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | existing | feature | main   | local, origin |
+    And the current branch is "existing"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |

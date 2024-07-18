@@ -1,7 +1,13 @@
 Feature: sync a branch whose tracking branch was shipped in offline mode
 
   Background:
-    Given the feature branches "feature-1" and "feature-2"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature   | feature | main   | local, origin |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+    And the current branch is "feature"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |

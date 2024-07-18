@@ -2,7 +2,11 @@
 Feature: delete another than the current branch
 
   Background:
-    Given the feature branches "good" and "dead"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | good | feature | main   | local, origin |
+      | dead | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        |
       | main   | local, origin | conflicting commit | conflicting_file |

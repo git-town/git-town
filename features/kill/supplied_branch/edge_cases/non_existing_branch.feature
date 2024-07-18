@@ -1,7 +1,7 @@
 Feature: non-existing branch
 
   Scenario:
-    Given the current branch is "main"
+    Given a Git repo clone
     And an uncommitted file
     When I run "git-town kill non-existing"
     Then it runs the commands

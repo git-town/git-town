@@ -2,8 +2,12 @@
 Feature: "rebase" sync-feature strategy
 
   Background:
-    Given Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And Git Town setting "sync-feature-strategy" is "rebase"
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

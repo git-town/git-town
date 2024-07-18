@@ -1,7 +1,12 @@
 Feature: handle rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given the perennial branches "alpha", "beta", and "gamma"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE      | LOCATIONS     |
+      | alpha | perennial | local, origin |
+      | beta  | perennial | local, origin |
+      | gamma | perennial | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |

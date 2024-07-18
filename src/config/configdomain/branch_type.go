@@ -1,6 +1,9 @@
 package configdomain
 
-import "github.com/git-town/git-town/v14/src/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+)
 
 type BranchType int
 
@@ -14,24 +17,26 @@ const (
 	BranchTypePrototypeBranch
 )
 
-func NewBranchType(name string) BranchType {
+func NewBranchType(name string) Option[BranchType] {
 	switch name {
 	case "contribution":
-		return BranchTypeContributionBranch
+		return Some(BranchTypeContributionBranch)
 	case "feature":
-		return BranchTypeFeatureBranch
+		return Some(BranchTypeFeatureBranch)
 	case "main":
-		return BranchTypeMainBranch
+		return Some(BranchTypeMainBranch)
 	case "observed":
-		return BranchTypeObservedBranch
+		return Some(BranchTypeObservedBranch)
 	case "parked":
-		return BranchTypeParkedBranch
+		return Some(BranchTypeParkedBranch)
 	case "perennial":
-		return BranchTypePerennialBranch
+		return Some(BranchTypePerennialBranch)
 	case "prototype":
-		return BranchTypePrototypeBranch
+		return Some(BranchTypePrototypeBranch)
+	case "(none)":
+		return None[BranchType]()
 	}
-	panic("unhandled branch type: " + name)
+	panic("unknown branch type: " + name)
 }
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.

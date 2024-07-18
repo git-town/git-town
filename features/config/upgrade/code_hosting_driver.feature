@@ -1,7 +1,8 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given <LOCATION> Git Town setting "code-hosting-driver" is "github"
+    Given a Git repo clone
+    And <LOCATION> Git Town setting "code-hosting-driver" is "github"
     When I run "git-town config"
     Then it prints:
       """

@@ -1,7 +1,7 @@
 Feature: cannot make the current main branch a feature branch
 
   Background:
-    Given the current branch is "main"
+    Given a Git repo clone
     When I run "git-town hack"
 
   Scenario: result

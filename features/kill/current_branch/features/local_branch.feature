@@ -1,7 +1,11 @@
 Feature: delete a local branch
 
   Background:
-    Given the local feature branches "current" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | current | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION | MESSAGE      |
       | current | local    | local commit |

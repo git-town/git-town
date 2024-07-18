@@ -1,7 +1,8 @@
 Feature: on the main branch with an upstream repo
 
   Background:
-    Given an upstream repo
+    Given a Git repo clone
+    And an upstream repo
     And the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
