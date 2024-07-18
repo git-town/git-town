@@ -19,7 +19,7 @@ type Commit struct {
 	SHA         gitdomain.SHA `exhaustruct:"optional"`
 }
 
-var counter helpers.AtomicCounter
+var counter helpers.AtomicCounter //nolint:gochecknoglobals
 
 // Set assigns the given value to the property with the given Gherkin table name.
 func (self *Commit) Set(name, value string) {
