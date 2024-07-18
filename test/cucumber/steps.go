@@ -654,7 +654,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commit := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))[0]
+		commit := git.FromGherkinTable(table)[0]
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
 		devRepo.StageFiles(commit.FileName)
 		devRepo.CommitStagedChanges(commit.Message)
@@ -1449,7 +1449,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		initialTable := datatable.FromGherkin(table)
 		state.initialCommits = Some(initialTable)
 		// create the commits
-		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
+		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
@@ -1511,7 +1511,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
+		commits := git.FromGherkinTable(table)
 		commit := commits[0]
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
@@ -1644,7 +1644,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		devRepo.CheckoutBranch(branchName)
 		devRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table, branchName) {
+		for _, commit := range git.FromGherkinTable(table) {
 			devRepo.CreateFile(commit.FileName, commit.FileContent)
 			devRepo.StageFiles(commit.FileName)
 			devRepo.CommitStagedChanges(commit.Message)
@@ -1662,7 +1662,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateChildFeatureBranch(branch, parentBranch)
 		devRepo.CheckoutBranch(branch)
 		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table, branch) {
+		for _, commit := range git.FromGherkinTable(table) {
 			devRepo.CreateFile(commit.FileName, commit.FileContent)
 			devRepo.StageFiles(commit.FileName)
 			devRepo.CommitStagedChanges(commit.Message)
