@@ -1450,6 +1450,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.initialCommits = Some(initialTable)
 		// create the commits
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
+		fmt.Printf("1111111111111111111111 %#v\n", commits)
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()

@@ -73,7 +73,7 @@ func FromGherkinTable(table *godog.Table, branchName gitdomain.LocalBranchName) 
 			FileContent: None[string](),
 			FileName:    None[string](),
 			Locations:   None[Locations](),
-			Message:     "",
+			Message:     "default commit message",
 			SHA:         None[gitdomain.SHA](),
 		}
 		for cellNo, cell := range row.Cells {

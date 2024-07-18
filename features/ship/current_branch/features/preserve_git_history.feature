@@ -3,7 +3,6 @@ Feature: preserve the previous Git branch
   Background:
     Given the feature branches "previous" and "current"
 
-  @this
   Scenario: current branch gone
     And the commits
       | BRANCH  | LOCATION |
