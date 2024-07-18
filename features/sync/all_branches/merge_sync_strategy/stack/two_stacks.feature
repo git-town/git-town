@@ -24,37 +24,37 @@ Feature: sync a workspace with two independent stacks
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | four | feature | three  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME |
-      | four   | local, origin | four    |           |
+      | BRANCH | LOCATION      | MESSAGE |
+      | four   | local, origin | four    |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | first | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME |
-      | first  | local, origin | first 1 |           |
+      | BRANCH | LOCATION      | MESSAGE |
+      | first  | local, origin | first 1 |
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | second | feature | first  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  | FILE NAME |
-      | second | local, origin | second 1 |           |
+      | BRANCH | LOCATION      | MESSAGE  |
+      | second | local, origin | second 1 |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | third | feature | second | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME |
-      | third  | local, origin | third 1 |           |
+      | BRANCH | LOCATION      | MESSAGE |
+      | third  | local, origin | third 1 |
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | fourth | feature | third  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  | FILE NAME |
-      | fourth | local, origin | fourth 1 |           |
+      | BRANCH | LOCATION      | MESSAGE  |
+      | fourth | local, origin | fourth 1 |
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                |
