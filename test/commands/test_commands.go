@@ -178,8 +178,7 @@ func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchN
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	self.CreateBranch(name, main)
+	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToPerennialBranches(name))
 }
 
