@@ -66,6 +66,7 @@ const (
 	KeyParkedBranches                      = Key("git-town.parked-branches")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
+	KeyPrototypeBranches                   = Key("git-town.prototype-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
 	KeyPushNewBranches                     = Key("git-town.push-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")

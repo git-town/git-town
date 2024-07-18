@@ -1485,6 +1485,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 					repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
 				case configdomain.BranchTypeParkedBranch:
 					repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+				case configdomain.BranchTypePrototypeBranch:
+					repoToCreateBranchIn.CreatePrototypeBranches(branchSetup.Name)
+				default:
+					panic("unhandled branch type: " + branchType.String())
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")

@@ -176,7 +176,7 @@ func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchN
 	asserts.NoError(self.Config.AddToObservedBranches(names...))
 }
 
-// CreateParkedBranches creates perennial branches with the given names in this repository.
+// CreateParkedBranches creates parked branches with the given names in this repository.
 func (self *TestCommands) CreateParkedBranches(names ...gitdomain.LocalBranchName) {
 	for _, name := range names {
 		self.CreateFeatureBranch(name)
@@ -191,6 +191,14 @@ func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranch
 		self.CreateBranch(name, main)
 	}
 	asserts.NoError(self.Config.AddToPerennialBranches(names...))
+}
+
+// CreateParkedBranches creates perennial branches with the given names in this repository.
+func (self *TestCommands) CreatePrototypeBranches(names ...gitdomain.LocalBranchName) {
+	for _, name := range names {
+		self.CreateFeatureBranch(name)
+	}
+	asserts.NoError(self.Config.AddToPrototypeBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
