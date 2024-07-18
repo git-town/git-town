@@ -32,7 +32,7 @@ func (self Commit) GetFileContent() string {
 	if content, hasContent := self.FileContent.Get(); hasContent {
 		return content
 	}
-	return fmt.Sprintf("default file content for file %s in branch %s", self.GetFileName(), self.Branch)
+	return fmt.Sprintf("default file content for file %q in branch %q", self.GetFileName(), self.Branch)
 }
 
 func (self Commit) GetFileName() string {
