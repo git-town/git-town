@@ -20,6 +20,8 @@ func syncDeletedBranchProgram(list Mutable[program.Program], branch gitdomain.Lo
 		syncDeletedPerennialBranchProgram(list, branch, args)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
 		syncDeletedObservedBranchProgram(list, branch, args)
+	case configdomain.BranchTypePrototypeBranch:
+		syncDeletedPrototypeBranchProgram(list, branch, args)
 	}
 }
 
@@ -50,6 +52,19 @@ func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitd
 }
 
 func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
+		Branch:  branch,
+		Lineage: args.Config.Lineage,
+		Parent:  args.Config.MainBranch,
+		Program: list,
+	})
+	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
+	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch})
+	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
+	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
+}
+
+func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
