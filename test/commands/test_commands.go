@@ -145,7 +145,7 @@ func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchNam
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (self *TestCommands) CreateFeatureBranch(name, parent gitdomain.LocalBranchName) {
-	self.MustRun("git", "branch", name.String(), parent.String())
+	self.CreateBranch(name, parent)
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
