@@ -6,14 +6,14 @@ Feature: sync a workspace with two independent stacks
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | one  | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME |
-      | one    | local, origin | one     | one       |
+      | BRANCH | LOCATION      | MESSAGE |
+      | one    | local, origin | one     |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | two  | feature | one    | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME |
-      | two    | local, origin | two     | two       |
+      | BRANCH | LOCATION      | MESSAGE |
+      | two    | local, origin | two     |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | three | feature | two    | local, origin |
@@ -54,7 +54,6 @@ Feature: sync a workspace with two independent stacks
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                |

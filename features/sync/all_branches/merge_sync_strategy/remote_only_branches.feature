@@ -1,8 +1,11 @@
 Feature: does not sync branches that exist only on remotes
 
   Background:
-    Given a feature branch "mine"
-    And a remote branch "other"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | mine  | feature | main   | local, origin |
+      | other | feature | main   | origin        |
     And the commits
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | origin        | main commit     |
