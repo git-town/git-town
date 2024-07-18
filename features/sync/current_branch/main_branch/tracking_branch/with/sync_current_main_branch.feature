@@ -3,9 +3,9 @@ Feature: sync the main branch
   Background:
     Given the current branch is "main"
     And the commits
-      | LOCATION | MESSAGE       | FILE NAME   |
-      | local    | local commit  | local_file  |
-      | origin   | origin commit | origin_file |
+      | BRANCH | LOCATION | MESSAGE       | FILE NAME   |
+      | main   | local    | local commit  | local_file  |
+      |        | origin   | origin commit | origin_file |
     And an uncommitted file
     When I run "git-town sync"
 
