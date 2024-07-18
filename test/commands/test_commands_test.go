@@ -104,8 +104,8 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreateChildFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
-		runtime.CreateChildFeatureBranch(gitdomain.NewLocalBranchName("f1a"), gitdomain.NewLocalBranchName("f1"))
+		runtime.CreateFeatureBranch("f1", "main")
+		runtime.CreateChildFeatureBranch("f1a", "f1")
 		output, err := runtime.TestRunner.QueryTrim("git-town", "config")
 		must.NoError(t, err)
 		output = stripansi.Strip(output)
@@ -155,7 +155,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreateFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
+		runtime.CreateFeatureBranch("f1", "main")
 		runtime.Config.Reload()
 		must.False(t, runtime.Config.Config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Config.Lineage
@@ -187,7 +187,8 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreatePerennialBranches", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		runtime.CreatePerennialBranches(gitdomain.NewLocalBranchName("p1"), gitdomain.NewLocalBranchName("p2"))
+		runtime.CreatePerennialBranch("p1")
+		runtime.CreatePerennialBranch("p2")
 		branches, err := runtime.LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("main", "initial", "p1", "p2")
@@ -321,7 +322,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch lineage is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewLocalBranchName("initial"))
-			runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("foo"))
+			runtime.CreateFeatureBranch("foo", "main")
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 	})
