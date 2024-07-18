@@ -1,8 +1,11 @@
 Feature: local repository
 
   Background:
-    Given my repo does not have an origin
-    And the local feature branches "good" and "other"
+    Given a local Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | good  | feature | main   | local     |
+      | other | feature | main   | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        |
       | main   | local    | main commit  | conflicting_file |

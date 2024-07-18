@@ -1,6 +1,7 @@
 Feature: too few or many parameters
 
   Scenario Outline:
+    Given I am outside a Git repo
     When I run "git-town <CMD>"
     Then it runs no commands
     And it prints the error:

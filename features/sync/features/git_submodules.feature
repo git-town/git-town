@@ -1,8 +1,12 @@
 Feature: on a feature branch in a repository with a submodule that has uncommitted changes
 
   Background:
-    Given my repo has a Git submodule
-    And the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And my repo has a Git submodule
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And an uncommitted file with name "submodule/file" and content "a change in the submodule"
     When I run "git-town sync"
 

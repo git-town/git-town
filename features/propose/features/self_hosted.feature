@@ -1,11 +1,17 @@
 @skipWindows
 Feature: self-hosted service
 
+  Background:
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
+
   Scenario Outline: self hosted
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git Town setting "hosting-platform" is "<PLATFORM>"
-    And the current branch is a feature branch "feature"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """
@@ -22,7 +28,6 @@ Feature: self-hosted service
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
     And Git Town setting "hosting-platform" is "gitlab"
-    And the current branch is a feature branch "feature"
     And tool "open" is installed
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:

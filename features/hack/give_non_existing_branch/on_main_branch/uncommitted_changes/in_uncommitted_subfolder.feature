@@ -1,7 +1,8 @@
 Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
-    Given the commits
+    Given a Git repo clone
+    And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And an uncommitted file with name "uncommitted_folder/uncommitted" and content "uncommitted"

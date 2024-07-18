@@ -1,8 +1,12 @@
 Feature: with upstream repo
 
   Background:
-    Given an upstream repo
-    And the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And an upstream repo
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |

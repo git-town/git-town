@@ -1,9 +1,14 @@
 Feature: reset the configuration
 
   Scenario: with configuration
-    Given the main branch is "main"
-    And the current branch is a feature branch "feature"
-    And the perennial branches are "qa" and "staging"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE      | PARENT | LOCATIONS |
+      | feature | feature   | main   | local     |
+      | qa      | perennial |        | local     |
+      | staging | perennial |        | local     |
+    And the main branch is "main"
+    And the current branch is "feature"
     And global Git setting "alias.hack" is "town hack"
     And global Git setting "alias.sync" is "town sync"
     And global Git setting "alias.append" is "commit --amend"
@@ -16,6 +21,7 @@ Feature: reset the configuration
     And global Git setting "alias.append" is still "commit --amend"
 
   Scenario: no configuration
-    Given Git Town is not configured
+    Given a Git repo clone
+    And Git Town is not configured
     When I run "git-town config remove"
     Then Git Town is no longer configured

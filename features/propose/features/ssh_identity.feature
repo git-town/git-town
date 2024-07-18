@@ -2,10 +2,14 @@
 Feature: use a SSH identity
 
   Scenario Outline: ssh identity
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
     And tool "open" is installed
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git Town setting "hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
-    And the current branch is a feature branch "feature"
+    And the current branch is "feature"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """

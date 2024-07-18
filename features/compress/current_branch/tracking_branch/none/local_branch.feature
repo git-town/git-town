@@ -1,7 +1,11 @@
 Feature: compress the commits on a local feature branch
 
   Background:
-    Given the current branch is a local feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local    | commit 1 | file_1    | content 1    |

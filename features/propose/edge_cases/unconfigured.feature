@@ -1,7 +1,8 @@
 Feature: ask for missing configuration
 
   Background:
-    Given Git Town is not configured
+    Given a Git repo clone
+    And Git Town is not configured
     And the origin is "https://github.com/git-town/git-town.git"
     When I run "git-town propose" and enter into the dialog:
       | DIALOG      | KEYS  |

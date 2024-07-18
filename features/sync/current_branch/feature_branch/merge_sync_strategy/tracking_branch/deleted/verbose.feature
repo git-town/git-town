@@ -1,7 +1,11 @@
 Feature: display all executed Git commands
 
   Background:
-    Given the feature branches "active" and "old"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | active | feature | main   | local, origin |
+      | old    | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |

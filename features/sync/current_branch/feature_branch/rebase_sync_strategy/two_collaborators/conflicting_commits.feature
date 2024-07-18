@@ -1,7 +1,8 @@
 Feature: two people using rebase make conflicting changes to a branch
 
   Scenario: I and my coworker work together on a branch
-    Given the committed configuration file:
+    Given a Git repo clone
+    And the committed configuration file:
       """
       [sync-strategy]
       feature-branches = "rebase"
@@ -10,7 +11,10 @@ Feature: two people using rebase make conflicting changes to a branch
       main = "main"
       perennials = []
       """
-    And the current branch is a feature branch "feature"
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And a coworker clones the repository
     And the coworker fetches updates
     And the coworker is on the "feature" branch

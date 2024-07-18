@@ -1,7 +1,8 @@
 Feature: branch does not exist
 
   Scenario:
-    Given the commits
+    Given a Git repo clone
+    And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And the current branch is "main"

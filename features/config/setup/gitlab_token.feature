@@ -1,6 +1,9 @@
 @messyoutput
 Feature: enter the GitLab API token
 
+  Background:
+    Given a Git repo clone
+
   Scenario: auto-detected GitLab platform
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:

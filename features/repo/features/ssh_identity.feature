@@ -2,7 +2,8 @@
 Feature: use an SSH identity
 
   Scenario Outline:
-    Given tool "open" is installed
+    Given a Git repo clone
+    And tool "open" is installed
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git Town setting "hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
     When I run "git-town repo"

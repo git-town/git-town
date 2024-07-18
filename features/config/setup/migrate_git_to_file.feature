@@ -2,7 +2,10 @@
 Feature: migrate existing configuration in Git metadata to a config file
 
   Background:
-    Given a perennial branch "qa"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE      | LOCATIONS     |
+      | qa   | perennial | local, origin |
     And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
     And local Git Town setting "push-new-branches" is "false"

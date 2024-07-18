@@ -2,7 +2,11 @@
 Feature: enter a parent branch name when prompted
 
   Background:
-    Given the branches "alpha" and "beta"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE   | LOCATIONS     |
+      | alpha | (none) | local, origin |
+      | beta  | (none) | local, origin |
     And the current branch is "beta"
 
   Scenario: choose the default branch name

@@ -1,7 +1,8 @@
 Feature: offline mode
 
   Scenario:
-    Given offline mode is enabled
+    Given a Git repo clone
+    And offline mode is enabled
     When I run "git-town propose"
     Then it prints the error:
       """

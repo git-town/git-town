@@ -1,7 +1,8 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given <LOCATION> Git Town setting "perennial-branch-names" is "one two"
+    Given a Git repo clone
+    And <LOCATION> Git Town setting "perennial-branch-names" is "one two"
     When I run "git-town <COMMAND>"
     Then it prints:
       """

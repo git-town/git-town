@@ -1,8 +1,11 @@
 Feature: sync the current contribution branch in a local repo
 
   Background:
-    Given my repo does not have an origin
-    And the current branch is a local contribution branch "contribution"
+    Given a local Git repo clone
+    And the branches
+      | NAME         | TYPE         | LOCATIONS |
+      | contribution | contribution | local     |
+    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION | MESSAGE      | FILE NAME  |
       | main         | local    | main commit  | main_file  |

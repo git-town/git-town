@@ -1,7 +1,8 @@
 Feature: display all executed Git commands
 
   Scenario: Git Town command ran successfully
-    Given I ran "git-town sync"
+    Given a Git repo clone
+    And I ran "git-town sync"
     When I run "git-town status --verbose"
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                            |

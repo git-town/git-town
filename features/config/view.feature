@@ -1,13 +1,23 @@
 @smoke
 Feature: show the configuration
 
+  Background:
+    Given a Git repo clone
+
   Scenario: all configured in Git, no stacked changes
-    Given the main branch is "main"
-    And the perennial branches are "qa" and "staging"
+    Given the branches
+      | NAME           | TYPE         | PARENT | LOCATIONS |
+      | feature        | feature      | main   | local     |
+      | qa             | perennial    |        | local     |
+      | staging        | perennial    |        | local     |
+      | observed-1     | observed     |        | local     |
+      | observed-2     | observed     |        | local     |
+      | contribution-1 | contribution |        | local     |
+      | contribution-2 | contribution |        | local     |
+      | parked-1       | parked       |        | local     |
+      | parked-2       | parked       |        | local     |
+    And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
-    And the observed branches "observed-1" and "observed-2"
-    And the contribution branches "contribution-1" and "contribution-2"
-    And the parked branches "parked-1" and "parked-2"
     When I run "git-town config"
     Then it prints:
       """
@@ -37,7 +47,7 @@ Feature: show the configuration
       """
 
   Scenario: all configured in config file
-    Given the configuration file:
+    And the configuration file:
       """
       push-new-branches = true
       ship-delete-tracking-branch = true
@@ -85,11 +95,17 @@ Feature: show the configuration
       """
 
   Scenario: configured in both Git and config file
-    Given the main branch is "git-main"
-    And the perennial branches are "git-perennial-1" and "git-perennial-2"
-    And the observed branches "observed-1" and "observed-2"
-    And the contribution branches "contribution-1" and "contribution-2"
-    And the parked branches "parked-1" and "parked-2"
+    Given the branches
+      | NAME            | TYPE         | PARENT | LOCATIONS |
+      | git-perennial-1 | perennial    |        | local     |
+      | git-perennial-2 | perennial    |        | local     |
+      | observed-1      | observed     |        | local     |
+      | observed-2      | observed     |        | local     |
+      | contribution-1  | contribution |        | local     |
+      | contribution-2  | contribution |        | local     |
+      | parked-1        | parked       | main   | local     |
+      | parked-2        | parked       | main   | local     |
+    And the main branch is "git-main"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-delete-tracking-branch" is "false"
@@ -144,10 +160,14 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with stacked changes
-    Given the perennial branches "qa" and "staging"
-    And the feature branches "alpha" and "beta"
-    And a feature branch "child" as a child of "alpha"
-    And a feature branch "hotfix" as a child of "qa"
+    Given the branches
+      | NAME    | TYPE      | PARENT | LOCATIONS |
+      | alpha   | feature   | main   | local     |
+      | qa      | perennial |        | local     |
+      | staging | perennial |        | local     |
+      | beta    | feature   | main   | local     |
+      | child   | feature   | alpha  | local     |
+      | hotfix  | feature   | qa     | local     |
     When I run "git-town config"
     Then it prints:
       """

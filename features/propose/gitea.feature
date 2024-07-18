@@ -2,10 +2,14 @@
 Feature: Gitea support
 
   Background:
-    Given tool "open" is installed
+    Given a Git repo clone
+    And tool "open" is installed
 
   Scenario Outline: normal origin
-    Given the current branch is a feature branch "feature"
+    Given the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -25,7 +29,10 @@ Feature: Gitea support
       | ssh://git@gitea.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given the current branch is a feature branch "feature"
+    Given the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -43,7 +50,10 @@ Feature: Gitea support
       | git@gitea.com:git-town/git-town.gitea.com         |
 
   Scenario Outline: proper URL encoding
-    Given the current branch is a feature branch "<BRANCH_NAME>"
+    Given the branches
+      | NAME          | TYPE    | PARENT | LOCATIONS     |
+      | <BRANCH_NAME> | feature | main   | local, origin |
+    And the current branch is "<BRANCH_NAME>"
     And the origin is "https://gitea.com/git-town/git-town"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -59,8 +69,10 @@ Feature: Gitea support
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
   Scenario: stacked change with known parent
-    Given a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+    Given the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And the origin is "git@gitea.com:git-town/git-town.git"
     And the current branch is "child"
     When I run "git-town propose"

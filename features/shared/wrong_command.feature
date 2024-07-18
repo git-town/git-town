@@ -1,5 +1,8 @@
 Feature: show all available commands
 
+  Background:
+    Given I am outside a Git repo
+
   Scenario: no command
     When I run "git-town"
     Then it prints:

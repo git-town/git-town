@@ -1,7 +1,8 @@
 Feature: cannot make the main branch a contribution branch
 
   Background:
-    Given an uncommitted file
+    Given a Git repo clone
+    And an uncommitted file
     When I run "git-town contribute"
 
   Scenario: result

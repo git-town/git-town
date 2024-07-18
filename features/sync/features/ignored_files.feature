@@ -1,7 +1,11 @@
 Feature: ignore files
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |

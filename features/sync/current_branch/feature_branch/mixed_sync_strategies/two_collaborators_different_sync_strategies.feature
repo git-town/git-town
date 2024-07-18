@@ -1,8 +1,12 @@
 Feature: compatibility between different sync-feature-strategy settings
 
   Scenario: I use rebase and my coworker uses merge
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
     Given Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is a feature branch "feature"
+    And the current branch is "feature"
     And a coworker clones the repository
     And the coworker fetches updates
     And the coworker sets the "sync-feature-strategy" to "merge"
