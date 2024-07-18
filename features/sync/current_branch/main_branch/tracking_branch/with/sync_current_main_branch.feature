@@ -1,11 +1,11 @@
 Feature: sync the main branch
 
   Background:
-    Given the current branch is "main"
-    And the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE       | FILE NAME   |
       | main   | local    | local commit  | local_file  |
       |        | origin   | origin commit | origin_file |
+    And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync"
 
