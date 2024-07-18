@@ -1,8 +1,12 @@
 Feature: remove parent entries for perennial branches
 
   Scenario: parent branch entry for a perennial branch exists
-    Given the current branch is a local feature branch "feature-1"
-    And the local feature branch "feature-2"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS |
+      | feature-1 | feature | main   | local     |
+      | feature-2 | feature | main   | local     |
+    Given the current branch is "feature-1"
     And the configuration file:
       """
       [branches]

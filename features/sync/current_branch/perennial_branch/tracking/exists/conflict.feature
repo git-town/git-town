@@ -1,7 +1,11 @@
 Feature: handle conflicts between the current perennial branch and its tracking branch
 
   Background:
-    Given the perennial branches "production" and "qa"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | LOCATIONS     |
+      | production | perennial | local, origin |
+      | qa         | perennial | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |

@@ -1,5 +1,8 @@
 Feature: sync tags
 
+  Background:
+    Given a Git repo clone
+
   Scenario: local tag gets pushed to origin
     Given the tags
       | NAME      | LOCATION |
