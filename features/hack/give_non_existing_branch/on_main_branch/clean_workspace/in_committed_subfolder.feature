@@ -1,7 +1,8 @@
 Feature: in a subfolder on the main branch
 
   Background:
-    Given the commits
+    Given a Git repo clone
+    And the commits
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And the current branch is "main"

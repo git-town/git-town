@@ -1,7 +1,11 @@
 Feature: parking an observed branch
 
   Background:
-    Given the current branch is an observed branch "observed"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE     | LOCATIONS |
+      | observed | observed | local     |
+    And the current branch is "observed"
     And an uncommitted file
     When I run "git-town park"
 

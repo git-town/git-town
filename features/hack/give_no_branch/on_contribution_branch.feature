@@ -1,7 +1,11 @@
 Feature: making the current contribution branch a feature branch
 
   Background:
-    Given the current branch is a contribution branch "contribution"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | LOCATIONS |
+      | contribution | contribution | local     |
+    And the current branch is "contribution"
     When I run "git-town hack"
 
   Scenario: result

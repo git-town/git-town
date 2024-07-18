@@ -1,7 +1,11 @@
 Feature: undo deleting the current feature branch with disabled push-hook
 
   Background:
-    Given the feature branches "current" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | current | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |

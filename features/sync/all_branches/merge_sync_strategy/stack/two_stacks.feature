@@ -1,30 +1,55 @@
 Feature: sync a workspace with two independent stacks
 
   Background:
-    Given feature branch "one" with these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | one     |
-    And feature branch "two" as a child of "one" has these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | two     |
-    And feature branch "three" as a child of "two" has these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | three   |
-    And feature branch "four" as a child of "three" has these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | four    |
-    And feature branch "first" with these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | first 1 |
-    And feature branch "second" as a child of "first" has these commits
-      | LOCATION      | MESSAGE  |
-      | local, origin | second 1 |
-    And feature branch "third" as a child of "second" has these commits
-      | LOCATION      | MESSAGE |
-      | local, origin | third 1 |
-    And feature branch "fourth" as a child of "third" has these commits
-      | LOCATION      | MESSAGE  |
-      | local, origin | fourth 1 |
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | one  | feature | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | one    | local, origin | one     |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | two  | feature | one    | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | two    | local, origin | two     |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | three | feature | two    | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | three  | local, origin | three   |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | four | feature | three  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | four   | local, origin | four    |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | first | feature | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | first  | local, origin | first 1 |
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | second | feature | first  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE  |
+      | second | local, origin | second 1 |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | third | feature | second | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE |
+      | third  | local, origin | third 1 |
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | fourth | feature | third  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE  |
+      | fourth | local, origin | fourth 1 |
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"

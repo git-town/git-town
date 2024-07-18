@@ -1,8 +1,11 @@
 Feature: sync a stack that makes conflicting changes
 
   Scenario: all branches in the stack change the same file to different values and this hasn't been synced yet
-    Given a feature branch "alpha"
-    And a feature branch "beta" as a child of "alpha"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
       | main   | origin        | main commit  | file      | main content  |

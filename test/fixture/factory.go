@@ -18,10 +18,10 @@ import (
 // Making copies of a fully set up Git repo is much faster than creating it from scratch.
 // End-to-end tests run multi-threaded, all threads share a global Factory instance.
 type Factory struct {
-	counter helpers.AtomicCounter
+	Counter helpers.AtomicCounter
 
 	// path of the folder that this class operates in
-	dir string
+	Dir string
 
 	// the memoized environment
 	memoized Memoized
@@ -39,19 +39,19 @@ func CreateFactory() Factory {
 		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 	}
 	return Factory{
-		counter:  helpers.AtomicCounter{},
-		dir:      evalBaseDir,
+		Counter:  helpers.AtomicCounter{},
+		Dir:      evalBaseDir,
 		memoized: NewMemoized(filepath.Join(evalBaseDir, "memoized")),
 	}
 }
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
 func (self *Factory) CreateFixture(scenarioName string) Fixture {
-	envDirName := filesystem.FolderName(scenarioName) + "_" + self.counter.ToString()
-	envPath := filepath.Join(self.dir, envDirName)
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.ToString()
+	envPath := filepath.Join(self.Dir, envDirName)
 	return self.memoized.CloneInto(envPath)
 }
 
 func (self *Factory) Remove() {
-	os.RemoveAll(self.dir)
+	os.RemoveAll(self.Dir)
 }

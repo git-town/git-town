@@ -1,7 +1,10 @@
 Feature: continue after successful command
 
   Scenario Outline:
-    Given a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
     And I run "git-town <COMMAND>"
     When I run "git-town continue"
     Then it prints:

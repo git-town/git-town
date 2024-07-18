@@ -1,7 +1,8 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given <LOCATION> Git Town setting "ship-delete-remote-branch" is "true"
+    Given a Git repo clone
+    And <LOCATION> Git Town setting "ship-delete-remote-branch" is "true"
     When I run "git-town <COMMAND>"
     Then it prints:
       """

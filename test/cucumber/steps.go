@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
+	cukemessages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -24,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
+	"github.com/git-town/git-town/v14/test/filesystem"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/helpers"
@@ -31,6 +34,7 @@ import (
 	"github.com/git-town/git-town/v14/test/subshell"
 	"github.com/git-town/git-town/v14/test/testruntime"
 	"github.com/google/go-cmp/cmp"
+	"github.com/kballard/go-shellquote"
 )
 
 // the global FixtureFactory instance.
@@ -39,36 +43,26 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 // dedicated type for storing data in context.Context
 type key int
 
-// the key for storing the scenario state in the context.Context
-const keyScenarioState key = iota
+// the key for storing the state in the context.Context
+const (
+	keyScenarioState key = iota
+	keyScenarioName
+	keyScenarioTags
+)
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
-		fixture := fixtureFactory.CreateFixture(scenario.Name)
-		if helpers.HasTag(scenario.Tags, "@debug") {
-			fixture.DevRepo.GetOrPanic().Verbose = configdomain.Verbose(true)
-		}
-		state := ScenarioState{
-			fixture:              fixture,
-			initialBranches:      None[datatable.DataTable](),
-			initialCommits:       None[datatable.DataTable](),
-			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
-			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
-			insideGitRepo:        true,
-			runExitCode:          None[int](),
-			runExitCodeChecked:   false,
-			runOutput:            None[string](),
-			uncommittedContent:   None[string](),
-			uncommittedFileName:  None[string](),
-		}
-		return context.WithValue(ctx, keyScenarioState, &state), nil
+		ctx = context.WithValue(ctx, keyScenarioName, scenario.Name)
+		ctx = context.WithValue(ctx, keyScenarioTags, scenario.Tags)
+		return ctx, nil
 	})
 
 	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		ctxValue := ctx.Value(keyScenarioState)
+		if ctxValue == nil {
+			panic("after-scenario hook has found no scenario state found to clean up")
+		}
+		state := ctxValue.(*ScenarioState)
 		if err != nil {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
 			return ctx, nil //nolint:nilerr
@@ -97,23 +91,9 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	sc.Step(`^a branch "([^"]*)"$`, func(ctx context.Context, branch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), gitdomain.NewLocalBranchName("main"))
-	})
-
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddCoworkerRepo()
-	})
-
-	sc.Given(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(ctx context.Context, branchText, parentBranch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		devRepo.CreateChildFeatureBranch(branch, gitdomain.NewLocalBranchName(parentBranch))
-		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 	})
 
 	sc.Step(`^a folder "([^"]*)"$`, func(ctx context.Context, name string) {
@@ -122,13 +102,59 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFolder(name)
 	})
 
-	sc.Step(`^a known remote branch "([^"]*)"$`, func(ctx context.Context, branchText string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
-		devRepo.TestCommands.Fetch()
+	sc.Step("a Git repo clone", func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		fixture := fixtureFactory.CreateFixture(scenarioName)
+		if helpers.HasTag(scenarioTags, "@debug") {
+			fixture.DevRepo.GetOrPanic().Verbose = true
+		}
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
+	})
+
+	sc.Step("a local Git repo", func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		fixture := fixtureFactory.CreateFixture(scenarioName)
+		devRepo := fixture.DevRepo.GetOrPanic()
+		if helpers.HasTag(scenarioTags, "@debug") {
+			devRepo.Verbose = true
+		}
+		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
+		fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
 	sc.Step(`^a merge is now in progress$`, func(ctx context.Context) {
@@ -139,34 +165,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^a (local )?feature branch "([^"]*)"$`, func(ctx context.Context, localStr, branchText string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		isLocal := localStr != ""
-		devRepo.CreateFeatureBranch(branch)
-		if !isLocal {
-			devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			return
-		}
-	})
-
-	sc.Step(`^a parked branch "([^"]+)"$`, func(ctx context.Context, branchText string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		devRepo.CreateParkedBranches(branch)
-		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-	})
-
-	sc.Step(`^a perennial branch "([^"]+)"$`, func(ctx context.Context, branchText string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		devRepo.CreatePerennialBranches(branch)
-		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-	})
-
 	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -175,13 +173,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !repoStatus.RebaseInProgress {
 			panic("expected rebase in progress")
 		}
-	})
-
-	sc.Step(`^a remote branch "([^"]*)"$`, func(ctx context.Context, branchText string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branch := gitdomain.NewLocalBranchName(branchText)
-		// we are creating a remote branch in the remote repo --> it is a local branch there
-		state.fixture.OriginRepo.GetOrPanic().CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
 	})
 
 	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
@@ -395,6 +386,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.SetColorUI(value)
 	})
 
+	// TODO: remove?
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -669,11 +661,38 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.insideGitRepo = false
-		os.RemoveAll(filepath.Join(devRepo.WorkingDir, ".git"))
+	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		// scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.ToString()
+		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
+		asserts.NoError(os.Mkdir(envPath, 0o777))
+		fixture := fixture.Fixture{
+			CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+			DevRepo:        NoneP[testruntime.TestRuntime](),
+			Dir:            envPath,
+			OriginRepo:     NoneP[testruntime.TestRuntime](),
+			SecondWorktree: NoneP[testruntime.TestRuntime](),
+			SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
+			UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+		}
+		state := ScenarioState{
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
 	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
@@ -708,15 +727,29 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
+		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+		if hasDevRepo {
+			state.CaptureState()
+			updateInitialSHAs(state)
+		}
 		var exitCode int
 		var runOutput string
-		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		if hasDevRepo {
+			runOutput, exitCode = devRepo.MustQueryStringCode(command)
+			devRepo.Config.Reload()
+		} else {
+			parts, err := shellquote.Split(command)
+			asserts.NoError(err)
+			cmd, args := parts[0], parts[1:]
+			subProcess := exec.Command(cmd, args...) // #nosec
+			subProcess.Dir = state.fixture.Dir
+			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+			outputBytes, _ := subProcess.CombinedOutput()
+			runOutput = string(outputBytes)
+			exitCode = subProcess.ProcessState.ExitCode()
+		}
 		state.runOutput = Some(runOutput)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -1423,12 +1456,54 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) {
+	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		for _, branchName := range []string{branch1, branch2} {
-			branch := gitdomain.NewLocalBranchName(branchName)
-			devRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		// TODO: uncomment this and make it work
+		// if state.initialBranches.IsNone() {
+		// 	initialTable := datatable.FromGherkin(table)
+		// 	state.initialBranches = Some(initialTable)
+		// } else {
+		// 	state.initialBranches = None[datatable.DataTable]()
+		// }
+		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
+			var repoToCreateBranchIn *testruntime.TestRuntime
+			switch {
+			case branchSetup.Locations.Is(git.LocationLocal), branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
+				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
+			case branchSetup.Locations.Is(git.LocationOrigin):
+				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
+			case branchSetup.Locations.Is(git.LocationUpstream):
+				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
+			default:
+				panic("unhandled location to create the new branch: " + branchSetup.Locations.String())
+			}
+			branchType, hasBranchType := branchSetup.BranchType.Get()
+			if hasBranchType {
+				switch branchType {
+				case configdomain.BranchTypeMainBranch:
+					panic("main branch exists already")
+				case configdomain.BranchTypeFeatureBranch:
+					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
+				case configdomain.BranchTypePerennialBranch:
+					repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
+				case configdomain.BranchTypeContributionBranch:
+					repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
+				case configdomain.BranchTypeObservedBranch:
+					repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
+				case configdomain.BranchTypeParkedBranch:
+					repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+				}
+			} else {
+				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
+			}
+			if len(branchSetup.Locations) > 1 {
+				switch {
+				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
+					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+				default:
+					panic("unhandled location to push the new branch to: " + branchSetup.Locations.String())
+				}
+			}
 		}
 	})
 
@@ -1446,8 +1521,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		initialTable := datatable.FromGherkin(table)
-		state.initialCommits = Some(initialTable)
+		// TODO: uncomment this and make it work
+		// if state.initialCommits.IsNone() {
+		// 	initialTable := datatable.FromGherkin(table)
+		// 	state.initialCommits = Some(initialTable)
+		// } else {
+		// 	state.initialCommits = None[datatable.DataTable]()
+		// }
 		// create the commits
 		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
@@ -1492,21 +1572,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println(cmp.Diff(want, have))
 			panic("mismatching config file content")
 		}
-	})
-
-	sc.Step(`^a contribution branch "([^"]+)"$`, func(ctx context.Context, branch string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateBranch(gitdomain.NewLocalBranchName(branch), "main")
-		return devRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch))
-	})
-
-	sc.Step(`^the contribution branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateBranch(gitdomain.NewLocalBranchName(branch1), "main")
-		devRepo.CreateBranch(gitdomain.NewLocalBranchName(branch2), "main")
-		return devRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
@@ -1587,36 +1652,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CheckoutBranch(branch)
 	})
 
-	sc.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(ctx context.Context, localStr, branchType, branchName string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchName)
-		isLocal := localStr != ""
-		switch configdomain.NewBranchType(branchType) {
-		case configdomain.BranchTypeFeatureBranch:
-			devRepo.CreateFeatureBranch(branch)
-		case configdomain.BranchTypePerennialBranch:
-			devRepo.CreatePerennialBranches(branch)
-		case configdomain.BranchTypeParkedBranch:
-			devRepo.CreateParkedBranches(branch)
-		case configdomain.BranchTypeContributionBranch:
-			devRepo.CreateContributionBranches(branch)
-		case configdomain.BranchTypeObservedBranch:
-			devRepo.CreateObservedBranches(branch)
-		case configdomain.BranchTypeMainBranch:
-		default:
-			panic(fmt.Sprintf("unknown branch type: %q", branchType))
-		}
-		if !isLocal {
-			devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		}
-		state.initialCurrentBranch = Some(branch)
-		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
-		if !devRepo.CurrentBranchCache.Initialized() || devRepo.CurrentBranchCache.Value() != branch {
-			devRepo.CheckoutBranch(branch)
-		}
-	})
-
 	sc.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(ctx context.Context, currentText, previousText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1625,51 +1660,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.initialCurrentBranch = Some(current)
 		devRepo.CheckoutBranch(previous)
 		devRepo.CheckoutBranch(current)
-	})
-
-	sc.Step(`^(contribution|feature|observed|parked) branch "([^"]*)" with these commits$`, func(ctx context.Context, branchTypeName, name string, table *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branchName := gitdomain.NewLocalBranchName(name)
-		switch configdomain.NewBranchType(branchTypeName) {
-		case configdomain.BranchTypeContributionBranch:
-			devRepo.CreateContributionBranches(branchName)
-		case configdomain.BranchTypeFeatureBranch:
-			devRepo.CreateFeatureBranch(branchName)
-		case configdomain.BranchTypeObservedBranch:
-			devRepo.CreateObservedBranches(branchName)
-		case configdomain.BranchTypeParkedBranch:
-			devRepo.CreateParkedBranches(branchName)
-		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-		}
-		devRepo.CheckoutBranch(branchName)
-		devRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table) {
-			devRepo.CreateFile(commit.FileName, commit.FileContent)
-			devRepo.StageFiles(commit.FileName)
-			devRepo.CommitStagedChanges(commit.Message)
-			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
-				devRepo.PushBranch()
-			}
-		}
-	})
-
-	sc.Step(`^feature branch "([^"]*)" as a child of "([^"]*)" has these commits$`, func(ctx context.Context, name, parent string, table *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		parentBranch := gitdomain.NewLocalBranchName(parent)
-		devRepo.CreateChildFeatureBranch(branch, parentBranch)
-		devRepo.CheckoutBranch(branch)
-		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		for _, commit := range git.FromGherkinTable(table) {
-			devRepo.CreateFile(commit.FileName, commit.FileContent)
-			devRepo.StageFiles(commit.FileName)
-			devRepo.CommitStagedChanges(commit.Message)
-			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
-				devRepo.PushBranch()
-			}
-		}
 	})
 
 	sc.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
@@ -1770,72 +1760,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		panic("current commits are not the same as the initial commits")
 	})
 
-	sc.Step(`^the local feature branch "([^"]+)"$`, func(ctx context.Context, branch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branchName := gitdomain.NewLocalBranchName(branch)
-		devRepo.CreateFeatureBranch(branchName)
-	})
-
-	sc.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2 string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		isLocal := localStr != ""
-		for _, branchText := range []string{branch1, branch2} {
-			branch := gitdomain.NewLocalBranchName(branchText)
-			devRepo.CreateFeatureBranch(branch)
-			if !isLocal {
-				devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			}
-		}
-	})
-
-	sc.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		isLocal := localStr != ""
-		for _, branchText := range []string{branch1, branch2, branch3} {
-			branch := gitdomain.NewLocalBranchName(branchText)
-			devRepo.CreateFeatureBranch(branch)
-			if !isLocal {
-				devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			}
-		}
-	})
-
-	sc.Step(`^the local observed branch "([^"]+)"$`, func(ctx context.Context, name string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		devRepo.CreateObservedBranches(branch)
-	})
-
-	sc.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, localStr, branch1Text, branch2Text string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch1 := gitdomain.NewLocalBranchName(branch1Text)
-		branch2 := gitdomain.NewLocalBranchName(branch2Text)
-		isLocal := localStr != ""
-		devRepo.CreatePerennialBranches(branch1, branch2)
-		if !isLocal {
-			devRepo.PushBranchToRemote(branch1, gitdomain.RemoteOrigin)
-			devRepo.PushBranchToRemote(branch2, gitdomain.RemoteOrigin)
-		}
-	})
-
-	sc.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(ctx context.Context, localStr, branch1, branch2, branch3 string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		isLocal := localStr != ""
-		for _, branchText := range []string{branch1, branch2, branch3} {
-			branch := gitdomain.NewLocalBranchName(branchText)
-			devRepo.CreatePerennialBranches(branch)
-			if !isLocal {
-				devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			}
-		}
-	})
-
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1862,31 +1786,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^an observed branch "([^"]+)"$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		devRepo.CreateBranch(branch, "main")
-		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-		return devRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(name))
-	})
-
-	sc.Step(`^the observed branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
-	})
-
 	sc.Step(`^the origin is "([^"]*)"$`, func(ctx context.Context, origin string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.SetTestOrigin(origin)
-	})
-
-	sc.Step(`^the parked branches "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetParkedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
 	sc.Step(`^the perennial branches are "([^"]+)"$`, func(ctx context.Context, name string) error {

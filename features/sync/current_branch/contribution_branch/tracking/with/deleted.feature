@@ -1,7 +1,11 @@
 Feature: remove a contribution branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
-    Given the current branch is a contribution branch "contribution"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | LOCATIONS     |
+      | contribution | contribution | local, origin |
+    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE      | FILE NAME  |
       | main         | local, origin | main commit  | main_file  |

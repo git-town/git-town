@@ -1,7 +1,7 @@
 Feature: handle conflicts between the main branch and its tracking branch when syncing the main branch
 
   Background:
-    Given the current branch is "main"
+    Given a Git repo clone
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |

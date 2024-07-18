@@ -1,7 +1,12 @@
 Feature: handle merge conflicts between feature branches and their tracking branches
 
   Background:
-    Given the feature branches "alpha", "beta", and "gamma"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | main   | local, origin |
+      | gamma | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |

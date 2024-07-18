@@ -1,10 +1,15 @@
 Feature: sync all feature branches
 
   Background:
-    Given the feature branches "alpha" and "beta"
-    And the perennial branches "production" and "qa"
-    And an observed branch "observed"
-    And a parked branch "parked"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | PARENT | LOCATIONS     |
+      | alpha      | feature   | main   | local, origin |
+      | beta       | feature   | main   | local, origin |
+      | production | perennial |        | local, origin |
+      | qa         | perennial |        | local, origin |
+      | observed   | observed  |        | local, origin |
+      | parked     | parked    | main   | local, origin |
     And the commits
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |

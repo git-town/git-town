@@ -1,7 +1,11 @@
 Feature: does not compress observed branches
 
   Background:
-    Given the current branch is an observed branch "observed"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE     | PARENT | LOCATIONS     |
+      | observed | observed |        | local, origin |
+    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | observed | local, origin | commit 1 | file_1    | content 1    |

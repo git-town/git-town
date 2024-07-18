@@ -1,6 +1,7 @@
 Feature: on perennial branch
 
   Scenario: on main branch
+    Given a Git repo clone
     And the current branch is "main"
     When I run "git-town diff-parent"
     Then it runs no commands
@@ -10,7 +11,11 @@ Feature: on perennial branch
       """
 
   Scenario: on perennial branch
-    And the current branch is a perennial branch "qa"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE      | LOCATIONS |
+      | qa   | perennial | local     |
+    And the current branch is "qa"
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:

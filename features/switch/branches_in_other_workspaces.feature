@@ -1,9 +1,13 @@
 Feature: switch branches
 
   Scenario: switching to another branch
-    Given the current branch is a feature branch "alpha"
-    And a feature branch "beta"
-    And a feature branch "gamma"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | main   | local, origin |
+      | gamma | feature | main   | local, origin |
+    And the current branch is "alpha"
     And branch "beta" is active in another worktree
     When I run "git-town switch" and enter into the dialogs:
       | KEYS       |

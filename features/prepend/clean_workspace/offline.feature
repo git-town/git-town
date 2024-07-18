@@ -1,8 +1,12 @@
 Feature: offline mode
 
   Background:
-    Given offline mode is enabled
-    And the current branch is a feature branch "old"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And offline mode is enabled
+    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |

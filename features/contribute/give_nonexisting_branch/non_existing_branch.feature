@@ -1,6 +1,7 @@
 Feature: cannot make non-existing branches contribution branches
 
   Background:
+    Given a Git repo clone
     When I run "git-town contribute non-existing"
 
   Scenario: result

@@ -1,8 +1,12 @@
 Feature: stay on the same branch
 
   Scenario: switching to another branch
-    Given the current branch is a feature branch "alpha"
-    And a feature branch "beta"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | main   | local, origin |
+    And the current branch is "alpha"
     When I run "git-town switch" and enter into the dialogs:
       | KEYS  |
       | enter |

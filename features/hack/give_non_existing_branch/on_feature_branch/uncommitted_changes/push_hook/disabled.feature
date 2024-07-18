@@ -1,7 +1,8 @@
 Feature: auto-push the new branch without running Git push hooks
 
   Background:
-    Given Git Town setting "push-new-branches" is "true"
+    Given a Git repo clone
+    And Git Town setting "push-new-branches" is "true"
     And Git Town setting "push-hook" is "false"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |

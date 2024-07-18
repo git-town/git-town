@@ -1,7 +1,11 @@
 Feature: cannot make the current feature branch a feature branch
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+    And the current branch is "feature"
     When I run "git-town hack"
 
   Scenario: result

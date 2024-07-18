@@ -2,8 +2,11 @@
 Feature: change existing information in Git metadata
 
   Background:
-    Given a perennial branch "qa"
-    And a branch "production"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | LOCATIONS     |
+      | qa         | perennial | local, origin |
+      | production | (none)    | local, origin |
     And the main branch is "main"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"

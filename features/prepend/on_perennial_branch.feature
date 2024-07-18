@@ -1,7 +1,9 @@
 Feature: does not prepend perennial branches
 
+  Background:
+    Given a Git repo clone
+
   Scenario: on main branch
-    And the current branch is "main"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -13,7 +15,10 @@ Feature: does not prepend perennial branches
     And the current branch is still "main"
 
   Scenario: on perennial branch
-    And the current branch is a perennial branch "production"
+    Given the branches
+      | NAME       | TYPE      | LOCATIONS     |
+      | production | perennial | local, origin |
+    And the current branch is "production"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH     | COMMAND                  |

@@ -1,7 +1,11 @@
 Feature: ask for missing parent information
 
   Scenario:
-    Given the current branch is "old"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE   | LOCATIONS |
+      | old  | (none) | local     |
+    And the current branch is "old"
     When I run "git-town prepend new" and enter into the dialog:
       | DIALOG               | KEYS  |
       | parent branch of old | enter |

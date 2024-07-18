@@ -1,7 +1,11 @@
 Feature: sync the current observed branch
 
   Background:
-    Given the current branch is an observed branch "observed"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE     | LOCATIONS     |
+      | observed | observed | local, origin |
+    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME   |
       | main     | local, origin | main commit   | main_file   |

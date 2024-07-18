@@ -1,7 +1,10 @@
 Feature: inactive parked branches don't get synced
 
   Background:
-    Given a parked branch "parked"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | parked | parked | main   | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
