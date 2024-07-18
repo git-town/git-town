@@ -1478,13 +1478,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypeFeatureBranch:
 					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main"))
 				case configdomain.BranchTypePerennialBranch:
-					repoToCreateBranchIn.CreatePerennialBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreatePerennialBranch(branchSetup.Name)
 				case configdomain.BranchTypeContributionBranch:
-					repoToCreateBranchIn.CreateContributionBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateContributionBranch(branchSetup.Name)
 				case configdomain.BranchTypeObservedBranch:
-					repoToCreateBranchIn.CreateObservedBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateObservedBranch(branchSetup.Name)
 				case configdomain.BranchTypeParkedBranch:
-					repoToCreateBranchIn.CreateParkedBranches(branchSetup.Name)
+					repoToCreateBranchIn.CreateParkedBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")

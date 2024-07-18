@@ -4,7 +4,7 @@ Feature: compress the commits on a parked branch
     Given a Git repo clone
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
-      | parked | parked |        | local, origin |
+      | parked | parked | main   | local, origin |
     And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
