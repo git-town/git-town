@@ -1,7 +1,10 @@
 Feature: already existing unfetched remote branch
 
   Background:
-    Given a remote branch "existing"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | existing | feature | main   | origin    |
     When I run "git-town append existing"
 
   Scenario: result
@@ -10,7 +13,7 @@ Feature: already existing unfetched remote branch
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      there is already a branch "existing" at the "origin" remote
+      there is already a branch "existing"
       """
 
   Scenario: undo

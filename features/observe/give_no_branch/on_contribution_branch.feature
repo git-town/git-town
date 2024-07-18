@@ -1,7 +1,11 @@
 Feature: observing a contribution branch
 
   Background:
-    Given the current branch is a contribution branch "branch"
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE         | LOCATIONS |
+      | branch | contribution | local     |
+    And the current branch is "branch"
     And an uncommitted file
     When I run "git-town observe"
 

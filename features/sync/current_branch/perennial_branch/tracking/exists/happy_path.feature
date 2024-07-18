@@ -1,7 +1,11 @@
 Feature: sync the current perennial branch
 
   Background:
-    Given the perennial branches "production" and "qa"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | LOCATIONS     |
+      | production | perennial | local, origin |
+      | qa         | perennial | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
       | qa     | local         | local commit  | local_file  |

@@ -1,7 +1,8 @@
 Feature: does not ship a non-existing branch
 
   Background:
-    Given the current branch is "main"
+    Given a Git repo clone
+    And the current branch is "main"
     And an uncommitted file
     When I run "git-town ship non-existing-branch"
 

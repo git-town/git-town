@@ -1,7 +1,11 @@
 Feature: cannot ship perennial branches
 
   Background:
-    Given the current branch is a perennial branch "perennial"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE      | LOCATIONS     |
+      | perennial | perennial | local, origin |
+    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | perennial | local, origin | perennial commit |

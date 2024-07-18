@@ -1,7 +1,12 @@
 Feature: shipped changes conflict with multiple existing feature branches
 
   Scenario:
-    Given the feature branches "alpha", "beta", and "gamma"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | main   | local, origin |
+      | gamma | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | conflicting_file | alpha content |

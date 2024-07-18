@@ -1,7 +1,8 @@
 Feature: does not rename the main branch
 
   Background:
-    Given the current branch is "main"
+    Given a Git repo clone
+    And the current branch is "main"
 
   Scenario: try to rename
     When I run "git-town rename-branch main new"

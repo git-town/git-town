@@ -1,7 +1,12 @@
 Feature: parking multiple branches
 
   Background:
-    Given the feature branches "feature-1", "feature-2", and "feature-3"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS |
+      | feature-1 | feature | main   | local     |
+      | feature-2 | feature | main   | local     |
+      | feature-3 | feature | main   | local     |
     And an uncommitted file
     When I run "git-town park feature-1 feature-2 feature-3"
 

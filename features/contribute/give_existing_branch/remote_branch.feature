@@ -1,7 +1,11 @@
-Feature: make a remote branch a contribution branch
+Feature: make a known remote branch a contribution branch
 
   Background:
-    Given a known remote branch "remote-feature"
+    Given a Git repo clone
+    And the branches
+      | NAME           | TYPE    | PARENT | LOCATIONS |
+      | remote-feature | feature | main   | origin    |
+    And I run "git fetch"
     And an uncommitted file
     When I run "git-town contribute remote-feature"
 

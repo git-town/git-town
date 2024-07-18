@@ -1,8 +1,12 @@
 Feature: display all executed Git commands
 
   Background:
-    Given the current branch is a feature branch "current"
-    And a feature branch "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | current | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
+    And the current branch is "current"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |

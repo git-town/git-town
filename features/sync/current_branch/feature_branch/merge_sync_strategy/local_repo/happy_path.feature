@@ -1,8 +1,11 @@
 Feature: sync the current feature branch (in a local repo)
 
   Background:
-    Given my repo does not have an origin
-    And the current branch is a local feature branch "feature"
+    Given a local Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |

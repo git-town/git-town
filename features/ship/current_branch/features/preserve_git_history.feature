@@ -1,7 +1,11 @@
 Feature: preserve the previous Git branch
 
   Background:
-    Given the feature branches "previous" and "current"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | previous | feature | main   | local, origin |
+      | current  | feature | main   | local, origin |
 
   Scenario: current branch gone
     And the commits
@@ -22,7 +26,9 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
-    Given a feature branch "feature"
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION |
       | feature | local    |

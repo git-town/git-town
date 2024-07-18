@@ -1,8 +1,11 @@
 Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
 
   Background:
-    Given my repo does not have an origin
-    And the current branch is a local feature branch "feature"
+    Given a local Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

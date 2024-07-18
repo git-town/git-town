@@ -1,7 +1,11 @@
 Feature: append to a perennial branch
 
   Background:
-    Given the perennial branches "qa" and "production"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | PARENT | LOCATIONS     |
+      | qa         | perennial |        | local, origin |
+      | production | perennial |        |               |
     And the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | origin   | production commit |

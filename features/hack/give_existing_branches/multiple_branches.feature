@@ -1,9 +1,12 @@
 Feature: making multiple branches a feature branch
 
   Background:
-    Given a contribution branch "contribution"
-    And an observed branch "observed"
-    And a parked branch "parked"
+    Given a Git repo clone
+    And the branches
+      | NAME         | TYPE         | PARENT | LOCATIONS |
+      | contribution | contribution |        | local     |
+      | observed     | observed     |        | local     |
+      | parked       | parked       | main   | local     |
     When I run "git-town hack contribution observed parked"
 
   Scenario: result

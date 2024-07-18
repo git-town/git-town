@@ -1,7 +1,11 @@
 Feature: rename the current branch without pre-push hook
 
   Background:
-    Given the current branch is a feature branch "old"
+    Given a Git repo clone
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

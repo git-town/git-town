@@ -1,7 +1,11 @@
 Feature: unsupported hosting platform
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     When I run "git-town propose"
 
   Scenario: result

@@ -1,8 +1,12 @@
 Feature: already existing remote branch
 
   Background:
-    Given the current branch is a feature branch "old"
-    And a remote branch "existing"
+    Given a Git repo clone
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | old      | feature | main   | local, origin |
+      | existing | feature | main   | origin        |
+    And the current branch is "old"
     When I run "git-town prepend existing"
 
   Scenario: result

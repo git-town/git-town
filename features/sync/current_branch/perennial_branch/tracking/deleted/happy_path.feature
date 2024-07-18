@@ -1,10 +1,14 @@
 Feature: sync perennial branch that was deleted at the remote
 
   Background:
-    Given the perennial branches "feature-1" and "feature-2"
-    And a feature branch "feature-1a" as a child of "feature-1"
-    And a feature branch "feature-1b" as a child of "feature-1"
-    And a feature branch "feature-2a" as a child of "feature-2"
+    Given a Git repo clone
+    And the branches
+      | NAME       | TYPE      | PARENT    | LOCATIONS     |
+      | feature-1  | perennial |           | local, origin |
+      | feature-2  | perennial |           | local, origin |
+      | feature-1a | feature   | feature-1 | local, origin |
+      | feature-1b | feature   | feature-1 | local, origin |
+      | feature-2a | feature   | feature-2 | local, origin |
     And origin deletes the "feature-1" branch
     And the current branch is "feature-1"
     When I run "git-town sync"

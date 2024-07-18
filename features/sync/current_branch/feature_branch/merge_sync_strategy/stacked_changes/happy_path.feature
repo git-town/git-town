@@ -1,8 +1,11 @@
 Feature: stacked changes
 
-  Scenario:
-    Given a feature branch "parent"
-    And a feature branch "child" as a child of "parent"
+  Background:
+    Given a Git repo clone
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -13,6 +16,8 @@ Feature: stacked changes
       |        | origin   | origin child commit  |
     And the current branch is "child"
     When I run "git-town sync"
+
+  Scenario:
     Then it runs the commands
       | BRANCH | COMMAND                                |
       | child  | git fetch --prune --tags               |
@@ -52,8 +57,11 @@ Feature: stacked changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
-      """
-      nothing to undo
-      """
-    And it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                                                                                         |
+      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                      |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
+      |        | git checkout parent                                                                             |
+      | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
+      |        | git checkout child                                                                              |

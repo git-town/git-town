@@ -1,7 +1,11 @@
 Feature: does not ship empty feature branches
 
   Background:
-    Given the feature branches "empty" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | empty | feature | main   | local, origin |
+      | other | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit    | common_file | common content |

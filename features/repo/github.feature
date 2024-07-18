@@ -2,7 +2,8 @@
 Feature: GitHub
 
   Scenario Outline:
-    Given the origin is "<ORIGIN>"
+    Given a Git repo clone
+    And the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town repo"
     Then "open" launches a new proposal with this url in my browser:
