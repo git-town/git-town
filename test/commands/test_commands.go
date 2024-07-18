@@ -183,11 +183,9 @@ func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) 
 }
 
 // CreateParkedBranches creates perennial branches with the given names in this repository.
-func (self *TestCommands) CreatePrototypeBranches(names ...gitdomain.LocalBranchName) {
-	for _, name := range names {
-		self.CreateFeatureBranch(name)
-	}
-	asserts.NoError(self.Config.AddToPrototypeBranches(names...))
+func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
+	self.CreateFeatureBranch(name, parent)
+	asserts.NoError(self.Config.AddToPrototypeBranches(name))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
