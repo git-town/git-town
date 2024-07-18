@@ -160,10 +160,14 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with stacked changes
-    Given the perennial branches "qa" and "staging"
-    And the feature branches "alpha" and "beta"
-    And a feature branch "child" as a child of "alpha"
-    And a feature branch "hotfix" as a child of "qa"
+    Given the branches
+      | NAME    | TYPE      | PARENT | LOCATIONS |
+      | alpha   | feature   | main   | local     |
+      | qa      | perennial |        | local     |
+      | staging | perennial |        | local     |
+      | beta    | feature   | main   | local     |
+      | child   | feature   | alpha  | local     |
+      | hotfix  | feature   | qa     | local     |
     When I run "git-town config"
     Then it prints:
       """
