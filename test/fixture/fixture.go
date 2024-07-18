@@ -155,16 +155,16 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	devRepo := self.DevRepo.GetOrPanic()
 	for _, commit := range commits {
 		switch {
-		case commit.Locations.Matches(testgit.LocationCoworker):
+		case commit.GetLocations().Matches(testgit.LocationCoworker):
 			self.CoworkerRepo.GetOrPanic().CreateCommit(commit)
-		case commit.Locations.Matches(testgit.LocationLocal):
+		case commit.GetLocations().Matches(testgit.LocationLocal):
 			devRepo.CreateCommit(commit)
-		case commit.Locations.Matches(testgit.LocationLocal, testgit.LocationOrigin):
+		case commit.GetLocations().Matches(testgit.LocationLocal, testgit.LocationOrigin):
 			devRepo.CreateCommit(commit)
 			devRepo.PushBranch()
-		case commit.Locations.Matches(testgit.LocationOrigin):
+		case commit.GetLocations().Matches(testgit.LocationOrigin):
 			self.OriginRepo.GetOrPanic().CreateCommit(commit)
-		case commit.Locations.Matches(testgit.LocationUpstream):
+		case commit.GetLocations().Matches(testgit.LocationUpstream):
 			self.UpstreamRepo.GetOrPanic().CreateCommit(commit)
 		default:
 			log.Fatalf("unknown commit locations %q", commit.Locations)

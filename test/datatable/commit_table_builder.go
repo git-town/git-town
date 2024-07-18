@@ -43,12 +43,12 @@ func NewCommitTableBuilder() CommitTableBuilder {
 
 // Add registers the given commit from the given location into this table.
 func (self *CommitTableBuilder) Add(commit git.Commit, location string) {
-	self.commits[commit.SHA] = commit
+	self.commits[commit.GetSHA()] = commit
 	commitsInBranch, exists := self.commitsInBranch[commit.Branch]
 	if exists {
-		self.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
+		self.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.GetSHA())
 	} else {
-		self.commitsInBranch[commit.Branch] = helpers.NewOrderedSet(commit.SHA)
+		self.commitsInBranch[commit.Branch] = helpers.NewOrderedSet(commit.GetSHA())
 	}
 	locationKey := commit.SHA.String() + commit.Branch.String()
 	locations, exists := self.locations[locationKey]
@@ -96,11 +96,11 @@ func (self *CommitTableBuilder) Table(fields []string) DataTable {
 				case "MESSAGE":
 					row = append(row, commit.Message)
 				case "FILE NAME":
-					row = append(row, commit.FileName)
+					row = append(row, commit.GetFileName())
 				case "FILE CONTENT":
-					row = append(row, commit.FileContent)
+					row = append(row, commit.GetFileContent())
 				case "AUTHOR":
-					row = append(row, commit.Author)
+					row = append(row, commit.GetAuthor())
 				default:
 					panic("unknown table field: " + field)
 				}

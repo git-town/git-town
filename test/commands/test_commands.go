@@ -88,17 +88,17 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fiel
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
+		commit := git.Commit{Branch: branch, SHA: Some(gitdomain.NewSHA(parts[0])), Message: parts[1], Author: Some(parts[2])}
 		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, ConfigFileCommitMessage) {
 			continue
 		}
 		if slice.Contains(fields, "FILE NAME") {
-			filenames := self.FilesInCommit(commit.SHA)
-			commit.FileName = strings.Join(filenames, ", ")
+			filenames := self.FilesInCommit(commit.GetSHA())
+			commit.SetFileName(strings.Join(filenames, ", "))
 		}
 		if slice.Contains(fields, "FILE CONTENT") {
-			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
-			commit.FileContent = filecontent
+			filecontent := self.FileContentInCommit(commit.GetSHA().Location(), commit.GetFileName())
+			commit.FileContent = Some(filecontent)
 		}
 		result = append(result, commit)
 	}
@@ -128,11 +128,11 @@ func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchN
 // CreateCommit creates a commit with the given properties in this Git repo.
 func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.CheckoutBranch(commit.Branch)
-	self.CreateFile(commit.FileName, commit.FileContent)
-	self.MustRun("git", "add", commit.FileName)
+	self.CreateFile(commit.GetFileName(), commit.GetFileContent())
+	self.MustRun("git", "add", commit.GetFileName())
 	commands := []string{"commit", "-m", commit.Message}
-	if commit.Author != "" {
-		commands = append(commands, "--author="+commit.Author)
+	if commit.GetAuthor() != "" {
+		commands = append(commands, "--author="+commit.GetAuthor())
 	}
 	self.MustRun("git", commands...)
 }

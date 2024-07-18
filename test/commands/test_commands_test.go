@@ -9,6 +9,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/filesystem"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
@@ -37,25 +38,25 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileContent: "hello",
-			FileName:    "file1",
+			FileContent: Some("hello"),
+			FileName:    Some("file1"),
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileContent: "hello again",
-			FileName:    "file2",
+			FileContent: Some("hello again"),
+			FileName:    Some("file2"),
 			Message:     "second commit",
 		})
 		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
 		must.Len(t, 2, commits)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[0].Branch)
-		must.EqOp(t, "file1", commits[0].FileName)
-		must.EqOp(t, "hello", commits[0].FileContent)
+		must.EqOp(t, "file1", commits[0].GetFileName())
+		must.EqOp(t, "hello", commits[0].GetFileContent())
 		must.EqOp(t, "first commit", commits[0].Message)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[1].Branch)
-		must.EqOp(t, "file2", commits[1].FileName)
-		must.EqOp(t, "hello again", commits[1].FileContent)
+		must.EqOp(t, "file2", commits[1].GetFileName())
+		must.EqOp(t, "hello again", commits[1].GetFileContent())
 		must.EqOp(t, "second commit", commits[1].Message)
 	})
 
@@ -120,14 +121,14 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileContent: "hello world",
-				FileName:    "hello.txt",
+				FileContent: Some("hello world"),
+				FileName:    Some("hello.txt"),
 				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
 			must.Len(t, 1, commits)
-			must.EqOp(t, "hello.txt", commits[0].FileName)
-			must.EqOp(t, "hello world", commits[0].FileContent)
+			must.EqOp(t, "hello.txt", commits[0].GetFileName())
+			must.EqOp(t, "hello world", commits[0].GetFileContent())
 			must.EqOp(t, "test commit", commits[0].Message)
 			must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[0].Branch)
 		})
@@ -136,19 +137,19 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
-				Author:      "developer <developer@example.com>",
+				Author:      Some("developer <developer@example.com>"),
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileContent: "hello world",
-				FileName:    "hello.txt",
+				FileContent: Some("hello world"),
+				FileName:    Some("hello.txt"),
 				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
 			must.Len(t, 1, commits)
-			must.EqOp(t, "hello.txt", commits[0].FileName)
-			must.EqOp(t, "hello world", commits[0].FileContent)
+			must.EqOp(t, "hello.txt", commits[0].GetFileName())
+			must.EqOp(t, "hello world", commits[0].GetFileContent())
 			must.EqOp(t, "test commit", commits[0].Message)
 			must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[0].Branch)
-			must.EqOp(t, "developer <developer@example.com>", commits[0].Author)
+			must.EqOp(t, "developer <developer@example.com>", commits[0].GetAuthor())
 		})
 	})
 
@@ -210,13 +211,13 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileContent: "hello world",
-			FileName:    "hello.txt",
+			FileContent: Some("hello world"),
+			FileName:    Some("hello.txt"),
 			Message:     "commit",
 		})
 		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), []string{})
 		must.Len(t, 1, commits)
-		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
+		content := runtime.FileContentInCommit(commits[0].GetSHA().Location(), "hello.txt")
 		must.EqOp(t, "hello world", content)
 	})
 
@@ -229,7 +230,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CommitStagedChanges("stuff")
 		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"))
 		must.Len(t, 1, commits)
-		fileNames := runtime.FilesInCommit(commits[0].SHA)
+		fileNames := runtime.FilesInCommit(commits[0].GetSHA())
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
 	})
 
@@ -385,10 +386,8 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		repo.CreateCommit(git.Commit{
-			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileContent: "bar",
-			FileName:    "foo",
-			Message:     "commit",
+			Branch:  gitdomain.NewLocalBranchName("initial"),
+			Message: "commit",
 		})
 		shas := repo.SHAsForCommit("commit")
 		must.EqOp(t, 1, len(shas))

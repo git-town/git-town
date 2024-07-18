@@ -23,6 +23,10 @@ func (self Locations) Contains(location Location) bool {
 	return false
 }
 
+func (self Locations) Join(sep string) string {
+	return strings.Join(self.Strings(), sep)
+}
+
 // Matches indicates whether this Locations instance contains exactly the given elements.
 func (self Locations) Matches(elements ...Location) bool {
 	if len(self) != len(elements) {
@@ -34,4 +38,12 @@ func (self Locations) Matches(elements ...Location) bool {
 		}
 	}
 	return true
+}
+
+func (self Locations) Strings() []string {
+	result := make([]string, len(self))
+	for l, location := range self {
+		result[l] = location.String()
+	}
+	return result
 }

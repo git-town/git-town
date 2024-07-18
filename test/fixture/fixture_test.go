@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/fixture"
 	"github.com/git-town/git-town/v14/test/git"
@@ -79,23 +80,23 @@ func TestFixture(t *testing.T) {
 		cloned.CreateCommits([]git.Commit{
 			{
 				Branch:      mainBranch,
-				FileContent: "local and origin content",
-				FileName:    "loc-rem-file",
-				Locations:   git.Locations{git.LocationLocal, git.LocationOrigin},
+				FileContent: Some("local and origin content"),
+				FileName:    Some("loc-rem-file"),
+				Locations:   Some(git.Locations{git.LocationLocal, git.LocationOrigin}),
 				Message:     "local and origin commit",
 			},
 			{
 				Branch:      mainBranch,
-				FileContent: "local content",
-				FileName:    "local-file",
-				Locations:   git.Locations{git.LocationLocal},
+				FileContent: Some("local content"),
+				FileName:    Some("local-file"),
+				Locations:   Some(git.Locations{git.LocationLocal}),
 				Message:     "local commit",
 			},
 			{
 				Branch:      mainBranch,
-				FileContent: "origin content",
-				FileName:    "origin-file",
-				Locations:   git.Locations{git.LocationOrigin},
+				FileContent: Some("origin content"),
+				FileName:    Some("origin-file"),
+				Locations:   Some(git.Locations{git.LocationOrigin}),
 				Message:     "origin commit",
 			},
 		})
@@ -103,20 +104,20 @@ func TestFixture(t *testing.T) {
 		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
-		must.EqOp(t, "loc-rem-file", commits[0].FileName)
-		must.EqOp(t, "local and origin content", commits[0].FileContent)
+		must.EqOp(t, ("loc-rem-file"), commits[0].GetFileName())
+		must.EqOp(t, ("local and origin content"), commits[0].GetFileContent())
 		must.EqOp(t, "local commit", commits[1].Message)
-		must.EqOp(t, "local-file", commits[1].FileName)
-		must.EqOp(t, "local content", commits[1].FileContent)
+		must.EqOp(t, ("local-file"), commits[1].GetFileName())
+		must.EqOp(t, ("local content"), commits[1].GetFileContent())
 		// verify origin commits
 		commits = cloned.OriginRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("main"))
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
-		must.EqOp(t, "loc-rem-file", commits[0].FileName)
-		must.EqOp(t, "local and origin content", commits[0].FileContent)
+		must.EqOp(t, ("loc-rem-file"), commits[0].GetFileName())
+		must.EqOp(t, ("local and origin content"), commits[0].GetFileContent())
 		must.EqOp(t, "origin commit", commits[1].Message)
-		must.EqOp(t, "origin-file", commits[1].FileName)
-		must.EqOp(t, "origin content", commits[1].FileContent)
+		must.EqOp(t, ("origin-file"), commits[1].GetFileName())
+		must.EqOp(t, ("origin content"), commits[1].GetFileContent())
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
 		must.NoError(t, err)
@@ -152,15 +153,15 @@ func TestFixture(t *testing.T) {
 			// create a few commits
 			clonedDevRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "one",
-				FileName:    "local-origin.md",
+				FileContent: Some("one"),
+				FileName:    Some("local-origin.md"),
 				Message:     "local-origin",
 			})
 			clonedDevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
 			cloned.OriginRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "two",
-				FileName:    "origin.md",
+				FileContent: Some("two"),
+				FileName:    Some("origin.md"),
 				Message:     "2",
 			})
 			// get the CommitTable
@@ -184,14 +185,14 @@ func TestFixture(t *testing.T) {
 			// create a few commits
 			cloned.DevRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "one",
-				FileName:    "local.md",
+				FileContent: Some("one"),
+				FileName:    Some("local.md"),
 				Message:     "local",
 			})
 			cloned.UpstreamRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileContent: "two",
-				FileName:    "upstream.md",
+				FileContent: Some("two"),
+				FileName:    Some("upstream.md"),
 				Message:     "2",
 			})
 			// get the CommitTable

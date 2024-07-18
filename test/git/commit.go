@@ -1,53 +1,63 @@
 package git
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/helpers"
 )
 
 // Commit describes a Git commit.
 type Commit struct {
-	Author      string `exhaustruct:"optional"`
+	Author      Option[string] `exhaustruct:"optional"`
 	Branch      gitdomain.LocalBranchName
-	FileContent string    `exhaustruct:"optional"`
-	FileName    string    `exhaustruct:"optional"`
-	Locations   Locations `exhaustruct:"optional"`
+	FileContent Option[string]    `exhaustruct:"optional"`
+	FileName    Option[string]    `exhaustruct:"optional"`
+	Locations   Option[Locations] `exhaustruct:"optional"`
 	Message     string
-	SHA         gitdomain.SHA `exhaustruct:"optional"`
+	SHA         Option[gitdomain.SHA] `exhaustruct:"optional"`
 }
 
-// Set assigns the given value to the property with the given Gherkin table name.
-func (self *Commit) Set(name, value string) {
-	switch name {
-	case "BRANCH":
-		self.Branch = gitdomain.NewLocalBranchName(value)
-	case "LOCATION":
-		self.Locations = NewLocations(value)
-	case "MESSAGE":
-		self.Message = value
-	case "FILE NAME":
-		self.FileName = value
-	case "FILE CONTENT":
-		self.FileContent = value
-	case "AUTHOR":
-		self.Author = value
-	default:
-		log.Fatalf("unknown Commit property: %s", name)
+func (self Commit) GetAuthor() string {
+	if author, hasAuthor := self.Author.Get(); hasAuthor {
+		return author
 	}
+	return "user <email@example.com>"
 }
 
-// DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit(filenameSuffix string) Commit {
-	return Commit{
-		Branch:      gitdomain.NewLocalBranchName("main"),
-		FileContent: "default file content",
-		FileName:    "default_file_name_" + filenameSuffix,
-		Locations:   Locations{LocationLocal, LocationOrigin},
-		Message:     "default commit message",
+func (self Commit) GetFileContent() string {
+	if content, hasContent := self.FileContent.Get(); hasContent {
+		return content
 	}
+	return fmt.Sprintf("default file content for file %s in branch %s", self.GetFileName(), self.Branch)
+}
+
+func (self Commit) GetFileName() string {
+	if name, hasName := self.FileName.Get(); hasName {
+		return name
+	}
+	return fmt.Sprintf("default_filename_%s_%s", self.Branch, self.GetLocations().Join("_"))
+}
+
+func (self Commit) GetLocations() Locations {
+	if locations, hasLocations := self.Locations.Get(); hasLocations {
+		return locations
+	}
+	return Locations{LocationLocal, LocationOrigin}
+}
+
+func (self Commit) GetSHA() gitdomain.SHA {
+	if sha, hasSHA := self.SHA.Get(); hasSHA {
+		return sha
+	}
+	return gitdomain.NewSHA("111111")
+}
+
+func (self *Commit) SetFileName(fileName string) {
+	self.FileName = Some(fileName)
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
@@ -56,27 +66,45 @@ func FromGherkinTable(table *godog.Table, branchName gitdomain.LocalBranchName) 
 	lastBranch := ""
 	lastLocationName := ""
 	result := []Commit{}
-	counter := helpers.AtomicCounter{}
 	for _, row := range table.Rows[1:] {
-		commit := DefaultCommit(branchName.String() + counter.ToString())
+		commit := Commit{
+			Author:      None[string](),
+			Branch:      branchName,
+			FileContent: None[string](),
+			FileName:    None[string](),
+			Locations:   None[Locations](),
+			Message:     "",
+			SHA:         None[gitdomain.SHA](),
+		}
 		for cellNo, cell := range row.Cells {
 			columnName := columnNames[cellNo]
 			cellValue := cell.Value
-			if columnName == "BRANCH" {
-				if cell.Value == "" {
+			switch columnName {
+			case "BRANCH":
+				if cellValue == "" {
 					cellValue = lastBranch
 				} else {
 					lastBranch = cellValue
 				}
-			}
-			if columnName == "LOCATION" {
+				commit.Branch = gitdomain.NewLocalBranchName(cellValue)
+			case "LOCATION":
 				if cell.Value == "" {
 					cellValue = lastLocationName
 				} else {
 					lastLocationName = cellValue
 				}
+				commit.Locations = Some(NewLocations(cellValue))
+			case "MESSAGE":
+				commit.Message = cellValue
+			case "FILE NAME":
+				commit.FileName = Some(cellValue)
+			case "FILE CONTENT":
+				commit.FileContent = Some(cellValue)
+			case "AUTHOR":
+				commit.Author = Some(cellValue)
+			default:
+				log.Fatalf("unknown Commit property: %s", columnName)
 			}
-			commit.Set(columnName, cellValue)
 		}
 		result = append(result, commit)
 	}

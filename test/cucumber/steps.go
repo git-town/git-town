@@ -646,7 +646,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateCommit(git.Commit{
 			Branch:   gitdomain.NewLocalBranchName(branch),
-			FileName: "new_file",
+			FileName: Some("new_file"),
 			Message:  message,
 		})
 	})
@@ -655,8 +655,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		commit := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))[0]
-		devRepo.CreateFile(commit.FileName, commit.FileContent)
-		devRepo.StageFiles(commit.FileName)
+		devRepo.CreateFile(commit.GetFileName(), commit.GetFileContent())
+		devRepo.StageFiles(commit.GetFileName())
 		devRepo.CommitStagedChanges(commit.Message)
 	})
 
@@ -1514,8 +1514,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		commits := git.FromGherkinTable(table, gitdomain.NewLocalBranchName("current"))
 		commit := commits[0]
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
-		coworkerRepo.StageFiles(commit.FileName)
+		coworkerRepo.CreateFile(commit.GetFileName(), commit.GetFileContent())
+		coworkerRepo.StageFiles(commit.GetFileName())
 		coworkerRepo.CommitStagedChanges(commit.Message)
 	})
 
@@ -1645,10 +1645,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CheckoutBranch(branchName)
 		devRepo.PushBranchToRemote(branchName, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table, branchName) {
-			devRepo.CreateFile(commit.FileName, commit.FileContent)
-			devRepo.StageFiles(commit.FileName)
+			devRepo.CreateFile(commit.GetFileName(), commit.GetFileContent())
+			devRepo.StageFiles(commit.GetFileName())
 			devRepo.CommitStagedChanges(commit.Message)
-			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+			if commit.GetLocations().Contains(git.Location(gitdomain.RemoteOrigin)) {
 				devRepo.PushBranch()
 			}
 		}
@@ -1663,10 +1663,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CheckoutBranch(branch)
 		devRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 		for _, commit := range git.FromGherkinTable(table, branch) {
-			devRepo.CreateFile(commit.FileName, commit.FileContent)
-			devRepo.StageFiles(commit.FileName)
+			devRepo.CreateFile(commit.GetFileName(), commit.GetFileContent())
+			devRepo.StageFiles(commit.GetFileName())
 			devRepo.CommitStagedChanges(commit.Message)
-			if commit.Locations.Contains(git.Location(gitdomain.RemoteOrigin)) {
+			if commit.GetLocations().Contains(git.Location(gitdomain.RemoteOrigin)) {
 				devRepo.PushBranch()
 			}
 		}
