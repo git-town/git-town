@@ -139,8 +139,7 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 
 // CreateObservedBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
-	main := gitdomain.NewLocalBranchName("main")
-	self.CreateBranch(name, main)
+	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToContributionBranches(name))
 }
 
