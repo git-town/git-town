@@ -94,7 +94,6 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  @this
   Scenario: configured in both Git and config file
     Given the branches
       | NAME            | TYPE         | PARENT | LOCATIONS |

@@ -1,7 +1,11 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given the feature branches "current" and "other"
+    Given a Git repo clone
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | current | feature | main   | local, origin |
+      | other   | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |

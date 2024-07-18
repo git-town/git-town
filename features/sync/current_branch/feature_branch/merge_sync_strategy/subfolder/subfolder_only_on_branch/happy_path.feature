@@ -1,7 +1,11 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given the feature branches "alpha" and "beta"
+    Given a Git repo clone
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME        |
       | main   | local, origin | main commit   | main_file        |
