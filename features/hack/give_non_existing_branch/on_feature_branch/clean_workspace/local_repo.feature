@@ -1,12 +1,11 @@
 Feature: local repo
 
   Background:
-    Given a Git repo clone
+    Given a local Git repo clone
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | existing | feature | main   | local, origin |
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | existing | feature | main   | local     |
     And the current branch is "existing"
-    And my repo does not have an origin
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |

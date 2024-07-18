@@ -1,12 +1,11 @@
 Feature: syncs all feature branches (in a local repo)
 
   Background:
-    Given a Git repo clone
+    Given a local Git repo clone
     And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | alpha | feature | main   | local, origin |
-      | beta  | feature | main   | local, origin |
-    And my repo does not have an origin
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | alpha | feature | main   | local     |
+      | beta  | feature | main   | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |

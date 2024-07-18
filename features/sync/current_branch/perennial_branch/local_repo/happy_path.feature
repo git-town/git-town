@@ -1,12 +1,11 @@
 Feature: sync the current perennial branch in a local repo
 
   Background:
-    Given a Git repo clone
+    Given a local Git repo clone
     And the branches
-      | NAME       | TYPE      | LOCATIONS     |
-      | production | perennial | local, origin |
-      | qa         | perennial | local, origin |
-    And my repo does not have an origin
+      | NAME       | TYPE      | LOCATIONS |
+      | production | perennial | local     |
+      | qa         | perennial | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | main commit  | main_file  |
