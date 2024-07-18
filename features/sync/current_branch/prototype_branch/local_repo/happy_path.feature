@@ -13,7 +13,6 @@ Feature: sync the current observed branch in a local repo
     And an uncommitted file
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                       |
@@ -35,10 +34,11 @@ Feature: sync the current observed branch in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH    | COMMAND       |
-      | prototype | git add -A    |
-      |           | git stash     |
-      |           | git stash pop |
+      | BRANCH    | COMMAND                                              |
+      | prototype | git add -A                                           |
+      |           | git stash                                            |
+      |           | git reset --hard {{ sha-before-run 'local commit' }} |
+      |           | git stash pop                                        |
     And the current branch is still "prototype"
     And the initial commits exist
     And the initial branches and lineage exist
