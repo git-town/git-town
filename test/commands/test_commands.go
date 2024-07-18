@@ -129,6 +129,7 @@ func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchN
 func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.CheckoutBranch(commit.Branch)
 	self.CreateFile(commit.FileName, commit.FileContent)
+	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111111", commit)
 	self.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
