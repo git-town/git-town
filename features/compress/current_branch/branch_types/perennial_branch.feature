@@ -24,7 +24,7 @@ Feature: does not compress perennial branches
 
   Scenario: on main branch
     Given a Git repo clone
-    Given the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | main   | local, origin | commit 1 | file_1    | content 1    |
       |        |               | commit 2 | file_2    | content 2    |
