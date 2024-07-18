@@ -5,7 +5,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |

@@ -6,7 +6,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
       | branch-2 | feature | main   | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |

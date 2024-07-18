@@ -5,7 +5,7 @@ Feature: compress the commits on a parked branch
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked |        | local, origin |
-    Given the current branch is "parked"
+    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | parked | local, origin | commit 1 | file_1    | content 1    |

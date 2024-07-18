@@ -7,7 +7,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
       | feature   | feature | main   | local, origin |
       | feature-1 | feature | main   | local, origin |
       | feature-2 | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |

@@ -10,7 +10,7 @@ Feature: delete the current observed branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | feature  | local, origin | feature commit  |
       | observed | local, origin | observed commit |
-    Given the current branch is "observed"
+    And the current branch is "observed"
     And an uncommitted file
     And the current branch is "observed" and the previous branch is "feature"
     When I run "git-town kill"

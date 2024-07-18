@@ -6,7 +6,7 @@ Feature: syncing a branch whose parent was shipped
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |

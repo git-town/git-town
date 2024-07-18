@@ -6,7 +6,7 @@ Feature: killing a branch without a useful previous branch setting
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | current | feature | main   | local     |
       | other   | feature | main   | local     |
-    Given the current branch is "current"
+    And the current branch is "current"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | current | local    | current commit |

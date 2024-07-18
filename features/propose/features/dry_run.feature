@@ -6,7 +6,7 @@ Feature: dry-run proposing changes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given tool "open" is installed
+    And tool "open" is installed
     And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose --dry-run"

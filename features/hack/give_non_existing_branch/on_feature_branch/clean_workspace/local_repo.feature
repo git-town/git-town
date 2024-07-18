@@ -5,7 +5,7 @@ Feature: local repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     And my repo does not have an origin
     And the commits
       | BRANCH | LOCATION | MESSAGE     |

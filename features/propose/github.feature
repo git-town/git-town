@@ -3,13 +3,13 @@ Feature: GitHub support
 
   Background:
     Given a Git repo clone
-    Given tool "open" is installed
+    And tool "open" is installed
 
   Scenario Outline: normal origin
     Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -32,7 +32,7 @@ Feature: GitHub support
     Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -53,7 +53,7 @@ Feature: GitHub support
     Given the branches
       | NAME          | TYPE    | PARENT | LOCATIONS     |
       | <BRANCH_NAME> | feature | main   | local, origin |
-    Given the current branch is "<BRANCH_NAME>"
+    And the current branch is "<BRANCH_NAME>"
     And the origin is "https://github.com/git-town/git-town"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:

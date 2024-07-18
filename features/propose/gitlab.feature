@@ -3,7 +3,7 @@ Feature: GitLab support
 
   Background:
     Given a Git repo clone
-    Given tool "open" is installed
+    And tool "open" is installed
 
   Scenario Outline: creating proposals
     Given the branches

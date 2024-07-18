@@ -6,7 +6,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | main   | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME        |
       | main   | local, origin | main commit   | main_file        |

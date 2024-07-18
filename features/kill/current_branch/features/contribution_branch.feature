@@ -6,7 +6,7 @@ Feature: delete the current contribution branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
       | feature      | feature      | main   | local, origin |
-    Given the current branch is "contribution"
+    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |

@@ -5,7 +5,7 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    Given the current branch is "parked"
+    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  |
       | main   | local, origin | main commit  | main_file  |

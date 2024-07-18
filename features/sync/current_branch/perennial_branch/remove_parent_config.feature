@@ -6,7 +6,7 @@ Feature: remove parent entries for perennial branches
       | NAME      | TYPE    | PARENT | LOCATIONS |
       | feature-1 | feature | main   | local     |
       | feature-2 | feature | main   | local     |
-    Given the current branch is "feature-1"
+    And the current branch is "feature-1"
     And the configuration file:
       """
       [branches]

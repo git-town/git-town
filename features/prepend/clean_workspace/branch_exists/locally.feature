@@ -6,7 +6,7 @@ Feature: already existing local branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | old      | feature | main   | local, origin |
       | existing | feature | main   | local         |
-    Given the current branch is "old"
+    And the current branch is "old"
     When I run "git-town prepend existing"
 
   Scenario: result

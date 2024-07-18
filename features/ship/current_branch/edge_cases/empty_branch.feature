@@ -5,7 +5,7 @@ Feature: does not ship an empty branch
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | empty | feature | main   | local, origin |
-    Given the current branch is "empty"
+    And the current branch is "empty"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit  | common_file | common content |

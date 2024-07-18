@@ -7,7 +7,7 @@ Feature: switch branches while a manually deleted branch is still listed in the 
       | alpha | feature | main   | local     |
       | beta  | feature | main   | local     |
       | gamma | feature | main   | local     |
-    Given the current branch is "alpha"
+    And the current branch is "alpha"
     And I run "git branch -D beta"
     When I run "git-town switch" and enter into the dialogs:
       | KEYS       |

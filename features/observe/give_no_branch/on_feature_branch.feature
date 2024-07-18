@@ -5,7 +5,7 @@ Feature: observing the current branch
     And the branches
       | NAME   | TYPE    | LOCATIONS |
       | branch | feature | local     |
-    Given the current branch is "branch"
+    And the current branch is "branch"
     And an uncommitted file
     When I run "git-town observe"
 

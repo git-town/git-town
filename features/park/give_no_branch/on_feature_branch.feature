@@ -5,7 +5,7 @@ Feature: parking the current branch
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
-    Given the current branch is "branch"
+    And the current branch is "branch"
     And an uncommitted file
     When I run "git-town park"
 

@@ -5,7 +5,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME              |
       | existing | local, origin | folder commit | committed_folder/file1 |

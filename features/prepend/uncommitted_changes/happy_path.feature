@@ -6,7 +6,7 @@ Feature: prepend a branch to a feature branch
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    Given the current branch is "old"
+    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |

@@ -5,7 +5,7 @@ Feature: sync the current feature branch without a tracking branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |

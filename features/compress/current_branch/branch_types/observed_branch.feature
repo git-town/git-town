@@ -5,7 +5,7 @@ Feature: does not compress observed branches
     And the branches
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed |        | local, origin |
-    Given the current branch is "observed"
+    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | observed | local, origin | commit 1 | file_1    | content 1    |

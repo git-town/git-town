@@ -5,7 +5,7 @@ Feature: conflicts between the main branch and its tracking branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |

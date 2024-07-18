@@ -5,7 +5,7 @@ Feature: cannot observe perennial branches
     And the branches
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
-    Given the current branch is "perennial"
+    And the current branch is "perennial"
     And an uncommitted file
     When I run "git-town observe"
 

@@ -5,7 +5,7 @@ Feature: Cannot create proposals for contribution branches
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    Given the current branch is "contribution"
+    And the current branch is "contribution"
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 

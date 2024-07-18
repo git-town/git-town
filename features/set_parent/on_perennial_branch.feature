@@ -17,7 +17,7 @@ Feature: cannot set parent of perennial branches
     Given the branches
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
-    Given the current branch is "qa"
+    And the current branch is "qa"
     When I run "git-town set-parent"
     Then it prints the error:
       """

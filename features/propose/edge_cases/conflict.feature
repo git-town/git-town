@@ -6,7 +6,7 @@ Feature: merge conflict
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | conflicting_file | main content    |

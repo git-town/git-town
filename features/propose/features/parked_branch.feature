@@ -6,7 +6,7 @@ Feature: Create proposals for parked branches
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    Given the current branch is "parked"
+    And the current branch is "parked"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"

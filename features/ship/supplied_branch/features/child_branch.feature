@@ -7,7 +7,7 @@ Feature: does not ship a child branch
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
       | gamma | feature | beta   | local, origin |
-    Given the current branch is "alpha"
+    And the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

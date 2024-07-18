@@ -53,7 +53,7 @@ Feature: Gitea support
     Given the branches
       | NAME          | TYPE    | PARENT | LOCATIONS     |
       | <BRANCH_NAME> | feature | main   | local, origin |
-    Given the current branch is "<BRANCH_NAME>"
+    And the current branch is "<BRANCH_NAME>"
     And the origin is "https://gitea.com/git-town/git-town"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:

@@ -6,7 +6,7 @@ Feature: rename a perennial branch
       | NAME       | TYPE      | PARENT     | LOCATIONS     |
       | production | perennial |            | local, origin |
       | hotfix     | feature   | production | local, origin |
-    Given the current branch is "production"
+    And the current branch is "production"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local, origin | hotfix commit     |

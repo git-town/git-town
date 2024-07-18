@@ -5,7 +5,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
-    Given the current branch is "observed"
+    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | observed | local    | conflicting local commit  | conflicting_file | local content  |

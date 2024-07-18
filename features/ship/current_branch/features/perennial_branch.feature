@@ -5,7 +5,7 @@ Feature: cannot ship perennial branches
     And the branches
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
-    Given the current branch is "perennial"
+    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | perennial | local, origin | perennial commit |

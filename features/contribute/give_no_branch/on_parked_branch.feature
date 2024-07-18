@@ -5,7 +5,7 @@ Feature: making a parked branch a contribution branch
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS |
       | branch | parked | main   | local     |
-    Given the current branch is "branch"
+    And the current branch is "branch"
     And an uncommitted file
     When I run "git-town contribute"
 

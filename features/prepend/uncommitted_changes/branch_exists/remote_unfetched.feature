@@ -6,7 +6,7 @@ Feature: already existing remote branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | old      | feature | main   | local, origin |
       | existing | feature | main   | origin        |
-    Given the current branch is "old"
+    And the current branch is "old"
     And an uncommitted file
     When I run "git-town prepend existing"
 

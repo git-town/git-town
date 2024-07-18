@@ -17,7 +17,7 @@ Feature: does not kill perennial branches
     And the branches
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
-    Given the current branch is "qa"
+    And the current branch is "qa"
     When I run "git-town kill"
     Then it runs the commands
       | BRANCH | COMMAND                  |

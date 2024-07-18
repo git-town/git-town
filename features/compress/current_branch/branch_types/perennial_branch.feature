@@ -5,7 +5,7 @@ Feature: does not compress perennial branches
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | perennial | perennial |        | local, origin |
-    Given the current branch is "perennial"
+    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | perennial | local, origin | commit 1 | file_1    | content 1    |

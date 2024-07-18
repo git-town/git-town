@@ -5,7 +5,7 @@ Feature: ship a feature branch in a local repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And my repo does not have an origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |

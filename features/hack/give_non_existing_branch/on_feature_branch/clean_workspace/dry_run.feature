@@ -5,7 +5,7 @@ Feature: dry-run hacking a new feature branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |

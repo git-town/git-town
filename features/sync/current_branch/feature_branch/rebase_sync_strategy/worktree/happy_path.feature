@@ -6,7 +6,7 @@ Feature: sync a branch whose parent is active in another worktree
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |

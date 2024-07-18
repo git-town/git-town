@@ -7,7 +7,7 @@ Feature: shipped parent branches in a stacked change
       | feature-1 | feature | main      | local, origin |
       | feature-2 | feature | feature-1 | local, origin |
       | feature-3 | feature | feature-2 | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |

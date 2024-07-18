@@ -5,7 +5,7 @@ Feature: making the current contribution branch a feature branch
     And the branches
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
-    Given the current branch is "contribution"
+    And the current branch is "contribution"
     When I run "git-town hack"
 
   Scenario: result

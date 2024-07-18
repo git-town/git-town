@@ -17,7 +17,7 @@ Feature: describe the status of the current/last Git Town command
     Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

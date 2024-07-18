@@ -6,7 +6,7 @@ Feature: switch branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |
       | other   | feature | main   | local, origin |
-    Given the current branch is "current"
+    And the current branch is "current"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |

@@ -29,7 +29,7 @@ Feature: destination branch exists
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | origin        |
-    Given the current branch is "alpha"
+    And the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

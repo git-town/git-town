@@ -6,7 +6,7 @@ Feature: rename a parent branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    Given the current branch is "parent"
+    And the current branch is "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |

@@ -5,7 +5,7 @@ Feature: with sync-perennial-strategy set to "merge"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And the current branch is "feature"
     And the commits

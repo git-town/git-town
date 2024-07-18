@@ -5,7 +5,7 @@ Feature: Cannot create proposals for observed branches
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
-    Given the current branch is "observed"
+    And the current branch is "observed"
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 

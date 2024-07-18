@@ -6,7 +6,7 @@ Feature: delete the current parked branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | parked  | parked  | main   | local, origin |
       | feature | feature | main   | local, origin |
-    Given the current branch is "parked"
+    And the current branch is "parked"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

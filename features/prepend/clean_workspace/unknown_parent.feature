@@ -5,7 +5,7 @@ Feature: ask for missing parent information
     And the branches
       | NAME | TYPE   | LOCATIONS |
       | old  | (none) | local     |
-    Given the current branch is "old"
+    And the current branch is "old"
     When I run "git-town prepend new" and enter into the dialog:
       | DIALOG               | KEYS  |
       | parent branch of old | enter |

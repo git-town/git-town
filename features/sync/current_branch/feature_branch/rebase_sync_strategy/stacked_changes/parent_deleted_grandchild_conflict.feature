@@ -6,7 +6,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | NAME       | TYPE    | PARENT | LOCATIONS     |
       | child      | feature | main   | local, origin |
       | grandchild | feature | child  | local, origin |
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "child"
     And the commits
       | BRANCH     | LOCATION | MESSAGE                       | FILE NAME        | FILE CONTENT       |

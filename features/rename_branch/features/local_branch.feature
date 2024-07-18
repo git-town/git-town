@@ -5,7 +5,7 @@ Feature: rename a local-only branch
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS |
       | old  | feature | main   | local     |
-    Given the current branch is "old"
+    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

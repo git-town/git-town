@@ -5,7 +5,7 @@ Feature: unsupported hosting platform
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
     When I run "git-town propose"
 
   Scenario: result

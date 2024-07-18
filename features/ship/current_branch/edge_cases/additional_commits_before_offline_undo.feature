@@ -6,7 +6,7 @@ Feature: undoing an offline ship with additional commits to main
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    Given offline mode is enabled
+    And offline mode is enabled
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

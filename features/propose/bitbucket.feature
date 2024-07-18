@@ -6,10 +6,10 @@ Feature: Bitbucket support
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the current branch is "feature"
+    And the current branch is "feature"
 
   Scenario Outline: normal origin
-    And the origin is "<ORIGIN>"
+    Given the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -33,7 +33,7 @@ Feature: Bitbucket support
       | ssh://username@bitbucket.org/git-town/git-town       |
 
   Scenario Outline: origin includes path that looks like a URL
-    And the origin is "<ORIGIN>"
+    Given the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:

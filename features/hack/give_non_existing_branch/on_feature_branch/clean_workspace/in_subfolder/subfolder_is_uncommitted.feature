@@ -8,7 +8,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    Given the current branch is "existing"
+    And the current branch is "existing"
     And a folder "uncommitted_folder"
     When I run "git-town hack new" in the "uncommitted_folder" folder
 

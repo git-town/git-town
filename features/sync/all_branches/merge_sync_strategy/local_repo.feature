@@ -6,7 +6,7 @@ Feature: syncs all feature branches (in a local repo)
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | main   | local, origin |
-    Given my repo does not have an origin
+    And my repo does not have an origin
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |

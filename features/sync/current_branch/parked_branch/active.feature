@@ -5,7 +5,7 @@ Feature: active parked branches get synced like normal feature branches
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    Given the current branch is "parked"
+    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
