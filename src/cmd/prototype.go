@@ -123,7 +123,7 @@ type createPrototypeData struct {
 	commandsCounter           Mutable[gohacks.Counter]
 	config                    config.ValidatedConfig
 	dialogTestInputs          Mutable[components.TestInputs]
-	dryRun                    bool
+	dryRun                    configdomain.DryRun
 	finalMessages             stringslice.Collector
 	frontend                  gitdomain.Runner
 	git                       git.Commands
@@ -134,7 +134,7 @@ type createPrototypeData struct {
 	remotes                   gitdomain.Remotes
 	rootDir                   gitdomain.RepoRootDir
 	targetBranch              gitdomain.LocalBranchName
-	verbose                   bool
+	verbose                   configdomain.Verbose
 }
 
 // this configuration is for when "git prototype" is used to make contribution, observed, or parked branches prototype branches
