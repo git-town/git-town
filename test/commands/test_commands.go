@@ -164,13 +164,13 @@ func (self *TestCommands) CreateFolder(name string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 }
 
-// CreateObservedBranches creates perennial branches with the given names in this repository.
+// CreateObservedBranches creates observed branches with the given names in this repository.
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
-// CreateParkedBranches creates perennial branches with the given names in this repository.
+// CreateParkedBranches creates parked branches with the given names in this repository.
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent)
 	asserts.NoError(self.Config.AddToParkedBranches(name))
