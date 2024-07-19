@@ -1449,7 +1449,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step("^the branch(es)?$", func(ctx context.Context, table *godog.Table) {
+	sc.Step("^the branch(es)?$", func(ctx context.Context, plural string, table *godog.Table) {
+		if len(plural) > 0 && len(table.Rows) == 2 {
+			panic(`you said "the branches" but only 1 branch provided`)
+		}
+		if len(plural) == 0 && len(table.Rows) > 2 {
+			panic(`you said "the branch" but more than 1 branch provided`)
+		}
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		// TODO: uncomment this and make it work
 		// if state.initialBranches.IsNone() {
