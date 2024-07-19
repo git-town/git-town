@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
@@ -40,14 +39,14 @@ func NewBranchType(name string) Option[BranchType] {
 }
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
-func (self BranchType) ShouldPush(currentBranch, initialBranch gitdomain.LocalBranchName) bool {
+func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	switch self {
 	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeContributionBranch:
 		return true
 	case BranchTypeObservedBranch, BranchTypePrototypeBranch:
 		return false
 	case BranchTypeParkedBranch:
-		return currentBranch == initialBranch
+		return isInitialBranch
 	}
 	panic("unhandled branch type")
 }
