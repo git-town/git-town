@@ -1,5 +1,4 @@
 @skipWindows
-@this
 Feature: Create proposals for prototype branches
 
   Background:
