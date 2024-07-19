@@ -2,28 +2,28 @@ Feature: sync a stack making independent changes
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
       |        |               | alpha 2 | alpha_2   | alpha 2      |
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta 1  | beta_1    | beta 1       |
       |        |               | beta 2  | beta_2    | beta 2       |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | gamma | feature | beta   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | gamma  | local, origin | gamma 1 | gamma_1   | gamma 1      |
       |        |               | gamma 2 | gamma_2   | gamma 2      |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | delta | feature | gamma  | local, origin |
     And the commits

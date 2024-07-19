@@ -2,7 +2,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the perennial branches are "main"

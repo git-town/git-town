@@ -2,7 +2,7 @@ Feature: ship a feature branch in a local repo
 
   Background:
     Given a local Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"

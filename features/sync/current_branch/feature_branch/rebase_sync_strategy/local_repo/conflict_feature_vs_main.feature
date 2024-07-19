@@ -3,7 +3,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given a local Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And Git Town setting "sync-feature-strategy" is "rebase"

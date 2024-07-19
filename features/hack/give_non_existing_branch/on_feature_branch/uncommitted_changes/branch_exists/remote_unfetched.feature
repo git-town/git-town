@@ -2,7 +2,7 @@ Feature: already existing remote branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | origin    |
     And an uncommitted file

@@ -2,7 +2,7 @@ Feature: parking an observed branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE     | LOCATIONS |
       | observed | observed | local     |
     And the current branch is "observed"

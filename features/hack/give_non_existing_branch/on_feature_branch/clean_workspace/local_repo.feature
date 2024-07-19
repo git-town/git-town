@@ -2,7 +2,7 @@ Feature: local repo
 
   Background:
     Given a local Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
     And the current branch is "existing"
