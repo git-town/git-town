@@ -19,7 +19,6 @@ Feature: remove an prototype branch as soon as its tracking branch is gone, even
       | BRANCH    | COMMAND                  |
       | prototype | git fetch --prune --tags |
       |           | git checkout main        |
-      # TODO: it shouldn't rebase here
       | main      | git rebase origin/main   |
       |           | git branch -D prototype  |
     And the current branch is now "main"

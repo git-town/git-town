@@ -13,8 +13,7 @@ import (
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
 func syncDeletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
-	branchType := args.Config.BranchType(branch)
-	switch branchType {
+	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
