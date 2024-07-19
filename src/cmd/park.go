@@ -105,6 +105,10 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 			if err := config.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
+		case configdomain.BranchTypePrototypeBranch:
+			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
+				return err
+			}
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 	}

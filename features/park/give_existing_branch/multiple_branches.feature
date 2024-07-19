@@ -8,8 +8,9 @@ Feature: parking multiple branches
       | feature      | feature      | main   | local     |
       | contribution | contribution |        | local     |
       | observed     | observed     | main   | local     |
+      | prototype    | prototype    | main   | local     |
     And an uncommitted file
-    When I run "git-town park feature contribution observed"
+    When I run "git-town park feature contribution observed prototype"
 
   Scenario: result
     Then it runs no commands
@@ -19,7 +20,11 @@ Feature: parking multiple branches
       """
     And branch "feature" is now parked
     And branch "contribution" is now parked
+    And there are now no contribution branches
     And branch "observed" is now parked
+    And there are now no observed branches
+    And branch "prototype" is now parked
+    And there are now no prototype branches
     And the current branch is still "main"
     And the uncommitted file still exists
 
