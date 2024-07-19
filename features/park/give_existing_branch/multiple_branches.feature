@@ -23,7 +23,7 @@ Feature: parking multiple branches
     And branch "observed" is now parked
     And there are now no observed branches
     And branch "prototype" is now parked
-    And there are now no prototype branches
+    And branch "prototype" is still prototype
     And the current branch is still "main"
     And the uncommitted file still exists
 
