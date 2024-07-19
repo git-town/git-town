@@ -82,6 +82,16 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		ContributionBranchProgram(args.Program, branch)
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch.RemoteName, args.Program)
+	case configdomain.BranchTypePrototypeBranch:
+		FeatureBranchProgram(featureBranchArgs{
+			localName:           localName,
+			offline:             args.Config.Offline,
+			parentOtherWorktree: parentOtherWorktree,
+			program:             list,
+			pushBranches:        false,
+			remoteName:          branch.RemoteName,
+			syncStrategy:        args.Config.SyncFeatureStrategy,
+		})
 	}
 	if args.PushBranch.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {

@@ -20,6 +20,8 @@ func syncDeletedBranchProgram(list Mutable[program.Program], branch gitdomain.Lo
 		syncDeletedPerennialBranchProgram(list, branch, args)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
 		syncDeletedObservedBranchProgram(list, branch, args)
+	case configdomain.BranchTypePrototypeBranch:
+		syncDeletedPrototypeBranchProgram(list, branch, args)
 	}
 }
 
@@ -40,11 +42,11 @@ func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitd
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  args.Config.MainBranch,
+		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch})
+	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
@@ -53,11 +55,24 @@ func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch git
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  args.Config.MainBranch,
+		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch})
+	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
+	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
+	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
+}
+
+func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
+		Branch:  branch,
+		Lineage: args.Config.Lineage,
+		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
+		Program: list,
+	})
+	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
+	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }

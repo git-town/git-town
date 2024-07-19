@@ -386,7 +386,7 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 	switch branchType {
 	case configdomain.BranchTypeContributionBranch:
 		return errors.New(messages.ContributionBranchCannotShip)
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.MainBranchCannotShip)

@@ -53,18 +53,18 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 
 func (self BranchType) String() string {
 	switch self {
-	case BranchTypeMainBranch:
-		return "main branch"
-	case BranchTypePerennialBranch:
-		return "perennial branch"
-	case BranchTypeFeatureBranch:
-		return "feature branch"
-	case BranchTypeParkedBranch:
-		return "parked branch"
 	case BranchTypeContributionBranch:
 		return "contribution branch"
+	case BranchTypeFeatureBranch:
+		return "feature branch"
+	case BranchTypeMainBranch:
+		return "main branch"
 	case BranchTypeObservedBranch:
 		return "observed branch"
+	case BranchTypeParkedBranch:
+		return "parked branch"
+	case BranchTypePerennialBranch:
+		return "perennial branch"
 	case BranchTypePrototypeBranch:
 		return "prototype branch"
 	}
