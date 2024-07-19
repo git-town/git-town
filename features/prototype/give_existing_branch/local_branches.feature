@@ -34,6 +34,7 @@ Feature: make multiple branches prototype
       branch "parked" is now a prototype branch
       """
     And branch "parked" is now prototype
+    And branch "parked" is still
     And the current branch is still "main"
     And the uncommitted file still exists
 
