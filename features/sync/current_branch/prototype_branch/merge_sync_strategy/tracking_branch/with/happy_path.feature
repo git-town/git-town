@@ -1,4 +1,4 @@
-Feature: sync the current prototype branch
+Feature: sync the current prototype branch with tracking branch
 
   Background:
     Given a Git repo clone
