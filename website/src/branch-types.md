@@ -71,3 +71,22 @@ parked branch. You might want to park a branch if you
 
 You can park any feature branch by running [git park](commands/park.md) on it.
 Unpark a parked branch by running `git hack` on it.
+
+## Prototype Branches
+
+A prototype branch is a local-only feature branch that incorporates updates from
+its parent branch but is not pushed to the remote repository. This branch type
+is useful in several scenarios:
+
+- The branch contains sensitive information, such as secrets, or potentially
+  problematic code or data that could trigger alerts.
+- The developer prefers to keep their work private from the rest of the team
+  during the initial stages of development.
+- Prototype branches can reduce CI pressure during the early phases of feature
+  development.
+
+You can compress and ship prototype branches normally.
+
+You can park and unpark a prototype branch and it maintains its prototype
+status. When you change it to an observed or contribution branch it loses its
+prototype status.
