@@ -41,19 +41,19 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	}, finalMessages
 }
 
-// AddToContributionBranches registers the given branch names as perennial branches.
+// AddToContributionBranches registers the given branch names as contribution branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetContributionBranches(append(self.Config.Value.ContributionBranches, branches...))
 }
 
-// AddToObservedBranches registers the given branch names as perennial branches.
+// AddToObservedBranches registers the given branch names as observed branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetObservedBranches(append(self.Config.Value.ObservedBranches, branches...))
 }
 
-// AddToParkedBranches registers the given branch names as perennial branches.
+// AddToParkedBranches registers the given branch names as parked branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetParkedBranches(append(self.Config.Value.ParkedBranches, branches...))
