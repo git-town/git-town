@@ -180,7 +180,7 @@ func validateContributeData(data contributeData) error {
 			return errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		}
 	}
 	return nil

@@ -272,6 +272,8 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			err = args.config.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
 			err = args.config.RemoveFromParkedBranches(branchName)
+		case configdomain.BranchTypePrototypeBranch:
+			err = args.config.RemoveFromPrototypeBranches(branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
 		}
