@@ -148,7 +148,9 @@ func validateParkData(data parkData) error {
 			return errors.New(messages.PerennialBranchCannotPark)
 		case configdomain.BranchTypeParkedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePrototypeBranch:
+		default:
+			panic("unhandled branch type:" + branchType.String())
 		}
 	}
 	return nil
