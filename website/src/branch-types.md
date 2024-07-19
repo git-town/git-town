@@ -90,7 +90,7 @@ prototype status since it now has an official tracking branch that other people
 look at. In this situation you can keep syncing without pushes by using the
 `--no-push` sync option.
 
-You can compress and ship prototype branches normally. You can park and unpark a
+You can compress and ship prototype branches as usual. You can park and unpark a
 prototype branch and it will maintain its prototype status. When you change a
 prototype branch to an observed or contribution branch it loses its prototype
 status.
