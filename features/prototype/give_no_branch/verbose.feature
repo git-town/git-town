@@ -27,7 +27,7 @@ Feature: prototype a branch verbosely
       """
     And it prints:
       """
-      branch "branch" is now an prototype branch
+      branch "branch" is now a prototype branch
       """
     And the current branch is still "branch"
     And branch "branch" is now prototype

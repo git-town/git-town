@@ -67,12 +67,12 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 	if err = removeNonPrototypeBranchTypes(data.branchesToPrototype, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
-	printPrototypeBranches(branchNames)
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
 		if err = repo.Git.CheckoutBranch(repo.Frontend, checkout, false); err != nil {
 			return err
 		}
 	}
+	printPrototypeBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
