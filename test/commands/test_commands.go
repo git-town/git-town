@@ -137,7 +137,7 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.MustRun("git", commands...)
 }
 
-// CreateObservedBranches creates perennial branches with the given names in this repository.
+// CreateObservedBranch creates a contribution branches with the given name in this repository.
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToContributionBranches(name))
@@ -164,25 +164,25 @@ func (self *TestCommands) CreateFolder(name string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 }
 
-// CreateObservedBranches creates observed branches with the given names in this repository.
+// CreateObservedBranch creates an observed branch with the given name in this repository.
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
-// CreateParkedBranches creates parked branches with the given names in this repository.
+// CreateParkedBranch creates a parked branch with the given name in this repository.
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent)
 	asserts.NoError(self.Config.AddToParkedBranches(name))
 }
 
-// CreatePerennialBranches creates perennial branches with the given names in this repository.
+// CreatePerennialBranch creates a perennial branch with the given name in this repository.
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToPerennialBranches(name))
 }
 
-// CreatePrototypeBranches creates prototype branches with the given names in this repository.
+// CreatePrototypeBranches creates a prototype branch with the given name in this repository.
 func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent)
 	asserts.NoError(self.Config.AddToPrototypeBranches(name))
