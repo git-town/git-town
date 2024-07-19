@@ -4,7 +4,7 @@ Feature: make a contribution branch without parent a prototype
     Given a Git repo clone
     And the branch
       | NAME   | TYPE         | LOCATIONS |
-      | branch | contribution | origin    |
+      | branch | contribution | local     |
     And the current branch is "branch"
     And an uncommitted file
     When I run "git-town prototype"
@@ -20,7 +20,6 @@ Feature: make a contribution branch without parent a prototype
     And there are now no contribution branches
     And the uncommitted file still exists
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -30,5 +29,6 @@ Feature: make a contribution branch without parent a prototype
       |        | git stash pop |
     And the current branch is still "branch"
     And the initial branches and lineage exist
+    And branch "branch" is now a contribution branch
     And there are now no prototype branches
     And the uncommitted file still exists
