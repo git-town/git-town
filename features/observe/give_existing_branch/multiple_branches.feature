@@ -24,16 +24,19 @@ Feature: observing multiple branches
       branch "contribution" is now an observed branch
       """
     And branch "contribution" is now observed
+    And there are now no contribution branches
     And it prints:
       """
       branch "parked" is now an observed branch
       """
     And branch "parked" is now observed
+    And there are now no parked branches
     And it prints:
       """
       branch "prototype" is now an observed branch
       """
     And branch "prototype" is now observed
+    And there are now no prototype branches
     And the current branch is still "main"
     And the uncommitted file still exists
 
