@@ -1,4 +1,4 @@
-Feature: making multiple branches prototype
+Feature: make multiple branches prototype
 
   Background:
     Given a Git repo clone
@@ -10,7 +10,6 @@ Feature: making multiple branches prototype
     And an uncommitted file
     When I run "git-town prototype feature-1 feature-2 feature-3"
 
-  @this
   Scenario: result
     Then it runs no commands
     And it prints:

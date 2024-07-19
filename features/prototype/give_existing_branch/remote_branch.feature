@@ -1,9 +1,13 @@
 Feature: observe a remote branch
 
   Background:
-    Given a known remote branch "remote-feature"
+    Given a Git repo clone
+    And the branch
+      | NAME           | TYPE    | PARENT | LOCATIONS |
+      | remote-feature | feature | main   | origin    |
+    And I run "git fetch"
     And an uncommitted file
-    When I run "git-town observe remote-feature"
+    When I run "git-town prototype remote-feature"
 
   Scenario: result
     Then it runs the commands
@@ -11,10 +15,10 @@ Feature: observe a remote branch
       |        | git checkout remote-feature |
     And it prints:
       """
-      branch "remote-feature" is now an observed branch
+      branch "remote-feature" is now a prototype branch
       """
     And the current branch is now "remote-feature"
-    And branch "remote-feature" is now observed
+    And branch "remote-feature" is now prototype
     And the uncommitted file still exists
 
   Scenario: undo

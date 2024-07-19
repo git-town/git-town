@@ -1,7 +1,7 @@
 Feature: on the main branch with uncommitted changes
 
   Background:
-    Given the branches
+    Given the branch
       | NAME | TYPE | PARENT |
       | main | main |        |
     And the commits
@@ -11,7 +11,6 @@ Feature: on the main branch with uncommitted changes
     And an uncommitted file
     When I run "git-town prototype new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |

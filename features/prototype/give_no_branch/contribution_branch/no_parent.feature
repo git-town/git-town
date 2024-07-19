@@ -1,18 +1,22 @@
-Feature: observing a contribution branch
+Feature: make a contribution branch without parent a prototype
 
   Background:
-    Given the current branch is a contribution branch "branch"
+    Given a Git repo clone
+    And the branch
+      | NAME   | TYPE         | LOCATIONS |
+      | branch | contribution | origin    |
     And an uncommitted file
-    When I run "git-town observe"
+    When I run "git-town prototype"
 
+  @this
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "branch" is now a prototype branch
       """
     And the current branch is still "branch"
-    And branch "branch" is now observed
+    And branch "branch" is now prototype
     And there are now no contribution branches
     And the uncommitted file still exists
 
@@ -25,5 +29,5 @@ Feature: observing a contribution branch
       |        | git stash pop |
     And the current branch is still "branch"
     And branch "branch" is now a contribution branch
-    And there are now no observed branches
+    And there are now no prototype branches
     And the uncommitted file still exists
