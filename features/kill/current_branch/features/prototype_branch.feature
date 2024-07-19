@@ -6,7 +6,6 @@ Feature: delete the current prototype branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
       | previous  | feature   | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | previous  | local, origin | previous commit  |
