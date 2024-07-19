@@ -170,7 +170,7 @@ func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
-// creates a parked branch with the given name in this repository
+// creates a parked branch with the given name and parent in this repository
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent)
 	asserts.NoError(self.Config.AddToParkedBranches(name))
