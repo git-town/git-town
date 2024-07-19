@@ -13,6 +13,7 @@ const (
 	BranchTypeParkedBranch
 	BranchTypeContributionBranch
 	BranchTypeObservedBranch
+	BranchTypePrototypeBranch
 )
 
 func NewBranchType(name string) Option[BranchType] {
@@ -29,6 +30,8 @@ func NewBranchType(name string) Option[BranchType] {
 		return Some(BranchTypeParkedBranch)
 	case "perennial":
 		return Some(BranchTypePerennialBranch)
+	case "prototype":
+		return Some(BranchTypePrototypeBranch)
 	case "(none)":
 		return None[BranchType]()
 	}
@@ -40,7 +43,7 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	switch self {
 	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeContributionBranch:
 		return true
-	case BranchTypeObservedBranch:
+	case BranchTypeObservedBranch, BranchTypePrototypeBranch:
 		return false
 	case BranchTypeParkedBranch:
 		return isInitialBranch
@@ -50,18 +53,20 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 
 func (self BranchType) String() string {
 	switch self {
-	case BranchTypeMainBranch:
-		return "main branch"
-	case BranchTypePerennialBranch:
-		return "perennial branch"
-	case BranchTypeFeatureBranch:
-		return "feature branch"
-	case BranchTypeParkedBranch:
-		return "parked branch"
 	case BranchTypeContributionBranch:
 		return "contribution branch"
+	case BranchTypeFeatureBranch:
+		return "feature branch"
+	case BranchTypeMainBranch:
+		return "main branch"
 	case BranchTypeObservedBranch:
 		return "observed branch"
+	case BranchTypeParkedBranch:
+		return "parked branch"
+	case BranchTypePerennialBranch:
+		return "perennial branch"
+	case BranchTypePrototypeBranch:
+		return "prototype branch"
 	}
 	panic("unhandled branch type")
 }

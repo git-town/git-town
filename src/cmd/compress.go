@@ -286,7 +286,7 @@ func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType confi
 
 func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
 	switch branchType {
-	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch:
+	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.CompressIsPerennial)

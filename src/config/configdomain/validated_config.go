@@ -26,6 +26,8 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 		return BranchTypeObservedBranch
 	case self.IsParkedBranch(branch):
 		return BranchTypeParkedBranch
+	case self.IsPrototypeBranch(branch):
+		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
 }
