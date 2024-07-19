@@ -4,7 +4,7 @@ Feature: make the current branch a contribution branch
     Given a Git repo clone
     And the branch
       | NAME   | TYPE    | PARENT | LOCATIONS |
-      | branch | feature | main   | origin    |
+      | branch | feature | main   | local     |
     And the current branch is "branch"
     And an uncommitted file
     When I run "git-town contribute"

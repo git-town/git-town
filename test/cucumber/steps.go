@@ -957,7 +957,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.runExitCodeChecked = true
 		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput)
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
 		}
 		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
 			return fmt.Errorf("unexpected exit code %d", exitCode)
@@ -1666,7 +1666,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
 		if !devRepo.BranchExists(devRepo.TestRunner, branch) {
-			devRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+			panic("cannot check out non-existing branch: " + branch)
 		}
 		devRepo.CheckoutBranch(branch)
 	})
