@@ -104,6 +104,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyParkedBranches,
 	KeyPerennialBranches,
 	KeyPerennialRegex,
+	KeyPrototypeBranches,
 	KeyPushHook,
 	KeyPushNewBranches,
 	KeyShipDeleteTrackingBranch,

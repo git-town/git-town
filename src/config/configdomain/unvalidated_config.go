@@ -1,6 +1,8 @@
 package configdomain
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -48,6 +50,8 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 		return BranchTypeObservedBranch
 	case self.IsParkedBranch(branch):
 		return BranchTypeParkedBranch
+	case self.IsPrototypeBranch(branch):
+		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
 }
@@ -96,6 +100,11 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 		return perennialRegex.MatchesBranch(branch)
 	}
 	return false
+}
+
+func (self *UnvalidatedConfig) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
+	fmt.Println("33333333333333333333333333333333333", self.PrototypeBranches.String())
+	return slice.Contains(self.PrototypeBranches, branch)
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
@@ -150,6 +159,7 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.PerennialRegex.IsSome() {
 		self.PerennialRegex = other.PerennialRegex
 	}
+	self.PrototypeBranches = append(self.PrototypeBranches, other.PrototypeBranches...)
 	if value, has := other.PushHook.Get(); has {
 		self.PushHook = value
 	}
