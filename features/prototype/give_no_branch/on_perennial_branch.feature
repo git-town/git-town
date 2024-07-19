@@ -1,19 +1,24 @@
-Feature: cannot observe perennial branches
+Feature: cannot prototype perennial branches
 
   Background:
-    Given the current branch is a perennial branch "perennial"
+    Given a Git repo clone
+    And the branch
+      | NAME   | TYPE      | LOCATIONS |
+      | branch | perennial | local     |
+    Given the current branch is "branch"
     And an uncommitted file
-    When I run "git-town observe"
+    When I run "git-town prototype"
 
+  @debug @this
   Scenario: result
     Then it runs no commands
     And it prints the error:
       """
-      cannot observe perennial branches
+      cannot prototype perennial branches
       """
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
-    And there are still no observed branches
+    And there are still no prototype branches
     And the uncommitted file still exists
 
   Scenario: undo
@@ -21,5 +26,5 @@ Feature: cannot observe perennial branches
     Then it runs no commands
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
-    And there are still no observed branches
+    And there are still no prototype branches
     And the uncommitted file still exists

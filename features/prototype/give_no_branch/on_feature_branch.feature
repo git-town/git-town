@@ -1,18 +1,22 @@
 Feature: make the current branch a prototype branch
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given a Git repo clone
+    And the branch
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
+    Given the current branch is "branch"
     And an uncommitted file
-    When I run "git-town observe"
+    When I run "git-town prototype"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "branch" is now a prototype branch
       """
     And the current branch is still "branch"
-    And branch "branch" is now observed
+    And branch "branch" is now prototype
     And the uncommitted file still exists
 
   Scenario: undo
@@ -23,5 +27,5 @@ Feature: make the current branch a prototype branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And there are now no observed branches
+    And there are now no prototype branches
     And the uncommitted file still exists
