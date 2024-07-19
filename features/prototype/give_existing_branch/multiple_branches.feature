@@ -1,27 +1,33 @@
-Feature: observing multiple branches
+Feature: making multiple branches prototype
 
   Background:
-    Given the feature branches "feature-1", "feature-2", and "feature-3"
+    Given a Git repo clone
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+      | feature-3 | feature | main   | local, origin |
     And an uncommitted file
-    When I run "git-town observe feature-1 feature-2 feature-3"
+    When I run "git-town prototype feature-1 feature-2 feature-3"
 
+  @this
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "feature-1" is now an observed branch
+      branch "feature-1" is now a prototype branch
       """
-    And branch "feature-1" is now observed
+    And branch "feature-1" is now prototype
     And it prints:
       """
-      branch "feature-2" is now an observed branch
+      branch "feature-2" is now a prototype branch
       """
-    And branch "feature-2" is now observed
+    And branch "feature-2" is now prototype
     And it prints:
       """
-      branch "feature-3" is now an observed branch
+      branch "feature-3" is now a prototype branch
       """
-    And branch "feature-3" is now observed
+    And branch "feature-3" is now prototype
     And the current branch is still "main"
     And the uncommitted file still exists
 

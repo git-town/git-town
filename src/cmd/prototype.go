@@ -30,7 +30,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prototypeDesc = "Creates prototype branches"
+const prototypeDesc = "Mark a branch as a prototype branch"
 
 const prototypeHelp = `
 A prototype branch is a local-only feature branch that incorporates updates from its parent branch but is not pushed to the remote repository.
@@ -54,7 +54,7 @@ func prototypeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePrototype(args []string, dryRun, verbose bool) error {
+func executePrototype(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
