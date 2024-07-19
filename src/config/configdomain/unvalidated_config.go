@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -103,7 +101,6 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 }
 
 func (self *UnvalidatedConfig) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	fmt.Println("33333333333333333333333333333333333", self.PrototypeBranches.String())
 	return slice.Contains(self.PrototypeBranches, branch)
 }
 
