@@ -1,4 +1,3 @@
-@this
 Feature: observing multiple branches
 
   Background:

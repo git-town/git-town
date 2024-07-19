@@ -175,7 +175,9 @@ func validateObserveData(data observeData) error {
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+		default:
+			panic("unhandled branch type" + branchType.String())
 		}
 	}
 	return nil
