@@ -4,7 +4,6 @@ Feature: show the configuration
   Background:
     Given a Git repo clone
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given the branches
       | NAME           | TYPE         | PARENT | LOCATIONS |
