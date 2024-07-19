@@ -4,7 +4,7 @@ Feature: does not compress non-active parked branches in the stack
     Given a Git repo clone
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
-      | parked | parked |        | local, origin |
+      | parked | parked | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | parked | local, origin | parked 1 | parked_1  | parked 1     |
