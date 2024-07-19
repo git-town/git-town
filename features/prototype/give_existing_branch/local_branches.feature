@@ -1,32 +1,39 @@
+@this
 Feature: make multiple branches prototype
 
   Background:
     Given a Git repo clone
     And the branches
-      | NAME      | TYPE    | PARENT | LOCATIONS     |
-      | feature-1 | feature | main   | local, origin |
-      | feature-2 | feature | main   | local, origin |
-      | feature-3 | feature | main   | local, origin |
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | feature      | feature      | main   | local, origin |
+      | contribution | contribution |        | local, origin |
+      | observed     | observed     |        | local, origin |
+      | parked       | parked       | main   | local, origin |
     And an uncommitted file
-    When I run "git-town prototype feature-1 feature-2 feature-3"
+    When I run "git-town prototype feature contribution observed parked"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "feature-1" is now a prototype branch
+      branch "feature" is now a prototype branch
       """
-    And branch "feature-1" is now prototype
+    And branch "feature" is now prototype
     And it prints:
       """
-      branch "feature-2" is now a prototype branch
+      branch "contribution" is now a prototype branch
       """
-    And branch "feature-2" is now prototype
+    And branch "contribution" is now prototype
     And it prints:
       """
-      branch "feature-3" is now a prototype branch
+      branch "observed" is now a prototype branch
       """
-    And branch "feature-3" is now prototype
+    And branch "observed" is now prototype
+    And it prints:
+      """
+      branch "parked" is now a prototype branch
+      """
+    And branch "parked" is now prototype
     And the current branch is still "main"
     And the uncommitted file still exists
 
@@ -37,6 +44,7 @@ Feature: make multiple branches prototype
       | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
-    And there are now no observed branches
+    And there are now no prototype branches
     And the current branch is still "main"
     And the uncommitted file still exists
+    And the initial branches and lineage exist
