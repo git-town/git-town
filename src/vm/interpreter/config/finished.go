@@ -29,6 +29,10 @@ func Finished(args FinishedArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
+	branchesSnapshot, err := args.repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return prototypeData{}, err
+	}
 	runState := runstate.RunState{
 		AbortProgram:             program.Program{},
 		BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
