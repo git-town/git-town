@@ -12,12 +12,12 @@ Feature: Create proposals for prototype branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it prints:
-      """
-      branch "prototype" is no longer a prototype branch
-      """
     Then "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/prototype?expand=1
+      """
+    And it prints:
+      """
+      branch "prototype" is no longer a prototype branch
       """
     And there are now no prototype branches
