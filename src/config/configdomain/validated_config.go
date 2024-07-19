@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
@@ -17,7 +15,6 @@ type ValidatedConfig struct {
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", branch)
 	switch {
 	case self.IsMainBranch(branch):
 		return BranchTypeMainBranch

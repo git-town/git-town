@@ -80,7 +80,6 @@ func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verb
 	if err != nil {
 		return err
 	}
-	fmt.Println("8888888888888888888888888888888888888", repo.UnvalidatedConfig.LocalGitConfig.PrototypeBranches.String())
 	data, exit, err := determineSyncData(all, repo, verbose)
 	if err != nil || exit {
 		return err
@@ -227,7 +226,6 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose config
 	if err != nil || exit {
 		return data, exit, err
 	}
-	fmt.Println("999999999999999999999999999999999999999999999999999", validatedConfig.LocalGitConfig.PrototypeBranches.String())
 	var shouldPushTags bool
 	if allFlag {
 		shouldPushTags = true
