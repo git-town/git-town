@@ -115,20 +115,21 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 }
 
 type proposeData struct {
-	allBranches      gitdomain.BranchInfos
-	branchesSnapshot gitdomain.BranchesSnapshot
-	branchesToSync   gitdomain.BranchInfos
-	config           config.ValidatedConfig
-	connector        Option[hostingdomain.Connector]
-	dialogTestInputs Mutable[components.TestInputs]
-	dryRun           configdomain.DryRun
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	previousBranch   Option[gitdomain.LocalBranchName]
-	proposalBody     gitdomain.ProposalBody
-	proposalTitle    gitdomain.ProposalTitle
-	remotes          gitdomain.Remotes
-	stashSize        gitdomain.StashSize
+	allBranches       gitdomain.BranchInfos
+	branchesSnapshot  gitdomain.BranchesSnapshot
+	branchesToSync    gitdomain.BranchInfos
+	config            config.ValidatedConfig
+	connector         Option[hostingdomain.Connector]
+	dialogTestInputs  Mutable[components.TestInputs]
+	dryRun            configdomain.DryRun
+	hasOpenChanges    bool
+	initialBranch     gitdomain.LocalBranchName
+	initialBranchType configdomain.BranchType
+	previousBranch    Option[gitdomain.LocalBranchName]
+	proposalBody      gitdomain.ProposalBody
+	proposalTitle     gitdomain.ProposalTitle
+	remotes           gitdomain.Remotes
+	stashSize         gitdomain.StashSize
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -182,6 +183,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil || exit {
 		return data, exit, err
 	}
+	initialBranchType := validatedConfig.Config.BranchType(initialBranch)
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -218,20 +220,21 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	return proposeData{
-		allBranches:      branchesSnapshot.Branches,
-		branchesSnapshot: branchesSnapshot,
-		branchesToSync:   branchesToSync,
-		config:           validatedConfig,
-		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		previousBranch:   previousBranch,
-		proposalBody:     bodyText,
-		proposalTitle:    title,
-		remotes:          remotes,
-		stashSize:        stashSize,
+		allBranches:       branchesSnapshot.Branches,
+		branchesSnapshot:  branchesSnapshot,
+		branchesToSync:    branchesToSync,
+		config:            validatedConfig,
+		connector:         connector,
+		dialogTestInputs:  dialogTestInputs,
+		dryRun:            dryRun,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     initialBranch,
+		initialBranchType: initialBranchType,
+		previousBranch:    previousBranch,
+		proposalBody:      bodyText,
+		proposalTitle:     title,
+		remotes:           remotes,
+		stashSize:         stashSize,
 	}, false, err
 }
 
@@ -246,6 +249,9 @@ func proposeProgram(data proposeData) program.Program {
 			Program:       prog,
 			PushBranch:    true,
 		})
+	}
+	if data.initialBranchType == configdomain.BranchTypePrototypeBranch {
+		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.initialBranch})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
@@ -269,7 +275,7 @@ func proposeProgram(data proposeData) program.Program {
 func validateProposeData(data proposeData) error {
 	initialBranchType := data.config.Config.BranchType(data.initialBranch)
 	switch initialBranchType {
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.MainBranchCannotPropose)

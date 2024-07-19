@@ -272,6 +272,8 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			err = args.config.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
 			err = args.config.RemoveFromParkedBranches(branchName)
+		case configdomain.BranchTypePrototypeBranch:
+			err = args.config.RemoveFromPrototypeBranches(branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
 		}
@@ -304,7 +306,7 @@ type convertToFeatureBranchArgs struct {
 func validateConvertToFeatureData(data convertToFeatureData) error {
 	for branchName, branchType := range data.targetBranches {
 		switch branchType {
-		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 			return nil
 		case configdomain.BranchTypeFeatureBranch:
 			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)

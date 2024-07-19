@@ -26,6 +26,7 @@ type UnvalidatedConfig struct {
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
+	PrototypeBranches        gitdomain.LocalBranchNames
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -46,6 +47,8 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 		return BranchTypeObservedBranch
 	case self.IsParkedBranch(branch):
 		return BranchTypeParkedBranch
+	case self.IsPrototypeBranch(branch):
+		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
 }
@@ -94,6 +97,10 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 		return perennialRegex.MatchesBranch(branch)
 	}
 	return false
+}
+
+func (self *UnvalidatedConfig) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.PrototypeBranches, branch)
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
@@ -148,6 +155,7 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	if other.PerennialRegex.IsSome() {
 		self.PerennialRegex = other.PerennialRegex
 	}
+	self.PrototypeBranches = append(self.PrototypeBranches, other.PrototypeBranches...)
 	if value, has := other.PushHook.Get(); has {
 		self.PushHook = value
 	}
@@ -200,6 +208,7 @@ func DefaultConfig() UnvalidatedConfig {
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           None[PerennialRegex](),
+		PrototypeBranches:        gitdomain.NewLocalBranchNames(),
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,

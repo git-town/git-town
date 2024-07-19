@@ -119,6 +119,10 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 			if err := config.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
+		case configdomain.BranchTypePrototypeBranch:
+			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
+				return err
+			}
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 	}
@@ -176,7 +180,7 @@ func validateContributeData(data contributeData) error {
 			return errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		}
 	}
 	return nil

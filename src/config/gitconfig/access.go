@@ -100,6 +100,8 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		config.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialRegex:
 		config.PerennialRegex = configdomain.NewPerennialRegexOption(value)
+	case KeyPrototypeBranches:
+		config.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPushHook:
 		var pushHook configdomain.PushHook
 		pushHook, err = configdomain.NewPushHook(value, KeyPushHook.String())

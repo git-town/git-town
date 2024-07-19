@@ -143,6 +143,7 @@ END OUTPUT FROM 'git branch -vva'
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
+	PrototypeRemoved                      = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 
 This command has been renamed to "git town propose"
