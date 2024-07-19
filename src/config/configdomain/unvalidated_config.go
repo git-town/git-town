@@ -212,6 +212,7 @@ func DefaultConfig() UnvalidatedConfig {
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           None[PerennialRegex](),
+		PrototypeBranches:        gitdomain.NewLocalBranchNames(),
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
