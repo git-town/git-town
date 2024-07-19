@@ -119,6 +119,10 @@ func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, c
 			if err := config.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
+		case configdomain.BranchTypePrototypeBranch:
+			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
+				return err
+			}
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 	}

@@ -105,9 +105,9 @@ func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBr
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (self *ValidatedConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.PrototypeBranches = slice.Remove(self.Config.PrototypeBranches, branch)
-	return self.SetPrototypeBranches(self.Config.PrototypeBranches)
+func (self *UnvalidatedConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.Value.PrototypeBranches = slice.Remove(self.Config.Value.PrototypeBranches, branch)
+	return self.SetPrototypeBranches(self.Config.Value.PrototypeBranches)
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
