@@ -2,14 +2,14 @@ Feature: does not compress non-active parked branches in the stack
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | parked | local, origin | parked 1 | parked_1  | parked 1     |
       |        |               | parked 2 | parked_2  | parked 2     |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | child | feature | parked | local, origin |
     And the commits

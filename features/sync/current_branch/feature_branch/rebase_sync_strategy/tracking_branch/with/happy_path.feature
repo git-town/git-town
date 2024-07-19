@@ -2,7 +2,7 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git Town setting "sync-feature-strategy" is "rebase"

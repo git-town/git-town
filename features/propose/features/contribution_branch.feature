@@ -2,7 +2,7 @@ Feature: Cannot create proposals for contribution branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
     And the current branch is "contribution"

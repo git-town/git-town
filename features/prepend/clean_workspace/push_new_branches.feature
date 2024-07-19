@@ -2,7 +2,7 @@ Feature: auto-push new branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And Git Town setting "push-new-branches" is "true"

@@ -3,7 +3,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
     And the main branch is "main"

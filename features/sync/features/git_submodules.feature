@@ -3,7 +3,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
   Background:
     Given a Git repo clone
     And my repo has a Git submodule
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"

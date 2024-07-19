@@ -19,7 +19,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now ""
 
   Scenario: current and previous branch remain
-    And the branches
+    And the branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | victim | feature | main   | local, origin |
     And the current branch is "current" and the previous branch is "previous"

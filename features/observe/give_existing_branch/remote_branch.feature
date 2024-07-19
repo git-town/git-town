@@ -2,7 +2,7 @@ Feature: observe a remote branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME           | TYPE    | PARENT | LOCATIONS |
       | remote-feature | feature | main   | origin    |
     And I run "git fetch"

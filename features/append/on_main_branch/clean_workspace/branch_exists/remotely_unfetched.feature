@@ -2,7 +2,7 @@ Feature: already existing unfetched remote branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | origin    |
     When I run "git-town append existing"

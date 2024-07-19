@@ -2,14 +2,14 @@ Feature: does not compress the active contribution branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
     And the commits
       | BRANCH       | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT   |
       | contribution | local, origin | contribution 1 | contribution_1 | contribution 1 |
       |              |               | contribution 2 | contribution_2 | contribution 2 |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT       | LOCATIONS     |
       | child | feature | contribution | local, origin |
     And the commits

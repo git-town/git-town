@@ -2,7 +2,7 @@ Feature: continue after successful command
 
   Scenario Outline:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And I run "git-town <COMMAND>"

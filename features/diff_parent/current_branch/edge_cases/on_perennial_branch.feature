@@ -12,7 +12,7 @@ Feature: on perennial branch
 
   Scenario: on perennial branch
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE      | LOCATIONS |
       | qa   | perennial | local     |
     And the current branch is "qa"

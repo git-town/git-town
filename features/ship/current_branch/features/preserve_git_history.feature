@@ -26,7 +26,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits

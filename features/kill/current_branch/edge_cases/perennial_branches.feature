@@ -14,7 +14,7 @@ Feature: does not kill perennial branches
 
   Scenario: perennial branch
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
     And the current branch is "qa"

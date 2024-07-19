@@ -2,7 +2,7 @@ Feature: dry run appending a new feature branch to an existing feature branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
