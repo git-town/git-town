@@ -1450,10 +1450,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step("^the branch(es)?$", func(ctx context.Context, plural string, table *godog.Table) {
-		if len(plural) > 0 && len(table.Rows) == 2 {
+		providedPlural := len(plural) > 0
+		providedMultipleBranches := len(table.Rows) > 2
+		if providedPlural && !providedMultipleBranches {
 			panic(`you said "the branches" but only 1 branch provided`)
 		}
-		if len(plural) == 0 && len(table.Rows) > 2 {
+		if !providedPlural && providedMultipleBranches {
 			panic(`you said "the branch" but more than 1 branch provided`)
 		}
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
