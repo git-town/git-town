@@ -22,7 +22,7 @@ func enterParentCmd() *cobra.Command {
 				return err
 			}
 			localBranches := gitdomain.LocalBranchNames{}
-			for i := 0; i < int(amount); i++ {
+			for i := range amount {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			main := gitdomain.NewLocalBranchName("main")
