@@ -3,7 +3,7 @@ Feature: rename the current branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the current branch is "old"

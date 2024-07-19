@@ -3,7 +3,7 @@ Feature: view changes made on another branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | alpha | feature | main   | local     |
 
@@ -14,7 +14,7 @@ Feature: view changes made on another branch
       | main   | git diff main..alpha |
 
   Scenario: child branch
-    Given the branches
+    Given the branch
       | NAME | TYPE    | PARENT | LOCATIONS |
       | beta | feature | alpha  | local     |
     When I run "git-town diff-parent beta"

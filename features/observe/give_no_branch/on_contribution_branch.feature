@@ -2,7 +2,7 @@ Feature: observing a contribution branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME   | TYPE         | LOCATIONS |
       | branch | contribution | local     |
     And the current branch is "branch"

@@ -2,7 +2,7 @@ Feature: making the current observed branch a feature branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE     | PARENT | LOCATIONS |
       | observed | observed |        | local     |
     And the current branch is "observed"

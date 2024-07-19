@@ -2,7 +2,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
     And the current branch is "contribution"

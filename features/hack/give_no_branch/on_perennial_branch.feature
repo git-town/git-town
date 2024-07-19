@@ -2,7 +2,7 @@ Feature: cannot make the current perennial branch a feature branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     And the current branch is "perennial"

@@ -2,7 +2,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
     And the current branch is "contribution"

@@ -2,7 +2,7 @@ Feature: cannot park perennial branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     And the current branch is "perennial"

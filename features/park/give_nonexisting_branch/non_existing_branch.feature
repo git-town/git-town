@@ -2,7 +2,7 @@ Feature: cannot park non-existing branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"

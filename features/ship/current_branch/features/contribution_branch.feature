@@ -2,7 +2,7 @@ Feature: cannot ship contribution branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
     And the current branch is "contribution"
