@@ -21,7 +21,7 @@ func enterPerennialBranches() *cobra.Command {
 				return err
 			}
 			localBranches := gitdomain.LocalBranchNames{}
-			for i := 0; i < int(amount); i++ {
+			for i := range amount {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			existingPerennialBranches := gitdomain.NewLocalBranchNames("branch-2", "branch-4")
