@@ -1,4 +1,4 @@
-Feature: sync the current observed branch in a local repo
+Feature: sync the current prototype branch in a local repo
 
   Background:
     Given a local Git repo clone
