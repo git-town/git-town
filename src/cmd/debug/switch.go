@@ -24,7 +24,7 @@ func switchBranch() *cobra.Command {
 			}
 			localBranches := gitdomain.LocalBranchNames{}
 			branchInfos := gitdomain.BranchInfos{}
-			for i := 0; i < int(amount); i++ {
+			for i := range amount {
 				branchName := gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i))
 				localBranches = append(localBranches, branchName)
 				branchInfos = append(branchInfos, gitdomain.BranchInfo{LocalName: Some(branchName), SyncStatus: gitdomain.SyncStatusLocalOnly}) //exhaustruct:ignore
