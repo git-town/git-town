@@ -4,6 +4,7 @@ Feature: show the configuration
   Background:
     Given a Git repo clone
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the branches
       | NAME           | TYPE         | PARENT | LOCATIONS |
@@ -14,8 +15,8 @@ Feature: show the configuration
       | observed-2     | observed     |        | local     |
       | contribution-1 | contribution |        | local     |
       | contribution-2 | contribution |        | local     |
-      | parked-1       | parked       |        | local     |
-      | parked-2       | parked       |        | local     |
+      | parked-1       | parked       | main   | local     |
+      | parked-2       | parked       | main   | local     |
     And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
     When I run "git-town config"
