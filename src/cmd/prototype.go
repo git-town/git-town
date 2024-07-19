@@ -196,7 +196,7 @@ func createPrototypeBranch(args createPrototypeData) error {
 	})
 }
 
-func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun, verbose bool) (data prototypeData, exit bool, err error) {
+func determinePrototypeData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data prototypeData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
