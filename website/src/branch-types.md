@@ -75,15 +75,15 @@ Unpark a parked branch by running `git hack` on it.
 ## Prototype Branches
 
 A prototype branch is a local-only feature branch that incorporates updates from
-its parent branch but is not pushed to the remote repository. This branch type
-is useful in several scenarios:
+its parent branch but is not pushed to the remote repository. Prototype branches
+are useful when:
 
-- The branch contains sensitive information, such as secrets, or potentially
-  problematic code or data that could trigger alerts.
-- The developer prefers to keep their work private from the rest of the team
-  during the initial stages of development.
-- Prototype branches can reduce CI pressure during the early phases of feature
-  development.
+- the branch contains sensitive information, such as secrets, or potentially
+  problematic code or data that could trigger alerts
+- the developer prefers to keep their work private from the rest of the team
+  during the initial stages of development
+- you want to reduce CI pressure in the early phases of feature development when
+  changes happen rapidly and there isn't much to test
 
 When you [propose](commands/propose.md) a prototype branch, it loses its
 prototype status since it now has an official tracking branch that other people
