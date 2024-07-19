@@ -41,22 +41,28 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	}, finalMessages
 }
 
-// AddToContributionBranches registers the given branch names as perennial branches.
+// AddToContributionBranches registers the given branch names as contribution branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetContributionBranches(append(self.Config.Value.ContributionBranches, branches...))
 }
 
-// AddToObservedBranches registers the given branch names as perennial branches.
+// AddToObservedBranches registers the given branch names as observed branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetObservedBranches(append(self.Config.Value.ObservedBranches, branches...))
 }
 
-// AddToParkedBranches registers the given branch names as perennial branches.
+// AddToParkedBranches registers the given branch names as parked branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetParkedBranches(append(self.Config.Value.ParkedBranches, branches...))
+}
+
+// AddToPrototypeBranches registers the given branch names as prototype branches.
+// The branches must exist.
+func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetPrototypeBranches(append(self.Config.Value.PrototypeBranches, branches...))
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -96,6 +102,12 @@ func (self *UnvalidatedConfig) RemoveFromObservedBranches(branch gitdomain.Local
 func (self *UnvalidatedConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.Value.ParkedBranches = slice.Remove(self.Config.Value.ParkedBranches, branch)
 	return self.SetParkedBranches(self.Config.Value.ParkedBranches)
+}
+
+// RemoveFromPerennialBranches removes the given branch as a perennial branch.
+func (self *UnvalidatedConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
+	self.Config.Value.PrototypeBranches = slice.Remove(self.Config.Value.PrototypeBranches, branch)
+	return self.SetPrototypeBranches(self.Config.Value.PrototypeBranches)
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
@@ -207,6 +219,12 @@ func (self *UnvalidatedConfig) SetPerennialBranches(branches gitdomain.LocalBran
 func (self *UnvalidatedConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
 	self.Config.Value.PerennialRegex = Some(value)
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
+}
+
+// SetContributionBranches marks the given branches as contribution branches.
+func (self *UnvalidatedConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
+	self.Config.Value.PrototypeBranches = branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPrototypeBranches, branches.Join(" "))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.

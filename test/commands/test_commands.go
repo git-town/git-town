@@ -137,19 +137,19 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.MustRun("git", commands...)
 }
 
-// CreateObservedBranches creates perennial branches with the given names in this repository.
+// creates a contribution branches with the given name in this repository
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToContributionBranches(name))
 }
 
-// CreateFeatureBranch creates a feature branch with the given name in this repository.
+// creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(name, parent)
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
-// CreateFile creates a file with the given name and content in this repository.
+// creates a file with the given name and content in this repository
 func (self *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(self.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
@@ -164,22 +164,28 @@ func (self *TestCommands) CreateFolder(name string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 }
 
-// CreateObservedBranches creates perennial branches with the given names in this repository.
+// creates an observed branch with the given name in this repository
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToObservedBranches(name))
 }
 
-// CreateParkedBranches creates perennial branches with the given names in this repository.
+// creates a parked branch with the given name and parent in this repository
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent)
 	asserts.NoError(self.Config.AddToParkedBranches(name))
 }
 
-// CreatePerennialBranches creates perennial branches with the given names in this repository.
+// creates a perennial branch with the given name in this repository
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.AddToPerennialBranches(name))
+}
+
+// creates a prototype branch with the given name and parent in this repository
+func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
+	self.CreateFeatureBranch(name, parent)
+	asserts.NoError(self.Config.AddToPrototypeBranches(name))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
