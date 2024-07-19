@@ -2,7 +2,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
     And the current branch is "prototype"

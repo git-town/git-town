@@ -2,14 +2,14 @@ Feature: does not compress non-active prototype branches in the stack
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | prototype | local, origin | prototype 1 | parked_1  | prototype 1  |
       |           |               | prototype 2 | parked_2  | prototype 2  |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT    | LOCATIONS     |
       | child | feature | prototype | local, origin |
     And the commits

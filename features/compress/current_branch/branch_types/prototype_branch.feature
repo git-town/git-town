@@ -2,7 +2,7 @@ Feature: compress the commits on a prototype branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
     And the current branch is "prototype"

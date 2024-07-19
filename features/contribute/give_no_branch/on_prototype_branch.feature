@@ -2,7 +2,7 @@ Feature: making a prototype branch a contribution branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME   | TYPE      | PARENT | LOCATIONS |
       | branch | prototype | main   | local     |
     And the current branch is "branch"
