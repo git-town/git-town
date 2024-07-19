@@ -1,4 +1,4 @@
-Feature: remove an prototype branch as soon as its tracking branch is gone, even if it has unpushed commits
+Feature: remove a prototype branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
     Given a Git repo clone
