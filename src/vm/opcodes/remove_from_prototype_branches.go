@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
 
-// RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
+// RemoveFromPrototypeBranches removes the branch with the given name as a prototype branch.
 type RemoveFromPrototypeBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
