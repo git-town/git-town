@@ -3,7 +3,7 @@ Feature: shipping a parked branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the current branch is "parked"

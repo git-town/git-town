@@ -6,7 +6,7 @@ Feature: GitHub support
     And tool "open" is installed
 
   Scenario Outline: normal origin
-    Given the branches
+    Given the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
@@ -29,7 +29,7 @@ Feature: GitHub support
       | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given the branches
+    Given the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
@@ -50,7 +50,7 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com         |
 
   Scenario Outline: proper URL encoding
-    Given the branches
+    Given the branch
       | NAME          | TYPE    | PARENT | LOCATIONS     |
       | <BRANCH_NAME> | feature | main   | local, origin |
     And the current branch is "<BRANCH_NAME>"

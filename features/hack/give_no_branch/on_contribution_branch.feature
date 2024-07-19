@@ -2,7 +2,7 @@ Feature: making the current contribution branch a feature branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
     And the current branch is "contribution"

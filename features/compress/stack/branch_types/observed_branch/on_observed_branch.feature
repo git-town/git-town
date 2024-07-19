@@ -2,14 +2,14 @@ Feature: does not compress an active observed branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed |        | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE    | FILE NAME  | FILE CONTENT |
       | observed | local, origin | observed 1 | observed_1 | observed 1   |
       |          |               | observed 2 | observed_2 | observed 2   |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT   | LOCATIONS     |
       | child | feature | observed | local, origin |
     And the commits

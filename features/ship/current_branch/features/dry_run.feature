@@ -3,7 +3,7 @@ Feature: enter the commit message interactively via the editor
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"

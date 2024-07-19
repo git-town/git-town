@@ -2,7 +2,7 @@ Feature: Cannot create proposals for perennial branches
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
     And the current branch is "perennial"

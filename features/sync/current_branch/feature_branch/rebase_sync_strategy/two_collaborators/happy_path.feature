@@ -11,7 +11,7 @@ Feature: two people with rebase strategy sync changes made by them
       main = "main"
       perennials = []
       """
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And a coworker clones the repository
