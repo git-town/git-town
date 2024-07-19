@@ -54,6 +54,15 @@ func (self Option[T]) GetOrDefault() T { //nolint:ireturn
 	return empty
 }
 
+// GetOrElse provides a copy of the contained value.
+// If this option contains nothing, you get a copy of the given alternative value.
+func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
+	if value, has := self.Get(); has {
+		return value
+	}
+	return other
+}
+
 // GetOrPanic provides a copy of the contained value.
 // Panics if this option contains nothing.
 func (self Option[T]) GetOrPanic() T { //nolint:ireturn
