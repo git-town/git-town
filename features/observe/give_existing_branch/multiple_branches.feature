@@ -1,32 +1,39 @@
+@this
 Feature: observing multiple branches
 
   Background:
     Given a Git repo clone
     And the branches
-      | NAME      | TYPE    | PARENT | LOCATIONS     |
-      | feature-1 | feature | main   | local, origin |
-      | feature-2 | feature | main   | local, origin |
-      | feature-3 | feature | main   | local, origin |
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | feature      | feature      | main   | local, origin |
+      | contribution | contribution |        | local, origin |
+      | parked       | parked       | main   | local, origin |
+      | prototype    | prototype    | main   | local, origin |
     And an uncommitted file
-    When I run "git-town observe feature-1 feature-2 feature-3"
+    When I run "git-town observe feature contribution parked prototype"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "feature-1" is now an observed branch
+      branch "feature" is now an observed branch
       """
-    And branch "feature-1" is now observed
+    And branch "feature" is now observed
     And it prints:
       """
-      branch "feature-2" is now an observed branch
+      branch "contribution" is now an observed branch
       """
-    And branch "feature-2" is now observed
+    And branch "contribution" is now observed
     And it prints:
       """
-      branch "feature-3" is now an observed branch
+      branch "parked" is now an observed branch
       """
-    And branch "feature-3" is now observed
+    And branch "parked" is now observed
+    And it prints:
+      """
+      branch "prototype" is now an observed branch
+      """
+    And branch "prototype" is now observed
     And the current branch is still "main"
     And the uncommitted file still exists
 
@@ -38,5 +45,6 @@ Feature: observing multiple branches
       |        | git stash     |
       |        | git stash pop |
     And there are now no observed branches
+    And the initial branches exist
     And the current branch is still "main"
     And the uncommitted file still exists
