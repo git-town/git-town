@@ -310,7 +310,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,
-				strings.Join(devRepo.Config.Config.PrototypeBranches.Strings(), ", "),
+				devRepo.Config.Config.PrototypeBranches.Join(", "),
 			)
 		}
 		return nil
