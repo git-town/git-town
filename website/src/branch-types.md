@@ -83,7 +83,7 @@ are useful when:
 - the developer prefers to keep their work private from the rest of the team
   during the initial stages of development
 - you want to reduce CI pressure in the early phases of feature development when
-  changes happen rapidly and there isn't much to test
+  there isn't anything to test
 
 When you [propose](commands/propose.md) a prototype branch, it loses its
 prototype status since it now has an official tracking branch that other people
