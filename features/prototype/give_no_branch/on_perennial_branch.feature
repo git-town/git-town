@@ -5,7 +5,7 @@ Feature: cannot prototype perennial branches
     And the branch
       | NAME   | TYPE      | LOCATIONS |
       | branch | perennial | local     |
-    Given the current branch is "branch"
+    And the current branch is "branch"
     And an uncommitted file
     When I run "git-town prototype"
 
