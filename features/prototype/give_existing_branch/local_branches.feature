@@ -1,4 +1,3 @@
-@this
 Feature: make multiple branches prototype
 
   Background:
@@ -34,7 +33,7 @@ Feature: make multiple branches prototype
       branch "parked" is now a prototype branch
       """
     And branch "parked" is now prototype
-    And branch "parked" is still
+    And branch "parked" is still parked
     And the current branch is still "main"
     And the uncommitted file still exists
 
@@ -46,6 +45,9 @@ Feature: make multiple branches prototype
       |        | git stash     |
       |        | git stash pop |
     And there are now no prototype branches
+    And branch "contribution" is now a contribution branch
+    And branch "observed" is now observed
+    And branch "parked" is still parked
     And the current branch is still "main"
     And the uncommitted file still exists
     And the initial branches and lineage exist
