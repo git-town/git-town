@@ -85,8 +85,12 @@ is useful in several scenarios:
 - Prototype branches can reduce CI pressure during the early phases of feature
   development.
 
-You can compress and ship prototype branches normally.
+When you [propose](commands/propose.md) a prototype branch, it loses its
+prototype status since it now has an official tracking branch that other people
+look at. You can keep syncing without pushes by using the `--no-push` sync
+option.
 
-You can park and unpark a prototype branch and it maintains its prototype
-status. When you change it to an observed or contribution branch it loses its
-prototype status.
+You can compress and ship prototype branches normally. You can park and unpark a
+prototype branch and it will maintain its prototype status. When you change a
+prototype branch to an observed or contribution branch it loses its prototype
+status.
