@@ -14,16 +14,16 @@ Feature: compress the commits on a prototype branch
     And an uncommitted file
     When I run "git-town compress"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                                         |
-      | prototype | git fetch --prune --tags                        |
-      |           | git add -A                                      |
-      |           | git stash                                       |
-      |           | git reset --soft main                           |
-      |           | git commit -m "commit 1"                        |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git stash pop                                   |
+      | BRANCH    | COMMAND                  |
+      | prototype | git fetch --prune --tags |
+      |           | git add -A               |
+      |           | git stash                |
+      |           | git reset --soft main    |
+      |           | git commit -m "commit 1" |
+      |           | git stash pop            |
     And all branches are now synchronized
     And the current branch is still "prototype"
     And these commits exist now

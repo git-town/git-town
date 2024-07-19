@@ -272,7 +272,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	prog.Value.Add(&opcodes.Checkout{Branch: data.name})
 	prog.Value.Add(&opcodes.ResetCommitsInCurrentBranch{Parent: data.parentBranch})
 	prog.Value.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
-	if data.hasTracking && online.Bool() {
+	if data.hasTracking && online.Bool() && data.branchType.ShouldPush() {
 		prog.Value.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
