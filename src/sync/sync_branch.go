@@ -52,7 +52,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	list.Value.Add(&opcodes.Checkout{Branch: localName})
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
-	case configdomain.BranchTypeFeatureBranch:
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(featureBranchArgs{
 			localName:           localName,
 			offline:             args.Config.Offline,
