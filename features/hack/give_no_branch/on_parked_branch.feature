@@ -2,7 +2,7 @@ Feature: making the current parked branch a feature branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS |
       | parked | parked | main   | local     |
     And the current branch is "parked"

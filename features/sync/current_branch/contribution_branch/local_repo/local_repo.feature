@@ -2,7 +2,7 @@ Feature: sync the current contribution branch in a local repo
 
   Background:
     Given a local Git repo clone
-    And the branches
+    And the branch
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
     And the current branch is "contribution"

@@ -6,7 +6,7 @@ Feature: GitLab support
     And tool "open" is installed
 
   Scenario Outline: creating proposals
-    Given the branches
+    Given the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"

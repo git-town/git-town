@@ -2,7 +2,7 @@ Feature: display the parent of a perennial branch
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | perennial | perennial |        | local, origin |
     And the current branch is "perennial"

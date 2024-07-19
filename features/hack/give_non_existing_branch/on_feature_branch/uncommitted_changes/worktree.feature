@@ -2,7 +2,7 @@ Feature: hack a new branch while the main branch is active in another worktree
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the current branch is "existing"

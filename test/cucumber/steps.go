@@ -1449,7 +1449,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step("^the branches$", func(ctx context.Context, table *godog.Table) {
+	sc.Step("^the branch(es)?$", func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		// TODO: uncomment this and make it work
 		// if state.initialBranches.IsNone() {

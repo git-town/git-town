@@ -3,7 +3,7 @@ Feature: display all executed Git commands
 
   Scenario: verbose mode enabled
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And tool "open" is installed
