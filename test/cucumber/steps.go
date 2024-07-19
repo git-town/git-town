@@ -1666,7 +1666,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
 		if !devRepo.BranchExists(devRepo.TestRunner, branch) {
-			devRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+			panic("cannot check out non-existing branch: " + branch)
 		}
 		devRepo.CheckoutBranch(branch)
 	})
