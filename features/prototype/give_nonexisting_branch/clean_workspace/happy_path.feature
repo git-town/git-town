@@ -1,35 +1,21 @@
 Feature: create a prototyping branch
 
   Background:
-    Given the commits
-      | BRANCH | LOCATION | MESSAGE     |
-      | main   | origin   | main commit |
-    And the current branch is "main"
-    When I run "git-town prototype new"
+    Given a Git repo clone
+    When I run "git-town prototype zonk"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git checkout -b new      |
-    And the current branch is now "new"
-    And branch "new" is now a prototype branch
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-      | new    | local         | main commit |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
+    Then it runs no commands
+    And it prints the error:
+      """
+      there is no branch "zonk"
+      """
+    And there are still no prototype branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | new    | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git branch -D new                           |
-    And the current branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    Then it runs no commands
+    And it prints:
+      """
+      nothing to undo
+      """
