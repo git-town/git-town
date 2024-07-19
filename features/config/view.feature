@@ -14,8 +14,8 @@ Feature: show the configuration
       | observed-2     | observed     |        | local     |
       | contribution-1 | contribution |        | local     |
       | contribution-2 | contribution |        | local     |
-      | parked-1       | parked       |        | local     |
-      | parked-2       | parked       |        | local     |
+      | parked-1       | parked       | main   | local     |
+      | parked-2       | parked       | main   | local     |
     And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
     When I run "git-town config"

@@ -3,8 +3,8 @@ Feature: observing the current branch
   Background:
     Given a Git repo clone
     And the branches
-      | NAME   | TYPE    | LOCATIONS |
-      | branch | feature | local     |
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
     And the current branch is "branch"
     And an uncommitted file
     When I run "git-town observe"
