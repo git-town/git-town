@@ -13,7 +13,6 @@ Feature: remove an prototype branch as soon as its tracking branch is gone, even
     And origin deletes the "prototype" branch
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                  |
