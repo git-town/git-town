@@ -76,7 +76,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:             repo.Backend,
 		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "observe",
+		Command:             "prototype",
 		CommandsCounter:     repo.CommandsCounter,
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		FinalMessages:       repo.FinalMessages,

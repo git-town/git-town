@@ -1,51 +1,56 @@
-Feature: observe a branch verbosely
+Feature: prototype a branch verbosely
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given a Git repo clone
+    And the branch
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
+    Given the current branch is "branch"
     And an uncommitted file
-    When I run "git-town observe --verbose"
+    When I run "git-town prototype --verbose"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                      |
-      |        | git version                                  |
-      |        | git config -lz --includes --global           |
-      |        | git config -lz --includes --local            |
-      |        | git rev-parse --show-toplevel                |
-      |        | git branch -vva --sort=refname               |
-      |        | git config git-town.observed-branches branch |
-      |        | git config -lz --includes --global           |
-      |        | git config -lz --includes --local            |
+      | BRANCH | COMMAND                                       |
+      |        | git version                                   |
+      |        | git rev-parse --show-toplevel                 |
+      |        | git config -lz --includes --global            |
+      |        | git config -lz --includes --local             |
+      |        | git branch -vva --sort=refname                |
+      |        | git config git-town.prototype-branches branch |
+      |        | git config -lz --includes --global            |
+      |        | git config -lz --includes --local             |
     And it prints:
       """
       Ran 8 shell commands
       """
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "branch" is now an prototype branch
       """
     And the current branch is still "branch"
-    And branch "branch" is now observed
+    And branch "branch" is now prototype
     And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
     Then it runs the commands
-      | BRANCH | COMMAND                                       |
-      |        | git version                                   |
-      |        | git config -lz --includes --global            |
-      |        | git config -lz --includes --local             |
-      |        | git rev-parse --show-toplevel                 |
-      |        | git status --long --ignore-submodules         |
-      |        | git stash list                                |
-      |        | git branch -vva --sort=refname                |
-      |        | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | git remote get-url origin                     |
-      | branch | git add -A                                    |
-      |        | git stash                                     |
-      | <none> | git config --unset git-town.observed-branches |
-      |        | git stash list                                |
-      | branch | git stash pop                                 |
+      | BRANCH | COMMAND                                        |
+      |        | git version                                    |
+      |        | git config -lz --includes --global             |
+      |        | git config -lz --includes --local              |
+      |        | git rev-parse --show-toplevel                  |
+      |        | git status --long --ignore-submodules          |
+      |        | git stash list                                 |
+      |        | git branch -vva --sort=refname                 |
+      |        | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | git remote get-url origin                      |
+      | branch | git add -A                                     |
+      |        | git stash                                      |
+      | <none> | git config --unset git-town.prototype-branches |
+      |        | git stash list                                 |
+      | branch | git stash pop                                  |
     And it prints:
       """
       Ran 14 shell commands
