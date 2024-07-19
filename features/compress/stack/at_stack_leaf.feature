@@ -2,7 +2,7 @@ Feature: compress the commits on an entire stack when at the stack root
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
@@ -10,7 +10,7 @@ Feature: compress the commits on an entire stack when at the stack root
       | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
       |        |               | alpha 2 | alpha_2   | alpha 2      |
       |        |               | alpha 3 | alpha_3   | alpha 3      |
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
@@ -18,7 +18,7 @@ Feature: compress the commits on an entire stack when at the stack root
       | beta   | local, origin | beta 1  | beta_1    | beta 1       |
       |        |               | beta 2  | beta_2    | beta 2       |
       |        |               | beta 3  | beta_3    | beta 3       |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | gamma | feature | beta   | local, origin |
     And the commits

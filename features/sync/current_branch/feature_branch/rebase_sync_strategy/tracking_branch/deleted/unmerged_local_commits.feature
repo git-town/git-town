@@ -2,7 +2,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
     And Git Town setting "sync-feature-strategy" is "rebase"

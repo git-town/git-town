@@ -2,7 +2,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
     And the current branch is "observed"

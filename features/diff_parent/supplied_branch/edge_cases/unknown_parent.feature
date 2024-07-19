@@ -3,7 +3,7 @@ Feature: ask for missing parent
 
   Scenario: branch without parent
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "main"

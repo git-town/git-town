@@ -2,49 +2,49 @@ Feature: sync a workspace with two independent stacks
 
   Background:
     Given a Git repo clone
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | one  | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | one    | local, origin | one     |
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | two  | feature | one    | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | two    | local, origin | two     |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | three | feature | two    | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | three  | local, origin | three   |
-    And the branches
+    And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | four | feature | three  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | four   | local, origin | four    |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | first | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | first  | local, origin | first 1 |
-    And the branches
+    And the branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | second | feature | first  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE  |
       | second | local, origin | second 1 |
-    And the branches
+    And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | third | feature | second | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | third  | local, origin | third 1 |
-    And the branches
+    And the branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | fourth | feature | third  | local, origin |
     And the commits
