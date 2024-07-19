@@ -111,6 +111,7 @@ func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verb
 		ShouldPushTags: data.shouldPushTags,
 	})
 	runProgram = optimizer.Optimize(runProgram)
+	fmt.Println("3333333333333333", runProgram)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
