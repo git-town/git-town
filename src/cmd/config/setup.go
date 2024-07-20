@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting"
-	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -75,7 +74,6 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "setup",
 		CommandsCounter:     repo.CommandsCounter,
-		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
