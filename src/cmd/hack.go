@@ -287,7 +287,6 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		BeginConfigSnapshot: args.beginConfigSnapshot,
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,
-		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		FinalMessages:       args.repo.FinalMessages,
 		RootDir:             args.rootDir,
 		Verbose:             args.verbose,

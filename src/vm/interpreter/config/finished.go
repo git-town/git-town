@@ -57,7 +57,6 @@ type FinishedArgs struct {
 	BeginConfigSnapshot undoconfig.ConfigSnapshot
 	Command             string
 	CommandsCounter     Mutable[gohacks.Counter]
-	EndConfigSnapshot   undoconfig.ConfigSnapshot
 	FinalMessages       stringslice.Collector
 	RootDir             gitdomain.RepoRootDir
 	Verbose             configdomain.Verbose
