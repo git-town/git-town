@@ -20,7 +20,15 @@ func Execute(args ExecuteArgs) error {
 	for {
 		nextStep := args.RunState.RunProgram.Pop()
 		if nextStep == nil {
-			return finished(args)
+			return finished(finishedArgs{
+				Backend:         args.Backend,
+				CommandsCounter: args.CommandsCounter,
+				FinalMessages:   args.FinalMessages,
+				Git:             args.Git,
+				RootDir:         args.RootDir,
+				RunState:        args.RunState,
+				Verbose:         args.Verbose,
+			})
 		}
 		stepName := gohacks.TypeName(nextStep)
 		if stepName == "SkipCurrentBranchProgram" {
