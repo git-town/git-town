@@ -88,6 +88,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		Command:             "observe",
 		CommandsCounter:     repo.CommandsCounter,
 		FinalMessages:       repo.FinalMessages,
+		Git:                 repo.Git,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
