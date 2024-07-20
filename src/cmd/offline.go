@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/messages"
-	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
@@ -64,7 +63,6 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
 		CommandsCounter:     repo.CommandsCounter,
-		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		FinalMessages:       repo.FinalMessages,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
