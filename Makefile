@@ -8,9 +8,6 @@ GO_BUILD_ARGS = LANG=C GOGC=off
 build:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
-clear: tools/rta@${RTA_VERSION}  # clears the build and lint caches
-	tools/rta golangci-lint cache clean
-
 cuke: build  # runs all end-to-end tests except the ones that mess up the output, best for development
 	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
 
@@ -61,6 +58,7 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	tools/rta actionlint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
