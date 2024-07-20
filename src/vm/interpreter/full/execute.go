@@ -20,7 +20,7 @@ func Execute(args ExecuteArgs) error {
 	for {
 		nextStep := args.RunState.RunProgram.Pop()
 		if nextStep == nil {
-			return finished(finishedArgs{
+			return Finished(FinishedArgs{
 				Backend:         args.Backend,
 				CommandsCounter: args.CommandsCounter,
 				FinalMessages:   args.FinalMessages,

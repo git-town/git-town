@@ -288,6 +288,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		Command:             "observe",
 		CommandsCounter:     args.repo.CommandsCounter,
 		FinalMessages:       args.repo.FinalMessages,
+		Git:                 args.repo.Git,
 		RootDir:             args.rootDir,
 		Verbose:             args.verbose,
 	})

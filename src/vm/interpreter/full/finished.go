@@ -17,8 +17,8 @@ import (
 	"github.com/git-town/git-town/v14/src/vm/statefile"
 )
 
-// finished is called when executing all steps has successfully finished.
-func finished(args finishedArgs) error {
+// Finished is called when executing all steps has successfully Finished.
+func Finished(args FinishedArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func finished(args finishedArgs) error {
 	return nil
 }
 
-type finishedArgs struct {
+type FinishedArgs struct {
 	Backend         gitdomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	FinalMessages   stringslice.Collector
@@ -64,7 +64,7 @@ type finishedArgs struct {
 	Verbose         configdomain.Verbose
 }
 
-func finishedDryRunCommand(args finishedArgs) error {
+func finishedDryRunCommand(args FinishedArgs) error {
 	args.RunState.MarkAsFinished()
 	err := statefile.Save(args.RunState, args.RootDir)
 	if err != nil {

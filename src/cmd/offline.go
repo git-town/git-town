@@ -64,6 +64,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 		Command:             "offline",
 		CommandsCounter:     repo.CommandsCounter,
 		FinalMessages:       repo.FinalMessages,
+		Git:                 repo.Git,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})

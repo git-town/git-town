@@ -75,6 +75,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 		Command:             "setup",
 		CommandsCounter:     repo.CommandsCounter,
 		FinalMessages:       repo.FinalMessages,
+		Git:                 repo.Git,
 		RootDir:             repo.RootDir,
 		Verbose:             verbose,
 	})
