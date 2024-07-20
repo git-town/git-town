@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -29,9 +30,9 @@ func Finished(args FinishedArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	branchesSnapshot, err := args.repo.Git.BranchesSnapshot(repo.Backend)
+	branchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
-		return prototypeData{}, err
+		return err
 	}
 	runState := runstate.RunState{
 		AbortProgram:             program.Program{},
@@ -40,7 +41,7 @@ func Finished(args FinishedArgs) error {
 		BeginStashSize:           0,
 		Command:                  args.Command,
 		DryRun:                   false,
-		EndBranchesSnapshot:      None[gitdomain.BranchesSnapshot](),
+		EndBranchesSnapshot:      Some(branchesSnapshot),
 		EndConfigSnapshot:        Some(configSnapshot),
 		EndStashSize:             None[gitdomain.StashSize](),
 		FinalUndoProgram:         program.Program{},
@@ -58,6 +59,7 @@ type FinishedArgs struct {
 	Command             string
 	CommandsCounter     Mutable[gohacks.Counter]
 	FinalMessages       stringslice.Collector
+	Git                 git.Commands
 	RootDir             gitdomain.RepoRootDir
 	Verbose             configdomain.Verbose
 }
