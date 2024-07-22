@@ -70,13 +70,15 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
-		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "setup",
-		CommandsCounter:     repo.CommandsCounter,
-		FinalMessages:       repo.FinalMessages,
-		RootDir:             repo.RootDir,
-		Verbose:             verbose,
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "setup",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		Verbose:               verbose,
 	})
 }
 

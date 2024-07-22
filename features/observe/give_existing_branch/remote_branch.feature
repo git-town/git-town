@@ -24,10 +24,12 @@ Feature: observe a remote branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH         | COMMAND       |
-      | remote-feature | git add -A    |
-      |                | git stash     |
-      |                | git stash pop |
-    And the current branch is still "remote-feature"
+      | BRANCH         | COMMAND                      |
+      | remote-feature | git add -A                   |
+      |                | git stash                    |
+      |                | git checkout main            |
+      | main           | git branch -D remote-feature |
+      |                | git stash pop                |
+    And the current branch is now "main"
     And there are now no observed branches
     And the uncommitted file still exists
