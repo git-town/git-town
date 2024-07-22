@@ -109,7 +109,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 
 type OpenRepoArgs struct {
 	DryRun           configdomain.DryRun
-	OmitBranchNames  bool
+	OmitBranchNames  bool // TODO: rename to PrintBranchNames and reverse its boolean value
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
