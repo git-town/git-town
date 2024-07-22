@@ -17,7 +17,7 @@ Feature: observing a parked branch
       """
     And the current branch is still "branch"
     And branch "branch" is now prototype
-    And there are now no parked branches
+    And branch "branch" is still parked
     And the uncommitted file still exists
 
   Scenario: undo
@@ -28,6 +28,6 @@ Feature: observing a parked branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And branch "branch" is now parked
+    And branch "branch" is still parked
     And there are now no prototype branches
     And the uncommitted file still exists
