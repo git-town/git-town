@@ -77,15 +77,14 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	printContributeBranches(branchNames)
-	branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get()
-	if hasBranchToCheckout {
+	if branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get(); hasBranchToCheckout {
 		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, false); err != nil {
 			return err
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:               repo.Backend,
-		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginBranchesSnapshot: Some(data.beginBranchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "contribute",
 		CommandsCounter:       repo.CommandsCounter,
@@ -97,9 +96,10 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 }
 
 type contributeData struct {
-	allBranches      gitdomain.BranchInfos
-	branchToCheckout Option[gitdomain.LocalBranchName]
-	branchesToMark   commandconfig.BranchesAndTypes
+	allBranches           gitdomain.BranchInfos
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchToCheckout      Option[gitdomain.LocalBranchName]
+	branchesToMark        commandconfig.BranchesAndTypes
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
@@ -162,9 +162,10 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{
-		allBranches:      branchesSnapshot.Branches,
-		branchToCheckout: branchToCheckout,
-		branchesToMark:   branchesToMark,
+		allBranches:           branchesSnapshot.Branches,
+		beginBranchesSnapshot: branchesSnapshot,
+		branchToCheckout:      branchToCheckout,
+		branchesToMark:        branchesToMark,
 	}, nil
 }
 
