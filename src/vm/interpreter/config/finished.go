@@ -38,10 +38,6 @@ func Finished(args FinishedArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	branchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		AbortProgram:             program.Program{},
 		BeginBranchesSnapshot:    args.BeginBranchesSnapshot.GetOrDefault(),
