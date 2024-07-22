@@ -139,6 +139,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v NewCommitMessages \
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v Paniced \
+	                                                           | grep -v EmptyConfigSnapshot \
 	                                                           || true
 	@tput sgr0 || true
 
