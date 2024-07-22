@@ -88,13 +88,12 @@ func executeHack(args []string, dryRun configdomain.DryRun, verbose configdomain
 	}
 	if doConvertToFeatureBranch {
 		return convertToFeatureBranch(convertToFeatureBranchArgs{
-			beginBranchesSnapshot: convertToFeatureBranchData.beginBranchesSnapshot,
-			beginConfigSnapshot:   repo.ConfigSnapshot,
-			config:                convertToFeatureBranchData.config,
-			makeFeatureData:       convertToFeatureBranchData,
-			repo:                  repo,
-			rootDir:               repo.RootDir,
-			verbose:               verbose,
+			beginConfigSnapshot: repo.ConfigSnapshot,
+			config:              convertToFeatureBranchData.config,
+			makeFeatureData:     convertToFeatureBranchData,
+			repo:                repo,
+			rootDir:             repo.RootDir,
+			verbose:             verbose,
 		})
 	}
 	panic("both config arms were nil")
@@ -106,9 +105,8 @@ type hackData = Either[appendFeatureData, convertToFeatureData]
 
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type convertToFeatureData struct {
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	config                config.ValidatedConfig
-	targetBranches        commandconfig.BranchesAndTypes
+	config         config.ValidatedConfig
+	targetBranches commandconfig.BranchesAndTypes
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
@@ -220,9 +218,8 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
-			beginBranchesSnapshot: branchesSnapshot,
-			config:                validatedConfig,
-			targetBranches:        commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
+			config:         validatedConfig,
+			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
 		return data, false, nil
 	}
@@ -287,7 +284,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:               args.repo.Backend,
-		BeginBranchesSnapshot: Some(args.beginBranchesSnapshot),
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
 		Command:               "observe",
 		CommandsCounter:       args.repo.CommandsCounter,
@@ -299,13 +296,12 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 }
 
 type convertToFeatureBranchArgs struct {
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.ConfigSnapshot
-	config                config.ValidatedConfig
-	makeFeatureData       convertToFeatureData
-	repo                  execute.OpenRepoResult
-	rootDir               gitdomain.RepoRootDir
-	verbose               configdomain.Verbose
+	beginConfigSnapshot undoconfig.ConfigSnapshot
+	config              config.ValidatedConfig
+	makeFeatureData     convertToFeatureData
+	repo                execute.OpenRepoResult
+	rootDir             gitdomain.RepoRootDir
+	verbose             configdomain.Verbose
 }
 
 func validateConvertToFeatureData(data convertToFeatureData) error {
