@@ -84,14 +84,15 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
-		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "contribute",
-		CommandsCounter:     repo.CommandsCounter,
-		FinalMessages:       repo.FinalMessages,
-		Git:                 repo.Git,
-		RootDir:             repo.RootDir,
-		Verbose:             verbose,
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "contribute",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		Verbose:               verbose,
 	})
 }
 

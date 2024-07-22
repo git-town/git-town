@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
@@ -71,14 +72,15 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	}
 	printParkedBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
-		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "park",
-		CommandsCounter:     repo.CommandsCounter,
-		FinalMessages:       repo.FinalMessages,
-		Git:                 repo.Git,
-		RootDir:             repo.RootDir,
-		Verbose:             verbose,
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "park",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		Verbose:               verbose,
 	})
 }
 
