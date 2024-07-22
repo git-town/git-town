@@ -1,10 +1,10 @@
-Feature: observe a remote branch
+Feature: make a remote branch prototype
 
   Background:
     Given a Git repo clone
     And the branch
-      | NAME           | TYPE    | PARENT | LOCATIONS |
-      | remote-feature | feature | main   | origin    |
+      | NAME           | TYPE   | PARENT | LOCATIONS |
+      | remote-feature | (none) | main   | origin    |
     And I run "git fetch"
     And an uncommitted file
     When I run "git-town prototype remote-feature"
@@ -32,4 +32,5 @@ Feature: observe a remote branch
       |                | git stash pop                |
     And the current branch is now "main"
     And there are now no observed branches
+    And the initial branches exist
     And the uncommitted file still exists
