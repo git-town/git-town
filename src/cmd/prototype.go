@@ -73,19 +73,21 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 	}
 	printPrototypeBranches(branchNames)
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
-		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "prototype",
-		CommandsCounter:     repo.CommandsCounter,
-		FinalMessages:       repo.FinalMessages,
-		Git:                 repo.Git,
-		RootDir:             repo.RootDir,
-		Verbose:             verbose,
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: Some(data.branchesSnapshot),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "prototype",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		Verbose:               verbose,
 	})
 }
 
 type prototypeData struct {
 	allBranches         gitdomain.BranchInfos
+	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPrototype commandconfig.BranchesAndTypes
 	checkout            Option[gitdomain.LocalBranchName]
 }
@@ -143,6 +145,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	}
 	return prototypeData{
 		allBranches:         branchesSnapshot.Branches,
+		branchesSnapshot:    branchesSnapshot,
 		branchesToPrototype: branchesToPrototype,
 		checkout:            checkout,
 	}, nil
