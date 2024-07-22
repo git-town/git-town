@@ -70,6 +70,8 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
+	// TODO: If the branchNames contain remote-only branches,
+	// check them out here.
 	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
