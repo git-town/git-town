@@ -18,11 +18,12 @@ Feature: observe a branch verbosely
       |        | git config -lz --includes --local            |
       |        | git branch -vva --sort=refname               |
       |        | git config git-town.observed-branches branch |
+      |        | git branch -vva --sort=refname               |
       |        | git config -lz --includes --global           |
       |        | git config -lz --includes --local            |
     And it prints:
       """
-      Ran 8 shell commands
+      Ran 9 shell commands
       """
     And it prints:
       """
