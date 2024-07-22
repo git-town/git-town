@@ -283,13 +283,15 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             args.repo.Backend,
-		BeginConfigSnapshot: args.beginConfigSnapshot,
-		Command:             "observe",
-		CommandsCounter:     args.repo.CommandsCounter,
-		FinalMessages:       args.repo.FinalMessages,
-		RootDir:             args.rootDir,
-		Verbose:             args.verbose,
+		Backend:               args.repo.Backend,
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginConfigSnapshot:   args.beginConfigSnapshot,
+		Command:               "observe",
+		CommandsCounter:       args.repo.CommandsCounter,
+		FinalMessages:         args.repo.FinalMessages,
+		Git:                   args.repo.Git,
+		RootDir:               args.rootDir,
+		Verbose:               args.verbose,
 	})
 }
 

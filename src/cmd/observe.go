@@ -83,18 +83,21 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:             repo.Backend,
-		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "observe",
-		CommandsCounter:     repo.CommandsCounter,
-		FinalMessages:       repo.FinalMessages,
-		RootDir:             repo.RootDir,
-		Verbose:             verbose,
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: Some(data.branchesSnapshot),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "observe",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		Verbose:               verbose,
 	})
 }
 
 type observeData struct {
 	allBranches       gitdomain.BranchInfos
+	branchesSnapshot  gitdomain.BranchesSnapshot
 	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          Option[gitdomain.LocalBranchName]
 }
@@ -156,6 +159,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
+		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
 		checkout:          checkout,
 	}, nil
