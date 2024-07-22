@@ -9,7 +9,6 @@ Feature: observe a remote branch
     And an uncommitted file
     When I run "git-town prototype remote-feature"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                     |
