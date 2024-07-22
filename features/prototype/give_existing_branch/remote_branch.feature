@@ -21,7 +21,6 @@ Feature: observe a remote branch
     And branch "remote-feature" is now prototype
     And the uncommitted file still exists
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
