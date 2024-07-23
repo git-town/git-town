@@ -121,7 +121,6 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranchCannotShip                  = "cannot ship the main branch"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
-	ObservedBranchCannotPrototype         = "cannot prototype observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
 	ObservedBranchIsNowObserved           = "branch %q is now an observed branch\n"
 	OfflineNotAllowed                     = "this command requires an active internet connection"
