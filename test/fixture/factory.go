@@ -47,7 +47,7 @@ func CreateFactory() Factory {
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
 func (self *Factory) CreateFixture(scenarioName string) Fixture {
-	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.ToString()
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
 	envPath := filepath.Join(self.Dir, envDirName)
 	return self.memoized.CloneInto(envPath)
 }

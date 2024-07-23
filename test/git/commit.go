@@ -46,7 +46,7 @@ func DefaultCommit() Commit {
 	return Commit{
 		Branch:      gitdomain.NewLocalBranchName("main"),
 		FileContent: "default file content",
-		FileName:    "default_file_name_" + counter.ToString(),
+		FileName:    "default_file_name_" + counter.NextAsString(),
 		Locations:   Locations{LocationLocal, LocationOrigin},
 		Message:     "default commit message",
 	}

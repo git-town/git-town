@@ -678,7 +678,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		// scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
-		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.ToString()
+		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.NextAsString()
 		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
 		asserts.NoError(os.Mkdir(envPath, 0o777))
 		fixture := fixture.Fixture{
