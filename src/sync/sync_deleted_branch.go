@@ -39,10 +39,11 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 }
 
 func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	parent := args.Config.Lineage.Parent(branch)
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
+		Parent:  parent.GetOrElse(args.Config.MainBranch),
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
