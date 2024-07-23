@@ -20,9 +20,9 @@ import (
 const prototypeDesc = "Make an existing branch a prototype branch"
 
 const prototypeHelp = `
-A prototype branch is a local-only feature branch that incorporates updates from its parent branch but is not pushed to the remote repository.
+A prototype branch is for local-only development. It incorporates updates from its parent branch and is not pushed to the remote repository until you run "git propose" on it.
 
-To create prototype branches please run git hack, append, or prepend with the --prototype option.
+You can create new prototype branches using git hack, append, or prepend with the --prototype option.
 `
 
 func prototypeCmd() *cobra.Command {
