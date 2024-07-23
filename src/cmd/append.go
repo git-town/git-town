@@ -108,6 +108,7 @@ type appendFeatureData struct {
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	previousBranch            Option[gitdomain.LocalBranchName]
+	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes
 	stashSize                 gitdomain.StashSize
 	targetBranch              gitdomain.LocalBranchName
@@ -213,6 +214,9 @@ func appendProgram(data appendFeatureData) program.Program {
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
+	if data.prototype.IsTrue() {
+		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
+	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		previousBranchCandidates = append(previousBranchCandidates, previousBranch)

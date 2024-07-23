@@ -67,7 +67,7 @@ func executeHack(args []string, dryRun configdomain.DryRun, prototype configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, dryRun, verbose)
+	data, exit, err := determineHackData(args, repo, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -158,7 +158,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -254,6 +254,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
 		previousBranch:            previousBranch,
+		prototype:                 prototype,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
