@@ -1,4 +1,4 @@
-Feature: observing a parked branch
+Feature: making a parked branch a prototype
 
   Background:
     Given a Git repo clone
