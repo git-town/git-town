@@ -38,6 +38,7 @@ See "sync" for information regarding upstream remotes.`
 func hackCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
@@ -45,15 +46,16 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executeHack(args, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
+	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeHack(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeHack(args []string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
