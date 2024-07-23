@@ -39,24 +39,25 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 }
 
 func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	parent := args.Config.Lineage.Parent(branch)
+	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  parent.GetOrElse(args.Config.MainBranch),
+		Parent:  parent,
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: parent.GetOrElse(args.Config.MainBranch)})
+	list.Value.Add(&opcodes.Checkout{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
 
 func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
+		Parent:  parent,
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
@@ -66,10 +67,11 @@ func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch git
 }
 
 func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  args.Config.MainBranch, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
+		Parent:  parent,
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
