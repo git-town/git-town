@@ -8,7 +8,6 @@ Feature: on the main branch
     And the current branch is "main"
     When I run "git-town append --prototype new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
