@@ -46,7 +46,7 @@ When run on a perennial branch:
 func renameBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	// TODO: extract into flags package
-	addForceFlag, readForceFlag := flags.Bool("force", "f", "force rename of perennial branch", flags.FlagTypeNonPersistent)
+	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
@@ -63,7 +63,7 @@ func renameBranchCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRenameBranch(args []string, dryRun configdomain.DryRun, force bool, verbose configdomain.Verbose) error {
+func executeRenameBranch(args []string, dryRun configdomain.DryRun, force configdomain.Force, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -123,7 +123,7 @@ type renameBranchData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameBranchData, exit bool, err error) {
+func determineRenameBranchData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameBranchData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -186,7 +186,7 @@ func determineRenameBranchData(args []string, forceFlag bool, repo execute.OpenR
 	if validatedConfig.Config.IsMainBranch(oldBranchName) {
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
-	if !forceFlag {
+	if force.IsFalse() {
 		if validatedConfig.Config.IsPerennialBranch(oldBranchName) {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}

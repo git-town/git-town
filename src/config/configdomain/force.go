@@ -1,13 +1,8 @@
 package configdomain
 
 // indicates whether a Git Town command should execute the commands or only display them
-type DryRun bool
+type Force bool
 
-// TODO: remove
-func (self DryRun) IsFalse() bool {
+func (self Force) IsFalse() bool {
 	return !bool(self)
-}
-
-func (self DryRun) IsTrue() bool {
-	return bool(self)
 }
