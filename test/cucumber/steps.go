@@ -400,7 +400,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.SetColorUI(value)
 	})
 
-	// TODO: remove?
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1473,13 +1472,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 			panic(`you said "the branch" but more than 1 branch provided`)
 		}
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		// TODO: uncomment this and make it work
-		// if state.initialBranches.IsNone() {
-		// 	initialTable := datatable.FromGherkin(table)
-		// 	state.initialBranches = Some(initialTable)
-		// } else {
-		// 	state.initialBranches = None[datatable.DataTable]()
-		// }
+		if state.initialBranches.IsNone() {
+			initialTable := datatable.FromGherkin(table)
+			state.initialBranches = Some(initialTable)
+		}
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
 			switch {
