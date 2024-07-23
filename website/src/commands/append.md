@@ -40,6 +40,6 @@ will create the remote tracking branch.
 
 ### Arguments
 
-When given a non-existing branch name, `git hack` creates a new feature branch
+When given a non-existing branch name, `git append` creates a new feature branch
 with the main branch as its parent. Adding the `--prototype` or `-p` switch
 makes it create a [prototype branch](../branch-types.md#prototype-branches)).
