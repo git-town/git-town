@@ -16,7 +16,7 @@ const (
 // type-safe access to the CLI arguments of type configdomain.Verbose
 func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(verboseLong, verboseShort, false, "Display all Git commands run under the hood")
+		cmd.PersistentFlags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.Verbose {
 		value, err := cmd.Flags().GetBool(verboseLong)
