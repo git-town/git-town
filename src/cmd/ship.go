@@ -78,7 +78,7 @@ func shipCmd() *cobra.Command {
 func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
-		OmitBranchNames:  false,
+		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
