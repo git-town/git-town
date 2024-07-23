@@ -28,4 +28,5 @@ Feature: make the current feature branch a prototype branch
       |        | git stash pop |
     And the current branch is still "branch"
     And there are now no prototype branches
+    And the initial branches exist
     And the uncommitted file still exists
