@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
-	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
+	interpreterConfig "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
 
@@ -72,7 +72,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		}
 	}
 	printPrototypeBranches(branchNames)
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return interpreterConfig.Finished(interpreterConfig.FinishedArgs{
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: Some(data.branchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
