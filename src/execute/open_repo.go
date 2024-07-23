@@ -75,7 +75,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		counter:          commandsCounter,
 		dryRun:           args.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
-		omitBranchNames:  !args.PrintBranchNames, // TODO: reverse
+		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
 	})
 	isOffline := unvalidatedConfig.Config.Value.Offline
@@ -138,7 +138,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 		return &subshell.FrontendDryRunner{
 			Backend:          args.backend,
 			GetCurrentBranch: args.getCurrentBranch,
-			OmitBranchNames:  args.omitBranchNames,
+			OmitBranchNames:  !args.printBranchNames,
 			PrintCommands:    args.printCommands,
 			CommandsCounter:  args.counter,
 		}
@@ -146,7 +146,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 	return &subshell.FrontendRunner{
 		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
-		OmitBranchNames:  args.omitBranchNames,
+		OmitBranchNames:  !args.printBranchNames,
 		PrintCommands:    args.printCommands,
 		CommandsCounter:  args.counter,
 	}
@@ -157,6 +157,6 @@ type newFrontendRunnerArgs struct {
 	counter          Mutable[gohacks.Counter]
 	dryRun           configdomain.DryRun
 	getCurrentBranch subshell.GetCurrentBranchFunc
-	omitBranchNames  bool
+	printBranchNames bool
 	printCommands    bool
 }
