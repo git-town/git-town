@@ -47,7 +47,7 @@ func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitd
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
+	list.Value.Add(&opcodes.Checkout{Branch: parent.GetOrElse(args.Config.MainBranch)})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
