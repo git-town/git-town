@@ -99,7 +99,7 @@ func printPrototypeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonPrototypeBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
+func removeNonPrototypeBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
