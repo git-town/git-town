@@ -14,7 +14,7 @@ const (
 	commitMessageShort = "m"       // short form of the "commit message" CLI flag
 )
 
-// CommitMessage provides type-safe access to the CLI arguments of type gitdomain.CommitMessage.
+// type-safe access to the CLI arguments of type gitdomain.CommitMessage
 func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(commitMessageLong, commitMessageShort, "", desc)

@@ -13,7 +13,7 @@ const (
 	bodyShort = "b"    // short form of the "body" CLI flag
 )
 
-// ProposalBody provides type-safe access to the CLI arguments of type gitdomain.ProposalBody.
+// type-safe access to the CLI arguments of type gitdomain.ProposalBody
 func ProposalBody() (AddFunc, ReadProposalBodyFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(bodyLong, bodyShort, "", "Provide a body for the proposal")

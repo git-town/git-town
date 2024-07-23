@@ -13,7 +13,7 @@ const (
 	titleShort = "t"     // short form of the "title" CLI flag
 )
 
-// ProposalTitle provides type-safe access to the CLI arguments of type gitdomain.ProposalTitle.
+// type-safe access to the CLI arguments of type gitdomain.ProposalTitle
 func ProposalTitle() (AddFunc, ReadProposalTitleFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(titleLong, titleShort, "", "Provide a title for the proposal")
