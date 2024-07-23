@@ -45,7 +45,6 @@ When run on a perennial branch:
 
 func renameBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	// TODO: extract into flags package
 	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
@@ -66,7 +65,7 @@ func renameBranchCommand() *cobra.Command {
 func executeRenameBranch(args []string, dryRun configdomain.DryRun, force configdomain.Force, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
-		OmitBranchNames:  false,
+		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,

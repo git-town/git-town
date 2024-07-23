@@ -32,7 +32,7 @@ func getParentCommand() *cobra.Command {
 func executeGetParent(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
-		OmitBranchNames:  true,
+		PrintBranchNames: false,
 		PrintCommands:    false,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
