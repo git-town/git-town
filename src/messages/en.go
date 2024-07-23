@@ -17,6 +17,7 @@ const (
 	BranchHasWrongSHA                  = "cannot reset branch %q to %q because it received additional commits in the meantime. It should have SHA %q but has %q"
 	BranchIsAlreadyContribution        = "branch %q is already a contribution branch"
 	BranchIsAlreadyObserved            = "branch %q is already observed"
+	BranchIsAlreadyPrototype           = "branch %q is already a prototype branch"
 	BranchIsAlreadyParked              = "branch %q is already parked"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
@@ -116,6 +117,7 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranchCannotObserve               = "cannot observe the main branch"
 	MainBranchCannotPark                  = "cannot park the main branch"
 	MainBranchCannotPropose               = "cannot propose the main branch"
+	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
@@ -131,6 +133,7 @@ END OUTPUT FROM 'git branch -vva'
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
 	PerennialBranchCannotPark             = "cannot park perennial branches"
 	PerennialBranchCannotPropose          = "cannot propose perennial branches"
+	PerennialBranchCannotPrototype        = "cannot prototype perennial branches"
 	PerennialBranchCannotShip             = "cannot ship perennial branches"
 	PerennialBranches                     = "Perennial branches: %s\n"
 	PerennialBranchRemovedParentEntry     = "Removed parent entry for perennial branch %q\n"
@@ -143,6 +146,7 @@ END OUTPUT FROM 'git branch -vva'
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
+	PrototypeBranchIsNowPrototype         = "branch %q is now a prototype branch\n"
 	PrototypeRemoved                      = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 

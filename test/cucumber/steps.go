@@ -274,7 +274,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^branch "([^"]+)" is now parked`, func(ctx context.Context, name string) error {
+	sc.Step(`^branch "([^"]+)" is (?:now|still) parked`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
