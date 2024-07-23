@@ -71,7 +71,7 @@ func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch git
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  parent, // TODO: change from MainBranch to the actual parent of the branch whose remote was deleted
+		Parent:  parent,
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
