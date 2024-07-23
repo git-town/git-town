@@ -42,7 +42,7 @@ func switchCmd() *cobra.Command {
 func executeSwitch(verbose configdomain.Verbose, merge bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
-		OmitBranchNames:  false,
+		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,

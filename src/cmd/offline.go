@@ -42,7 +42,7 @@ func offlineCmd() *cobra.Command {
 func executeOffline(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
-		OmitBranchNames:  true,
+		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  false,
 		ValidateIsOnline: false,

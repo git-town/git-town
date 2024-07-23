@@ -18,7 +18,6 @@ func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, config configdomai
 	return result
 }
 
-// TODO: instead of injecting the fullConfig, inject the branchType
 func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig configdomain.UnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
