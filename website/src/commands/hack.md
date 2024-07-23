@@ -31,4 +31,4 @@ When given an existing contribution, observed, parked, or prototype branch,
 `git hack` converts that branch to a feature branch.
 
 When given no arguments, `git hack` converts the current contribution, observed,
-parked, or prototype branch into a proper feature branch.
+parked, or prototype branch into a feature branch.

@@ -37,3 +37,9 @@ If [push-new-branches](../preferences/push-new-branches.md) is set, `git append`
 also creates the tracking branch for the new feature branch. This behavior is
 disabled by default to make `git append` run fast. The first run of `git sync`
 will create the remote tracking branch.
+
+### Arguments
+
+When given a non-existing branch name, `git hack` creates a new feature branch
+with the main branch as its parent. Adding the `--prototype` or `-p` switch
+makes it create a [prototype branch](../branch-types.md#prototype-branches)).
