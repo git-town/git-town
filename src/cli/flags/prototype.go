@@ -13,7 +13,7 @@ const prototypeLong = "prototype"
 // type-safe access to the CLI arguments of type gitdomain.Prototype
 func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(prototypeLong, "p", false, "print but do not run the Git commands")
+		cmd.PersistentFlags().BoolP(prototypeLong, "p", false, "create a prototype branch")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.Prototype {
 		value, err := cmd.Flags().GetBool(prototypeLong)
