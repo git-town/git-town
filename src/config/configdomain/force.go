@@ -1,6 +1,6 @@
 package configdomain
 
-// indicates whether a Git Town command should execute the commands or only display them
+// indicates whether a Git Town command should execute the commands despite not all safety conditions met
 type Force bool
 
 func (self Force) IsFalse() bool {
