@@ -20,7 +20,7 @@ type FrontendRunner struct {
 	Backend          gitdomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
-	OmitBranchNames  bool
+	PrintBranchNames bool
 	PrintCommands    bool
 }
 
@@ -58,14 +58,14 @@ func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, cmd string
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	self.CommandsCounter.Value.Inc()
 	var branchName gitdomain.LocalBranchName
-	if !self.OmitBranchNames {
+	if self.PrintBranchNames {
 		branchName, err = self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
+		PrintCommand(branchName, self.PrintBranchNames, cmd, args...)
 	}
 	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)

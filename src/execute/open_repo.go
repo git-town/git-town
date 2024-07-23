@@ -146,7 +146,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 	return &subshell.FrontendRunner{
 		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
-		OmitBranchNames:  args.printBranchNames,
+		PrintBranchNames: args.printBranchNames,
 		PrintCommands:    args.printCommands,
 		CommandsCounter:  args.counter,
 	}
