@@ -20,15 +20,15 @@ type FrontendRunner struct {
 	Backend          gitdomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
-	OmitBranchNames  bool
+	PrintBranchNames bool
 	PrintCommands    bool
 }
 
 type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
 
-func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
+func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, executable string, args ...string) string {
 	var result string
-	if executable == "git" && !omitBranch {
+	if executable == "git" && printBranch {
 		result = "[" + currentBranch.String() + "] git "
 	} else {
 		result = executable + " "
@@ -48,8 +48,8 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, exe
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, omitBranch, cmd, args...)
+func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, cmd string, args ...string) {
+	header := FormatCommand(branch, printBranch, cmd, args...)
 	fmt.Println()
 	fmt.Println(colors.Bold().Styled(header))
 }
@@ -58,14 +58,14 @@ func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string,
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	self.CommandsCounter.Value.Inc()
 	var branchName gitdomain.LocalBranchName
-	if !self.OmitBranchNames {
+	if self.PrintBranchNames {
 		branchName, err = self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
+		PrintCommand(branchName, self.PrintBranchNames, cmd, args...)
 	}
 	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
