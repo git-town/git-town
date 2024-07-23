@@ -57,8 +57,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validatePrototypeData(data)
-	if err != nil {
+	if err = validatePrototypeData(data); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
