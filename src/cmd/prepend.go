@@ -36,6 +36,7 @@ See "sync" for upstream remote options.`
 func prependCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
@@ -43,15 +44,16 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePrepend(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			return executePrepend(args, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
+	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePrepend(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executePrepend(args []string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -63,7 +65,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, verbose configdom
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, dryRun, verbose)
+	data, exit, err := determinePrependData(args, repo, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -110,12 +112,13 @@ type prependData struct {
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
 	previousBranch      Option[gitdomain.LocalBranchName]
+	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -191,6 +194,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
 		previousBranch:      previousBranch,
+		prototype:           prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
 		targetBranch:        targetBranch,
@@ -223,6 +227,9 @@ func prependProgram(data prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
+	if data.prototype.IsTrue() {
+		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
+	}
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
 		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
