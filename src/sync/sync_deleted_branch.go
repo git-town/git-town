@@ -61,7 +61,7 @@ func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch git
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
+	list.Value.Add(&opcodes.Checkout{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
@@ -75,7 +75,7 @@ func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch git
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: args.Config.MainBranch}) // TODO: checkout the actual parent here
+	list.Value.Add(&opcodes.Checkout{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
