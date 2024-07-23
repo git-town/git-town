@@ -1021,40 +1021,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
-		}
-		newValue, hasNewValue := devRepo.TestCommands.LocalGitConfig(configKey).Get()
-		if hasNewValue {
-			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
-		}
-		return nil
-	})
-
-	sc.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
-		}
-		return devRepo.Config.GitConfig.RemoveLocalConfigValue(configKey)
-	})
-
-	sc.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return fmt.Errorf("unknown config key: %q", name)
-		}
-		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
-	})
-
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1176,6 +1142,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "push-hook" is "([^"]*)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.ParsePushHook(text, "")
+		asserts.NoError(err)
+		return devRepo.Config.SetPushNewBranches(value, false)
+	})
+
 	sc.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1194,6 +1168,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "push-new-branches" is "([^"]*)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.ParsePushNewBranches(text, "")
+		asserts.NoError(err)
+		return devRepo.Config.SetPushNewBranches(value, false)
 	})
 
 	sc.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func(ctx context.Context) error {
