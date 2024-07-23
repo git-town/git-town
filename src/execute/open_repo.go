@@ -75,7 +75,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		counter:          commandsCounter,
 		dryRun:           args.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
-		omitBranchNames:  args.OmitBranchNames,
+		omitBranchNames:  !args.PrintBranchNames, // TODO: reverse
 		printCommands:    args.PrintCommands,
 	})
 	isOffline := unvalidatedConfig.Config.Value.Offline
@@ -109,7 +109,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 
 type OpenRepoArgs struct {
 	DryRun           configdomain.DryRun
-	OmitBranchNames  bool // TODO: rename to PrintBranchNames and reverse its boolean value
+	PrintBranchNames bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool

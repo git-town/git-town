@@ -36,7 +36,7 @@ func RootCmd() *cobra.Command {
 func executeDisplayConfig(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
-		OmitBranchNames:  true,
+		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
