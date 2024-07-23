@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -47,12 +45,10 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		return
 	}
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
-	fmt.Println("333333333333333333333", isMainOrPerennialBranch, args.Remotes.HasOrigin())
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	fmt.Println("44444444444444444444444")
 	list.Value.Add(&opcodes.Checkout{Branch: localName})
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
