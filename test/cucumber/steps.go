@@ -1472,10 +1472,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			panic(`you said "the branch" but more than 1 branch provided`)
 		}
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if state.initialBranches.IsNone() {
-			initialTable := datatable.FromGherkin(table)
-			state.initialBranches = Some(initialTable)
-		}
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
 			switch {
