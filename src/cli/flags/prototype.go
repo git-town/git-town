@@ -10,7 +10,7 @@ import (
 
 const prototypeLong = "prototype"
 
-// ProposalTitle provides type-safe access to the CLI arguments of type gitdomain.ProposalTitle.
+// type-safe access to the CLI arguments of type gitdomain.Prototype
 func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(prototypeLong, "", false, "Print but do not run the Git commands")
