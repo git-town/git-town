@@ -26,9 +26,9 @@ type FrontendRunner struct {
 
 type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
 
-func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
+func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, executable string, args ...string) string {
 	var result string
-	if executable == "git" && !omitBranch {
+	if executable == "git" && printBranch {
 		result = "[" + currentBranch.String() + "] git "
 	} else {
 		result = executable + " "
@@ -48,8 +48,8 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, exe
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, omitBranch, cmd, args...)
+func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, cmd string, args ...string) {
+	header := FormatCommand(branch, printBranch, cmd, args...)
 	fmt.Println()
 	fmt.Println(colors.Bold().Styled(header))
 }
