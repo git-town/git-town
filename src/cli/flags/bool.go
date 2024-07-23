@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Bool provides mistake-safe access to boolean Cobra command-line flags.
+// type-safe access to boolean Cobra command-line flags
 func Bool(name, short, desc string, persistent FlagType) (AddFunc, ReadBoolFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		switch persistent {

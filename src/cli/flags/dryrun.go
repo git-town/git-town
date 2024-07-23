@@ -10,7 +10,7 @@ import (
 
 const dryRunLong = "dry-run"
 
-// type-safe access to the CLI arguments of type gitdomain.ProposalTitle
+// type-safe access to the CLI arguments of type gitdomain.DryRun
 func DryRun() (AddFunc, ReadDryRunFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(dryRunLong, "", false, "Print but do not run the Git commands")
