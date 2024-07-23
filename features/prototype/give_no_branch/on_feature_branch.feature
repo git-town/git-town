@@ -1,4 +1,4 @@
-Feature: make the current branch a prototype branch
+Feature: make the current feature branch a prototype branch
 
   Background:
     Given a Git repo clone
