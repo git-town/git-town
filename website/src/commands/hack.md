@@ -20,3 +20,15 @@ If [push-new-branches](../preferences/push-new-branches.md) is set, `git hack`
 creates a remote tracking branch for the new feature branch. This behavior is
 disabled by default to make `git hack` run fast. The first run of `git sync`
 will create the remote tracking branch.
+
+### Arguments
+
+When given a non-existing branch name, `git hack` creates a new feature branch
+with the main branch as its parent. Adding the `--prototype` or `-p` switch
+makes it create a [prototype branch](../branch-types.md#prototype-branches)).
+
+When given an existing contribution, observed, parked, or prototype branch,
+`git hack` converts that branch to a feature branch.
+
+When given no arguments, `git hack` converts the current contribution, observed,
+parked, or prototype branch into a proper feature branch.
