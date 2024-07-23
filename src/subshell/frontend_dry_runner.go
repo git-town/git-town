@@ -14,16 +14,14 @@ type FrontendDryRunner struct {
 	Backend          gitdomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
-	OmitBranchNames  bool
+	PrintBranchNames bool
 	PrintCommands    bool
 }
 
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 	var currentBranch gitdomain.LocalBranchName
-	if self.OmitBranchNames {
-		currentBranch = ""
-	} else {
+	if self.PrintBranchNames {
 		var err error
 		currentBranch, err = self.GetCurrentBranch(self.Backend)
 		if err != nil {
@@ -31,7 +29,7 @@ func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)
+		PrintCommand(currentBranch, self.PrintBranchNames, executable, args...)
 		fmt.Println("(dry run)")
 	}
 	return nil
