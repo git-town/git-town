@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prototypeDesc = "Mark an existing branch as a prototype branch"
+const prototypeDesc = "Make an existing branch a prototype branch"
 
 const prototypeHelp = `
 A prototype branch is a local-only feature branch that incorporates updates from its parent branch but is not pushed to the remote repository.
