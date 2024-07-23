@@ -1,4 +1,4 @@
-Feature: create a prototyping branch
+Feature: does not create prototyping branches this way
 
   Background:
     Given a Git repo clone
