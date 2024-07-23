@@ -8,7 +8,6 @@ Feature: creating a new prototype branch
     And the current branch is "main"
     When I run "git-town hack --prototype new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -33,5 +32,6 @@ Feature: creating a new prototype branch
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
     And the current branch is now "main"
+    And there are now no prototype branches
     And the initial commits exist
     And the initial branches and lineage exist
