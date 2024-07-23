@@ -1532,13 +1532,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// TODO: uncomment this and make it work
-		// if state.initialCommits.IsNone() {
-		// 	initialTable := datatable.FromGherkin(table)
-		// 	state.initialCommits = Some(initialTable)
-		// } else {
-		// 	state.initialCommits = None[datatable.DataTable]()
-		// }
 		// create the commits
 		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
