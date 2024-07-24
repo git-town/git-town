@@ -21,7 +21,7 @@ func TestFindStepDefinitions(t *testing.T) {
 			"	})"
 		have := lintSteps.FindStepDefinitions(give)
 		want := []string{
-			"^a coworker clones the repository$",
+			`^a coworker clones the repository$`,
 			`^a folder "([^"]*)"$`,
 		}
 		must.Eq(t, want, have)
