@@ -20,9 +20,15 @@ func TestLintSteps(t *testing.T) {
 			"	sc.Step(`^a folder \"([^\"]*)\"$`, func(ctx context.Context, name string) {\n" +
 			"	})"
 		have := lintSteps.FindStepDefinitions(give)
-		want := []string{
-			`^a coworker clones the repository$`,
-			`^a folder "([^"]*)"$`,
+		want := []lintSteps.StepDefinition{
+			{
+				Text: `^a coworker clones the repository$`,
+				Line: 2,
+			},
+			{
+				Text: `^a folder "([^"]*)"$`,
+				Line: 6,
+			},
 		}
 		must.Eq(t, want, have)
 	})
@@ -44,6 +50,36 @@ func TestLintSteps(t *testing.T) {
 		want := []string{
 			`sc.Step("`,
 			"sc.Step('",
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("FindUnsortedStepDefs", func(t *testing.T) {
+		t.Parallel()
+		stepDefs := []lintSteps.StepDefinition{
+			{
+				Text: `^a regex`,
+				Line: 1,
+			},
+			{
+				Text: `^c regex`,
+				Line: 2,
+			},
+			{
+				Text: `^b regex`,
+				Line: 3,
+			},
+		}
+		have := lintSteps.FindUnsortedStepDefs(stepDefs)
+		want := []lintSteps.StepDefinition{
+			{
+				Text: `^b regex`,
+				Line: 2,
+			},
+			{
+				Text: `^c regex`,
+				Line: 3,
+			},
 		}
 		must.Eq(t, want, have)
 	})

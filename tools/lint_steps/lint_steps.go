@@ -54,8 +54,8 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 		matches := re.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			result = append(result, StepDefinition{
-				text: match[1],
-				line: l,
+				Text: match[1],
+				Line: l,
 			})
 		}
 	}
@@ -63,20 +63,24 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 }
 
 type StepDefinition struct {
-	text string
-	line int
+	Text string
+	Line int
 }
 
-func FindUnsortedStepDefs(stepDefs []StepDefinition) {
+func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
+	result := []StepDefinition{}
 	sortedStepDefs := make([]string, len(stepDefs))
 	for s, stepDef := range stepDefs {
-		sortedStepDefs[s] = stepDef.text
+		sortedStepDefs[s] = stepDef.Text
 	}
 	slices.Sort(sortedStepDefs)
 	for s := range sortedStepDefs {
-		if stepDefs[s].text != sortedStepDefs[s] {
-			fmt.Printf("%s:%d  expected %q\n", fileName, s, sortedStepDefs)
+		if stepDefs[s].Text != sortedStepDefs[s] {
+			result = append(result, StepDefinition{
+				Text: sortedStepDefs[s],
+				Line: stepDefs[s].Line,
+			})
 		}
 	}
-
+	return result
 }
