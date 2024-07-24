@@ -1318,6 +1318,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^local Git Town setting "gitlab-token" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.Config.LocalGitConfig.GitLabToken.Get(); has {
+			return fmt.Errorf(`unexpected local setting "gitlab-token" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^(?:local )?Git Town setting "hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
