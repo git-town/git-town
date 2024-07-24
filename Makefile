@@ -54,6 +54,7 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
 	git diff --check
+	go run tools/lint_steps/lint_steps.go
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/ensure_no_files_with_dashes.sh
@@ -70,6 +71,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
+	@echo lint tools/lint_steps
+	@(cd tools/lint_steps && ../rta golangci-lint run)
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
