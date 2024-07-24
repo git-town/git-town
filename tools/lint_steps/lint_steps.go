@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strings"
 
+	sets "github.com/deckarep/golang-set/v2"
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
@@ -92,7 +93,7 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 }
 
 func FindAllUsedSteps() []string {
-	result := []string{}
+	result := sets.NewSet[string]()
 	err := filepath.WalkDir(featureDir, func(path string, entry os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
@@ -101,16 +102,19 @@ func FindAllUsedSteps() []string {
 		fileContent, err := os.ReadFile(path)
 		asserts.NoError(err)
 		stepsInFile := FindUsedStepsIn(string(fileContent))
-		result = append(result, stepsInFile...)
+		result.Append(stepsInFile...)
 		return nil
 	})
 	asserts.NoError(err)
-	return result
+	return result.ToSlice()
 }
 
 // provides all usages of Cucumber steps in the given file content
 func FindUsedStepsIn(fileContent string) []string {
-	initializeRE()
+
+	if stepUsageRE == nil {
+		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
+	}
 	result := []string{}
 	for _, line := range strings.Split(fileContent, "\n") {
 		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
@@ -119,10 +123,4 @@ func FindUsedStepsIn(fileContent string) []string {
 		}
 	}
 	return result
-}
-
-func initializeRE() {
-	if stepUsageRE == nil {
-		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
-	}
 }
