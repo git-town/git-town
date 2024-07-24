@@ -1,0 +1,49 @@
+package main
+
+import (
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
+
+	sets "github.com/deckarep/golang-set/v2"
+	"github.com/git-town/git-town/v14/test/asserts"
+)
+
+func FindUnusedStepDefs() []string {
+	result := []string{}
+	return result
+}
+
+func FindAllUsedSteps() []string {
+	result := sets.NewSet[string]()
+	err := filepath.WalkDir(featureDir, func(path string, entry os.DirEntry, err error) error {
+		asserts.NoError(err)
+		if filepath.Ext(path) != ".feature" {
+			return nil
+		}
+		fileContent, err := os.ReadFile(path)
+		asserts.NoError(err)
+		stepsInFile := FindUsedStepsIn(string(fileContent))
+		result.Append(stepsInFile...)
+		return nil
+	})
+	asserts.NoError(err)
+	return result.ToSlice()
+}
+
+// provides all usages of Cucumber steps in the given file content
+func FindUsedStepsIn(fileContent string) []string {
+
+	if stepUsageRE == nil {
+		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
+	}
+	result := []string{}
+	for _, line := range strings.Split(fileContent, "\n") {
+		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
+		if len(matches) > 0 {
+			result = append(result, strings.TrimSpace(matches[0][1]))
+		}
+	}
+	return result
+}
