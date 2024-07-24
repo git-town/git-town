@@ -100,7 +100,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFolder(name)
 	})
 
-	sc.Step("a Git repo clone", func(ctx context.Context) (context.Context, error) {
+	sc.Step(`a Git repo clone`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
@@ -126,7 +126,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
-	sc.Step("a local Git repo", func(ctx context.Context) (context.Context, error) {
+	sc.Step(`a local Git repo`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
@@ -1019,7 +1019,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step("^the branch(es)?$", func(ctx context.Context, plural string, table *godog.Table) {
+	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
 		providedPlural := len(plural) > 0
 		providedMultipleBranches := len(table.Rows) > 2
 		if providedPlural && !providedMultipleBranches {
