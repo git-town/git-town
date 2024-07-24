@@ -480,7 +480,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still|again) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
