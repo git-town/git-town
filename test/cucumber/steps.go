@@ -509,6 +509,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	// TODO: replace the * with + everywhere
 	sc.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
