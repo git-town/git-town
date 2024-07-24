@@ -11,7 +11,7 @@ import (
 )
 
 func FindAllUnusedStepDefs() []StepDefinition {
-	definedSteps := FindStepDefinitions(fileName)
+	definedSteps := FindStepDefinitions(filePath)
 	usedSteps := FindAllUsedSteps()
 	return FindUnusedStepDefs(definedSteps, usedSteps)
 }
