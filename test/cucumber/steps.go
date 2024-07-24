@@ -1599,7 +1599,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.SetShipDeleteTrackingBranch(value, false)
 	})
 
-	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch.Get()
@@ -1632,7 +1632,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.SetSyncBeforeShip(value, false)
 	})
 
-	sc.Step(`^local Git Town setting "sync-before-ship" is still not set$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "sync-before-ship" is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.LocalGitConfig.SyncBeforeShip.Get()
@@ -1665,7 +1665,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.SetSyncFeatureStrategy(value)
 	})
 
-	sc.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "sync-feature-strategy" is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.LocalGitConfig.SyncFeatureStrategy.Get()
@@ -1698,7 +1698,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.SetSyncPerennialStrategy(value)
 	})
 
-	sc.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "sync-perennial-strategy" is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.LocalGitConfig.SyncPerennialStrategy.Get()
@@ -1746,7 +1746,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.SetSyncUpstream(value, false)
 	})
 
-	sc.Step(`^local Git Town setting "sync-upstream" is still not set$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "sync-upstream" is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.LocalGitConfig.SyncUpstream.Get()

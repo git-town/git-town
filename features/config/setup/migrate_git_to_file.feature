@@ -33,21 +33,20 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-before-ship                          | enter |
       | save config to config file                | enter |
 
-  #@this
   Scenario: result
     Then it runs no commands
     And the main branch is now not set
     And there are now no perennial branches
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" now doesn't exist
-    And local Git Town setting "sync-perennial-strategy" now doesn't exist
-    And local Git Town setting "sync-upstream" now doesn't exist
-    And local Git Town setting "perennial-regex" now doesn't exist
-    And local Git Town setting "push-new-branches" now doesn't exist
-    And local Git Town setting "push-hook" now doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
-    And local Git Town setting "sync-before-ship" now doesn't exist
+    And local Git Town setting "sync-feature-strategy" is now not set
+    And local Git Town setting "sync-perennial-strategy" is now not set
+    And local Git Town setting "sync-upstream" is now not set
+    And local Git Town setting "perennial-regex" is now not set
+    And local Git Town setting "push-new-branches" is now not set
+    And local Git Town setting "push-hook" is now not set
+    And local Git Town setting "ship-delete-tracking-branch" is now not set
+    And local Git Town setting "sync-before-ship" is now not set
     And the configuration file is now:
       """
       # Git Town configuration file

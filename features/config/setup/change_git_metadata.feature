@@ -75,7 +75,6 @@ Feature: change existing information in Git metadata
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  #@this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
@@ -94,11 +93,11 @@ Feature: change existing information in Git metadata
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" now doesn't exist
-    And local Git Town setting "sync-perennial-strategy" now doesn't exist
-    And local Git Town setting "sync-upstream" now doesn't exist
-    And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git Town setting "sync-feature-strategy" is now not set
+    And local Git Town setting "sync-perennial-strategy" is now not set
+    And local Git Town setting "sync-upstream" is now not set
+    And local Git Town setting "perennial-regex" is now not set
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
-    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
-    And local Git Town setting "sync-before-ship" now doesn't exist
+    And local Git Town setting "ship-delete-tracking-branch" is now not set
+    And local Git Town setting "sync-before-ship" is now not set
