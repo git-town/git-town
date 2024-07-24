@@ -310,6 +310,7 @@ func (self *UnvalidatedConfig) SetSyncPerennialStrategy(strategy configdomain.Sy
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
+// TODO: create newtypes for the global option: LocalityGlobal and LocalityLocal
 func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
 	self.Config.Value.SyncUpstream = value
 	if global {

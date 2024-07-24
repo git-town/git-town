@@ -1386,6 +1386,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "sync-upstream" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.ParseSyncUpstream(text, "")
+		asserts.NoError(err)
+		return devRepo.Config.SetSyncUpstream(value, false)
+	})
+
 	sc.Step(`^local Git Town setting "sync-upstream" is still not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
