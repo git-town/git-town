@@ -24,7 +24,7 @@ func (pushHook PushHook) String() string {
 	return strconv.FormatBool(pushHook.Bool())
 }
 
-func NewPushHook(value, source string) (PushHook, error) {
+func ParsePushHook(value, source string) (PushHook, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
 		return PushHook(true), fmt.Errorf(messages.ValueInvalid, source, value)

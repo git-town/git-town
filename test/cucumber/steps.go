@@ -1031,6 +1031,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "hosting-platform" is "([^"]*)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		platform, err := configdomain.NewHostingPlatform(value)
+		asserts.NoError(err)
+		return devRepo.Config.SetHostingPlatform(Some(platform))
+	})
+
 	sc.Step(`^local Git Town setting "hosting-platform" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1051,6 +1059,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "gitea-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetGiteaToken(configdomain.NewGiteaTokenOption(value))
+	})
+
 	sc.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1059,6 +1073,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "gitea-token" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "github-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetGitHubToken(configdomain.NewGitHubTokenOption(value))
 	})
 
 	sc.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1081,6 +1101,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "gitlab-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetGitLabToken(configdomain.NewGitLabTokenOption(value))
+	})
+
 	sc.Step(`^local Git Town setting "gitlab-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1089,6 +1115,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "gitlab-token" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetHostingOriginHostname(Some(configdomain.NewHostingOriginHostname(value)))
 	})
 
 	sc.Step(`^local Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1111,6 +1143,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "main-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(value))
+	})
+
 	sc.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1119,6 +1157,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "perennial-branches" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetPerennialBranches(gitdomain.ParseLocalBranchNames(value))
 	})
 
 	sc.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
@@ -1130,6 +1174,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "perennial-branches" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "perennial-regex" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.SetPerennialRegexLocally(configdomain.NewPerennialRegex(value))
 	})
 
 	sc.Step(`^local Git Town setting "perennial-regex" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1147,7 +1197,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		value, err := configdomain.ParsePushHook(text, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetPushNewBranches(value, false)
+		return devRepo.Config.SetPushHookLocally(value)
 	})
 
 	sc.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func(ctx context.Context) error {
@@ -1204,6 +1254,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "ship-delete-tracking-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.ParseShipDeleteTrackingBranch(text, "")
+		asserts.NoError(err)
+		return devRepo.Config.SetShipDeleteTrackingBranch(value, false)
+	})
+
 	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1227,6 +1285,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "sync-before-ship" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.ParseSyncBeforeShip(text, "")
+		asserts.NoError(err)
+		return devRepo.Config.SetSyncBeforeShip(value, false)
 	})
 
 	sc.Step(`^local Git Town setting "sync-before-ship" is still not set$`, func(ctx context.Context) error {
@@ -1254,6 +1320,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "sync-feature-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.NewSyncFeatureStrategy(text)
+		asserts.NoError(err)
+		return devRepo.Config.SetSyncFeatureStrategy(value)
+	})
+
 	sc.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1277,6 +1351,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "sync-perennial-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		value, err := configdomain.NewSyncPerennialStrategy(text)
+		asserts.NoError(err)
+		return devRepo.Config.SetSyncPerennialStrategy(value)
 	})
 
 	sc.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func(ctx context.Context) error {

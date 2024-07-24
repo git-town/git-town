@@ -104,7 +104,7 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		config.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPushHook:
 		var pushHook configdomain.PushHook
-		pushHook, err = configdomain.NewPushHook(value, KeyPushHook.String())
+		pushHook, err = configdomain.ParsePushHook(value, KeyPushHook.String())
 		config.PushHook = Some(pushHook)
 	case KeyPushNewBranches:
 		config.PushNewBranches, err = configdomain.ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
