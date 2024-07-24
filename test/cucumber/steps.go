@@ -1270,8 +1270,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^local Git Town setting "gitea-token" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.GiteaToken
-		if have.IsSome() {
+		if have, has := devRepo.Config.LocalGitConfig.GiteaToken.Get(); has {
 			return fmt.Errorf(`unexpected local setting "gitea-token" with value %q`, have)
 		}
 		return nil
