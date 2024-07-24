@@ -1343,6 +1343,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	// TODO: rename all of these steps to "is still not set"
 	sc.Step(`^local Git Town setting "hosting-origin-hostname" (?:now|still) doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
