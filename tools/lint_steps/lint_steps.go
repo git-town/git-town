@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
-const fileName = "test/cucumber/steps.go"
-const featureDir = "features"
+const fileName = "../../test/cucumber/steps.go"
+const featureDir = "../../features"
 
 var stepUsageRE *regexp.Regexp
 
@@ -33,7 +33,7 @@ func main() {
 	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
 	if len(unsortedStepDefs) > 0 {
 		for _, unsortedStepDef := range unsortedStepDefs {
-			fmt.Printf("%s:%d expected %q", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
+			fmt.Printf("%s:%d expected %q\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 		}
 		os.Exit(1)
 	}
@@ -41,7 +41,7 @@ func main() {
 	unusedStepDefs := FindAllUnusedStepDefs()
 	if len(unusedStepDefs) > 0 {
 		for _, unusedStepDef := range unusedStepDefs {
-			fmt.Printf("unused step definition: %s", unusedStepDef)
+			fmt.Printf("%s:%d unused step definition: %s\n", unusedStepDef)
 		}
 		os.Exit(1)
 	}

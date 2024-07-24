@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,24 +10,10 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
-func FindAllUnusedStepDefs() []string {
-	result := []string{}
+func FindAllUnusedStepDefs() []StepDefinition {
 	definedSteps := FindStepDefinitions(fileName)
-	definedREs := make([]*regexp.Regexp, len(definedSteps))
-	for d, definedStep := range definedSteps {
-		definedREs[d] = regexp.MustCompile(definedStep.Text)
-	}
 	usedSteps := FindAllUsedSteps()
-REs:
-	for _, definedRE := range definedREs {
-		for _, usedStep := range usedSteps {
-			if definedRE.MatchString(usedStep) {
-				continue REs
-			}
-		}
-		fmt.Printf("unused step definition: %s", definedRE)
-	}
-	return result
+	return FindUnusedStepDefs(definedSteps, usedSteps)
 }
 
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {

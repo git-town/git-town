@@ -54,13 +54,16 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
 	git diff --check
-	go run tools/lint_steps/lint_steps.go
+	(cd tools/lint_steps && go build && ./lint_steps)
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
+
+lintsteps:
+	(cd tools/lint_steps && go build && ./lint_steps)
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self

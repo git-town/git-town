@@ -8,6 +8,7 @@ tools/alphavet*
 tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
+tools/lint_steps/lint_steps
 tools/stats_release/stats_release
 tools/structs_sorted/structs_sorted
 tools/rta*
