@@ -34,7 +34,7 @@ func main() {
 	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
 	if len(unsortedStepDefs) > 0 {
 		for _, unsortedStepDef := range unsortedStepDefs {
-			fmt.Printf("%s:%d unsorted, expected %q here\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
+			fmt.Printf("%s:%d unsorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 		}
 		os.Exit(1)
 	}
