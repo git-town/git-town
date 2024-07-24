@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
   Scenario Outline:
     Given a Git repo clone
     And <LOCATION> Git Town setting "main-branch-name" is "main"

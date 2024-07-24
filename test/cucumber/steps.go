@@ -515,21 +515,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "main-branch-name" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedMainBranchName, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedMainBranchName, text)
 	})
 
-	sc.Step(`^local Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
+	sc.Step(`^global Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// the problem is that we want to access the raw Git config data,
-		// but we only have access to the high-level config data,
-		// and the high-level config data doesn't contain the deprecated settings.
-		// Possible options:
-		// a) somehow get access to the raw Git config data
-		// b) query the data from Git in a subshell
-		have := devRepo.Config.LocalGitConfig.
-		if have.IsSome() {
-			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedMainBranchName).Get(); has {
+			return fmt.Errorf(`unexpected global setting "main-branch-name" with value %q`, have)
 		}
 		return nil
 	})
@@ -1210,6 +1203,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedMainBranchName, value)
+	})
+
+	sc.Step(`^local Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedMainBranchName).Get(); has {
+			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "perennial-branches" is "([^"]+)"$`, func(ctx context.Context, value string) error {
