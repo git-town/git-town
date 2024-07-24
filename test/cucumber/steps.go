@@ -1227,7 +1227,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		platform, err := configdomain.NewHostingPlatform(value)
 		asserts.NoError(err)
-		return devRepo.Config.SetHostingPlatform(Some(platform))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingPlatform, platform.String())
 	})
 
 	sc.Step(`^local Git Town setting "hosting-platform" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1253,7 +1253,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "gitea-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetGiteaToken(configdomain.NewGiteaTokenOption(value))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyGiteaToken, value)
 	})
 
 	sc.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1279,7 +1279,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "github-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetGitHubToken(configdomain.NewGitHubTokenOption(value))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyGithubToken, value)
 	})
 
 	sc.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1305,7 +1305,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "gitlab-token" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetGitLabToken(configdomain.NewGitLabTokenOption(value))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyGitlabToken, value)
 	})
 
 	sc.Step(`^local Git Town setting "gitlab-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1330,7 +1330,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetHostingOriginHostname(Some(configdomain.NewHostingOriginHostname(value)))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, value)
 	})
 
 	sc.Step(`^local Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
