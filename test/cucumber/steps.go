@@ -464,28 +464,22 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
+	sc.Step(`^global Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return fmt.Errorf("unknown configuration key: %q", name)
-		}
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(configKey, value)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, text)
 	})
 
-	sc.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+	sc.Step(`^global Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
-		}
-		newValue, hasNewValue := devRepo.TestCommands.GlobalGitConfig(configKey).Get()
-		if hasNewValue {
-			return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
-		}
-		return nil
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+	})
+
+	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
 	})
 
 	sc.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -516,6 +510,34 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^global Git Town setting "main-branch-name" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedMainBranchName, text)
+	})
+
+	sc.Step(`^local Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		// the problem is that we want to access the raw Git config data,
+		// but we only have access to the high-level config data,
+		// and the high-level config data doesn't contain the deprecated settings.
+		// Possible options:
+		// a) somehow get access to the raw Git config data
+		// b) query the data from Git in a subshell
+		have := devRepo.Config.LocalGitConfig.
+		if have.IsSome() {
+			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^global Git Town setting "new-branch-push-flag" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, text)
 	})
 
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
@@ -1042,6 +1064,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
+		// XXX this uses the wrong key
 		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
 		if have.IsSome() {
 			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
@@ -1204,6 +1227,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "perennial-branches" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "perennial-branch-names" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPerennialBranchNames, value)
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "perennial-regex" is "([^"]+)"$`, func(ctx context.Context, value string) error {
