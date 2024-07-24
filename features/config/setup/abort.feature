@@ -13,7 +13,6 @@ Feature: aborting the setup assistant
       | perennial branches | enter |
       | perennial regex    | esc   |
 
-  @this
   Scenario: result
     Then it runs no commands
     And the main branch is still not set
