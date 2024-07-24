@@ -488,7 +488,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
+	})
+
+	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedCodeHostingOriginHostname).Get(); has {
+			return fmt.Errorf(`unexpected global setting "code-hosting-origin-hostname" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
@@ -1099,9 +1108,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// XXX this uses the wrong key
-		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have.IsSome() {
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedCodeHostingOriginHostname).Get(); has {
 			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
 		}
 		return nil
@@ -1257,7 +1264,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedMainBranchName).Get(); has {
-			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
+			return fmt.Errorf(`unexpected local setting "main-branch-name" with value %q`, have)
 		}
 		return nil
 	})
