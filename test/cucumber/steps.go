@@ -462,7 +462,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global|local|) Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
@@ -482,7 +482,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global|local|) Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
@@ -499,7 +499,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^(global|local|) Git Town setting "([^"]+)" is (?:now|still|again) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still|again) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
