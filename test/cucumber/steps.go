@@ -1033,6 +1033,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
+	})
+
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1041,6 +1047,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "hosting-platform" is "([^"]*)"$`, func(ctx context.Context, value string) error {
