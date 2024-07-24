@@ -174,15 +174,6 @@ func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalB
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
 }
 
-func (self *UnvalidatedConfig) SetGiteaToken(tokenOpt Option[configdomain.GiteaToken]) error {
-	self.Config.Value.GiteaToken = tokenOpt
-	if token, hasToken := tokenOpt.Get(); hasToken {
-		return self.GitConfig.SetLocalConfigValue(gitconfig.KeyGiteaToken, token.String())
-	} else {
-		return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyGiteaToken)
-	}
-}
-
 func (self *UnvalidatedConfig) SetGitHubToken(tokenOpt Option[configdomain.GitHubToken]) error {
 	self.Config.Value.GitHubToken = tokenOpt
 	if token, hasToken := tokenOpt.Get(); hasToken {
@@ -198,6 +189,15 @@ func (self *UnvalidatedConfig) SetGitLabToken(tokenOpt Option[configdomain.GitLa
 		return self.GitConfig.SetLocalConfigValue(gitconfig.KeyGitlabToken, token.String())
 	} else {
 		return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyGitlabToken)
+	}
+}
+
+func (self *UnvalidatedConfig) SetGiteaToken(tokenOpt Option[configdomain.GiteaToken]) error {
+	self.Config.Value.GiteaToken = tokenOpt
+	if token, hasToken := tokenOpt.Get(); hasToken {
+		return self.GitConfig.SetLocalConfigValue(gitconfig.KeyGiteaToken, token.String())
+	} else {
+		return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyGiteaToken)
 	}
 }
 
