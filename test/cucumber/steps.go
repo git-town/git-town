@@ -596,7 +596,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if have, has := devRepo.Config.GlobalGitConfig.Offline.Get(); has {
-			return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, have)
+			return fmt.Errorf(`unexpected local setting "offline" with value %q`, have)
 		}
 		return nil
 	})
