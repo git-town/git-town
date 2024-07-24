@@ -470,6 +470,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("unknown config key: " + name)
 		}
 		var valueOpt Option[string]
+		locality = strings.TrimSpace(locality)
 		switch locality {
 		case "local", "":
 			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
@@ -489,13 +490,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
+		locality = strings.TrimSpace(locality)
 		switch locality {
 		case "local", "":
 			return devRepo.Config.GitConfig.SetLocalConfigValue(key, value)
 		case "global":
 			return devRepo.Config.GitConfig.SetGlobalConfigValue(key, value)
 		default:
-			panic("unknown locality: " + locality)
+			return fmt.Errorf("unknown locality: %q", locality)
 		}
 	})
 
@@ -507,13 +509,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
 		var haveOpt Option[string]
+		locality = strings.TrimSpace(locality)
 		switch locality {
 		case "local", "":
 			haveOpt = devRepo.TestCommands.LocalGitConfig(key)
 		case "global":
 			haveOpt = devRepo.TestCommands.GlobalGitConfig(key)
 		default:
-			panic("unknown locality: " + locality)
+			return fmt.Errorf("unknown locality: %q", locality)
 		}
 		have, has := haveOpt.Get()
 		if !has {
