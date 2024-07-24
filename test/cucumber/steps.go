@@ -1366,7 +1366,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "main-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(value))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, value)
 	})
 
 	sc.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
