@@ -464,10 +464,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, value)
 	})
 
 	sc.Step(`^global Git Town setting "code-hosting-driver" now doesn't exist$`, func(ctx context.Context) error {
@@ -479,10 +479,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, value)
 	})
 
 	sc.Step(`^global Git Town setting "code-hosting-platform" now doesn't exist$`, func(ctx context.Context) error {
@@ -494,10 +494,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, value)
 	})
 
 	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
@@ -539,10 +539,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "main-branch-name" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "main-branch-name" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedMainBranchName, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedMainBranchName, value)
 	})
 
 	sc.Step(`^global Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
@@ -554,10 +554,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "new-branch-push-flag" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "new-branch-push-flag" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, value)
 	})
 
 	sc.Step(`^global Git Town setting "new-branch-push-flag" now doesn't exist$`, func(ctx context.Context) error {
@@ -569,10 +569,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "offline" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "offline" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value)
 	})
 
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
@@ -635,10 +635,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, value)
 	})
 
 	sc.Step(`^global Git Town setting "pull-branch-strategy" now doesn't exist$`, func(ctx context.Context) error {
@@ -660,10 +660,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPushVerify, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPushVerify, value)
 	})
 
 	sc.Step(`^global Git Town setting "push-verify" now doesn't exist$`, func(ctx context.Context) error {
@@ -690,10 +690,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, value)
 	})
 
 	sc.Step(`^global Git Town setting "ship-delete-remote-branch" now doesn't exist$`, func(ctx context.Context) error {
@@ -765,10 +765,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "sync-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^global Git Town setting "sync-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedSyncStrategy, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedSyncStrategy, value)
 	})
 
 	sc.Step(`^global Git Town setting "sync-strategy" now doesn't exist$`, func(ctx context.Context) error {
@@ -1171,10 +1171,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, value)
 	})
 
 	sc.Step(`^local Git Town setting "code-hosting-driver" now doesn't exist$`, func(ctx context.Context) error {
@@ -1186,10 +1186,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, value)
 	})
 
 	sc.Step(`^local Git Town setting "code-hosting-platform" now doesn't exist$`, func(ctx context.Context) error {
@@ -1201,10 +1201,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingOriginHostname, value)
 	})
 
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
@@ -1216,10 +1216,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, value)
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "hosting-platform" is "([^"]*)"$`, func(ctx context.Context, value string) error {
@@ -1484,10 +1484,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, value)
 	})
 
 	sc.Step(`^local Git Town setting "pull-branch-strategy" now doesn't exist$`, func(ctx context.Context) error {
@@ -1499,12 +1499,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "push-hook" is "([^"]*)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "push-hook" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.ParsePushHook(text, "")
+		pushHook, err := configdomain.ParsePushHook(value, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetPushHookLocally(value)
+		return devRepo.Config.SetPushHookLocally(pushHook)
 	})
 
 	sc.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func(ctx context.Context) error {
@@ -1527,12 +1527,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "push-new-branches" is "([^"]*)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "push-new-branches" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.ParsePushNewBranches(text, "")
+		pushNewBranches, err := configdomain.ParsePushNewBranches(value, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetPushNewBranches(value, false)
+		return devRepo.Config.SetPushNewBranches(pushNewBranches, false)
 	})
 
 	sc.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func(ctx context.Context) error {
@@ -1561,10 +1561,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^local Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPushVerify, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPushVerify, value)
 	})
 
 	sc.Step(`^local Git Town setting "push-verify" now doesn't exist$`, func(ctx context.Context) error {
@@ -1576,10 +1576,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^local Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, value)
 	})
 
 	sc.Step(`^local Git Town setting "ship-delete-remote-branch" now doesn't exist$`, func(ctx context.Context) error {
@@ -1591,12 +1591,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "ship-delete-tracking-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "ship-delete-tracking-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.ParseShipDeleteTrackingBranch(text, "")
+		shipDeleteTrackingBranch, err := configdomain.ParseShipDeleteTrackingBranch(value, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetShipDeleteTrackingBranch(value, false)
+		return devRepo.Config.SetShipDeleteTrackingBranch(shipDeleteTrackingBranch, false)
 	})
 
 	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is (?:now|still) not set$`, func(ctx context.Context) error {
@@ -1624,12 +1624,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "sync-before-ship" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "sync-before-ship" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.ParseSyncBeforeShip(text, "")
+		syncBeforeShip, err := configdomain.ParseSyncBeforeShip(value, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetSyncBeforeShip(value, false)
+		return devRepo.Config.SetSyncBeforeShip(syncBeforeShip, false)
 	})
 
 	sc.Step(`^local Git Town setting "sync-before-ship" is (?:now|still) not set$`, func(ctx context.Context) error {
@@ -1657,12 +1657,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "sync-feature-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "sync-feature-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.NewSyncFeatureStrategy(text)
+		syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
 		asserts.NoError(err)
-		return devRepo.Config.SetSyncFeatureStrategy(value)
+		return devRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 	})
 
 	sc.Step(`^local Git Town setting "sync-feature-strategy" is (?:now|still) not set$`, func(ctx context.Context) error {
@@ -1690,12 +1690,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "sync-perennial-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "sync-perennial-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.NewSyncPerennialStrategy(text)
+		syncPerennialStrategy, err := configdomain.NewSyncPerennialStrategy(value)
 		asserts.NoError(err)
-		return devRepo.Config.SetSyncPerennialStrategy(value)
+		return devRepo.Config.SetSyncPerennialStrategy(syncPerennialStrategy)
 	})
 
 	sc.Step(`^local Git Town setting "sync-perennial-strategy" is (?:now|still) not set$`, func(ctx context.Context) error {
@@ -1723,10 +1723,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "sync-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^local Git Town setting "sync-strategy" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedSyncStrategy, text)
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedSyncStrategy, value)
 	})
 
 	sc.Step(`^local Git Town setting "sync-strategy" now doesn't exist$`, func(ctx context.Context) error {
@@ -1738,12 +1738,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git Town setting "sync-upstream" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^(?:local )?Git Town setting "sync-upstream" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		value, err := configdomain.ParseSyncUpstream(text, "")
+		syncUpstream, err := configdomain.ParseSyncUpstream(value, "")
 		asserts.NoError(err)
-		return devRepo.Config.SetSyncUpstream(value, false)
+		return devRepo.Config.SetSyncUpstream(syncUpstream, false)
 	})
 
 	sc.Step(`^local Git Town setting "sync-upstream" is (?:now|still) not set$`, func(ctx context.Context) error {
