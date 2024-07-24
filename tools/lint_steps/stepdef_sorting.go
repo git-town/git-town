@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"regexp"
 	"slices"
 	"strings"
@@ -33,7 +34,7 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 	for s, stepDef := range stepDefs {
 		sortedStepDefs[s] = stepDef.Text
 	}
-	slices.Sort(sortedStepDefs)
+	slices.SortFunc(sortedStepDefs, func(a, b string) int { return cmp.Compare(normalizeForSort(a), normalizeForSort(b)) })
 	for s := range sortedStepDefs {
 		if stepDefs[s].Text != sortedStepDefs[s] {
 			result = append(result, StepDefinition{
@@ -43,4 +44,12 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 		}
 	}
 	return result
+}
+
+func normalizeForSort(text string) string {
+	text = strings.ToLower(text)
+	for _, c := range "\"()[]^$*+ " {
+		text = strings.ReplaceAll(text, string(c), "")
+	}
+	return text
 }
