@@ -126,6 +126,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
+	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
+		if branchesOutOfSync {
+			panic("unexpected out of sync:\n" + output)
+		}
+	})
+
 	sc.Step(`a local Git repo`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
@@ -176,15 +185,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
-	})
-
-	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
-		if branchesOutOfSync {
-			panic("unexpected out of sync:\n" + output)
-		}
 	})
 
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {

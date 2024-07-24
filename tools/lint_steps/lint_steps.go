@@ -32,18 +32,15 @@ func main() {
 	}
 
 	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
-	if len(unsortedStepDefs) > 0 {
-		for _, unsortedStepDef := range unsortedStepDefs {
-			fmt.Printf("%s:%d unsorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
-		}
-		os.Exit(1)
+	for _, unsortedStepDef := range unsortedStepDefs {
+		fmt.Printf("%s:%d unsorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 	}
 
 	unusedStepDefs := FindAllUnusedStepDefs()
-	if len(unusedStepDefs) > 0 {
-		for _, unusedStepDef := range unusedStepDefs {
-			fmt.Printf("%s:%d unused step definition: %s\n", fileName, unusedStepDef.Line, unusedStepDef.Text)
-		}
+	for _, unusedStepDef := range unusedStepDefs {
+		fmt.Printf("%s:%d unused step definition: %s\n", fileName, unusedStepDef.Line, unusedStepDef.Text)
+	}
+	if len(unsortedStepDefs) > 0 || len(unusedStepDefs) > 0 {
 		os.Exit(1)
 	}
 }
