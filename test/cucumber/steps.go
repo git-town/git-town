@@ -1344,6 +1344,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^local Git Town setting "hosting-platform" still doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.Config.LocalGitConfig.HostingPlatform.Get(); has {
+			return fmt.Errorf(`unexpected local setting "hosting-platform" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^(?:local )?Git Town setting "main-branch" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1356,6 +1365,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Config.LocalGitConfig.MainBranch.String()
 		if have != want {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^local Git Town setting "main-branch" still doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.Config.LocalGitConfig.MainBranch.Get(); has {
+			return fmt.Errorf(`unexpected local setting "main-branch" with value %q`, have)
 		}
 		return nil
 	})
@@ -1403,6 +1421,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
 		if !cmp.Equal(have, want) {
 			return fmt.Errorf(`expected local setting "perennial-branches" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^local Git Town setting "perennial-branches" still doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have := devRepo.Config.LocalGitConfig.PerennialBranches; len(have) > 0 {
+			return fmt.Errorf(`unexpected local setting "perennial-branches" with value %q`, have)
 		}
 		return nil
 	})
