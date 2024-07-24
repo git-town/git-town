@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -21,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configfile"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
@@ -400,7 +398,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.SetColorUI(value)
 	})
 
-	// TODO: remove?
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -465,184 +462,70 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return fmt.Errorf("unknown configuration key: %q", name)
+		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasKey {
+			return fmt.Errorf("unknown config key: %q", name)
 		}
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(configKey, value)
+		locality = strings.TrimSpace(locality)
+		switch locality {
+		case "local", "":
+			return devRepo.Config.GitConfig.SetLocalConfigValue(key, value)
+		case "global":
+			return devRepo.Config.GitConfig.SetGlobalConfigValue(key, value)
+		default:
+			return fmt.Errorf("unknown locality: %q", locality)
+		}
 	})
 
-	sc.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
+		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasKey {
+			return fmt.Errorf("unknown config key: %q", name)
 		}
-		newValue, hasNewValue := devRepo.TestCommands.GlobalGitConfig(configKey).Get()
-		if hasNewValue {
-			return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
+		locality = strings.TrimSpace(locality)
+		var haveOpt Option[string]
+		switch locality {
+		case "local", "":
+			haveOpt = devRepo.TestCommands.LocalGitConfig(key)
+		case "global":
+			haveOpt = devRepo.TestCommands.GlobalGitConfig(key)
+		default:
+			return fmt.Errorf("unknown locality: %q", locality)
 		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.GlobalGitConfig.HostingOriginHostname.String()
-		if have != want {
-			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "hosting-platform" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.GlobalGitConfig.HostingPlatform
-		if have.String() != want {
-			return fmt.Errorf(`expected global setting "hosting-platform" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.GlobalGitConfig.MainBranch.String()
-		if have != want {
-			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		wantBool, err := gohacks.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.Offline(wantBool)
-		have, exists := devRepo.Config.GlobalGitConfig.Offline.Get()
-		if !exists {
-			return fmt.Errorf(`expected global setting "offline" to be %t, but doesn't exist`, want)
+		have, has := haveOpt.Get()
+		if !has {
+			return fmt.Errorf(`expected %s setting %q to be %q but doesn't exist`, locality, name, want)
 		}
 		if have != want {
-			return fmt.Errorf(`expected global setting "offline" to be %t, but was %t`, want, have)
+			return fmt.Errorf(`expected %s setting %q to be %q but is %q`, locality, name, want, have)
 		}
 		return nil
 	})
 
-	sc.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.GlobalGitConfig.PerennialBranches
-		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
-		if !cmp.Equal(have, want) {
-			return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, have)
+		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasKey {
+			return fmt.Errorf("unknown config key: %q", name)
 		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.GlobalGitConfig.PushHook.String()
-		if !cmp.Equal(have, want) {
-			return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, have)
+		locality = strings.TrimSpace(locality)
+		var valueOpt Option[string]
+		switch locality {
+		case "local", "":
+			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
+		case "global":
+			valueOpt = devRepo.TestCommands.GlobalGitConfig(key)
+		default:
+			return fmt.Errorf("unknown locality: %q", locality)
 		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.GlobalGitConfig.PushNewBranches.Get()
-		if !has {
-			return errors.New(`expected global setting "push-new-branches" to exist but it doesn't`)
-		}
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		if have.Bool() != want {
-			return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.GlobalGitConfig.ShipDeleteTrackingBranch.Get()
-		if !has {
-			return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but doesn't exist`, want)
-		}
-		if have.Bool() != want {
-			return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "sync-before-ship" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.GlobalGitConfig.SyncBeforeShip.Get()
-		if !has {
-			return fmt.Errorf(`expected global setting "sync-before-ship" to be %v, but doesn't exist`, want)
-		}
-		if have.Bool() != want {
-			return fmt.Errorf(`expected global setting "sync-before-ship" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "sync-feature-strategy" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.GlobalGitConfig.SyncFeatureStrategy.Get()
-		if !has {
-			return fmt.Errorf(`expected global setting "sync-feature-strategy" to be %v, but doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected global setting "sync-feature-strategy" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "sync-perennial-strategy" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.GlobalGitConfig.SyncPerennialStrategy.Get()
-		if !has {
-			return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but it doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^global Git Town setting "sync-upstream" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		wantBool, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.SyncUpstream(wantBool)
-		have, has := devRepo.Config.GlobalGitConfig.SyncUpstream.Get()
-		if !has {
-			return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but was %v`, want, have)
+		if value, hasValue := valueOpt.Get(); hasValue {
+			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", locality, name, value)
 		}
 		return nil
 	})
@@ -1022,333 +905,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "([^"]*)" (:?now|still) doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
-		}
-		newValue, hasNewValue := devRepo.TestCommands.LocalGitConfig(configKey).Get()
-		if hasNewValue {
-			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
-		}
-		return nil
-	})
-
-	sc.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return errors.New("unknown config key: " + name)
-		}
-		return devRepo.Config.GitConfig.RemoveLocalConfigValue(configKey)
-	})
-
-	sc.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		configKey, hasConfigKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasConfigKey {
-			return fmt.Errorf("unknown config key: %q", name)
-		}
-		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
-	})
-
-	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have.IsSome() {
-			return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "hosting-platform" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.HostingPlatform
-		if have.String() != want {
-			return fmt.Errorf(`expected local setting "hosting-platform" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "hosting-platform" (:?now|still) doesn't exist$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.HostingPlatform
-		if value, has := have.Get(); has {
-			return fmt.Errorf(`expected local setting "hosting-platform" to not exist but was %q`, value)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.GiteaToken.String()
-		if have != want {
-			return fmt.Errorf(`expected local setting "gitea-token" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.GitHubToken.String()
-		if have != want {
-			return fmt.Errorf(`expected local setting "github-token" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "github-token" now doesn't exist$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.GitHubToken
-		if have.IsSome() {
-			return fmt.Errorf(`unexpected local setting "github-token" with value %q`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "gitlab-token" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.GitLabToken.String()
-		if have != want {
-			return fmt.Errorf(`expected local setting "gitlab-token" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have.String() != want {
-			return fmt.Errorf(`expected local setting "hosting-origin-hostname" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have.IsSome() {
-			return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.MainBranch.String()
-		if have != want {
-			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.PerennialBranches
-		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
-		if !cmp.Equal(have, want) {
-			return fmt.Errorf(`expected local setting "perennial-branches" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "perennial-regex" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.PerennialRegex.String()
-		if have != want {
-			return fmt.Errorf(`expected local setting "perennial-regex" to be %q, but was %q`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.PushHook
-		if have.IsSome() {
-			return fmt.Errorf(`unexpected local setting "push-hook" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(ctx context.Context, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.PushHook.String()
-		if !cmp.Equal(have, want) {
-			return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.LocalGitConfig.PushNewBranches
-		if value, has := have.Get(); has {
-			return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, value)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		pushNewBranches, has := devRepo.Config.LocalGitConfig.PushNewBranches.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but it doesn't exist`, want)
-		}
-		have := pushNewBranches.Bool()
-		if have != want {
-			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch.Get()
-		if has {
-			return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but doesn't exist`, want)
-		}
-		if have.Bool() != want {
-			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-before-ship" is still not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.LocalGitConfig.SyncBeforeShip.Get()
-		if has {
-			return fmt.Errorf(`unexpected local setting "sync-before-ship" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-before-ship" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.LocalGitConfig.SyncBeforeShip.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "sync-before-ship" to be %v, but doesn't exist`, want)
-		}
-		if have.Bool() != want {
-			return fmt.Errorf(`expected local setting "sync-before-ship" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.LocalGitConfig.SyncFeatureStrategy.Get()
-		if has {
-			return fmt.Errorf(`unexpected local setting "sync-feature-strategy" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.LocalGitConfig.SyncFeatureStrategy.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.LocalGitConfig.SyncPerennialStrategy.Get()
-		if has {
-			return fmt.Errorf(`unexpected local setting "sync-perennial-strategy" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
-		asserts.NoError(err)
-		have, has := devRepo.Config.LocalGitConfig.SyncPerennialStrategy.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-upstream" is still not set$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.LocalGitConfig.SyncUpstream.Get()
-		if has {
-			return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		wantBool, err := strconv.ParseBool(wantStr)
-		asserts.NoError(err)
-		want := configdomain.SyncUpstream(wantBool)
-		have, has := devRepo.Config.LocalGitConfig.SyncUpstream.Get()
-		if !has {
-			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but doesn't exist`, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but was %v`, want, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^my repo has a Git submodule$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1473,13 +1029,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			panic(`you said "the branch" but more than 1 branch provided`)
 		}
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		// TODO: uncomment this and make it work
-		// if state.initialBranches.IsNone() {
-		// 	initialTable := datatable.FromGherkin(table)
-		// 	state.initialBranches = Some(initialTable)
-		// } else {
-		// 	state.initialBranches = None[datatable.DataTable]()
-		// }
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
 			switch {
@@ -1540,13 +1089,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// TODO: uncomment this and make it work
-		// if state.initialCommits.IsNone() {
-		// 	initialTable := datatable.FromGherkin(table)
-		// 	state.initialCommits = Some(initialTable)
-		// } else {
-		// 	state.initialCommits = None[datatable.DataTable]()
-		// }
 		// create the commits
 		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
