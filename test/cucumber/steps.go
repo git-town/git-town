@@ -591,6 +591,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^global Git Town setting "offline" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.Config.GlobalGitConfig.Offline.Get(); has {
+			return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^global Git Town setting "offline" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyOffline).Get(); has {
+			return fmt.Errorf(`unexpected global setting "new-branch-push-flag" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
