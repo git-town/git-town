@@ -514,8 +514,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		var valueOpt Option[string]
 		locality = strings.TrimSpace(locality)
+		var valueOpt Option[string]
 		switch locality {
 		case "local", "":
 			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
