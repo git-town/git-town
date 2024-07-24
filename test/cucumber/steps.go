@@ -462,27 +462,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
-		if !hasKey {
-			return errors.New("unknown config key: " + name)
-		}
-		var valueOpt Option[string]
-		locality = strings.TrimSpace(locality)
-		switch locality {
-		case "local", "":
-			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
-		case "global":
-			valueOpt = devRepo.TestCommands.GlobalGitConfig(key)
-		}
-		if value, hasValue := valueOpt.Get(); hasValue {
-			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", locality, name, value)
-		}
-		return nil
-	})
-
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -524,6 +503,27 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		if have != want {
 			return fmt.Errorf(`expected %s setting %q to be %q but is %q`, locality, name, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
+		if !hasKey {
+			return errors.New("unknown config key: " + name)
+		}
+		var valueOpt Option[string]
+		locality = strings.TrimSpace(locality)
+		switch locality {
+		case "local", "":
+			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
+		case "global":
+			valueOpt = devRepo.TestCommands.GlobalGitConfig(key)
+		}
+		if value, hasValue := valueOpt.Get(); hasValue {
+			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", locality, name, value)
 		}
 		return nil
 	})
