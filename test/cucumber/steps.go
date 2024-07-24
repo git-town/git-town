@@ -651,6 +651,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^global Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, text)
+	})
+
+	sc.Step(`^global Git Town setting "ship-delete-remote-branch" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedShipDeleteRemoteBranch).Get(); has {
+			return fmt.Errorf(`unexpected global setting "ship-delete-remote-branch" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1432,6 +1447,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := pushNewBranches.Bool()
 		if have != want {
 			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^local Git Town setting "ship-delete-remote-branch" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedShipDeleteRemoteBranch, text)
+	})
+
+	sc.Step(`^local Git Town setting "ship-delete-remote-branch" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedShipDeleteRemoteBranch).Get(); has {
+			return fmt.Errorf(`unexpected local setting "ship-delete-remote-branch" with value %q`, have)
 		}
 		return nil
 	})
