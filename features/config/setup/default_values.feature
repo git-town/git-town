@@ -166,11 +166,11 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "github-token" still doesn't exist
     And local Git Town setting "hosting-origin-hostname" still doesn't exist
-    And local Git Town setting "sync-feature-strategy" still doesn't exist
-    And local Git Town setting "sync-perennial-strategy" still doesn't exist
-    And local Git Town setting "sync-upstream" still doesn't exist
-    And local Git Town setting "perennial-regex" still doesn't exist
-    And local Git Town setting "push-new-branches" still doesn't exist
-    And local Git Town setting "push-hook" still doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
-    And local Git Town setting "sync-before-ship" still doesn't exist
+    And local Git Town setting "sync-feature-strategy" is still not set
+    And local Git Town setting "sync-perennial-strategy" is still not set
+    And local Git Town setting "sync-upstream" is still not set
+    And local Git Town setting "perennial-regex" is still not set
+    And local Git Town setting "push-new-branches" is still not set
+    And local Git Town setting "push-hook" is still not set
+    And local Git Town setting "ship-delete-tracking-branch" is still not set
+    And local Git Town setting "sync-before-ship" is still not set

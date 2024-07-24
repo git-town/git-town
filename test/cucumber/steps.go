@@ -1292,7 +1292,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "github-token" now doesn't exist$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "github-token" (?:now|still) doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.LocalGitConfig.GitHubToken
@@ -1343,7 +1343,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git Town setting "hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
+	sc.Step(`^local Git Town setting "hosting-origin-hostname" (?:now|still) doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.LocalGitConfig.HostingOriginHostname
@@ -1470,6 +1470,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Config.LocalGitConfig.PerennialRegex.String()
 		if have != want {
 			return fmt.Errorf(`expected local setting "perennial-regex" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^local Git Town setting "perennial-regex" is (:?now|still) not set$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.Config.LocalGitConfig.PerennialRegex.Get(); has {
+			return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, have)
 		}
 		return nil
 	})

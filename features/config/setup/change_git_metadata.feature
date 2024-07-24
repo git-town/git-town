@@ -75,6 +75,7 @@ Feature: change existing information in Git metadata
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
+  #@this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
