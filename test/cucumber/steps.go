@@ -512,7 +512,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		key, hasKey := gitconfig.ParseKey("git-town." + name).Get()
 		if !hasKey {
-			return errors.New("unknown config key: " + name)
+			return fmt.Errorf("unknown config key: %q", name)
 		}
 		var valueOpt Option[string]
 		locality = strings.TrimSpace(locality)
