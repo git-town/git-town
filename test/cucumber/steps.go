@@ -1021,6 +1021,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-driver" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingDriver, text)
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+	})
+
 	sc.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1157,6 +1169,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "main-branch-name" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedMainBranchName, value)
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "perennial-branches" is "([^"]+)"$`, func(ctx context.Context, value string) error {
