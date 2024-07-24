@@ -611,6 +611,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^global Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, text)
+	})
+
+	sc.Step(`^global Git Town setting "pull-branch-strategy" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedPullBranchStrategy).Get(); has {
+			return fmt.Errorf(`unexpected global setting "pull-branch-strategy" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1340,6 +1355,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Config.LocalGitConfig.PerennialRegex.String()
 		if have != want {
 			return fmt.Errorf(`expected local setting "perennial-regex" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^(?:local )?Git Town setting "pull-branch-strategy" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPullBranchStrategy, text)
+	})
+
+	sc.Step(`^local Git Town setting "pull-branch-strategy" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedPullBranchStrategy).Get(); has {
+			return fmt.Errorf(`unexpected local setting "pull-branch-strategy" with value %q`, have)
 		}
 		return nil
 	})
