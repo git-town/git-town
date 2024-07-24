@@ -636,6 +636,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^global Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPushVerify, text)
+	})
+
+	sc.Step(`^global Git Town setting "push-verify" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedPushVerify).Get(); has {
+			return fmt.Errorf(`unexpected local setting "push-verify" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1447,6 +1462,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := pushNewBranches.Bool()
 		if have != want {
 			return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^local Git Town setting "push-verify" is "([^"]+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPushVerify, text)
+	})
+
+	sc.Step(`^local Git Town setting "push-verify" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedPushVerify).Get(); has {
+			return fmt.Errorf(`unexpected local setting "push-verify" with value %q`, have)
 		}
 		return nil
 	})
