@@ -482,7 +482,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "code-hosting-platform" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+	})
+
+	sc.Step(`^global Git Town setting "code-hosting-platform" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedCodeHostingPlatform).Get(); has {
+			return fmt.Errorf(`unexpected local setting "code-hosting-platform" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^global Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
@@ -1097,6 +1106,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedCodeHostingPlatform, text)
+	})
+
+	sc.Step(`^local Git Town setting "code-hosting-platform" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedCodeHostingPlatform).Get(); has {
+			return fmt.Errorf(`unexpected local setting "code-hosting-platform" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "code-hosting-origin-hostname" is "([^"]+)"$`, func(ctx context.Context, text string) error {
