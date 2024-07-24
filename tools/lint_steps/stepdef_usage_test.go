@@ -15,13 +15,56 @@ func TestStepDefUsage(t *testing.T) {
 
 		t.Run("no unused steps", func(t *testing.T) {
 			t.Parallel()
-			have := lintSteps.FindAllUnusedStepDefs()
-			want := []string{}
+			definedSteps := []lintSteps.StepDefinition{
+				{
+					Text: `branch "([^"]+)"`,
+					Line: 1,
+				},
+				{
+					Text: `tag "([^"]+)"`,
+					Line: 2,
+				},
+			}
+			usedSteps := []string{
+				`branch "one"`,
+				`tag "two"`,
+			}
+			have := lintSteps.FindUnusedStepDefs(definedSteps, usedSteps)
+			want := []lintSteps.StepDefinition{}
 			must.Eq(t, want, have)
 		})
 
 		t.Run("some unused steps", func(t *testing.T) {
 			t.Parallel()
+			definedSteps := []lintSteps.StepDefinition{
+				{
+					Text: `branch "([^"]+)"`,
+					Line: 1,
+				},
+				{
+					Text: `tag "([^"]+)"`,
+					Line: 2,
+				},
+				{
+					Text: `remote "([^"]+)"`,
+					Line: 3,
+				},
+			}
+			usedSteps := []string{
+				`branch "one"`,
+			}
+			have := lintSteps.FindUnusedStepDefs(definedSteps, usedSteps)
+			want := []lintSteps.StepDefinition{
+				{
+					Text: `tag "([^"]+)"`,
+					Line: 2,
+				},
+				{
+					Text: `remote "([^"]+)"`,
+					Line: 3,
+				},
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
