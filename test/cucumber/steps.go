@@ -1412,7 +1412,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(?:local )?Git Town setting "perennial-branches" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetPerennialBranches(gitdomain.ParseLocalBranchNames(value))
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, value)
 	})
 
 	sc.Step(`^local Git Town setting "new-branch-push-flag" now doesn't exist$`, func(ctx context.Context) error {
