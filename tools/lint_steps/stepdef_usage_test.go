@@ -10,6 +10,21 @@ import (
 func TestStepDefUsage(t *testing.T) {
 	t.Parallel()
 
+	t.Run("FindUnusedStepDefs", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("no unused steps", func(t *testing.T) {
+			t.Parallel()
+			have := lintSteps.FindAllUnusedStepDefs()
+			want := []string{}
+			must.Eq(t, want, have)
+		})
+
+		t.Run("some unused steps", func(t *testing.T) {
+			t.Parallel()
+		})
+	})
+
 	t.Run("FindUsedStepsIn", func(t *testing.T) {
 		t.Parallel()
 		fileContent := "\n" +

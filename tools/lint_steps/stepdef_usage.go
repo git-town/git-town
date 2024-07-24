@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -10,9 +11,50 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
-func FindUnusedStepDefs() []string {
+func FindAllUnusedStepDefs() []string {
 	result := []string{}
+	definedSteps := FindStepDefinitions(fileName)
+	definedREs := make([]*regexp.Regexp, len(definedSteps))
+	for d, definedStep := range definedSteps {
+		definedREs[d] = regexp.MustCompile(definedStep.Text)
+	}
+	usedSteps := FindAllUsedSteps()
+REs:
+	for _, definedRE := range definedREs {
+		for _, usedStep := range usedSteps {
+			if definedRE.MatchString(usedStep) {
+				continue REs
+			}
+		}
+		fmt.Printf("unused step definition: %s", definedRE)
+	}
 	return result
+}
+
+func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
+	result := []StepDefinition{}
+	definedREs := make([]StepRE, len(definedSteps))
+	for d, definedStep := range definedSteps {
+		definedREs[d] = StepRE{
+			regex:   regexp.MustCompile(definedStep.Text),
+			stepDef: definedStep,
+		}
+	}
+REs:
+	for _, definedRE := range definedREs {
+		for _, usedStep := range usedSteps {
+			if definedRE.regex.MatchString(usedStep) {
+				continue REs
+			}
+		}
+		result = append(result, definedRE.stepDef)
+	}
+	return result
+}
+
+type StepRE struct {
+	regex   *regexp.Regexp
+	stepDef StepDefinition
 }
 
 func FindAllUsedSteps() []string {
@@ -34,7 +76,6 @@ func FindAllUsedSteps() []string {
 
 // provides all usages of Cucumber steps in the given file content
 func FindUsedStepsIn(fileContent string) []string {
-
 	if stepUsageRE == nil {
 		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
 	}

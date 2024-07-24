@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	unusedStepDefs := FindUnusedStepDefs()
+	unusedStepDefs := FindAllUnusedStepDefs()
 	if len(unusedStepDefs) > 0 {
 		for _, unusedStepDef := range unusedStepDefs {
 			fmt.Printf("unused step definition: %s", unusedStepDef)
