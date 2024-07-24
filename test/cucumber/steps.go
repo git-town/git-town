@@ -530,7 +530,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git Town setting "new-branch-push-flag" is "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, text)
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, text)
+	})
+
+	sc.Step(`^global Git Town setting "new-branch-push-flag" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedNewBranchPushFlag).Get(); has {
+			return fmt.Errorf(`unexpected global setting "new-branch-push-flag" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
@@ -1205,6 +1214,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedMainBranchName, value)
 	})
 
+	sc.Step(`^(?:local )?Git Town setting "new-branch-push-flag" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedNewBranchPushFlag, value)
+	})
+
 	sc.Step(`^local Git Town setting "main-branch-name" now doesn't exist$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1218,6 +1233,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.SetPerennialBranches(gitdomain.ParseLocalBranchNames(value))
+	})
+
+	sc.Step(`^local Git Town setting "new-branch-push-flag" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedNewBranchPushFlag).Get(); has {
+			return fmt.Errorf(`unexpected local setting "new-branch-push-flag" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(ctx context.Context, wantStr string) error {
