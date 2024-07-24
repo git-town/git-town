@@ -569,6 +569,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^global Git Town setting "perennial-branch-names" is "([^"]+)"$`, func(ctx context.Context, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.GitConfig.SetGlobalConfigValue(gitconfig.KeyDeprecatedPerennialBranchNames, value)
+	})
+
+	sc.Step(`^global Git Town setting "perennial-branch-names" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedPerennialBranchNames).Get(); has {
+			return fmt.Errorf(`unexpected global setting "perennial-branch-names" with value %q`, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1259,6 +1274,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.GitConfig.SetLocalConfigValue(gitconfig.KeyDeprecatedPerennialBranchNames, value)
+	})
+
+	sc.Step(`^local Git Town setting "perennial-branch-names" now doesn't exist$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if have, has := devRepo.TestCommands.LocalGitConfig(gitconfig.KeyDeprecatedPerennialBranchNames).Get(); has {
+			return fmt.Errorf(`unexpected local setting "perennial-branch-names" with value %q`, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^(?:local )?Git Town setting "perennial-regex" is "([^"]+)"$`, func(ctx context.Context, value string) error {
