@@ -605,7 +605,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyOffline).Get(); has {
-			return fmt.Errorf(`unexpected global setting "new-branch-push-flag" with value %q`, have)
+			return fmt.Errorf(`unexpected global setting "offline" with value %q`, have)
 		}
 		return nil
 	})
