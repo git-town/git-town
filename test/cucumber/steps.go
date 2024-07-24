@@ -521,6 +521,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
 		case "global":
 			valueOpt = devRepo.TestCommands.GlobalGitConfig(key)
+		default:
+			return fmt.Errorf("unknown locality: %q", locality)
 		}
 		if value, hasValue := valueOpt.Get(); hasValue {
 			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", locality, name, value)
