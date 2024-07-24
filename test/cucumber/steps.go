@@ -776,7 +776,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if have, has := devRepo.TestCommands.GlobalGitConfig(gitconfig.KeyDeprecatedSyncStrategy).Get(); has {
-			return fmt.Errorf(`unexpected local setting "sync-strategy" with value %q`, have)
+			return fmt.Errorf(`unexpected global setting "sync-strategy" with value %q`, have)
 		}
 		return nil
 	})
