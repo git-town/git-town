@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"slices"
 	"strings"
@@ -11,13 +12,15 @@ import (
 )
 
 const fileName = "test/cucumber/steps.go"
+const featureDir = "features"
+
+var stepUsageRE *regexp.Regexp
 
 func main() {
 	content, err := os.ReadFile(fileName)
 	asserts.NoError(err)
 	fileContent := string(content)
 
-	// ensure step definitions use backticks
 	if malformattedStepDefs := CheckStepDefinitions(fileContent); len(malformattedStepDefs) > 0 {
 		for i, issue := range malformattedStepDefs {
 			fmt.Printf("%d. %s", i, issue)
@@ -25,14 +28,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	// find step definitions
-	stepDefs := FindStepDefinitions(fileContent)
-	if len(stepDefs) == 0 {
+	existingStepDefs := FindStepDefinitions(fileContent)
+	if len(existingStepDefs) == 0 {
 		panic("no step definitions found")
 	}
 
-	// find unsorted step definitions
-	FindUnsortedStepDefs(stepDefs)
+	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
+	if len(unsortedStepDefs) > 0 {
+		for _, unsortedStepDef := range unsortedStepDefs {
+			fmt.Printf("%s:%d expected %q", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
+		}
+	}
 
 	// find unused step definitions
 
@@ -83,4 +89,40 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 		}
 	}
 	return result
+}
+
+func FindAllUsedSteps() []string {
+	result := []string{}
+	err := filepath.WalkDir(featureDir, func(path string, entry os.DirEntry, err error) error {
+		asserts.NoError(err)
+		if filepath.Ext(path) != ".feature" {
+			return nil
+		}
+		fileContent, err := os.ReadFile(path)
+		asserts.NoError(err)
+		stepsInFile := FindUsedStepsIn(string(fileContent))
+		result = append(result, stepsInFile...)
+		return nil
+	})
+	asserts.NoError(err)
+	return result
+}
+
+// provides all usages of Cucumber steps in the given file content
+func FindUsedStepsIn(fileContent string) []string {
+	initializeRE()
+	result := []string{}
+	for _, line := range strings.Split(fileContent, "\n") {
+		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
+		if len(matches) > 0 {
+			result = append(result, strings.TrimSpace(matches[0][1]))
+		}
+	}
+	return result
+}
+
+func initializeRE() {
+	if stepUsageRE == nil {
+		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
+	}
 }
