@@ -14,7 +14,7 @@ const (
 	featureDir = "../../features"
 )
 
-var stepUsageRE *regexp.Regexp
+var stepUsageRE *regexp.Regexp //nolint:gochecknoglobals
 
 func main() {
 	content, err := os.ReadFile(filePath)

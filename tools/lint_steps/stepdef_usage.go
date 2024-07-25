@@ -44,7 +44,7 @@ type StepRE struct {
 
 func FindAllUsedSteps() []string {
 	result := sets.NewSet[string]()
-	err := filepath.WalkDir(featureDir, func(path string, entry os.DirEntry, err error) error {
+	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
 			return nil
