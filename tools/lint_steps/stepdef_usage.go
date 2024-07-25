@@ -17,11 +17,13 @@ var unusedWhitelist = []string{ //nolint:gochecknoglobals
 	`^inspect the repo$`,
 }
 
+// provides all elements of the given defined steps that aren't used in .feature files on disk
 func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
-	usedSteps := FindAllUsedSteps()
+	usedSteps := findAllUsedSteps()
 	return FindUnusedStepDefs(definedSteps, usedSteps)
 }
 
+// provides all elements of the given defined steps that aren't used in the given executed steps
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
 	unusedStepDefs := []StepDefinition{}
 	for _, stepDefRE := range CreateStepRegexes(definedSteps) {
@@ -40,14 +42,15 @@ func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []Ste
 	return unusedStepDefs
 }
 
+// a step definition compiled into a regex
 type StepRE struct {
 	regex   *regexp.Regexp
 	stepDef StepDefinition
 }
 
+// compiles the regexes for the given step definitions
 func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 	result := make([]StepRE, len(definedSteps))
-
 	for d, definedStep := range definedSteps {
 		result[d] = StepRE{
 			regex:   regexp.MustCompile(definedStep.Text),
@@ -57,6 +60,7 @@ func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 	return result
 }
 
+// indicates whether the given step definition is used anywhere in the given list of executed steps
 func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
 	for _, usedStep := range usedSteps {
 		if definedStep.regex.MatchString(usedStep) {
@@ -66,7 +70,8 @@ func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
 	return false
 }
 
-func FindAllUsedSteps() []string {
+// provides all steps that are executed in .feature files
+func findAllUsedSteps() []string {
 	result := map[string]bool{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
