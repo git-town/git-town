@@ -42,13 +42,8 @@ func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []Ste
 		if slices.Contains(unusedWhitelist, stepDefRE.regex.String()) {
 			continue
 		}
-		for _, usedStep := range usedSteps {
-			if stepDefRE.regex.MatchString(usedStep) {
-				continue
-			}
-			if !IsStepDefUsed(stepDefRE, usedSteps) {
-				unusedStepDefs = append(unusedStepDefs, stepDefRE.stepDef)
-			}
+		if !IsStepDefUsed(stepDefRE, usedSteps) {
+			unusedStepDefs = append(unusedStepDefs, stepDefRE.stepDef)
 		}
 	}
 	return unusedStepDefs
