@@ -17,11 +17,11 @@ const (
 var stepUsageRE *regexp.Regexp //nolint:gochecknoglobals
 
 func main() {
-	content, err := os.ReadFile(filePath)
+	stepsFileBytes, err := os.ReadFile(filePath)
 	asserts.NoError(err)
-	fileContent := string(content)
+	stepsFileContent := string(stepsFileBytes)
 
-	malformattedStepDefs := CheckStepDefinitions(fileContent)
+	malformattedStepDefs := CheckStepDefinitions(stepsFileContent)
 	for _, issue := range malformattedStepDefs {
 		fmt.Printf("%s:%d step definition must use backticks\n", fileName, issue.Line)
 	}
@@ -29,7 +29,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	existingStepDefs := FindStepDefinitions(fileContent)
+	existingStepDefs := FindStepDefinitions(stepsFileContent)
 	if len(existingStepDefs) == 0 {
 		panic("no step definitions found")
 	}
