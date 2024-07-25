@@ -248,7 +248,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^branch "([^"]+)" is now a feature branch`, func(ctx context.Context, name string) error {
+	sc.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
@@ -263,16 +263,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		if devRepo.Config.Config.IsPerennialBranch(branch) {
 			return fmt.Errorf("branch %q is perennial", branch)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		if devRepo.Config.Config.BranchType(branch) != configdomain.BranchTypeFeatureBranch {
-			return fmt.Errorf("branch %q isn't a feature branch as expected", branch)
 		}
 		return nil
 	})
