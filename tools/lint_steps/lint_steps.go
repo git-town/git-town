@@ -36,7 +36,7 @@ func main() {
 
 	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
 	for _, unsortedStepDef := range unsortedStepDefs {
-		fmt.Printf("%s:%d unsorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
+		fmt.Printf("%s:%d steps are not alphabetically sorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 	}
 
 	unusedStepDefs := FindAllUnusedStepDefs()
