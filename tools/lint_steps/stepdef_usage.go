@@ -24,15 +24,15 @@ func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
 
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
 	unusedStepDefs := []StepDefinition{}
-	definedREs := make([]StepRE, len(definedSteps))
+	definedRegexes := make([]StepRE, len(definedSteps))
 	for d, definedStep := range definedSteps {
-		definedREs[d] = StepRE{
+		definedRegexes[d] = StepRE{
 			regex:   regexp.MustCompile(definedStep.Text),
 			stepDef: definedStep,
 		}
 	}
 REs:
-	for _, definedRE := range definedREs {
+	for _, definedRE := range definedRegexes {
 		if slices.Contains(unusedWhitelist, definedRE.regex.String()) {
 			continue
 		}
