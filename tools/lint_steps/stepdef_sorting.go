@@ -10,8 +10,7 @@ import (
 func FindStepDefinitions(fileContent string) []StepDefinition {
 	result := []StepDefinition{}
 	re := regexp.MustCompile("sc\\.Step\\(`(.*)`")
-	lines := strings.Split(fileContent, "\n")
-	for l, line := range lines {
+	for l, line := range strings.Split(fileContent, "\n") {
 		matches := re.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			result = append(result, StepDefinition{
