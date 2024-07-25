@@ -334,12 +334,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return err
 	})
 
-	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
+	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filePath := filepath.Join(devRepo.WorkingDir, name)
-		//nolint:gosec // need permission 700 here in order for tests to work
-		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+		actualContent := devRepo.FileContent(file)
+		if expectedContent != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+		}
+		return nil
 	})
 
 	sc.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(ctx context.Context, name string) error {
@@ -352,14 +354,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
+	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actualContent := devRepo.FileContent(file)
-		if expectedContent != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
-		}
-		return nil
+		filePath := filepath.Join(devRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
 	})
 
 	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
@@ -382,12 +382,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.RemoveMainBranchConfiguration()
 	})
 
-	sc.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(ctx context.Context, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.SetColorUI(value)
-	})
-
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -396,10 +390,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
-	sc.Step(`^local Git setting "init.defaultbranch" is "([^"]*)"$`, func(ctx context.Context, value string) {
+	sc.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.SetDefaultGitBranch(gitdomain.NewLocalBranchName(value))
+		return devRepo.SetColorUI(value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
@@ -416,24 +410,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.SetGitAlias(aliasableCommand, value)
 	})
 
-	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
-		if !hasKey {
-			return errors.New("key not found")
-		}
-		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
-		if !hasAliasableCommand {
-			return errors.New("unknown alias: " + key.String())
-		}
-		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
-		if has {
-			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
-		}
-		return nil
-	})
-
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -448,6 +424,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		key, hasKey := gitconfig.ParseKey("alias." + name).Get()
+		if !hasKey {
+			return errors.New("key not found")
+		}
+		aliasableCommand, hasAliasableCommand := gitconfig.AliasableCommandForKey(key).Get()
+		if !hasAliasableCommand {
+			return errors.New("unknown alias: " + key.String())
+		}
+		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
+		if has {
+			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
 		}
 		return nil
 	})
@@ -582,6 +576,22 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
+	sc.Step(`^inspect the commits$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		fmt.Println("DEV")
+		output, err := devRepo.Query("git", "branch", "-vva")
+		fmt.Println(output)
+		return err
+	})
+
+	sc.Step(`^inspect the repo$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		fmt.Printf("\nThe workspace is at %s\n", devRepo.WorkingDir)
+		time.Sleep(1 * time.Hour)
+	})
+
 	sc.Step(`^I pipe the following text into "([^"]+)":$`, func(ctx context.Context, cmd string, input *godog.DocString) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -594,6 +604,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Config.Reload()
 	})
 
+	sc.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(ctx context.Context, filename string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		content := "resolved content"
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CreateFile(filename, content)
+		secondWorkTree.StageFiles(filename)
+	})
+
 	sc.Step(`^I resolve the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -604,39 +622,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.StageFiles(filename)
 	})
 
-	sc.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(ctx context.Context, filename string) {
+	sc.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(ctx context.Context, cmd string, input *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		content := "resolved content"
-		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		secondWorkTree.CreateFile(filename, content)
-		secondWorkTree.StageFiles(filename)
-	})
-
-	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := append(os.Environ(), "GIT_EDITOR=true")
+		answers, err := helpers.TableToInputEnv(input)
+		asserts.NoError(err)
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s%d=%s", components.TestInputKey, dialogNumber, answer))
 		}
 		var exitCode int
-		var runOutput string
-		if hasDevRepo {
-			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Config.Reload()
-		} else {
-			parts, err := shellquote.Split(command)
-			asserts.NoError(err)
-			cmd, args := parts[0], parts[1:]
-			subProcess := exec.Command(cmd, args...) // #nosec
-			subProcess.Dir = state.fixture.Dir
-			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-			outputBytes, _ := subProcess.CombinedOutput()
-			runOutput = string(outputBytes)
-			exitCode = subProcess.ProcessState.ExitCode()
-		}
-		state.runOutput = Some(runOutput)
+		var output string
+		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
+		devRepo.Config.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -681,58 +683,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Config.Reload()
 	})
 
-	sc.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.CaptureState()
-		updateInitialSHAs(state)
-		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		secondWorkTree.MockCommitMessage(message)
-		var exitCode int
-		var output string
-		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		secondWorkTree.Config.Reload()
-	})
-
-	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := os.Environ()
-		answers, err := helpers.TableToInputEnv(input)
-		asserts.NoError(err)
-		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
-		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
-	})
-
-	sc.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(ctx context.Context, cmd string, input *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := append(os.Environ(), "GIT_EDITOR=true")
-		answers, err := helpers.TableToInputEnv(input)
-		asserts.NoError(err)
-		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s%d=%s", components.TestInputKey, dialogNumber, answer))
-		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
-	})
-
 	sc.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(ctx context.Context, cmd, folderName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -759,20 +709,64 @@ func defineSteps(sc *godog.ScenarioContext) {
 		secondWorkTree.Config.Reload()
 	})
 
-	sc.Step(`^inspect the commits$`, func(ctx context.Context) error {
+	sc.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Println("DEV")
-		output, err := devRepo.Query("git", "branch", "-vva")
-		fmt.Println(output)
-		return err
+		state.CaptureState()
+		updateInitialSHAs(state)
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.MockCommitMessage(message)
+		var exitCode int
+		var output string
+		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		secondWorkTree.Config.Reload()
 	})
 
-	sc.Step(`^inspect the repo$`, func(ctx context.Context) {
+	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+		if hasDevRepo {
+			state.CaptureState()
+			updateInitialSHAs(state)
+		}
+		var exitCode int
+		var runOutput string
+		if hasDevRepo {
+			runOutput, exitCode = devRepo.MustQueryStringCode(command)
+			devRepo.Config.Reload()
+		} else {
+			parts, err := shellquote.Split(command)
+			asserts.NoError(err)
+			cmd, args := parts[0], parts[1:]
+			subProcess := exec.Command(cmd, args...) // #nosec
+			subProcess.Dir = state.fixture.Dir
+			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+			outputBytes, _ := subProcess.CombinedOutput()
+			runOutput = string(outputBytes)
+			exitCode = subProcess.ProcessState.ExitCode()
+		}
+		state.runOutput = Some(runOutput)
+		state.runExitCode = Some(exitCode)
+	})
+
+	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Printf("\nThe workspace is at %s\n", devRepo.WorkingDir)
-		time.Sleep(1 * time.Hour)
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		answers, err := helpers.TableToInputEnv(input)
+		asserts.NoError(err)
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
+		}
+		var exitCode int
+		var output string
+		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		devRepo.Config.Reload()
 	})
 
 	sc.Step(`^it does not print "(.+)"$`, func(ctx context.Context, text string) error {
@@ -895,11 +889,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^my repo has a Git submodule$`, func(ctx context.Context) {
+	sc.Step(`^local Git setting "init.defaultbranch" is "([^"]*)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.fixture.AddSubmoduleRepo()
-		devRepo.AddSubmodule(state.fixture.SubmoduleRepo.GetOrPanic().WorkingDir)
+		devRepo.SetDefaultGitBranch(gitdomain.NewLocalBranchName(value))
 	})
 
 	sc.Step(`^my repo's "([^"]*)" remote is "([^"]*)"$`, func(ctx context.Context, remoteName, remoteURL string) {
@@ -910,14 +903,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.AddRemote(remote, remoteURL)
 	})
 
-	sc.Step(`^still no configuration file exists$`, func(ctx context.Context) error {
+	sc.Step(`^my repo has a Git submodule$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		_, err := devRepo.FileContentErr(configfile.FileName)
-		if err == nil {
-			return errors.New("expected no configuration file but found one")
-		}
-		return nil
+		state.fixture.AddSubmoduleRepo()
+		devRepo.AddSubmodule(state.fixture.SubmoduleRepo.GetOrPanic().WorkingDir)
 	})
 
 	sc.Step(`^no commits exist now$`, func(ctx context.Context) {
@@ -1007,6 +997,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+	})
+
+	sc.Step(`^still no configuration file exists$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		_, err := devRepo.FileContentErr(configfile.FileName)
+		if err == nil {
+			return errors.New("expected no configuration file but found one")
+		}
+		return nil
 	})
 
 	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
@@ -1192,6 +1192,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
+		secondWorkTree.CurrentBranchCache.Invalidate()
+		actual, err := secondWorkTree.CurrentBranch(secondWorkTree.TestCommands)
+		if err != nil {
+			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
+		}
+		if actual.String() != expected {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		}
+		return nil
+	})
+
 	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1227,40 +1241,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		secondWorkTree.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.CurrentBranch(secondWorkTree.TestCommands)
-		if err != nil {
-			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
-		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
-		}
-		return nil
-	})
-
 	sc.Step(`^the home directory contains file "([^"]+)" with content$`, func(ctx context.Context, filename string, docString *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		filePath := filepath.Join(devRepo.HomeDir, filename)
 		//nolint:gosec // need permission 700 here in order for tests to work
 		return os.WriteFile(filePath, []byte(docString.Content), 0o700)
-	})
-
-	sc.Step(`^the initial lineage exists$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.LineageTable()
-		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
-		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
-			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
-			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
-			fmt.Println(diff)
-			panic("mismatching branches found, see the diff above")
-		}
 	})
 
 	sc.Step(`^the initial branches and lineage exist$`, func(ctx context.Context) {
@@ -1309,6 +1295,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		fmt.Println(errDiff)
 		panic("current commits are not the same as the initial commits")
+	})
+
+	sc.Step(`^the initial lineage exists$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		have := devRepo.LineageTable()
+		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
+		if errCnt > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
+			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
+			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
+			fmt.Println(diff)
+			panic("mismatching branches found, see the diff above")
+		}
 	})
 
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
@@ -1374,7 +1374,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
+	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actual := devRepo.Config.LocalGitConfig.PerennialBranches
@@ -1447,6 +1447,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		currentBranches := state.fixture.Branches()
+		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		diff, errorCount := currentBranches.EqualGherkin(input)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
+			fmt.Println(diff)
+			panic("mismatching branches found, see diff above")
+		}
+	})
+
+	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		return state.compareGherkinTable(table)
+	})
+
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1457,11 +1474,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println(diff)
 			panic("mismatching files found, see diff above")
 		}
-	})
-
-	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		return state.compareGherkinTable(table)
 	})
 
 	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) {
@@ -1506,18 +1518,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 		if hasFile != "" {
 			panic(hasFile)
-		}
-	})
-
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		currentBranches := state.fixture.Branches()
-		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualGherkin(input)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
-			fmt.Println(diff)
-			panic("mismatching branches found, see diff above")
 		}
 	})
 
