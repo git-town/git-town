@@ -1,10 +1,9 @@
-package main_test
+package main
 
 import (
 	"os"
 	"testing"
 
-	structsSorted "github.com/git-town/git-town/tools/structs_sorted"
 	"github.com/shoenig/test/must"
 )
 
@@ -25,7 +24,7 @@ type MyStruct struct {
 `
 			createTestFile(give)
 			defer os.Remove(testPath)
-			have := structsSorted.LintFile(testPath).String()
+			have := LintFile(testPath).String()
 			want := `
 test.go:3:6 unsorted fields, expected order:
 

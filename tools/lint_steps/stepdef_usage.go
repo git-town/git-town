@@ -17,6 +17,12 @@ var unusedWhitelist = []string{ //nolint:gochecknoglobals
 	`^inspect the repo$`,
 }
 
+// provides the defined steps that aren't used in .feature files on disk
+func AllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
+	usedSteps := findAllUsedSteps()
+	return FindUnusedStepDefs(definedSteps, usedSteps)
+}
+
 // compiles the regexes for the given step definitions
 func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 	result := make([]StepRE, len(definedSteps))
@@ -27,12 +33,6 @@ func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 		}
 	}
 	return result
-}
-
-// provides the defined steps that aren't used in .feature files on disk
-func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
-	usedSteps := findAllUsedSteps()
-	return FindUnusedStepDefs(definedSteps, usedSteps)
 }
 
 // provides all elements of the given defined steps that aren't used in the given executed steps

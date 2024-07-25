@@ -39,7 +39,7 @@ func main() {
 		fmt.Printf("%s:%d steps are not alphabetically sorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 	}
 
-	unusedStepDefs := FindAllUnusedStepDefs(existingStepDefs)
+	unusedStepDefs := AllUnusedStepDefs(existingStepDefs)
 	for _, unusedStepDef := range unusedStepDefs {
 		fmt.Printf("%s:%d unused step definition: %s\n", fileName, unusedStepDef.Line, unusedStepDef.Text)
 	}
