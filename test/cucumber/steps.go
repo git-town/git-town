@@ -1459,7 +1459,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step("^these commits exist now$", func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		return state.compareGherkinTable(table)
 	})
