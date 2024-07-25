@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := help
+
 fix:  # runs all linters and auto-fixes
 	../rta gofumpt -l -w .
 	go run ../format_unittests/format_unittests.go
