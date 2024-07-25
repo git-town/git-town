@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	sets "github.com/deckarep/golang-set/v2"
 	"github.com/git-town/git-town/v14/test/asserts"
+	"golang.org/x/exp/maps"
 )
 
 var unusedWhitelist = []string{
@@ -52,7 +52,7 @@ type StepRE struct {
 }
 
 func FindAllUsedSteps() []string {
-	result := sets.NewSet[string]()
+	result := map[string]struct{}{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
@@ -60,12 +60,13 @@ func FindAllUsedSteps() []string {
 		}
 		fileContent, err := os.ReadFile(path)
 		asserts.NoError(err)
-		stepsInFile := FindUsedStepsIn(string(fileContent))
-		result.Append(stepsInFile...)
+		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
+			result[stepInFile] = struct{}{}
+		}
 		return nil
 	})
 	asserts.NoError(err)
-	return result.ToSlice()
+	return maps.Keys(result)
 }
 
 // provides all usages of Cucumber steps in the given file content
