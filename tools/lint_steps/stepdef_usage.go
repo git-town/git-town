@@ -52,7 +52,7 @@ type StepRE struct {
 }
 
 func FindAllUsedSteps() []string {
-	result := map[string]struct{}{}
+	result := map[string]bool{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
@@ -61,7 +61,7 @@ func FindAllUsedSteps() []string {
 		fileContent, err := os.ReadFile(path)
 		asserts.NoError(err)
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
-			result[stepInFile] = struct{}{}
+			result[stepInFile] = true
 		}
 		return nil
 	})
