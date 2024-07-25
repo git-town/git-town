@@ -4,14 +4,20 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 
 	sets "github.com/deckarep/golang-set/v2"
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
-func FindAllUnusedStepDefs() []StepDefinition {
-	definedSteps := FindStepDefinitions(filePath)
+var unusedWhitelist = []string{
+	`^display "([^"]+)"$`,
+	`^inspect the commits$`,
+	`^inspect the repo$`,
+}
+
+func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
 	usedSteps := FindAllUsedSteps()
 	return FindUnusedStepDefs(definedSteps, usedSteps)
 }
@@ -27,6 +33,9 @@ func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []Ste
 	}
 REs:
 	for _, definedRE := range definedREs {
+		if slices.Contains(unusedWhitelist, definedRE.regex.String()) {
+			continue
+		}
 		for _, usedStep := range usedSteps {
 			if definedRE.regex.MatchString(usedStep) {
 				continue REs

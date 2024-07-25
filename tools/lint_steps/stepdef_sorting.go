@@ -15,7 +15,7 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 		matches := re.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			result = append(result, StepDefinition{
-				Line: l,
+				Line: l + 1,
 				Text: match[1],
 			})
 		}

@@ -185,16 +185,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 	})
 
-	sc.Step(`^an uncommitted file in folder "([^"]*)"$`, func(ctx context.Context, folder string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fileName := folder + "/uncommitted file"
-		state.uncommittedFileName = Some(fileName)
-		content := "uncommitted content"
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(fileName, content)
-	})
-
 	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -388,12 +378,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := gitconfig.NewParentKey(branchName)
 		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
-	})
-
-	sc.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(ctx context.Context, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.SetColorUI(value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
@@ -620,25 +604,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		devRepo.CreateFile(filename, content)
 		devRepo.StageFiles(filename)
-	})
-
-	sc.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(ctx context.Context, cmd string, input *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := append(os.Environ(), "GIT_EDITOR=true")
-		answers, err := helpers.TableToInputEnv(input)
-		asserts.NoError(err)
-		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s%d=%s", components.TestInputKey, dialogNumber, answer))
-		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -869,14 +834,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^it runs without error$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if state.runExitCode.GetOrPanic() != 0 {
-			return fmt.Errorf("did not expect the Git Town command to produce an exit code: %d", state.runExitCode)
-		}
-		return nil
-	})
-
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
@@ -969,16 +926,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^offline mode is disabled$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		isOffline := devRepo.Config.Config.Offline
-		if isOffline {
-			return errors.New("expected to not be offline but am")
-		}
-		return nil
-	})
-
 	sc.Step(`^offline mode is enabled$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -997,16 +944,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
-	})
-
-	sc.Step(`^still no configuration file exists$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		_, err := devRepo.FileContentErr(configfile.FileName)
-		if err == nil {
-			return errors.New("expected no configuration file but found one")
-		}
-		return nil
 	})
 
 	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
@@ -1347,18 +1284,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames(name))
-	})
-
-	sc.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
-	})
-
-	sc.Step(`^the perennial branches are not configured$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.RemovePerennialBranchConfiguration()
 	})
 
 	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
