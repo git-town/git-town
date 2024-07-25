@@ -19,9 +19,9 @@ var stepUsageRE *regexp.Regexp //nolint:gochecknoglobals
 func main() {
 	stepsFileBytes, err := os.ReadFile(filePath)
 	asserts.NoError(err)
-	stepsFileContent := string(stepsFileBytes)
+	stepsFileText := string(stepsFileBytes)
 
-	malformattedStepDefs := CheckStepDefinitions(stepsFileContent)
+	malformattedStepDefs := CheckStepDefinitions(stepsFileText)
 	for _, issue := range malformattedStepDefs {
 		fmt.Printf("%s:%d step definition must use backticks\n", fileName, issue.Line)
 	}
@@ -29,12 +29,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	existingStepDefs := FindStepDefinitions(stepsFileContent)
+	existingStepDefs := FindStepDefinitions(stepsFileText)
 	if len(existingStepDefs) == 0 {
 		panic("no step definitions found")
 	}
 
-	unsortedStepDefs := FindUnsortedStepDefs(existingStepDefs)
+	unsortedStepDefs := AllUnsortedStepDefs(existingStepDefs)
 	for _, unsortedStepDef := range unsortedStepDefs {
 		fmt.Printf("%s:%d steps are not alphabetically sorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
 	}

@@ -12,21 +12,7 @@ type StepDefinition struct {
 	Text string
 }
 
-func FindStepDefinitions(fileContent string) []StepDefinition {
-	result := []StepDefinition{}
-	re := regexp.MustCompile("sc\\.Step\\(`(.*)`")
-	for l, line := range strings.Split(fileContent, "\n") {
-		for _, match := range re.FindAllStringSubmatch(line, -1) {
-			result = append(result, StepDefinition{
-				Line: l + 1,
-				Text: match[1],
-			})
-		}
-	}
-	return result
-}
-
-func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
+func AllUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 	result := []StepDefinition{}
 	sortedStepDefs := make([]string, len(stepDefs))
 	for s, stepDef := range stepDefs {
@@ -38,6 +24,20 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 			result = append(result, StepDefinition{
 				Line: stepDefs[s].Line,
 				Text: sortedStepDefs[s],
+			})
+		}
+	}
+	return result
+}
+
+func FindStepDefinitions(fileContent string) []StepDefinition {
+	result := []StepDefinition{}
+	re := regexp.MustCompile("sc\\.Step\\(`(.*)`")
+	for l, line := range strings.Split(fileContent, "\n") {
+		for _, match := range re.FindAllStringSubmatch(line, -1) {
+			result = append(result, StepDefinition{
+				Line: l + 1,
+				Text: match[1],
 			})
 		}
 	}

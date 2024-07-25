@@ -50,7 +50,7 @@ func TestStepDefSorting(t *testing.T) {
 				Text: `^b regex`,
 			},
 		}
-		have := lintSteps.FindUnsortedStepDefs(stepDefs)
+		have := lintSteps.AllUnsortedStepDefs(stepDefs)
 		want := []lintSteps.StepDefinition{
 			{
 				Line: 2,
