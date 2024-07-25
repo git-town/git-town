@@ -32,9 +32,7 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 	for s, stepDef := range stepDefs {
 		sortedStepDefs[s] = stepDef.Text
 	}
-	slices.SortFunc(sortedStepDefs, func(a, b string) int {
-		return cmp.Compare(normalizeForSort(a), normalizeForSort(b))
-	})
+	slices.SortFunc(sortedStepDefs, normalizedSort)
 	for s := range sortedStepDefs {
 		if stepDefs[s].Text != sortedStepDefs[s] {
 			result = append(result, StepDefinition{
@@ -44,6 +42,10 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 		}
 	}
 	return result
+}
+
+func normalizedSort(a, b string) int {
+	return cmp.Compare(normalizeForSort(a), normalizeForSort(b))
 }
 
 func normalizeForSort(text string) string {

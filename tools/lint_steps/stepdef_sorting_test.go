@@ -24,11 +24,11 @@ func TestStepDefSorting(t *testing.T) {
 		want := []lintSteps.StepDefinition{
 			{
 				Text: `^a coworker clones the repository$`,
-				Line: 2,
+				Line: 3,
 			},
 			{
 				Text: `^a folder "([^"]*)"$`,
-				Line: 6,
+				Line: 7,
 			},
 		}
 		must.Eq(t, want, have)
