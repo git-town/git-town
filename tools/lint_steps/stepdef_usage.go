@@ -23,7 +23,7 @@ func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
 }
 
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
-	result := []StepDefinition{}
+	unusedStepDefs := []StepDefinition{}
 	definedREs := make([]StepRE, len(definedSteps))
 	for d, definedStep := range definedSteps {
 		definedREs[d] = StepRE{
@@ -41,9 +41,9 @@ REs:
 				continue REs
 			}
 		}
-		result = append(result, definedRE.stepDef)
+		unusedStepDefs = append(unusedStepDefs, definedRE.stepDef)
 	}
-	return result
+	return unusedStepDefs
 }
 
 type StepRE struct {
