@@ -17,6 +17,18 @@ var unusedWhitelist = []string{ //nolint:gochecknoglobals
 	`^inspect the repo$`,
 }
 
+// compiles the regexes for the given step definitions
+func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
+	result := make([]StepRE, len(definedSteps))
+	for d, definedStep := range definedSteps {
+		result[d] = StepRE{
+			regex:   regexp.MustCompile(definedStep.Text),
+			stepDef: definedStep,
+		}
+	}
+	return result
+}
+
 // provides the defined steps that aren't used in .feature files on disk
 func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
 	usedSteps := findAllUsedSteps()
@@ -48,13 +60,16 @@ type StepRE struct {
 	stepDef StepDefinition
 }
 
-// compiles the regexes for the given step definitions
-func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
-	result := make([]StepRE, len(definedSteps))
-	for d, definedStep := range definedSteps {
-		result[d] = StepRE{
-			regex:   regexp.MustCompile(definedStep.Text),
-			stepDef: definedStep,
+// provides all usages of Cucumber steps in the given file content
+func FindUsedStepsIn(fileContent string) []string {
+	if stepUsageRE == nil {
+		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
+	}
+	result := []string{}
+	for _, line := range strings.Split(fileContent, "\n") {
+		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
+		if len(matches) > 0 {
+			result = append(result, strings.TrimSpace(matches[0][1]))
 		}
 	}
 	return result
@@ -87,19 +102,4 @@ func findAllUsedSteps() []string {
 	})
 	asserts.NoError(err)
 	return maps.Keys(result)
-}
-
-// provides all usages of Cucumber steps in the given file content
-func FindUsedStepsIn(fileContent string) []string {
-	if stepUsageRE == nil {
-		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
-	}
-	result := []string{}
-	for _, line := range strings.Split(fileContent, "\n") {
-		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
-		if len(matches) > 0 {
-			result = append(result, strings.TrimSpace(matches[0][1]))
-		}
-	}
-	return result
 }
