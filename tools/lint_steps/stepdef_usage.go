@@ -11,7 +11,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-var unusedWhitelist = []string{
+var unusedWhitelist = []string{ //nolint:gochecknoglobals
 	`^display "([^"]+)"$`,
 	`^inspect the commits$`,
 	`^inspect the repo$`,
@@ -24,24 +24,18 @@ func FindAllUnusedStepDefs(definedSteps []StepDefinition) []StepDefinition {
 
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
 	unusedStepDefs := []StepDefinition{}
-	definedRegexes := make([]StepRE, len(definedSteps))
-	for d, definedStep := range definedSteps {
-		definedRegexes[d] = StepRE{
-			regex:   regexp.MustCompile(definedStep.Text),
-			stepDef: definedStep,
-		}
-	}
-REs:
-	for _, definedRE := range definedRegexes {
-		if slices.Contains(unusedWhitelist, definedRE.regex.String()) {
+	for _, stepDefRE := range CreateStepRegexes(definedSteps) {
+		if slices.Contains(unusedWhitelist, stepDefRE.regex.String()) {
 			continue
 		}
 		for _, usedStep := range usedSteps {
-			if definedRE.regex.MatchString(usedStep) {
-				continue REs
+			if stepDefRE.regex.MatchString(usedStep) {
+				continue
+			}
+			if !IsStepDefUsed(stepDefRE, usedSteps) {
+				unusedStepDefs = append(unusedStepDefs, stepDefRE.stepDef)
 			}
 		}
-		unusedStepDefs = append(unusedStepDefs, definedRE.stepDef)
 	}
 	return unusedStepDefs
 }
@@ -49,6 +43,27 @@ REs:
 type StepRE struct {
 	regex   *regexp.Regexp
 	stepDef StepDefinition
+}
+
+func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
+	result := make([]StepRE, len(definedSteps))
+
+	for d, definedStep := range definedSteps {
+		result[d] = StepRE{
+			regex:   regexp.MustCompile(definedStep.Text),
+			stepDef: definedStep,
+		}
+	}
+	return result
+}
+
+func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
+	for _, usedStep := range usedSteps {
+		if definedStep.regex.MatchString(usedStep) {
+			return true
+		}
+	}
+	return false
 }
 
 func FindAllUsedSteps() []string {
