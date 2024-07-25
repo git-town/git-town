@@ -1,5 +1,3 @@
-RTA_VERSION = 0.6.1  # run-that-app version to use
-
 fix:  # runs all linters and auto-fixes
 	../rta gofumpt -l -w .
 	go run ../format_unittests/format_unittests.go
