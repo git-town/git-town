@@ -82,7 +82,7 @@ func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
 
 // provides all steps that are executed in .feature files
 func findAllUsedSteps() []string {
-	result := map[string]bool{}
+	result := map[string]struct{}{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
@@ -91,7 +91,7 @@ func findAllUsedSteps() []string {
 		fileContent, err := os.ReadFile(path)
 		asserts.NoError(err)
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
-			result[stepInFile] = true
+			result[stepInFile] = struct{}{}
 		}
 		return nil
 	})
