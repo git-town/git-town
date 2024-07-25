@@ -1,7 +1,7 @@
 RTA_VERSION = 0.6.1  # run-that-app version to use
 
 fix: ../rta@${RTA_VERSION}  # runs all linters and auto-fixes
-	tools/rta gofumpt -l -w .
+	../rta gofumpt -l -w .
 
 
 help:  # prints all available targets
@@ -16,7 +16,7 @@ unit:  # runs only the unit tests
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/rta@${RTA_VERSION}:
+../rta@${RTA_VERSION}:
 	@rm -f ../rta*
 	@(cd .. && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv ../rta ../rta@${RTA_VERSION}
