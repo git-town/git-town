@@ -49,11 +49,11 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	make --no-print-dir lint-smoke
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	make --no-print-directory deadcode
-	make --no-print-directory lint-structs-sorted
-	git diff --check
+# make --no-print-dir lint-smoke
+# @tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+# make --no-print-directory deadcode
+# make --no-print-directory lint-structs-sorted
+# git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint

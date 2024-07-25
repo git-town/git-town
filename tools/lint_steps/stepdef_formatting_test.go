@@ -24,9 +24,15 @@ func TestStepDefFormatting(t *testing.T) {
 			"	sc.Step('^a folder \"([^\"]*)\"$`, func(ctx context.Context, name string) {\n" +
 			"	})"
 		have := lintSteps.CheckStepDefinitions(give)
-		want := []string{
-			`sc.Step("`,
-			"sc.Step('",
+		want := []lintSteps.StepDefinition{
+			{
+				Line: 3,
+				Text: `sc.Step("`,
+			},
+			{
+				Line: 6,
+				Text: "sc.Step('",
+			},
 		}
 		must.Eq(t, want, have)
 	})
