@@ -21,10 +21,11 @@ func main() {
 	asserts.NoError(err)
 	fileContent := string(content)
 
-	if malformattedStepDefs := CheckStepDefinitions(fileContent); len(malformattedStepDefs) > 0 {
-		for _, issue := range malformattedStepDefs {
-			fmt.Printf("%s:%d step definition must use backticks\n", fileName, issue.Line)
-		}
+	malformattedStepDefs := CheckStepDefinitions(fileContent)
+	for _, issue := range malformattedStepDefs {
+		fmt.Printf("%s:%d step definition must use backticks\n", fileName, issue.Line)
+	}
+	if len(malformattedStepDefs) > 0 {
 		os.Exit(1)
 	}
 
