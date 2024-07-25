@@ -30,3 +30,5 @@ unit:  # runs only the unit tests
 	@(cd .. && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv ../rta ../rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} ../rta
+
+.DEFAULT_GOAL := help
