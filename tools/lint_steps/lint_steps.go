@@ -8,9 +8,11 @@ import (
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
-const fileName = "test/cucumber/steps.go"
-const filePath = "../../" + fileName
-const featureDir = "../../features"
+const (
+	fileName   = "test/cucumber/steps.go"
+	filePath   = "../../" + fileName
+	featureDir = "../../features"
+)
 
 var stepUsageRE *regexp.Regexp
 

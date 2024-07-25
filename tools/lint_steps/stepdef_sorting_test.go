@@ -63,5 +63,4 @@ func TestStepDefSorting(t *testing.T) {
 		}
 		must.Eq(t, want, have)
 	})
-
 }
