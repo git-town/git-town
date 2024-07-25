@@ -4,6 +4,7 @@ use (
 	.
 	./tools/format_self
 	./tools/format_unittests
+	./tools/lint_steps
 	./tools/stats_release
 	./tools/structs_sorted
 )

@@ -54,6 +54,7 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
 	git diff --check
+	(cd tools/lint_steps && go build && ./lint_steps)
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/ensure_no_files_with_dashes.sh
@@ -70,6 +71,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
+	@echo lint tools/lint_steps
+	@(cd tools/lint_steps && ../rta golangci-lint run)
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
@@ -103,7 +106,7 @@ todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile
 
 unit: build  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/...
+	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
@@ -125,6 +128,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
+	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
 	@tput bold || true
 	@tput setaf 1 || true
 	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v Memoized.AsFixture \
