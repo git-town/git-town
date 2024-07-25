@@ -1,6 +1,6 @@
 RTA_VERSION = 0.6.1  # run-that-app version to use
 
-fix: ../rta@${RTA_VERSION}  # runs all linters and auto-fixes
+fix:  # runs all linters and auto-fixes
 	../rta gofumpt -l -w .
 	go run ../format_unittests/format_unittests.go
 	go run ../format_self/format_self.go
@@ -22,13 +22,3 @@ test: unit lint  # runs all tests
 
 unit:  # runs only the unit tests
 	go test ./...
-
-# --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
-
-../rta@${RTA_VERSION}:
-	@rm -f ../rta*
-	@(cd .. && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
-	@mv ../rta ../rta@${RTA_VERSION}
-	@ln -s rta@${RTA_VERSION} ../rta
-
-.DEFAULT_GOAL := help
