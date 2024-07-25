@@ -23,12 +23,12 @@ func TestStepDefSorting(t *testing.T) {
 		have := lintSteps.FindStepDefinitions(fileContent)
 		want := []lintSteps.StepDefinition{
 			{
-				Text: `^a coworker clones the repository$`,
 				Line: 3,
+				Text: `^a coworker clones the repository$`,
 			},
 			{
-				Text: `^a folder "([^"]*)"$`,
 				Line: 7,
+				Text: `^a folder "([^"]*)"$`,
 			},
 		}
 		must.Eq(t, want, have)
@@ -38,27 +38,27 @@ func TestStepDefSorting(t *testing.T) {
 		t.Parallel()
 		stepDefs := []lintSteps.StepDefinition{
 			{
-				Text: `^a regex`,
 				Line: 1,
+				Text: `^a regex`,
 			},
 			{
-				Text: `^c regex`,
 				Line: 2,
+				Text: `^c regex`,
 			},
 			{
-				Text: `^b regex`,
 				Line: 3,
+				Text: `^b regex`,
 			},
 		}
 		have := lintSteps.FindUnsortedStepDefs(stepDefs)
 		want := []lintSteps.StepDefinition{
 			{
-				Text: `^b regex`,
 				Line: 2,
+				Text: `^b regex`,
 			},
 			{
-				Text: `^c regex`,
 				Line: 3,
+				Text: `^c regex`,
 			},
 		}
 		must.Eq(t, want, have)

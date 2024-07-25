@@ -12,7 +12,8 @@ help:  # prints all available targets
 lint:  # runs all linters
 	../rta golangci-lint run
 	../rta deadcode github.com/git-town/git-town/tools/structs_sorted
-	@../rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	@../rta --available alphavet && go vet "-vettool=$(shell ../rta --which alphavet)" $(shell go list ./...)
+	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
 	../rta golangci-lint cache clean
 	../rta golangci-lint run
