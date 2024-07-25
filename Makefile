@@ -128,6 +128,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
+	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
 	@tput bold || true
 	@tput setaf 1 || true
 	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v Memoized.AsFixture \
