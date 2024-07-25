@@ -15,8 +15,8 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 		matches := re.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			result = append(result, StepDefinition{
-				Text: match[1],
 				Line: l,
+				Text: match[1],
 			})
 		}
 	}
@@ -24,8 +24,8 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 }
 
 type StepDefinition struct {
-	Text string
 	Line int
+	Text string
 }
 
 func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
@@ -38,8 +38,8 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 	for s := range sortedStepDefs {
 		if stepDefs[s].Text != sortedStepDefs[s] {
 			result = append(result, StepDefinition{
-				Text: sortedStepDefs[s],
 				Line: stepDefs[s].Line,
+				Text: sortedStepDefs[s],
 			})
 		}
 	}

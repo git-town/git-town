@@ -62,9 +62,6 @@ lint: tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
 
-lintsteps:
-	@(cd tools/lint_steps && go build && ./lint_steps)
-
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/format_self
 	@(cd tools/format_self && ../rta golangci-lint run)
