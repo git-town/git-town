@@ -26,11 +26,11 @@ func TestStepDefFormatting(t *testing.T) {
 		have := lintSteps.CheckStepDefinitions(give)
 		want := []lintSteps.StepDefinition{
 			{
-				Line: 3,
+				Line: 7,
 				Text: `sc.Step("`,
 			},
 			{
-				Line: 6,
+				Line: 9,
 				Text: "sc.Step('",
 			},
 		}
