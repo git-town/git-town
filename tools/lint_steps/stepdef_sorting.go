@@ -48,7 +48,7 @@ func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
 
 func normalizeForSort(text string) string {
 	text = strings.ToLower(text)
-	for _, c := range "\"()[]^$*+ " {
+	for _, c := range "\"()[]^$*+?: " {
 		text = strings.ReplaceAll(text, string(c), "")
 	}
 	return text

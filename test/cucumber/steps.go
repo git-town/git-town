@@ -172,21 +172,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
-		asserts.NoError(err)
-		if !repoStatus.RebaseInProgress {
-			panic("expected rebase in progress")
-		}
-	})
-
-	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
-	})
-
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -223,10 +208,25 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddUpstream()
 	})
 
+	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
+		asserts.NoError(err)
+		if !repoStatus.RebaseInProgress {
+			panic("expected rebase in progress")
+		}
+	})
+
 	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(ctx context.Context, name, url string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.AddRemote(gitdomain.Remote(name), url)
+	})
+
+	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 	})
 
 	sc.Step(`^branch "([^"]+)" is active in another worktree`, func(ctx context.Context, branch string) {
@@ -244,6 +244,25 @@ func defineSteps(sc *godog.ScenarioContext) {
 				branch,
 				strings.Join(devRepo.Config.Config.ContributionBranches.Strings(), ", "),
 			)
+		}
+		return nil
+	})
+
+	sc.Step(`^branch "([^"]+)" is now a feature branch`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branch := gitdomain.NewLocalBranchName(name)
+		if devRepo.Config.Config.IsParkedBranch(branch) {
+			return fmt.Errorf("branch %q is parked", branch)
+		}
+		if devRepo.Config.Config.IsObservedBranch(branch) {
+			return fmt.Errorf("branch %q is observed", branch)
+		}
+		if devRepo.Config.Config.IsContributionBranch(branch) {
+			return fmt.Errorf("branch %q is contribution", branch)
+		}
+		if devRepo.Config.Config.IsPerennialBranch(branch) {
+			return fmt.Errorf("branch %q is perennial", branch)
 		}
 		return nil
 	})
@@ -310,25 +329,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 				branch,
 				devRepo.Config.Config.PrototypeBranches.Join(", "),
 			)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is now a feature branch`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		if devRepo.Config.Config.IsParkedBranch(branch) {
-			return fmt.Errorf("branch %q is parked", branch)
-		}
-		if devRepo.Config.Config.IsObservedBranch(branch) {
-			return fmt.Errorf("branch %q is observed", branch)
-		}
-		if devRepo.Config.Config.IsContributionBranch(branch) {
-			return fmt.Errorf("branch %q is contribution", branch)
-		}
-		if devRepo.Config.Config.IsPerennialBranch(branch) {
-			return fmt.Errorf("branch %q is perennial", branch)
 		}
 		return nil
 	})
