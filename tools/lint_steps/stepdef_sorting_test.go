@@ -63,4 +63,16 @@ func TestStepDefSorting(t *testing.T) {
 		}
 		must.Eq(t, want, have)
 	})
+
+	t.Run("normalizeForSort", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]string{
+			"abc":                        "abc",
+			`branch "([^"]+)" is active`: "branchisactive",
+		}
+		for give, want := range tests {
+			have := lintSteps.NormalizeForSort(give)
+			must.EqOp(t, want, have)
+		}
+	})
 }
