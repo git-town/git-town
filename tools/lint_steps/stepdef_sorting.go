@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type StepDefinition struct {
+	Line int
+	Text string
+}
+
 func FindStepDefinitions(fileContent string) []StepDefinition {
 	result := []StepDefinition{}
 	re := regexp.MustCompile("sc\\.Step\\(`(.*)`")
@@ -19,11 +24,6 @@ func FindStepDefinitions(fileContent string) []StepDefinition {
 		}
 	}
 	return result
-}
-
-type StepDefinition struct {
-	Line int
-	Text string
 }
 
 func FindUnsortedStepDefs(stepDefs []StepDefinition) []StepDefinition {
