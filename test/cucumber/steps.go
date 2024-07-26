@@ -1085,10 +1085,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker pushes a new "([^"]+)" branch with these commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(branchName)
-		commits := git.FromGherkinTable(table)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateBranch(branch, "main")
-		for _, commit := range commits {
+		for _, commit := range git.FromGherkinTable(table) {
 			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)
@@ -1099,10 +1098,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker pushes these commits to the "([^"]+)" branch$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branch := gitdomain.NewLocalBranchName(branchName)
-		commits := git.FromGherkinTable(table)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CheckoutBranch(branch)
-		for _, commit := range commits {
+		for _, commit := range git.FromGherkinTable(table) {
 			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)
