@@ -1,7 +1,7 @@
 Feature: ask for missing configuration
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town is not configured
     When I run "git-town kill" and enter into the dialog:
       | DIALOG      | KEYS  |

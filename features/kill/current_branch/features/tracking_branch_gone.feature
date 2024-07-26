@@ -1,7 +1,7 @@
 Feature: killing a branch whose tracking branch is gone
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |

@@ -1,7 +1,7 @@
 Feature: remove an observed branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |

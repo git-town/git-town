@@ -1,7 +1,7 @@
 Feature: does not kill perennial branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: main branch
     And the branch

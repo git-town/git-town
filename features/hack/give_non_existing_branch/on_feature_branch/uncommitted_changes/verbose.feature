@@ -1,7 +1,7 @@
 Feature: display all executed Git commands with uncommitted changes
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |

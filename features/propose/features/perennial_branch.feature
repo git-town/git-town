@@ -1,7 +1,7 @@
 Feature: Cannot create proposals for perennial branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |

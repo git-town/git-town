@@ -1,7 +1,7 @@
 Feature: remove parent entries for perennial branches
 
   Scenario: parent branch entry for a perennial branch exists
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS |
       | feature-1 | feature | main   | local     |

@@ -1,7 +1,7 @@
 Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

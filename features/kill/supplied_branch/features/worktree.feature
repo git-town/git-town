@@ -1,7 +1,7 @@
 Feature: delete a branch that is active in another worktree
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | good | feature | main   | local, origin |

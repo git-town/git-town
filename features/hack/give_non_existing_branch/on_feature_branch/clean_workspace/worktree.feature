@@ -1,7 +1,7 @@
 Feature: hack a new branch while the main branch is active in another worktree
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |

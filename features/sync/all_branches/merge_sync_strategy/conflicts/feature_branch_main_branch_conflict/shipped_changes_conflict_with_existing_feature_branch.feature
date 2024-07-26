@@ -1,7 +1,7 @@
 Feature: shipped changes conflict with multiple existing feature branches
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |

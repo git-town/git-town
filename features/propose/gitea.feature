@@ -2,7 +2,7 @@
 Feature: Gitea support
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And tool "open" is installed
 
   Scenario Outline: normal origin

@@ -1,7 +1,7 @@
 Feature: making the current observed branch a feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE     | PARENT | LOCATIONS |
       | observed | observed |        | local     |

@@ -2,7 +2,7 @@
 Feature: remove existing configuration in Git metadata
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE      | LOCATIONS     |
       | qa         | perennial | local, origin |

@@ -2,7 +2,7 @@
 Feature: don't ask for perennial branches if no branches that could be perennial exist
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS       | DESCRIPTION                                 |

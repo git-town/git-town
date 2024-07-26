@@ -1,7 +1,7 @@
 Feature: offline mode
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And offline mode is enabled
     And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
