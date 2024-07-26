@@ -1082,6 +1082,33 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.CoworkerRepo.GetOrPanic().CheckoutBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
+	sc.Step(`^the coworker pushes a new "([^"]+)" branch with these commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		branch := gitdomain.NewLocalBranchName(branchName)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CreateBranch(branch, "main")
+		coworkerRepo.CheckoutBranch(branch)
+		for _, commit := range git.FromGherkinTable(table) {
+			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
+			coworkerRepo.StageFiles(commit.FileName)
+			coworkerRepo.CommitStagedChanges(commit.Message)
+		}
+		coworkerRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+	})
+
+	sc.Step(`^the coworker pushes these commits to the "([^"]+)" branch$`, func(ctx context.Context, branchName string, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		branch := gitdomain.NewLocalBranchName(branchName)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CheckoutBranch(branch)
+		for _, commit := range git.FromGherkinTable(table) {
+			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
+			coworkerRepo.StageFiles(commit.FileName)
+			coworkerRepo.CommitStagedChanges(commit.Message)
+		}
+		coworkerRepo.PushBranch()
+	})
+
 	sc.Step(`^the coworker resolves the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(ctx context.Context, filename, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
