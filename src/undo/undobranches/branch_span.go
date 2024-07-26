@@ -137,6 +137,7 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
 
+// indicates whether this BranchSpan should be undone when running "git town undo"
 func (self BranchSpan) ShouldUndo() bool {
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
