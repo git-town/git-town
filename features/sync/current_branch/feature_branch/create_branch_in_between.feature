@@ -49,7 +49,6 @@ Feature: handle a created branch while resolving conflicts
       | BRANCH    | COMMAND                                                                                      |
       | feature-1 | git reset --hard {{ sha 'conflicting local commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |
-      |           | git branch -D feature-2                                                                      |
     And no merge is in progress
     And the current branch is still "feature-1"
     And the initial branches and lineage exist
