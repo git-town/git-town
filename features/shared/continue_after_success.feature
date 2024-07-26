@@ -1,7 +1,7 @@
 Feature: continue after successful command
 
   Scenario Outline:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

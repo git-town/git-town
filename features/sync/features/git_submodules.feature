@@ -1,7 +1,7 @@
 Feature: on a feature branch in a repository with a submodule that has uncommitted changes
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And my repo has a Git submodule
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |

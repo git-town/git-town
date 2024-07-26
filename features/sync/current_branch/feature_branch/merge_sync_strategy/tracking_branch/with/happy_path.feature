@@ -2,7 +2,7 @@
 Feature: sync the current feature branch with a tracking branch using the "merge" sync-feature strategy
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

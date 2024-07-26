@@ -1,7 +1,7 @@
 Feature: sync a stack making independent changes
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |

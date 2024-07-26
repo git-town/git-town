@@ -2,7 +2,7 @@
 Feature: require minimum Git version
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git has version "2.29.2"
 
   Scenario Outline: using an unsupported Git Version

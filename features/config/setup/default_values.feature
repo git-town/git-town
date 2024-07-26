@@ -2,7 +2,7 @@
 Feature: Accepting all default values leads to a working setup
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE   | LOCATIONS     |
       | dev        | (none) | local, origin |

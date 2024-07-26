@@ -1,7 +1,7 @@
 Feature: does not ship an empty branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | empty | feature | main   | local, origin |

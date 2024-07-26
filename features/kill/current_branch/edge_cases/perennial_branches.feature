@@ -1,7 +1,7 @@
 Feature: does not kill perennial branches
 
   Scenario: main branch
-    Given a Git repo clone
+    Given a Git repo with origin
     When I run "git-town kill"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -13,7 +13,7 @@ Feature: does not kill perennial branches
     And the current branch is still "main"
 
   Scenario: perennial branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |

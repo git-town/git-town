@@ -1,7 +1,7 @@
 Feature: Cannot create proposals for the main branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 

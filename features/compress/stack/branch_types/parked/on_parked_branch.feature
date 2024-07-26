@@ -1,7 +1,7 @@
 Feature: compresses active parked branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |

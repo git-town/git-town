@@ -1,7 +1,7 @@
 Feature: sync all feature branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | alpha      | feature   | main   | local, origin |

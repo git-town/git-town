@@ -1,7 +1,7 @@
 Feature: rename the current branch to a branch that is active in another worktree
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | old   | feature | main   | local, origin |

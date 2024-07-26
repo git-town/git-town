@@ -1,7 +1,7 @@
 Feature: sync all branches syncs the tags
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the tags
       | NAME       | LOCATION |
       | local-tag  | local    |

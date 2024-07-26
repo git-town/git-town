@@ -1,7 +1,7 @@
 Feature: does not compress observed branches in the stack
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed |        | local, origin |

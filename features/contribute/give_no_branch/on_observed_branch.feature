@@ -1,7 +1,7 @@
 Feature: making an observed branch a contribution branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME   | TYPE     | LOCATIONS |
       | branch | observed | local     |

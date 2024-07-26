@@ -1,7 +1,7 @@
 Feature: sync a workspace with two independent stacks
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | one  | feature | main   | local, origin |

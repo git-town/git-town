@@ -1,7 +1,7 @@
 Feature: the branch to kill has a deleted tracking branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | old   | feature | main   | local, origin |

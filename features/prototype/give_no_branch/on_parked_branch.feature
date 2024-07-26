@@ -1,7 +1,7 @@
 Feature: making a parked branch a prototype
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS |
       | branch | parked | main   | local     |

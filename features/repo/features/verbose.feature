@@ -2,7 +2,7 @@
 Feature: display all executed Git commands
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     When I run "git-town repo --verbose"

@@ -1,7 +1,7 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given a Git repo clone
+    Given a Git repo with origin
     And <LOCATION> Git Town setting "main-branch-name" is "main"
     When I run "git-town hack foo"
     Then it prints:

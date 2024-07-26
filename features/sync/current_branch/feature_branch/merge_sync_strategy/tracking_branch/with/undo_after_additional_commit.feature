@@ -1,7 +1,7 @@
 Feature: undo offline sync after additional commits to the feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

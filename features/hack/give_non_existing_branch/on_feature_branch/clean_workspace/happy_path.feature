@@ -2,7 +2,7 @@
 Feature: on a feature branch with a clean workspace
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
