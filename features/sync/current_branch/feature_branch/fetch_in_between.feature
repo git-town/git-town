@@ -62,6 +62,6 @@ Feature: handle intermittent "git fetch" while resolving conflicts
       | BRANCH     | LOCATION         | MESSAGE                   | FILE NAME         | FILE CONTENT   |
       | coworker-1 | coworker, origin | coworker-1 commit A       | coworker_1_file_a | content 1A     |
       |            |                  | coworker-1 commit B       | coworker_1_file_b | content 1B     |
-      |            | coworker         | coworker-2 commit A       | coworker_2_file_a | content 2A     |
+      | coworker-2 | coworker, origin | coworker-2 commit A       | coworker_2_file_a | content 2A     |
       | feature    | local            | conflicting local commit  | conflicting_file  | local content  |
       |            | origin           | conflicting origin commit | conflicting_file  | origin content |

@@ -1087,6 +1087,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateBranch(branch, "main")
+		coworkerRepo.CheckoutBranch(branch)
 		for _, commit := range git.FromGherkinTable(table) {
 			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 			coworkerRepo.StageFiles(commit.FileName)
