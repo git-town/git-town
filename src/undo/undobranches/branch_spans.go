@@ -107,3 +107,7 @@ func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
 	}
 	return result
 }
+
+func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchName) BranchSpans {
+	panic("implement")
+}

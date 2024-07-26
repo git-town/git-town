@@ -29,6 +29,7 @@ type RunState struct {
 	EndStashSize             Option[gitdomain.StashSize]
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
+	TouchedBranches          []gitdomain.BranchName             // the branches that are touched by the Git Town command that this RunState is for
 	UndoablePerennialCommits []gitdomain.SHA                    `exhaustruct:"optional"`
 	UnfinishedDetails        OptionP[UnfinishedRunStateDetails] `exhaustruct:"optional"`
 }
