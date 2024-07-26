@@ -2,7 +2,7 @@
 
 ## 14.4.0 (2024-07-26)
 
-Git Town v14.4 ships a feature requested by the community and fixes a severe bug in the undo feature. Update as quickly as possible.
+Git Town v14.4 ships features suggested by Git Town users and fixes a severe bug in the undo feature.
 
 Many thanks to @ianjsikes, @kevgo, @ruudk, @stephenwade who contributed ideas for great new features and helped identify and solve a severe bug, resulting in 46 shipped PRs and 2 resolved issues.
 
