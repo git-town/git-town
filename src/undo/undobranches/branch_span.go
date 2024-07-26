@@ -136,3 +136,9 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
+
+func (self BranchSpan) ShouldUndo() bool {
+	before, hasBefore := self.Before.Get()
+	after, hasAfter := self.After.Get()
+	return (hasBefore && before.LocalName.IsSome()) || (hasAfter && after.LocalName.IsSome())
+}

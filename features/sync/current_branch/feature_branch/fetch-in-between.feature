@@ -33,7 +33,7 @@ Feature: handle intermittent "git fetch" while resolving conflicts
       | coworker-1 commit B | coworker_1_file_b | content 1B   |
     And the coworker pushes a new "coworker-2" branch with these commits
       | MESSAGE             | FILE NAME         | FILE CONTENT |
-      | coworker-2 commit A | coworker_2_file_1 | content 2A   |
+      | coworker-2 commit A | coworker_2_file_a | content 2A   |
     And I run "git fetch"
     When I run "git-town continue"
 
@@ -55,11 +55,14 @@ Feature: handle intermittent "git fetch" while resolving conflicts
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
     And no merge is in progress
     And the current branch is still "feature"
+    And these branches exist now
+      | REPOSITORY | BRANCHES                              |
+      | local      | main, feature                         |
+      | origin     | main, coworker-1, coworker-2, feature |
     And these commits exist now
       | BRANCH     | LOCATION         | MESSAGE                   | FILE NAME         | FILE CONTENT   |
       | coworker-1 | coworker, origin | coworker-1 commit A       | coworker_1_file_a | content 1A     |
-      |            | coworker         | coworker-1 commit B       | coworker_1_file_b | content 1B     |
-      |            |                  | coworker-2 commit A       | coworker_2_file_1 | content 2A     |
+      |            |                  | coworker-1 commit B       | coworker_1_file_b | content 1B     |
+      |            | coworker         | coworker-2 commit A       | coworker_2_file_a | content 2A     |
       | feature    | local            | conflicting local commit  | conflicting_file  | local content  |
       |            | origin           | conflicting origin commit | conflicting_file  | origin content |
-    And the initial branches and lineage exist

@@ -96,3 +96,14 @@ func (self BranchSpans) Changes() BranchChanges {
 		RemoteRemoved:         remoteRemoved,
 	}
 }
+
+// provides a BranchSpans with all remote-only branches removed
+func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
+	result := BranchSpans{}
+	for _, branchSpan := range self {
+		if branchSpan.ShouldUndo() {
+			result = append(result, branchSpan)
+		}
+	}
+	return result
+}

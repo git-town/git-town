@@ -8,6 +8,7 @@ import (
 
 func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig) program.Program {
 	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
+	branchSpans = branchSpans.RemoveRemoteOnlyBranches()
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		BeginBranch:              beginBranchesSnapshot.Active.GetOrDefault(),
