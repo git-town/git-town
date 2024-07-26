@@ -197,5 +197,63 @@ func TestBranchSpans(t *testing.T) {
 			have := give.RemoveRemoteOnlyBranches()
 			must.Eq(t, want, have)
 		})
+
+		t.Run("keeps local branches that got added", func(t *testing.T) {
+			give := undobranches.BranchSpans{
+				{
+					Before: None[gitdomain.BranchInfo](),
+					After: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+				},
+			}
+			want := undobranches.BranchSpans{
+				{
+					Before: None[gitdomain.BranchInfo](),
+					After: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+				},
+			}
+			have := give.RemoveRemoteOnlyBranches()
+			must.Eq(t, want, have)
+		})
+
+		t.Run("keeps local branches that got removed", func(t *testing.T) {
+			give := undobranches.BranchSpans{
+				{
+					Before: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+					After: None[gitdomain.BranchInfo](),
+				},
+			}
+			want := undobranches.BranchSpans{
+				{
+					Before: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+					After: None[gitdomain.BranchInfo](),
+				},
+			}
+			have := give.RemoveRemoteOnlyBranches()
+			must.Eq(t, want, have)
+		})
 	})
 }
