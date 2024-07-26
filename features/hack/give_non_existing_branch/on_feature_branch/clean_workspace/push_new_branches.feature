@@ -1,7 +1,7 @@
 Feature: auto-push the new branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town setting "push-new-branches" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |

@@ -1,7 +1,7 @@
 Feature: cannot observe non-existing branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     When I run "git-town observe non-existing"
 
   Scenario: result

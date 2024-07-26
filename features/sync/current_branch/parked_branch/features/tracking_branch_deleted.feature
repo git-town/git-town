@@ -1,7 +1,7 @@
 Feature: remove a parked branch as soon as the tracking branch is gone, even if it has unpushed commits
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |

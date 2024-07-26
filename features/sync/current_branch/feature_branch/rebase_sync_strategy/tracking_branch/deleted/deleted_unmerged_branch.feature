@@ -1,7 +1,7 @@
 Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |

@@ -1,7 +1,7 @@
 Feature: sync perennial branch that was deleted at the remote
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE      | PARENT    | LOCATIONS     |
       | feature-1  | perennial |           | local, origin |

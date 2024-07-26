@@ -1,7 +1,7 @@
 Feature: on the main branch with a clean workspace
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |

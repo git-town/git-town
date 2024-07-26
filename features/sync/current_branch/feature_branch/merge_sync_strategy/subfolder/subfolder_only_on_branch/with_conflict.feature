@@ -1,7 +1,7 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |

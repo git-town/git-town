@@ -1,7 +1,7 @@
 Feature: on a forked repo
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And an upstream repo
     And the commits
       | BRANCH | LOCATION | MESSAGE         |

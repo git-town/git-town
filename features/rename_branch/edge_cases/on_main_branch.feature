@@ -1,7 +1,7 @@
 Feature: does not rename the main branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the current branch is "main"
 
   Scenario: try to rename

@@ -2,7 +2,7 @@
 Feature: handle conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

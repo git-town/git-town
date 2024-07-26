@@ -1,7 +1,7 @@
 Feature: sync the main branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the commits
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |

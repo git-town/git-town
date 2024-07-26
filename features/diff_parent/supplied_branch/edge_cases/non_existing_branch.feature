@@ -1,7 +1,7 @@
 Feature: does not diff non-existing branch
 
   Scenario: non-existing branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |

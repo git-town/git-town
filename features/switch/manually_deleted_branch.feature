@@ -1,7 +1,7 @@
 Feature: switch branches while a manually deleted branch is still listed in the lineage
 
   Scenario: repo contains a manually deleted branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | alpha | feature | main   | local     |

@@ -1,7 +1,7 @@
 Feature: compress the commits on an entire stack when at the stack root
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |

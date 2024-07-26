@@ -1,7 +1,7 @@
 Feature: does not prepend perennial branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: on main branch
     When I run "git-town prepend new"

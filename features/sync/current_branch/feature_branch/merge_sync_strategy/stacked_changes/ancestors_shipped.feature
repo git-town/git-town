@@ -1,7 +1,7 @@
 Feature: shipped parent branches in a stacked change
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-1 | feature | main      | local, origin |

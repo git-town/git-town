@@ -1,7 +1,7 @@
 Feature: make a remote branch prototype
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME           | TYPE   | PARENT | LOCATIONS |
       | remote-feature | (none) | main   | origin    |

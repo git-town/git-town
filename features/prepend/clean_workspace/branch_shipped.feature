@@ -1,7 +1,7 @@
 Feature: prepend a branch to a branch that was shipped at the remote
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |

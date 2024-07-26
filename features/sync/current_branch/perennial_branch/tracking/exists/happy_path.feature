@@ -1,7 +1,7 @@
 Feature: sync the current perennial branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE      | LOCATIONS     |
       | production | perennial | local, origin |

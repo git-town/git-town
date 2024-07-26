@@ -1,7 +1,7 @@
 Feature: compatibility between different sync-feature-strategy settings
 
   Scenario: I use rebase and my coworker uses merge
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

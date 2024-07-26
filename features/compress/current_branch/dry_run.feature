@@ -1,7 +1,7 @@
 Feature: dry-run compressing the commits on a feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
