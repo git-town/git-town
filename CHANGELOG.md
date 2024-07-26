@@ -1,5 +1,21 @@
 # Git Town Changelog
 
+## 14.4.0 (2024-07-26)
+
+Git Town v14.4 ships features suggested by Git Town users and fixes a severe bug in the undo feature.
+
+Many thanks to @ianjsikes, @kevgo, @ruudk, @stephenwade who contributed ideas for great new features and helped identify and solve a severe bug, resulting in 46 shipped PRs and 2 resolved issues.
+
+#### New Features
+
+- Prototype branches are fully synced branches that don't have a tracking branch. They are useful when working with sensitive information or to save on CI minutes ([#3646](https://github.com/git-town/git-town/issues/3646)).
+
+#### Bug Fixes
+
+- Undo only local branches and their tracking branches ([#3764](https://github.com/git-town/git-town/pull/3764)).
+- Use correct parent when deleting shipped observed branches ([#3757](https://github.com/git-town/git-town/pull/3757), [#3756](https://github.com/git-town/git-town/pull/3756), [#3755](https://github.com/git-town/git-town/pull/3755), [#3754](https://github.com/git-town/git-town/pull/3754/files)).
+- Undo for configuration commands now correctly undoes branch changes ([#3741](https://github.com/git-town/git-town/pull/3741/files)).
+
 ## 14.3.1 (2024-07-15)
 
 #### Bug Fixes
