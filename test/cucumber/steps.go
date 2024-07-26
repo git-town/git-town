@@ -560,6 +560,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
+	sc.Step(`in a separate terminal I create branch "([^"]+)" with commits`, func(ctx context.Context, branchName string, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		existingBranch := devRepo.CurrentBranchCache.Value()
+		newBranch := gitdomain.NewLocalBranchName(branchName)
+		devRepo.CreateBranch(newBranch, "main")
+		devRepo.CheckoutBranch(newBranch)
+		for _, commit := range git.FromGherkinTable(table) {
+			devRepo.CreateFile(commit.FileName, commit.FileContent)
+			devRepo.StageFiles(commit.FileName)
+			devRepo.CommitStagedChanges(commit.Message)
+		}
+		devRepo.CheckoutBranch(existingBranch)
+	})
+
 	sc.Step(`^inspect the commits$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
