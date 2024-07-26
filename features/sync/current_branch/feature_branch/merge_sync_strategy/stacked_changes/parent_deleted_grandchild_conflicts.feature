@@ -1,7 +1,7 @@
 Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME       | TYPE    | PARENT | LOCATIONS     |
       | child      | feature | main   | local, origin |

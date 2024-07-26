@@ -1,7 +1,7 @@
 Feature: on perennial branch
 
   Scenario: on main branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the current branch is "main"
     When I run "git-town diff-parent"
     Then it runs no commands
@@ -11,7 +11,7 @@ Feature: on perennial branch
       """
 
   Scenario: on perennial branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME | TYPE      | LOCATIONS |
       | qa   | perennial | local     |

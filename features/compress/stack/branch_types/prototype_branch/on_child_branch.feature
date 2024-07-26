@@ -1,7 +1,7 @@
 Feature: does not compress non-active prototype branches in the stack
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |

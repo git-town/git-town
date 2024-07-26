@@ -1,7 +1,7 @@
 Feature: handle rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE      | LOCATIONS     |
       | alpha | perennial | local, origin |

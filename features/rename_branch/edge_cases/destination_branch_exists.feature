@@ -1,7 +1,7 @@
 Feature: destination branch exists
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: destination branch exists locally
     Given the branches

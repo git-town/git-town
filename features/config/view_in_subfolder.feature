@@ -1,7 +1,7 @@
 Feature: show the configuration from a subfolder
 
   Scenario: running in a subfolder
-    Given a Git repo clone
+    Given a Git repo with origin
     And the configuration file:
       """
       [branches]

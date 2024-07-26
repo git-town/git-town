@@ -1,7 +1,7 @@
 Feature: print nice error message for invalid config file
 
   Scenario: Config file with invalid TOML content
-    Given a Git repo clone
+    Given a Git repo with origin
     And the configuration file:
       """
       push-new-branches =

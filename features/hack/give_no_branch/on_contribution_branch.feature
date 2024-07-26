@@ -1,7 +1,7 @@
 Feature: making the current contribution branch a feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |

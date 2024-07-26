@@ -1,7 +1,7 @@
 Feature: does not compress perennial branches
 
   Scenario: on perennial branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | perennial | perennial |        | local, origin |
@@ -23,7 +23,7 @@ Feature: does not compress perennial branches
     And the initial branches and lineage exist
 
   Scenario: on main branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the commits
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | main   | local, origin | commit 1 | file_1    | content 1    |

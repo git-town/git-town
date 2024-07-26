@@ -1,7 +1,7 @@
 Feature: delete the current prototype branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |

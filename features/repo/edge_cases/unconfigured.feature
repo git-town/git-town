@@ -2,7 +2,7 @@
 Feature: ask for missing configuration
 
   Scenario: unconfigured
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town is not configured
     And the origin is "https://github.com/git-town/git-town.git"
     And tool "open" is installed

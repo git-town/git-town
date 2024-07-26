@@ -2,7 +2,7 @@
 Feature: enter a parent branch name when prompted
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE   | LOCATIONS     |
       | alpha | (none) | local, origin |

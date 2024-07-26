@@ -1,7 +1,7 @@
 Feature: display the current offline status
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: default value
     When I run "git-town offline"

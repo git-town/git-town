@@ -1,7 +1,7 @@
 Feature: missing configuration
 
   Background: running unconfigured
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town is not configured
     When I run "git-town hack feature" and enter into the dialog:
       | DIALOG      | KEYS  |

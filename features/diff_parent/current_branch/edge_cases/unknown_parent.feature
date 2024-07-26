@@ -2,7 +2,7 @@
 Feature: ask for missing parent
 
   Scenario: on feature branch without parent
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
