@@ -53,8 +53,6 @@ Feature: handle intermittent "git fetch" while resolving conflicts
       | BRANCH  | COMMAND                                                                                    |
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
-      |         | git push origin :coworker-2                                                                |
-      |         | git push --force-with-lease origin {{ sha-in-origin 'coworker-1 commit A' }}:coworker-1    |
     And no merge is in progress
     And the current branch is still "feature"
     And these commits exist now
