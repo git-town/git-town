@@ -116,47 +116,6 @@ func TestBranchSpans(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 
-		t.Run("keeps local branches that got their tracking branches created", func(t *testing.T) {
-			give := undobranches.BranchSpans{
-				{
-					Before: Some(gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						RemoteName: None[gitdomain.RemoteBranchName](),
-						RemoteSHA:  None[gitdomain.SHA](),
-						SyncStatus: gitdomain.SyncStatusLocalOnly,
-					}),
-					After: Some(gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
-						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusUpToDate,
-					}),
-				},
-			}
-			want := undobranches.BranchSpans{
-				{
-					Before: Some(gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						RemoteName: None[gitdomain.RemoteBranchName](),
-						RemoteSHA:  None[gitdomain.SHA](),
-						SyncStatus: gitdomain.SyncStatusLocalOnly,
-					}),
-					After: Some(gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
-						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusUpToDate,
-					}),
-				},
-			}
-			have := give.RemoveRemoteOnlyBranches()
-			must.Eq(t, want, have)
-		})
-
 		t.Run("keeps local branches that got added", func(t *testing.T) {
 			give := undobranches.BranchSpans{
 				{
@@ -209,6 +168,47 @@ func TestBranchSpans(t *testing.T) {
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
 					}),
 					After: None[gitdomain.BranchInfo](),
+				},
+			}
+			have := give.RemoveRemoteOnlyBranches()
+			must.Eq(t, want, have)
+		})
+
+		t.Run("keeps local branches that got their tracking branches created", func(t *testing.T) {
+			give := undobranches.BranchSpans{
+				{
+					Before: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+					After: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+						SyncStatus: gitdomain.SyncStatusUpToDate,
+					}),
+				},
+			}
+			want := undobranches.BranchSpans{
+				{
+					Before: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					}),
+					After: Some(gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+						SyncStatus: gitdomain.SyncStatusUpToDate,
+					}),
 				},
 			}
 			have := give.RemoveRemoteOnlyBranches()
