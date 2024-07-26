@@ -97,7 +97,7 @@ func (self BranchSpans) Changes() BranchChanges {
 	}
 }
 
-// provides a BranchSpans with all remote-only branches removed
+// provides a copy of this BranchSpans with all remote-only branches removed
 func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
 	result := BranchSpans{}
 	for _, branchSpan := range self {
