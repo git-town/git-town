@@ -69,6 +69,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 	if err != nil || exit {
 		return err
 	}
+	runProgram := prependProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -78,7 +79,8 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            prependProgram(data),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

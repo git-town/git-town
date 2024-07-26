@@ -3,6 +3,7 @@ package undobranches
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"golang.org/x/exp/maps"
 )
 
 // BranchSpan represents changes of a branch over time.
@@ -19,6 +20,27 @@ func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before
 	after, hasAfter := self.After.Get()
 	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
 	return isInconsistentChange, before, after
+}
+
+func (self BranchSpan) BranchNames() []gitdomain.BranchName {
+	result := map[gitdomain.BranchName]struct{}{}
+	if before, hasBefore := self.Before.Get(); hasBefore {
+		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
+			result[localName.BranchName()] = struct{}{}
+		}
+		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
+			result[remoteName.BranchName()] = struct{}{}
+		}
+	}
+	if after, hasAfter := self.After.Get(); hasAfter {
+		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
+			result[localName.BranchName()] = struct{}{}
+		}
+		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
+			result[remoteName.BranchName()] = struct{}{}
+		}
+	}
+	return maps.Keys(result)
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch

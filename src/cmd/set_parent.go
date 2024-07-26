@@ -76,7 +76,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	prog, aborted := setParentProgram(outcome, selectedBranch, data.initialBranch)
+	runProgram, aborted := setParentProgram(outcome, selectedBranch, data.initialBranch)
 	if aborted {
 		return nil
 	}
@@ -89,7 +89,8 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            prog,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/vm/shared"
 )
@@ -102,6 +103,15 @@ func (self Program) StringIndented(indent string) string {
 		}
 	}
 	return sb.String()
+}
+
+func (self Program) TouchedBranches() []gitdomain.BranchName {
+	result := []gitdomain.BranchName{}
+	for _, opcode := range self {
+		opcodeBranches := shared.OpcodeBranches(opcode)
+		result = append(result, opcodeBranches...)
+	}
+	return result
 }
 
 // UnmarshalJSON unmarshals the program from JSON.

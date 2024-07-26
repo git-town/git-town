@@ -88,6 +88,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            program,
+		TouchedBranches:       program.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

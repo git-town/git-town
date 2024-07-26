@@ -97,6 +97,14 @@ func (self BranchSpans) Changes() BranchChanges {
 	}
 }
 
+func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchName) BranchSpans {
+	result := BranchSpans{}
+	for _, branchSpan := range self {
+		spanBranches := branchSpan.BranchNames()
+	}
+	return result
+}
+
 // provides a copy of this BranchSpans with all remote-only branches removed
 func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
 	result := BranchSpans{}
@@ -106,8 +114,4 @@ func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
 		}
 	}
 	return result
-}
-
-func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchName) BranchSpans {
-	panic("implement")
 }

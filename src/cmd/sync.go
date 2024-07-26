@@ -121,6 +121,7 @@ func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verb
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

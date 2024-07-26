@@ -162,6 +162,7 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
+			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: SomeP(&runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
@@ -451,6 +452,10 @@ func TestLoadSave(t *testing.T) {
       },
       "type": "UpdateProposalTarget"
     }
+  ],
+  "TouchedBranches": [
+    "branch-1",
+    "branch-2"
   ],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": {

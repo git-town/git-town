@@ -78,6 +78,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 	if err != nil || exit {
 		return err
 	}
+	runProgram := renameBranchProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -87,7 +88,8 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            renameBranchProgram(data),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

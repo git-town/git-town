@@ -112,6 +112,7 @@ type convertToFeatureData struct {
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
+	runProgram := appendProgram(args.appendData)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -121,7 +122,8 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            appendProgram(args.appendData),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.backend,
@@ -294,6 +296,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		FinalMessages:         args.repo.FinalMessages,
 		Git:                   args.repo.Git,
 		RootDir:               args.rootDir,
+		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
 		Verbose:               args.verbose,
 	})
 }
