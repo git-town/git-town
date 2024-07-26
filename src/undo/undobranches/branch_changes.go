@@ -1,6 +1,7 @@
 package undobranches
 
 import (
+	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
@@ -63,6 +64,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.Checkout{Branch: branch})
 			result.Add(&opcodes.RevertCommit{SHA: change.After})
+			if dialog.GitHubToken()
 			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 		}
 	}
