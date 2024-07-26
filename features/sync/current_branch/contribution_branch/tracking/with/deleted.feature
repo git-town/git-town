@@ -1,7 +1,7 @@
 Feature: remove a contribution branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |

@@ -1,7 +1,7 @@
 Feature: two people with rebase strategy sync changes made by them
 
   Scenario: I and my coworker sync changes we both made to the same branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the committed configuration file:
       """
       [sync-strategy]

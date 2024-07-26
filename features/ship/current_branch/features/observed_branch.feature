@@ -1,7 +1,7 @@
 Feature: cannot ship observed branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |

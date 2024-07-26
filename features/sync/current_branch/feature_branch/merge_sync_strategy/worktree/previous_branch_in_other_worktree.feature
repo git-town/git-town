@@ -1,7 +1,7 @@
 Feature: sync a branch when the previous branch is active in another worktree
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | current  | feature | main   | local, origin |

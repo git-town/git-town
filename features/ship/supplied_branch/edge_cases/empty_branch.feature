@@ -1,7 +1,7 @@
 Feature: does not ship empty feature branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | empty | feature | main   | local, origin |

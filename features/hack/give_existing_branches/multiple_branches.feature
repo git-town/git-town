@@ -1,7 +1,7 @@
 Feature: making multiple branches a feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS |
       | contribution | contribution |        | local     |

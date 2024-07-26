@@ -2,7 +2,7 @@
 Feature: remove an existing code hosting override
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And local Git Town setting "hosting-platform" is "github"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS           | DESCRIPTION                                 |

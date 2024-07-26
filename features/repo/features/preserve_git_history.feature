@@ -2,7 +2,7 @@
 Feature: preserve the previous Git branch
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | current  | feature | main   | local, origin |

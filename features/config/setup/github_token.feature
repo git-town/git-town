@@ -2,7 +2,7 @@
 Feature: enter the GitHub API token
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: auto-detected GitHub platform
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"

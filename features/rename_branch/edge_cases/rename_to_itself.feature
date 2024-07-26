@@ -1,7 +1,7 @@
 Feature: rename a branch to itself
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |

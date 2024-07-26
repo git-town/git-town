@@ -1,7 +1,7 @@
 Feature: change offline mode
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario Outline: writing to local Git metadata
     When I run "git-town offline <GIVE>"

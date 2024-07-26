@@ -1,7 +1,7 @@
 Feature: already existing remote branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | origin    |

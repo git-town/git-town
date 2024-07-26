@@ -1,7 +1,7 @@
 Feature: cannot prototype the main branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And an uncommitted file
     When I run "git-town prototype"
 

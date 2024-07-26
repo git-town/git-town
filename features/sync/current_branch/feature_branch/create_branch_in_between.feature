@@ -1,7 +1,7 @@
 Feature: handle a created branch while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |

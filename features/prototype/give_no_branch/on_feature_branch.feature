@@ -1,7 +1,7 @@
 Feature: make the current feature branch a prototype branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |

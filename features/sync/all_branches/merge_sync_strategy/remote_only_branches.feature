@@ -1,7 +1,7 @@
 Feature: does not sync branches that exist only on remotes
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | mine  | feature | main   | local, origin |
