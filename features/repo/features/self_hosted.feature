@@ -2,7 +2,7 @@
 Feature: self hosted servie
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario Outline:
     Given tool "open" is installed

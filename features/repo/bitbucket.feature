@@ -2,7 +2,7 @@
 Feature: Bitbucket
 
   Scenario Outline:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town repo"

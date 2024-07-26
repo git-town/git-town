@@ -1,7 +1,7 @@
 Feature: reset the configuration
 
   Scenario: with configuration
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME    | TYPE      | PARENT | LOCATIONS |
       | feature | feature   | main   | local     |
@@ -21,7 +21,7 @@ Feature: reset the configuration
     And global Git setting "alias.append" is still "commit --amend"
 
   Scenario: no configuration
-    Given a Git repo clone
+    Given a Git repo with origin
     And Git Town is not configured
     When I run "git-town config remove"
     Then Git Town is no longer configured

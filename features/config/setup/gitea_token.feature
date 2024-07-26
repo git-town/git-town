@@ -2,7 +2,7 @@
 Feature: enter the Gitea API token
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: auto-detected Gitea platform
     And my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"

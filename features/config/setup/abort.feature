@@ -2,7 +2,7 @@
 Feature: aborting the setup assistant
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:

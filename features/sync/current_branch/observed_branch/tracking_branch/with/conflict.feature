@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current observed branch and its tracking branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |

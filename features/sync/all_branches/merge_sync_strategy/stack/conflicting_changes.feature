@@ -1,7 +1,7 @@
 Feature: sync a stack that makes conflicting changes
 
   Scenario: all branches in the stack change the same file to different values and this hasn't been synced yet
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |

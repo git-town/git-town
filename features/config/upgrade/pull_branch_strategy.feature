@@ -1,7 +1,7 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given a Git repo clone
+    Given a Git repo with origin
     And <LOCATION> Git Town setting "pull-branch-strategy" is "rebase"
     When I run "git-town <COMMAND>"
     Then it prints:

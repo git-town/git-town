@@ -2,7 +2,7 @@
 Feature: show the configuration
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: all configured in Git, no stacked changes
     Given the branches

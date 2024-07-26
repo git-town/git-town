@@ -2,7 +2,7 @@
 Feature: multi-platform support
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario Outline: supported tool installed
     Given the origin is "https://github.com/git-town/git-town.git"

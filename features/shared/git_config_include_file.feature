@@ -1,7 +1,7 @@
 Feature: support Git configuration that includes other files
 
   Scenario: global config file contains an include directive
-    Given a Git repo clone
+    Given a Git repo with origin
     And the home directory contains file ".gitconfig" with content
       """
       [include]

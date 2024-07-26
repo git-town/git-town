@@ -1,7 +1,7 @@
 Feature: two people using rebase make conflicting changes to a branch
 
   Scenario: I and my coworker work together on a branch
-    Given a Git repo clone
+    Given a Git repo with origin
     And the committed configuration file:
       """
       [sync-strategy]

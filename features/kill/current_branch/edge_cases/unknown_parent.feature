@@ -1,7 +1,7 @@
 Feature: ask for missing parent branch information
 
   Scenario:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branch
       | NAME    | TYPE   | LOCATIONS |
       | feature | (none) | local     |

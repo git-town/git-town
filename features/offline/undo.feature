@@ -1,7 +1,7 @@
 Feature: undo changing offline mode
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: undo enabling offline mode
     Given I ran "git-town offline on"

@@ -1,7 +1,7 @@
 Feature: does not diff perennial branches
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: main branch
     When I run "git-town diff-parent main"

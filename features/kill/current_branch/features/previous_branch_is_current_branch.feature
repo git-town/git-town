@@ -1,7 +1,7 @@
 Feature: killing a branch without a useful previous branch setting
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | current | feature | main   | local     |

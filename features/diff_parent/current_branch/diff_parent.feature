@@ -2,7 +2,7 @@
 Feature: view changes made on the current feature branch
 
   Background:
-    Given a Git repo clone
+    Given a Git repo with origin
 
   Scenario: feature branch
     Given the branch
