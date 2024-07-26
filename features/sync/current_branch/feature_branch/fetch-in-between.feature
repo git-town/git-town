@@ -46,7 +46,6 @@ Feature: handle intermittent "git fetch" while resolving conflicts
     And no merge is in progress
     And all branches are now synchronized
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
