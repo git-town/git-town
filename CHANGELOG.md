@@ -4,6 +4,8 @@
 
 Git Town v14.4 ships a feature requested by the community and fixes a severe bug in the undo feature. Update as quickly as possible.
 
+Many thanks to @ianjsikes, @kevgo, @ruudk, @stephenwade who contributed ideas for great new features and helped identify and solve a severe bug, resulting in 46 shipped PRs and 2 resolved issues.
+
 #### New Features
 
 - Prototype branches are fully synced branches that don't have a tracking branch. They are useful when working with sensitive information or to save on CI minutes ([#3646](https://github.com/git-town/git-town/issues/3646)).
