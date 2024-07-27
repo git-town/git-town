@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/flags"
@@ -16,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -191,7 +191,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
 	var branchesToValidate gitdomain.LocalBranchNames
-	shouldCreateBranch := len(targetBranches) == 1 && !slice.Contains(localBranchNames, targetBranches[0])
+	shouldCreateBranch := len(targetBranches) == 1 && !slices.Contains(localBranchNames, targetBranches[0])
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
