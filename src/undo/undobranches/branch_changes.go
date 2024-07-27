@@ -1,9 +1,10 @@
 package undobranches
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -60,7 +61,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// revert omni-changed perennial branches
 	for _, branch := range omniChangedPerennials.BranchNames() {
 		change := omniChangedPerennials[branch]
-		if slice.Contains(args.UndoablePerennialCommits, change.After) {
+		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.Checkout{Branch: branch})
 			result.Add(&opcodes.RevertCommit{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
@@ -87,7 +88,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
-			if slice.Contains(args.UndoablePerennialCommits, afterSHA) {
+			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.Checkout{Branch: branchName})
 				result.Add(&opcodes.RevertCommit{SHA: afterSHA})
 				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branchName})
