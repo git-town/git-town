@@ -12,16 +12,6 @@ type BranchSpan struct {
 	After  Option[gitdomain.BranchInfo] // the status of the branch after Git Town ran
 }
 
-func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
-	isOmniChange, _, _, _ := self.IsOmniChange()
-	localChanged, _, _, _ := self.LocalChanged()
-	remoteChanged, _, _, _ := self.RemoteChanged()
-	before, hasBefore := self.Before.Get()
-	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
-	return isInconsistentChange, before, after
-}
-
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	result := map[gitdomain.BranchName]struct{}{}
 	if before, hasBefore := self.Before.Get(); hasBefore {
@@ -41,6 +31,16 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 		}
 	}
 	return maps.Keys(result)
+}
+
+func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
+	isOmniChange, _, _, _ := self.IsOmniChange()
+	localChanged, _, _, _ := self.LocalChanged()
+	remoteChanged, _, _, _ := self.RemoteChanged()
+	before, hasBefore := self.Before.Get()
+	after, hasAfter := self.After.Get()
+	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
+	return isInconsistentChange, before, after
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch

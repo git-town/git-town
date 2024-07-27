@@ -1,4 +1,3 @@
-@this
 Feature: handle a created branch while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts

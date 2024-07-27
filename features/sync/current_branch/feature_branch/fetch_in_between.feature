@@ -1,4 +1,3 @@
-@this
 Feature: handle intermittent "git fetch" while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
