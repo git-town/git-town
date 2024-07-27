@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestUndeclaredOpcodeMethods(t *testing.T) {
+func TestOpcodeBranches(t *testing.T) {
 	t.Parallel()
 
 	t.Run("TouchedBranches", func(t *testing.T) {
