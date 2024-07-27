@@ -8,16 +8,11 @@ import (
 
 func OpcodeBranches(code Opcode) []gitdomain.BranchName {
 	result := []gitdomain.BranchName{}
-
 	valueOfSelf := reflect.ValueOf(code).Elem()
 	typeOfSelf := valueOfSelf.Type()
-
-	fieldCount := valueOfSelf.NumField()
-	for i := 0; i < fieldCount; i++ {
+	for i := range valueOfSelf.NumField() {
 		field := valueOfSelf.Field(i)
 		fieldType := typeOfSelf.Field(i).Type
-
-		// Check if the field is of one of the target types
 		if fieldType == reflect.TypeOf((*gitdomain.BranchName)(nil)).Elem() {
 			branchName := field.Interface().(gitdomain.BranchName)
 			result = append(result, branchName)
@@ -31,6 +26,5 @@ func OpcodeBranches(code Opcode) []gitdomain.BranchName {
 			result = append(result, remoteBranchName.BranchName())
 		}
 	}
-
 	return result
 }
