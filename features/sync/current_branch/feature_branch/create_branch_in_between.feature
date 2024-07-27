@@ -1,4 +1,4 @@
-Feature: do not undo a branch that was created while resolving conflicts
+Feature: do not undo branches that were created while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
     Given a Git repo with origin
