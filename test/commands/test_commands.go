@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/config"
@@ -92,11 +93,11 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fiel
 		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, ConfigFileCommitMessage) {
 			continue
 		}
-		if slice.Contains(fields, "FILE NAME") {
+		if slices.Contains(fields, "FILE NAME") {
 			filenames := self.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
-		if slice.Contains(fields, "FILE CONTENT") {
+		if slices.Contains(fields, "FILE CONTENT") {
 			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 			commit.FileContent = filecontent
 		}
