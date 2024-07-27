@@ -1,3 +1,4 @@
+@this
 Feature: handle a created branch while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
@@ -42,7 +43,6 @@ Feature: handle a created branch while resolving conflicts
     And no merge is in progress
     And all branches are now synchronized
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -51,5 +51,12 @@ Feature: handle a created branch while resolving conflicts
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |
     And no merge is in progress
     And the current branch is still "feature-1"
-    And the initial branches and lineage exist
-    And the initial commits exist
+    And these branches exist now
+      | REPOSITORY | BRANCHES                   |
+      | local      | main, feature-1, feature-2 |
+      | origin     | main, feature-1            |
+    And these commits exist now
+      | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | feature-1 | local    | conflicting local commit  | conflicting_file | local content  |
+      |           | origin   | conflicting origin commit | conflicting_file | origin content |
+      | feature-2 | local    | feature-2 commit          | feature_2_file   | content 2      |

@@ -108,14 +108,3 @@ func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchN
 	}
 	return result
 }
-
-// provides a copy of this BranchSpans with all remote-only branches removed
-func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
-	result := BranchSpans{}
-	for _, branchSpan := range self {
-		if branchSpan.ShouldUndo() {
-			result = append(result, branchSpan)
-		}
-	}
-	return result
-}
