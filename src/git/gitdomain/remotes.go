@@ -1,8 +1,6 @@
 package gitdomain
 
-import (
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
-)
+import "slices"
 
 // Remotes answers questions which Git remotes a repo has.
 type Remotes []Remote
@@ -16,9 +14,9 @@ func NewRemotes(remotes ...string) Remotes {
 }
 
 func (self Remotes) HasOrigin() bool {
-	return slice.Contains(self, RemoteOrigin)
+	return slices.Contains(self, RemoteOrigin)
 }
 
 func (self Remotes) HasUpstream() bool {
-	return slice.Contains(self, RemoteUpstream)
+	return slices.Contains(self, RemoteUpstream)
 }

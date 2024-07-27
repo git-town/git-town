@@ -188,7 +188,7 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 	roots := gitdomain.LocalBranchNames{}
 	for _, parent := range self.data {
 		_, found := self.data[parent]
-		if !found && !slice.Contains(roots, parent) {
+		if !found && !slices.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}
