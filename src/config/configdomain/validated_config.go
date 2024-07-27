@@ -1,8 +1,9 @@
 package configdomain
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
@@ -45,7 +46,7 @@ func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranc
 }
 
 func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slice.Contains(self.PerennialBranches, branch) {
+	if slices.Contains(self.PerennialBranches, branch) {
 		return true
 	}
 	if perennialRegex, hasPerennialRegex := self.PerennialRegex.Get(); hasPerennialRegex {

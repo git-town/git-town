@@ -1,9 +1,10 @@
 package configdomain
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/gohacks/slice"
 )
 
 // UnvalidatedConfig is the Git Town configuration as read from disk.
@@ -59,7 +60,7 @@ func (self *UnvalidatedConfig) ContainsLineage() bool {
 }
 
 func (self *UnvalidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ContributionBranches, branch)
+	return slices.Contains(self.ContributionBranches, branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -78,7 +79,7 @@ func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBra
 }
 
 func (self *UnvalidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ObservedBranches, branch)
+	return slices.Contains(self.ObservedBranches, branch)
 }
 
 func (self *UnvalidatedConfig) IsOnline() bool {
@@ -86,11 +87,11 @@ func (self *UnvalidatedConfig) IsOnline() bool {
 }
 
 func (self *UnvalidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.ParkedBranches, branch)
+	return slices.Contains(self.ParkedBranches, branch)
 }
 
 func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slice.Contains(self.PerennialBranches, branch) {
+	if slices.Contains(self.PerennialBranches, branch) {
 		return true
 	}
 	if perennialRegex, has := self.PerennialRegex.Get(); has {
@@ -100,7 +101,7 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 }
 
 func (self *UnvalidatedConfig) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.PrototypeBranches, branch)
+	return slices.Contains(self.PrototypeBranches, branch)
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
