@@ -16,6 +16,7 @@ func TestContainsAny(t *testing.T) {
 		needles := []int{4, 5, 6}
 		must.False(t, slice.ContainsAny(haystack, needles))
 	})
+
 	t.Run("one element in common", func(t *testing.T) {
 		t.Parallel()
 		haystack := []int{1, 2, 3}
