@@ -1,6 +1,8 @@
 package undobranches
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"golang.org/x/exp/maps"
@@ -13,24 +15,26 @@ type BranchSpan struct {
 }
 
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
-	result := map[gitdomain.BranchName]struct{}{}
+	branchNames := map[gitdomain.BranchName]struct{}{}
 	if before, hasBefore := self.Before.Get(); hasBefore {
 		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
-			result[localName.BranchName()] = struct{}{}
+			branchNames[localName.BranchName()] = struct{}{}
 		}
 		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
-			result[remoteName.BranchName()] = struct{}{}
+			branchNames[remoteName.BranchName()] = struct{}{}
 		}
 	}
 	if after, hasAfter := self.After.Get(); hasAfter {
 		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
-			result[localName.BranchName()] = struct{}{}
+			branchNames[localName.BranchName()] = struct{}{}
 		}
 		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
-			result[remoteName.BranchName()] = struct{}{}
+			branchNames[remoteName.BranchName()] = struct{}{}
 		}
 	}
-	return maps.Keys(result)
+	result := maps.Keys(branchNames)
+	slices.Sort(result)
+	return result
 }
 
 func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
