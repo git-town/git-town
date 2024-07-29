@@ -200,6 +200,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	return result
 }
 
+// TODO: remove Mutable from DialogTestInputs since that struct already has internal mutability
+
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   configdomain.ValidatedConfig
