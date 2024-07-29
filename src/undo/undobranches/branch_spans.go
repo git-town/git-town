@@ -98,7 +98,8 @@ func (self BranchSpans) Changes() BranchChanges {
 	}
 }
 
-func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchName) BranchSpans {
+// keeps only the branch spans that contain any of the given branches
+func (self BranchSpans) KeepOnly(branchesToKeep []gitdomain.BranchName) BranchSpans {
 	result := BranchSpans{}
 	for _, branchSpan := range self {
 		if slice.ContainsAny(branchSpan.BranchNames(), branchesToKeep) {
