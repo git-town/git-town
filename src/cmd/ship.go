@@ -86,6 +86,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil {
 		return err
 	}
+	runProgram := shipProgram(data, message)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -95,7 +96,8 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            shipProgram(data, message),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

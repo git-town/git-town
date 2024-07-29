@@ -60,6 +60,7 @@ func TestRunState(t *testing.T) {
 			BeginConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
 			BeginStashSize:           0,
 			UndoablePerennialCommits: []gitdomain.SHA{},
+			TouchedBranches:          []gitdomain.BranchName{"branch-1", "branch-2"},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)
@@ -117,6 +118,10 @@ func TestRunState(t *testing.T) {
       },
       "type": "ResetCurrentBranchToSHA"
     }
+  ],
+  "TouchedBranches": [
+    "branch-1",
+    "branch-2"
   ],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": null

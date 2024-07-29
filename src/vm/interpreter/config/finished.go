@@ -50,6 +50,7 @@ func Finished(args FinishedArgs) error {
 		EndStashSize:             None[gitdomain.StashSize](),
 		FinalUndoProgram:         program.Program{},
 		RunProgram:               program.Program{},
+		TouchedBranches:          args.TouchedBranches,
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UnfinishedDetails:        NoneP[runstate.UnfinishedRunStateDetails](),
 	}
@@ -66,5 +67,6 @@ type FinishedArgs struct {
 	FinalMessages         stringslice.Collector
 	Git                   git.Commands
 	RootDir               gitdomain.RepoRootDir
+	TouchedBranches       []gitdomain.BranchName
 	Verbose               configdomain.Verbose
 }

@@ -78,6 +78,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
+		TouchedBranches:       []gitdomain.BranchName{},
 		Verbose:               verbose,
 	})
 }

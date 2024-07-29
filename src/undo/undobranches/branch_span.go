@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
@@ -9,6 +10,27 @@ import (
 type BranchSpan struct {
 	Before Option[gitdomain.BranchInfo] // the status of the branch before Git Town ran
 	After  Option[gitdomain.BranchInfo] // the status of the branch after Git Town ran
+}
+
+func (self BranchSpan) BranchNames() []gitdomain.BranchName {
+	branchNames := gohacks.NewSet[gitdomain.BranchName]()
+	if before, hasBefore := self.Before.Get(); hasBefore {
+		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
+			branchNames.Add(localName.BranchName())
+		}
+		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
+			branchNames.Add(remoteName.BranchName())
+		}
+	}
+	if after, hasAfter := self.After.Get(); hasAfter {
+		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
+			branchNames.Add(localName.BranchName())
+		}
+		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
+			branchNames.Add(remoteName.BranchName())
+		}
+	}
+	return branchNames.Values()
 }
 
 func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
@@ -135,11 +157,4 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	afterHasRemoteBranch, _, _ := after.HasRemoteBranch()
 	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
 	return remoteRemoved, remoteBranchName, beforeSHA
-}
-
-// indicates whether this BranchSpan should be undone when running "git town undo"
-func (self BranchSpan) ShouldUndo() bool {
-	before, hasBefore := self.Before.Get()
-	after, hasAfter := self.After.Get()
-	return (hasBefore && before.LocalName.IsSome()) || (hasAfter && after.LocalName.IsSome())
 }
