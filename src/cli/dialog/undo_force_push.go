@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	undoForcePushTitle = `force-push to remote branch`
+	undoForcePushTitle = `confirm undo`
 	undoForcePushHelp  = `
-Should I force-push remote branch %q?
+Undo changes to remote branch %q?
 
 Existing commit: %q
 Commit to be pushed: %q
@@ -19,18 +19,31 @@ Commit to be pushed: %q
 `
 )
 
-type YesNoEntry struct {
-	Text  string
-	Value bool
+type BoolEntry bool
+
+func (self BoolEntry) String() string {
+	return fmt.Sprintf("%t", self)
 }
 
-func (self YesNoEntry) String() string {
-	return fmt.Sprintf("%t", self.Value)
+func (self BoolEntry) Bool() bool {
+	return bool(self)
 }
 
 // GitHubToken lets the user enter the GitHub API token.
-func ForcePushBranch(branch gitdomain.RemoteBranchName, inputs components.TestInput) (result bool, aborted bool, err error) {
-	entries := list.Entries[YesNoEntry]{}
-	entry, aborted, err := components.RadioList(entries, 0, undoForcePushTitle, undoForcePushHelp, inputs)
-	return entry.Value, aborted, err
+func ForcePushBranch(branch gitdomain.RemoteBranchName, existingSHA, SHAToPush gitdomain.SHA, inputs components.TestInput) (result bool, aborted bool, err error) {
+	entries := list.Entries[BoolEntry]{
+		{
+			Data:    false,
+			Enabled: true,
+			Text:    "No",
+		},
+		{
+			Data:    true,
+			Enabled: true,
+			Text:    "Yes",
+		},
+	}
+	helpText := fmt.Sprintf(undoForcePushHelp, branch, existingSHA, SHAToPush)
+	entry, aborted, err := components.RadioList(entries, 0, undoForcePushTitle, helpText, inputs)
+	return entry.Bool(), aborted, err
 }
