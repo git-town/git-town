@@ -30,9 +30,7 @@ Feature: do not undo branches that were created while resolving conflicts
     And in a separate terminal I create branch "feature-2" with commits
       | MESSAGE          | FILE NAME      | FILE CONTENT |
       | feature-2 commit | feature_2_file | content 2    |
-    When I run "git-town continue" and enter into the dialog:
-      | DIALOG                      | KEYS  |
-      | parent branch for feature-2 | enter |
+    When I run "git-town continue"
 
   Scenario: result
     Then it runs the commands
