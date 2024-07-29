@@ -10,26 +10,23 @@ import (
 func TestUsers(t *testing.T) {
 	t.Parallel()
 
-	t.Run("AddUser", func(t *testing.T) {
+	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		users := data.NewUsers()
-		users.AddUser("one")
-		users.AddUser("one")
-		users.AddUser("two")
-		have := users.Users()
+		users.Add("one")
+		users.Add("one")
+		users.Add("two")
+		have := users.Values()
 		want := []string{"one", "two"}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("AddUsers", func(t *testing.T) {
 		t.Parallel()
-		allUsers := data.NewUsers()
-		allUsers.AddUser("alpha")
-		otherUsers := data.NewUsers()
-		otherUsers.AddUser("beta1")
-		otherUsers.AddUser("beta2")
+		allUsers := data.NewUsers("alpha")
+		otherUsers := data.NewUsers("beta1", "beta2")
 		allUsers.AddUsers(otherUsers)
-		have := allUsers.Users()
+		have := allUsers.Values()
 		want := []string{"alpha", "beta1", "beta2"}
 		must.Eq(t, want, have)
 	})
