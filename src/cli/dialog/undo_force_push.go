@@ -5,10 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/dialog/components/list"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 const (
@@ -27,15 +24,13 @@ type YesNoEntry struct {
 	Value bool
 }
 
+func (self YesNoEntry) String() string {
+	return fmt.Sprintf("%t", self.Value)
+}
+
 // GitHubToken lets the user enter the GitHub API token.
-func ForcePushBranch(branch gitdomain.RemoteBranchName, oldValue, newValue string, inputs components.TestInput) (Option[configdomain.GitHubToken], bool, error) {
-	text, aborted, err := components.RadioList(list.Entries[string]{})(components.TextFieldArgs{
-		ExistingValue: oldValue,
-		Help:          gitHubTokenHelp,
-		Prompt:        "Your GitHub API token: ",
-		TestInput:     inputs,
-		Title:         githubTokenTitle,
-	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return configdomain.NewGitHubTokenOption(text), aborted, err
+func ForcePushBranch(branch gitdomain.RemoteBranchName, inputs components.TestInput) (result bool, aborted bool, err error) {
+	entries := list.Entries[YesNoEntry]{}
+	entry, aborted, err := components.RadioList(entries, 0, undoForcePushTitle, undoForcePushHelp, inputs)
+	return entry.Value, aborted, err
 }

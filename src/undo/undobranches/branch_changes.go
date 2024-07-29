@@ -1,9 +1,10 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v14/src/cli/dialog"
 	"slices"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
@@ -65,7 +66,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.Checkout{Branch: branch})
 			result.Add(&opcodes.RevertCommit{SHA: change.After})
-			if dialog.GitHubToken()
 			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 		}
 	}
@@ -110,20 +110,38 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				SetToSHA:    beforeLocalSHA,
 				Hard:        true,
 			})
-			result.Add(&opcodes.ResetRemoteBranchToSHA{
-				Branch:      beforeRemoteName,
-				MustHaveSHA: afterRemoteSHA,
-				SetToSHA:    beforeRemoteSHA,
-			})
+			doPush, abort, err := dialog.ForcePushBranch(beforeRemoteName, args.Inputs.Next())
+			if err != nil {
+				panic(err)
+			}
+			if abort {
+				return program.Program{}
+			}
+			if doPush {
+				result.Add(&opcodes.ResetRemoteBranchToSHA{
+					Branch:      beforeRemoteName,
+					MustHaveSHA: afterRemoteSHA,
+					SetToSHA:    beforeRemoteSHA,
+				})
+			}
 		}
 	}
 
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			result.Add(&opcodes.DeleteTrackingBranch{
-				Branch: addedRemoteBranch,
-			})
+			doPush, abort, err := dialog.ForcePushBranch(addedRemoteBranch, args.Inputs.Next())
+			if err != nil {
+				panic(err)
+			}
+			if abort {
+				return program.Program{}
+			}
+			if doPush {
+				result.Add(&opcodes.DeleteTrackingBranch{
+					Branch: addedRemoteBranch,
+				})
+			}
 		}
 	}
 
@@ -185,5 +203,6 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   configdomain.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
+	Inputs                   components.TestInputs
 	UndoablePerennialCommits []gitdomain.SHA
 }
