@@ -204,6 +204,6 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   configdomain.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
-	Inputs                   Mutable[components.TestInputs]
+	Inputs                   components.TestInputs
 	UndoablePerennialCommits []gitdomain.SHA
 }

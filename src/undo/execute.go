@@ -29,7 +29,7 @@ func Execute(args ExecuteArgs) error {
 		DryRun:         args.RunState.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
-		Inputs:         args.Inputs,
+		Inputs:         args.DialogTestInputs,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
@@ -53,12 +53,12 @@ type ExecuteArgs struct {
 	Backend          gitdomain.RunnerQuerier
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
+	DialogTestInputs components.TestInputs
 	FinalMessages    stringslice.Collector
 	Frontend         gitdomain.Runner
 	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
-	Inputs           Mutable[components.TestInputs]
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 	Verbose          configdomain.Verbose

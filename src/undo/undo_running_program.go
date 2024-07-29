@@ -37,7 +37,7 @@ type CreateUndoProgramArgs struct {
 	DryRun         configdomain.DryRun
 	Git            git.Commands
 	HasOpenChanges bool
-	Inputs         Mutable[components.TestInputs]
+	Inputs         components.TestInputs
 	NoPushHook     configdomain.NoPushHook
 	RunState       runstate.RunState
 }
