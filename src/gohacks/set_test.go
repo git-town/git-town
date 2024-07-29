@@ -20,6 +20,14 @@ func TestSet(t *testing.T) {
 		must.Eq(t, []int{1}, set.Values())
 	})
 
+	t.Run("AddSet", func(t *testing.T) {
+		t.Parallel()
+		set := gohacks.NewSet[int](1)
+		other := gohacks.NewSet(2, 3)
+		set.AddSet(other)
+		must.Eq(t, []int{1, 2, 3}, set.Values())
+	})
+
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
 		set := gohacks.NewSet(1, 2)
