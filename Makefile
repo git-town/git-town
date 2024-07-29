@@ -143,7 +143,9 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v Memoized.AsFixture \
 																														 | grep -v NewCommitMessages \
 	                                                           | grep -v NewSHAs \
+	                                                           | grep -v NewSet \
 	                                                           | grep -v Paniced \
+	                                                           | grep -v Set.Add \
 	                                                           || true
 	@tput sgr0 || true
 
