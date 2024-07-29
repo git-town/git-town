@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/test/asserts"
-	"golang.org/x/exp/maps"
 )
 
 var unusedWhitelist = []string{ //nolint:gochecknoglobals
@@ -82,7 +82,7 @@ func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
 
 // provides all steps that are executed in .feature files
 func findAllUsedSteps() []string {
-	result := map[string]struct{}{}
+	result := gohacks.Set[string]{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {
@@ -91,10 +91,10 @@ func findAllUsedSteps() []string {
 		fileContent, err := os.ReadFile(path)
 		asserts.NoError(err)
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
-			result[stepInFile] = struct{}{}
+			result.Add(stepInFile)
 		}
 		return nil
 	})
 	asserts.NoError(err)
-	return maps.Keys(result)
+	return result.Values()
 }
