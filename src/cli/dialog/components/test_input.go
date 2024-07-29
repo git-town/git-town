@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -42,7 +41,7 @@ func (self TestInputs) Next() TestInput {
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
-func LoadTestInputs(environmenttVariables []string) Mutable[TestInputs] {
+func LoadTestInputs(environmenttVariables []string) TestInputs {
 	result := NewTestInputs()
 	sort.Strings(environmenttVariables)
 	for _, environmentVariable := range environmenttVariables {
@@ -55,15 +54,15 @@ func LoadTestInputs(environmenttVariables []string) Mutable[TestInputs] {
 			continue
 		}
 		input := ParseTestInput(value)
-		result.Value.Append(input)
+		result.Append(input)
 	}
 	return result
 }
 
-func NewTestInputs(inputs ...TestInput) Mutable[TestInputs] {
-	return NewMutable(&TestInputs{
+func NewTestInputs(inputs ...TestInput) TestInputs {
+	return TestInputs{
 		inputs: &inputs,
-	})
+	}
 }
 
 // ParseTestInput converts the given input data in the environment variable format

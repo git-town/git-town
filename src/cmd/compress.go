@@ -115,7 +115,7 @@ type compressBranchesData struct {
 	branchesToCompress  []compressBranchData
 	compressEntireStack bool
 	config              config.ValidatedConfig
-	dialogTestInputs    Mutable[components.TestInputs]
+	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
