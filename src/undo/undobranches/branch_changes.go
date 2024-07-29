@@ -130,7 +130,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			doPush, abort, err := dialog.ForcePushBranch(addedRemoteBranch, args.Inputs.Next())
+			doPush, abort, err := dialog.DeleteRemoteBranch(addedRemoteBranch, args.Inputs.Next())
 			if err != nil {
 				panic(err)
 			}
