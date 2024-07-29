@@ -4,10 +4,11 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/vm/program"
 )
 
-func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig, touchedBranches []gitdomain.BranchName, inputs components.TestInputs) program.Program {
+func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig, touchedBranches []gitdomain.BranchName, inputs Mutable[components.TestInputs]) program.Program {
 	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
 	branchSpans = branchSpans.KeepOnly(touchedBranches)
 	branchChanges := branchSpans.Changes()

@@ -3,6 +3,7 @@ package undo
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/cli/print"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
@@ -28,6 +29,7 @@ func Execute(args ExecuteArgs) error {
 		DryRun:         args.RunState.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
+		Inputs:         args.Inputs,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})
@@ -56,6 +58,7 @@ type ExecuteArgs struct {
 	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
+	Inputs           Mutable[components.TestInputs]
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 	Verbose          configdomain.Verbose

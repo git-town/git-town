@@ -22,6 +22,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		DryRun:         args.Config.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: false,
+		Inputs:         args.DialogTestInputs,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
 	})

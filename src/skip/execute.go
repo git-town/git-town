@@ -51,6 +51,7 @@ func Execute(args ExecuteArgs) error {
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
+		Inputs:                  args.TestInputs,
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
 		Verbose:                 args.Verbose,
@@ -108,6 +109,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		BeginBranch:              args.InitialBranch,
 		Config:                   args.Config.Config,
 		EndBranch:                args.InitialBranch,
+		Inputs:                   args.TestInputs,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{

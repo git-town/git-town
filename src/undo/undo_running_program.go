@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/undo/undostash"
@@ -36,7 +37,7 @@ type CreateUndoProgramArgs struct {
 	DryRun         configdomain.DryRun
 	Git            git.Commands
 	HasOpenChanges bool
-	Inputs         components.TestInputs
+	Inputs         Mutable[components.TestInputs]
 	NoPushHook     configdomain.NoPushHook
 	RunState       runstate.RunState
 }

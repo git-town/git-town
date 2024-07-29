@@ -203,6 +203,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 		Git:              args.Git,
 		HasOpenChanges:   args.HasOpenChanges,
 		InitialStashSize: runState.BeginStashSize,
+		Inputs:           args.DialogTestInputs,
 		RootDir:          args.RootDir,
 		RunState:         runState,
 		Verbose:          args.Verbose,
