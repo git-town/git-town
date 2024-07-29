@@ -131,19 +131,19 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
 	@tput bold || true
 	@tput setaf 1 || true
-	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v Memoized.AsFixture \
-	                                                           | grep -v BranchExists \
+	@tools/rta deadcode -test github.com/git-town/git-town/v14 | grep -v BranchExists \
 	                                                           | grep -v 'Create$$' \
 	                                                           | grep -v CreateFile \
 	                                                           | grep -v CreateGitTown \
+	                                                           | grep -v EmptyConfigSnapshot \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
 	                                                           | grep -v FilterErr \
 	                                                           | grep -v IsGitRepo \
-	                                                           | grep -v NewCommitMessages \
+	                                                           | grep -v Memoized.AsFixture \
+																														 | grep -v NewCommitMessages \
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v Paniced \
-	                                                           | grep -v EmptyConfigSnapshot \
 	                                                           || true
 	@tput sgr0 || true
 
