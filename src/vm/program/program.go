@@ -108,8 +108,7 @@ func (self Program) StringIndented(indent string) string {
 func (self Program) TouchedBranches() []gitdomain.BranchName {
 	result := []gitdomain.BranchName{}
 	for _, opcode := range self {
-		opcodeBranches := shared.OpcodeBranches(opcode)
-		result = append(result, opcodeBranches...)
+		result = append(result, shared.OpcodeBranches(opcode)...)
 	}
 	return result
 }
