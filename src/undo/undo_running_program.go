@@ -1,6 +1,7 @@
 package undo
 
 import (
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -19,7 +20,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 		result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
-		result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches))
+		result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.Inputs))
 	}
 	finalStashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {
@@ -35,6 +36,7 @@ type CreateUndoProgramArgs struct {
 	DryRun         configdomain.DryRun
 	Git            git.Commands
 	HasOpenChanges bool
+	Inputs         components.TestInputs
 	NoPushHook     configdomain.NoPushHook
 	RunState       runstate.RunState
 }
