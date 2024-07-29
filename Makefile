@@ -136,14 +136,16 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v 'Create$$' \
 	                                                           | grep -v CreateFile \
 	                                                           | grep -v CreateGitTown \
+	                                                           | grep -v EmptyConfigSnapshot \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
 	                                                           | grep -v FilterErr \
 	                                                           | grep -v IsGitRepo \
 	                                                           | grep -v NewCommitMessages \
 	                                                           | grep -v NewSHAs \
+	                                                           | grep -v NewSet \
 	                                                           | grep -v Paniced \
-	                                                           | grep -v EmptyConfigSnapshot \
+	                                                           | grep -v Set.Add \
 	                                                           || true
 	@tput sgr0 || true
 

@@ -21,6 +21,7 @@ func TestSet(t *testing.T) {
 	})
 
 	t.Run("Contains", func(t *testing.T) {
+		t.Parallel()
 		set := gohacks.NewSet(1, 2)
 		must.True(t, set.Contains(1))
 		must.True(t, set.Contains(2))
