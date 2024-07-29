@@ -83,6 +83,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 	if err = validateProposeData(data); err != nil {
 		return err
 	}
+	runProgram := proposeProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -92,7 +93,8 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            proposeProgram(data),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

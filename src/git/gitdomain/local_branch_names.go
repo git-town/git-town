@@ -33,6 +33,14 @@ func (self LocalBranchNames) AppendAllMissing(others ...LocalBranchName) LocalBr
 	return slice.AppendAllMissing(self, others...)
 }
 
+func (self LocalBranchNames) BranchNames() []BranchName {
+	result := make([]BranchName, len(self))
+	for l, localBranchName := range self {
+		result[l] = localBranchName.BranchName()
+	}
+	return result
+}
+
 // Contains indicates whether this collection contains the given branch.
 func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)

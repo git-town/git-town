@@ -29,6 +29,7 @@ type RunState struct {
 	EndStashSize             Option[gitdomain.StashSize]        // size of the Git stash after the Git Town command that this RunState is for ran
 	FinalUndoProgram         program.Program                    `exhaustruct:"optional"` // additional opcodes to run after this RunState was undone
 	RunProgram               program.Program                    // remaining opcodes of the Git Town command that this RunState is for
+	TouchedBranches          []gitdomain.BranchName             // the branches that are touched by the Git Town command that this RunState is for
 	UndoablePerennialCommits []gitdomain.SHA                    `exhaustruct:"optional"` // contains the SHAs of commits on perennial branches that can safely be undone
 	UnfinishedDetails        OptionP[UnfinishedRunStateDetails] `exhaustruct:"optional"`
 }

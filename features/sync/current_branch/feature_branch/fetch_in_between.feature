@@ -1,4 +1,4 @@
-Feature: handle intermittent "git fetch" while resolving conflicts
+Feature: do not undo branches that were pulled in through "git fetch" while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
     Given a Git repo with origin
