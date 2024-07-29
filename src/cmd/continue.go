@@ -113,7 +113,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: localBranches,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
