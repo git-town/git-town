@@ -68,6 +68,7 @@ func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomai
 	if err != nil || exit {
 		return err
 	}
+	runProgram := appendProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -77,7 +78,8 @@ func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            appendProgram(data),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

@@ -68,7 +68,7 @@ func executeKill(args []string, dryRun configdomain.DryRun, verbose configdomain
 	if err != nil {
 		return err
 	}
-	steps, finalUndoProgram := killProgram(data)
+	runProgram, finalUndoProgram := killProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -78,8 +78,9 @@ func executeKill(args []string, dryRun configdomain.DryRun, verbose configdomain
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            steps,
 		FinalUndoProgram:      finalUndoProgram,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
