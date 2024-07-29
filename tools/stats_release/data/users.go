@@ -1,35 +1,18 @@
 package data
 
 import (
-	"sort"
-	"strings"
-
-	"golang.org/x/exp/maps"
+	"github.com/git-town/git-town/v14/src/gohacks"
 )
 
 // collection of unique GitHub usernames
 type Users struct {
-	list map[string]struct{}
+	gohacks.Set[string]
 }
 
-func NewUsers() Users {
-	return Users{
-		list: map[string]struct{}{},
-	}
+func NewUsers(users ...string) Users {
+	return Users{gohacks.NewSet(users...)}
 }
 
-func (self *Users) AddUser(id string) {
-	self.list[id] = struct{}{}
-}
-
-func (self *Users) AddUsers(users Users) {
-	for _, user := range users.Users() {
-		self.AddUser(user)
-	}
-}
-
-func (self *Users) Users() []string {
-	result := maps.Keys(self.list)
-	sort.Slice(result, func(i, j int) bool { return strings.ToLower(result[i]) < strings.ToLower(result[j]) })
-	return result
+func (self Users) AddUsers(other Users) {
+	self.Add(other.Values()...)
 }
