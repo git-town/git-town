@@ -12,9 +12,7 @@ type Set[T cmp.Ordered] map[T]struct{}
 
 func NewSet[T cmp.Ordered](values ...T) Set[T] {
 	result := Set[T]{}
-	for _, value := range values {
-		result.Add(value)
-	}
+	result.Add(values...)
 	return result
 }
 
