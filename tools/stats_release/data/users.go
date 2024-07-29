@@ -10,9 +10,10 @@ type Users struct {
 }
 
 func NewUsers(users ...string) Users {
-	return Users{Set: gohacks.NewSet(users...)}
+	result := Users{gohacks.NewSet[string](users...)}
+	return result
 }
 
 func (self Users) AddUsers(other Users) {
-	self.AddMany(other.Values()...)
+	self.Add(other.Values()...)
 }

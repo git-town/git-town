@@ -1,11 +1,16 @@
 package gohacks
 
-import "golang.org/x/exp/maps"
+import (
+	"cmp"
+	"slices"
+
+	"golang.org/x/exp/maps"
+)
 
 // a simple generic Set implementation
-type Set[T comparable] map[T]struct{}
+type Set[T cmp.Ordered] map[T]struct{}
 
-func NewSet[T comparable](values ...T) Set[T] {
+func NewSet[T cmp.Ordered](values ...T) Set[T] {
 	result := Set[T]{}
 	for _, value := range values {
 		result.Add(value)
@@ -13,13 +18,9 @@ func NewSet[T comparable](values ...T) Set[T] {
 	return result
 }
 
-func (self Set[T]) Add(value T) {
-	self[value] = struct{}{}
-}
-
-func (self Set[T]) AddMany(values ...T) {
+func (self Set[T]) Add(values ...T) {
 	for _, value := range values {
-		self.Add(value)
+		self[value] = struct{}{}
 	}
 }
 
@@ -35,5 +36,7 @@ func (self Set[T]) Contains(value T) bool {
 }
 
 func (self Set[T]) Values() []T {
-	return maps.Keys(self)
+	result := maps.Keys(self)
+	slices.Sort(result)
+	return result
 }

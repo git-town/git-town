@@ -6,7 +6,7 @@ import (
 )
 
 func (gh Connector) IssuesParticipants(issues []*github.Issue, issueType string) data.Users {
-	result := data.Users{}
+	result := data.NewUsers()
 	total := len(issues)
 	for i, issue := range issues {
 		result.Add(issueAuthor(*issue))
