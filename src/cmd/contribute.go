@@ -91,6 +91,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
+		TouchedBranches:       data.branchesToMark.Keys().BranchNames(),
 		Verbose:               verbose,
 	})
 }

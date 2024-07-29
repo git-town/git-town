@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v14/src/vm/program"
 )
 
-func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig) program.Program {
+func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig, touchedBranches []gitdomain.BranchName) program.Program {
 	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
-	branchSpans = branchSpans.RemoveRemoteOnlyBranches()
+	branchSpans = branchSpans.KeepOnly(touchedBranches)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		BeginBranch:              beginBranchesSnapshot.Active.GetOrDefault(),

@@ -12,6 +12,57 @@ import (
 func TestBranchSpan(t *testing.T) {
 	t.Parallel()
 
+	t.Run("BranchNames", func(t *testing.T) {
+		t.Parallel()
+		t.Run("same branch name before and after", func(t *testing.T) {
+			branchSpan := undobranches.BranchSpan{
+				Before: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+				}),
+				After: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+				}),
+			}
+			have := branchSpan.BranchNames()
+			want := []gitdomain.BranchName{"branch", "origin/branch"}
+			must.Eq(t, want, have)
+		})
+
+		t.Run("different branch name before and after", func(t *testing.T) {
+			branchSpan := undobranches.BranchSpan{
+				Before: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				}),
+				After: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
+				}),
+			}
+			have := branchSpan.BranchNames()
+			want := []gitdomain.BranchName{"branch-1", "branch-2", "origin/branch-1", "origin/branch-2"}
+			must.Eq(t, want, have)
+		})
+
+		t.Run("all none", func(t *testing.T) {
+			branchSpan := undobranches.BranchSpan{
+				Before: Some(gitdomain.BranchInfo{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					RemoteName: None[gitdomain.RemoteBranchName](),
+				}),
+				After: Some(gitdomain.BranchInfo{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					RemoteName: None[gitdomain.RemoteBranchName](),
+				}),
+			}
+			have := branchSpan.BranchNames()
+			want := []gitdomain.BranchName{}
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("IsOmniChange", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {

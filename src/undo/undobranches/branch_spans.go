@@ -3,6 +3,7 @@ package undobranches
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 )
 
@@ -97,11 +98,11 @@ func (self BranchSpans) Changes() BranchChanges {
 	}
 }
 
-// provides a copy of this BranchSpans with all remote-only branches removed
-func (self BranchSpans) RemoveRemoteOnlyBranches() BranchSpans {
+// keeps only the branch spans that contain any of the given branches
+func (self BranchSpans) KeepOnly(branchesToKeep []gitdomain.BranchName) BranchSpans {
 	result := BranchSpans{}
 	for _, branchSpan := range self {
-		if branchSpan.ShouldUndo() {
+		if slice.ContainsAny(branchSpan.BranchNames(), branchesToKeep) {
 			result = append(result, branchSpan)
 		}
 	}

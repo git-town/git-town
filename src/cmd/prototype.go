@@ -82,6 +82,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
+		TouchedBranches:       branchNames.BranchNames(),
 		Verbose:               verbose,
 	})
 }
