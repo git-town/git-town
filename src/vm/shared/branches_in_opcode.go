@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 )
 
-func OpcodeBranches(code Opcode) []gitdomain.BranchName {
+func BranchesInOpcode(code Opcode) []gitdomain.BranchName {
 	result := []gitdomain.BranchName{}
 	valueOfSelf := reflect.ValueOf(code).Elem()
 	typeOfSelf := valueOfSelf.Type()
