@@ -23,9 +23,7 @@ func (self Set[T]) Add(values ...T) {
 }
 
 func (self Set[T]) AddSet(other Set[T]) {
-	for _, value := range other.Values() {
-		self.Add(value)
-	}
+	self.Add(other.Values()...)
 }
 
 func (self Set[T]) Contains(value T) bool {
