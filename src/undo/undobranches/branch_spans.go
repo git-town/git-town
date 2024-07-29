@@ -101,8 +101,7 @@ func (self BranchSpans) Changes() BranchChanges {
 func (self BranchSpans) KeepOnlyTheseBranches(branchesToKeep []gitdomain.BranchName) BranchSpans {
 	result := BranchSpans{}
 	for _, branchSpan := range self {
-		spanBranches := branchSpan.BranchNames()
-		if slice.ContainsAny(spanBranches, branchesToKeep) {
+		if slice.ContainsAny(branchSpan.BranchNames(), branchesToKeep) {
 			result = append(result, branchSpan)
 		}
 	}
