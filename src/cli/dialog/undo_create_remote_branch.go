@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	undoCreateRemoteBranchTitle = `confirm undo`
+	undoCreateRemoteBranchTitle = `confirm undo action`
 	undoCreateRemoteBranchHelp  = `
 Delete remote branch %q?
 
@@ -31,6 +31,7 @@ func UndoCreateRemoteBranch(branch gitdomain.RemoteBranchName, inputs components
 		},
 	}
 	helpText := fmt.Sprintf(undoCreateRemoteBranchHelp, branch)
-	entry, aborted, err := components.RadioList(entries, 0, undoCreateRemoteBranchTitle, helpText, inputs)
-	return entry.Bool(), aborted, err
+	selection, aborted, err := components.RadioList(entries, 0, undoCreateRemoteBranchTitle, helpText, inputs)
+	fmt.Printf("delete branch %q: %s\n", branch, components.FormattedSelection(selection.String(), aborted))
+	return selection.Bool(), aborted, err
 }

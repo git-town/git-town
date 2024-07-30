@@ -22,7 +22,7 @@ Commit to be pushed: %q
 type BoolEntry bool
 
 func (self BoolEntry) String() string {
-	return fmt.Sprintf("%t", self)
+	return fmt.Sprintf("%v", self.Bool())
 }
 
 func (self BoolEntry) Bool() bool {
