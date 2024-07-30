@@ -79,6 +79,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And the perennial branches are now "production"
+    And local Git Town setting "create-prototype-branches" now doesn't exist
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
@@ -106,6 +107,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And local Git Town setting "create-prototype-branches" now doesn't exist
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "perennial-regex" is now "qa.*"
     And local Git Town setting "push-new-branches" is now "true"

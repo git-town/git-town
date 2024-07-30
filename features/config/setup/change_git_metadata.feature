@@ -64,6 +64,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
+    And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "hosting-origin-hostname" is now "code"
@@ -73,7 +74,6 @@ Feature: change existing information in Git metadata
     And local Git Town setting "perennial-regex" is now "3366"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
