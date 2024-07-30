@@ -10,8 +10,8 @@ Feature: sync the current prototype branch in a local repo
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
     And the current branch is "prototype"
-    And Git Town setting "sync-prototype-strategy" is "rebase"
     And Git Town setting "sync-feature-strategy" is "merge"
+    And an uncommitted file
     When I run "git-town sync"
 
   @this
@@ -20,11 +20,10 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | COMMAND         |
       | prototype | git rebase main |
     And these commits exist now
-      | BRANCH    | LOCATION | MESSAGE                            |
-      | main      | local    | main commit                        |
-      | prototype | local    | local commit                       |
-      |           |          | main commit                        |
-      |           |          | Merge branch 'main' into prototype |
+      | BRANCH    | LOCATION | MESSAGE      |
+      | main      | local    | main commit  |
+      | prototype | local    | main commit  |
+      |           |          | local commit |
     And all branches are now synchronized
     And the current branch is still "prototype"
     And the uncommitted file still exists
