@@ -427,7 +427,6 @@ func TestLineage(t *testing.T) {
 
 	t.Run("Merge", func(t *testing.T) {
 		t.Parallel()
-
 		lineage1 := configdomain.NewLineage()
 		lineage1.Add("one", "main")
 		lineage1.Add("two", "one")
