@@ -162,7 +162,7 @@ type continueData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	connector        Option[hostingdomain.Connector]
-	dialogTestInputs Mutable[components.TestInputs]
+	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	stashSize        gitdomain.StashSize
