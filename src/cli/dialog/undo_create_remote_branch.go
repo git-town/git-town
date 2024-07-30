@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	deleteRemoteBranchTitle = `confirm undo`
-	deleteRemoteBranchHelp  = `
+	undoCreateRemoteBranchTitle = `confirm undo`
+	undoCreateRemoteBranchHelp  = `
 Delete remote branch %q?
 
 `
@@ -30,7 +30,7 @@ func DeleteRemoteBranch(branch gitdomain.RemoteBranchName, inputs components.Tes
 			Text:    "Yes",
 		},
 	}
-	helpText := fmt.Sprintf(deleteRemoteBranchHelp, branch)
-	entry, aborted, err := components.RadioList(entries, 0, deleteRemoteBranchTitle, helpText, inputs)
+	helpText := fmt.Sprintf(undoCreateRemoteBranchHelp, branch)
+	entry, aborted, err := components.RadioList(entries, 0, undoCreateRemoteBranchTitle, helpText, inputs)
 	return entry.Bool(), aborted, err
 }
