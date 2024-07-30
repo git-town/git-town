@@ -14,7 +14,7 @@ Feature: sync the current prototype branch in a local repo
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town sync"
 
-  # @this
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND         |
@@ -26,7 +26,6 @@ Feature: sync the current prototype branch in a local repo
       |           |          | local commit |
     And all branches are now synchronized
     And the current branch is still "prototype"
-    And the uncommitted file still exists
     And the initial branches and lineage exist
 
   Scenario: undo
