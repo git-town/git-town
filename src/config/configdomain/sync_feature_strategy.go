@@ -12,12 +12,12 @@ const (
 	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
 )
 
-func (self SyncFeatureStrategy) SyncStrategy() SyncStrategy {
-	return SyncStrategy(self)
-}
-
 func (self SyncFeatureStrategy) String() string {
 	return self.SyncStrategy().String()
+}
+
+func (self SyncFeatureStrategy) SyncStrategy() SyncStrategy {
+	return SyncStrategy(self)
 }
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {

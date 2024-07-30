@@ -12,12 +12,12 @@ const (
 	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
 )
 
-func (self SyncPerennialStrategy) SyncStrategy() SyncStrategy {
-	return SyncStrategy(self)
-}
-
 func (self SyncPerennialStrategy) String() string {
 	return self.SyncStrategy().String()
+}
+
+func (self SyncPerennialStrategy) SyncStrategy() SyncStrategy {
+	return SyncStrategy(self)
 }
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
