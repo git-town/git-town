@@ -1,36 +1,29 @@
 package configdomain
 
 import (
-	"fmt"
-	"strings"
-
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
-type SyncPerennialStrategy string
+type SyncPerennialStrategy SyncStrategy
 
-func (self SyncPerennialStrategy) String() string { return string(self) }
-func (self SyncPerennialStrategy) StringRef() *string {
-	result := string(self)
-	return &result
+func (self SyncPerennialStrategy) String() string {
+	return self.SyncStrategy().String()
+}
+
+func (self SyncPerennialStrategy) SyncStrategy() SyncStrategy {
+	return SyncStrategy(self)
 }
 
 const (
-	SyncPerennialStrategyMerge  = SyncPerennialStrategy("merge")
-	SyncPerennialStrategyRebase = SyncPerennialStrategy("rebase")
+	SyncPerennialStrategyMerge  = SyncPerennialStrategy(SyncStrategyMerge)
+	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
 )
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
-	switch strings.ToLower(text) {
-	case "merge":
-		return SyncPerennialStrategyMerge, nil
-	case "rebase", "":
-		return SyncPerennialStrategyRebase, nil
-	default:
-		return SyncPerennialStrategyMerge, fmt.Errorf(messages.ConfigSyncPerennialStrategyUnknown, text)
-	}
+	syncStrategyOpt, err := ParseSyncStrategy(text)
+	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
+	return SyncPerennialStrategy(syncStrategy), err
 }
 
 func NewSyncPerennialStrategyOption(text string) (Option[SyncPerennialStrategy], error) {
