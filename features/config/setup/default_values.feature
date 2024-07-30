@@ -23,6 +23,7 @@ Feature: Accepting all default values leads to a working setup
       | sync-upstream               | enter |
       | push-new-branches           | enter |
       | push-hook                   | enter |
+      | create-prototype-branches   | enter |
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
       | save config to config file  | enter |
@@ -31,6 +32,7 @@ Feature: Accepting all default values leads to a working setup
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches
+    And local Git Town setting "create-prototype-branches" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
@@ -68,6 +70,14 @@ Feature: Accepting all default values leads to a working setup
       # and Git Town will create the missing tracking branch
       # on the first run of "git sync".
       push-new-branches = false
+
+      # The "create-prototype-branches" setting determines whether Git Town
+      # always creates prototype branches.
+      # Prototype branches sync only locally and don't create a tracking branch
+      # until they are proposed.
+      #
+      # More info at https://www.git-town.com/preferences/create-prototype-branches.
+      create-prototype-branches = false
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
@@ -161,6 +171,7 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    And local Git Town setting "create-prototype-branches" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
