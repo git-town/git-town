@@ -14,7 +14,6 @@ Feature: sync the current prototype branch in a local repo
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                       |
@@ -33,10 +32,7 @@ Feature: sync the current prototype branch in a local repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                                              |
-      | prototype | git add -A                                           |
-      |           | git stash                                            |
-      |           | git reset --hard {{ sha-before-run 'local commit' }} |
-      |           | git stash pop                                        |
+      | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"
     And the initial commits exist
     And the initial branches and lineage exist
