@@ -23,7 +23,8 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
+// Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
+func (self *Access) AddValueToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
 		if childName == "" {
@@ -270,7 +271,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 			}
 		}
 		snapshot[configKey] = value
-		err := self.AddKeyToPartialConfig(configKey, value, &config)
+		err := self.AddValueToPartialConfig(configKey, value, &config)
 		if err != nil {
 			return snapshot, config, err
 		}
