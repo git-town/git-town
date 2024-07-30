@@ -23,14 +23,17 @@ Feature: Accepting all default values leads to a working setup
       | sync-upstream               | enter |
       | push-new-branches           | enter |
       | push-hook                   | enter |
+      | create-prototype-branches   | enter |
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
       | save config to config file  | enter |
 
+  @this
   Scenario: result
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches
+    And local Git Town setting "create-prototype-branches" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
