@@ -42,6 +42,7 @@ func TestSave(t *testing.T) {
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.UnvalidatedConfig{
+			CreatePrototypeBranches:  true,
 			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 			HostingPlatform:          None[configdomain.HostingPlatform](),
 			Lineage:                  configdomain.NewLineage(),
@@ -88,6 +89,14 @@ push-hook = true
 # and Git Town will create the missing tracking branch
 # on the first run of "git sync".
 push-new-branches = false
+
+# The "create-prototype-branches" setting determines whether Git Town
+# always creates prototype branches.
+# Prototype branches sync only locally and don't create a tracking branch
+# until they are proposed.
+#
+# More info at https://www.git-town.com/preferences/create-prototype-branches.
+create-prototype-branches = true
 
 # Should "git ship" delete the tracking branch?
 # You want to disable this if your code hosting platform
@@ -206,6 +215,14 @@ push-hook = true
 # and Git Town will create the missing tracking branch
 # on the first run of "git sync".
 push-new-branches = false
+
+# The "create-prototype-branches" setting determines whether Git Town
+# always creates prototype branches.
+# Prototype branches sync only locally and don't create a tracking branch
+# until they are proposed.
+#
+# More info at https://www.git-town.com/preferences/create-prototype-branches.
+create-prototype-branches = false
 
 # Should "git ship" delete the tracking branch?
 # You want to disable this if your code hosting platform

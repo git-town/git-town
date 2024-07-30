@@ -219,7 +219,7 @@ func appendProgram(data appendFeatureData) program.Program {
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
-	if data.prototype.IsTrue() {
+	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}

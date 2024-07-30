@@ -45,6 +45,7 @@ const (
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
+	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
@@ -83,6 +84,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingOriginHostname,
 	KeyHostingPlatform,
 	KeyContributionBranches,
+	KeyCreatePrototypeBranches,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
