@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
@@ -86,11 +85,11 @@ type ConfigArgs struct {
 	Backend            gitdomain.RunnerQuerier
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
-	DialogTestInputs   Mutable[components.TestInputs]
+	DialogTestInputs   components.TestInputs
 	Frontend           gitdomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus
-	TestInputs         Mutable[components.TestInputs]
+	TestInputs         components.TestInputs
 	Unvalidated        config.UnvalidatedConfig
 }

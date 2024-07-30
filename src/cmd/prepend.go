@@ -107,7 +107,7 @@ type prependData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      gitdomain.BranchInfos
 	config              config.ValidatedConfig
-	dialogTestInputs    Mutable[components.TestInputs]
+	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool

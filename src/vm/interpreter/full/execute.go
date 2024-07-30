@@ -58,7 +58,7 @@ type ExecuteArgs struct {
 	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
 	Connector               Option[hostingdomain.Connector]
-	DialogTestInputs        Mutable[components.TestInputs]
+	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector
 	Frontend                gitdomain.Runner
 	Git                     git.Commands

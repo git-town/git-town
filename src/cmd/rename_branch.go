@@ -114,7 +114,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 type renameBranchData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	dialogTestInputs Mutable[components.TestInputs]
+	dialogTestInputs components.TestInputs
 	dryRun           configdomain.DryRun
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

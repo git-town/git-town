@@ -41,7 +41,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 		unfinishedDetails.EndBranch,
 		unfinishedDetails.EndTime,
 		unfinishedDetails.CanSkip,
-		args.DialogTestInputs.Value.Next(),
+		args.DialogTestInputs.Next(),
 	)
 	if err != nil {
 		return false, err
@@ -68,7 +68,7 @@ type UnfinishedStateArgs struct {
 	Backend           gitdomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[hostingdomain.Connector]
-	DialogTestInputs  Mutable[components.TestInputs]
+	DialogTestInputs  components.TestInputs
 	FinalMessages     stringslice.Collector
 	Frontend          gitdomain.Runner
 	Git               git.Commands
@@ -129,7 +129,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Value.Next())
+		validatedMain, exit, err := dialog.MainBranch(localBranches, args.git.DefaultBranch(args.backend), args.dialogInputs.Next())
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -212,7 +212,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 
 type quickValidateConfigArgs struct {
 	backend      gitdomain.RunnerQuerier
-	dialogInputs Mutable[components.TestInputs]
+	dialogInputs components.TestInputs
 	git          git.Commands
 	unvalidated  config.UnvalidatedConfig
 }

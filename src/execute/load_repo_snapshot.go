@@ -76,7 +76,7 @@ type LoadRepoSnapshotArgs struct {
 	Backend               gitdomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
-	DialogTestInputs      Mutable[components.TestInputs]
+	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              gitdomain.Runner

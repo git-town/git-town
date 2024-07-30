@@ -69,7 +69,7 @@ type ExecuteArgs struct {
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	TestInputs      Mutable[components.TestInputs]
+	TestInputs      components.TestInputs
 	Verbose         configdomain.Verbose
 }
 
