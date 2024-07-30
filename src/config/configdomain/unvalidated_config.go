@@ -112,72 +112,6 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.PerennialBranches
 }
 
-// Merges the given PartialConfig into this configuration object.
-func (self *UnvalidatedConfig) Merge(other PartialConfig) {
-	for key, value := range other.Aliases {
-		self.Aliases[key] = value
-	}
-	for _, entry := range other.Lineage.Entries() {
-		self.Lineage.Add(entry.Child, entry.Parent)
-	}
-	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
-	if createPrototypeBranches, hasCreatePrototypeBranches := other.CreatePrototypeBranches.Get(); hasCreatePrototypeBranches {
-		self.CreatePrototypeBranches = createPrototypeBranches
-	}
-	if other.HostingOriginHostname.IsSome() {
-		self.HostingOriginHostname = other.HostingOriginHostname
-	}
-	if other.HostingPlatform.IsSome() {
-		self.HostingPlatform = other.HostingPlatform
-	}
-	if other.GiteaToken.IsSome() {
-		self.GiteaToken = other.GiteaToken
-	}
-	if other.GitHubToken.IsSome() {
-		self.GitHubToken = other.GitHubToken
-	}
-	if other.GitLabToken.IsSome() {
-		self.GitLabToken = other.GitLabToken
-	}
-	if other.GitUserEmail.IsSome() {
-		self.GitUserEmail = other.GitUserEmail
-	}
-	if other.GitUserName.IsSome() {
-		self.GitUserName = other.GitUserName
-	}
-	if branch, has := other.MainBranch.Get(); has {
-		self.MainBranch = Some(branch)
-	}
-	if pushNewBranches, has := other.PushNewBranches.Get(); has {
-		self.PushNewBranches = pushNewBranches
-	}
-	self.ObservedBranches = append(self.ObservedBranches, other.ObservedBranches...)
-	if offline, has := other.Offline.Get(); has {
-		self.Offline = offline
-	}
-	self.ParkedBranches = append(self.ParkedBranches, other.ParkedBranches...)
-	self.PerennialBranches = append(self.PerennialBranches, other.PerennialBranches...)
-	if other.PerennialRegex.IsSome() {
-		self.PerennialRegex = other.PerennialRegex
-	}
-	self.PrototypeBranches = append(self.PrototypeBranches, other.PrototypeBranches...)
-	if value, has := other.PushHook.Get(); has {
-		self.PushHook = value
-	}
-	if value, has := other.ShipDeleteTrackingBranch.Get(); has {
-		self.ShipDeleteTrackingBranch = value
-	}
-	if value, has := other.SyncFeatureStrategy.Get(); has {
-		self.SyncFeatureStrategy = value
-	}
-	if value, has := other.SyncPerennialStrategy.Get(); has {
-		self.SyncPerennialStrategy = value
-	}
-	if value, has := other.SyncUpstream.Get(); has {
-		self.SyncUpstream = value
-	}
-}
-
 func (self *UnvalidatedConfig) MustKnowParent(branch gitdomain.LocalBranchName) bool {
 	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsContributionBranch(branch) && !self.IsObservedBranch(branch)
 }
@@ -225,11 +159,11 @@ func DefaultConfig() UnvalidatedConfig {
 }
 
 func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
-	result := DefaultConfig()
+	result := EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result.Merge(configFile)
 	}
 	result.Merge(globalGitConfig)
 	result.Merge(localGitConfig)
-	return result
+	return result.ToUnvalidatedConfig(DefaultConfig())
 }
