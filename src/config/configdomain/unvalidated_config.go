@@ -161,7 +161,7 @@ func DefaultConfig() UnvalidatedConfig {
 }
 
 func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
-	result := EmptyPartialConfig()
+	var result PartialConfig
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = configFile
 	}
