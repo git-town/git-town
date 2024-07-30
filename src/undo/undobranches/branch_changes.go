@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 	"github.com/git-town/git-town/v14/src/vm/opcodes"
 	"github.com/git-town/git-town/v14/src/vm/program"
@@ -111,7 +110,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				SetToSHA:    beforeLocalSHA,
 				Hard:        true,
 			})
-			doPush, abort, err := dialog.ForcePushBranch(beforeRemoteName, afterLocalSHA, beforeLocalSHA, args.Inputs.Value.Next())
+			doPush, abort, err := dialog.ForcePushBranch(beforeRemoteName, afterLocalSHA, beforeLocalSHA, args.Inputs.Next())
 			if err != nil {
 				panic(err)
 			}
@@ -131,7 +130,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			doPush, abort, err := dialog.DeleteRemoteBranch(addedRemoteBranch, args.Inputs.Value.Next())
+			doPush, abort, err := dialog.UndoCreateRemoteBranch(addedRemoteBranch, args.Inputs.Next())
 			if err != nil {
 				panic(err)
 			}

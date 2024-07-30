@@ -17,17 +17,17 @@ Delete remote branch %q?
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func DeleteRemoteBranch(branch gitdomain.RemoteBranchName, inputs components.TestInput) (result bool, aborted bool, err error) {
+func UndoCreateRemoteBranch(branch gitdomain.RemoteBranchName, inputs components.TestInput) (result bool, aborted bool, err error) {
 	entries := list.Entries[BoolEntry]{
-		{
-			Data:    false,
-			Enabled: true,
-			Text:    "No",
-		},
 		{
 			Data:    true,
 			Enabled: true,
 			Text:    "Yes",
+		},
+		{
+			Data:    false,
+			Enabled: true,
+			Text:    "No",
 		},
 	}
 	helpText := fmt.Sprintf(undoCreateRemoteBranchHelp, branch)
