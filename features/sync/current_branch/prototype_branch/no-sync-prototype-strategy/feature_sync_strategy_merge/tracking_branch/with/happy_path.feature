@@ -16,23 +16,25 @@ Feature: sync the current prototype branch with tracking branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                     |
-      | prototype | git fetch --prune --tags    |
-      |           | git checkout main           |
-      | main      | git rebase origin/main      |
-      |           | git push                    |
-      |           | git checkout prototype      |
-      | prototype | git rebase main             |
-      |           | git rebase origin/prototype |
+      | BRANCH    | COMMAND                                   |
+      | prototype | git fetch --prune --tags                  |
+      |           | git checkout main                         |
+      | main      | git rebase origin/main                    |
+      |           | git push                                  |
+      |           | git checkout prototype                    |
+      | prototype | git merge --no-edit --ff origin/prototype |
+      |           | git merge --no-edit --ff main             |
     And the current branch is still "prototype"
     And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE            |
-      | main      | local, origin | main local commit  |
-      |           |               | main origin commit |
-      | prototype | local, origin | origin commit      |
-      |           | local         | main local commit  |
-      |           |               | main origin commit |
-      |           |               | local commit       |
+      | BRANCH    | LOCATION      | MESSAGE                                                        |
+      | main      | local, origin | main local commit                                              |
+      |           |               | main origin commit                                             |
+      | prototype | local         | local commit                                                   |
+      |           | local, origin | origin commit                                                  |
+      |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
+      |           |               | main local commit                                              |
+      |           |               | main origin commit                                             |
+      |           |               | Merge branch 'main' into prototype                             |
 
   Scenario: undo
     When I run "git-town undo"
