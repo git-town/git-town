@@ -30,6 +30,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(selectCommitAuthorCmd())
 	debugCommand.AddCommand(switchBranch())
 	debugCommand.AddCommand(undoCreateRemoteBranch())
+	debugCommand.AddCommand(undoForcePush())
 	debugCommand.AddCommand(unfinishedStateCommitAuthorCmd())
 	debugCommand.AddCommand(welcome())
 	return debugCommand

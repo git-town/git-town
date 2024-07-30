@@ -110,7 +110,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				SetToSHA:    beforeLocalSHA,
 				Hard:        true,
 			})
-			doPush, abort, err := dialog.ForcePushBranch(beforeRemoteName, afterLocalSHA, beforeLocalSHA, args.Inputs.Next())
+			doPush, abort, err := dialog.UndoForcePush(beforeRemoteName, afterLocalSHA, beforeLocalSHA, args.Inputs.Next())
 			if err != nil {
 				panic(err)
 			}

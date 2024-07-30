@@ -13,8 +13,8 @@ const (
 	undoForcePushHelp = `
 Undo changes to remote branch %q?
 
-Existing commit: %q
-Commit to be pushed: %q
+Existing commit SHA: %s
+Commit to be pushed: %s
 
 `
 )
@@ -30,20 +30,21 @@ func (self BoolEntry) Bool() bool {
 }
 
 // GitHubToken lets the user enter the GitHub API token.
-func ForcePushBranch(branch gitdomain.RemoteBranchName, existingSHA, SHAToPush gitdomain.SHA, inputs components.TestInput) (result bool, aborted bool, err error) {
+func UndoForcePush(branch gitdomain.RemoteBranchName, existingSHA, SHAToPush gitdomain.SHA, inputs components.TestInput) (result bool, aborted bool, err error) {
 	entries := list.Entries[BoolEntry]{
-		{
-			Data:    false,
-			Enabled: true,
-			Text:    "No",
-		},
 		{
 			Data:    true,
 			Enabled: true,
 			Text:    "Yes",
 		},
+		{
+			Data:    false,
+			Enabled: true,
+			Text:    "No",
+		},
 	}
 	helpText := fmt.Sprintf(undoForcePushHelp, branch, existingSHA, SHAToPush)
-	entry, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, inputs)
-	return entry.Bool(), aborted, err
+	selection, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, inputs)
+	fmt.Printf("undo force-push %q: %s\n", branch, components.FormattedSelection(selection.String(), aborted))
+	return selection.Bool(), aborted, err
 }
