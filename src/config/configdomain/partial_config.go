@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
@@ -42,72 +43,33 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 // Merges the given PartialConfig into this configuration object.
-// TODO: refactor to have the same structure as ToUnvalidatedConfig
-func (self *PartialConfig) Merge(other PartialConfig) {
-	for key, value := range other.Aliases {
-		self.Aliases[key] = value
-	}
-	for _, entry := range other.Lineage.Entries() {
-		self.Lineage.Add(entry.Child, entry.Parent)
-	}
-	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
-	if other.CreatePrototypeBranches.IsSome() {
-		self.CreatePrototypeBranches = other.CreatePrototypeBranches
-	}
-	if other.HostingOriginHostname.IsSome() {
-		self.HostingOriginHostname = other.HostingOriginHostname
-	}
-	if other.HostingPlatform.IsSome() {
-		self.HostingPlatform = other.HostingPlatform
-	}
-	if other.GiteaToken.IsSome() {
-		self.GiteaToken = other.GiteaToken
-	}
-	if other.GitHubToken.IsSome() {
-		self.GitHubToken = other.GitHubToken
-	}
-	if other.GitLabToken.IsSome() {
-		self.GitLabToken = other.GitLabToken
-	}
-	if other.GitUserEmail.IsSome() {
-		self.GitUserEmail = other.GitUserEmail
-	}
-	if other.GitUserName.IsSome() {
-		self.GitUserName = other.GitUserName
-	}
-	if branch, has := other.MainBranch.Get(); has {
-		self.MainBranch = Some(branch)
-	}
-	if other.PushNewBranches.IsSome() {
-		self.PushNewBranches = other.PushNewBranches
-	}
-	self.ObservedBranches = append(self.ObservedBranches, other.ObservedBranches...)
-	if other.Offline.IsSome() {
-		self.Offline = other.Offline
-	}
-	self.ParkedBranches = append(self.ParkedBranches, other.ParkedBranches...)
-	self.PerennialBranches = append(self.PerennialBranches, other.PerennialBranches...)
-	if other.PerennialRegex.IsSome() {
-		self.PerennialRegex = other.PerennialRegex
-	}
-	self.PrototypeBranches = append(self.PrototypeBranches, other.PrototypeBranches...)
-	if other.PushHook.IsSome() {
-		self.PushHook = other.PushHook
-	}
-	if other.ShipDeleteTrackingBranch.IsSome() {
-		self.ShipDeleteTrackingBranch = other.ShipDeleteTrackingBranch
-	}
-	if other.SyncBeforeShip.IsSome() {
-		self.SyncBeforeShip = other.SyncBeforeShip
-	}
-	if other.SyncFeatureStrategy.IsSome() {
-		self.SyncFeatureStrategy = other.SyncFeatureStrategy
-	}
-	if other.SyncPerennialStrategy.IsSome() {
-		self.SyncPerennialStrategy = other.SyncPerennialStrategy
-	}
-	if other.SyncUpstream.IsSome() {
-		self.SyncUpstream = other.SyncUpstream
+func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
+	return PartialConfig{
+		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
+		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
+		CreatePrototypeBranches:  other.CreatePrototypeBranches.Or(self.CreatePrototypeBranches),
+		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
+		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
+		GitUserName:              other.GitUserName.Or(self.GitUserName),
+		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
+		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
+		HostingPlatform:          other.HostingPlatform.Or(self.HostingPlatform),
+		Lineage:                  other.Lineage.Merge(self.Lineage),
+		MainBranch:               other.MainBranch.Or(self.MainBranch),
+		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
+		Offline:                  other.Offline.Or(self.Offline),
+		ParkedBranches:           append(other.ParkedBranches, self.ParkedBranches...),
+		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
+		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
+		PrototypeBranches:        append(other.PrototypeBranches, self.PrototypeBranches...),
+		PushHook:                 other.PushHook.Or(self.PushHook),
+		PushNewBranches:          other.PushNewBranches.Or(self.PushNewBranches),
+		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
+		SyncBeforeShip:           other.SyncBeforeShip.Or(self.SyncBeforeShip),
+		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
+		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
+		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 	}
 }
 
