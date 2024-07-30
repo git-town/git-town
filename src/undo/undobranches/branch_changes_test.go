@@ -3,6 +3,8 @@ package undobranches_test
 import (
 	"testing"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v14/src/cli/dialog/components"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -14,10 +16,8 @@ import (
 )
 
 func TestChanges(t *testing.T) {
-	t.Parallel()
 
 	t.Run("local-only branch added", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
 			Active:   Some(gitdomain.NewLocalBranchName("main")),
@@ -75,6 +75,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -86,7 +87,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("local-only branch removed", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -131,6 +131,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -144,7 +145,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("local-only branch changed", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -221,6 +221,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -242,7 +243,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("local-only branch pushed to origin", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -312,6 +312,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -327,7 +328,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("remote-only branch downloaded", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -397,6 +397,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -407,8 +408,7 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("omnibranch added", func(t *testing.T) {
-		t.Parallel()
+	t.Run("omnibranch_added", func(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
 			Active:   Some(gitdomain.NewLocalBranchName("main")),
@@ -466,6 +466,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -484,7 +485,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch changed locally", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -560,6 +560,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -581,7 +582,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch remote updated", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -692,6 +692,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -708,7 +709,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -802,6 +802,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch: before.Active.GetOrPanic(),
 			Config:      config,
 			EndBranch:   after.Active.GetOrPanic(),
+			Inputs:      components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -822,7 +823,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -903,6 +903,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch: before.Active.GetOrPanic(),
 			Config:      config,
 			EndBranch:   after.Active.GetOrPanic(),
+			Inputs:      components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -922,7 +923,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1022,6 +1022,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1043,7 +1044,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1119,6 +1119,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1140,7 +1141,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch updates pushed up", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1216,6 +1216,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1231,7 +1232,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch deleted locally", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1301,6 +1301,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1318,7 +1319,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1388,6 +1388,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrDefault(),
+			Inputs:                   components.NewTestInputs([]tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}, []tea.Msg{tea.KeyEnter, tea.KeyEnter}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1403,7 +1404,6 @@ func TestChanges(t *testing.T) {
 	})
 
 	t.Run("sync with a new upstream remote", func(t *testing.T) {
-		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1470,6 +1470,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			Inputs:                   components.NewTestInputs(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{

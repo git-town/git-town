@@ -31,7 +31,8 @@ func (self BoolEntry) String() string {
 }
 
 // GitHubToken lets the user enter the GitHub API token.
-func UndoForcePush(branch gitdomain.RemoteBranchName, existingSHA, shaToPush gitdomain.SHA, inputs components.TestInput) (result bool, aborted bool, err error) {
+func UndoForcePush(branch gitdomain.RemoteBranchName, existingSHA, shaToPush gitdomain.SHA, input components.TestInput) (result bool, aborted bool, err error) {
+	fmt.Println("11111111111111111111111111111", input)
 	entries := list.Entries[BoolEntry]{
 		{
 			Data:    true,
@@ -45,7 +46,7 @@ func UndoForcePush(branch gitdomain.RemoteBranchName, existingSHA, shaToPush git
 		},
 	}
 	helpText := fmt.Sprintf(undoForcePushHelp, branch, existingSHA, shaToPush)
-	selection, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, inputs)
+	selection, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, input)
 	fmt.Printf("undo force-push %q: %s\n", branch, components.FormattedSelection(selection.String(), aborted))
 	return selection.Bool(), aborted, err
 }

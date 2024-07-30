@@ -16,7 +16,8 @@ Delete remote branch %q?
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func UndoCreateRemoteBranch(branch gitdomain.RemoteBranchName, inputs components.TestInput) (result bool, aborted bool, err error) {
+func UndoCreateRemoteBranch(branch gitdomain.RemoteBranchName, input components.TestInput) (result bool, aborted bool, err error) {
+	fmt.Println("2222222222222222222222222222222222", input)
 	entries := list.Entries[BoolEntry]{
 		{
 			Data:    true,
@@ -30,7 +31,7 @@ func UndoCreateRemoteBranch(branch gitdomain.RemoteBranchName, inputs components
 		},
 	}
 	helpText := fmt.Sprintf(undoCreateRemoteBranchHelp, branch)
-	selection, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, inputs)
+	selection, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, input)
 	fmt.Printf("delete branch %q: %s\n", branch, components.FormattedSelection(selection.String(), aborted))
 	return selection.Bool(), aborted, err
 }
