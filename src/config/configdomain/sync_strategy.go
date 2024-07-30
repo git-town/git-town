@@ -13,11 +13,6 @@ type SyncStrategy string
 
 func (self SyncStrategy) String() string { return string(self) }
 
-func (self SyncStrategy) StringRef() *string {
-	result := string(self)
-	return &result
-}
-
 const (
 	SyncStrategyMerge  = SyncStrategy("merge")
 	SyncStrategyRebase = SyncStrategy("rebase")
