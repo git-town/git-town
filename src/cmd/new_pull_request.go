@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -23,7 +23,7 @@ func newPullRequestCommand() *cobra.Command {
 		Hidden:  true,
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			printDeprecationNotice()
 			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))

@@ -18,6 +18,7 @@ linters:
     - godot # comments don't really need to read like prose, we don't use the godoc web UI
     - godox # we allow todo comments
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
+    - inamedparam # we are okay with concise interfaces
     - lll # we aren't enforcing a line length at this point
     - maintidx # we keep complexity under check with code reviews
     - mnd # we keep track of magic numbers through code reviews

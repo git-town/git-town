@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
@@ -120,10 +120,10 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.RemoveGlobalConfig{
-					Key: gitconfig.KeyOffline,
+					Key: configdomain.KeyOffline,
 				},
 				&opcodes.RemoveLocalConfig{
-					Key: gitconfig.KeyOffline,
+					Key: configdomain.KeyOffline,
 				},
 				&opcodes.ResetCurrentBranchToSHA{
 					Hard:        true,
@@ -135,11 +135,11 @@ func TestLoadSave(t *testing.T) {
 					SHA: gitdomain.NewSHA("123456"),
 				},
 				&opcodes.SetGlobalConfig{
-					Key:   gitconfig.KeyOffline,
+					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
 				&opcodes.SetLocalConfig{
-					Key:   gitconfig.KeyOffline,
+					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
 				&opcodes.SetParent{
