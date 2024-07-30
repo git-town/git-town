@@ -1,5 +1,14 @@
 # Git Town Changelog
 
+## 14.4.1 (2024-07-29)
+
+Many thanks to @charlierudolph, @ianjsikes, @kevgo, @seadowg, @stephenwade for contributing feedback, ideas, and code to 10 shipped PRs and 4 resolved issues.
+
+### Bug Fixes
+
+- `git town undo` now only undoes changes to branches that the previous Git Town command has touched ([#3765](https://github.com/git-town/git-town/issues/3765))
+- `git town continue` now does not ask for additional lineage information ([#3725](https://github.com/git-town/git-town/issues/3725))
+
 ## 14.4.0 (2024-07-26)
 
 Git Town v14.4 ships features suggested by Git Town users and fixes a severe bug in the undo feature.
