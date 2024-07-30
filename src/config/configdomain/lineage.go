@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"golang.org/x/exp/maps"
@@ -148,6 +149,13 @@ func (self Lineage) IsEmpty() bool {
 
 func (self Lineage) Len() int {
 	return len(self.data)
+}
+
+// provides a new Lineage that consists of entries from both this and the given Lineage
+func (self Lineage) Merge(other Lineage) Lineage {
+	return Lineage{
+		data: mapstools.Merge(self.data, other.data),
+	}
 }
 
 // OrderHierarchically provides the given branches sorted so that ancestor branches come before their descendants.
