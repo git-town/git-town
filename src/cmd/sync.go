@@ -56,7 +56,7 @@ func syncCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
-		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, gitconfig.KeySyncUpstream)),
+		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
@@ -254,7 +254,7 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose config
 func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages stringslice.Collector) error {
 	for _, perennialBranch := range perennialBranches {
 		if lineage.Parent(perennialBranch).IsSome() {
-			if err := access.RemoveLocalConfigValue(gitconfig.NewParentKey(perennialBranch)); err != nil {
+			if err := access.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
 				return err
 			}
 			lineage.RemoveBranch(perennialBranch)

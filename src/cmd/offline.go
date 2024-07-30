@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
@@ -81,7 +80,7 @@ func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
 func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
-		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)
+		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
 	return config.SetOffline(configdomain.Offline(value))
 }
