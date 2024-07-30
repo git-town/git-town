@@ -155,7 +155,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 			}
 		}
 		snapshot[configKey] = value
-		err := config.AddValue(configKey, value, self)
+		err := config.AddValue(configKey, value, self.RemoveLocalConfigValue)
 		if err != nil {
 			return snapshot, config, err
 		}
