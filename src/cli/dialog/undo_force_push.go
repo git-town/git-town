@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	undoForcePushTitle = `confirm undo`
-	undoForcePushHelp  = `
+	confirmUndoTitle  = `confirm undo action`
+	undoForcePushHelp = `
 Undo changes to remote branch %q?
 
 Existing commit: %q
@@ -44,6 +44,6 @@ func ForcePushBranch(branch gitdomain.RemoteBranchName, existingSHA, SHAToPush g
 		},
 	}
 	helpText := fmt.Sprintf(undoForcePushHelp, branch, existingSHA, SHAToPush)
-	entry, aborted, err := components.RadioList(entries, 0, undoForcePushTitle, helpText, inputs)
+	entry, aborted, err := components.RadioList(entries, 0, confirmUndoTitle, helpText, inputs)
 	return entry.Bool(), aborted, err
 }
