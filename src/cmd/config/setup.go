@@ -85,7 +85,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 
 type setupData struct {
 	config        config.UnvalidatedConfig
-	dialogInputs  Mutable[components.TestInputs]
+	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	userInput     userInput
@@ -107,11 +107,11 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 }
 
 func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, err error) {
-	aborted, err = dialog.Welcome(data.dialogInputs.Value.Next())
+	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Value.Next())
+	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -122,20 +122,20 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if existingMainBranch.IsNone() {
 		existingMainBranch = gitCommands.OriginHead(backend)
 	}
-	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Value.Next())
+	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	data.userInput.config.MainBranch = Some(mainBranch)
-	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.Value.PerennialBranches, mainBranch, data.dialogInputs.Value.Next())
+	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.Value.PerennialBranches, mainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.Value.PerennialRegex, data.dialogInputs.Value.Next())
+	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.Value.PerennialRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.Value.HostingPlatform, data.dialogInputs.Value.Next())
+	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.Value.HostingPlatform, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -144,51 +144,51 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		case configdomain.HostingPlatformBitbucket:
 			// BitBucket API isn't supported yet
 		case configdomain.HostingPlatformGitea:
-			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.Value.GiteaToken, data.dialogInputs.Value.Next())
+			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.Value.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.Value.GitHubToken, data.dialogInputs.Value.Next())
+			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.Value.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.Value.GitLabToken, data.dialogInputs.Value.Next())
+			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.Value.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.Value.HostingOriginHostname, data.dialogInputs.Value.Next())
+	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.Value.HostingOriginHostname, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.Value.SyncFeatureStrategy, data.dialogInputs.Value.Next())
+	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.Value.SyncFeatureStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.Value.SyncPerennialStrategy, data.dialogInputs.Value.Next())
+	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.Value.SyncPerennialStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.Value.SyncUpstream, data.dialogInputs.Value.Next())
+	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.Value.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.Value.PushNewBranches, data.dialogInputs.Value.Next())
+	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.Value.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.Value.PushHook, data.dialogInputs.Value.Next())
+	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.Value.PushHook, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.Value.ShipDeleteTrackingBranch, data.dialogInputs.Value.Next())
+	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.Value.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Value.Next())
+	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
