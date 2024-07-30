@@ -2,6 +2,8 @@
 
 ## 14.4.1 (2024-07-29)
 
+Many thanks to @charlierudolph, @ianjsikes, @kevgo, @seadowg, @stephenwade for contributing feedback, ideas, and code to 10 shipped PRs and 4 resolved issues.
+
 ### Bug Fixes
 
 - `git town undo` now only undoes changes to branches that the previous Git Town command has touched ([#3765](https://github.com/git-town/git-town/issues/3765))
