@@ -134,7 +134,7 @@ Feature: show the configuration
       """
       Branches:
         main branch: git-main
-        perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
+        perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: git-perennial-.*
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2

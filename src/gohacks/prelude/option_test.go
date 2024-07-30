@@ -66,6 +66,42 @@ func TestOption(t *testing.T) {
 		})
 	})
 
+	t.Run("Or", func(t *testing.T) {
+		t.Parallel()
+		t.Run("none or none = none", func(t *testing.T) {
+			t.Parallel()
+			option := None[int]()
+			other := None[int]()
+			have := option.Or(other)
+			want := None[int]()
+			must.Eq(t, want, have)
+		})
+		t.Run("none or some = some", func(t *testing.T) {
+			t.Parallel()
+			option := None[int]()
+			other := Some(2)
+			have := option.Or(other)
+			want := Some(2)
+			must.Eq(t, want, have)
+		})
+		t.Run("some or none = some", func(t *testing.T) {
+			t.Parallel()
+			option := Some(1)
+			other := None[int]()
+			have := option.Or(other)
+			want := Some(1)
+			must.Eq(t, want, have)
+		})
+		t.Run("some1 or some2 = some1", func(t *testing.T) {
+			t.Parallel()
+			option := Some(1)
+			other := Some(2)
+			have := option.Or(other)
+			want := Some(1)
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Run("Some", func(t *testing.T) {
 			t.Parallel()
