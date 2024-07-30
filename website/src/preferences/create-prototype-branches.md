@@ -12,7 +12,7 @@ To configure the creation of prototype branches in the
 [configuration file](../configuration-file.md):
 
 ```toml
-create-prototype-branches = false
+create-prototype-branches = true
 ```
 
 ## Git metadata
