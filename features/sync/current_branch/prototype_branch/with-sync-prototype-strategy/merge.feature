@@ -14,16 +14,17 @@ Feature: sync the current prototype branch in a local repo
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                          |
-      | prototype | git merge --no-edit --no-ff main |
+      | BRANCH    | COMMAND                       |
+      | prototype | git merge --no-edit --ff main |
     And these commits exist now
-      | BRANCH    | LOCATION | MESSAGE      |
-      | main      | local    | main commit  |
-      | prototype | local    | main commit  |
-      |           |          | local commit |
+      | BRANCH    | LOCATION | MESSAGE                            |
+      | main      | local    | main commit                        |
+      | prototype | local    | local commit                       |
+      |           |          | main commit                        |
+      |           |          | Merge branch 'main' into prototype |
     And all branches are now synchronized
     And the current branch is still "prototype"
     And the initial branches and lineage exist
