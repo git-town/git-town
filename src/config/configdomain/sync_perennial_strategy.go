@@ -7,11 +7,6 @@ import (
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
 type SyncPerennialStrategy SyncStrategy
 
-const (
-	SyncPerennialStrategyMerge  = SyncPerennialStrategy(SyncStrategyMerge)
-	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
-)
-
 func (self SyncPerennialStrategy) String() string {
 	return self.SyncStrategy().String()
 }
@@ -19,6 +14,11 @@ func (self SyncPerennialStrategy) String() string {
 func (self SyncPerennialStrategy) SyncStrategy() SyncStrategy {
 	return SyncStrategy(self)
 }
+
+const (
+	SyncPerennialStrategyMerge  = SyncPerennialStrategy(SyncStrategyMerge)
+	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
+)
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 	syncStrategyOpt, err := NewSyncStrategy(text)
