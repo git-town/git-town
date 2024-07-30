@@ -45,6 +45,7 @@ const (
 	ConfigStorage                      = "Config storage: %s\n"
 	ConfigSyncFeatureStrategyUnknown   = "unknown sync-feature strategy: %q"
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
+	ConfigSyncPrototypeStrategyUnknown = "unknown sync-prototype strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git town skip\"."

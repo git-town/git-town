@@ -31,6 +31,7 @@ type PartialConfig struct {
 	SyncBeforeShip           Option[SyncBeforeShip]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
+	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncUpstream             Option[SyncUpstream]
 }
 

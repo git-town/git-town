@@ -35,6 +35,7 @@ type UnvalidatedConfig struct {
 	SyncBeforeShip           SyncBeforeShip
 	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncPerennialStrategy    SyncPerennialStrategy
+	SyncPrototypeStrategy    SyncPrototypeStrategy
 	SyncUpstream             SyncUpstream
 }
 
@@ -176,6 +177,9 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 	}
 	if value, has := other.SyncPerennialStrategy.Get(); has {
 		self.SyncPerennialStrategy = value
+	}
+	if value, has := other.SyncPrototypeStrategy.Get(); has {
+		self.SyncPrototypeStrategy = value
 	}
 	if value, has := other.SyncUpstream.Get(); has {
 		self.SyncUpstream = value

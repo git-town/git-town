@@ -10,16 +10,15 @@ Feature: sync the current prototype branch in a local repo
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
     And the current branch is "prototype"
-    And an uncommitted file
+    And Git Town setting "sync-prototype-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | prototype | git add -A                    |
-      |           | git stash                     |
-      |           | git merge --no-edit --ff main |
-      |           | git stash pop                 |
+      | BRANCH    | COMMAND         |
+      | prototype | git rebase main |
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
