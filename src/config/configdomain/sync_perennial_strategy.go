@@ -21,7 +21,7 @@ const (
 )
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
-	syncStrategyOpt, err := NewSyncStrategy(text)
+	syncStrategyOpt, err := ParseSyncStrategy(text)
 	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
 	return SyncPerennialStrategy(syncStrategy), err
 }

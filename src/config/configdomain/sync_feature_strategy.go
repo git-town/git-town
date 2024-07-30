@@ -21,7 +21,7 @@ const (
 )
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
-	syncStrategyOpt, err := NewSyncStrategy(text)
+	syncStrategyOpt, err := ParseSyncStrategy(text)
 	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyMerge)
 	return SyncFeatureStrategy(syncStrategy), err
 }

@@ -18,7 +18,7 @@ const (
 	SyncStrategyRebase = SyncStrategy("rebase")
 )
 
-func NewSyncStrategy(text string) (Option[SyncStrategy], error) {
+func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
 	switch strings.ToLower(text) {
 	case "":
 		return None[SyncStrategy](), nil
