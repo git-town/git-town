@@ -1,4 +1,4 @@
-Feature: prepend a branch to a feature branch
+Feature: auto-create prototype branches when prepending
 
   Background:
     Given a Git repo with origin
