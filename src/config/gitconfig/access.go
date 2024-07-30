@@ -269,7 +269,6 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 				continue
 			}
 		}
-		fmt.Println("777777777777777777777777777777 FOUND CONFIG SETTING", configKey, value)
 		snapshot[configKey] = value
 		err := self.AddKeyToPartialConfig(configKey, value, &config)
 		if err != nil {
