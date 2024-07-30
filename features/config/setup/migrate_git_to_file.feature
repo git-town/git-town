@@ -29,6 +29,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-upstream                             | enter |
       | enable push-new-branches                  | enter |
       | disable the push hook                     | enter |
+      | create-prototype-branches                 | enter |
       | disable ship-delete-tracking-branch       | enter |
       | sync-before-ship                          | enter |
       | save config to config file                | enter |

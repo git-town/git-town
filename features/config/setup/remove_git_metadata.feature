@@ -45,6 +45,7 @@ Feature: remove existing configuration in Git metadata
       | sync-upstream                           | down enter                                    |
       | enable push-new-branches                | down enter                                    |
       | disable the push hook                   | down enter                                    |
+      | create-prototype-branches               | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
       | sync-before-ship                        | down enter                                    |
       | save config to Git metadata             | down enter                                    |
