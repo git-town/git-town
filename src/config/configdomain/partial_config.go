@@ -145,6 +145,8 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyOption(value)
 	case KeySyncPerennialStrategy:
 		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyOption(value)
+	case KeySyncPrototypeStrategy:
+		self.SyncPrototypeStrategy, err = NewSyncPrototypeStrategyOption(value)
 	case KeySyncUpstream:
 		self.SyncUpstream, err = ParseSyncUpstreamOption(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
