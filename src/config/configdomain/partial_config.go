@@ -41,6 +41,7 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 // Merges the given PartialConfig into this configuration object.
+// TODO: refactor to have the same structure as ToUnvalidatedConfig
 func (self *PartialConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
 		self.Aliases[key] = value
