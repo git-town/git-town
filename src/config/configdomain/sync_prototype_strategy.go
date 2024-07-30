@@ -1,36 +1,29 @@
 package configdomain
 
 import (
-	"fmt"
-	"strings"
-
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // SyncPrototypeStrategy defines legal values for the "sync-prototype-strategy" configuration setting.
-type SyncPrototypeStrategy string
+type SyncPrototypeStrategy SyncStrategy
 
-func (self SyncPrototypeStrategy) String() string { return string(self) }
-func (self SyncPrototypeStrategy) StringRef() *string {
-	result := string(self)
-	return &result
+func (self SyncPrototypeStrategy) String() string {
+	return self.SyncStrategy().String()
+}
+
+func (self SyncPrototypeStrategy) SyncStrategy() SyncStrategy {
+	return SyncStrategy(self)
 }
 
 const (
-	SyncPrototypeStrategyMerge  = SyncPrototypeStrategy("merge")
-	SyncPrototypeStrategyRebase = SyncPrototypeStrategy("rebase")
+	SyncPrototypeStrategyMerge  = SyncPrototypeStrategy(SyncStrategyMerge)
+	SyncPrototypeStrategyRebase = SyncPrototypeStrategy(SyncStrategyRebase)
 )
 
 func NewSyncPrototypeStrategy(text string) (SyncPrototypeStrategy, error) {
-	switch strings.ToLower(text) {
-	case "merge":
-		return SyncPrototypeStrategyMerge, nil
-	case "rebase", "":
-		return SyncPrototypeStrategyRebase, nil
-	default:
-		return SyncPrototypeStrategyMerge, fmt.Errorf(messages.ConfigSyncPrototypeStrategyUnknown, text)
-	}
+	syncStrategyOpt, err := ParseSyncStrategy(text)
+	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
+	return SyncPrototypeStrategy(syncStrategy), err
 }
 
 func NewSyncPrototypeStrategyOption(text string) (Option[SyncPrototypeStrategy], error) {
