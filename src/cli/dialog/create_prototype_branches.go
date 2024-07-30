@@ -40,7 +40,7 @@ func CreatePrototypeBranches(existing configdomain.CreatePrototypeBranches, inpu
 	}
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, createPrototypeBranchesTitle, CreatePrototypeBranchesHelp, inputs)
 	if err != nil || aborted {
-		return true, aborted, err
+		return false, aborted, err
 	}
 	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), aborted))
 	return selection.Data.CreatePrototypeBranches(), aborted, err
