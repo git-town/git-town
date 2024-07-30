@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -79,6 +81,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
+		fmt.Println("1111111111111111111111111111111", args.Config.SyncPrototypeStrategy)
 		FeatureBranchProgram(featureBranchArgs{
 			localName:           localName,
 			offline:             args.Config.Offline,
