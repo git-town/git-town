@@ -30,11 +30,3 @@ func NewSyncStrategy(text string) (Option[SyncStrategy], error) {
 		return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
 	}
 }
-
-// func NewSyncStrategyOption(text string) (Option[SyncStrategy], error) {
-// 	result, err := NewSyncStrategy(text)
-// 	if err != nil {
-// 		return None[SyncStrategy](), err
-// 	}
-// 	return Some(result), err
-// }
