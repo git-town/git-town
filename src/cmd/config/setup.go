@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"slices"
 
@@ -298,12 +297,9 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 }
 
 func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {
-	fmt.Printf("111111111111111111111111111111111111 %q %q\n", oldValue, newValue)
 	if newValue == oldValue {
-		fmt.Println("2222222222222222222222222222222222")
 		return nil
 	}
-	fmt.Println("333333333333333333333333333333333")
 	return config.SetCreatePrototypeBranches(newValue)
 }
 

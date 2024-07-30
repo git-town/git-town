@@ -11,7 +11,7 @@ import (
 
 const (
 	createPrototypeBranchesTitle = `Create prototype branches`
-	createPrototypeBranchesHelp  = `
+	CreatePrototypeBranchesHelp  = `
 The "create-prototype-branches" setting determines whether Git Town
 always creates prototype branches.
 Prototype branches sync only locally and don't create a tracking branch
@@ -38,7 +38,7 @@ func CreatePrototypeBranches(existing configdomain.CreatePrototypeBranches, inpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, createPrototypeBranchesTitle, createPrototypeBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, createPrototypeBranchesTitle, CreatePrototypeBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
