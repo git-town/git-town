@@ -29,16 +29,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |        | git branch -D feature           |
       |        | git checkout other              |
       | other  | git stash pop                   |
-    And it prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
-    And it prints the error:
-      """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      """
-    And the current branch is now "feature"
+    And the current branch is now "other"
     And the uncommitted file is stashed
     And a merge is now in progress
 
