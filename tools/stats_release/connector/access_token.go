@@ -4,11 +4,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 )
 
 func loadAccessToken() string {
-	process := exec.Command("git", "config", "--get", gitconfig.KeyGithubToken.String()) //nolint:gosec
+	process := exec.Command("git", "config", "--get", configdomain.KeyGithubToken.String()) //nolint:gosec
 	output, err := process.Output()
 	if err != nil {
 		panic(err.Error())

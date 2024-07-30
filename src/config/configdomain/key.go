@@ -1,11 +1,10 @@
-package gitconfig
+package configdomain
 
 import (
 	"encoding/json"
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
@@ -117,46 +116,46 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func AliasableCommandForKey(key Key) Option[configdomain.AliasableCommand] {
-	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
+func AliasableCommandForKey(key Key) Option[AliasableCommand] {
+	for _, aliasableCommand := range AllAliasableCommands() {
 		if KeyForAliasableCommand(aliasableCommand) == key {
 			return Some(aliasableCommand)
 		}
 	}
-	return None[configdomain.AliasableCommand]()
+	return None[AliasableCommand]()
 }
 
-func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key {
+func KeyForAliasableCommand(aliasableCommand AliasableCommand) Key {
 	switch aliasableCommand {
-	case configdomain.AliasableCommandAppend:
+	case AliasableCommandAppend:
 		return KeyAliasAppend
-	case configdomain.AliasableCommandCompress:
+	case AliasableCommandCompress:
 		return KeyAliasCompress
-	case configdomain.AliasableCommandContribute:
+	case AliasableCommandContribute:
 		return KeyAliasContribute
-	case configdomain.AliasableCommandDiffParent:
+	case AliasableCommandDiffParent:
 		return KeyAliasDiffParent
-	case configdomain.AliasableCommandHack:
+	case AliasableCommandHack:
 		return KeyAliasHack
-	case configdomain.AliasableCommandKill:
+	case AliasableCommandKill:
 		return KeyAliasKill
-	case configdomain.AliasableCommandObserve:
+	case AliasableCommandObserve:
 		return KeyAliasObserve
-	case configdomain.AliasableCommandPark:
+	case AliasableCommandPark:
 		return KeyAliasPark
-	case configdomain.AliasableCommandPrepend:
+	case AliasableCommandPrepend:
 		return KeyAliasPrepend
-	case configdomain.AliasableCommandPropose:
+	case AliasableCommandPropose:
 		return KeyAliasPropose
-	case configdomain.AliasableCommandRenameBranch:
+	case AliasableCommandRenameBranch:
 		return KeyAliasRenameBranch
-	case configdomain.AliasableCommandRepo:
+	case AliasableCommandRepo:
 		return KeyAliasRepo
-	case configdomain.AliasableCommandSetParent:
+	case AliasableCommandSetParent:
 		return KeyAliasSetParent
-	case configdomain.AliasableCommandShip:
+	case AliasableCommandShip:
 		return KeyAliasShip
-	case configdomain.AliasableCommandSync:
+	case AliasableCommandSync:
 		return KeyAliasSync
 	}
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", &aliasableCommand))
@@ -175,7 +174,7 @@ func ParseKey(name string) Option[Key] {
 	if lineageKey, hasLineageKey := parseLineageKey(name).Get(); hasLineageKey {
 		return Some(lineageKey)
 	}
-	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
+	for _, aliasableCommand := range AllAliasableCommands() {
 		key := KeyForAliasableCommand(aliasableCommand)
 		if key.String() == name {
 			return Some(key)

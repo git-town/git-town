@@ -24,9 +24,9 @@ type Access struct {
 }
 
 // Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
-func (self *Access) AddValueToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
-	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
-		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
+func (self *Access) AddValueToPartialConfig(key configdomain.Key, value string, config *configdomain.PartialConfig) error {
+	if strings.HasPrefix(key.String(), configdomain.LineageKeyPrefix) {
+		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), configdomain.LineageKeyPrefix), configdomain.LineageKeySuffix))
 		if childName == "" {
 			// empty lineage entries are invalid --> delete it
 			return self.RemoveLocalConfigValue(key)
@@ -43,96 +43,96 @@ func (self *Access) AddValueToPartialConfig(key Key, value string, config *confi
 	}
 	var err error
 	switch key {
-	case KeyAliasAppend:
+	case configdomain.KeyAliasAppend:
 		config.Aliases[configdomain.AliasableCommandAppend] = value
-	case KeyAliasCompress:
+	case configdomain.KeyAliasCompress:
 		config.Aliases[configdomain.AliasableCommandCompress] = value
-	case KeyAliasContribute:
+	case configdomain.KeyAliasContribute:
 		config.Aliases[configdomain.AliasableCommandContribute] = value
-	case KeyAliasDiffParent:
+	case configdomain.KeyAliasDiffParent:
 		config.Aliases[configdomain.AliasableCommandDiffParent] = value
-	case KeyAliasHack:
+	case configdomain.KeyAliasHack:
 		config.Aliases[configdomain.AliasableCommandHack] = value
-	case KeyAliasKill:
+	case configdomain.KeyAliasKill:
 		config.Aliases[configdomain.AliasableCommandKill] = value
-	case KeyAliasObserve:
+	case configdomain.KeyAliasObserve:
 		config.Aliases[configdomain.AliasableCommandObserve] = value
-	case KeyAliasPark:
+	case configdomain.KeyAliasPark:
 		config.Aliases[configdomain.AliasableCommandPark] = value
-	case KeyAliasPrepend:
+	case configdomain.KeyAliasPrepend:
 		config.Aliases[configdomain.AliasableCommandPrepend] = value
-	case KeyAliasPropose:
+	case configdomain.KeyAliasPropose:
 		config.Aliases[configdomain.AliasableCommandPropose] = value
-	case KeyAliasRenameBranch:
+	case configdomain.KeyAliasRenameBranch:
 		config.Aliases[configdomain.AliasableCommandRenameBranch] = value
-	case KeyAliasRepo:
+	case configdomain.KeyAliasRepo:
 		config.Aliases[configdomain.AliasableCommandRepo] = value
-	case KeyAliasSetParent:
+	case configdomain.KeyAliasSetParent:
 		config.Aliases[configdomain.AliasableCommandSetParent] = value
-	case KeyAliasShip:
+	case configdomain.KeyAliasShip:
 		config.Aliases[configdomain.AliasableCommandShip] = value
-	case KeyAliasSync:
+	case configdomain.KeyAliasSync:
 		config.Aliases[configdomain.AliasableCommandSync] = value
-	case KeyContributionBranches:
+	case configdomain.KeyContributionBranches:
 		config.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyCreatePrototypeBranches:
+	case configdomain.KeyCreatePrototypeBranches:
 		var createPrototypeBranches configdomain.CreatePrototypeBranches
-		createPrototypeBranches, err = configdomain.NewCreatePrototypeBranches(value, KeyPrototypeBranches.String())
+		createPrototypeBranches, err = configdomain.NewCreatePrototypeBranches(value, configdomain.KeyPrototypeBranches.String())
 		config.CreatePrototypeBranches = Some(createPrototypeBranches)
-	case KeyHostingOriginHostname:
+	case configdomain.KeyHostingOriginHostname:
 		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameOption(value)
-	case KeyHostingPlatform:
+	case configdomain.KeyHostingPlatform:
 		config.HostingPlatform, err = configdomain.NewHostingPlatformOption(value)
-	case KeyGiteaToken:
+	case configdomain.KeyGiteaToken:
 		config.GiteaToken = configdomain.NewGiteaTokenOption(value)
-	case KeyGithubToken:
+	case configdomain.KeyGithubToken:
 		config.GitHubToken = configdomain.NewGitHubTokenOption(value)
-	case KeyGitlabToken:
+	case configdomain.KeyGitlabToken:
 		config.GitLabToken = configdomain.NewGitLabTokenOption(value)
-	case KeyGitUserEmail:
+	case configdomain.KeyGitUserEmail:
 		config.GitUserEmail = configdomain.NewGitUserEmailOption(value)
-	case KeyGitUserName:
+	case configdomain.KeyGitUserName:
 		config.GitUserName = configdomain.NewGitUserNameOption(value)
-	case KeyMainBranch:
+	case configdomain.KeyMainBranch:
 		config.MainBranch = gitdomain.NewLocalBranchNameOption(value)
-	case KeyObservedBranches:
+	case configdomain.KeyObservedBranches:
 		config.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyOffline:
-		config.Offline, err = configdomain.NewOfflineOption(value, KeyOffline.String())
-	case KeyParkedBranches:
+	case configdomain.KeyOffline:
+		config.Offline, err = configdomain.NewOfflineOption(value, configdomain.KeyOffline.String())
+	case configdomain.KeyParkedBranches:
 		config.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPerennialBranches:
+	case configdomain.KeyPerennialBranches:
 		config.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPerennialRegex:
+	case configdomain.KeyPerennialRegex:
 		config.PerennialRegex = configdomain.NewPerennialRegexOption(value)
-	case KeyPrototypeBranches:
+	case configdomain.KeyPrototypeBranches:
 		config.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPushHook:
+	case configdomain.KeyPushHook:
 		var pushHook configdomain.PushHook
-		pushHook, err = configdomain.NewPushHook(value, KeyPushHook.String())
+		pushHook, err = configdomain.NewPushHook(value, configdomain.KeyPushHook.String())
 		config.PushHook = Some(pushHook)
-	case KeyPushNewBranches:
-		config.PushNewBranches, err = configdomain.ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
-	case KeyShipDeleteTrackingBranch:
-		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchOption(value, KeyShipDeleteTrackingBranch.String())
-	case KeySyncBeforeShip:
-		config.SyncBeforeShip, err = configdomain.ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
-	case KeySyncFeatureStrategy:
+	case configdomain.KeyPushNewBranches:
+		config.PushNewBranches, err = configdomain.ParsePushNewBranchesOption(value, configdomain.KeyPushNewBranches.String())
+	case configdomain.KeyShipDeleteTrackingBranch:
+		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchOption(value, configdomain.KeyShipDeleteTrackingBranch.String())
+	case configdomain.KeySyncBeforeShip:
+		config.SyncBeforeShip, err = configdomain.ParseSyncBeforeShipOption(value, configdomain.KeySyncBeforeShip.String())
+	case configdomain.KeySyncFeatureStrategy:
 		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyOption(value)
-	case KeySyncPerennialStrategy:
+	case configdomain.KeySyncPerennialStrategy:
 		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyOption(value)
-	case KeySyncUpstream:
-		config.SyncUpstream, err = configdomain.ParseSyncUpstreamOption(value, KeySyncUpstream.String())
-	case KeyDeprecatedCodeHostingDriver,
-		KeyDeprecatedCodeHostingOriginHostname,
-		KeyDeprecatedCodeHostingPlatform,
-		KeyDeprecatedMainBranchName,
-		KeyDeprecatedNewBranchPushFlag,
-		KeyDeprecatedPerennialBranchNames,
-		KeyDeprecatedPullBranchStrategy,
-		KeyDeprecatedPushVerify,
-		KeyDeprecatedShipDeleteRemoteBranch,
-		KeyDeprecatedSyncStrategy:
+	case configdomain.KeySyncUpstream:
+		config.SyncUpstream, err = configdomain.ParseSyncUpstreamOption(value, configdomain.KeySyncUpstream.String())
+	case configdomain.KeyDeprecatedCodeHostingDriver,
+		configdomain.KeyDeprecatedCodeHostingOriginHostname,
+		configdomain.KeyDeprecatedCodeHostingPlatform,
+		configdomain.KeyDeprecatedMainBranchName,
+		configdomain.KeyDeprecatedNewBranchPushFlag,
+		configdomain.KeyDeprecatedPerennialBranchNames,
+		configdomain.KeyDeprecatedPullBranchStrategy,
+		configdomain.KeyDeprecatedPushVerify,
+		configdomain.KeyDeprecatedShipDeleteRemoteBranch,
+		configdomain.KeyDeprecatedSyncStrategy:
 		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
 	}
 	return err
@@ -158,12 +158,12 @@ func (self *Access) OriginRemote() string {
 	return strings.TrimSpace(output)
 }
 
-func (self *Access) RemoveGlobalConfigValue(key Key) error {
+func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *Access) RemoveLocalConfigValue(key Key) error {
+func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--unset", key.String())
 }
 
@@ -192,16 +192,16 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) er
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *Access) SetGlobalConfigValue(key Key, value string) error {
+func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *Access) SetLocalConfigValue(key Key, value string) error {
+func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", key.String(), value)
 }
 
-func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value string) {
+func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
 	err := self.RemoveGlobalConfigValue(oldKey)
 	if err != nil {
@@ -213,7 +213,7 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value stri
 	}
 }
 
-func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey Key, value string) {
+func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
 	err := self.RemoveLocalConfigValue(oldKey)
 	if err != nil {
@@ -225,7 +225,7 @@ func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey Key, value strin
 	}
 }
 
-func (self *Access) UpdateDeprecatedSetting(oldKey, newKey Key, value string, global bool) {
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
 	if global {
 		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
 	} else {
@@ -255,17 +255,17 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, hasConfigKey := ParseKey(key).Get()
+		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
 		if !hasConfigKey {
 			continue
 		}
 		if updateOutdated {
-			newKey, keyIsDeprecated := DeprecatedKeys[configKey]
+			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				self.UpdateDeprecatedSetting(configKey, newKey, value, global)
 				configKey = newKey
 			}
-			if configKey != KeyPerennialBranches && value == "" {
+			if configKey != configdomain.KeyPerennialBranches && value == "" {
 				_ = self.RemoveLocalConfigValue(configKey)
 				continue
 			}
@@ -281,7 +281,7 @@ func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, conf
 		for _, entry := range config.Lineage.Entries() {
 			if entry.Child == entry.Parent {
 				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, entry.Child)))
-				_ = self.RemoveLocalConfigValue(NewParentKey(entry.Child))
+				_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(entry.Child))
 			}
 		}
 	}
