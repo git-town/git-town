@@ -1,36 +1,29 @@
 package configdomain
 
 import (
-	"fmt"
-
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.
-type SyncFeatureStrategy string
+type SyncFeatureStrategy SyncStrategy
 
-func (self SyncFeatureStrategy) String() string { return string(self) }
+func (self SyncFeatureStrategy) String() string {
+	return self.SyncStrategy().String()
+}
 
-func (self SyncFeatureStrategy) StringRef() *string {
-	result := string(self)
-	return &result
+func (self SyncFeatureStrategy) SyncStrategy() SyncStrategy {
+	return SyncStrategy(self)
 }
 
 const (
-	SyncFeatureStrategyMerge  = SyncFeatureStrategy("merge")
-	SyncFeatureStrategyRebase = SyncFeatureStrategy("rebase")
+	SyncFeatureStrategyMerge  = SyncFeatureStrategy(SyncStrategyMerge)
+	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
 )
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
-	switch text {
-	case "merge", "":
-		return SyncFeatureStrategyMerge, nil
-	case "rebase":
-		return SyncFeatureStrategyRebase, nil
-	default:
-		return SyncFeatureStrategyMerge, fmt.Errorf(messages.ConfigSyncFeatureStrategyUnknown, text)
-	}
+	syncStrategyOpt, err := ParseSyncStrategy(text)
+	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyMerge)
+	return SyncFeatureStrategy(syncStrategy), err
 }
 
 func NewSyncFeatureStrategyOption(text string) (Option[SyncFeatureStrategy], error) {
