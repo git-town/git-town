@@ -39,6 +39,7 @@
     - [offline](commands/offline.md)
 - [Preferences](preferences.md)
   - [configuration file](configuration-file.md)
+  - [create-prototype-branches](preferences/create-prototype-branches.md)
   - [hosting-platform](preferences/hosting-platform.md)
   - [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
   - [github-token](preferences/github-token.md)

@@ -74,6 +74,10 @@ func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configd
 		config.Aliases[configdomain.AliasableCommandSync] = value
 	case KeyContributionBranches:
 		config.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyCreatePrototypeBranches:
+		var createPrototypeBranches configdomain.CreatePrototypeBranches
+		createPrototypeBranches, err = configdomain.NewCreatePrototypeBranches(value, KeyPrototypeBranches.String())
+		config.CreatePrototypeBranches = Some(createPrototypeBranches)
 	case KeyHostingOriginHostname:
 		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameOption(value)
 	case KeyHostingPlatform:
