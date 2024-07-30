@@ -12,6 +12,7 @@ import (
 // If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
+	CreatePrototypeBranches  CreatePrototypeBranches
 	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]

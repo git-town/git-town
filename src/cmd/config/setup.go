@@ -184,6 +184,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.CreatePrototypeBranches, aborted, err = dialog.CreatePrototypeBranches(config.Config.Value.CreatePrototypeBranches, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(config.Config.Value.SyncBeforeShip, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -271,6 +275,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
 	fc.Check(saveSyncBeforeShip(oldConfig.Config.Value.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig))
+	fc.Check(saveCreatePrototypeBranches(oldConfig.Config.Value.CreatePrototypeBranches, userInput.config.CreatePrototypeBranches, oldConfig))
 	return fc.Err
 }
 
@@ -289,6 +294,13 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 		}
 	}
 	return nil
+}
+
+func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.SetCreatePrototypeBranches(newValue)
 }
 
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
@@ -425,6 +437,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	if err != nil {
 		return err
 	}
+	config.RemoveCreatePrototypeBranches()
 	config.RemoveMainBranch()
 	config.RemovePerennialBranches()
 	config.RemovePerennialRegex()
