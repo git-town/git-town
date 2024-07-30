@@ -42,6 +42,7 @@ func TestSave(t *testing.T) {
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.UnvalidatedConfig{
+			CreatePrototypeBranches:  true,
 			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 			HostingPlatform:          None[configdomain.HostingPlatform](),
 			Lineage:                  configdomain.NewLineage(),
@@ -95,7 +96,7 @@ push-new-branches = false
 # until they are proposed.
 #
 # More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = false
+create-prototype-branches = true
 
 # Should "git ship" delete the tracking branch?
 # You want to disable this if your code hosting platform
