@@ -12,8 +12,8 @@ import (
 // If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
-	CreatePrototypeBranches  CreatePrototypeBranches
 	ContributionBranches     gitdomain.LocalBranchNames
+	CreatePrototypeBranches  CreatePrototypeBranches
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -200,6 +200,7 @@ func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
+		CreatePrototypeBranches:  false,
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GitUserEmail:             None[GitUserEmail](),
