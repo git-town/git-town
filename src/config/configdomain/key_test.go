@@ -1,4 +1,4 @@
-package gitconfig_test
+package configdomain_test
 
 import (
 	"testing"
