@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	"github.com/git-town/git-town/v14/src/validate"
 	"github.com/spf13/cobra"
@@ -55,7 +54,7 @@ func executeSwitch(verbose configdomain.Verbose, merge bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Value.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
@@ -78,7 +77,7 @@ type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.ValidatedConfig
-	dialogInputs       Mutable[components.TestInputs]
+	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	lineage            configdomain.Lineage
 	uncommittedChanges bool
