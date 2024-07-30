@@ -1,6 +1,7 @@
 package undoconfig
 
 import (
+	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/undo/undodomain"
 )
@@ -8,9 +9,9 @@ import (
 // SingleCacheDiff provides a diff of the two given SingleCache instances.
 func SingleCacheDiff(before, after gitconfig.SingleSnapshot) ConfigDiff {
 	result := ConfigDiff{
-		Added:   []gitconfig.Key{},
-		Changed: map[gitconfig.Key]undodomain.Change[string]{},
-		Removed: map[gitconfig.Key]string{},
+		Added:   []configdomain.Key{},
+		Changed: map[configdomain.Key]undodomain.Change[string]{},
+		Removed: map[configdomain.Key]string{},
 	}
 	for key, beforeValue := range before {
 		afterValue, afterContains := after[key]

@@ -1,6 +1,8 @@
 package configdomain
 
 import (
+	"strings"
+
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -40,6 +42,124 @@ func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{
 		Aliases: Aliases{},
 	} //exhaustruct:ignore
+}
+
+// a function that deletes the local Git configuration value with the given key
+type removeLocalConfigValueFunc func(Key) error
+
+// Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
+func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValue removeLocalConfigValueFunc) error {
+	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
+		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
+		if childName == "" {
+			// empty lineage entries are invalid --> delete it
+			return removeLocalConfigValue(key)
+		}
+		child := gitdomain.NewLocalBranchName(childName)
+		value = strings.TrimSpace(value)
+		if value == "" {
+			// empty lineage entries are invalid --> delete it
+			return removeLocalConfigValue(key)
+		}
+		parent := gitdomain.NewLocalBranchName(value)
+		self.Lineage.Add(child, parent)
+		return nil
+	}
+	var err error
+	switch key {
+	case KeyAliasAppend:
+		self.Aliases[AliasableCommandAppend] = value
+	case KeyAliasCompress:
+		self.Aliases[AliasableCommandCompress] = value
+	case KeyAliasContribute:
+		self.Aliases[AliasableCommandContribute] = value
+	case KeyAliasDiffParent:
+		self.Aliases[AliasableCommandDiffParent] = value
+	case KeyAliasHack:
+		self.Aliases[AliasableCommandHack] = value
+	case KeyAliasKill:
+		self.Aliases[AliasableCommandKill] = value
+	case KeyAliasObserve:
+		self.Aliases[AliasableCommandObserve] = value
+	case KeyAliasPark:
+		self.Aliases[AliasableCommandPark] = value
+	case KeyAliasPrepend:
+		self.Aliases[AliasableCommandPrepend] = value
+	case KeyAliasPropose:
+		self.Aliases[AliasableCommandPropose] = value
+	case KeyAliasRenameBranch:
+		self.Aliases[AliasableCommandRenameBranch] = value
+	case KeyAliasRepo:
+		self.Aliases[AliasableCommandRepo] = value
+	case KeyAliasSetParent:
+		self.Aliases[AliasableCommandSetParent] = value
+	case KeyAliasShip:
+		self.Aliases[AliasableCommandShip] = value
+	case KeyAliasSync:
+		self.Aliases[AliasableCommandSync] = value
+	case KeyContributionBranches:
+		self.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyCreatePrototypeBranches:
+		var createPrototypeBranches CreatePrototypeBranches
+		createPrototypeBranches, err = NewCreatePrototypeBranches(value, KeyPrototypeBranches.String())
+		self.CreatePrototypeBranches = Some(createPrototypeBranches)
+	case KeyHostingOriginHostname:
+		self.HostingOriginHostname = NewHostingOriginHostnameOption(value)
+	case KeyHostingPlatform:
+		self.HostingPlatform, err = NewHostingPlatformOption(value)
+	case KeyGiteaToken:
+		self.GiteaToken = NewGiteaTokenOption(value)
+	case KeyGithubToken:
+		self.GitHubToken = NewGitHubTokenOption(value)
+	case KeyGitlabToken:
+		self.GitLabToken = NewGitLabTokenOption(value)
+	case KeyGitUserEmail:
+		self.GitUserEmail = NewGitUserEmailOption(value)
+	case KeyGitUserName:
+		self.GitUserName = NewGitUserNameOption(value)
+	case KeyMainBranch:
+		self.MainBranch = gitdomain.NewLocalBranchNameOption(value)
+	case KeyObservedBranches:
+		self.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyOffline:
+		self.Offline, err = NewOfflineOption(value, KeyOffline.String())
+	case KeyParkedBranches:
+		self.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyPerennialBranches:
+		self.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyPerennialRegex:
+		self.PerennialRegex = NewPerennialRegexOption(value)
+	case KeyPrototypeBranches:
+		self.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
+	case KeyPushHook:
+		var pushHook PushHook
+		pushHook, err = NewPushHook(value, KeyPushHook.String())
+		self.PushHook = Some(pushHook)
+	case KeyPushNewBranches:
+		self.PushNewBranches, err = ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
+	case KeyShipDeleteTrackingBranch:
+		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranchOption(value, KeyShipDeleteTrackingBranch.String())
+	case KeySyncBeforeShip:
+		self.SyncBeforeShip, err = ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
+	case KeySyncFeatureStrategy:
+		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyOption(value)
+	case KeySyncPerennialStrategy:
+		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyOption(value)
+	case KeySyncUpstream:
+		self.SyncUpstream, err = ParseSyncUpstreamOption(value, KeySyncUpstream.String())
+	case KeyDeprecatedCodeHostingDriver,
+		KeyDeprecatedCodeHostingOriginHostname,
+		KeyDeprecatedCodeHostingPlatform,
+		KeyDeprecatedMainBranchName,
+		KeyDeprecatedNewBranchPushFlag,
+		KeyDeprecatedPerennialBranchNames,
+		KeyDeprecatedPullBranchStrategy,
+		KeyDeprecatedPushVerify,
+		KeyDeprecatedShipDeleteRemoteBranch,
+		KeyDeprecatedSyncStrategy:
+		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
+	}
+	return err
 }
 
 // Merges the given PartialConfig into this configuration object.
