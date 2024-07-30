@@ -1,6 +1,9 @@
 package undoconfig
 
-import "github.com/git-town/git-town/v14/src/config/gitconfig"
+import (
+	"github.com/git-town/git-town/v14/src/config/configdomain"
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
+)
 
 // ConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.
 type ConfigSnapshot struct {
@@ -10,7 +13,7 @@ type ConfigSnapshot struct {
 
 func EmptyConfigSnapshot() ConfigSnapshot {
 	return ConfigSnapshot{
-		Global: map[gitconfig.Key]string{},
-		Local:  map[gitconfig.Key]string{},
+		Global: map[configdomain.Key]string{},
+		Local:  map[configdomain.Key]string{},
 	}
 }
