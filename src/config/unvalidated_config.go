@@ -181,7 +181,7 @@ func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalB
 // SetCreatePrototypeBranches updates whether Git Town is in offline mode.
 func (self *UnvalidatedConfig) SetCreatePrototypeBranches(value configdomain.CreatePrototypeBranches) error {
 	self.Config.Value.CreatePrototypeBranches = value
-	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyCreatePrototypeBranches, value.String())
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyCreatePrototypeBranches, value.String())
 }
 
 // SetMainBranch marks the given branch as the main branch

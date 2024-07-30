@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"slices"
 
@@ -263,6 +264,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
+	fc.Check(saveCreatePrototypeBranches(oldConfig.Config.Value.CreatePrototypeBranches, userInput.config.CreatePrototypeBranches, oldConfig))
 	fc.Check(saveHostingPlatform(oldConfig.Config.Value.HostingPlatform, userInput.config.HostingPlatform, gitCommands, frontend))
 	fc.Check(saveOriginHostname(oldConfig.Config.Value.HostingOriginHostname, userInput.config.HostingOriginHostname, gitCommands, frontend))
 	fc.Check(saveMainBranch(oldConfig.Config.Value.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
@@ -275,7 +277,6 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
 	fc.Check(saveSyncBeforeShip(oldConfig.Config.Value.SyncBeforeShip, userInput.config.SyncBeforeShip, oldConfig))
-	fc.Check(saveCreatePrototypeBranches(oldConfig.Config.Value.CreatePrototypeBranches, userInput.config.CreatePrototypeBranches, oldConfig))
 	return fc.Err
 }
 
@@ -297,9 +298,12 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 }
 
 func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {
+	fmt.Printf("111111111111111111111111111111111111 %q %q\n", oldValue, newValue)
 	if newValue == oldValue {
+		fmt.Println("2222222222222222222222222222222222")
 		return nil
 	}
+	fmt.Println("333333333333333333333333333333333")
 	return config.SetCreatePrototypeBranches(newValue)
 }
 

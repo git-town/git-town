@@ -164,6 +164,7 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    And local Git Town setting "create-prototype-branches" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist

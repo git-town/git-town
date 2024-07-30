@@ -25,6 +25,7 @@ Feature: change existing information in Git metadata
       | sync-upstream                             | down enter             |
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
+      | create-prototype-branches                 | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
       | save config to Git metadata               | down enter             |
@@ -72,6 +73,7 @@ Feature: change existing information in Git metadata
     And local Git Town setting "perennial-regex" is now "3366"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
+    And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
@@ -90,6 +92,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
+    And local Git Town setting "create-prototype-branches" now doesn't exist
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
