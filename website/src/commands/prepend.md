@@ -37,3 +37,8 @@ If [push-new-branches](../preferences/push-new-branches.md) is set, `git hack`
 creates a remote tracking branch for the new feature branch. This behavior is
 disabled by default to make `git hack` run fast. The first run of `git sync`
 will create the remote tracking branch.
+
+If the configuration setting
+[create-prototype-branches](../preferences/create-prototype-branches.md) is set,
+`git prepend` always creates a
+[prototype branch](../branch-types.md#prototype-branches).

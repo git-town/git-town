@@ -8,7 +8,7 @@ When running without uncommitted changes in your workspace, it also
 [syncs](sync.md) the main branch to ensure you develop on top of the current
 state of the repository. If the workspace contains uncommitted changes,
 `git hack` does not perform this sync to let you commit your open changes first
-and then sync manually.
+and then sync later.
 
 ### Configuration
 
@@ -20,6 +20,11 @@ If [push-new-branches](../preferences/push-new-branches.md) is set, `git hack`
 creates a remote tracking branch for the new feature branch. This behavior is
 disabled by default to make `git hack` run fast. The first run of `git sync`
 will create the remote tracking branch.
+
+If the configuration setting
+[create-prototype-branches](../preferences/create-prototype-branches.md) is set,
+`git hack` always creates a
+[prototype branch](../branch-types.md#prototype-branches).
 
 ### Arguments
 
