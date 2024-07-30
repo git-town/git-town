@@ -34,6 +34,7 @@ type UnvalidatedConfig struct {
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncPerennialStrategy    SyncPerennialStrategy
+	SyncPrototypeStrategy    SyncPrototypeStrategy
 	SyncUpstream             SyncUpstream
 }
 
@@ -154,6 +155,7 @@ func DefaultConfig() UnvalidatedConfig {
 		ShipDeleteTrackingBranch: true,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
+		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,
 		SyncUpstream:             true,
 	}
 }

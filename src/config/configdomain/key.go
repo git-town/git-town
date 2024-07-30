@@ -72,6 +72,7 @@ const (
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
 	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
+	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
 	KeySyncStrategy                        = Key("git-town.sync-strategy")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
 	KeyGitUserEmail                        = Key("user.email")
@@ -110,6 +111,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyShipDeleteTrackingBranch,
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
+	KeySyncPrototypeStrategy,
 	KeySyncStrategy,
 	KeySyncUpstream,
 }
