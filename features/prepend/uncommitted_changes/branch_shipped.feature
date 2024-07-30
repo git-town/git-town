@@ -17,25 +17,16 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                |
-      | child  | git add -A                             |
-      |        | git stash                              |
-      |        | git checkout main                      |
-      | main   | git rebase origin/main                 |
-      |        | git checkout parent                    |
-      | parent | git merge --no-edit --ff origin/parent |
-      |        | git merge --no-edit --ff main          |
-      |        | git checkout child                     |
-      | child  | git merge --no-edit --ff origin/child  |
-      |        | git merge --no-edit --ff parent        |
-      |        | git push                               |
-      |        | git checkout -b new parent             |
-      | new    | git stash pop                          |
+      | BRANCH | COMMAND                    |
+      | child  | git add -A                 |
+      |        | git stash                  |
+      |        | git checkout -b new parent |
+      | new    | git stash pop              |
     And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
-      | origin     | main, child, parent      |
+      | origin     | main, parent             |
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | new    |
@@ -46,17 +37,16 @@ Feature: prepend a branch to a branch that was shipped at the remote
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                         |
-      | new    | git add -A                                      |
-      |        | git stash                                       |
-      |        | git checkout child                              |
-      | child  | git reset --hard {{ sha 'child commit' }}       |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git branch -D new                               |
-      |        | git stash pop                                   |
+      | BRANCH | COMMAND            |
+      | new    | git add -A         |
+      |        | git stash          |
+      |        | git checkout child |
+      | child  | git branch -D new  |
+      |        | git stash pop      |
     And the current branch is now "child"
     And the branches are now
-      | REPOSITORY    | BRANCHES            |
-      | local, origin | main, child, parent |
+      | REPOSITORY | BRANCHES            |
+      | local      | main, child, parent |
+      | origin     | main, parent        |
     And the initial lineage exists
     And the uncommitted file still exists
