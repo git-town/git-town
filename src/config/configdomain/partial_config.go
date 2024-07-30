@@ -138,8 +138,6 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 		self.PushNewBranches, err = ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:
 		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranchOption(value, KeyShipDeleteTrackingBranch.String())
-	case KeySyncBeforeShip:
-		self.SyncBeforeShip, err = ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
 		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyOption(value)
 	case KeySyncPerennialStrategy:
@@ -187,7 +185,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		PushNewBranches:          other.PushNewBranches.Or(self.PushNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
-		SyncBeforeShip:           other.SyncBeforeShip.Or(self.SyncBeforeShip),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
@@ -219,7 +216,6 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
 		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
-		SyncBeforeShip:           self.SyncBeforeShip.GetOrElse(defaults.SyncBeforeShip),
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
