@@ -22,10 +22,7 @@ const (
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 	syncStrategyOpt, err := NewSyncStrategy(text)
-	syncStrategy, hasSyncStrategy := syncStrategyOpt.Get()
-	if !hasSyncStrategy {
-		return SyncFeatureStrategyMerge, err
-	}
+	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyMerge)
 	return SyncFeatureStrategy(syncStrategy), err
 }
 

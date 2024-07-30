@@ -22,10 +22,7 @@ const (
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 	syncStrategyOpt, err := NewSyncStrategy(text)
-	syncStrategy, hasSyncStrategy := syncStrategyOpt.Get()
-	if !hasSyncStrategy {
-		return SyncPerennialStrategyRebase, err
-	}
+	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
 	return SyncPerennialStrategy(syncStrategy), err
 }
 
