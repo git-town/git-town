@@ -229,6 +229,7 @@ func DefaultConfig() UnvalidatedConfig {
 		SyncBeforeShip:           false,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
+		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,
 		SyncUpstream:             true,
 	}
 }
