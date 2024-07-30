@@ -10,6 +10,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "perennial-regex" is "release-.*"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
+    And local Git Town setting "create-prototype-branches" is "true"
     And local Git Town setting "sync-before-ship" is "false"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     And local Git Town setting "sync-feature-strategy" is "merge"
@@ -46,6 +47,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "perennial-regex" now doesn't exist
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
+    And local Git Town setting "create-prototype-branches" now doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
     And local Git Town setting "sync-before-ship" now doesn't exist
     And the configuration file is now:
@@ -75,6 +77,14 @@ Feature: migrate existing configuration in Git metadata to a config file
       # and Git Town will create the missing tracking branch
       # on the first run of "git sync".
       push-new-branches = false
+
+      # The "create-prototype-branches" setting determines whether Git Town
+      # always creates prototype branches.
+      # Prototype branches sync only locally and don't create a tracking branch
+      # until they are proposed.
+      #
+      # More info at https://www.git-town.com/preferences/create-prototype-branches.
+      create-prototype-branches = true
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
@@ -158,6 +168,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
+    And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "perennial-regex" is now "release-.*"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
