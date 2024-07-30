@@ -13,16 +13,18 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And an uncommitted file
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                                   |
-      | prototype | git fetch --prune --tags                  |
-      |           | git add -A                                |
-      |           | git stash                                 |
-      |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
-      |           | git checkout prototype                    |
-      | prototype | git merge --no-edit --ff origin/prototype |
+      | BRANCH    | COMMAND                     |
+      | prototype | git fetch --prune --tags    |
+      |           | git add -A                  |
+      |           | git stash                   |
+      |           | git checkout main           |
+      | main      | git rebase origin/main      |
+      |           | git checkout prototype      |
+      | prototype | git rebase main             |
+      |           | git rebase origin/prototype |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
