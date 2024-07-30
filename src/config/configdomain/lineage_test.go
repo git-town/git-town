@@ -425,6 +425,24 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("Merge", func(t *testing.T) {
+		t.Parallel()
+
+		lineage1 := configdomain.NewLineage()
+		lineage1.Add("one", "main")
+		lineage1.Add("two", "one")
+		lineage2 := configdomain.NewLineage()
+		lineage2.Add("alpha", "main")
+		lineage2.Add("beta", "alpha")
+		haveMerged := lineage1.Merge(lineage2)
+		wantMerged := configdomain.NewLineage()
+		wantMerged.Add("one", "main")
+		wantMerged.Add("two", "one")
+		wantMerged.Add("alpha", "main")
+		wantMerged.Add("beta", "alpha")
+		must.Eq(t, wantMerged, haveMerged)
+	})
+
 	t.Run("OrderHierarchically", func(t *testing.T) {
 		t.Run("multiple lineages", func(t *testing.T) {
 			t.Parallel()

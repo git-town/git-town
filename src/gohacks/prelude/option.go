@@ -90,6 +90,13 @@ func (self Option[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
+func (self Option[T]) Or(other Option[T]) Option[T] {
+	if self.IsSome() {
+		return self
+	}
+	return other
+}
+
 // String provides the string serialization of the contained value.
 // If this option contains nothing, you get an empty string.
 func (self Option[T]) String() string {
