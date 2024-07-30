@@ -69,6 +69,7 @@ func executeUndo(verbose configdomain.Verbose) error {
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
+		DialogTestInputs: data.dialogTestInputs,
 		FinalMessages:    repo.FinalMessages,
 		Frontend:         repo.Frontend,
 		Git:              repo.Git,

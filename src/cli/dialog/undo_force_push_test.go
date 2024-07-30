@@ -9,6 +9,7 @@ import (
 
 func TestBoolEntry(t *testing.T) {
 	t.Parallel()
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		entry := dialog.BoolEntry(true)
