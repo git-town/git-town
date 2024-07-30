@@ -7,11 +7,6 @@ import (
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.
 type SyncFeatureStrategy SyncStrategy
 
-const (
-	SyncFeatureStrategyMerge  = SyncFeatureStrategy(SyncStrategyMerge)
-	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
-)
-
 func (self SyncFeatureStrategy) String() string {
 	return self.SyncStrategy().String()
 }
@@ -19,6 +14,11 @@ func (self SyncFeatureStrategy) String() string {
 func (self SyncFeatureStrategy) SyncStrategy() SyncStrategy {
 	return SyncStrategy(self)
 }
+
+const (
+	SyncFeatureStrategyMerge  = SyncFeatureStrategy(SyncStrategyMerge)
+	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
+)
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 	syncStrategyOpt, err := NewSyncStrategy(text)
