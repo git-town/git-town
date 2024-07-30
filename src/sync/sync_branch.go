@@ -60,7 +60,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			program:             list,
 			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncFeatureStrategy,
+			syncStrategy:        args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
@@ -72,7 +72,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			program:             list,
 			pushBranches:        args.PushBranch,
 			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncFeatureStrategy,
+			syncStrategy:        args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branch)
@@ -86,7 +86,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 			program:             list,
 			pushBranches:        false,
 			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncFeatureStrategy,
+			syncStrategy:        args.Config.SyncPrototypeStrategy.SyncStrategy(),
 		})
 	}
 	if args.PushBranch.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
