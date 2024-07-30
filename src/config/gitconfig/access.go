@@ -23,6 +23,7 @@ type Access struct {
 	Runner
 }
 
+// Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
 func (self *Access) AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
 		childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(key.String(), LineageKeyPrefix), LineageKeySuffix))
