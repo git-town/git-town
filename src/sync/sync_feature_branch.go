@@ -19,9 +19,9 @@ func FeatureBranchProgram(args featureBranchArgs) {
 		remoteName:          args.remoteName,
 	}
 	switch args.syncStrategy {
-	case configdomain.SyncFeatureStrategyMerge:
+	case configdomain.SyncStrategyMerge:
 		syncFeatureBranchMergeProgram(syncArgs)
-	case configdomain.SyncFeatureStrategyRebase:
+	case configdomain.SyncStrategyRebase:
 		syncFeatureBranchRebaseProgram(syncArgs)
 	}
 }
@@ -33,7 +33,7 @@ type featureBranchArgs struct {
 	program             Mutable[program.Program] // the program to update
 	pushBranches        configdomain.PushBranches
 	remoteName          Option[gitdomain.RemoteBranchName]
-	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
+	syncStrategy        configdomain.SyncStrategy // the sync-feature-strategy
 }
 
 // syncs the given feature branch using the "merge" sync strategy
