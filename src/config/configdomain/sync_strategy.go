@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"fmt"
+	"strings"
 
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
@@ -23,7 +24,7 @@ const (
 )
 
 func NewSyncStrategy(text string) (Option[SyncStrategy], error) {
-	switch text {
+	switch strings.ToLower(text) {
 	case "":
 		return None[SyncStrategy](), nil
 	case "merge":

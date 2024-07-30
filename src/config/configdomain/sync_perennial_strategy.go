@@ -24,7 +24,7 @@ func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 	syncStrategyOpt, err := NewSyncStrategy(text)
 	syncStrategy, hasSyncStrategy := syncStrategyOpt.Get()
 	if !hasSyncStrategy {
-		return SyncPerennialStrategyMerge, err
+		return SyncPerennialStrategyRebase, err
 	}
 	return SyncPerennialStrategy(syncStrategy), err
 }
