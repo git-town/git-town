@@ -21,6 +21,7 @@ Feature: enter the GitLab API token
       | sync-upstream                 | enter             |                                             |
       | push-new-branches             | enter             |                                             |
       | push-hook                     | enter             |                                             |
+      | create-prototype-branches     | enter             |                                             |
       | ship-delete-tracking-branch   | enter             |                                             |
       | save config to Git metadata   | down enter        |                                             |
     Then it runs the commands
@@ -45,6 +46,7 @@ Feature: enter the GitLab API token
       | sync-upstream               | enter             |                                             |
       | push-new-branches           | enter             |                                             |
       | push-hook                   | enter             |                                             |
+      | create-prototype-branches   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then it runs the commands

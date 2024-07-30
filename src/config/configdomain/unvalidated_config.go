@@ -13,6 +13,7 @@ import (
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
+	CreatePrototypeBranches  CreatePrototypeBranches
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -120,6 +121,9 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		self.Lineage.Add(entry.Child, entry.Parent)
 	}
 	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
+	if createPrototypeBranches, hasCreatePrototypeBranches := other.CreatePrototypeBranches.Get(); hasCreatePrototypeBranches {
+		self.CreatePrototypeBranches = createPrototypeBranches
+	}
 	if other.HostingOriginHostname.IsSome() {
 		self.HostingOriginHostname = other.HostingOriginHostname
 	}
@@ -195,6 +199,7 @@ func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
+		CreatePrototypeBranches:  false,
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GitUserEmail:             None[GitUserEmail](),

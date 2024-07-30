@@ -231,7 +231,7 @@ func prependProgram(data prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.prototype.IsTrue() {
+	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {

@@ -9,6 +9,7 @@ import (
 type PartialConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
+	CreatePrototypeBranches  Option[CreatePrototypeBranches]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]

@@ -52,6 +52,7 @@ const (
 	ContributionBranchCannotPark       = "cannot park contribution branches"
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
+	CreatePrototypeBranches            = "Create prototype branches:"
 	DiffConflictWithMain               = "conflicts between your uncommmitted changes and the main branch"
 	DryRun                             = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 	ValueInvalid                       = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""

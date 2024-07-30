@@ -11,6 +11,7 @@ func RootCmd() *cobra.Command {
 		Hidden: true,
 	}
 	debugCommand.AddCommand(enterAliases())
+	debugCommand.AddCommand(enterCreatePrototypeBranches())
 	debugCommand.AddCommand(enterHostingPlatform())
 	debugCommand.AddCommand(enterGiteaToken())
 	debugCommand.AddCommand(enterGitHubToken())

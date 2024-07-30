@@ -86,6 +86,10 @@ func (self *UnvalidatedConfig) OriginURLString() string {
 	return self.GitConfig.OriginRemote()
 }
 
+func (self *UnvalidatedConfig) RemoveCreatePrototypeBranches() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyCreatePrototypeBranches)
+}
+
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
 func (self *UnvalidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.Value.ContributionBranches = slice.Remove(self.Config.Value.ContributionBranches, branch)
@@ -168,6 +172,12 @@ func (self *UnvalidatedConfig) RemoveSyncUpstream() {
 func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.Value.ContributionBranches = branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
+}
+
+// SetCreatePrototypeBranches updates whether Git Town is in offline mode.
+func (self *UnvalidatedConfig) SetCreatePrototypeBranches(value configdomain.CreatePrototypeBranches) error {
+	self.Config.Value.CreatePrototypeBranches = value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyCreatePrototypeBranches, value.String())
 }
 
 // SetMainBranch marks the given branch as the main branch
