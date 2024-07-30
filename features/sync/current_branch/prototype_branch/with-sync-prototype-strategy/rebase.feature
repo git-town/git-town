@@ -31,10 +31,7 @@ Feature: sync the current prototype branch in a local repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                                              |
-      | prototype | git add -A                                           |
-      |           | git stash                                            |
-      |           | git reset --hard {{ sha-before-run 'local commit' }} |
-      |           | git stash pop                                        |
+      | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"
     And the initial commits exist
     And the initial branches and lineage exist
