@@ -189,11 +189,13 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncBeforeShip:           other.SyncBeforeShip.Or(self.SyncBeforeShip),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
+		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 	}
 }
 
 func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
 	return UnvalidatedConfig{
 		Aliases:                  self.Aliases,
 		ContributionBranches:     self.ContributionBranches,
@@ -217,8 +219,9 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
 		SyncBeforeShip:           self.SyncBeforeShip.GetOrElse(defaults.SyncBeforeShip),
-		SyncFeatureStrategy:      self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy),
+		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
+		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
 	}
 }

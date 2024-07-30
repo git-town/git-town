@@ -20,14 +20,18 @@ const (
 	SyncPrototypeStrategyRebase = SyncPrototypeStrategy(SyncStrategyRebase)
 )
 
-func NewSyncPrototypeStrategy(text string) (SyncPrototypeStrategy, error) {
+func NewSyncPrototypeStrategyFromString(text string) (SyncPrototypeStrategy, error) {
 	syncStrategyOpt, err := ParseSyncStrategy(text)
 	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
 	return SyncPrototypeStrategy(syncStrategy), err
 }
 
+func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
+	return SyncPrototypeStrategy(syncFeatureStrategy)
+}
+
 func NewSyncPrototypeStrategyOption(text string) (Option[SyncPrototypeStrategy], error) {
-	result, err := NewSyncPrototypeStrategy(text)
+	result, err := NewSyncPrototypeStrategyFromString(text)
 	if err != nil {
 		return None[SyncPrototypeStrategy](), err
 	}
