@@ -71,6 +71,14 @@ Feature: Accepting all default values leads to a working setup
       # on the first run of "git sync".
       push-new-branches = false
 
+      # The "create-prototype-branches" setting determines whether Git Town
+      # always creates prototype branches.
+      # Prototype branches sync only locally and don't create a tracking branch
+      # until they are proposed.
+      #
+      # More info at https://www.git-town.com/preferences/create-prototype-branches.
+      create-prototype-branches = false
+
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
       # (GitHub, GitLab, etc) deletes head branches when
