@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-// GitHubToken is a bearer token to use with the GitHub API.
+// whether all created branches should be prototype
 type CreatePrototypeBranches bool
 
 func (self CreatePrototypeBranches) Bool() bool {
