@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"slices"
 
@@ -219,7 +220,9 @@ func appendProgram(data appendFeatureData) program.Program {
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
-	if data.prototype.IsTrue() {
+	fmt.Println("11111111111111111111111111111111111111111111111111", data.config.Config.CreatePrototypeBranches.IsTrue())
+	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
+		fmt.Println("222222222222222222222222222222222222222")
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}

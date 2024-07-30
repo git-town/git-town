@@ -2,6 +2,7 @@ package execute
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v14/src/config"
@@ -63,6 +64,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	fmt.Println("66666666666666666666666666666666666666666666", localConfig.CreatePrototypeBranches)
 	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access:       configGitAccess,
 		ConfigFile:   configFile,
@@ -70,6 +72,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		GlobalConfig: globalConfig,
 		LocalConfig:  localConfig,
 	})
+	fmt.Println("33333333333333333333333", unvalidatedConfig.LocalGitConfig.CreatePrototypeBranches)
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
 		counter:          commandsCounter,

@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -122,6 +123,10 @@ func (self *UnvalidatedConfig) Merge(other PartialConfig) {
 		self.Lineage.Add(entry.Child, entry.Parent)
 	}
 	self.ContributionBranches = append(self.ContributionBranches, other.ContributionBranches...)
+	if createPrototypeBranches, hasCreatePrototypeBranches := other.CreatePrototypeBranches.Get(); hasCreatePrototypeBranches {
+		fmt.Println("444444444444444444444444444444444444444444444444 MERGING create-prototype-branches", createPrototypeBranches)
+		self.CreatePrototypeBranches = createPrototypeBranches
+	}
 	if other.HostingOriginHostname.IsSome() {
 		self.HostingOriginHostname = other.HostingOriginHostname
 	}
@@ -232,6 +237,7 @@ func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, loc
 		result.Merge(configFile)
 	}
 	result.Merge(globalGitConfig)
+	fmt.Println("55555555555555555555555555555555555555555555 MERGING local git config", localGitConfig.CreatePrototypeBranches)
 	result.Merge(localGitConfig)
 	return result
 }
