@@ -61,7 +61,13 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 	ec.Check(err)
 	syncBeforeShip, err := ParseSyncBeforeShipOption(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
 	ec.Check(err)
-	syncFeatureStrategy, err := NewSyncFeatureStrategyOption(snapshot[KeySyncFeatureStrategy], KeySyncFeatureStrategy.String())
+	syncFeatureStrategy, err := NewSyncFeatureStrategyOption(snapshot[KeySyncFeatureStrategy])
+	ec.Check(err)
+	syncPerennialStrategy, err := NewSyncPerennialStrategyOption(snapshot[KeySyncPerennialStrategy])
+	ec.Check(err)
+	syncPrototypeStrategy, err := NewSyncPrototypeStrategyOption(snapshot[KeySyncPrototypeStrategy])
+	ec.Check(err)
+	syncUpstream, err := ParseSyncUpstreamOption(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  NewAliasesFromSnapshot(snapshot),
@@ -87,9 +93,9 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		SyncBeforeShip:           syncBeforeShip,
 		SyncFeatureStrategy:      syncFeatureStrategy,
-		SyncPerennialStrategy:    Option{},
-		SyncPrototypeStrategy:    Option{},
-		SyncUpstream:             Option{},
+		SyncPerennialStrategy:    syncPerennialStrategy,
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncUpstream:             syncUpstream,
 	}, err
 }
 
