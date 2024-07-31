@@ -53,7 +53,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	offline, err := NewOfflineOption(snapshot[KeyOffline], KeyOffline.String())
 	ec.Check(err)
-	pushHook, err := NewPushHookOption(snapshot[KeyPushHook], KeyPushHook.String())
+	pushHook, err := ParsePushHookOption(snapshot[KeyPushHook], KeyPushHook.String())
 	ec.Check(err)
 	pushNewBranches, err := ParsePushNewBranchesOption(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
 	ec.Check(err)

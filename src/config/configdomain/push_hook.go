@@ -36,17 +36,6 @@ func ParsePushHookOption(valueStr, source string) (Option[PushHook], error) {
 	return Some(PushHook(valueBool)), nil
 }
 
-func NewPushHookOption(value, source string) (Option[PushHook], error) {
-	if value == "" {
-		return None[PushHook](), nil
-	}
-	boolValue, err := gohacks.ParseBool(value)
-	if err != nil {
-		return None[PushHook](), fmt.Errorf(messages.ValueInvalid, source, value)
-	}
-	return Some(PushHook(boolValue)), nil
-}
-
 // NoPushHook helps using the type checker to verify correct negation of the push-hook configuration setting.
 type NoPushHook bool
 
