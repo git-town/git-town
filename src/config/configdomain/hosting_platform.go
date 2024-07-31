@@ -24,7 +24,7 @@ const (
 func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 	text := strings.ToLower(platformName)
 	for _, hostingPlatform := range hostingPlatforms() {
-		if strings.ToLower(text) == hostingPlatform.String() {
+		if text == hostingPlatform.String() {
 			return hostingPlatform, nil
 		}
 	}
