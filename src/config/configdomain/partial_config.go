@@ -44,6 +44,10 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) PartialConfig {
+	return PartialConfig{}
+}
+
 // a function that deletes the local Git configuration value with the given key
 type removeLocalConfigValueFunc func(Key) error
 
