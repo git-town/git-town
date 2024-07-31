@@ -12,14 +12,15 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
-// indicates using the returned option whether this key is a lineage key
-func (self Key) IsLineage() Option[string] {
+// IsLineage indicates using the returned option whether this key is a lineage key.
+// The option contains the name of the child branch of the lineage entry.
+func (self Key) IsLineage() (child Option[gitdomain.LocalBranchName]) {
 	selfStr := self.String()
-	childName := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(selfStr, LineageKeyPrefix), LineageKeySuffix))
-	if childName != selfStr {
-		return Some(childName)
+	childStr := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(selfStr, LineageKeyPrefix), LineageKeySuffix))
+	if childStr != selfStr {
+		return Some(gitdomain.NewLocalBranchName(childStr))
 	}
-	return None[string]()
+	return None[gitdomain.LocalBranchName]()
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
