@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -47,22 +46,15 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error) {
+	ec := gohacks.ErrorCollector{}
 	createPrototypeBranches, err := NewCreatePrototypeBranchesFromGitConfig(snapshot[KeyPrototypeBranches])
-	if err != nil {
-		return EmptyPartialConfig(), err
-	}
+	ec.Check(err)
 	hostingPlatform, err := NewHostingPlatformOption(snapshot[KeyHostingPlatform])
-	if err != nil {
-		return EmptyPartialConfig(), err
-	}
-	offline, err := NewOfflineOption(snapshot[KeyOffline])
-	if err != nil {
-		return EmptyPartialConfig(), err
-	}
-	pushHook, err := NewPushHookOption(snapshot[KeyPushHook])
-	if err != nil {
-		return EmptyPartialConfig(), err
-	}
+	ec.Check(err)
+	offline, err := NewOfflineOption(snapshot[KeyOffline], KeyOffline.String())
+	ec.Check(err)
+	pushHook, err := NewPushHookOption(snapshot[KeyPushHook], KeyPushHook.String())
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  NewAliasesFromSnapshot(snapshot),
 		ContributionBranches:     gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyPrototypeBranches]),
@@ -82,7 +74,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 		PerennialBranches:        gitdomain.NewLocalBranchNames(snapshot[KeyPerennialBranches]),
 		PerennialRegex:           NewPerennialRegexOption(snapshot[KeyPerennialRegex]),
 		PrototypeBranches:        gitdomain.NewLocalBranchNames(snapshot[KeyPrototypeBranches]),
-		PushHook:                 ,
+		PushHook:                 pushHook,
 		PushNewBranches:          Option{},
 		ShipDeleteTrackingBranch: Option{},
 		SyncBeforeShip:           Option{},
