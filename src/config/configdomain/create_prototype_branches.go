@@ -25,7 +25,7 @@ func (self CreatePrototypeBranches) String() string {
 }
 
 // deserializes the given Git configuration value into a CreatePrototypeBranches instance
-func ParseCreatePrototypeBranches(valueStr, source string) (Option[CreatePrototypeBranches], error) {
+func ParseCreatePrototypeBranchesOpt(valueStr, source string) (Option[CreatePrototypeBranches], error) {
 	if valueStr == "" {
 		return None[CreatePrototypeBranches](), nil
 	}
