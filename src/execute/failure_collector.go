@@ -12,7 +12,7 @@ import (
 // Use with care and only if it's abundantly clear and obvious that there are no negative side effects.
 // This is an anti-pattern in code to work arount an anti-pattern in the language.
 type FailureCollector struct {
-	gohacks.ErrorCollector
+	gohacks.ErrorCollector `exhaustruct:"optional"`
 }
 
 func (self *FailureCollector) BranchInfos(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
