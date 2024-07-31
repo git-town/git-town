@@ -29,6 +29,9 @@ func ParsePushNewBranches(value, source string) (PushNewBranches, error) {
 }
 
 func ParsePushNewBranchesOption(value, source string) (Option[PushNewBranches], error) {
+	if value == "" {
+		return None[PushNewBranches](), nil
+	}
 	result, err := ParsePushNewBranches(value, source)
 	if err != nil {
 		return None[PushNewBranches](), err

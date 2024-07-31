@@ -29,6 +29,9 @@ func ParseSyncBeforeShip(value, source string) (SyncBeforeShip, error) {
 }
 
 func ParseSyncBeforeShipOption(value, source string) (Option[SyncBeforeShip], error) {
+	if value == "" {
+		return None[SyncBeforeShip](), nil
+	}
 	result, err := ParseSyncBeforeShip(value, source)
 	if err != nil {
 		return None[SyncBeforeShip](), err
