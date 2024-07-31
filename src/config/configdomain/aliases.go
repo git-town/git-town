@@ -1,6 +1,6 @@
 package configdomain
 
-import "errors"
+import "fmt"
 
 // Aliases contains the Git Town releated Git aliases.
 type Aliases map[AliasableCommand]string
@@ -11,7 +11,7 @@ func NewAliasesFromSnapshot(snapshot SingleSnapshot) (Aliases, error) {
 		if key.IsAliasKey() {
 			aliasableCommand, has := AliasableCommandForKey(key).Get()
 			if !has {
-				return result, errors.New("not an aliasable command: " + key.String())
+				return result, fmt.Errorf("not an aliasable command: %q", key)
 			}
 			result[aliasableCommand] = value
 		}
