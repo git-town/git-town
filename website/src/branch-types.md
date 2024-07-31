@@ -85,6 +85,13 @@ are useful when:
 - you want to reduce CI pressure in the early phases of feature development when
   there isn't anything to test
 
+Syncing prototype branches follows the
+[sync-prototype-strategy](preferences/sync-prototype-strategy.md) or - if this
+setting isn't present - the
+[sync-feature-strategy](preferences/sync-feature-strategy.md). This allows you
+to rebase your commits while working locally, and avoid rebasing when your
+commits become visible to others.
+
 When you [propose](commands/propose.md) a prototype branch, it loses its
 prototype status since it now has an official tracking branch that other people
 look at. In this situation you can keep syncing without pushes by using the
