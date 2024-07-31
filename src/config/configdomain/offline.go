@@ -25,6 +25,9 @@ func (offline Offline) ToOnline() Online {
 }
 
 func NewOfflineOption(value, source string) (Option[Offline], error) {
+	if value == "" {
+		return None[Offline](), nil
+	}
 	boolValue, err := gohacks.ParseBool(value)
 	if err != nil {
 		return None[Offline](), fmt.Errorf(messages.ValueInvalid, source, value)
