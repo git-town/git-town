@@ -47,7 +47,7 @@ const (
 
 func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingPlatform] {
 	switch entry {
-	case hostingPlatformAutoDetect:
+	case hostingPlatformAutoDetect, "":
 		return None[configdomain.HostingPlatform]()
 	case hostingPlatformBitBucket:
 		return Some(configdomain.HostingPlatformBitbucket)
@@ -58,7 +58,7 @@ func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingP
 	case hostingPlatformGitLab:
 		return Some(configdomain.HostingPlatformGitLab)
 	}
-	panic("unknown hosting platform: " + entry)
+	panic(fmt.Sprintf(messages.HostingPlatformUnknown, entry))
 }
 
 func (entry hostingPlatformEntry) String() string {

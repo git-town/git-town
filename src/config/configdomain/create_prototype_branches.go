@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -23,11 +24,14 @@ func (self CreatePrototypeBranches) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewCreatePrototypeBranches(value, source string) (CreatePrototypeBranches, error) {
-	parsed, err := gohacks.ParseBool(value)
-	if err != nil {
-		return CreatePrototypeBranches(true), fmt.Errorf(messages.ValueInvalid, source, value)
+// deserializes the given Git configuration value into a CreatePrototypeBranches instance
+func ParseCreatePrototypeBranchesOpt(valueStr, source string) (Option[CreatePrototypeBranches], error) {
+	if valueStr == "" {
+		return None[CreatePrototypeBranches](), nil
 	}
-	result := CreatePrototypeBranches(parsed)
-	return result, nil
+	valueBool, err := gohacks.ParseBool(valueStr)
+	if err != nil {
+		return None[CreatePrototypeBranches](), fmt.Errorf(messages.ValueInvalid, source, valueStr)
+	}
+	return Some(CreatePrototypeBranches(valueBool)), nil
 }
