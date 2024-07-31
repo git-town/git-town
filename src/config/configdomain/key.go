@@ -14,6 +14,8 @@ type Key string
 
 // IsLineage indicates using the returned option whether this key is a lineage key.
 // The option contains the name of the child branch of the lineage entry.
+// This method returns a string instead of a gitdomain.LocalBranchName to indicate that
+// the returned child name isn't verified and might be empty.
 func (self Key) IsLineage() (child Option[string]) {
 	selfStr := self.String()
 	childStr := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(selfStr, LineageKeyPrefix), LineageKeySuffix))
