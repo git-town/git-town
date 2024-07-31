@@ -45,7 +45,7 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	createPrototypeBranches, err := NewCreatePrototypeBranchesFromGitConfig(snapshot[KeyPrototypeBranches])
 	ec.Check(err)
@@ -69,6 +69,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstreamOption(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
+	lineage, err := NewLineageFromSnapshot(snapshot, removeLocalConfigValue)
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  NewAliasesFromSnapshot(snapshot),
 		ContributionBranches:     gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyPrototypeBranches]),
@@ -80,7 +82,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 		GiteaToken:               NewGiteaTokenOption(snapshot[KeyGiteaToken]),
 		HostingOriginHostname:    NewHostingOriginHostnameOption(snapshot[KeyHostingOriginHostname]),
 		HostingPlatform:          hostingPlatform,
-		Lineage:                  NewLineageFromSnapshot(snapshot),
+		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
 		ObservedBranches:         gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyObservedBranches]),
 		Offline:                  offline,

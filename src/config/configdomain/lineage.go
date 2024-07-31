@@ -3,6 +3,7 @@ package configdomain
 import (
 	"cmp"
 	"slices"
+	"strings"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
@@ -24,8 +25,25 @@ func NewLineage() Lineage {
 	}
 }
 
-func NewLineageFromSnapshot(snapshot SingleSnapshot) Lineage {
-	return Lineage{}
+func NewLineageFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
+	result := Lineage{}
+	for key, value := range snapshot {
+		if childStr, isLineage := key.IsLineage().Get(); isLineage {
+			if childStr == "" {
+				// empty lineage entries are invalid --> delete it
+				return result, removeLocalConfigValue(key)
+			}
+			child := gitdomain.NewLocalBranchName(childStr)
+			value = strings.TrimSpace(value)
+			if value == "" {
+				// empty lineage entries are invalid --> delete it
+				return result, removeLocalConfigValue(key)
+			}
+			parent := gitdomain.NewLocalBranchName(value)
+			result.Add(child, parent)
+		}
+	}
+	return result, nil
 }
 
 func (self *Lineage) Add(branch, parent gitdomain.LocalBranchName) {
