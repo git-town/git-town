@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -30,4 +31,12 @@ func NewCreatePrototypeBranches(value, source string) (CreatePrototypeBranches, 
 	}
 	result := CreatePrototypeBranches(parsed)
 	return result, nil
+}
+
+func NewCreatePrototypeBranchesFromGitConfig(configStr string) (Option[CreatePrototypeBranches], error) {
+	if configStr == "" {
+		return None[CreatePrototypeBranches](), nil
+	}
+	result, err := gohacks.ParseBool(configStr)
+	return Some(CreatePrototypeBranches(result)), err
 }

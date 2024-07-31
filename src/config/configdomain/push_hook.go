@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
@@ -31,6 +32,14 @@ func NewPushHook(value, source string) (PushHook, error) {
 	}
 	result := PushHook(parsed)
 	return result, nil
+}
+
+func NewPushHookOption(value, source string) (Option[PushHook], error) {
+	boolValue, err := gohacks.ParseBool(value)
+	if err != nil {
+		return None[PushHook](), fmt.Errorf(messages.ValueInvalid, source, value)
+	}
+	return Some(PushHook(boolValue)), nil
 }
 
 // NoPushHook helps using the type checker to verify correct negation of the push-hook configuration setting.

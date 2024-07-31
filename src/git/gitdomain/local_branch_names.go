@@ -18,6 +18,10 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
+func NewLocalBranchNamesFromGitConfig(stored string) LocalBranchNames {
+	return NewLocalBranchNames()
+}
+
 // ParseLocalBranchNamesRef constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
 func ParseLocalBranchNames(names string) LocalBranchNames {

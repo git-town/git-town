@@ -1,9 +1,11 @@
 package configdomain
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
@@ -44,8 +46,51 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) PartialConfig {
-	return PartialConfig{}
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error) {
+	createPrototypeBranches, err := NewCreatePrototypeBranchesFromGitConfig(snapshot[KeyPrototypeBranches])
+	if err != nil {
+		return EmptyPartialConfig(), err
+	}
+	hostingPlatform, err := NewHostingPlatformOption(snapshot[KeyHostingPlatform])
+	if err != nil {
+		return EmptyPartialConfig(), err
+	}
+	offline, err := NewOfflineOption(snapshot[KeyOffline])
+	if err != nil {
+		return EmptyPartialConfig(), err
+	}
+	pushHook, err := NewPushHookOption(snapshot[KeyPushHook])
+	if err != nil {
+		return EmptyPartialConfig(), err
+	}
+	return PartialConfig{
+		Aliases:                  NewAliasesFromSnapshot(snapshot),
+		ContributionBranches:     gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyPrototypeBranches]),
+		CreatePrototypeBranches:  createPrototypeBranches,
+		GitHubToken:              NewGitHubTokenOption(snapshot[KeyGithubToken]),
+		GitLabToken:              NewGitLabTokenOption(snapshot[KeyGitlabToken]),
+		GitUserEmail:             NewGitUserEmailOption(snapshot[KeyGitUserEmail]),
+		GitUserName:              NewGitUserNameOption(snapshot[KeyGitUserName]),
+		GiteaToken:               NewGiteaTokenOption(snapshot[KeyGiteaToken]),
+		HostingOriginHostname:    NewHostingOriginHostnameOption(snapshot[KeyHostingOriginHostname]),
+		HostingPlatform:          hostingPlatform,
+		Lineage:                  NewLineageFromSnapshot(snapshot),
+		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
+		ObservedBranches:         gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyObservedBranches]),
+		Offline:                  offline,
+		ParkedBranches:           gitdomain.NewLocalBranchNames(snapshot[KeyParkedBranches]),
+		PerennialBranches:        gitdomain.NewLocalBranchNames(snapshot[KeyPerennialBranches]),
+		PerennialRegex:           NewPerennialRegexOption(snapshot[KeyPerennialRegex]),
+		PrototypeBranches:        gitdomain.NewLocalBranchNames(snapshot[KeyPrototypeBranches]),
+		PushHook:                 ,
+		PushNewBranches:          Option{},
+		ShipDeleteTrackingBranch: Option{},
+		SyncBeforeShip:           Option{},
+		SyncFeatureStrategy:      Option{},
+		SyncPerennialStrategy:    Option{},
+		SyncPrototypeStrategy:    Option{},
+		SyncUpstream:             Option{},
+	}, err
 }
 
 // a function that deletes the local Git configuration value with the given key
