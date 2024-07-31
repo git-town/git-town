@@ -24,7 +24,8 @@ func (self CreatePrototypeBranches) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewCreatePrototypeBranchesFromGitConfig(valueStr, source string) (Option[CreatePrototypeBranches], error) {
+// deserializes the given Git configuration value into a CreatePrototypeBranches instance
+func ParseCreatePrototypeBranches(valueStr, source string) (Option[CreatePrototypeBranches], error) {
 	if valueStr == "" {
 		return None[CreatePrototypeBranches](), nil
 	}
