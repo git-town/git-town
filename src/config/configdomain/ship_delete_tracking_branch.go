@@ -30,6 +30,9 @@ func ParseShipDeleteTrackingBranch(value, source string) (ShipDeleteTrackingBran
 }
 
 func ParseShipDeleteTrackingBranchOption(value, source string) (Option[ShipDeleteTrackingBranch], error) {
+	if value == "" {
+		return None[ShipDeleteTrackingBranch](), nil
+	}
 	result, err := ParseShipDeleteTrackingBranch(value, source)
 	if err != nil {
 		return None[ShipDeleteTrackingBranch](), err
