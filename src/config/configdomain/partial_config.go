@@ -55,6 +55,14 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 	ec.Check(err)
 	pushHook, err := NewPushHookOption(snapshot[KeyPushHook], KeyPushHook.String())
 	ec.Check(err)
+	pushNewBranches, err := ParsePushNewBranchesOption(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
+	ec.Check(err)
+	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranchOption(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
+	ec.Check(err)
+	syncBeforeShip, err := ParseSyncBeforeShipOption(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
+	ec.Check(err)
+	syncFeatureStrategy, err := NewSyncFeatureStrategyOption(snapshot[KeySyncFeatureStrategy], KeySyncFeatureStrategy.String())
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  NewAliasesFromSnapshot(snapshot),
 		ContributionBranches:     gitdomain.NewLocalBranchNamesFromGitConfig(snapshot[KeyPrototypeBranches]),
@@ -75,10 +83,10 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 		PerennialRegex:           NewPerennialRegexOption(snapshot[KeyPerennialRegex]),
 		PrototypeBranches:        gitdomain.NewLocalBranchNames(snapshot[KeyPrototypeBranches]),
 		PushHook:                 pushHook,
-		PushNewBranches:          Option{},
-		ShipDeleteTrackingBranch: Option{},
-		SyncBeforeShip:           Option{},
-		SyncFeatureStrategy:      Option{},
+		PushNewBranches:          pushNewBranches,
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		SyncBeforeShip:           syncBeforeShip,
+		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    Option{},
 		SyncPrototypeStrategy:    Option{},
 		SyncUpstream:             Option{},
