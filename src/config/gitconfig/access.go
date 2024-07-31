@@ -154,9 +154,6 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 			}
 		}
 		snapshot[configKey] = value
-		if err != nil {
-			return snapshot, configdomain.EmptyPartialConfig(), err
-		}
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err
