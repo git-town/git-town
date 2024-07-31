@@ -45,7 +45,7 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	createPrototypeBranches, err := NewCreatePrototypeBranchesFromGitConfig(snapshot[KeyPrototypeBranches])
 	ec.Check(err)
@@ -69,7 +69,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValu
 	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstreamOption(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
-	lineage, err := NewLineageFromSnapshot(snapshot, removeLocalConfigValue)
+	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  NewAliasesFromSnapshot(snapshot),

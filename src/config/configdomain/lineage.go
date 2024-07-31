@@ -2,13 +2,16 @@ package configdomain
 
 import (
 	"cmp"
+	"fmt"
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v14/src/cli/colors"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
+	"github.com/git-town/git-town/v14/src/messages"
 	"golang.org/x/exp/maps"
 )
 
@@ -25,8 +28,8 @@ func NewLineage() Lineage {
 	}
 }
 
-func NewLineageFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
-	result := Lineage{}
+func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
+	result := NewLineage()
 	for key, value := range snapshot {
 		if childStr, isLineage := key.IsLineage().Get(); isLineage {
 			if childStr == "" {
@@ -38,6 +41,10 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue remo
 			if value == "" {
 				// empty lineage entries are invalid --> delete it
 				return result, removeLocalConfigValue(key)
+			}
+			if updateOutdated && childStr == value {
+				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, childStr)))
+				_ = removeLocalConfigValue(NewParentKey(child))
 			}
 			parent := gitdomain.NewLocalBranchName(value)
 			result.Add(child, parent)
