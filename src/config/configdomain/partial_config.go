@@ -47,7 +47,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec := gohacks.ErrorCollector{}
 	aliases, err := NewAliasesFromSnapshot(snapshot)
 	ec.Check(err)
-	createPrototypeBranches, err := NewCreatePrototypeBranchesFromGitConfig(snapshot[KeyPrototypeBranches])
+	createPrototypeBranches, err := ParseCreatePrototypeBranchesOpt(snapshot[KeyPrototypeBranches], KeyPrototypeBranches.String())
 	ec.Check(err)
 	hostingPlatform, err := NewHostingPlatformOption(snapshot[KeyHostingPlatform])
 	ec.Check(err)
