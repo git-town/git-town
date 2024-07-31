@@ -33,6 +33,9 @@ func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 
 // NewHostingPlatformOption provides the HostingPlatform enum matching the given text.
 func NewHostingPlatformOption(platformName string) (Option[HostingPlatform], error) {
+	if platformName == "" {
+		return None[HostingPlatform](), nil
+	}
 	platform, err := NewHostingPlatform(platformName)
 	if err != nil {
 		return None[HostingPlatform](), err
