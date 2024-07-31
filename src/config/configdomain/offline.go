@@ -24,12 +24,15 @@ func (offline Offline) ToOnline() Online {
 	return Online(!offline.Bool())
 }
 
-func NewOfflineOption(value, source string) (Option[Offline], error) {
-	boolValue, err := gohacks.ParseBool(value)
-	if err != nil {
-		return None[Offline](), fmt.Errorf(messages.ValueInvalid, source, value)
+func NewOfflineOption(valueStr, source string) (Option[Offline], error) {
+	if valueStr == "" {
+		return None[Offline](), nil
 	}
-	return Some(Offline(boolValue)), nil
+	valueBool, err := gohacks.ParseBool(valueStr)
+	if err != nil {
+		return None[Offline](), fmt.Errorf(messages.ValueInvalid, source, valueStr)
+	}
+	return Some(Offline(valueBool)), nil
 }
 
 type Online bool
