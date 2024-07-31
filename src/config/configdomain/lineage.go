@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"slices"
 
+	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -22,6 +23,10 @@ func NewLineage() Lineage {
 	return Lineage{
 		data: make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName),
 	}
+}
+
+func NewLineageFromSnapshot(snapshot gitconfig.SingleSnapshot) Lineage {
+	return Lineage{}
 }
 
 func (self *Lineage) Add(branch, parent gitdomain.LocalBranchName) {
