@@ -10,6 +10,12 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsAliasKey", func(t *testing.T) {
+		t.Parallel()
+		must.True(t, configdomain.KeyAliasAppend.IsAliasKey())
+		must.False(t, configdomain.KeyPushHook.IsAliasKey())
+	})
+
 	t.Run("IsLineage", func(t *testing.T) {
 		t.Parallel()
 		t.Run("valid lineage key", func(t *testing.T) {
