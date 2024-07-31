@@ -18,7 +18,7 @@ func (self Key) IsLineage() (child Option[gitdomain.LocalBranchName]) {
 	selfStr := self.String()
 	childStr := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(selfStr, LineageKeyPrefix), LineageKeySuffix))
 	if childStr != selfStr {
-		return Some(gitdomain.NewLocalBranchName(childStr))
+		return Some(gitdomain.LocalBranchName(childStr))
 	}
 	return None[gitdomain.LocalBranchName]()
 }
