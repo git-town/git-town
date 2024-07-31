@@ -22,10 +22,10 @@ func (self CreatePrototypeBranches) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewCreatePrototypeBranchesFromGitConfig(configStr, source string) (Option[CreatePrototypeBranches], error) {
-	if configStr == "" {
+func NewCreatePrototypeBranchesFromGitConfig(valueStr, source string) (Option[CreatePrototypeBranches], error) {
+	if valueStr == "" {
 		return None[CreatePrototypeBranches](), nil
 	}
-	result, err := gohacks.ParseBool(configStr)
-	return Some(CreatePrototypeBranches(result)), err
+	valueBool, err := gohacks.ParseBool(valueStr)
+	return Some(CreatePrototypeBranches(valueBool)), err
 }
