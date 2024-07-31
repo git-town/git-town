@@ -23,12 +23,12 @@ type Access struct {
 }
 
 // LoadLocal reads the global Git Town configuration that applies to the entire machine.
-func (self *Access) LoadGlobal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+func (self *Access) LoadGlobal(updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
 	return self.load(true, updateOutdated)
 }
 
 // LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
-func (self *Access) LoadLocal(updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+func (self *Access) LoadLocal(updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
 	return self.load(false, updateOutdated)
 }
 
@@ -117,8 +117,8 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, val
 	}
 }
 
-func (self *Access) load(global bool, updateOutdated bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	snapshot := SingleSnapshot{}
+func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
+	snapshot := configdomain.SingleSnapshot{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz", "--includes"}
 	if global {
