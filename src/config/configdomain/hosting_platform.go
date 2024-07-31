@@ -24,7 +24,7 @@ const (
 func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 	text := strings.ToLower(platformName)
 	for _, hostingPlatform := range hostingPlatforms() {
-		if strings.ToLower(text) == hostingPlatform.String() {
+		if text == hostingPlatform.String() {
 			return hostingPlatform, nil
 		}
 	}
@@ -33,6 +33,9 @@ func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 
 // NewHostingPlatformOption provides the HostingPlatform enum matching the given text.
 func NewHostingPlatformOption(platformName string) (Option[HostingPlatform], error) {
+	if platformName == "" {
+		return None[HostingPlatform](), nil
+	}
 	platform, err := NewHostingPlatform(platformName)
 	if err != nil {
 		return None[HostingPlatform](), err
