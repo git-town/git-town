@@ -50,11 +50,12 @@ type removeLocalConfigValueFunc func(Key) error
 // Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
 func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValue removeLocalConfigValueFunc) error {
 	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
-		if child, isLineage := key.IsLineage().Get(); isLineage {
-			if child == "" {
+		if childStr, isLineage := key.IsLineage().Get(); isLineage {
+			if childStr == "" {
 				// empty lineage entries are invalid --> delete it
 				return removeLocalConfigValue(key)
 			}
+			child := gitdomain.NewLocalBranchName(childStr)
 			value = strings.TrimSpace(value)
 			if value == "" {
 				// empty lineage entries are invalid --> delete it

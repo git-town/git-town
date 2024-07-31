@@ -14,13 +14,13 @@ type Key string
 
 // IsLineage indicates using the returned option whether this key is a lineage key.
 // The option contains the name of the child branch of the lineage entry.
-func (self Key) IsLineage() (child Option[gitdomain.LocalBranchName]) {
+func (self Key) IsLineage() (child Option[string]) {
 	selfStr := self.String()
 	childStr := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(selfStr, LineageKeyPrefix), LineageKeySuffix))
 	if childStr != selfStr {
-		return Some(gitdomain.LocalBranchName(childStr))
+		return Some(childStr)
 	}
-	return None[gitdomain.LocalBranchName]()
+	return None[string]()
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.

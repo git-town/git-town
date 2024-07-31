@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,7 +17,7 @@ func TestKey(t *testing.T) {
 			key := configdomain.Key("git-town-branch.branch.parent")
 			have, has := key.IsLineage().Get()
 			must.True(t, has)
-			want := gitdomain.NewLocalBranchName("branch")
+			want := "branch"
 			must.Eq(t, want, have)
 		})
 		t.Run("empty lineage key", func(t *testing.T) {
@@ -26,7 +25,7 @@ func TestKey(t *testing.T) {
 			key := configdomain.Key("git-town-branch..parent")
 			have, has := key.IsLineage().Get()
 			must.True(t, has)
-			want := gitdomain.LocalBranchName("")
+			want := ""
 			must.Eq(t, want, have)
 		})
 		t.Run("not a lineage key", func(t *testing.T) {
