@@ -47,7 +47,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec := gohacks.ErrorCollector{}
 	aliases, err := NewAliasesFromSnapshot(snapshot)
 	ec.Check(err)
-	createPrototypeBranches, err := ParseCreatePrototypeBranchesOpt(snapshot[KeyPrototypeBranches], KeyPrototypeBranches.String())
+	createPrototypeBranches, err := ParseCreatePrototypeBranchesOpt(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches.String())
 	ec.Check(err)
 	hostingPlatform, err := NewHostingPlatformOption(snapshot[KeyHostingPlatform])
 	ec.Check(err)
@@ -73,7 +73,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
-		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyPrototypeBranches]),
+		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		CreatePrototypeBranches:  createPrototypeBranches,
 		GitHubToken:              NewGitHubTokenOption(snapshot[KeyGithubToken]),
 		GitLabToken:              NewGitLabTokenOption(snapshot[KeyGitlabToken]),
