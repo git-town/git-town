@@ -131,9 +131,7 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyPrototypeBranches:
 		self.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPushHook:
-		var pushHook PushHook
-		pushHook, err = NewPushHook(value, KeyPushHook.String())
-		self.PushHook = Some(pushHook)
+		self.PushHook, err = ParsePushHookOption(value, KeyPushHook.String())
 	case KeyPushNewBranches:
 		self.PushNewBranches, err = ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:
