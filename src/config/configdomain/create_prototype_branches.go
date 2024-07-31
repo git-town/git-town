@@ -35,11 +35,3 @@ func ParseCreatePrototypeBranchesOpt(valueStr, source string) (Option[CreateProt
 	}
 	return Some(CreatePrototypeBranches(valueBool)), nil
 }
-
-func NewCreatePrototypeBranchesFromGitConfig(configStr string) (Option[CreatePrototypeBranches], error) {
-	if configStr == "" {
-		return None[CreatePrototypeBranches](), nil
-	}
-	result, err := gohacks.ParseBool(configStr)
-	return Some(CreatePrototypeBranches(result)), err
-}
