@@ -14,6 +14,7 @@ func TestCollector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("BranchesSyncStatus", func(t *testing.T) {
+		t.Parallel()
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
