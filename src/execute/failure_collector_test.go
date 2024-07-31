@@ -40,5 +40,4 @@ func TestCollector(t *testing.T) {
 			must.Eq(t, branchInfos, have)
 		})
 	})
-
 }
