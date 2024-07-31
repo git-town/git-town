@@ -47,7 +47,7 @@ const (
 
 func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingPlatform] {
 	switch entry {
-	case hostingPlatformAutoDetect:
+	case hostingPlatformAutoDetect, "":
 		return None[configdomain.HostingPlatform]()
 	case hostingPlatformBitBucket:
 		return Some(configdomain.HostingPlatformBitbucket)
