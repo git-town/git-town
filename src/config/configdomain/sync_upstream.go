@@ -29,6 +29,9 @@ func ParseSyncUpstream(value, source string) (SyncUpstream, error) {
 }
 
 func ParseSyncUpstreamOption(value, source string) (Option[SyncUpstream], error) {
+	if value == "" {
+		return None[SyncUpstream](), nil
+	}
 	result, err := ParseSyncUpstream(value, source)
 	if err != nil {
 		return None[SyncUpstream](), err
