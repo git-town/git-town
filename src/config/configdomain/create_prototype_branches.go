@@ -1,10 +1,12 @@
 package configdomain
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // whether all created branches should be prototype
@@ -27,5 +29,8 @@ func NewCreatePrototypeBranchesFromGitConfig(valueStr, source string) (Option[Cr
 		return None[CreatePrototypeBranches](), nil
 	}
 	valueBool, err := gohacks.ParseBool(valueStr)
-	return Some(CreatePrototypeBranches(valueBool)), err
+	if err != nil {
+		return None[CreatePrototypeBranches](), fmt.Errorf(messages.ValueInvalid, source, valueStr)
+	}
+	return Some(CreatePrototypeBranches(valueBool)), nil
 }
