@@ -96,7 +96,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot) (PartialConfig, error
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncUpstream:             syncUpstream,
-	}, err
+	}, ec.Err
 }
 
 // a function that deletes the local Git configuration value with the given key
