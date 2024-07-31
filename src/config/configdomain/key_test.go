@@ -10,6 +10,32 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsLineage", func(t *testing.T) {
+		t.Parallel()
+		t.Run("valid lineage key", func(t *testing.T) {
+			t.Parallel()
+			key := configdomain.Key("git-town-branch.branch.parent")
+			have, has := key.IsLineage().Get()
+			must.True(t, has)
+			want := "branch"
+			must.Eq(t, want, have)
+		})
+		t.Run("empty lineage key", func(t *testing.T) {
+			t.Parallel()
+			key := configdomain.Key("git-town-branch..parent")
+			have, has := key.IsLineage().Get()
+			must.True(t, has)
+			want := ""
+			must.Eq(t, want, have)
+		})
+		t.Run("not a lineage key", func(t *testing.T) {
+			t.Parallel()
+			key := configdomain.Key("git-town.push-hook")
+			_, has := key.IsLineage().Get()
+			must.False(t, has)
+		})
+	})
+
 	t.Run("ParseKey", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal config key", func(t *testing.T) {
