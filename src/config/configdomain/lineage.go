@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"slices"
 
-	"github.com/git-town/git-town/v14/src/config/gitconfig"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
@@ -25,7 +24,7 @@ func NewLineage() Lineage {
 	}
 }
 
-func NewLineageFromSnapshot(snapshot gitconfig.SingleSnapshot) Lineage {
+func NewLineageFromSnapshot(snapshot SingleSnapshot) Lineage {
 	return Lineage{}
 }
 
