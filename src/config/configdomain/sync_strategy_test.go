@@ -24,7 +24,7 @@ func TestNewSyncStrategy(t *testing.T) {
 		for give, want := range tests {
 			have, err := configdomain.ParseSyncStrategy(give)
 			must.NoError(t, err)
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		}
 	})
 

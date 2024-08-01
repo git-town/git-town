@@ -64,7 +64,7 @@ func TestParseBool(t *testing.T) {
 		for give, want := range tests {
 			have, err := gohacks.ParseBoolOpt(give)
 			must.NoError(t, err)
-			must.EqOp(t, want, have)
+			must.Eq(t, want, have)
 		}
 
 		t.Run("invalid input", func(t *testing.T) {
