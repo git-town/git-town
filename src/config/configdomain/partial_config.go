@@ -101,51 +101,51 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyContributionBranches:
 		self.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyCreatePrototypeBranches:
-		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranchesOpt(value, KeyPrototypeBranches.String())
+		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranches(value, KeyPrototypeBranches.String())
 	case KeyHostingOriginHostname:
-		self.HostingOriginHostname = NewHostingOriginHostnameOption(value)
+		self.HostingOriginHostname = ParseHostingOriginHostname(value)
 	case KeyHostingPlatform:
-		self.HostingPlatform, err = NewHostingPlatformOption(value)
+		self.HostingPlatform, err = ParseHostingPlatform(value)
 	case KeyGiteaToken:
-		self.GiteaToken = NewGiteaTokenOption(value)
+		self.GiteaToken = ParseGiteaToken(value)
 	case KeyGithubToken:
-		self.GitHubToken = NewGitHubTokenOption(value)
+		self.GitHubToken = ParseGitHubToken(value)
 	case KeyGitlabToken:
-		self.GitLabToken = NewGitLabTokenOption(value)
+		self.GitLabToken = ParseGitLabToken(value)
 	case KeyGitUserEmail:
-		self.GitUserEmail = NewGitUserEmailOption(value)
+		self.GitUserEmail = ParseGitUserEmail(value)
 	case KeyGitUserName:
-		self.GitUserName = NewGitUserNameOption(value)
+		self.GitUserName = ParseGitUserName(value)
 	case KeyMainBranch:
 		self.MainBranch = gitdomain.NewLocalBranchNameOption(value)
 	case KeyObservedBranches:
 		self.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyOffline:
-		self.Offline, err = NewOfflineOption(value, KeyOffline.String())
+		self.Offline, err = ParseOffline(value, KeyOffline.String())
 	case KeyParkedBranches:
 		self.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialBranches:
 		self.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialRegex:
-		self.PerennialRegex = NewPerennialRegexOption(value)
+		self.PerennialRegex = ParsePerennialRegex(value)
 	case KeyPrototypeBranches:
 		self.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPushHook:
-		self.PushHook, err = ParsePushHookOption(value, KeyPushHook.String())
+		self.PushHook, err = ParsePushHook(value, KeyPushHook.String())
 	case KeyPushNewBranches:
-		self.PushNewBranches, err = ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
+		self.PushNewBranches, err = ParsePushNewBranches(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:
-		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranchOption(value, KeyShipDeleteTrackingBranch.String())
+		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranch(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
-		self.SyncBeforeShip, err = ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
+		self.SyncBeforeShip, err = ParseSyncBeforeShip(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
-		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyOption(value)
+		self.SyncFeatureStrategy, err = ParseSyncFeatureStrategy(value)
 	case KeySyncPerennialStrategy:
-		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyOption(value)
+		self.SyncPerennialStrategy, err = ParseSyncPerennialStrategy(value)
 	case KeySyncPrototypeStrategy:
-		self.SyncPrototypeStrategy, err = NewSyncPrototypeStrategyOption(value)
+		self.SyncPrototypeStrategy, err = ParseSyncPrototypeStrategy(value)
 	case KeySyncUpstream:
-		self.SyncUpstream, err = ParseSyncUpstreamOption(value, KeySyncUpstream.String())
+		self.SyncUpstream, err = ParseSyncUpstream(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
 		KeyDeprecatedCodeHostingOriginHostname,
 		KeyDeprecatedCodeHostingPlatform,

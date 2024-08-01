@@ -31,5 +31,5 @@ func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.Te
 		Title:         githubTokenTitle,
 	})
 	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return configdomain.NewGitHubTokenOption(text), aborted, err
+	return configdomain.ParseGitHubToken(text), aborted, err
 }

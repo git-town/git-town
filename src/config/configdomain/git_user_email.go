@@ -12,7 +12,7 @@ func (self GitUserEmail) String() string {
 	return string(self)
 }
 
-func NewGitUserEmailOption(value string) Option[GitUserEmail] {
+func ParseGitUserEmail(value string) Option[GitUserEmail] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GitUserEmail]()

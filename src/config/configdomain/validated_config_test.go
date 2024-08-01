@@ -55,7 +55,7 @@ func TestValidatedConfig(t *testing.T) {
 		config := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-			PerennialRegex:    configdomain.NewPerennialRegexOption("release-.*"),
+			PerennialRegex:    configdomain.ParsePerennialRegex("release-.*"),
 		}
 		tests := map[string]bool{
 			"main":      false,
