@@ -137,7 +137,7 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyShipDeleteTrackingBranch:
 		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranchOption(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
-		self.SyncBeforeShip, err = ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
+		self.SyncBeforeShip, err = ParseSyncBeforeShip(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
 		self.SyncFeatureStrategy, err = ParseSyncFeatureStrategy(value)
 	case KeySyncPerennialStrategy:

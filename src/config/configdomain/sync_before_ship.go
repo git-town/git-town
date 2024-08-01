@@ -1,12 +1,10 @@
 package configdomain
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 type SyncBeforeShip bool
@@ -19,22 +17,10 @@ func (self SyncBeforeShip) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func ParseSyncBeforeShip(value, source string) (SyncBeforeShip, error) {
-	parsed, err := gohacks.ParseBool(value)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, source, value)
+func ParseSyncBeforeShip(value, source string) (Option[SyncBeforeShip], error) {
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
+	if parsed, has := parsedOpt.Get(); has {
+		return Some(SyncBeforeShip(parsed)), err
 	}
-	result := SyncBeforeShip(parsed)
-	return result, nil
-}
-
-func ParseSyncBeforeShipOption(value, source string) (Option[SyncBeforeShip], error) {
-	if value == "" {
-		return None[SyncBeforeShip](), nil
-	}
-	result, err := ParseSyncBeforeShip(value, source)
-	if err != nil {
-		return None[SyncBeforeShip](), err
-	}
-	return Some(result), nil
+	return None[SyncBeforeShip](), err
 }

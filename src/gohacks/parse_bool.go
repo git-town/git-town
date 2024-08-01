@@ -1,10 +1,12 @@
 package gohacks
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 func ParseBool(text string) (bool, error) {
@@ -17,10 +19,13 @@ func ParseBool(text string) (bool, error) {
 	return strconv.ParseBool(text)
 }
 
-func ParseBoolOpt(text string) (Option[bool], error) {
+func ParseBoolOpt(text, source string) (Option[bool], error) {
 	if text == "" {
 		return None[bool](), nil
 	}
 	parsed, err := ParseBool(text)
-	return Some(parsed), err
+	if err != nil {
+		return None[bool](), fmt.Errorf(messages.ValueInvalid, source, text)
+	}
+	return Some(parsed), nil
 }
