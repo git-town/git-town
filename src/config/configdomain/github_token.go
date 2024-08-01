@@ -13,18 +13,10 @@ func (self GitHubToken) String() string {
 	return string(self)
 }
 
-func NewGitHubToken(value string) GitHubToken {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		panic("empty GitHub token")
-	}
-	return GitHubToken(value)
-}
-
-func NewGitHubTokenOption(value string) Option[GitHubToken] {
+func ParseGitHubToken(value string) Option[GitHubToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GitHubToken]()
 	}
-	return Some(NewGitHubToken(value))
+	return Some(GitHubToken(value))
 }

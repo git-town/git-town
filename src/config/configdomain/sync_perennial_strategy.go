@@ -20,16 +20,10 @@ const (
 	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
 )
 
-func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
+func ParseSyncPerennialStrategy(text string) (Option[SyncPerennialStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(text)
-	syncStrategy := syncStrategyOpt.GetOrElse(SyncStrategyRebase)
-	return SyncPerennialStrategy(syncStrategy), err
-}
-
-func NewSyncPerennialStrategyOption(text string) (Option[SyncPerennialStrategy], error) {
-	result, err := NewSyncPerennialStrategy(text)
-	if err != nil {
-		return None[SyncPerennialStrategy](), err
+	if syncStrategy, has := syncStrategyOpt.Get(); has {
+		return Some(SyncPerennialStrategy(syncStrategy)), err
 	}
-	return Some(result), err
+	return None[SyncPerennialStrategy](), err
 }

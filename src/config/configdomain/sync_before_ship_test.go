@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -31,8 +32,15 @@ func TestSyncBeforeShip(t *testing.T) {
 			t.Parallel()
 			have, err := configdomain.ParseSyncBeforeShip("yes", "test")
 			must.NoError(t, err)
-			want := configdomain.SyncBeforeShip(true)
-			must.EqOp(t, want, have)
+			want := Some(configdomain.SyncBeforeShip(true))
+			must.Eq(t, want, have)
+		})
+		t.Run("empty value", func(t *testing.T) {
+			t.Parallel()
+			have, err := configdomain.ParseSyncBeforeShip("", "test")
+			must.NoError(t, err)
+			want := None[configdomain.SyncBeforeShip]()
+			must.Eq(t, want, have)
 		})
 		t.Run("invalid value", func(t *testing.T) {
 			t.Parallel()

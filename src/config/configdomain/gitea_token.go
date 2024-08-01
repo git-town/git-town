@@ -13,18 +13,10 @@ func (self GiteaToken) String() string {
 	return string(self)
 }
 
-func NewGiteaToken(value string) GiteaToken {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		panic("empty Gitea token")
-	}
-	return GiteaToken(value)
-}
-
-func NewGiteaTokenOption(value string) Option[GiteaToken] {
+func ParseGiteaToken(value string) Option[GiteaToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GiteaToken]()
 	}
-	return Some(NewGiteaToken(value))
+	return Some(GiteaToken(value))
 }
