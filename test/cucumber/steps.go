@@ -386,7 +386,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		aliasableCommand, hasAliasableCommand := configdomain.AliasableCommandForKey(key).Get()
+		aliasableCommand, hasAliasableCommand := key..AliasableCommandForKey(key).Get()
 		if !hasAliasableCommand {
 			return fmt.Errorf("no aliasableCommand found for key %q", key)
 		}

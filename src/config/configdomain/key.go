@@ -130,15 +130,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func AliasableCommandForKey(key Key) Option[AliasableCommand] {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		if KeyForAliasableCommand(aliasableCommand) == key {
-			return Some(aliasableCommand)
-		}
-	}
-	return None[AliasableCommand]()
-}
-
 func KeyForAliasableCommand(aliasableCommand AliasableCommand) Key {
 	switch aliasableCommand {
 	case AliasableCommandAppend:
@@ -195,15 +186,6 @@ func ParseKey(name string) Option[Key] {
 		}
 	}
 	return None[Key]()
-}
-
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
-
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
