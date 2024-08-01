@@ -22,7 +22,7 @@ func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFea
 	return SyncPrototypeStrategy(syncFeatureStrategy)
 }
 
-func NewSyncPrototypeStrategyOption(text string) (Option[SyncPrototypeStrategy], error) {
+func ParseSyncPrototypeStrategy(text string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(text)
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPrototypeStrategy(syncStrategy)), err

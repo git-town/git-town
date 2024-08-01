@@ -88,7 +88,7 @@ func TestConnector(t *testing.T) {
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					APIToken: configdomain.NewGitHubTokenOption("apiToken"),
+					APIToken: configdomain.ParseGitHubToken("apiToken"),
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent, main, tt.title, tt.body)
 				must.NoError(t, err)
@@ -120,7 +120,7 @@ func TestNewConnector(t *testing.T) {
 		originURL, has := giturl.Parse("git@github.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  configdomain.NewGitHubTokenOption("apiToken"),
+			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
 			OriginURL: originURL,
 		})
@@ -138,7 +138,7 @@ func TestNewConnector(t *testing.T) {
 		originURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  configdomain.NewGitHubTokenOption("apiToken"),
+			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
 			OriginURL: originURL,
 		})

@@ -1,12 +1,10 @@
 package configdomain
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // Offline is a new-type for the "offline" configuration setting.
@@ -24,15 +22,12 @@ func (offline Offline) ToOnline() Online {
 	return Online(!offline.Bool())
 }
 
-func NewOfflineOption(valueStr, source string) (Option[Offline], error) {
-	if valueStr == "" {
-		return None[Offline](), nil
+func ParseOffline(value, source string) (Option[Offline], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source)
+	if parsed, has := parsedOpt.Get(); has {
+		return Some(Offline(parsed)), err
 	}
-	valueBool, err := gohacks.ParseBool(valueStr)
-	if err != nil {
-		return None[Offline](), fmt.Errorf(messages.ValueInvalid, source, valueStr)
-	}
-	return Some(Offline(valueBool)), nil
+	return None[Offline](), err
 }
 
 type Online bool

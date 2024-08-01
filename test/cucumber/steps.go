@@ -1156,9 +1156,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
+		syncFeatureStrategy, err := configdomain.ParseSyncFeatureStrategy(value)
 		asserts.NoError(err)
-		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy)
+		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy.GetOrPanic())
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {

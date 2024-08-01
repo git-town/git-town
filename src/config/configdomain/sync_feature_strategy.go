@@ -20,7 +20,7 @@ const (
 	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
 )
 
-func NewSyncFeatureStrategyOption(text string) (Option[SyncFeatureStrategy], error) {
+func ParseSyncFeatureStrategy(text string) (Option[SyncFeatureStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(text)
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncFeatureStrategy(syncStrategy)), err
