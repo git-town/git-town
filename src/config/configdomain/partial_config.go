@@ -101,21 +101,21 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyContributionBranches:
 		self.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyCreatePrototypeBranches:
-		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranchesOpt(value, KeyPrototypeBranches.String())
+		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranches(value, KeyPrototypeBranches.String())
 	case KeyHostingOriginHostname:
 		self.HostingOriginHostname = NewHostingOriginHostnameOption(value)
 	case KeyHostingPlatform:
-		self.HostingPlatform, err = NewHostingPlatformOption(value)
+		self.HostingPlatform, err = ParseHostingPlatform(value)
 	case KeyGiteaToken:
-		self.GiteaToken = NewGiteaTokenOption(value)
+		self.GiteaToken = ParseGiteaToken(value)
 	case KeyGithubToken:
 		self.GitHubToken = NewGitHubTokenOption(value)
 	case KeyGitlabToken:
 		self.GitLabToken = NewGitLabTokenOption(value)
 	case KeyGitUserEmail:
-		self.GitUserEmail = NewGitUserEmailOption(value)
+		self.GitUserEmail = ParseGitUserEmail(value)
 	case KeyGitUserName:
-		self.GitUserName = NewGitUserNameOption(value)
+		self.GitUserName = ParseGitUserName(value)
 	case KeyMainBranch:
 		self.MainBranch = gitdomain.NewLocalBranchNameOption(value)
 	case KeyObservedBranches:
