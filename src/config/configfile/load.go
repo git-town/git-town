@@ -49,23 +49,23 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		}
 		result.PerennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			result.PerennialRegex = configdomain.NewPerennialRegexOption(*data.Branches.PerennialRegex)
+			result.PerennialRegex = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
 		}
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			result.HostingPlatform, err = configdomain.NewHostingPlatformOption(*data.Hosting.Platform)
+			result.HostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
 		}
 		if data.Hosting.OriginHostname != nil {
-			result.HostingOriginHostname = configdomain.NewHostingOriginHostnameOption(*data.Hosting.OriginHostname)
+			result.HostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			result.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyOption(*data.SyncStrategy.FeatureBranches)
+			result.SyncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			result.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyOption(*data.SyncStrategy.PerennialBranches)
+			result.SyncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
 		}
 	}
 	if data.PushNewbranches != nil {

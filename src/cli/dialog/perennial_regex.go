@@ -30,5 +30,5 @@ func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs compone
 		Title:         perennialRegexTitle,
 	})
 	fmt.Printf(messages.PerennialRegex, components.FormattedSelection(value, aborted))
-	return configdomain.NewPerennialRegexOption(value), aborted, err
+	return configdomain.ParsePerennialRegex(value), aborted, err
 }

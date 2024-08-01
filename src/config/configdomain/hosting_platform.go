@@ -20,27 +20,18 @@ const (
 	HostingPlatformGitea     = HostingPlatform("gitea")
 )
 
-// NewHostingPlatform provides the HostingPlatform enum matching the given text.
-func NewHostingPlatform(platformName string) (HostingPlatform, error) {
-	text := strings.ToLower(platformName)
-	for _, hostingPlatform := range hostingPlatforms() {
-		if text == hostingPlatform.String() {
-			return hostingPlatform, nil
-		}
-	}
-	return HostingPlatformGitHub, fmt.Errorf(messages.HostingPlatformUnknown, text)
-}
-
-// NewHostingPlatformOption provides the HostingPlatform enum matching the given text.
-func NewHostingPlatformOption(platformName string) (Option[HostingPlatform], error) {
+// ParseHostingPlatform provides the HostingPlatform enum matching the given text.
+func ParseHostingPlatform(platformName string) (Option[HostingPlatform], error) {
 	if platformName == "" {
 		return None[HostingPlatform](), nil
 	}
-	platform, err := NewHostingPlatform(platformName)
-	if err != nil {
-		return None[HostingPlatform](), err
+	platformNameLower := strings.ToLower(platformName)
+	for _, hostingPlatform := range hostingPlatforms() {
+		if platformNameLower == hostingPlatform.String() {
+			return Some(hostingPlatform), nil
+		}
 	}
-	return Some(platform), nil
+	return None[HostingPlatform](), fmt.Errorf(messages.HostingPlatformUnknown, platformName)
 }
 
 // hostingPlatforms provides all legal values for HostingPlatform.

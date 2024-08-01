@@ -29,13 +29,9 @@ func (self PerennialRegex) String() string {
 	return string(self)
 }
 
-func NewPerennialRegex(value string) PerennialRegex {
-	return PerennialRegex(value)
-}
-
-func NewPerennialRegexOption(value string) Option[PerennialRegex] {
+func ParsePerennialRegex(value string) Option[PerennialRegex] {
 	if value == "" {
 		return None[PerennialRegex]()
 	}
-	return Some(NewPerennialRegex(value))
+	return Some(PerennialRegex(value))
 }
