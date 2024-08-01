@@ -133,7 +133,7 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyPushHook:
 		self.PushHook, err = ParsePushHookOption(value, KeyPushHook.String())
 	case KeyPushNewBranches:
-		self.PushNewBranches, err = ParsePushNewBranchesOption(value, KeyPushNewBranches.String())
+		self.PushNewBranches, err = ParsePushNewBranches(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:
 		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranch(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
