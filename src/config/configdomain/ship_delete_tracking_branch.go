@@ -1,12 +1,10 @@
 package configdomain
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v14/src/gohacks"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
-	"github.com/git-town/git-town/v14/src/messages"
 )
 
 // ShipDeleteTrackingBranch contains the configuration setting about whether to delete the tracking branch when shipping.
@@ -20,22 +18,10 @@ func (self ShipDeleteTrackingBranch) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func ParseShipDeleteTrackingBranch(value, source string) (ShipDeleteTrackingBranch, error) {
-	parsed, err := gohacks.ParseBool(value)
-	if err != nil {
-		return true, fmt.Errorf(messages.ValueInvalid, source, value)
+func ParseShipDeleteTrackingBranch(value, source string) (Option[ShipDeleteTrackingBranch], error) {
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
+	if parsed, has := parsedOpt.Get(); has {
+		return Some(ShipDeleteTrackingBranch(parsed)), err
 	}
-	result := ShipDeleteTrackingBranch(parsed)
-	return result, nil
-}
-
-func ParseShipDeleteTrackingBranchOption(value, source string) (Option[ShipDeleteTrackingBranch], error) {
-	if value == "" {
-		return None[ShipDeleteTrackingBranch](), nil
-	}
-	result, err := ParseShipDeleteTrackingBranch(value, source)
-	if err != nil {
-		return None[ShipDeleteTrackingBranch](), err
-	}
-	return Some(result), err
+	return None[ShipDeleteTrackingBranch](), err
 }
