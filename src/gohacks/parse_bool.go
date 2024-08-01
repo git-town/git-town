@@ -1,16 +1,26 @@
 package gohacks
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
+
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func ParseBool(text string) (bool, error) {
+func ParseBool(text, source string) (Option[bool], error) {
 	switch strings.ToLower(text) {
+	case "":
+		return None[bool](), nil
 	case "yes", "on", "enable", "enabled":
-		return true, nil
+		return Some(true), nil
 	case "no", "off", "disable", "disabled":
-		return false, nil
+		return Some(false), nil
 	}
-	return strconv.ParseBool(text)
+	parsed, err := strconv.ParseBool(text)
+	if err != nil {
+		return None[bool](), fmt.Errorf(messages.ValueInvalid, source, text)
+	}
+	return Some(parsed), nil
 }

@@ -12,18 +12,10 @@ func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func NewHostingOriginHostname(value string) HostingOriginHostname {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		panic("empty hosting origin hostname")
-	}
-	return HostingOriginHostname(value)
-}
-
-func NewHostingOriginHostnameOption(value string) Option[HostingOriginHostname] {
+func ParseHostingOriginHostname(value string) Option[HostingOriginHostname] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[HostingOriginHostname]()
 	}
-	return Some(NewHostingOriginHostname(value))
+	return Some(HostingOriginHostname(value))
 }

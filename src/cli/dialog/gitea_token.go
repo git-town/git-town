@@ -31,5 +31,5 @@ func GiteaToken(oldValue Option[configdomain.GiteaToken], inputs components.Test
 		Title:         giteaTokenTitle,
 	})
 	fmt.Printf(messages.GiteaToken, components.FormattedSecret(text, aborted))
-	return configdomain.NewGiteaTokenOption(text), aborted, err
+	return configdomain.ParseGiteaToken(text), aborted, err
 }
