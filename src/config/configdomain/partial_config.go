@@ -127,11 +127,11 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyPerennialBranches:
 		self.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialRegex:
-		self.PerennialRegex = NewPerennialRegexOption(value)
+		self.PerennialRegex = ParsePerennialRegex(value)
 	case KeyPrototypeBranches:
 		self.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPushHook:
-		self.PushHook, err = ParsePushHookOption(value, KeyPushHook.String())
+		self.PushHook, err = ParsePushHook(value, KeyPushHook.String())
 	case KeyPushNewBranches:
 		self.PushNewBranches, err = ParsePushNewBranches(value, KeyPushNewBranches.String())
 	case KeyShipDeleteTrackingBranch:

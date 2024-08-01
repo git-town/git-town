@@ -49,7 +49,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		}
 		result.PerennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			result.PerennialRegex = configdomain.NewPerennialRegexOption(*data.Branches.PerennialRegex)
+			result.PerennialRegex = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
 		}
 	}
 	if data.Hosting != nil {
