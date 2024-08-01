@@ -139,9 +139,9 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeySyncBeforeShip:
 		self.SyncBeforeShip, err = ParseSyncBeforeShipOption(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
-		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyOption(value)
+		self.SyncFeatureStrategy, err = ParseSyncFeatureStrategy(value)
 	case KeySyncPerennialStrategy:
-		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyOption(value)
+		self.SyncPerennialStrategy, err = ParseSyncPerennialStrategy(value)
 	case KeySyncPrototypeStrategy:
 		self.SyncPrototypeStrategy, err = NewSyncPrototypeStrategyOption(value)
 	case KeySyncUpstream:
