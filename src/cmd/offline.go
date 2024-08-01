@@ -78,9 +78,13 @@ func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
 }
 
 func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
-	value, err := gohacks.ParseBool(text)
+	value, err := gohacks.ParseBool(text, "offline status")
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return config.SetOffline(configdomain.Offline(value))
+	if offline, has := value.Get(); has {
+		return config.SetOffline(configdomain.Offline(offline))
+	}
+	// TODO: remove the offline setting here
+	return nil
 }

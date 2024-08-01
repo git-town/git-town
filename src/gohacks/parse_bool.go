@@ -9,21 +9,16 @@ import (
 	"github.com/git-town/git-town/v14/src/messages"
 )
 
-func ParseBool(text string) (bool, error) {
+func ParseBool(text, source string) (Option[bool], error) {
 	switch strings.ToLower(text) {
-	case "yes", "on", "enable", "enabled":
-		return true, nil
-	case "no", "off", "disable", "disabled":
-		return false, nil
-	}
-	return strconv.ParseBool(text)
-}
-
-func ParseBoolOpt(text, source string) (Option[bool], error) {
-	if text == "" {
+	case "":
 		return None[bool](), nil
+	case "yes", "on", "enable", "enabled":
+		return Some(true), nil
+	case "no", "off", "disable", "disabled":
+		return Some(false), nil
 	}
-	parsed, err := ParseBool(text)
+	parsed, err := strconv.ParseBool(text)
 	if err != nil {
 		return None[bool](), fmt.Errorf(messages.ValueInvalid, source, text)
 	}

@@ -18,7 +18,7 @@ func (self SyncBeforeShip) String() string {
 }
 
 func ParseSyncBeforeShip(value, source string) (Option[SyncBeforeShip], error) {
-	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
+	parsedOpt, err := gohacks.ParseBool(value, source)
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncBeforeShip(parsed)), err
 	}
