@@ -24,10 +24,6 @@ func (self Key) IsLineage() bool {
 	return isLineageKey(self.String())
 }
 
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
@@ -206,12 +202,8 @@ const (
 	LineageKeySuffix = ".parent"
 )
 
-func parseLineageKey(key string) Option[Key] {
-	if strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix) {
-		result := Key(key)
-		return Some(result)
-	}
-	return None[Key]()
+func isLineageKey(key string) bool {
+	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
