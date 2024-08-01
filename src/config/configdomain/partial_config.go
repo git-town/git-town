@@ -49,27 +49,27 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec := gohacks.ErrorCollector{}
 	aliases, err := NewAliasesFromSnapshot(snapshot)
 	ec.Check(err)
-	createPrototypeBranches, err := ParseCreatePrototypeBranchesOpt(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches.String())
+	createPrototypeBranches, err := ParseCreatePrototypeBranches(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches.String())
 	ec.Check(err)
-	hostingPlatform, err := NewHostingPlatformOption(snapshot[KeyHostingPlatform])
+	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
 	ec.Check(err)
-	offline, err := NewOfflineOption(snapshot[KeyOffline], KeyOffline.String())
+	offline, err := ParseOffline(snapshot[KeyOffline], KeyOffline.String())
 	ec.Check(err)
-	pushHook, err := ParsePushHookOption(snapshot[KeyPushHook], KeyPushHook.String())
+	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook.String())
 	ec.Check(err)
-	pushNewBranches, err := ParsePushNewBranchesOption(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
+	pushNewBranches, err := ParsePushNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
 	ec.Check(err)
-	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranchOption(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
+	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
 	ec.Check(err)
-	syncBeforeShip, err := ParseSyncBeforeShipOption(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
+	syncBeforeShip, err := ParseSyncBeforeShip(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
 	ec.Check(err)
-	syncFeatureStrategy, err := NewSyncFeatureStrategyOption(snapshot[KeySyncFeatureStrategy])
+	syncFeatureStrategy, err := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
 	ec.Check(err)
-	syncPerennialStrategy, err := NewSyncPerennialStrategyOption(snapshot[KeySyncPerennialStrategy])
+	syncPerennialStrategy, err := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
 	ec.Check(err)
-	syncPrototypeStrategy, err := NewSyncPrototypeStrategyOption(snapshot[KeySyncPrototypeStrategy])
+	syncPrototypeStrategy, err := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
 	ec.Check(err)
-	syncUpstream, err := ParseSyncUpstreamOption(snapshot[KeySyncUpstream], KeySyncUpstream.String())
+	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
@@ -77,12 +77,12 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Aliases:                  aliases,
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		CreatePrototypeBranches:  createPrototypeBranches,
-		GitHubToken:              NewGitHubTokenOption(snapshot[KeyGithubToken]),
-		GitLabToken:              NewGitLabTokenOption(snapshot[KeyGitlabToken]),
-		GitUserEmail:             NewGitUserEmailOption(snapshot[KeyGitUserEmail]),
-		GitUserName:              NewGitUserNameOption(snapshot[KeyGitUserName]),
-		GiteaToken:               NewGiteaTokenOption(snapshot[KeyGiteaToken]),
-		HostingOriginHostname:    NewHostingOriginHostnameOption(snapshot[KeyHostingOriginHostname]),
+		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
+		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
+		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
+		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
+		GiteaToken:               ParseGiteaToken(snapshot[KeyGiteaToken]),
+		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
 		HostingPlatform:          hostingPlatform,
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
@@ -90,7 +90,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Offline:                  offline,
 		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyParkedBranches]),
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
-		PerennialRegex:           NewPerennialRegexOption(snapshot[KeyPerennialRegex]),
+		PerennialRegex:           ParsePerennialRegex(snapshot[KeyPerennialRegex]),
 		PrototypeBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPrototypeBranches]),
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
