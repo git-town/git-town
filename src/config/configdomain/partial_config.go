@@ -121,7 +121,7 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyObservedBranches:
 		self.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyOffline:
-		self.Offline, err = NewOfflineOption(value, KeyOffline.String())
+		self.Offline, err = ParseOffline(value, KeyOffline.String())
 	case KeyParkedBranches:
 		self.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
 	case KeyPerennialBranches:

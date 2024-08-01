@@ -22,7 +22,7 @@ func (offline Offline) ToOnline() Online {
 	return Online(!offline.Bool())
 }
 
-func NewOfflineOption(value, source string) (Option[Offline], error) {
+func ParseOffline(value, source string) (Option[Offline], error) {
 	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(Offline(parsed)), err

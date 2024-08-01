@@ -16,7 +16,7 @@ const (
 	BranchTypePrototypeBranch
 )
 
-func NewBranchType(name string) Option[BranchType] {
+func ParseBranchType(name string) Option[BranchType] {
 	switch name {
 	case "contribution":
 		return Some(BranchTypeContributionBranch)
