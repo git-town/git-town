@@ -13,7 +13,7 @@ func (self GitLabToken) String() string {
 	return string(self)
 }
 
-func NewGitLabTokenOption(value string) Option[GitLabToken] {
+func ParseGitLabToken(value string) Option[GitLabToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GitLabToken]()

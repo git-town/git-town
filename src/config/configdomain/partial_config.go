@@ -103,15 +103,15 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeyCreatePrototypeBranches:
 		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranches(value, KeyPrototypeBranches.String())
 	case KeyHostingOriginHostname:
-		self.HostingOriginHostname = NewHostingOriginHostnameOption(value)
+		self.HostingOriginHostname = ParseHostingOriginHostname(value)
 	case KeyHostingPlatform:
 		self.HostingPlatform, err = ParseHostingPlatform(value)
 	case KeyGiteaToken:
 		self.GiteaToken = ParseGiteaToken(value)
 	case KeyGithubToken:
-		self.GitHubToken = NewGitHubTokenOption(value)
+		self.GitHubToken = ParseGitHubToken(value)
 	case KeyGitlabToken:
-		self.GitLabToken = NewGitLabTokenOption(value)
+		self.GitLabToken = ParseGitLabToken(value)
 	case KeyGitUserEmail:
 		self.GitUserEmail = ParseGitUserEmail(value)
 	case KeyGitUserName:
@@ -145,7 +145,7 @@ func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValu
 	case KeySyncPrototypeStrategy:
 		self.SyncPrototypeStrategy, err = ParseSyncPrototypeStrategy(value)
 	case KeySyncUpstream:
-		self.SyncUpstream, err = ParseSyncUpstreamOption(value, KeySyncUpstream.String())
+		self.SyncUpstream, err = ParseSyncUpstream(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
 		KeyDeprecatedCodeHostingOriginHostname,
 		KeyDeprecatedCodeHostingPlatform,

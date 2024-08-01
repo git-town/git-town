@@ -31,5 +31,5 @@ func GitLabToken(oldValue Option[configdomain.GitLabToken], inputs components.Te
 		Title:         gitLabTokenTitle,
 	})
 	fmt.Printf(messages.GitLabToken, components.FormattedSecret(text, aborted))
-	return configdomain.NewGitLabTokenOption(text), aborted, err
+	return configdomain.ParseGitLabToken(text), aborted, err
 }

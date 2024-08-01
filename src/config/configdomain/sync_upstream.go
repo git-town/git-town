@@ -18,7 +18,7 @@ func (self SyncUpstream) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func ParseSyncUpstreamOption(value, source string) (Option[SyncUpstream], error) {
+func ParseSyncUpstream(value, source string) (Option[SyncUpstream], error) {
 	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncUpstream(parsed)), err

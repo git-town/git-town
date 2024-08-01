@@ -12,7 +12,7 @@ func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func NewHostingOriginHostnameOption(value string) Option[HostingOriginHostname] {
+func ParseHostingOriginHostname(value string) Option[HostingOriginHostname] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[HostingOriginHostname]()
