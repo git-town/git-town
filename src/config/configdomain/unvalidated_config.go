@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -167,6 +168,9 @@ func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, loc
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = configFile
 	}
+	fmt.Println("22222222222222222222222222222222222 CONFIG FILE", result.SyncFeatureStrategy)
+	fmt.Println("22222222222222222222222222222222222 GLOBAL GIT", globalGitConfig.SyncFeatureStrategy)
+	fmt.Println("22222222222222222222222222222222222 LOCAL GIT", localGitConfig.SyncFeatureStrategy)
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)
 	return result.ToUnvalidatedConfig(DefaultConfig())
