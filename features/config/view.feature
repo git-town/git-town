@@ -46,7 +46,6 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  @debug @this
   Scenario: all configured in config file
     And the configuration file:
       """

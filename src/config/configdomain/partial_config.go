@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
@@ -108,7 +106,6 @@ type removeLocalConfigValueFunc func(Key) error
 
 // Merges the given PartialConfig into this configuration object.
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
-	fmt.Println("1111111111111111111111111111111111111111111", other.SyncFeatureStrategy)
 	return PartialConfig{
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
