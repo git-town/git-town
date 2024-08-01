@@ -14,6 +14,7 @@ func TestNewSyncStrategy(t *testing.T) {
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.SyncStrategy]{
+			"":       None[configdomain.SyncStrategy](),
 			"merge":  Some(configdomain.SyncStrategyMerge),
 			"Merge":  Some(configdomain.SyncStrategyMerge),
 			"MERGE":  Some(configdomain.SyncStrategyMerge),
