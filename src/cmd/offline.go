@@ -85,6 +85,6 @@ func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	if offline, has := value.Get(); has {
 		return config.SetOffline(configdomain.Offline(offline))
 	}
-	// TODO: remove the offline setting here
+	// in the future, we could remove the offline setting here
 	return nil
 }
