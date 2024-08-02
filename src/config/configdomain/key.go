@@ -20,8 +20,11 @@ func (self Key) IsAliasKey() bool {
 // The option contains the name of the child branch of the lineage entry.
 // This method returns a string instead of a gitdomain.LocalBranchName to indicate that
 // the returned child name isn't verified and might be empty.
-func (self Key) IsLineage() bool {
-	return isLineageKey(self.String())
+func (self Key) IsLineage() Option[LineageKey] {
+	if isLineageKey(self.String()) {
+		return Some(LineageKey(self))
+	}
+	return None[LineageKey]()
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
@@ -195,15 +198,6 @@ func ParseKey(name string) Option[Key] {
 		}
 	}
 	return None[Key]()
-}
-
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
-
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.

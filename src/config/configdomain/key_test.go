@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/src/config/configdomain"
+	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,10 +19,10 @@ func TestKey(t *testing.T) {
 
 	t.Run("IsLineage", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]bool{
-			"git-town-branch.branch.parent": true,  // valid lineage key
-			"git-town-branch..parent":       true,  // empty lineage key
-			"git-town.push-hook":            false, // not a lineage key
+		tests := map[string]Option[configdomain.LineageKey]{
+			"git-town-branch.branch.parent": Some(configdomain.LineageKey("git-town-branch.branch.parent")), // valid lineage key
+			"git-town-branch..parent":       Some(configdomain.LineageKey("git-town-branch..parent")),       // empty lineage key
+			"git-town.push-hook":            None[configdomain.LineageKey](),                                // not a lineage key
 		}
 		for give, want := range tests {
 			key := configdomain.Key(give)
