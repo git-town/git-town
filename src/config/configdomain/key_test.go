@@ -10,30 +10,24 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsAliasKey", func(t *testing.T) {
+		t.Parallel()
+		must.True(t, configdomain.KeyAliasAppend.IsAliasKey())
+		must.False(t, configdomain.KeyPushHook.IsAliasKey())
+	})
+
 	t.Run("IsLineage", func(t *testing.T) {
 		t.Parallel()
-		t.Run("valid lineage key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.Key("git-town-branch.branch.parent")
-			have, has := key.IsLineage().Get()
-			must.True(t, has)
-			want := "branch"
-			must.Eq(t, want, have)
-		})
-		t.Run("empty lineage key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.Key("git-town-branch..parent")
-			have, has := key.IsLineage().Get()
-			must.True(t, has)
-			want := ""
-			must.Eq(t, want, have)
-		})
-		t.Run("not a lineage key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.Key("git-town.push-hook")
-			_, has := key.IsLineage().Get()
-			must.False(t, has)
-		})
+		tests := map[string]bool{
+			"git-town-branch.branch.parent": true,  // valid lineage key
+			"git-town-branch..parent":       true,  // empty lineage key
+			"git-town.push-hook":            false, // not a lineage key
+		}
+		for give, want := range tests {
+			key := configdomain.Key(give)
+			have := key.IsLineage()
+			must.EqOp(t, want, have)
+		}
 	})
 
 	t.Run("ParseKey", func(t *testing.T) {
