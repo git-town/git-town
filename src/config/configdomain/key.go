@@ -134,21 +134,30 @@ func NewParentKey(branch gitdomain.LocalBranchName) Key {
 }
 
 func ParseKey(name string) Option[Key] {
-	for _, key := range keys {
-		if key.String() == name {
-			return Some(key)
+	for _, configKey := range keys {
+		if configKey.String() == name {
+			return Some(configKey)
 		}
 	}
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
 	for _, aliasableCommand := range AllAliasableCommands() {
-		key := aliasableCommand.Key()
+		key := KeyForAliasableCommand(aliasableCommand)
 		if key.String() == name {
 			return Some(key)
 		}
 	}
 	return None[Key]()
+}
+
+const (
+	LineageKeyPrefix = "git-town-branch."
+	LineageKeySuffix = ".parent"
+)
+
+func isLineageKey(key string) bool {
+	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
