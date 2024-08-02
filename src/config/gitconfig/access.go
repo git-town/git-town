@@ -119,7 +119,6 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, val
 
 func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := configdomain.SingleSnapshot{}
-	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz", "--includes"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -128,10 +127,10 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return snapshot, config, nil //nolint:nilerr
+		return snapshot, configdomain.EmptyPartialConfig(), nil //nolint:nilerr
 	}
 	if output == "" {
-		return snapshot, config, nil
+		return snapshot, configdomain.EmptyPartialConfig(), nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -155,19 +154,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 			}
 		}
 		snapshot[configKey] = value
-		err := config.AddValue(configKey, value, self.RemoveLocalConfigValue)
-		if err != nil {
-			return snapshot, config, err
-		}
 	}
-	// verify lineage
-	if updateOutdated {
-		for _, entry := range config.Lineage.Entries() {
-			if entry.Child == entry.Parent {
-				fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, entry.Child)))
-				_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(entry.Child))
-			}
-		}
-	}
-	return snapshot, config, nil
+	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
+	return snapshot, partialConfig, err
 }
