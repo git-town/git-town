@@ -1,9 +1,8 @@
 package configdomain
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
+	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/mapstools"
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
@@ -43,120 +42,66 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
+	ec := gohacks.ErrorCollector{}
+	aliases, err := NewAliasesFromSnapshot(snapshot)
+	ec.Check(err)
+	createPrototypeBranches, err := ParseCreatePrototypeBranches(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches.String())
+	ec.Check(err)
+	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
+	ec.Check(err)
+	offline, err := ParseOffline(snapshot[KeyOffline], KeyOffline.String())
+	ec.Check(err)
+	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook.String())
+	ec.Check(err)
+	pushNewBranches, err := ParsePushNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
+	ec.Check(err)
+	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
+	ec.Check(err)
+	syncBeforeShip, err := ParseSyncBeforeShip(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
+	ec.Check(err)
+	syncFeatureStrategy, err := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
+	ec.Check(err)
+	syncPerennialStrategy, err := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
+	ec.Check(err)
+	syncPrototypeStrategy, err := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
+	ec.Check(err)
+	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream.String())
+	ec.Check(err)
+	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
+	ec.Check(err)
+	return PartialConfig{
+		Aliases:                  aliases,
+		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
+		CreatePrototypeBranches:  createPrototypeBranches,
+		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
+		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
+		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
+		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
+		GiteaToken:               ParseGiteaToken(snapshot[KeyGiteaToken]),
+		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
+		HostingPlatform:          hostingPlatform,
+		Lineage:                  lineage,
+		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
+		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyObservedBranches]),
+		Offline:                  offline,
+		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyParkedBranches]),
+		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
+		PerennialRegex:           ParsePerennialRegex(snapshot[KeyPerennialRegex]),
+		PrototypeBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPrototypeBranches]),
+		PushHook:                 pushHook,
+		PushNewBranches:          pushNewBranches,
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		SyncBeforeShip:           syncBeforeShip,
+		SyncFeatureStrategy:      syncFeatureStrategy,
+		SyncPerennialStrategy:    syncPerennialStrategy,
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncUpstream:             syncUpstream,
+	}, ec.Err
+}
+
 // a function that deletes the local Git configuration value with the given key
 type removeLocalConfigValueFunc func(Key) error
-
-// Note: this exists here and not as a method of PartialConfig to avoid circular dependencies
-func (self *PartialConfig) AddValue(key Key, value string, removeLocalConfigValue removeLocalConfigValueFunc) error {
-	if strings.HasPrefix(key.String(), LineageKeyPrefix) {
-		if childStr, isLineage := key.IsLineage().Get(); isLineage {
-			if childStr == "" {
-				// empty lineage entries are invalid --> delete it
-				return removeLocalConfigValue(key)
-			}
-			child := gitdomain.NewLocalBranchName(childStr)
-			value = strings.TrimSpace(value)
-			if value == "" {
-				// empty lineage entries are invalid --> delete it
-				return removeLocalConfigValue(key)
-			}
-			parent := gitdomain.NewLocalBranchName(value)
-			self.Lineage.Add(child, parent)
-			return nil
-		}
-	}
-	var err error
-	switch key {
-	case KeyAliasAppend:
-		self.Aliases[AliasableCommandAppend] = value
-	case KeyAliasCompress:
-		self.Aliases[AliasableCommandCompress] = value
-	case KeyAliasContribute:
-		self.Aliases[AliasableCommandContribute] = value
-	case KeyAliasDiffParent:
-		self.Aliases[AliasableCommandDiffParent] = value
-	case KeyAliasHack:
-		self.Aliases[AliasableCommandHack] = value
-	case KeyAliasKill:
-		self.Aliases[AliasableCommandKill] = value
-	case KeyAliasObserve:
-		self.Aliases[AliasableCommandObserve] = value
-	case KeyAliasPark:
-		self.Aliases[AliasableCommandPark] = value
-	case KeyAliasPrepend:
-		self.Aliases[AliasableCommandPrepend] = value
-	case KeyAliasPropose:
-		self.Aliases[AliasableCommandPropose] = value
-	case KeyAliasRenameBranch:
-		self.Aliases[AliasableCommandRenameBranch] = value
-	case KeyAliasRepo:
-		self.Aliases[AliasableCommandRepo] = value
-	case KeyAliasSetParent:
-		self.Aliases[AliasableCommandSetParent] = value
-	case KeyAliasShip:
-		self.Aliases[AliasableCommandShip] = value
-	case KeyAliasSync:
-		self.Aliases[AliasableCommandSync] = value
-	case KeyContributionBranches:
-		self.ContributionBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyCreatePrototypeBranches:
-		self.CreatePrototypeBranches, err = ParseCreatePrototypeBranches(value, KeyPrototypeBranches.String())
-	case KeyHostingOriginHostname:
-		self.HostingOriginHostname = ParseHostingOriginHostname(value)
-	case KeyHostingPlatform:
-		self.HostingPlatform, err = ParseHostingPlatform(value)
-	case KeyGiteaToken:
-		self.GiteaToken = ParseGiteaToken(value)
-	case KeyGithubToken:
-		self.GitHubToken = ParseGitHubToken(value)
-	case KeyGitlabToken:
-		self.GitLabToken = ParseGitLabToken(value)
-	case KeyGitUserEmail:
-		self.GitUserEmail = ParseGitUserEmail(value)
-	case KeyGitUserName:
-		self.GitUserName = ParseGitUserName(value)
-	case KeyMainBranch:
-		self.MainBranch = gitdomain.NewLocalBranchNameOption(value)
-	case KeyObservedBranches:
-		self.ObservedBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyOffline:
-		self.Offline, err = ParseOffline(value, KeyOffline.String())
-	case KeyParkedBranches:
-		self.ParkedBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPerennialBranches:
-		self.PerennialBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPerennialRegex:
-		self.PerennialRegex = ParsePerennialRegex(value)
-	case KeyPrototypeBranches:
-		self.PrototypeBranches = gitdomain.ParseLocalBranchNames(value)
-	case KeyPushHook:
-		self.PushHook, err = ParsePushHook(value, KeyPushHook.String())
-	case KeyPushNewBranches:
-		self.PushNewBranches, err = ParsePushNewBranches(value, KeyPushNewBranches.String())
-	case KeyShipDeleteTrackingBranch:
-		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranch(value, KeyShipDeleteTrackingBranch.String())
-	case KeySyncFeatureStrategy:
-		self.SyncFeatureStrategy, err = ParseSyncFeatureStrategy(value)
-	case KeySyncPerennialStrategy:
-		self.SyncPerennialStrategy, err = ParseSyncPerennialStrategy(value)
-	case KeySyncPrototypeStrategy:
-		self.SyncPrototypeStrategy, err = ParseSyncPrototypeStrategy(value)
-	case KeySyncUpstream:
-		self.SyncUpstream, err = ParseSyncUpstream(value, KeySyncUpstream.String())
-	case KeyDeprecatedCodeHostingDriver,
-		KeyDeprecatedCodeHostingOriginHostname,
-		KeyDeprecatedCodeHostingPlatform,
-		KeyDeprecatedMainBranchName,
-		KeyDeprecatedNewBranchPushFlag,
-		KeyDeprecatedPerennialBranchNames,
-		KeyDeprecatedPullBranchStrategy,
-		KeyDeprecatedPushVerify,
-		KeyDeprecatedShipDeleteRemoteBranch,
-		KeyDeprecatedSyncStrategy:
-		// deprecated keys were handled before this is reached, they are listed here to check that the switch statement contains all keys
-	}
-	return err
-}
 
 // Merges the given PartialConfig into this configuration object.
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {

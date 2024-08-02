@@ -40,6 +40,7 @@ const (
 	ConfigFileCannotRead              = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidContent          = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigLineageParentIsChild        = "removing lineage entry for %q because the parent is the child"
+	ConfigLineageEmptyChild           = "removing empty lineage entry"
 	ConfigMainbranchInConfigFile      = "please configure the main branch in the config file"
 	ConfigNeeded                      = "Git Town needs to be configured\n\n"
 	ConfigStorage                     = "Config storage: %s\n"
