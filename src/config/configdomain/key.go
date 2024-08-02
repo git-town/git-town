@@ -12,16 +12,16 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
-func (self Key) IsAliasKey() bool {
-	return strings.HasPrefix(self.String(), "alias.")
+// CheckLineage indicates using the returned option whether this key is a lineage key.
+func (self Key) CheckLineage() Option[LineageKey] {
+	if isLineageKey(self.String()) {
+		return Some(LineageKey(self))
+	}
+	return None[LineageKey]()
 }
 
-// IsLineage indicates using the returned option whether this key is a lineage key.
-// The option contains the name of the child branch of the lineage entry.
-// This method returns a string instead of a gitdomain.LocalBranchName to indicate that
-// the returned child name isn't verified and might be empty.
-func (self Key) IsLineage() bool {
-	return isLineageKey(self.String())
+func (self Key) IsAliasKey() bool {
+	return strings.HasPrefix(self.String(), "alias.")
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
@@ -195,15 +195,6 @@ func ParseKey(name string) Option[Key] {
 		}
 	}
 	return None[Key]()
-}
-
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
-
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
