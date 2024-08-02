@@ -13,11 +13,12 @@ func (self SingleSnapshot) AliasKeys() map[AliasKey]string {
 	return result
 }
 
+// provides all the keys that describe lineage entries
 func (self SingleSnapshot) LineageKeys() map[LineageKey]string {
 	result := map[LineageKey]string{}
 	for key, value := range self {
-		if key.IsLineage() {
-			result[LineageKey(key)] = value
+		if lineageKey, isLineageKey := key.CheckLineage().Get(); isLineageKey {
+			result[lineageKey] = value
 		}
 	}
 	return result
