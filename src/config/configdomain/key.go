@@ -16,11 +16,8 @@ func (self Key) IsAliasKey() bool {
 	return strings.HasPrefix(self.String(), "alias.")
 }
 
-// IsLineage indicates using the returned option whether this key is a lineage key.
-// The option contains the name of the child branch of the lineage entry.
-// This method returns a string instead of a gitdomain.LocalBranchName to indicate that
-// the returned child name isn't verified and might be empty.
-func (self Key) IsLineage() Option[LineageKey] {
+// CheckLineage indicates using the returned option whether this key is a lineage key.
+func (self Key) CheckLineage() Option[LineageKey] {
 	if isLineageKey(self.String()) {
 		return Some(LineageKey(self))
 	}

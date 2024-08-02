@@ -26,7 +26,7 @@ func TestKey(t *testing.T) {
 		}
 		for give, want := range tests {
 			key := configdomain.Key(give)
-			have := key.IsLineage()
+			have := key.CheckLineage()
 			must.Eq(t, want, have)
 		}
 	})
