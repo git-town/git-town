@@ -8,8 +8,9 @@ type Aliases map[AliasableCommand]string
 
 func NewAliasesFromSnapshot(snapshot SingleSnapshot) (Aliases, error) {
 	result := Aliases{}
+	aliasableCommands := AllAliasableCommands()
 	for key, value := range snapshot.AliasKeys() {
-		aliasableCommand, has := key.AliasableCommand().Get()
+		aliasableCommand, has := aliasableCommands.Lookup(key.String()).Get()
 		if !has {
 			return result, fmt.Errorf("not an aliasable command: %q", key)
 		}
