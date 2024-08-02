@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -130,57 +129,21 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func KeyForAliasableCommand(aliasableCommand AliasableCommand) Key {
-	switch aliasableCommand {
-	case AliasableCommandAppend:
-		return KeyAliasAppend
-	case AliasableCommandCompress:
-		return KeyAliasCompress
-	case AliasableCommandContribute:
-		return KeyAliasContribute
-	case AliasableCommandDiffParent:
-		return KeyAliasDiffParent
-	case AliasableCommandHack:
-		return KeyAliasHack
-	case AliasableCommandKill:
-		return KeyAliasKill
-	case AliasableCommandObserve:
-		return KeyAliasObserve
-	case AliasableCommandPark:
-		return KeyAliasPark
-	case AliasableCommandPrepend:
-		return KeyAliasPrepend
-	case AliasableCommandPropose:
-		return KeyAliasPropose
-	case AliasableCommandRenameBranch:
-		return KeyAliasRenameBranch
-	case AliasableCommandRepo:
-		return KeyAliasRepo
-	case AliasableCommandSetParent:
-		return KeyAliasSetParent
-	case AliasableCommandShip:
-		return KeyAliasShip
-	case AliasableCommandSync:
-		return KeyAliasSync
-	}
-	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", &aliasableCommand))
-}
-
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {
-	for _, configKey := range keys {
-		if configKey.String() == name {
-			return Some(configKey)
+	for _, key := range keys {
+		if key.String() == name {
+			return Some(key)
 		}
 	}
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
 	for _, aliasableCommand := range AllAliasableCommands() {
-		key := KeyForAliasableCommand(aliasableCommand)
+		key := aliasableCommand.Key()
 		if key.String() == name {
 			return Some(key)
 		}
