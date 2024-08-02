@@ -17,7 +17,7 @@ func TestKey(t *testing.T) {
 		must.False(t, configdomain.KeyPushHook.IsAliasKey())
 	})
 
-	t.Run("IsLineage", func(t *testing.T) {
+	t.Run("CheckLineage", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.LineageKey]{
 			"git-town-branch.branch.parent": Some(configdomain.LineageKey("git-town-branch.branch.parent")), // valid lineage key
