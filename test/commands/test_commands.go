@@ -421,7 +421,7 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 
 // SetGitAlias sets the Git alias with the given name to the given value.
 func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
-	return self.Run("git", "config", "--global", "alias."+name.String(), value)
+	return self.Run("git", "config", "--global", configdomain.AliasKeyPrefix+name.String(), value)
 }
 
 // StageFiles adds the file with the given name to the Git index.
