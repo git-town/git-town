@@ -13,19 +13,14 @@ func TestKey(t *testing.T) {
 
 	t.Run("ToAliasKey", func(t *testing.T) {
 		t.Parallel()
-		t.Run("is alias key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.KeyAliasAppend
-			have, has := key.ToAliasKey().Get()
-			must.True(t, has)
-			must.Eq(t, configdomain.AliasKey("alias.append"), have)
-		})
-		t.Run("not an alias key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.KeyPushHook
-			have := key.ToAliasKey()
-			must.Eq(t, None[configdomain.AliasKey](), have)
-		})
+		tests := map[configdomain.Key]Option[configdomain.AliasKey]{
+			configdomain.KeyAliasAppend: Some(configdomain.AliasKey("alias.append")),
+			configdomain.KeyPushHook:    None[configdomain.AliasKey](),
+		}
+		for give, want := range tests {
+			have := give.ToAliasKey()
+			must.Eq(t, want, have)
+		}
 	})
 
 	t.Run("CheckLineage", func(t *testing.T) {
