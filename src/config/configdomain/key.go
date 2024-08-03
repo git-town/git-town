@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
@@ -20,16 +19,20 @@ func (self Key) CheckLineage() Option[LineageKey] {
 	return None[LineageKey]()
 }
 
-func (self Key) IsAliasKey() bool {
-	return strings.HasPrefix(self.String(), "alias.")
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
 }
 
 func (self Key) String() string { return string(self) }
+
+// tries to convert this Key into an AliasKey
+func (self Key) ToAliasKey() Option[AliasKey] {
+	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
+		return Some(AliasKey(self))
+	}
+	return None[AliasKey]()
+}
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
@@ -128,51 +131,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func AliasableCommandForKey(key Key) Option[AliasableCommand] {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		if KeyForAliasableCommand(aliasableCommand) == key {
-			return Some(aliasableCommand)
-		}
-	}
-	return None[AliasableCommand]()
-}
-
-func KeyForAliasableCommand(aliasableCommand AliasableCommand) Key {
-	switch aliasableCommand {
-	case AliasableCommandAppend:
-		return KeyAliasAppend
-	case AliasableCommandCompress:
-		return KeyAliasCompress
-	case AliasableCommandContribute:
-		return KeyAliasContribute
-	case AliasableCommandDiffParent:
-		return KeyAliasDiffParent
-	case AliasableCommandHack:
-		return KeyAliasHack
-	case AliasableCommandKill:
-		return KeyAliasKill
-	case AliasableCommandObserve:
-		return KeyAliasObserve
-	case AliasableCommandPark:
-		return KeyAliasPark
-	case AliasableCommandPrepend:
-		return KeyAliasPrepend
-	case AliasableCommandPropose:
-		return KeyAliasPropose
-	case AliasableCommandRenameBranch:
-		return KeyAliasRenameBranch
-	case AliasableCommandRepo:
-		return KeyAliasRepo
-	case AliasableCommandSetParent:
-		return KeyAliasSetParent
-	case AliasableCommandShip:
-		return KeyAliasShip
-	case AliasableCommandSync:
-		return KeyAliasSync
-	}
-	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", &aliasableCommand))
-}
-
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }
@@ -186,11 +144,8 @@ func ParseKey(name string) Option[Key] {
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
-	for _, aliasableCommand := range AllAliasableCommands() {
-		key := KeyForAliasableCommand(aliasableCommand)
-		if key.String() == name {
-			return Some(key)
-		}
+	if aliasKey, isAliasKey := AllAliasableCommands().LookupKey(name).Get(); isAliasKey {
+		return Some(aliasKey.Key())
 	}
 	return None[Key]()
 }
