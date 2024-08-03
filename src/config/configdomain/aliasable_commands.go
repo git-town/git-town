@@ -31,8 +31,8 @@ func (self AliasableCommands) Strings() []string {
 }
 
 // AllAliasableCommands provides all AliasType values.
-func AllAliasableCommands() []AliasableCommand {
-	return []AliasableCommand{
+func AllAliasableCommands() AliasableCommands {
+	return AliasableCommands{
 		AliasableCommandAppend,
 		AliasableCommandCompress,
 		AliasableCommandContribute,
