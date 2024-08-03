@@ -382,7 +382,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("alias." + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasPrefix + name).Get()
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
@@ -396,7 +396,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("alias." + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasPrefix + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
 		}
@@ -414,7 +414,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("alias." + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasPrefix + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
 		}

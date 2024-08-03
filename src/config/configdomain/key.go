@@ -20,7 +20,7 @@ func (self Key) CheckLineage() Option[LineageKey] {
 }
 
 func (self Key) IsAliasKey() bool {
-	return strings.HasPrefix(self.String(), "alias.")
+	return strings.HasPrefix(self.String(), AliasPrefix)
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
