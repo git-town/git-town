@@ -4,14 +4,6 @@ import . "github.com/git-town/git-town/v14/src/gohacks/prelude"
 
 type AliasableCommands []AliasableCommand
 
-func (self AliasableCommands) Keys() []AliasKey {
-	result := make([]AliasKey, len(self))
-	for a, aliasableCommand := range self {
-		result[a] = aliasableCommand.Key()
-	}
-	return result
-}
-
 // provides the AliasKey matching the given key name
 func (self AliasableCommands) LookupKey(name string) Option[AliasKey] {
 	for _, aliasableCommand := range self {
