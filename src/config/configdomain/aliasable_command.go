@@ -5,7 +5,7 @@ type AliasableCommand string
 
 // provides the key that configures this aliasable command in the Git config
 func (self AliasableCommand) Key() AliasKey {
-	return AliasKey(AliasPrefix + self.String())
+	return AliasKey(AliasKeyPrefix + self.String())
 }
 
 func (self AliasableCommand) String() string { return string(self) }
@@ -27,5 +27,3 @@ const (
 	AliasableCommandShip         = AliasableCommand("ship")
 	AliasableCommandSync         = AliasableCommand("sync")
 )
-
-const AliasPrefix = "alias."

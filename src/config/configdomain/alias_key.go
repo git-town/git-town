@@ -6,7 +6,7 @@ import "strings"
 type AliasKey Key
 
 func (self AliasKey) AliasableCommand() AliasableCommand {
-	commandName := strings.TrimPrefix(self.String(), AliasPrefix)
+	commandName := strings.TrimPrefix(self.String(), AliasKeyPrefix)
 	return AliasableCommand(commandName)
 }
 
@@ -17,3 +17,5 @@ func (self AliasKey) Key() Key {
 func (self AliasKey) String() string {
 	return string(self)
 }
+
+const AliasKeyPrefix = "alias."

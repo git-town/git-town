@@ -12,7 +12,7 @@ import (
 type Key string
 
 func (self Key) CheckAliasKey() Option[AliasKey] {
-	if strings.HasPrefix(self.String(), AliasPrefix) {
+	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
 		return Some(AliasKey(self))
 	}
 	return None[AliasKey]()
@@ -145,8 +145,8 @@ func ParseKey(name string) Option[Key] {
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
-	if aliasableCommand, isAliasableCommand := AllAliasableCommands().Lookup(name).Get(); isAliasableCommand {
-		return Some(aliasableCommand.Key().Key())
+	if aliasKey, isAliasKey := AllAliasableCommands().CheckAliasKey(name).Get(); isAliasKey {
+		return Some(aliasKey.Key())
 	}
 	// for _, aliasableCommand := range AllAliasableCommands() {
 	// 	key := aliasableCommand.Key().Key()

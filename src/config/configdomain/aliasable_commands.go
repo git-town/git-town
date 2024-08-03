@@ -4,14 +4,22 @@ import . "github.com/git-town/git-town/v14/src/gohacks/prelude"
 
 type AliasableCommands []AliasableCommand
 
-// provides the AliasableCommand matching the given Git Town command
-func (self AliasableCommands) Lookup(name string) Option[AliasableCommand] {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		if aliasableCommand.String() == name {
-			return Some(aliasableCommand)
+func (self AliasableCommands) CheckAliasKey(name string) Option[AliasKey] {
+	for _, aliasableCommand := range self {
+		keyOfCommand := aliasableCommand.Key()
+		if keyOfCommand.String() == name {
+			return Some(keyOfCommand)
 		}
 	}
-	return None[AliasableCommand]()
+	return None[AliasKey]()
+}
+
+func (self AliasableCommands) Keys() []AliasKey {
+	result := make([]AliasKey, len(self))
+	for a, aliasableCommand := range self {
+		result[a] = aliasableCommand.Key()
+	}
+	return result
 }
 
 func (self AliasableCommands) Strings() []string {
