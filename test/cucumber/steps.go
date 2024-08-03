@@ -386,8 +386,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		aliasKey := key.ToAliasKey().GetOrPanic()
-		return devRepo.SetGitAlias(aliasKey.AliasableCommand(), value)
+		return devRepo.SetGitAlias(key.ToAliasKey().GetOrPanic().AliasableCommand(), value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
