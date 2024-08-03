@@ -483,8 +483,7 @@ func (self *Commands) RemoveCommitsInCurrentBranch(runner gitdomain.Runner, pare
 
 // RemoveGitAlias removes the given Git alias.
 func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
-	aliasKey := aliasableCommand.Key()
-	return runner.Run("git", "config", "--global", "--unset", aliasKey.String())
+	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
