@@ -4,7 +4,7 @@ package configdomain
 type SingleSnapshot map[Key]string
 
 // provides all the keys that describe aliases for Git Town commands
-func (self SingleSnapshot) AliasKeys() map[AliasKey]string {
+func (self SingleSnapshot) AliasEntries() map[AliasKey]string {
 	result := map[AliasKey]string{}
 	for key, value := range self {
 		if aliasKey, isAliasKey := key.ToAliasKey().Get(); isAliasKey {
@@ -14,8 +14,17 @@ func (self SingleSnapshot) AliasKeys() map[AliasKey]string {
 	return result
 }
 
+func (self SingleSnapshot) Aliases() Aliases {
+	aliasEntries := self.AliasEntries()
+	result := make(Aliases, len(aliasEntries))
+	for key, value := range aliasEntries {
+		result[key.AliasableCommand()] = value
+	}
+	return result
+}
+
 // provides all the keys that describe lineage entries
-func (self SingleSnapshot) LineageKeys() map[LineageKey]string {
+func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	result := map[LineageKey]string{}
 	for key, value := range self {
 		if lineageKey, isLineageKey := key.CheckLineage().Get(); isLineageKey {
