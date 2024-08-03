@@ -5,6 +5,7 @@ import "strings"
 // A key used for storing aliases in the Git configuration
 type AliasKey Key
 
+// provides the AliasableCommand matching this AliasKey
 func (self AliasKey) AliasableCommand() AliasableCommand {
 	commandName := strings.TrimPrefix(self.String(), AliasKeyPrefix)
 	return AliasableCommand(commandName)

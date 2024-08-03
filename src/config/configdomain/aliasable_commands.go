@@ -31,22 +31,20 @@ func (self AliasableCommands) Strings() []string {
 }
 
 // AllAliasableCommands provides all AliasType values.
-func AllAliasableCommands() AliasableCommands {
-	return []AliasableCommand{
-		AliasableCommandAppend,
-		AliasableCommandCompress,
-		AliasableCommandContribute,
-		AliasableCommandDiffParent,
-		AliasableCommandHack,
-		AliasableCommandKill,
-		AliasableCommandObserve,
-		AliasableCommandPark,
-		AliasableCommandPrepend,
-		AliasableCommandPropose,
-		AliasableCommandRenameBranch,
-		AliasableCommandRepo,
-		AliasableCommandSetParent,
-		AliasableCommandShip,
-		AliasableCommandSync,
-	}
+var AllAliasableCommands AliasableCommands = []AliasableCommand{
+	AliasableCommandAppend,
+	AliasableCommandCompress,
+	AliasableCommandContribute,
+	AliasableCommandDiffParent,
+	AliasableCommandHack,
+	AliasableCommandKill,
+	AliasableCommandObserve,
+	AliasableCommandPark,
+	AliasableCommandPrepend,
+	AliasableCommandPropose,
+	AliasableCommandRenameBranch,
+	AliasableCommandRepo,
+	AliasableCommandSetParent,
+	AliasableCommandShip,
+	AliasableCommandSync,
 }

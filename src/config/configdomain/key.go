@@ -148,12 +148,6 @@ func ParseKey(name string) Option[Key] {
 	if aliasKey, isAliasKey := AllAliasableCommands().CheckAliasKey(name).Get(); isAliasKey {
 		return Some(aliasKey.Key())
 	}
-	// for _, aliasableCommand := range AllAliasableCommands() {
-	// 	key := aliasableCommand.Key().Key()
-	// 	if key.String() == name {
-	// 		return Some(key)
-	// 	}
-	// }
 	return None[Key]()
 }
 
