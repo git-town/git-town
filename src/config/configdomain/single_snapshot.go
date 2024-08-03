@@ -4,11 +4,11 @@ package configdomain
 type SingleSnapshot map[Key]string
 
 // provides all the keys that describe aliases for Git Town commands
-func (self SingleSnapshot) AliasKeys() map[Key]string {
-	result := map[Key]string{}
+func (self SingleSnapshot) AliasKeys() map[AliasKey]string {
+	result := map[AliasKey]string{}
 	for key, value := range self {
-		if key.IsAliasKey() {
-			result[key] = value
+		if aliasKey, isAliasKey := key.CheckAliasKey().Get(); isAliasKey {
+			result[aliasKey] = value
 		}
 	}
 	return result

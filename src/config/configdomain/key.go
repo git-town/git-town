@@ -11,16 +11,19 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
+func (self Key) CheckAliasKey() Option[AliasKey] {
+	if strings.HasPrefix(self.String(), AliasPrefix) {
+		return Some(AliasKey(self))
+	}
+	return None[AliasKey]()
+}
+
 // CheckLineage indicates using the returned option whether this key is a lineage key.
 func (self Key) CheckLineage() Option[LineageKey] {
 	if isLineageKey(self.String()) {
 		return Some(LineageKey(self))
 	}
 	return None[LineageKey]()
-}
-
-func (self Key) IsAliasKey() bool {
-	return strings.HasPrefix(self.String(), AliasPrefix)
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
@@ -129,15 +132,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-func AliasableCommandForKey(key Key) Option[AliasableCommand] {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		if aliasableCommand.Key().Key() == key {
-			return Some(aliasableCommand)
-		}
-	}
-	return None[AliasableCommand]()
-}
-
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }
@@ -154,12 +148,12 @@ func ParseKey(name string) Option[Key] {
 	if aliasableCommand, isAliasableCommand := AllAliasableCommands().Lookup(name).Get(); isAliasableCommand {
 		return Some(aliasableCommand.Key().Key())
 	}
-	for _, aliasableCommand := range AllAliasableCommands() {
-		key := aliasableCommand.Key().Key()
-		if key.String() == name {
-			return Some(key)
-		}
-	}
+	// for _, aliasableCommand := range AllAliasableCommands() {
+	// 	key := aliasableCommand.Key().Key()
+	// 	if key.String() == name {
+	// 		return Some(key)
+	// 	}
+	// }
 	return None[Key]()
 }
 

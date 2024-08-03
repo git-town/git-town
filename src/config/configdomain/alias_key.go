@@ -1,7 +1,14 @@
 package configdomain
 
+import "strings"
+
 // A key used for storing aliases in the Git configuration
 type AliasKey Key
+
+func (self AliasKey) AliasableCommand() AliasableCommand {
+	commandName := strings.TrimPrefix(self.String(), AliasPrefix)
+	return AliasableCommand(commandName)
+}
 
 func (self AliasKey) Key() Key {
 	return Key(self)

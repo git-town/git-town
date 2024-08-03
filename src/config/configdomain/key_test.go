@@ -11,10 +11,22 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsAliasKey", func(t *testing.T) {
+	t.Run("CheckAliasKey", func(t *testing.T) {
 		t.Parallel()
-		must.True(t, configdomain.KeyAliasAppend.IsAliasKey())
-		must.False(t, configdomain.KeyPushHook.IsAliasKey())
+		t.Run("is alias key", func(t *testing.T) {
+			t.Parallel()
+			key := configdomain.KeyAliasAppend
+			have, has := key.CheckAliasKey().Get()
+			must.True(t, has)
+			must.Eq(t, configdomain.AliasKey("alias.append"), have)
+		})
+	})
+
+	t.Run("not an alias key", func(t *testing.T) {
+		t.Parallel()
+		key := configdomain.KeyPushHook
+		have := key.CheckAliasKey()
+		must.Eq(t, None[configdomain.AliasKey](), have)
 	})
 
 	t.Run("CheckLineage", func(t *testing.T) {
