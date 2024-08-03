@@ -11,6 +11,7 @@ func (self AliasKey) AliasableCommand() AliasableCommand {
 	return AliasableCommand(commandName)
 }
 
+// provides the generic Key that this AliasKey represents
 func (self AliasKey) Key() Key {
 	return Key(self)
 }
