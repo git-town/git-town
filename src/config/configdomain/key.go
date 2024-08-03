@@ -26,6 +26,7 @@ func (self Key) MarshalJSON() ([]byte, error) {
 
 func (self Key) String() string { return string(self) }
 
+// tries to convert this Key into an AliasKey
 func (self Key) ToAliasKey() Option[AliasKey] {
 	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
 		return Some(AliasKey(self))
