@@ -1,6 +1,18 @@
 package configdomain
 
+import . "github.com/git-town/git-town/v14/src/gohacks/prelude"
+
 type AliasableCommands []AliasableCommand
+
+// provides the AliasableCommand matching the given Git Town command
+func (self AliasableCommands) Lookup(name string) Option[AliasableCommand] {
+	for _, aliasableCommand := range AllAliasableCommands() {
+		if aliasableCommand.String() == name {
+			return Some(aliasableCommand)
+		}
+	}
+	return None[AliasableCommand]()
+}
 
 func (self AliasableCommands) Strings() []string {
 	result := make([]string, len(self))

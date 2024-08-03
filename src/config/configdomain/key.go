@@ -188,6 +188,9 @@ func ParseKey(name string) Option[Key] {
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
+	if aliasableCommand, isAliasableCommand := AllAliasableCommands().Lookup(name).Get(); isAliasableCommand {
+		return Some(aliasableCommand.Key().Key())
+	}
 	for _, aliasableCommand := range AllAliasableCommands() {
 		key := KeyForAliasableCommand(aliasableCommand)
 		if key.String() == name {
