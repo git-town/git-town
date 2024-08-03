@@ -145,7 +145,7 @@ func ParseKey(name string) Option[Key] {
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
-	if aliasKey, isAliasKey := AllAliasableCommands().CheckAliasKey(name).Get(); isAliasKey {
+	if aliasKey, isAliasKey := AllAliasableCommands().LookupKey(name).Get(); isAliasKey {
 		return Some(aliasKey.Key())
 	}
 	return None[Key]()
