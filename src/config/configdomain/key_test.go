@@ -11,7 +11,7 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
-	t.Run("CheckAliasKey", func(t *testing.T) {
+	t.Run("ToAliasKey", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is alias key", func(t *testing.T) {
 			t.Parallel()
