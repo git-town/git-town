@@ -19,16 +19,20 @@ func (self Key) CheckLineage() Option[LineageKey] {
 	return None[LineageKey]()
 }
 
-func (self Key) IsAliasKey() bool {
-	return strings.HasPrefix(self.String(), "alias.")
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
 }
 
 func (self Key) String() string { return string(self) }
+
+// tries to convert this Key into an AliasKey
+func (self Key) ToAliasKey() Option[AliasKey] {
+	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
+		return Some(AliasKey(self))
+	}
+	return None[AliasKey]()
+}
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
@@ -142,11 +146,8 @@ func ParseKey(name string) Option[Key] {
 	if isLineageKey(name) {
 		return Some(Key(name))
 	}
-	for _, aliasableCommand := range AllAliasableCommands() {
-		key := KeyForAliasableCommand(aliasableCommand)
-		if key.String() == name {
-			return Some(key)
-		}
+	if aliasKey, isAliasKey := AllAliasableCommands().LookupKey(name).Get(); isAliasKey {
+		return Some(aliasKey.Key())
 	}
 	return None[Key]()
 }

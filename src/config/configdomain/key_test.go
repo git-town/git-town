@@ -11,10 +11,16 @@ import (
 func TestKey(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsAliasKey", func(t *testing.T) {
+	t.Run("ToAliasKey", func(t *testing.T) {
 		t.Parallel()
-		must.True(t, configdomain.KeyAliasAppend.IsAliasKey())
-		must.False(t, configdomain.KeyPushHook.IsAliasKey())
+		tests := map[configdomain.Key]Option[configdomain.AliasKey]{
+			configdomain.KeyAliasAppend: Some(configdomain.AliasKey(configdomain.KeyAliasAppend)),
+			configdomain.KeyPushHook:    None[configdomain.AliasKey](),
+		}
+		for give, want := range tests {
+			have := give.ToAliasKey()
+			must.Eq(t, want, have)
+		}
 	})
 
 	t.Run("CheckLineage", func(t *testing.T) {

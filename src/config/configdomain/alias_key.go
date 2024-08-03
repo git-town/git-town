@@ -1,8 +1,17 @@
 package configdomain
 
-// a Key that contains an alias for a Git Town command
+import "strings"
+
+// A key used for storing aliases in the Git configuration
 type AliasKey Key
 
+// provides the AliasableCommand matching this AliasKey
+func (self AliasKey) AliasableCommand() AliasableCommand {
+	commandName := strings.TrimPrefix(self.String(), AliasKeyPrefix)
+	return AliasableCommand(commandName)
+}
+
+// provides the generic Key that this AliasKey represents
 func (self AliasKey) Key() Key {
 	return Key(self)
 }
@@ -11,8 +20,4 @@ func (self AliasKey) String() string {
 	return string(self)
 }
 
-func NewAliasKey(command string) (AliasKey, error) {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		aliasableCommand
-	}
-}
+const AliasKeyPrefix = "alias."
