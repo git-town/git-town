@@ -386,7 +386,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		aliasKey := key.CheckAliasKey().GetOrPanic()
+		aliasKey := key.ToAliasKey().GetOrPanic()
 		return devRepo.SetGitAlias(aliasKey.AliasableCommand(), value)
 	})
 
@@ -397,7 +397,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := key.CheckAliasKey().GetOrPanic().AliasableCommand()
+		aliasableCommand := key.ToAliasKey().GetOrPanic().AliasableCommand()
 		have := devRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
@@ -412,7 +412,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := key.CheckAliasKey().GetOrPanic().AliasableCommand()
+		aliasableCommand := key.ToAliasKey().GetOrPanic().AliasableCommand()
 		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
 		if has {
 			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)

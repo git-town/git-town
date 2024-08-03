@@ -16,7 +16,7 @@ func TestKey(t *testing.T) {
 		t.Run("is alias key", func(t *testing.T) {
 			t.Parallel()
 			key := configdomain.KeyAliasAppend
-			have, has := key.CheckAliasKey().Get()
+			have, has := key.ToAliasKey().Get()
 			must.True(t, has)
 			must.Eq(t, configdomain.AliasKey("alias.append"), have)
 		})
@@ -25,7 +25,7 @@ func TestKey(t *testing.T) {
 	t.Run("not an alias key", func(t *testing.T) {
 		t.Parallel()
 		key := configdomain.KeyPushHook
-		have := key.CheckAliasKey()
+		have := key.ToAliasKey()
 		must.Eq(t, None[configdomain.AliasKey](), have)
 	})
 

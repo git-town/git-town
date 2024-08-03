@@ -7,7 +7,7 @@ type SingleSnapshot map[Key]string
 func (self SingleSnapshot) AliasKeys() map[AliasKey]string {
 	result := map[AliasKey]string{}
 	for key, value := range self {
-		if aliasKey, isAliasKey := key.CheckAliasKey().Get(); isAliasKey {
+		if aliasKey, isAliasKey := key.ToAliasKey().Get(); isAliasKey {
 			result[aliasKey] = value
 		}
 	}

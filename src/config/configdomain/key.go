@@ -11,13 +11,6 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
-func (self Key) CheckAliasKey() Option[AliasKey] {
-	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
-		return Some(AliasKey(self))
-	}
-	return None[AliasKey]()
-}
-
 // CheckLineage indicates using the returned option whether this key is a lineage key.
 func (self Key) CheckLineage() Option[LineageKey] {
 	if isLineageKey(self.String()) {
@@ -32,6 +25,13 @@ func (self Key) MarshalJSON() ([]byte, error) {
 }
 
 func (self Key) String() string { return string(self) }
+
+func (self Key) ToAliasKey() Option[AliasKey] {
+	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
+		return Some(AliasKey(self))
+	}
+	return None[AliasKey]()
+}
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
