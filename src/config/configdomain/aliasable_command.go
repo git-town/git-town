@@ -3,6 +3,11 @@ package configdomain
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
 type AliasableCommand string
 
+// provides the key that configures this aliasable command in the Git config
+func (self AliasableCommand) Key() AliasKey {
+	return AliasKey(AliasKeyPrefix + self.String())
+}
+
 func (self AliasableCommand) String() string { return string(self) }
 
 const (
