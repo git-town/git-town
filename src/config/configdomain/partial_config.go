@@ -45,8 +45,7 @@ func EmptyPartialConfig() PartialConfig {
 
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
-	aliases, err := NewAliasesFromSnapshot(snapshot)
-	ec.Check(err)
+	aliases := snapshot.Aliases()
 	createPrototypeBranches, err := ParseCreatePrototypeBranches(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches.String())
 	ec.Check(err)
 	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
