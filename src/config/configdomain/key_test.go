@@ -14,7 +14,7 @@ func TestKey(t *testing.T) {
 	t.Run("ToAliasKey", func(t *testing.T) {
 		t.Parallel()
 		tests := map[configdomain.Key]Option[configdomain.AliasKey]{
-			configdomain.KeyAliasAppend: Some(configdomain.AliasKey("alias.append")),
+			configdomain.KeyAliasAppend: Some(configdomain.AliasKey(configdomain.KeyAliasAppend)),
 			configdomain.KeyPushHook:    None[configdomain.AliasKey](),
 		}
 		for give, want := range tests {
