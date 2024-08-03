@@ -20,13 +20,12 @@ func TestKey(t *testing.T) {
 			must.True(t, has)
 			must.Eq(t, configdomain.AliasKey("alias.append"), have)
 		})
-	})
-
-	t.Run("not an alias key", func(t *testing.T) {
-		t.Parallel()
-		key := configdomain.KeyPushHook
-		have := key.ToAliasKey()
-		must.Eq(t, None[configdomain.AliasKey](), have)
+		t.Run("not an alias key", func(t *testing.T) {
+			t.Parallel()
+			key := configdomain.KeyPushHook
+			have := key.ToAliasKey()
+			must.Eq(t, None[configdomain.AliasKey](), have)
+		})
 	})
 
 	t.Run("CheckLineage", func(t *testing.T) {
