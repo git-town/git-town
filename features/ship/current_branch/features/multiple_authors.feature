@@ -9,10 +9,10 @@ Feature: ship a coworker's feature branch
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE            | AUTHOR                            |
-      | feature | local    | developer commit 1 | developer <developer@example.com> |
-      |         |          | developer commit 2 | developer <developer@example.com> |
-      |         |          | coworker commit    | coworker <coworker@example.com>   |
+      | BRANCH  | LOCATION      | MESSAGE            | AUTHOR                            |
+      | feature | local, origin | developer commit 1 | developer <developer@example.com> |
+      |         |               | developer commit 2 | developer <developer@example.com> |
+      |         |               | coworker commit    | coworker <coworker@example.com>   |
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
@@ -38,18 +38,18 @@ Feature: ship a coworker's feature branch
       | choose author for the squash commit | enter |
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                       |
-      | main   | git revert {{ sha 'feature done' }}                           |
-      |        | git push                                                      |
-      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
-      |        | git branch feature {{ sha 'coworker commit' }}                |
-      |        | git checkout feature                                          |
+      | BRANCH | COMMAND                                        |
+      | main   | git revert {{ sha 'feature done' }}            |
+      |        | git push                                       |
+      |        | git branch feature {{ sha 'coworker commit' }} |
+      |        | git push -u origin feature                     |
+      |        | git checkout feature                           |
     And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local         | developer commit 1    |
+      | feature | local, origin | developer commit 1    |
       |         |               | developer commit 2    |
       |         |               | coworker commit       |
     And the initial branches and lineage exist
