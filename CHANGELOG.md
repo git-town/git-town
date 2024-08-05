@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 15.0.0 (2024-08-05)
+
+Major version bump because some obsolete things gets removed, nothing really big.
+
+#### BREAKING CHANGES
+
+- The `sync-before-ship` config option no longer exists. `git town ship` now refuses shipping
+
 ## 14.4.1 (2024-07-29)
 
 Many thanks to @charlierudolph, @ianjsikes, @kevgo, @seadowg, @stephenwade for contributing feedback, ideas, and code to 10 shipped PRs and 4 resolved issues.
