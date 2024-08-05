@@ -3,13 +3,13 @@ Feature: does not ship an empty branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | empty | feature | main   | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | empty | feature | main   | local     |
     And the current branch is "empty"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME   | FILE CONTENT   |
-      | main   | local         | main commit  | common_file | common content |
-      | empty  | local, origin | empty commit | common_file | common content |
+      | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
+      | main   | local    | main commit  | common_file | common content |
+      | empty  | local    | empty commit | common_file | common content |
     When I run "git-town ship"
 
   Scenario: result
