@@ -57,8 +57,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
 	ec.Check(err)
-	syncBeforeShip, err := ParseSyncBeforeShip(snapshot[KeySyncBeforeShip], KeySyncBeforeShip.String())
-	ec.Check(err)
 	syncFeatureStrategy, err := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
 	ec.Check(err)
 	syncPerennialStrategy, err := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
@@ -91,7 +89,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		SyncBeforeShip:           syncBeforeShip,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
