@@ -372,7 +372,6 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 }
 
 func validateData(data shipData) error {
-	fmt.Println("111111111111111111111111111111111111111111111", data.branchToShip.SyncStatus)
 	switch data.branchToShip.SyncStatus {
 	case gitdomain.SyncStatusDeletedAtRemote:
 		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchToShip.LocalName)
@@ -382,7 +381,6 @@ func validateData(data shipData) error {
 		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchToShip.LocalName)
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
 	}
-	fmt.Println("222222222222222222222222222222222222222222222222222")
 	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
 			return validate.NoOpenChanges(data.hasOpenChanges)
