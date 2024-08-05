@@ -7,9 +7,9 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local    | conflicting main commit    | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local         | conflicting main commit    | conflicting_file | main content    |
+      | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result

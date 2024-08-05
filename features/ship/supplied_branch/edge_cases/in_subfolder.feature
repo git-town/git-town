@@ -3,9 +3,9 @@ Feature: ship the supplied feature branch from a subfolder
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-      | other   | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
@@ -23,15 +23,15 @@ Feature: ship the supplied feature branch from a subfolder
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
       |        | git push                        |
-      |        | git push origin :feature        |
       |        | git branch -D feature           |
       |        | git checkout other              |
       | other  | git stash pop                   |
     And the current branch is now "other"
     And the uncommitted file still exists
     And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
@@ -42,16 +42,15 @@ Feature: ship the supplied feature branch from a subfolder
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                       |
-      | other  | git add -A                                                    |
-      |        | git stash                                                     |
-      |        | git checkout main                                             |
-      | main   | git revert {{ sha 'feature done' }}                           |
-      |        | git push                                                      |
-      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
-      |        | git branch feature {{ sha 'feature commit' }}                 |
-      |        | git checkout other                                            |
-      | other  | git stash pop                                                 |
+      | BRANCH | COMMAND                                       |
+      | other  | git add -A                                    |
+      |        | git stash                                     |
+      |        | git checkout main                             |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout other                            |
+      | other  | git stash pop                                 |
     And the current branch is now "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

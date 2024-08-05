@@ -156,10 +156,6 @@ func (self *UnvalidatedConfig) RemoveShipDeleteTrackingBranch() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch)
 }
 
-func (self *UnvalidatedConfig) RemoveSyncBeforeShip() {
-	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncBeforeShip)
-}
-
 func (self *UnvalidatedConfig) RemoveSyncFeatureStrategy() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncFeatureStrategy)
 }
@@ -261,14 +257,6 @@ func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.Sh
 		return self.GitConfig.SetGlobalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
 	return self.GitConfig.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
-}
-
-func (self *UnvalidatedConfig) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global bool) error {
-	self.Config.Value.SyncBeforeShip = value
-	if global {
-		return self.GitConfig.SetGlobalConfigValue(configdomain.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
-	}
-	return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
 }
 
 func (self *UnvalidatedConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {

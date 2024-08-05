@@ -3,8 +3,8 @@ Feature: does not ship an empty branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | empty | feature | main   | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | empty | feature | main   | local     |
     And the current branch is "empty"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
