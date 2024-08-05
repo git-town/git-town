@@ -9,8 +9,8 @@ Feature: preserve the previous Git branch
 
   Scenario: current branch gone
     And the commits
-      | BRANCH  | LOCATION |
-      | current | local    |
+      | BRANCH  | LOCATION      |
+      | current | local, origin |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship -m 'feature done'"
     Then the current branch is now "main"
@@ -18,8 +18,8 @@ Feature: preserve the previous Git branch
 
   Scenario: previous branch gone
     Given the commits
-      | BRANCH   | LOCATION |
-      | previous | local    |
+      | BRANCH   | LOCATION      |
+      | previous | local, origin |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship previous -m 'feature done'"
     Then the current branch is still "current"
@@ -30,8 +30,8 @@ Feature: preserve the previous Git branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION |
-      | feature | local    |
+      | BRANCH  | LOCATION      |
+      | feature | local, origin |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship feature -m "feature done""
     Then the current branch is still "current"
