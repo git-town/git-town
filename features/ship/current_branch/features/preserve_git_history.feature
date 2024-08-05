@@ -3,14 +3,14 @@ Feature: preserve the previous Git branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | previous | feature | main   | local, origin |
-      | current  | feature | main   | local, origin |
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | previous | feature | main   | local     |
+      | current  | feature | main   | local     |
 
   Scenario: current branch gone
     And the commits
-      | BRANCH  | LOCATION      |
-      | current | local, origin |
+      | BRANCH  | LOCATION |
+      | current | local    |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship -m 'feature done'"
     Then the current branch is now "main"
@@ -18,8 +18,8 @@ Feature: preserve the previous Git branch
 
   Scenario: previous branch gone
     Given the commits
-      | BRANCH   | LOCATION      |
-      | previous | local, origin |
+      | BRANCH   | LOCATION |
+      | previous | local    |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship previous -m 'feature done'"
     Then the current branch is still "current"
@@ -27,11 +27,11 @@ Feature: preserve the previous Git branch
 
   Scenario: both branches exist
     And the branch
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     And the commits
-      | BRANCH  | LOCATION      |
-      | feature | local, origin |
+      | BRANCH  | LOCATION |
+      | feature | local    |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship feature -m "feature done""
     Then the current branch is still "current"
