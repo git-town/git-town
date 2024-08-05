@@ -7,9 +7,9 @@ Feature: does not ship an empty branch
       | empty | feature | main   | local, origin |
     And the current branch is "empty"
     And the commits
-      | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
-      | main   | local    | main commit  | common_file | common content |
-      | empty  | local    | empty commit | common_file | common content |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME   | FILE CONTENT   |
+      | main   | local         | main commit  | common_file | common content |
+      | empty  | local, origin | empty commit | common_file | common content |
     When I run "git-town ship"
 
   Scenario: result
