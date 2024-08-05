@@ -3,12 +3,12 @@ Feature: ship the supplied feature branch from a subfolder
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-      | other   | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, origin | feature commit |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     And the current branch is "other"
     And an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
@@ -23,15 +23,15 @@ Feature: ship the supplied feature branch from a subfolder
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
       |        | git push                        |
-      |        | git push origin :feature        |
       |        | git branch -D feature           |
       |        | git checkout other              |
       | other  | git stash pop                   |
     And the current branch is now "other"
     And the uncommitted file still exists
     And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
@@ -49,7 +49,6 @@ Feature: ship the supplied feature branch from a subfolder
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git push -u origin feature                    |
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
@@ -57,5 +56,5 @@ Feature: ship the supplied feature branch from a subfolder
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
+      | feature | local         | feature commit        |
     And the initial branches and lineage exist
