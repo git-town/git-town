@@ -85,7 +85,6 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil {
 		return err
 	}
-	fmt.Println("333333333333333333333333333333333333333333333")
 	runProgram := shipProgram(data, message)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
