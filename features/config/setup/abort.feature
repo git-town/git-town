@@ -24,4 +24,3 @@ Feature: aborting the setup assistant
     And local Git Town setting "sync-perennial-strategy" still doesn't exist
     And local Git Town setting "sync-upstream" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
-    And local Git Town setting "sync-before-ship" still doesn't exist

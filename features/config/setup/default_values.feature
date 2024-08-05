@@ -25,7 +25,6 @@ Feature: Accepting all default values leads to a working setup
       | push-hook                   | enter |
       | create-prototype-branches   | enter |
       | ship-delete-tracking-branch | enter |
-      | sync-before-ship            | enter |
       | save config to config file  | enter |
 
   Scenario: result
@@ -42,7 +41,6 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "sync-perennial-strategy" still doesn't exist
     And local Git Town setting "sync-upstream" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
-    And local Git Town setting "sync-before-ship" still doesn't exist
     And the configuration file is now:
       """
       # Git Town configuration file
@@ -84,19 +82,6 @@ Feature: Accepting all default values leads to a working setup
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = true
-
-      # Should "git ship" sync branches before shipping them?
-      #
-      # Guidance: enable when shipping branches locally on your machine
-      # and disable when shipping feature branches via the code hosting
-      # API or web UI.
-      #
-      # When enabled, branches are always fully up to date when shipped
-      # and you get a chance to resolve merge conflicts
-      # between the feature branch to ship and the main branch
-      # on the feature branch. This helps keep the main branch green.
-      # But this also triggers another CI run and delays shipping.
-      sync-before-ship = false
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -184,4 +169,3 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "push-new-branches" still doesn't exist
     And local Git Town setting "push-hook" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
-    And local Git Town setting "sync-before-ship" still doesn't exist

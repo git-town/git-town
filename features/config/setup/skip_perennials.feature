@@ -20,7 +20,6 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | push-hook                   | enter      |                                             |
       | create-prototype-branches   | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
-      | sync-before-ship            | enter      |                                             |
       | save config to Git metadata | down enter |                                             |
 
   Scenario: result
