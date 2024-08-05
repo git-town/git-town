@@ -3,9 +3,9 @@ Feature: abort the ship via empty commit message
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-      | other   | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
+      | other   | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | main_file        | main content    |

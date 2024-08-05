@@ -55,7 +55,6 @@ func TestSave(t *testing.T) {
 			PushHook:                 true,
 			PushNewBranches:          false,
 			ShipDeleteTrackingBranch: true,
-			SyncBeforeShip:           false,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
 			SyncUpstream:             true,
@@ -103,19 +102,6 @@ create-prototype-branches = true
 # (GitHub, GitLab, etc) deletes head branches when
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
-
-# Should "git ship" sync branches before shipping them?
-#
-# Guidance: enable when shipping branches locally on your machine
-# and disable when shipping feature branches via the code hosting
-# API or web UI.
-#
-# When enabled, branches are always fully up to date when shipped
-# and you get a chance to resolve merge conflicts
-# between the feature branch to ship and the main branch
-# on the feature branch. This helps keep the main branch green.
-# But this also triggers another CI run and delays shipping.
-sync-before-ship = false
 
 # Should "git sync" also fetch updates from the upstream remote?
 #
@@ -229,19 +215,6 @@ create-prototype-branches = false
 # (GitHub, GitLab, etc) deletes head branches when
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
-
-# Should "git ship" sync branches before shipping them?
-#
-# Guidance: enable when shipping branches locally on your machine
-# and disable when shipping feature branches via the code hosting
-# API or web UI.
-#
-# When enabled, branches are always fully up to date when shipped
-# and you get a chance to resolve merge conflicts
-# between the feature branch to ship and the main branch
-# on the feature branch. This helps keep the main branch green.
-# But this also triggers another CI run and delays shipping.
-sync-before-ship = false
 
 # Should "git sync" also fetch updates from the upstream remote?
 #

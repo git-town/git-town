@@ -2,8 +2,8 @@
 
 _Notice: Most people don't need to use the _ship_ command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code
-hosting service, as you already do. `git ship` is for edge cases like developing
-in [offline mode](../preferences/offline.md)._
+hosting service, as you would normally do. `git ship` is for edge cases like
+developing in [offline mode](../preferences/offline.md)._
 
 The _ship_ command ("let's ship this feature") squash-merges a completed feature
 branch into the main branch and removes the feature branch. After the merge it
@@ -34,8 +34,3 @@ If your origin server deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
 [disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).
-
-If [sync-before-ship](../preferences/sync-before-ship.md) is enabled, Git Town
-syncs the current branch before executing the ship. This allows you to resolve
-merge conflicts on the feature branch instead of on the main branch. This helps
-keep the main branch green, but can delay shipping.

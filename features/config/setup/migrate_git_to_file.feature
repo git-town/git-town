@@ -11,7 +11,6 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "create-prototype-branches" is "true"
-    And local Git Town setting "sync-before-ship" is "false"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     And local Git Town setting "sync-feature-strategy" is "merge"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
@@ -32,7 +31,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | disable the push hook                     | enter |
       | create-prototype-branches                 | enter |
       | disable ship-delete-tracking-branch       | enter |
-      | sync-before-ship                          | enter |
       | save config to config file                | enter |
 
   Scenario: result
@@ -49,7 +47,6 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "push-hook" now doesn't exist
     And local Git Town setting "create-prototype-branches" now doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
-    And local Git Town setting "sync-before-ship" now doesn't exist
     And the configuration file is now:
       """
       # Git Town configuration file
@@ -91,19 +88,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = false
-
-      # Should "git ship" sync branches before shipping them?
-      #
-      # Guidance: enable when shipping branches locally on your machine
-      # and disable when shipping feature branches via the code hosting
-      # API or web UI.
-      #
-      # When enabled, branches are always fully up to date when shipped
-      # and you get a chance to resolve merge conflicts
-      # between the feature branch to ship and the main branch
-      # on the feature branch. This helps keep the main branch green.
-      # But this also triggers another CI run and delays shipping.
-      sync-before-ship = false
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -172,7 +156,6 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "perennial-regex" is now "release-.*"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "sync-before-ship" is now "false"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "rebase"

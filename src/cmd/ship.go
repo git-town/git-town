@@ -19,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v14/src/hosting"
 	"github.com/git-town/git-town/v14/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/src/messages"
-	"github.com/git-town/git-town/v14/src/sync"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/validate"
 	fullInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/full"
@@ -36,15 +35,7 @@ const shipDesc = "Deliver a completed feature branch"
 const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
 
-- syncs the main branch
-- pulls updates for <branch_name>
-- merges the main branch into <branch_name>
-- squash-merges <branch_name> into the main branch
-  with commit message specified by the user
-- pushes the main branch to the origin repository
-- deletes <branch_name> from the local and origin repositories
-
-Ships direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
+Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 
@@ -301,26 +292,6 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 
 func shipProgram(data shipData, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := NewMutable(&program.Program{})
-	if data.config.Config.SyncBeforeShip {
-		// sync the parent branch
-		sync.BranchProgram(data.targetBranch, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       prog,
-			PushBranch:    true,
-		})
-		// sync the branch to ship (local sync only)
-		sync.BranchProgram(data.branchToShip, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       prog,
-			PushBranch:    false,
-		})
-	}
 	localBranchToShip, hasLocalBranchToShip := data.branchToShip.LocalName.Get()
 	localTargetBranch, _ := data.targetBranch.LocalName.Get()
 	if hasLocalBranchToShip {
@@ -400,6 +371,15 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 }
 
 func validateData(data shipData) error {
+	switch data.branchToShip.SyncStatus {
+	case gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusNotInSync:
+		return fmt.Errorf(messages.ShipBranchNotInSync, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
+	}
 	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
 			return validate.NoOpenChanges(data.hasOpenChanges)

@@ -3,9 +3,9 @@ Feature: preserve the previous Git branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | previous | feature | main   | local, origin |
-      | current  | feature | main   | local, origin |
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | previous | feature | main   | local     |
+      | current  | feature | main   | local     |
 
   Scenario: current branch gone
     And the commits
@@ -27,8 +27,8 @@ Feature: preserve the previous Git branch
 
   Scenario: both branches exist
     And the branch
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     And the commits
       | BRANCH  | LOCATION |
       | feature | local    |

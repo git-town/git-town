@@ -3,9 +3,9 @@ Feature: does not ship empty feature branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | empty | feature | main   | local, origin |
-      | other | feature | main   | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | empty | feature | main   | local     |
+      | other | feature | main   | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit    | common_file | common content |
