@@ -34,16 +34,16 @@ Feature: commit message with double-quotes
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                       |
-      | main   | git revert {{ sha 'with "double quotes"' }}                   |
-      |        | git push                                                      |
-      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
-      |        | git branch feature {{ sha 'feature commit' }}                 |
-      |        | git checkout feature                                          |
+      | BRANCH | COMMAND                                       |
+      | main   | git revert {{ sha 'with "double quotes"' }}   |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git push -u origin feature                    |
+      |        | git checkout feature                          |
     And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                       |
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
-      | feature | local         | feature commit                |
+      | feature | local, origin | feature commit                |
     And the initial branches and lineage exist
