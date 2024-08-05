@@ -1,4 +1,4 @@
-Feature: handle conflicts between the supplied feature branch and its tracking branch
+Feature: refuses shipping a branch with conflicts between the supplied feature branch and its tracking branch
 
   Background:
     Given a Git repo with origin
