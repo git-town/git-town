@@ -3,12 +3,12 @@ Feature: must provide a commit message
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     And the current branch is "feature"
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, origin | feature commit |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     When I run "git-town ship" and close the editor
 
   Scenario: result
