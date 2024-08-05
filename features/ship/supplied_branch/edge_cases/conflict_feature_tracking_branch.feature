@@ -16,7 +16,11 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
 
   @this
   Scenario: result
-    Then it runs the commands
+    Then it runs no commands
+    And it prints the error:
+      """
+      branch "other"
+      """
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |

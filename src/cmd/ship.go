@@ -382,5 +382,14 @@ func validateData(data shipData) error {
 			return validate.NoOpenChanges(data.hasOpenChanges)
 		}
 	}
+	switch data.branchToShip.SyncStatus {
+	case gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusNotInSync:
+		return fmt.Errorf(messages.ShipBranchNotInSync, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchToShip.LocalName)
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
+	}
 	return nil
 }
