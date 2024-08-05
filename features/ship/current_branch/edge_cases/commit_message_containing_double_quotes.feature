@@ -7,8 +7,8 @@ Feature: commit message with double-quotes
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE        |
-      | feature | local    | feature commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, origin | feature commit |
     When I run "git-town ship -m 'with "double quotes"'"
 
   Scenario: result

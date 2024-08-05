@@ -8,8 +8,8 @@ Feature: abort the ship by empty commit message
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE        |
-      | feature | local    | feature commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, origin | feature commit |
     When I run "git-town ship" and enter an empty commit message
 
   Scenario: result
