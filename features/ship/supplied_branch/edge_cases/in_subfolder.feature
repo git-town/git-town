@@ -7,8 +7,8 @@ Feature: ship the supplied feature branch from a subfolder
       | feature | feature | main   | local, origin |
       | other   | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION | MESSAGE        |
-      | feature | local    | feature commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, origin | feature commit |
     And the current branch is "other"
     And an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
@@ -42,20 +42,20 @@ Feature: ship the supplied feature branch from a subfolder
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                       |
-      | other  | git add -A                                                    |
-      |        | git stash                                                     |
-      |        | git checkout main                                             |
-      | main   | git revert {{ sha 'feature done' }}                           |
-      |        | git push                                                      |
-      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
-      |        | git branch feature {{ sha 'feature commit' }}                 |
-      |        | git checkout other                                            |
-      | other  | git stash pop                                                 |
+      | BRANCH | COMMAND                                       |
+      | other  | git add -A                                    |
+      |        | git stash                                     |
+      |        | git checkout main                             |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git push -u origin feature                    |
+      |        | git checkout other                            |
+      | other  | git stash pop                                 |
     And the current branch is now "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local         | feature commit        |
+      | feature | local, origin | feature commit        |
     And the initial branches and lineage exist
