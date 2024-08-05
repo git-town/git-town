@@ -11,7 +11,6 @@ Feature: shipping a branch that is checked out in another worktree
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
     And branch "feature" is active in another worktree
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature" and enter "feature done" for the commit message
 
   Scenario: result
