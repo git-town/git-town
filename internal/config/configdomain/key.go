@@ -1,10 +1,11 @@
-package keys
+package configdomain
 
 import (
 	"encoding/json"
 	"strings"
 
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v14/pkg"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
@@ -55,7 +56,7 @@ const (
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
-	KeyGithubToken                         = Key("git-town.github-token")
+	KeyGithubToken                         = Key(pkg.KeyGithubToken)
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyHostingPlatform                     = Key("git-town.hosting-platform")

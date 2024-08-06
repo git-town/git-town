@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/internal/config"
+	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	prodgit "github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -273,7 +273,7 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GlobalGitConfig(name keys.Key) Option[string] {
+func (self *TestCommands) GlobalGitConfig(name configdomain.Key) Option[string] {
 	output, err := self.Query("git", "config", "--global", "--get", name.String())
 	if err != nil {
 		return None[string]()
@@ -340,7 +340,7 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	return branches, nil
 }
 
-func (self *TestCommands) LocalGitConfig(name keys.Key) Option[string] {
+func (self *TestCommands) LocalGitConfig(name configdomain.Key) Option[string] {
 	output, err := self.Query("git", "config", "--local", "--get", name.String())
 	if err != nil {
 		return None[string]()
@@ -371,12 +371,12 @@ func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (self *TestCommands) RemoveMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", keys.KeyMainBranch.String())
+	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.Config.GitConfig.RemoveLocalConfigValue(keys.KeyPerennialBranches)
+	return self.Config.GitConfig.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
@@ -420,8 +420,8 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 }
 
 // SetGitAlias sets the Git alias with the given name to the given value.
-func (self *TestCommands) SetGitAlias(name keys.AliasableCommand, value string) error {
-	return self.Run("git", "config", "--global", keys.AliasKeyPrefix+name.String(), value)
+func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
+	return self.Run("git", "config", "--global", configdomain.AliasKeyPrefix+name.String(), value)
 }
 
 // StageFiles adds the file with the given name to the Git index.

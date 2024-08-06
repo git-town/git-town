@@ -1,15 +1,13 @@
 package configdomain
 
-import "github.com/git-town/git-town/v14/pkg/keys"
-
 // SingleSnapshot contains all of the local or global Git metadata config settings.
-type SingleSnapshot map[keys.Key]string
+type SingleSnapshot map[Key]string
 
 // provides all the keys that describe aliases for Git Town commands
-func (self SingleSnapshot) AliasEntries() map[keys.AliasKey]string {
-	result := map[keys.AliasKey]string{}
+func (self SingleSnapshot) AliasEntries() map[AliasKey]string {
+	result := map[AliasKey]string{}
 	for key, value := range self {
-		if aliasKey, isAliasKey := keys.NewAliasKey(key).Get(); isAliasKey {
+		if aliasKey, isAliasKey := NewAliasKey(key).Get(); isAliasKey {
 			result[aliasKey] = value
 		}
 	}
@@ -26,10 +24,10 @@ func (self SingleSnapshot) Aliases() Aliases {
 }
 
 // provides all the keys that describe lineage entries
-func (self SingleSnapshot) LineageEntries() map[keys.LineageKey]string {
-	result := map[keys.LineageKey]string{}
+func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
+	result := map[LineageKey]string{}
 	for key, value := range self {
-		if lineageKey, isLineageKey := keys.NewLineageKey(key).Get(); isLineageKey {
+		if lineageKey, isLineageKey := NewLineageKey(key).Get(); isLineageKey {
 			result[lineageKey] = value
 		}
 	}

@@ -1,4 +1,4 @@
-package keys
+package configdomain
 
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
 type AliasableCommand string

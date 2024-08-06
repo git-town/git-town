@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/messages"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	"github.com/muesli/termenv"
 )
 
@@ -29,7 +28,7 @@ If you are not sure, select all :)
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands keys.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
@@ -50,15 +49,15 @@ func Aliases(allAliasableCommands keys.AliasableCommands, existingAliases config
 }
 
 type AliasesModel struct {
-	list.List[keys.AliasableCommand]
-	AllAliasableCommands keys.AliasableCommands // all Git Town commands that can be aliased
-	CurrentSelections    []AliasSelection       // the status of the list entries
-	OriginalAliases      configdomain.Aliases   // the Git Town aliases as they currently exist on disk
+	list.List[configdomain.AliasableCommand]
+	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
+	CurrentSelections    []AliasSelection               // the status of the list entries
+	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
 	selectedColor        termenv.Style
 }
 
-func (self AliasesModel) Checked() keys.AliasableCommands {
-	result := keys.AliasableCommands{}
+func (self AliasesModel) Checked() configdomain.AliasableCommands {
+	result := configdomain.AliasableCommands{}
 	for c, choice := range self.CurrentSelections {
 		if choice == AliasSelectionGT {
 			result = append(result, self.AllAliasableCommands[c])
@@ -201,7 +200,7 @@ func (self AliasesModel) View() string {
 	return s.String()
 }
 
-func DetermineAliasResult(selections []AliasSelection, allAliasableCommands keys.AliasableCommands, existingAliases configdomain.Aliases) configdomain.Aliases {
+func DetermineAliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) configdomain.Aliases {
 	result := configdomain.Aliases{}
 	for s, selection := range selections {
 		command := allAliasableCommands[s]
@@ -217,18 +216,18 @@ func DetermineAliasResult(selections []AliasSelection, allAliasableCommands keys
 	return result
 }
 
-func DetermineAliasSelectionText(selectedCommands keys.AliasableCommands) string {
+func DetermineAliasSelectionText(selectedCommands configdomain.AliasableCommands) string {
 	switch len(selectedCommands) {
 	case 0:
 		return "(none)"
-	case len(keys.AllAliasableCommands()):
+	case len(configdomain.AllAliasableCommands()):
 		return "(all)"
 	default:
 		return strings.Join(selectedCommands.Strings(), ", ")
 	}
 }
 
-func NewAliasSelections(aliasableCommands keys.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
+func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
 	result := make([]AliasSelection, len(aliasableCommands))
 	for a, aliasableCommand := range aliasableCommands {
 		existingAlias, exists := existingAliases[aliasableCommand]

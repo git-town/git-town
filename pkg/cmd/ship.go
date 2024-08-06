@@ -24,7 +24,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/vm/program"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -55,7 +54,7 @@ func shipCmd() *cobra.Command {
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
-		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, keys.KeyGithubToken, keys.KeyShipDeleteTrackingBranch)),
+		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},

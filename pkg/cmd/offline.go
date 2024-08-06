@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/messages"
 	configInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/config"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -81,7 +80,7 @@ func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
 func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	value, err := gohacks.ParseBool(text, "offline status")
 	if err != nil {
-		return fmt.Errorf(messages.ValueInvalid, keys.KeyOffline, text)
+		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
 	if offline, has := value.Get(); has {
 		return config.SetOffline(configdomain.Offline(offline))

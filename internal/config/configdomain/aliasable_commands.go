@@ -1,4 +1,4 @@
-package keys
+package configdomain
 
 import . "github.com/git-town/git-town/v14/pkg/prelude"
 

@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/messages"
-	"github.com/git-town/git-town/v14/pkg/keys"
 )
 
 type Runner interface {
@@ -44,7 +43,7 @@ func (self *Access) OriginRemote() string {
 	return strings.TrimSpace(output)
 }
 
-func (self *Access) RemoveConfigValue(key keys.Key, scope configdomain.ConfigScope) error {
+func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
 		return self.RemoveGlobalConfigValue(key)
@@ -54,12 +53,12 @@ func (self *Access) RemoveConfigValue(key keys.Key, scope configdomain.ConfigSco
 	panic(messages.ConfigScopeUnhandled)
 }
 
-func (self *Access) RemoveGlobalConfigValue(key keys.Key) error {
+func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *Access) RemoveLocalConfigValue(key keys.Key) error {
+func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--unset", key.String())
 }
 
@@ -88,16 +87,16 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) er
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *Access) SetGlobalConfigValue(key keys.Key, value string) error {
+func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *Access) SetLocalConfigValue(key keys.Key, value string) error {
+func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", key.String(), value)
 }
 
-func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey keys.Key, value string) {
+func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
 	err := self.RemoveGlobalConfigValue(oldKey)
 	if err != nil {
@@ -109,7 +108,7 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey keys.Key, value
 	}
 }
 
-func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey keys.Key, value string) {
+func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
 	err := self.RemoveLocalConfigValue(oldKey)
 	if err != nil {
@@ -121,7 +120,7 @@ func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey keys.Key, value 
 	}
 }
 
-func (self *Access) UpdateDeprecatedSetting(oldKey, newKey keys.Key, value string, scope configdomain.ConfigScope) {
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, scope configdomain.ConfigScope) {
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
 		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
@@ -152,21 +151,21 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, hasConfigKey := keys.ParseKey(key).Get()
+		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
 		if !hasConfigKey {
 			continue
 		}
 		if updateOutdated {
-			newKey, keyIsDeprecated := keys.DeprecatedKeys[configKey]
+			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				self.UpdateDeprecatedSetting(configKey, newKey, value, scope)
 				configKey = newKey
 			}
-			if configKey != keys.KeyPerennialBranches && value == "" {
+			if configKey != configdomain.KeyPerennialBranches && value == "" {
 				_ = self.RemoveLocalConfigValue(configKey)
 				continue
 			}
-			if slices.Contains(keys.ObsoleteKeys, configKey) {
+			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
 				_ = self.RemoveConfigValue(configKey, scope)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue

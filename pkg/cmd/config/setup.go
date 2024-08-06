@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/hosting"
 	configInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/config"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -112,7 +111,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.Aliases, aborted, err = dialog.Aliases(keys.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Next())
+	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -276,7 +275,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 }
 
 func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
-	for _, aliasableCommand := range keys.AllAliasableCommands() {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := oldAliases[aliasableCommand]
 		newAlias, hasNew := newAliases[aliasableCommand]
 		switch {

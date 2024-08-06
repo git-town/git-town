@@ -19,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/config/configfile"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
@@ -376,28 +375,28 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
-		configKey := keys.NewParentKey(branchName)
+		configKey := configdomain.NewParentKey(branchName)
 		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey(keys.AliasKeyPrefix + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		return devRepo.SetGitAlias(keys.NewAliasKey(key).GetOrPanic().AliasableCommand(), value)
+		return devRepo.SetGitAlias(configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand(), value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey(keys.AliasKeyPrefix + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := keys.NewAliasKey(key).GetOrPanic().AliasableCommand()
+		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
 		have := devRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
@@ -408,11 +407,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey(keys.AliasKeyPrefix + name).Get()
+		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := keys.NewAliasKey(key).GetOrPanic().AliasableCommand()
+		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
 		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
 		if has {
 			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
@@ -423,7 +422,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey("git-town." + name).Get()
+		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
@@ -441,7 +440,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey("git-town." + name).Get()
+		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
@@ -468,7 +467,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := keys.ParseKey("git-town." + name).Get()
+		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}

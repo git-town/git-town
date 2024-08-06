@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/hosting"
 	"github.com/git-town/git-town/v14/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +28,7 @@ func repoCommand() *cobra.Command {
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, keys.KeyHostingPlatform, keys.KeyHostingOriginHostname)),
+		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeRepo(readVerboseFlag(cmd))
 		},

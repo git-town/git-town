@@ -2,7 +2,6 @@ package undoconfig
 
 import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/pkg/keys"
 )
 
 // ConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.
@@ -13,7 +12,7 @@ type ConfigSnapshot struct {
 
 func EmptyConfigSnapshot() ConfigSnapshot {
 	return ConfigSnapshot{
-		Global: map[keys.Key]string{},
-		Local:  map[keys.Key]string{},
+		Global: map[configdomain.Key]string{},
+		Local:  map[configdomain.Key]string{},
 	}
 }

@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/gohacks/cache"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/messages"
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
@@ -297,7 +296,7 @@ func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.
 
 // DeleteHostingPlatform removes the hosting platform config entry.
 func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", keys.KeyHostingPlatform.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyHostingPlatform.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -312,7 +311,7 @@ func (self *Commands) DeleteLocalBranch(runner gitdomain.Runner, name gitdomain.
 
 // DeleteOriginHostname removes the origin hostname override
 func (self *Commands) DeleteOriginHostname(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", keys.KeyHostingOriginHostname.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 // DeleteTrackingBranch removes the tracking branch of the given local branch.
@@ -483,23 +482,23 @@ func (self *Commands) RemoveCommitsInCurrentBranch(runner gitdomain.Runner, pare
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand keys.AliasableCommand) error {
+func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *Commands) RemoveGitHubToken(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", keys.KeyGithubToken.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyGithubToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *Commands) RemoveGitLabToken(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", keys.KeyGitlabToken.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyGitlabToken.String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", keys.KeyGiteaToken.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
@@ -560,33 +559,33 @@ func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.Bra
 }
 
 // SetGitAlias sets the given Git alias.
-func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand keys.AliasableCommand) error {
+func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
 }
 
 // SetGitHubToken sets the given API token for the GitHub API.
 func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain.GitHubToken) error {
-	return runner.Run("git", "config", keys.KeyGithubToken.String(), value.String())
+	return runner.Run("git", "config", configdomain.KeyGithubToken.String(), value.String())
 }
 
 // SetGitLabToken sets the given API token for the GitHub API.
 func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken) error {
-	return runner.Run("git", "config", keys.KeyGitlabToken.String(), value.String())
+	return runner.Run("git", "config", configdomain.KeyGitlabToken.String(), value.String())
 }
 
 // SetGiteaToken sets the given API token for the Gitea API.
 func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken) error {
-	return runner.Run("git", "config", keys.KeyGiteaToken.String(), value.String())
+	return runner.Run("git", "config", configdomain.KeyGiteaToken.String(), value.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
 func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.HostingPlatform) error {
-	return runner.Run("git", "config", keys.KeyHostingPlatform.String(), platform.String())
+	return runner.Run("git", "config", configdomain.KeyHostingPlatform.String(), platform.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
-	return runner.Run("git", "config", keys.KeyHostingOriginHostname.String(), hostname.String())
+	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
