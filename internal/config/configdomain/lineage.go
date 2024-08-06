@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"golang.org/x/exp/maps"
 )
@@ -48,7 +49,7 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, remove
 		}
 		if updateOutdated && childName == value {
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, childName)))
-			_ = removeLocalConfigValue(NewParentKey(child))
+			_ = removeLocalConfigValue(keys.NewParentKey(child))
 		}
 		parent := gitdomain.NewLocalBranchName(value)
 		result.Add(child, parent)

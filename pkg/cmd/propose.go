@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/vm/program"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -50,7 +51,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, keys.KeyHostingPlatform, keys.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 		},

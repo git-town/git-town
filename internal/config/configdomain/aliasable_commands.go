@@ -22,24 +22,3 @@ func (self AliasableCommands) Strings() []string {
 	}
 	return result
 }
-
-// AllAliasableCommands provides all AliasType values.
-func AllAliasableCommands() AliasableCommands {
-	return AliasableCommands{
-		AliasableCommandAppend,
-		AliasableCommandCompress,
-		AliasableCommandContribute,
-		AliasableCommandDiffParent,
-		AliasableCommandHack,
-		AliasableCommandKill,
-		AliasableCommandObserve,
-		AliasableCommandPark,
-		AliasableCommandPrepend,
-		AliasableCommandPropose,
-		AliasableCommandRenameBranch,
-		AliasableCommandRepo,
-		AliasableCommandSetParent,
-		AliasableCommandShip,
-		AliasableCommandSync,
-	}
-}

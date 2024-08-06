@@ -1,9 +1,22 @@
 package configdomain
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v14/pkg/keys"
+	. "github.com/git-town/git-town/v14/pkg/prelude"
+)
 
 // a Key that contains a lineage entry
-type LineageKey Key
+type LineageKey keys.Key
+
+// CheckLineage indicates using the returned option whether this key is a lineage key.
+func NewLineageKey(key keys.Key) Option[LineageKey] {
+	if isLineageKey(key.String()) {
+		return Some(LineageKey(key))
+	}
+	return None[LineageKey]()
+}
 
 // provides the name of the child branch encoded in this LineageKey
 func (self LineageKey) ChildName() string {
@@ -11,20 +24,10 @@ func (self LineageKey) ChildName() string {
 }
 
 // converts this LineageKey into a generic Key
-func (self LineageKey) Key() Key {
-	return Key(self)
+func (self LineageKey) Key() keys.Key {
+	return keys.Key(self)
 }
 
 func (self LineageKey) String() string {
 	return string(self)
-}
-
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
-
-// indicates whether the given key value is for a LineageKey
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }

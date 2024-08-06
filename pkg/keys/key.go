@@ -1,4 +1,4 @@
-package configdomain
+package keys
 
 import (
 	"encoding/json"
@@ -11,28 +11,12 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
-// CheckLineage indicates using the returned option whether this key is a lineage key.
-func (self Key) CheckLineage() Option[LineageKey] {
-	if isLineageKey(self.String()) {
-		return Some(LineageKey(self))
-	}
-	return None[LineageKey]()
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
 }
 
 func (self Key) String() string { return string(self) }
-
-// tries to convert this Key into an AliasKey
-func (self Key) ToAliasKey() Option[AliasKey] {
-	if strings.HasPrefix(self.String(), AliasKeyPrefix) {
-		return Some(AliasKey(self))
-	}
-	return None[AliasKey]()
-}
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
@@ -133,8 +117,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
+const (
+	LineageKeyPrefix = "git-town-branch."
+	LineageKeySuffix = ".parent"
+)
+
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
+	return Key(keys.LineageKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {
@@ -169,4 +158,9 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 // ObsoleteKeys defines the keys that are sunset and should get deleted
 var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
+}
+
+// indicates whether the given key value is for a LineageKey
+func isLineageKey(key string) bool {
+	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }

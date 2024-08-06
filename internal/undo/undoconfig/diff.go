@@ -3,14 +3,15 @@ package undoconfig
 import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/undo/undodomain"
+	"github.com/git-town/git-town/v14/pkg/keys"
 )
 
 // SingleCacheDiff provides a diff of the two given SingleCache instances.
 func SingleCacheDiff(before, after configdomain.SingleSnapshot) ConfigDiff {
 	result := ConfigDiff{
-		Added:   []configdomain.Key{},
-		Changed: map[configdomain.Key]undodomain.Change[string]{},
-		Removed: map[configdomain.Key]string{},
+		Added:   []keys.Key{},
+		Changed: map[keys.Key]undodomain.Change[string]{},
+		Removed: map[keys.Key]string{},
 	}
 	for key, beforeValue := range before {
 		afterValue, afterContains := after[key]
