@@ -123,7 +123,7 @@ const (
 )
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(keys.LineageKeyPrefix + branch + LineageKeySuffix)
+	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {

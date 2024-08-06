@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/cli/dialog"
 	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
+	"github.com/git-town/git-town/v14/pkg/keys"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,17 +15,17 @@ func TestAliases(t *testing.T) {
 
 	t.Run("AliasResult", func(t *testing.T) {
 		t.Parallel()
-		allAliasableCommands := configdomain.AliasableCommands{
-			configdomain.AliasableCommandAppend,
-			configdomain.AliasableCommandHack,
-			configdomain.AliasableCommandPropose,
-			configdomain.AliasableCommandSync,
+		allAliasableCommands := keys.AliasableCommands{
+			keys.AliasableCommandAppend,
+			keys.AliasableCommandHack,
+			keys.AliasableCommandPropose,
+			keys.AliasableCommandSync,
 		}
 		existingAliases := configdomain.Aliases{
-			configdomain.AliasableCommandAppend:  "town append",
-			configdomain.AliasableCommandHack:    "other hack",
-			configdomain.AliasableCommandPropose: "town propose",
-			configdomain.AliasableCommandSync:    "other sync",
+			keys.AliasableCommandAppend:  "town append",
+			keys.AliasableCommandHack:    "other hack",
+			keys.AliasableCommandPropose: "town propose",
+			keys.AliasableCommandSync:    "other sync",
 		}
 		selections := []dialog.AliasSelection{
 			dialog.AliasSelectionGT,
@@ -34,9 +35,9 @@ func TestAliases(t *testing.T) {
 		}
 		have := dialog.DetermineAliasResult(selections, allAliasableCommands, existingAliases)
 		want := configdomain.Aliases{
-			configdomain.AliasableCommandAppend: "town append",
-			configdomain.AliasableCommandHack:   "town hack",
-			configdomain.AliasableCommandSync:   "other sync",
+			keys.AliasableCommandAppend: "town append",
+			keys.AliasableCommandHack:   "town hack",
+			keys.AliasableCommandSync:   "other sync",
 		}
 		must.Eq(t, want, have)
 	})
@@ -45,24 +46,24 @@ func TestAliases(t *testing.T) {
 		t.Parallel()
 		t.Run("all commands selected", func(t *testing.T) {
 			t.Parallel()
-			give := configdomain.AllAliasableCommands()
+			give := keys.AllAliasableCommands()
 			have := dialog.DetermineAliasSelectionText(give)
 			want := "(all)"
 			must.EqOp(t, want, have)
 		})
 		t.Run("no commands selected", func(t *testing.T) {
 			t.Parallel()
-			give := configdomain.AliasableCommands{}
+			give := keys.AliasableCommands{}
 			have := dialog.DetermineAliasSelectionText(give)
 			want := "(none)"
 			must.EqOp(t, want, have)
 		})
 		t.Run("some commands selected", func(t *testing.T) {
 			t.Parallel()
-			give := configdomain.AliasableCommands{
-				configdomain.AliasableCommandAppend,
-				configdomain.AliasableCommandHack,
-				configdomain.AliasableCommandSync,
+			give := keys.AliasableCommands{
+				keys.AliasableCommandAppend,
+				keys.AliasableCommandHack,
+				keys.AliasableCommandSync,
 			}
 			have := dialog.DetermineAliasSelectionText(give)
 			want := "append, hack, sync"
@@ -73,11 +74,11 @@ func TestAliases(t *testing.T) {
 	t.Run("Checked", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{
-			AllAliasableCommands: configdomain.AliasableCommands{
-				configdomain.AliasableCommandAppend,
-				configdomain.AliasableCommandHack,
-				configdomain.AliasableCommandShip,
-				configdomain.AliasableCommandSync,
+			AllAliasableCommands: keys.AliasableCommands{
+				keys.AliasableCommandAppend,
+				keys.AliasableCommandHack,
+				keys.AliasableCommandShip,
+				keys.AliasableCommandSync,
 			},
 			CurrentSelections: []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
@@ -87,25 +88,25 @@ func TestAliases(t *testing.T) {
 			},
 		}
 		have := model.Checked()
-		want := configdomain.AliasableCommands{
-			configdomain.AliasableCommandAppend,
-			configdomain.AliasableCommandHack,
+		want := keys.AliasableCommands{
+			keys.AliasableCommandAppend,
+			keys.AliasableCommandHack,
 		}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("NewAliasSelections", func(t *testing.T) {
 		t.Parallel()
-		allAliasableCommands := configdomain.AliasableCommands{
-			configdomain.AliasableCommandAppend,
-			configdomain.AliasableCommandDiffParent,
-			configdomain.AliasableCommandHack,
-			configdomain.AliasableCommandRepo,
+		allAliasableCommands := keys.AliasableCommands{
+			keys.AliasableCommandAppend,
+			keys.AliasableCommandDiffParent,
+			keys.AliasableCommandHack,
+			keys.AliasableCommandRepo,
 		}
 		existingAliases := configdomain.Aliases{
-			configdomain.AliasableCommandAppend:     "town append",
-			configdomain.AliasableCommandDiffParent: "town diff-parent",
-			configdomain.AliasableCommandRepo:       "other command",
+			keys.AliasableCommandAppend:     "town append",
+			keys.AliasableCommandDiffParent: "town diff-parent",
+			keys.AliasableCommandRepo:       "other command",
 		}
 		have := dialog.NewAliasSelections(allAliasableCommands, existingAliases)
 		want := []dialog.AliasSelection{
@@ -122,14 +123,14 @@ func TestAliases(t *testing.T) {
 		t.Run("currently selecting an alias that isn't currently set on disk", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
-				AllAliasableCommands: configdomain.AliasableCommands{
-					configdomain.AliasableCommandAppend,
+				AllAliasableCommands: keys.AliasableCommands{
+					keys.AliasableCommandAppend,
 				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				List: list.List[configdomain.AliasableCommand]{
+				List: list.List[keys.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -149,16 +150,16 @@ func TestAliases(t *testing.T) {
 		t.Run("currently selecting an alias that is set on disk to a Git Town command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
-				AllAliasableCommands: configdomain.AliasableCommands{
-					configdomain.AliasableCommandAppend,
+				AllAliasableCommands: keys.AliasableCommands{
+					keys.AliasableCommandAppend,
 				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionGT,
 				},
 				OriginalAliases: configdomain.Aliases{
-					configdomain.AliasableCommandAppend: "town append",
+					keys.AliasableCommandAppend: "town append",
 				},
-				List: list.List[configdomain.AliasableCommand]{
+				List: list.List[keys.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -178,16 +179,16 @@ func TestAliases(t *testing.T) {
 		t.Run("currently selecting an alias that is currently set on disk to an external command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
-				AllAliasableCommands: configdomain.AliasableCommands{
-					configdomain.AliasableCommandAppend,
+				AllAliasableCommands: keys.AliasableCommands{
+					keys.AliasableCommandAppend,
 				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionOther,
 				},
 				OriginalAliases: configdomain.Aliases{
-					configdomain.AliasableCommandAppend: "other command",
+					keys.AliasableCommandAppend: "other command",
 				},
-				List: list.List[configdomain.AliasableCommand]{
+				List: list.List[keys.AliasableCommand]{
 					Cursor: 0,
 				},
 			}
@@ -215,11 +216,11 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{
-			List: list.List[configdomain.AliasableCommand]{
+			List: list.List[keys.AliasableCommand]{
 				Entries: list.NewEntries(
-					configdomain.AliasableCommandAppend,
-					configdomain.AliasableCommandHack,
-					configdomain.AliasableCommandSync,
+					keys.AliasableCommandAppend,
+					keys.AliasableCommandHack,
+					keys.AliasableCommandSync,
 				),
 			},
 			CurrentSelections: []dialog.AliasSelection{
@@ -240,11 +241,11 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{
-			List: list.List[configdomain.AliasableCommand]{
+			List: list.List[keys.AliasableCommand]{
 				Entries: list.NewEntries(
-					configdomain.AliasableCommandAppend,
-					configdomain.AliasableCommandHack,
-					configdomain.AliasableCommandDiffParent,
+					keys.AliasableCommandAppend,
+					keys.AliasableCommandHack,
+					keys.AliasableCommandDiffParent,
 				),
 			},
 			CurrentSelections: []dialog.AliasSelection{

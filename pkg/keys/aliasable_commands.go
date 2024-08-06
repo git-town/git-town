@@ -1,4 +1,4 @@
-package configdomain
+package keys
 
 import . "github.com/git-town/git-town/v14/pkg/prelude"
 
@@ -21,4 +21,25 @@ func (self AliasableCommands) Strings() []string {
 		result[c] = command.String()
 	}
 	return result
+}
+
+// AllAliasableCommands provides all AliasType values.
+func AllAliasableCommands() AliasableCommands {
+	return AliasableCommands{
+		AliasableCommandAppend,
+		AliasableCommandCompress,
+		AliasableCommandContribute,
+		AliasableCommandDiffParent,
+		AliasableCommandHack,
+		AliasableCommandKill,
+		AliasableCommandObserve,
+		AliasableCommandPark,
+		AliasableCommandPrepend,
+		AliasableCommandPropose,
+		AliasableCommandRenameBranch,
+		AliasableCommandRepo,
+		AliasableCommandSetParent,
+		AliasableCommandShip,
+		AliasableCommandSync,
+	}
 }

@@ -1,17 +1,16 @@
-package configdomain
+package keys
 
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // a Key that contains a lineage entry
-type LineageKey keys.Key
+type LineageKey Key
 
 // CheckLineage indicates using the returned option whether this key is a lineage key.
-func NewLineageKey(key keys.Key) Option[LineageKey] {
+func NewLineageKey(key Key) Option[LineageKey] {
 	if isLineageKey(key.String()) {
 		return Some(LineageKey(key))
 	}
@@ -24,8 +23,8 @@ func (self LineageKey) ChildName() string {
 }
 
 // converts this LineageKey into a generic Key
-func (self LineageKey) Key() keys.Key {
-	return keys.Key(self)
+func (self LineageKey) Key() Key {
+	return Key(self)
 }
 
 func (self LineageKey) String() string {

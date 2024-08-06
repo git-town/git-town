@@ -1,17 +1,16 @@
-package configdomain
+package keys
 
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v14/pkg/keys"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // A key used for storing aliases in the Git configuration
-type AliasKey keys.Key
+type AliasKey Key
 
 // tries to convert this Key into an AliasKey
-func NewAliasKey(key keys.Key) Option[AliasKey] {
+func NewAliasKey(key Key) Option[AliasKey] {
 	if strings.HasPrefix(key.String(), AliasKeyPrefix) {
 		return Some(AliasKey(key))
 	}
@@ -25,8 +24,8 @@ func (self AliasKey) AliasableCommand() AliasableCommand {
 }
 
 // provides the generic Key that this AliasKey represents
-func (self AliasKey) Key() keys.Key {
-	return keys.Key(self)
+func (self AliasKey) Key() Key {
+	return Key(self)
 }
 
 func (self AliasKey) String() string {
