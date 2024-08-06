@@ -1,16 +1,16 @@
 package data
 
 import (
-	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/pkg/set"
 )
 
 // collection of unique GitHub usernames
 type Users struct {
-	gohacks.Set[string]
+	set.Set[string]
 }
 
 func NewUsers(users ...string) Users {
-	return Users{gohacks.NewSet(users...)}
+	return Users{set.New(users...)}
 }
 
 func (self Users) AddUsers(other Users) {
