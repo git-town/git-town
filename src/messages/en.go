@@ -43,6 +43,7 @@ const (
 	ConfigLineageEmptyChild           = "removing empty lineage entry"
 	ConfigMainbranchInConfigFile      = "please configure the main branch in the config file"
 	ConfigNeeded                      = "Git Town needs to be configured\n\n"
+	ConfigScopeUnhandled              = "unhandled config scope"
 	ConfigStorage                     = "Config storage: %s\n"
 	ConfigSyncStrategyUnknown         = "unknown sync strategy: %q"
 	ConfigRemoveError                 = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
