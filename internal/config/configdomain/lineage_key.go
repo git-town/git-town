@@ -35,3 +35,8 @@ const (
 	LineageKeyPrefix = "git-town-branch."
 	LineageKeySuffix = ".parent"
 )
+
+// indicates whether the given key value is for a LineageKey
+func isLineageKey(key string) bool {
+	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
+}

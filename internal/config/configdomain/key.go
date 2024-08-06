@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"encoding/json"
-	"strings"
 
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
@@ -154,9 +153,4 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 // ObsoleteKeys defines the keys that are sunset and should get deleted
 var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
-}
-
-// indicates whether the given key value is for a LineageKey
-func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
 }
