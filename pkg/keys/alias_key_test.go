@@ -9,7 +9,6 @@ import (
 )
 
 func TestAliasKey(t *testing.T) {
-
 	t.Run("NewAliasKey", func(t *testing.T) {
 		t.Parallel()
 		tests := map[keys.Key]Option[keys.AliasKey]{

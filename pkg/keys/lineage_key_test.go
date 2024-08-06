@@ -36,5 +36,4 @@ func TestLineageKey(t *testing.T) {
 			must.Eq(t, want, have)
 		}
 	})
-
 }
