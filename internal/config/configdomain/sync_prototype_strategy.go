@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v14/pkg/prelude"
+import . "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 
 // SyncPrototypeStrategy defines legal values for the "sync-prototype-strategy" configuration setting.
 type SyncPrototypeStrategy SyncStrategy

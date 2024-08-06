@@ -2,8 +2,8 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/vm/shared"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // CommitOpenChanges commits all open changes as a new commit.

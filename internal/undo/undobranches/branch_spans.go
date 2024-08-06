@@ -2,9 +2,9 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/undo/undodomain"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.

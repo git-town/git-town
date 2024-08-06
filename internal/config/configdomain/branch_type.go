@@ -1,7 +1,7 @@
 package configdomain
 
 import (
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 )
 
 type BranchType int

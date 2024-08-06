@@ -13,9 +13,9 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/subshell"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/envvars"
 	"github.com/kballard/go-shellquote"

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 

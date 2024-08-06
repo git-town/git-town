@@ -9,12 +9,12 @@ import (
 	"github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/messages"
 	lightInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/light"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
 	"github.com/git-town/git-town/v14/internal/vm/statefile"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // undoes the persisted runstate

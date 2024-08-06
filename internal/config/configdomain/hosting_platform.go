@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/messages"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // HostingPlatform defines legal values for the "git-town.hosting-platform" config setting.

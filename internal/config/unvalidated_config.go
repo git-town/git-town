@@ -9,10 +9,10 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/gitconfig"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/git/giturl"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/messages"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 type Runner interface {

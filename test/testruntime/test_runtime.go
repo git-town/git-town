@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/commands"
 	testshell "github.com/git-town/git-town/v14/test/subshell"
 	"github.com/shoenig/test/must"

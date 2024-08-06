@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/messages"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 func ParseBool(text, source string) (Option[bool], error) {

@@ -2,9 +2,9 @@ package sync
 
 import (
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/vm/opcodes"
 	"github.com/git-town/git-town/v14/internal/vm/program"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // PerennialBranchProgram adds the opcodes to sync the observed branch with the given name.

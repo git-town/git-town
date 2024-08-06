@@ -11,9 +11,9 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/messages"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.

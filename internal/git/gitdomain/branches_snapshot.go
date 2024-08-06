@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v14/pkg/prelude"
+import . "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 
 // BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
 type BranchesSnapshot struct {

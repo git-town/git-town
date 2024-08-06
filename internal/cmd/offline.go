@@ -11,9 +11,9 @@ import (
 	"github.com/git-town/git-town/v14/internal/execute"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/messages"
 	configInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

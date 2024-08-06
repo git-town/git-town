@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 )
 
 // a Key that contains a lineage entry

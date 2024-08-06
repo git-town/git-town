@@ -7,7 +7,7 @@ import (
 	messages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/datatable"
 	"github.com/git-town/git-town/v14/test/git"
 	"github.com/shoenig/test/must"

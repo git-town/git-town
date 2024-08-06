@@ -2,7 +2,7 @@ package hostingdomain
 
 import (
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 )
 
 // Connector describes the activities that Git Town can perform on code hosting platforms.

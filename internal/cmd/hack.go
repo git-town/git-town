@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v14/internal/messages"
@@ -24,7 +25,6 @@ import (
 	configInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/config"
 	fullInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

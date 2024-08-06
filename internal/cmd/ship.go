@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/execute"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/hosting"
@@ -24,7 +25,6 @@ import (
 	"github.com/git-town/git-town/v14/internal/vm/opcodes"
 	"github.com/git-town/git-town/v14/internal/vm/program"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

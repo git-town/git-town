@@ -9,9 +9,9 @@ import (
 	"github.com/git-town/git-town/v14/internal/cli/colors"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/slice"
 	"github.com/git-town/git-town/v14/internal/messages"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"golang.org/x/exp/maps"
 )
 

@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/config/confighelpers"
 	"github.com/git-town/git-town/v14/internal/git/giturl"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 

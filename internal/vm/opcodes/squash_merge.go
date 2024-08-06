@@ -6,9 +6,9 @@ import (
 
 	"github.com/git-town/git-town/v14/internal/cli/dialog"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/messages"
 	"github.com/git-town/git-town/v14/internal/vm/shared"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // SquashMerge squash merges the branch with the given name into the current branch.

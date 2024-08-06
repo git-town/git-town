@@ -9,12 +9,12 @@ import (
 	"github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/gohacks"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v14/internal/messages"
 	"github.com/git-town/git-town/v14/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v14/internal/vm/runstate"
 	"github.com/git-town/git-town/v14/internal/vm/statefile"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // finished is called when executing all steps has successfully finished.

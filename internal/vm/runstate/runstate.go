@@ -7,11 +7,11 @@ import (
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v14/internal/vm/opcodes"
 	"github.com/git-town/git-town/v14/internal/vm/program"
 	"github.com/git-town/git-town/v14/internal/vm/shared"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 // RunState represents the current state of a Git Town command,

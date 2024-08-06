@@ -5,11 +5,11 @@ import (
 
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/internal/undo/undobranches"
 	"github.com/git-town/git-town/v14/internal/undo/undodomain"
 	"github.com/git-town/git-town/v14/internal/vm/opcodes"
 	"github.com/git-town/git-town/v14/internal/vm/program"
-	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
