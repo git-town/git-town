@@ -12,6 +12,7 @@ import (
 	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks/slice"
 	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v14/src/messages"
 )
 
 type Runner interface {
@@ -241,22 +242,28 @@ func (self *UnvalidatedConfig) SetPushHookLocally(value configdomain.PushHook) e
 
 // SetPushNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *UnvalidatedConfig) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
+func (self *UnvalidatedConfig) SetPushNewBranches(value configdomain.PushNewBranches, scope configdomain.ConfigScope) error {
 	setting := strconv.FormatBool(bool(value))
 	self.Config.Value.PushNewBranches = value
-	if global {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		return self.GitConfig.SetGlobalConfigValue(configdomain.KeyPushNewBranches, setting)
+	case configdomain.ConfigScopeLocal:
+		return self.GitConfig.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
 	}
-	return self.GitConfig.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
+	panic("unhandled scope")
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
-func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, global bool) error {
+func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	self.Config.Value.ShipDeleteTrackingBranch = value
-	if global {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		return self.GitConfig.SetGlobalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
+	case configdomain.ConfigScopeLocal:
+		return self.GitConfig.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
-	return self.GitConfig.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
+	panic(messages.ConfigScopeUnhandled)
 }
 
 func (self *UnvalidatedConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
@@ -271,12 +278,15 @@ func (self *UnvalidatedConfig) SetSyncPerennialStrategy(strategy configdomain.Sy
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
-func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
+func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
 	self.Config.Value.SyncUpstream = value
-	if global {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		return self.GitConfig.SetGlobalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+	case configdomain.ConfigScopeLocal:
+		return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	}
-	return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+	panic(messages.ConfigScopeUnhandled)
 }
 
 type NewUnvalidatedConfigArgs struct {

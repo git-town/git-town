@@ -389,14 +389,14 @@ func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetPushNewBranches(newValue, false)
+	return config.SetPushNewBranches(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetShipDeleteTrackingBranch(newValue, false)
+	return config.SetShipDeleteTrackingBranch(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
@@ -417,7 +417,7 @@ func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config confi
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetSyncUpstream(newValue, false)
+	return config.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
