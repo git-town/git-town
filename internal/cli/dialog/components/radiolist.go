@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v14/internal/gohacks/slice"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v15/internal/gohacks/slice"
 )
 
 // how many elements to display in the dialog

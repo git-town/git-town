@@ -1,7 +1,7 @@
 package dialog
 
 import (
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
 )
 
 const (

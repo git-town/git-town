@@ -1,13 +1,13 @@
 package hosting
 
 import (
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git/giturl"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/hosting/bitbucket"
-	"github.com/git-town/git-town/v14/internal/hosting/gitea"
-	"github.com/git-town/git-town/v14/internal/hosting/github"
-	"github.com/git-town/git-town/v14/internal/hosting/gitlab"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git/giturl"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v15/internal/hosting/gitea"
+	"github.com/git-town/git-town/v15/internal/hosting/github"
+	"github.com/git-town/git-town/v15/internal/hosting/gitlab"
 )
 
 func Detect(originURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {

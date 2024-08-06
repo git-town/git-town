@@ -3,7 +3,7 @@ package configfile_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/config/configfile"
+	"github.com/git-town/git-town/v15/internal/config/configfile"
 	"github.com/shoenig/test/must"
 )
 

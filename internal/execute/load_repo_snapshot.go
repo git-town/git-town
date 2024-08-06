@@ -1,17 +1,17 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v14/internal/config"
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/gohacks"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v14/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v14/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v14/internal/validate"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v15/internal/config"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/gohacks"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v15/internal/validate"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.

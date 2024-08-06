@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/git-town/git-town/v14/internal/gohacks"
+	"github.com/git-town/git-town/v15/internal/gohacks"
 )
 
 func IsEndOfBranchProgramOpcode(opcode Opcode) bool {

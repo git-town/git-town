@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v14/internal/gohacks"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/gohacks"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 )
 
 // ShipDeleteTrackingBranch contains the configuration setting about whether to delete the tracking branch when shipping.

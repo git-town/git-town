@@ -1,5 +1,24 @@
 # Git Town Changelog
 
+## 15.0.0 (2024-08-05)
+
+Git Town 15.0 improves Git Town's behavior in monorepos and removes technical drift.
+
+Major thanks to @ianjsikes, @kevgo, @ruudk, @seadowg, @stephenwade, @zodman for contributing valuable feedback, ideas, and code to 41 shipped PRs and 8 resolved issues!
+
+#### BREAKING CHANGES
+
+- `git town ship` no longer syncs branches when shipping. From now on it only ships branches that are in sync. This ensures that only fully tested and reviewed changes get shipped ([#3350](https://github.com/git-town/git-town/issues/3350)).
+- This also makes the `sync-before-ship` config option obsolete, it no longer exists ([#3644](https://github.com/git-town/git-town/pull/3644)).
+- `git town prepend` no longer syncs when uncommitted changes are present. This allows committing your uncommitted changes first, then syncing later ([#3778](https://github.com/git-town/git-town/pull/3778)).
+- The term `main development branch` gets shortened to `main branch` since there are no other development branches in Git Town's domain model ([#3643](https://github.com/git-town/git-town/issues/3643)).
+
+#### New Features
+
+- A new branch type called _prototype branches_ syncs only locally, i.e. they don't create or push to a tracking branch until they are proposed. This helps reduce stress on the CI server, allows developers to prototype using sensitive information or potentially problematic code or data that they don't want to share ([#3646](https://github.com/git-town/git-town/issues/3646)).
+- The new `sync-prototype-strategy` setting allows defining a dedicated sync strategy for prototype branches. This allows rebasing your commits while they are local, and switching to merging once other developers can see them ([#3785](https://github.com/git-town/git-town/pull/3785)).
+- The new `create-prototype-branches` setting makes Git Town always create prototype branches ([#3779](https://github.com/git-town/git-town/pull/3779)).
+
 ## 14.4.1 (2024-07-29)
 
 Many thanks to @charlierudolph, @ianjsikes, @kevgo, @seadowg, @stephenwade for contributing feedback, ideas, and code to 10 shipped PRs and 4 resolved issues.

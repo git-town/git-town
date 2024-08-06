@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/gohacks/slice"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/gohacks/slice"
 )
 
 // Config provides type-safe access to Git Town configuration settings

@@ -3,7 +3,7 @@ package cache_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/gohacks/cache"
+	"github.com/git-town/git-town/v15/internal/gohacks/cache"
 	"github.com/shoenig/test/must"
 )
 

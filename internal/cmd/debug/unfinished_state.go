@@ -4,9 +4,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/git-town/git-town/v14/internal/cli/dialog"
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/cli/dialog"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
