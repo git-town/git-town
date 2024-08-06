@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"slices"
 	"strings"
 
 	"github.com/git-town/git-town/v14/src/cli/colors"
@@ -40,6 +41,13 @@ func (self *Access) OriginRemote() string {
 		return ""
 	}
 	return strings.TrimSpace(output)
+}
+
+func (self *Access) RemoveConfigValue(key configdomain.Key, global bool) error {
+	if global {
+		return self.RemoveGlobalConfigValue(key)
+	}
+	return self.RemoveLocalConfigValue(key)
 }
 
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
@@ -150,6 +158,11 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
 				_ = self.RemoveLocalConfigValue(configKey)
+				continue
+			}
+			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
+				_ = self.RemoveConfigValue(configKey, global)
+				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
 		}

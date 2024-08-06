@@ -179,6 +179,7 @@ nd will be removed in future versions of Git Town.`
 	SettingLocalDeprecatedMessage  = "Upgrading deprecated local setting %q to %q."
 	SettingLocalCannotRemove       = "ERROR: cannot remove local Git setting %q: %v"
 	SettingLocalCannotWrite        = "ERROR: cannot write local Git setting %q: %v"
+	SettingSunsetDeleted           = "Deleting obsolete setting %q"
 	ShipBranchDeletedAtRemote      = "branch %q was deleted at the remote"
 	ShipBranchIsInOtherWorktree    = "branch %q is checked out in another worktree, please ship from there"
 	ShipBranchNotInSync            = "branch %q is not in sync"
