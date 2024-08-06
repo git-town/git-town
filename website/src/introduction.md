@@ -1,8 +1,12 @@
 # High-level CLI for Git
 
-Git Town provides additional Git commands that make creating, synchronizing,
-shipping, and cleanup of Git branches more efficient. Supports mono-repos and
-stacked changes.
+_Git is not a version control system but a framework for building your own
+custom version control system._
+
+Git Town solves the problem that using the Git CLI correctly is so cumbersome
+and repetitive that almost nobody uses Git correctly. Git Town provides
+additional Git commands that make creating, synchronizing, shipping, and cleanup
+of Git branches efficient. Supports mono-repos and stacked changes.
 
 <br>
 <p align="center">
