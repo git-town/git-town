@@ -3,14 +3,14 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/git"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/gohacks"
-	"github.com/git-town/git-town/v14/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/subshell"
-	testgit "github.com/git-town/git-town/v14/test/git"
-	"github.com/git-town/git-town/v14/test/testruntime"
+	"github.com/git-town/git-town/v15/internal/git"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/gohacks"
+	"github.com/git-town/git-town/v15/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/subshell"
+	testgit "github.com/git-town/git-town/v15/test/git"
+	"github.com/git-town/git-town/v15/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

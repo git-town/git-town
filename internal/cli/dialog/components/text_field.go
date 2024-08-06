@@ -5,8 +5,8 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v14/internal/cli/colors"
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v15/internal/cli/colors"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
 )
 
 func TextField(args TextFieldArgs) (string, bool, error) {

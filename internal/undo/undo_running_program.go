@@ -1,14 +1,14 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/undo/undobranches"
-	"github.com/git-town/git-town/v14/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v14/internal/undo/undostash"
-	"github.com/git-town/git-town/v14/internal/vm/program"
-	"github.com/git-town/git-town/v14/internal/vm/runstate"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/undo/undobranches"
+	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v15/internal/undo/undostash"
+	"github.com/git-town/git-town/v15/internal/vm/program"
+	"github.com/git-town/git-town/v15/internal/vm/runstate"
 )
 
 // create the program to undo a currently running Git Town command

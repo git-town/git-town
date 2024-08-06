@@ -16,6 +16,10 @@ process.
 This command ships only direct children of the main branch. To ship a child
 branch, you need to first ship or [kill](kill.md) all its ancestor branches.
 
+The branch to ship must be in sync. If it isn't in sync, `git ship` will exit
+with an error. When that happens, run [git sync](sync.md) to get the branch in
+sync, re-test and re-review the updated branch, and then run `git ship` again.
+
 ### Arguments
 
 Similar to `git commit`, the `-m` parameter allows specifying the commit message

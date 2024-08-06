@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v14/internal/gohacks/prelude"
+import . "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,

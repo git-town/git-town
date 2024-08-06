@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 // Open opens a new window/tab in the default browser with the given URL.

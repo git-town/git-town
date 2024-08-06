@@ -1,8 +1,8 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/undo/undodomain"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/undo/undodomain"
 )
 
 // ConfigDiff describes changes made to the Git Town configuration.

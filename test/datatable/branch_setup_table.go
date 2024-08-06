@@ -2,10 +2,10 @@ package datatable
 
 import (
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	testgit "github.com/git-town/git-town/v14/test/git"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	testgit "github.com/git-town/git-town/v15/test/git"
 )
 
 type BranchSetup struct {

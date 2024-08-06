@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 // TestInputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.

@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/test/testruntime"
+	"github.com/git-town/git-town/v15/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

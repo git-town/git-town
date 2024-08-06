@@ -3,8 +3,8 @@ package undostash_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/undo/undostash"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/undo/undostash"
 	"github.com/shoenig/test/must"
 )
 

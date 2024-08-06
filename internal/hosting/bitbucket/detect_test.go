@@ -3,8 +3,8 @@ package bitbucket_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/git/giturl"
-	"github.com/git-town/git-town/v14/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v15/internal/git/giturl"
+	"github.com/git-town/git-town/v15/internal/hosting/bitbucket"
 	"github.com/shoenig/test/must"
 )
 

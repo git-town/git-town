@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/git/giturl"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/git/giturl"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 // Connector provides access to the API of Bitbucket installations.

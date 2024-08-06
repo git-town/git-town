@@ -1,9 +1,9 @@
 package undostash
 
 import (
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/vm/opcodes"
-	"github.com/git-town/git-town/v14/internal/vm/program"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/vm/opcodes"
+	"github.com/git-town/git-town/v15/internal/vm/program"
 )
 
 // StashDiff describes the changes made to the Git stash.
