@@ -161,7 +161,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				self.RemoveConfigValue(configKey, global)
+				_ = self.RemoveConfigValue(configKey, global)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}

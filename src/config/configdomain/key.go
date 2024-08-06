@@ -167,6 +167,6 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 }
 
 // ObsoleteKeys defines the keys that are sunset and should get deleted
-var ObsoleteKeys = []Key{
+var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
 }
