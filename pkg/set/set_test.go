@@ -12,7 +12,7 @@ func TestSet(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
-		set := set.NewSet[int]()
+		set := set.New[int]()
 		set.Add(1)
 		must.Eq(t, []int{1}, set.Values())
 		set.Add(1)
@@ -23,38 +23,38 @@ func TestSet(t *testing.T) {
 
 	t.Run("AddSet", func(t *testing.T) {
 		t.Parallel()
-		have := set.NewSet(1)
-		other := set.NewSet(2, 3)
+		have := set.New(1)
+		other := set.New(2, 3)
 		have.AddSet(other)
 		must.Eq(t, []int{1, 2, 3}, have.Values())
 	})
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
-		set := set.NewSet(1, 2)
+		set := set.New(1, 2)
 		must.True(t, set.Contains(1))
 		must.True(t, set.Contains(2))
 		must.False(t, set.Contains(3))
 	})
 
-	t.Run("NewSet", func(t *testing.T) {
+	t.Run("New", func(t *testing.T) {
 		t.Parallel()
 
 		t.Run("no initial value", func(t *testing.T) {
 			t.Parallel()
-			set := set.NewSet[int]()
+			set := set.New[int]()
 			must.Eq(t, []int{}, set.Values())
 		})
 
 		t.Run("one initial value", func(t *testing.T) {
 			t.Parallel()
-			set := set.NewSet(1)
+			set := set.New(1)
 			must.Eq(t, []int{1}, set.Values())
 		})
 
 		t.Run("multiple initial values", func(t *testing.T) {
 			t.Parallel()
-			set := set.NewSet(1, 2)
+			set := set.New(1, 2)
 			must.Eq(t, []int{1, 2}, set.Values())
 		})
 	})
@@ -63,14 +63,14 @@ func TestSet(t *testing.T) {
 		t.Parallel()
 
 		t.Run("no values", func(t *testing.T) {
-			set := set.NewSet[int]()
+			set := set.New[int]()
 			have := set.Values()
 			want := []int{}
 			must.Eq(t, want, have)
 		})
 
 		t.Run("with values", func(t *testing.T) {
-			set := set.NewSet(1, 2)
+			set := set.New(1, 2)
 			have := set.Values()
 			want := []int{1, 2}
 			must.Eq(t, want, have)
