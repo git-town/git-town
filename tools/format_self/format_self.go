@@ -32,12 +32,12 @@ func main() {
 // shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
 func shouldIgnorePath(path string) bool {
 	return strings.HasPrefix(path, "vendor/") ||
-		path == "src/config/configdomain/push_hook.go" ||
-		path == "src/config/configdomain/offline.go" ||
-		path == "src/cli/dialog/hosting.go" ||
-		path == "src/cli/print/logger.go" ||
-		path == "src/cli/dialog/switch_branch.go" ||
-		path == "src/gohacks/slice/natural_sort.go" ||
+		path == "internal/config/configdomain/push_hook.go" ||
+		path == "internal/config/configdomain/offline.go" ||
+		path == "internal/cli/dialog/hosting.go" ||
+		path == "internal/cli/print/logger.go" ||
+		path == "internal/cli/dialog/switch_branch.go" ||
+		path == "internal/gohacks/slice/natural_sort.go" ||
 		strings.HasPrefix(path, "tools/stats_release")
 }
 
