@@ -251,7 +251,7 @@ func (self *UnvalidatedConfig) SetPushNewBranches(value configdomain.PushNewBran
 	case configdomain.ConfigScopeLocal:
 		return self.GitConfig.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
 	}
-	panic("unhandled scope")
+	panic(messages.ConfigScopeUnhandled)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
