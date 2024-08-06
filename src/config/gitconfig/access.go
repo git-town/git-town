@@ -43,6 +43,13 @@ func (self *Access) OriginRemote() string {
 	return strings.TrimSpace(output)
 }
 
+func (self *Access) RemoveConfigValue(key configdomain.Key, global bool) error {
+	if global {
+		return self.RemoveGlobalConfigValue(key)
+	}
+	return self.RemoveLocalConfigValue(key)
+}
+
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
@@ -154,11 +161,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				if global {
-					_ = self.RemoveGlobalConfigValue(configKey)
-				} else {
-					_ = self.RemoveLocalConfigValue(configKey)
-				}
+				self.RemoveConfigValue(configKey, global)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
