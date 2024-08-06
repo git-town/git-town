@@ -51,6 +51,7 @@ func syncCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.All()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
+	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: "basic",
@@ -58,17 +59,18 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
+			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addNoPushFlag(&cmd)
+	addStackFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -80,7 +82,7 @@ func executeSync(all bool, dryRun configdomain.DryRun, verbose configdomain.Verb
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(all, repo, verbose)
+	data, exit, err := determineSyncData(all, stack, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -157,7 +159,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
+func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -205,14 +207,32 @@ func determineSyncData(allFlag bool, repo execute.OpenRepoResult, verbose config
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	var branchNamesToSync gitdomain.LocalBranchNames
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	if allFlag {
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        repo.UnvalidatedConfig,
+	})
+	if err != nil || exit {
+		return data, exit, err
+	}
+	var branchNamesToSync gitdomain.LocalBranchNames
+	switch {
+	case allFlag:
 		branchNamesToSync = localBranches
-	} else {
+	case stackFlag:
+		branchNamesToSync = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
+	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
