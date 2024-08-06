@@ -127,11 +127,11 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 // Select provides the BranchSyncStatus elements with the given names.
 func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
-	for b, bi := range names {
-		if branch, hasBranch := self.FindByLocalName(bi).Get(); hasBranch {
-			result[b] = *branch
+	for n, name := range names {
+		if branch, hasBranch := self.FindByLocalName(name).Get(); hasBranch {
+			result[n] = *branch
 		} else {
-			return result, fmt.Errorf(messages.BranchDoesntExist, bi)
+			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}
 	}
 	return result, nil
