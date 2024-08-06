@@ -1,10 +1,10 @@
 package sync
 
 import (
+	"github.com/git-town/git-town/v14/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/internal/config/configdomain"
 	"github.com/git-town/git-town/v14/internal/git/gitdomain"
 	"github.com/git-town/git-town/v14/internal/vm/opcodes"
-	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
