@@ -85,7 +85,7 @@ const (
 	KeyPushHook                            = Key("git-town.push-hook")
 	KeyPushNewBranches                     = Key("git-town.push-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
-	KeySunsetSyncBeforeShip                = Key("git-town.sync-before-ship")
+	KeyObsoleteSyncBeforeShip              = Key("git-town.sync-before-ship")
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
 	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
 	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
@@ -125,7 +125,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyPushHook,
 	KeyPushNewBranches,
 	KeyShipDeleteTrackingBranch,
-	KeySunsetSyncBeforeShip,
+	KeyObsoleteSyncBeforeShip,
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeySyncPrototypeStrategy,
@@ -166,7 +166,7 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 	KeyDeprecatedSyncStrategy:              KeySyncFeatureStrategy,
 }
 
-// SunsetKeys defines the keys that are sunset and should get deleted
-var SunsetKeys = []Key{
-	KeySunsetSyncBeforeShip,
+// ObsoleteKeys defines the keys that are sunset and should get deleted
+var ObsoleteKeys = []Key{
+	KeyObsoleteSyncBeforeShip,
 }

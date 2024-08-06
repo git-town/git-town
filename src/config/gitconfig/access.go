@@ -153,7 +153,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 				_ = self.RemoveLocalConfigValue(configKey)
 				continue
 			}
-			if slices.Contains(configdomain.SunsetKeys, configKey) {
+			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
 				if global {
 					_ = self.RemoveGlobalConfigValue(configKey)
 				} else {
