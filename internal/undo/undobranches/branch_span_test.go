@@ -3,9 +3,9 @@ package undobranches_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/undo/undobranches"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/undo/undobranches"
 	"github.com/shoenig/test/must"
 )
 

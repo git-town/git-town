@@ -3,8 +3,8 @@ package prelude_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/shoenig/test/must"
 )
 

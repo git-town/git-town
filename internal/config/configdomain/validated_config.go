@@ -3,7 +3,7 @@ package configdomain
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 )
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.

@@ -3,11 +3,11 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 const (

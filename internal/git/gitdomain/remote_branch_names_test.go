@@ -3,7 +3,7 @@ package gitdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 

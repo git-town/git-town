@@ -4,12 +4,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v14/internal/config"
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/git/giturl"
-	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v14/test/testruntime"
+	"github.com/git-town/git-town/v15/internal/config"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/git/giturl"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v15/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

@@ -3,7 +3,7 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v14/test/git"
+	"github.com/git-town/git-town/v15/test/git"
 	"github.com/shoenig/test/must"
 )
 

@@ -3,7 +3,7 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v14/internal/vm/shared"
+	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
 // CommitOpenChanges commits all open changes as a new commit.

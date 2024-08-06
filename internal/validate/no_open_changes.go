@@ -3,7 +3,7 @@ package validate
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 func NoOpenChanges(hasOpenChanges bool) error {

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v14/internal/cli/flags"
-	"github.com/git-town/git-town/v14/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/cli/flags"
+	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 

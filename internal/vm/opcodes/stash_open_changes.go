@@ -1,6 +1,6 @@
 package opcodes
 
-import "github.com/git-town/git-town/v14/internal/vm/shared"
+import "github.com/git-town/git-town/v15/internal/vm/shared"
 
 type StashOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

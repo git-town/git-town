@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v14/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v14/internal/config/configdomain"
-	"github.com/git-town/git-town/v14/internal/messages"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v15/internal/messages"
 )
 
 const (

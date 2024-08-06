@@ -3,9 +3,9 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v14/internal/git/gitdomain"
-	"github.com/git-town/git-town/v14/internal/messages"
-	"github.com/git-town/git-town/v14/internal/vm/shared"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
 // ChangeParent changes the parent of the given branch to the given parent.
