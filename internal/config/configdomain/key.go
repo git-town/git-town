@@ -118,11 +118,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncUpstream,
 }
 
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
-
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
 }

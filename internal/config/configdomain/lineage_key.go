@@ -30,3 +30,8 @@ func (self LineageKey) Key() Key {
 func (self LineageKey) String() string {
 	return string(self)
 }
+
+const (
+	LineageKeyPrefix = "git-town-branch."
+	LineageKeySuffix = ".parent"
+)
