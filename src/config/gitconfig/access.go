@@ -25,12 +25,12 @@ type Access struct {
 
 // LoadLocal reads the global Git Town configuration that applies to the entire machine.
 func (self *Access) LoadGlobal(updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(true, updateOutdated)
+	return self.load(configdomain.ConfigScopeGlobal, updateOutdated)
 }
 
 // LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
 func (self *Access) LoadLocal(updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
-	return self.load(false, updateOutdated)
+	return self.load(configdomain.ConfigScopeLocal, updateOutdated)
 }
 
 func (self *Access) OriginRemote() string {
@@ -43,11 +43,14 @@ func (self *Access) OriginRemote() string {
 	return strings.TrimSpace(output)
 }
 
-func (self *Access) RemoveConfigValue(key configdomain.Key, global bool) error {
-	if global {
+func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		return self.RemoveGlobalConfigValue(key)
+	case configdomain.ConfigScopeLocal:
+		return self.RemoveLocalConfigValue(key)
 	}
-	return self.RemoveLocalConfigValue(key)
+	panic(messages.ConfigScopeUnhandled)
 }
 
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
@@ -117,20 +120,22 @@ func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key
 	}
 }
 
-func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
-	if global {
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, scope configdomain.ConfigScope) {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
-	} else {
+	case configdomain.ConfigScopeLocal:
 		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
 	}
 }
 
-func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
+func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz", "--includes"}
-	if global {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
 		cmdArgs = append(cmdArgs, "--global")
-	} else {
+	case configdomain.ConfigScopeLocal:
 		cmdArgs = append(cmdArgs, "--local")
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
@@ -153,7 +158,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 		if updateOutdated {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
-				self.UpdateDeprecatedSetting(configKey, newKey, value, global)
+				self.UpdateDeprecatedSetting(configKey, newKey, value, scope)
 				configKey = newKey
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
@@ -161,7 +166,7 @@ func (self *Access) load(global bool, updateOutdated bool) (configdomain.SingleS
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				_ = self.RemoveConfigValue(configKey, global)
+				_ = self.RemoveConfigValue(configKey, scope)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
