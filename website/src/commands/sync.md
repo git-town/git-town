@@ -1,4 +1,4 @@
-# git sync [--all]
+# git sync [--all|--stack]
 
 Merge conflicts are never fun, hence minimizing or eliminating them should
 always be a priority. To reduce the likelihood of conflicts, it's essential to
@@ -21,7 +21,8 @@ sync by running [git town undo](undo.md).
 ### Arguments
 
 By default this command syncs only the current branch. The `--all` parameter
-makes Git Town sync all local branches.
+makes Git Town sync all local branches. The `--stack` parameter makes Git Town
+sync all branches in the stack that the current branch belongs to.
 
 The `--dry-run` parameter allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
