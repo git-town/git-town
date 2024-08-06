@@ -1,9 +1,9 @@
 package confighelpers
 
 import (
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 func DetermineOriginURL(originURL string, originOverride Option[configdomain.HostingOriginHostname]) Option[giturl.Parts] {

@@ -1,9 +1,9 @@
 package undo
 
 import (
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/undo/undobranches"
 	"github.com/git-town/git-town/v14/src/undo/undoconfig"
 	"github.com/git-town/git-town/v14/src/undo/undostash"

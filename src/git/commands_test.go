@@ -3,11 +3,11 @@ package git_test
 import (
 	"testing"
 
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/subshell"
 	testgit "github.com/git-town/git-town/v14/test/git"
 	"github.com/git-town/git-town/v14/test/testruntime"

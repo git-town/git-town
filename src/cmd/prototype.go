@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/cli/flags"
 	"github.com/git-town/git-town/v14/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v14/src/config"
@@ -11,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/messages"
 	interpreterConfig "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"

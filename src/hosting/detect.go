@@ -1,9 +1,9 @@
 package hosting
 
 import (
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/config/configdomain"
 	"github.com/git-town/git-town/v14/src/git/giturl"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v14/src/hosting/gitea"
 	"github.com/git-town/git-town/v14/src/hosting/github"

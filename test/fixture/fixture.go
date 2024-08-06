@@ -7,10 +7,10 @@ import (
 
 	"github.com/cucumber/godog"
 
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/git"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks/cache"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"

@@ -3,9 +3,9 @@ package subshell
 import (
 	"fmt"
 
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/git/gitdomain"
 	"github.com/git-town/git-town/v14/src/gohacks"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed

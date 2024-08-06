@@ -5,8 +5,8 @@ import (
 	"os/exec"
 	"testing"
 
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 	"github.com/git-town/git-town/v14/src/gohacks"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
 	"github.com/git-town/git-town/v14/src/subshell"
 	"github.com/shoenig/test/must"
 )

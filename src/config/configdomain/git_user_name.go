@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	. "github.com/git-town/git-town/v14/pkg/prelude"
 )
 
 type GitUserName string
