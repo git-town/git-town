@@ -2,11 +2,19 @@
 
 ## 15.0.0 (2024-08-05)
 
-Major version bump because some obsolete things gets removed, nothing really big.
+Git Town 15.0 improves Git Town's behavior in monorepos and removes technical drift.
 
 #### BREAKING CHANGES
 
-- The `sync-before-ship` config option no longer exists. `git town ship` now refuses shipping
+- `git town ship` no longer syncs branches when shipping. From now on it only ships branches that are in sync. This ensures that only fully tested and reviewed changes get shipped. This makes the `sync-before-ship` config option obsolete, it no longer exists ([#3350](https://github.com/git-town/git-town/issues/3350)).
+- `git town prepend` no longer syncs when uncommitted changes are present. This allows committing your uncommitted changes first, then syncing later ([#3778](https://github.com/git-town/git-town/pull/3778)).
+- The term `main development branch` is now called `main branch` since there are no other development branches in Git Town's domain model ([#3643](https://github.com/git-town/git-town/issues/3643)).
+
+#### New Features
+
+- The new branch type called _prototype branches_ sync only locally, i.e. they don't create or push to a tracking branch until they are proposed. This helps reduce stress on the CI server, allows developers to prototype using sensitive information or potentially problematic code or data that they don't want to share or which could trigger alerts on CI ([#3646](https://github.com/git-town/git-town/issues/3646)).
+- The new `sync-prototype-strategy` setting allows using a dedicated sync strategy for prototype branches. This allows rebasing your commits while they are local, and switching to merging once other developers can see them ([#3785](https://github.com/git-town/git-town/pull/3785)).
+- The new `create-prototype-branches` setting allows to always create prototype branches ([#3779](https://github.com/git-town/git-town/pull/3779)).
 
 ## 14.4.1 (2024-07-29)
 
