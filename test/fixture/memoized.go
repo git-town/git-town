@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/filesystem"
 	"github.com/git-town/git-town/v14/test/testruntime"
 )

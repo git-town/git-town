@@ -14,12 +14,12 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	cukemessages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v14/src/cli/dialog/components"
-	"github.com/git-town/git-town/v14/src/cli/print"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/config/configfile"
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	. "github.com/git-town/git-town/v14/src/gohacks/prelude"
+	"github.com/git-town/git-town/v14/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v14/internal/cli/print"
+	"github.com/git-town/git-town/v14/internal/config/configdomain"
+	"github.com/git-town/git-town/v14/internal/config/configfile"
+	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v14/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v14/test/asserts"
 	"github.com/git-town/git-town/v14/test/commands"
 	"github.com/git-town/git-town/v14/test/datatable"
@@ -386,7 +386,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("no key found for %q", name)
 		}
-		return devRepo.SetGitAlias(key.ToAliasKey().GetOrPanic().AliasableCommand(), value)
+		return devRepo.SetGitAlias(configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand(), value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
@@ -396,7 +396,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := key.ToAliasKey().GetOrPanic().AliasableCommand()
+		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
 		have := devRepo.Config.Config.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
@@ -411,7 +411,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return errors.New("key not found")
 		}
-		aliasableCommand := key.ToAliasKey().GetOrPanic().AliasableCommand()
+		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
 		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
 		if has {
 			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
