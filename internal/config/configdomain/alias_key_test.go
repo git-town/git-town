@@ -10,6 +10,7 @@ import (
 
 func TestAliasKey(t *testing.T) {
 	t.Parallel()
+
 	t.Run("NewAliasKey", func(t *testing.T) {
 		t.Parallel()
 		tests := map[configdomain.Key]Option[configdomain.AliasKey]{
