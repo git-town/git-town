@@ -44,7 +44,7 @@ func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
-	addStackFlag, readStackFlag := flags.Bool("stack", "s", "Compress the entire stack", flags.FlagTypeNonPersistent)
+	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
 	cmd := cobra.Command{
 		Use:   compressCommand,
 		Args:  cobra.NoArgs,
