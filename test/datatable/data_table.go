@@ -10,9 +10,9 @@ import (
 
 	"github.com/cucumber/godog"
 
+	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v14/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
 )

@@ -1,0 +1,32 @@
+package configdomain
+
+import (
+	"strconv"
+
+	"github.com/git-town/git-town/v14/internal/gohacks"
+	. "github.com/git-town/git-town/v14/pkg/prelude"
+)
+
+// whether all created branches should be prototype
+type CreatePrototypeBranches bool
+
+func (self CreatePrototypeBranches) Bool() bool {
+	return bool(self)
+}
+
+func (self CreatePrototypeBranches) IsTrue() bool {
+	return self.Bool()
+}
+
+func (self CreatePrototypeBranches) String() string {
+	return strconv.FormatBool(self.Bool())
+}
+
+// deserializes the given Git configuration value into a CreatePrototypeBranches instance
+func ParseCreatePrototypeBranches(value, source string) (Option[CreatePrototypeBranches], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source)
+	if parsed, has := parsedOpt.Get(); has {
+		return Some(CreatePrototypeBranches(parsed)), err
+	}
+	return None[CreatePrototypeBranches](), err
+}

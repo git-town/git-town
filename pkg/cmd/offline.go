@@ -3,17 +3,17 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v14/internal/cli/flags"
+	"github.com/git-town/git-town/v14/internal/cli/format"
+	"github.com/git-town/git-town/v14/internal/config"
+	"github.com/git-town/git-town/v14/internal/config/configdomain"
+	"github.com/git-town/git-town/v14/internal/execute"
+	"github.com/git-town/git-town/v14/internal/git/gitdomain"
+	"github.com/git-town/git-town/v14/internal/gohacks"
+	"github.com/git-town/git-town/v14/internal/messages"
+	configInterpreter "github.com/git-town/git-town/v14/internal/vm/interpreter/config"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
 	. "github.com/git-town/git-town/v14/pkg/prelude"
-	"github.com/git-town/git-town/v14/src/cli/flags"
-	"github.com/git-town/git-town/v14/src/cli/format"
-	"github.com/git-town/git-town/v14/src/config"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/execute"
-	"github.com/git-town/git-town/v14/src/git/gitdomain"
-	"github.com/git-town/git-town/v14/src/gohacks"
-	"github.com/git-town/git-town/v14/src/messages"
-	configInterpreter "github.com/git-town/git-town/v14/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
 

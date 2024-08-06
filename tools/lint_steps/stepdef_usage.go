@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/pkg/set"
 	"github.com/git-town/git-town/v14/test/asserts"
 )
 
@@ -82,7 +82,7 @@ func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
 
 // provides all steps that are executed in .feature files
 func findAllUsedSteps() []string {
-	result := gohacks.Set[string]{}
+	result := set.Set[string]{}
 	err := filepath.WalkDir(featureDir, func(path string, _ os.DirEntry, err error) error {
 		asserts.NoError(err)
 		if filepath.Ext(path) != ".feature" {

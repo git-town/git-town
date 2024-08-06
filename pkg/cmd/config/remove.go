@@ -4,10 +4,10 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v14/internal/cli/flags"
+	"github.com/git-town/git-town/v14/internal/config/configdomain"
+	"github.com/git-town/git-town/v14/internal/execute"
 	"github.com/git-town/git-town/v14/pkg/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v14/src/cli/flags"
-	"github.com/git-town/git-town/v14/src/config/configdomain"
-	"github.com/git-town/git-town/v14/src/execute"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
 )

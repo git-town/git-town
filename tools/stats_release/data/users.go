@@ -1,7 +1,7 @@
 package data
 
 import (
-	"github.com/git-town/git-town/v14/src/gohacks"
+	"github.com/git-town/git-town/v14/internal/gohacks"
 )
 
 // collection of unique GitHub usernames
