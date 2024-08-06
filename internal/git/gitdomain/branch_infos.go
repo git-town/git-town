@@ -124,7 +124,7 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 	return result
 }
 
-// Select provides the BranchSyncStatus elements with the given names.
+// Select provides the BranchInfos with the given names.
 func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {
