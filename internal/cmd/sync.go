@@ -51,7 +51,7 @@ func syncCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.All()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
-	addStackFlag, readStackFlag := flags.Stack("sync only the current stack")
+	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: "basic",
