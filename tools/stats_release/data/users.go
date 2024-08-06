@@ -10,7 +10,7 @@ type Users struct {
 }
 
 func NewUsers(users ...string) Users {
-	return Users{set.NewSet(users...)}
+	return Users{set.New(users...)}
 }
 
 func (self Users) AddUsers(other Users) {

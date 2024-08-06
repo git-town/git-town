@@ -13,7 +13,7 @@ type BranchSpan struct {
 }
 
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
-	branchNames := set.NewSet[gitdomain.BranchName]()
+	branchNames := set.New[gitdomain.BranchName]()
 	if before, hasBefore := self.Before.Get(); hasBefore {
 		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())

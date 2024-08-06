@@ -10,7 +10,7 @@ import (
 // a simple generic Set implementation
 type Set[T cmp.Ordered] map[T]struct{}
 
-func NewSet[T cmp.Ordered](values ...T) Set[T] {
+func New[T cmp.Ordered](values ...T) Set[T] {
 	result := Set[T]{}
 	result.Add(values...)
 	return result
