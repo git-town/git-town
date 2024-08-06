@@ -4,6 +4,8 @@
 
 Git Town 15.0 improves Git Town's behavior in monorepos and removes technical drift.
 
+Major thanks to @ianjsikes, @kevgo, @ruudk, @seadowg, @stephenwade, @zodman for contributing valuable feedback, ideas, and code to 41 shipped PRs and 8 resolved issues!
+
 #### BREAKING CHANGES
 
 - `git town ship` no longer syncs branches when shipping. From now on it only ships branches that are in sync. This ensures that only fully tested and reviewed changes get shipped ([#3350](https://github.com/git-town/git-town/issues/3350)).
