@@ -2,7 +2,7 @@
 
 ## 15.0.0 (2024-08-05)
 
-Git Town 15.0 improves Git Town's behavior in monorepos and removes technical drift.
+Git Town 15.0 improves Git Town's compatibility with monorepos and removes technical drift.
 
 Major thanks to @ianjsikes, @kevgo, @ruudk, @seadowg, @stephenwade, @zodman for contributing valuable feedback, ideas, and code to 41 shipped PRs and 8 resolved issues!
 
