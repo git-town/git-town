@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
   Scenario Outline:
     Given a Git repo with origin
     And <LOCATION> Git Town setting "sync-before-ship" is "true"
