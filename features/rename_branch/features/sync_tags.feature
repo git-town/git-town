@@ -1,4 +1,3 @@
-@smoke
 Feature: don't sync tags while renaming branches
 
   Background:
