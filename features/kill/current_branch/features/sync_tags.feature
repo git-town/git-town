@@ -1,4 +1,4 @@
-Feature: don't sync tags while killing
+Feature: don't sync tags while deleting branches
 
   Background:
     Given a Git repo with origin
