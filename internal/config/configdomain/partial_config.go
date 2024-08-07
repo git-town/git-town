@@ -130,6 +130,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
+		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 	}
 }
@@ -161,6 +162,7 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
+		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
 	}
 }
