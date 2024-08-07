@@ -111,6 +111,7 @@ Feature: show the configuration
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-delete-tracking-branch" is "false"
     And Git Town setting "sync-upstream" is "false"
+    And Git Town setting "sync-tags" is "false"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And Git Town setting "sync-feature-strategy" is "merge"
     And the configuration file:
@@ -118,6 +119,7 @@ Feature: show the configuration
       push-new-branches = true
       ship-delete-tracking-branch = true
       sync-upstream = true
+      sync-tags = true
 
       [branches]
       main = "config-main"
@@ -151,6 +153,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: merge
         sync with upstream: no
+        sync tags: no
 
       Hosting:
         hosting platform override: github
@@ -187,6 +190,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
+        sync tags: yes
 
       Hosting:
         hosting platform override: (not set)
@@ -225,6 +229,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
+        sync tags: yes
 
       Hosting:
         hosting platform override: (not set)

@@ -28,6 +28,7 @@ Feature: show the configuration from a subfolder
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
+        sync tags: yes
 
       Hosting:
         hosting platform override: (not set)
