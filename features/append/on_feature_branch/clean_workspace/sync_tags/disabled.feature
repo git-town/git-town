@@ -13,7 +13,6 @@ Feature: don't sync tags while appending
     And Git Town setting "sync-tags" is "false"
     When I run "git-town append new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
