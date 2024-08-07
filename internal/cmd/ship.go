@@ -121,8 +121,8 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 }
 
 type shipData struct {
-	allowNonPerennialParent  bool
 	allBranches              gitdomain.BranchInfos
+	allowNonPerennialParent  bool
 	branchToShip             gitdomain.BranchInfo
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	canShipViaAPI            bool
@@ -257,8 +257,8 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 		}
 	}
 	return shipData{
-		allowNonPerennialParent:  allowNonPerennialParent,
 		allBranches:              branchesSnapshot.Branches,
+		allowNonPerennialParent:  allowNonPerennialParent,
 		branchToShip:             *branchToShip,
 		branchesSnapshot:         branchesSnapshot,
 		canShipViaAPI:            canShipViaAPI,
