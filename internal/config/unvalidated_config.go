@@ -165,12 +165,12 @@ func (self *UnvalidatedConfig) RemoveSyncPerennialStrategy() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncPerennialStrategy)
 }
 
-func (self *UnvalidatedConfig) RemoveSyncUpstream() {
-	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
-}
-
 func (self *UnvalidatedConfig) RemoveSyncTags() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncTags)
+}
+
+func (self *UnvalidatedConfig) RemoveSyncUpstream() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
 }
 
 // SetObservedBranches marks the given branches as observed branches.
