@@ -51,6 +51,7 @@ func syncCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.All()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
+	addNoTagsFlag, readNoTagsFlag := flags.NoTags()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	cmd := cobra.Command{
 		Use:     syncCommand,
@@ -59,18 +60,19 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
+			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd), readNoTagsFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addNoPushFlag(&cmd)
+	addNoTagsFlag(&cmd)
 	addStackFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches, syncTags configdomain.SyncTags) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -82,7 +84,7 @@ func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(all, stack, repo, verbose)
+	data, exit, err := determineSyncData(all, stack, repo, verbose, syncTags)
 	if err != nil || exit {
 		return err
 	}
@@ -159,7 +161,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
+func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose, syncTags configdomain.SyncTags) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -248,7 +250,7 @@ func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, ver
 		return data, exit, err
 	}
 	var shouldPushTags bool
-	if allFlag {
+	if allFlag || syncTags.IsTrue() {
 		shouldPushTags = true
 	} else {
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)

@@ -16,7 +16,7 @@ func NoTags() (AddFunc, ReadNoTagFunc) {
 		cmd.PersistentFlags().BoolP(noTagsLong, "", false, "do not sync tags")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.SyncTags {
-		value, err := cmd.Flags().GetBool(noPushLong)
+		value, err := cmd.Flags().GetBool(noTagsLong)
 		if err != nil {
 			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), noTagsLong))
 		}
