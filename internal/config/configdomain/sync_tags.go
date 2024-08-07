@@ -14,6 +14,10 @@ func (self SyncTags) IsTrue() bool {
 	return bool(self)
 }
 
+func (self SyncTags) IsFalse() bool {
+	return !self.IsTrue()
+}
+
 func (self SyncTags) String() string {
 	return strconv.FormatBool(self.IsTrue())
 }
