@@ -19,6 +19,7 @@ Feature: enter the GitHub API token
       | sync-feature-strategy         | enter             |                                             |
       | sync-perennial-strategy       | enter             |                                             |
       | sync-upstream                 | enter             |                                             |
+      | sync-tags                     | enter             |                                             |
       | push-new-branches             | enter             |                                             |
       | push-hook                     | enter             |                                             |
       | create-prototype-branches     | down enter        |                                             |
@@ -44,6 +45,7 @@ Feature: enter the GitHub API token
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
       | sync-upstream               | enter                |                                             |
+      | sync-tags                   | enter                |                                             |
       | push-new-branches           | enter                |                                             |
       | push-hook                   | enter                |                                             |
       | create-prototype-branches   | enter                |                                             |
@@ -72,6 +74,7 @@ Feature: enter the GitHub API token
       | sync-feature-strategy         | enter                               |                                             |
       | sync-perennial-strategy       | enter                               |                                             |
       | sync-upstream                 | enter                               |                                             |
+      | sync-tags                     | enter                               |                                             |
       | push-new-branches             | enter                               |                                             |
       | push-hook                     | enter                               |                                             |
       | create-prototype-branches     | enter                               |                                             |
