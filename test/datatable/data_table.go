@@ -82,6 +82,9 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
 					shas := localRepo.SHAsForCommit(commitName)
+					if len(shas) == 0 {
+						panic(fmt.Sprintf("test workspace has no commit %q", commitName))
+					}
 					sha := shas.First()
 					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
