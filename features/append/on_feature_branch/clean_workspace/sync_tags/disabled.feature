@@ -23,6 +23,4 @@ Feature: don't sync tags while appending
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
-    And the initial commits exist
-    And the initial lineage exists
     And the initial tags exist now
