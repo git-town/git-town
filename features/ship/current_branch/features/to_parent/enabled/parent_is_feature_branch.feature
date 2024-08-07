@@ -32,20 +32,13 @@ Feature: allowing shiping into a feature branch
       | BRANCH | PARENT |
       | alpha  | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                       |
-      | main   | git revert {{ sha 'feature done' }}           |
-      |        | git push                                      |
-      |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
-    And the current branch is now "feature"
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | feature done          |
-      |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
+      | BRANCH | COMMAND                                   |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }} |
+      |        | git branch beta {{ sha 'beta commit' }}   |
+      |        | git checkout beta                         |
+    And the current branch is now "beta"
+    And the initial commits exist
     And the initial branches and lineage exist
