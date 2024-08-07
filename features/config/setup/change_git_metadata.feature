@@ -10,7 +10,7 @@ Feature: change existing information in Git metadata
     And the main branch is "main"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
-    And local Git Town setting "sync-tags" is "true"
+    And local Git Town setting "sync-tags" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
       | welcome                                   | enter                  |
@@ -73,6 +73,7 @@ Feature: change existing information in Git metadata
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
+    And local Git Town setting "sync-tags" is now "true"
     And local Git Town setting "perennial-regex" is now "3366"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"

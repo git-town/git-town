@@ -169,6 +169,10 @@ func (self *UnvalidatedConfig) RemoveSyncUpstream() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
 }
 
+func (self *UnvalidatedConfig) RemoveSyncTags() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncTags)
+}
+
 // SetObservedBranches marks the given branches as observed branches.
 func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
 	self.Config.Value.ContributionBranches = branches

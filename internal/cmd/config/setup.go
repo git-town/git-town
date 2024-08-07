@@ -447,5 +447,6 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.RemoveSyncFeatureStrategy()
 	config.RemoveSyncPerennialStrategy()
 	config.RemoveSyncUpstream()
+	config.RemoveSyncTags()
 	return nil
 }
