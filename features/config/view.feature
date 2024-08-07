@@ -37,6 +37,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
+        sync tags: yes
 
       Hosting:
         hosting platform override: (not set)
@@ -45,12 +46,14 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  @this
   Scenario: all configured in config file
     And the configuration file:
       """
       push-new-branches = true
       ship-delete-tracking-branch = true
       sync-upstream = true
+      sync-tags = false
 
       [branches]
       main = "main"
@@ -84,6 +87,7 @@ Feature: show the configuration
         sync-feature strategy: rebase
         sync-perennial strategy: merge
         sync with upstream: yes
+        sync tags: no
 
       Hosting:
         hosting platform override: github

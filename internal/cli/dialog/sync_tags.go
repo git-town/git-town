@@ -13,7 +13,7 @@ import (
 const (
 	syncTagsTitle = `Sync-tags strategy`
 	SyncTagsHelp  = `
-Should "git sync" also sync tags with origin?
+Should "git sync" sync tags with origin?
 
 `
 )

@@ -74,6 +74,9 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	if data.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
 	}
+	if data.SyncTags != nil {
+		result.SyncTags = Some(configdomain.SyncTags(*data.SyncTags))
+	}
 	if data.SyncUpstream != nil {
 		result.SyncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
