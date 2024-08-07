@@ -1,4 +1,3 @@
-@skipWindows
 Feature: don't sync tags while proposing
 
   Background:
