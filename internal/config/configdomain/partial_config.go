@@ -33,6 +33,7 @@ type PartialConfig struct {
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
+	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
 }
 
@@ -63,6 +64,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	syncPrototypeStrategy, err := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
 	ec.Check(err)
+	syncTags, err := ParseSyncTags(snapshot[KeySyncTags], KeySyncTags.String())
+	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
@@ -92,6 +95,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 	}, ec.Err
 }
