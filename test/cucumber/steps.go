@@ -1279,6 +1279,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
+	sc.Step(`^the initial tags exist$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		currentTags := state.fixture.TagTable()
+		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
+		if errCount == 0 {
+			return
+		}
+		fmt.Println(errDiff)
+		panic("current tags are not the same as the initial commits")
+	})
+
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

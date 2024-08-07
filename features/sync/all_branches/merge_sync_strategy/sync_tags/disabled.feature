@@ -1,5 +1,6 @@
 Feature: sync all branches syncs the tags
 
+  @this
   Scenario:
     Given a Git repo with origin
     And the tags
@@ -8,8 +9,5 @@ Feature: sync all branches syncs the tags
       | origin-tag | origin   |
     And the current branch is "main"
     And Git Town setting "sync-tags" is "false"
-    When I run "git-town sync --all"
-    Then these tags exist
-      | NAME       | LOCATION      |
-      | local-tag  | local, origin |
-      | origin-tag | local, origin |
+    When I run "git-town sync --all --verbose"
+    Then the initial tags exist
