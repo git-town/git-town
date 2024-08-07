@@ -57,6 +57,7 @@ func TestSave(t *testing.T) {
 			ShipDeleteTrackingBranch: true,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+			SyncTags:                 true,
 			SyncUpstream:             true,
 		}
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
