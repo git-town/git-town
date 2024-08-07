@@ -10,17 +10,17 @@ import (
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
 
-func (pushHook PushHook) Bool() bool {
-	return bool(pushHook)
+func (self PushHook) Bool() bool {
+	return bool(self)
 }
 
-func (pushHook PushHook) Negate() NoPushHook {
-	boolValue := bool(pushHook)
+func (self PushHook) Negate() NoPushHook {
+	boolValue := bool(self)
 	return NoPushHook(!boolValue)
 }
 
-func (pushHook PushHook) String() string {
-	return strconv.FormatBool(pushHook.Bool())
+func (self PushHook) String() string {
+	return strconv.FormatBool(self.Bool())
 }
 
 func ParsePushHook(value, source string) (Option[PushHook], error) {

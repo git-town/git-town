@@ -10,16 +10,16 @@ import (
 // Offline is a new-type for the "offline" configuration setting.
 type Offline bool
 
-func (offline Offline) Bool() bool {
-	return bool(offline)
+func (self Offline) Bool() bool {
+	return bool(self)
 }
 
-func (offline Offline) String() string {
-	return strconv.FormatBool(offline.Bool())
+func (self Offline) String() string {
+	return strconv.FormatBool(self.Bool())
 }
 
-func (offline Offline) ToOnline() Online {
-	return Online(!offline.Bool())
+func (self Offline) ToOnline() Online {
+	return Online(!self.Bool())
 }
 
 func ParseOffline(value, source string) (Option[Offline], error) {
