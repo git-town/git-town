@@ -211,10 +211,6 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, targetBranchName, validatedConfig.Config, validatedConfig.Config.Lineage)
-	if err != nil {
-		return data, false, err
-	}
 	var proposalOpt Option[hostingdomain.Proposal]
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
@@ -371,6 +367,10 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 }
 
 func validateData(data shipData) error {
+	err := ensureParentBranchIsMainOrPerennialBranch(data.branchToShip.LocalName.GetOrPanic(), data.targetBranch.LocalName.GetOrPanic(), data.config.Config, data.config.Config.Lineage)
+	if err != nil {
+		return err
+	}
 	switch data.branchToShip.SyncStatus {
 	case gitdomain.SyncStatusDeletedAtRemote:
 		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchToShip.LocalName)
