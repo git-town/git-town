@@ -107,7 +107,6 @@ ship-delete-tracking-branch = true
 # Should "git sync" sync tags with origin?
 sync-tags = true
 
-[branches]
 # Should "git sync" also fetch updates from the upstream remote?
 #
 # If an "upstream" remote exists, and this setting is enabled,
