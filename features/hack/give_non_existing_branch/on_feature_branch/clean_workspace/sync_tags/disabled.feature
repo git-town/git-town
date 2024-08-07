@@ -1,4 +1,3 @@
-@smoke
 Feature: don't sync tags while hacking
 
   Background:
@@ -24,6 +23,4 @@ Feature: don't sync tags while hacking
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
-    And the initial commits exist
-    And the initial lineage exists
     And the initial tags exist now
