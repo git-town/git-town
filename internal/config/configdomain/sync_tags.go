@@ -10,12 +10,12 @@ import (
 // SyncTags contains the configuration setting whether to sync Git tags.
 type SyncTags bool
 
-func (self SyncTags) Bool() bool {
+func (self SyncTags) IsTrue() bool {
 	return bool(self)
 }
 
 func (self SyncTags) String() string {
-	return strconv.FormatBool(self.Bool())
+	return strconv.FormatBool(self.IsTrue())
 }
 
 func ParseSyncTags(value, source string) (Option[SyncTags], error) {

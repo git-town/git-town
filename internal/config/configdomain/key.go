@@ -115,6 +115,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncPerennialStrategy,
 	KeySyncPrototypeStrategy,
 	KeySyncStrategy,
+	KeySyncTags,
 	KeySyncUpstream,
 }
 
