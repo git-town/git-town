@@ -277,6 +277,12 @@ func (self *UnvalidatedConfig) SetSyncPerennialStrategy(strategy configdomain.Sy
 	return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncPerennialStrategy, strategy.String())
 }
 
+// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
+func (self *UnvalidatedConfig) SetSyncTags(value configdomain.SyncTags) error {
+	self.Config.Value.SyncTags = value
+	return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncTags, value.String())
+}
+
 // SetSyncUpstream updates the configured sync-upstream strategy.
 func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
 	self.Config.Value.SyncUpstream = value

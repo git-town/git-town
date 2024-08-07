@@ -16,6 +16,7 @@ Feature: override an existing Git alias
       | sync-feature-strategy       | enter   |
       | sync-perennial-strategy     | enter   |
       | sync-upstream               | enter   |
+      | sync-tags                   | enter   |
       | push-new-branches           | enter   |
       | push-hook                   | enter   |
       | create-prototype-branches   | enter   |

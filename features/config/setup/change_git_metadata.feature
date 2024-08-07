@@ -10,6 +10,7 @@ Feature: change existing information in Git metadata
     And the main branch is "main"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
+    And local Git Town setting "sync-tags" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
       | welcome                                   | enter                  |
@@ -23,12 +24,14 @@ Feature: change existing information in Git metadata
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
+      | sync-tags                                 | down enter             |
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
       | create-prototype-branches                 | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
+  @this
   Scenario: result
     Then it runs the commands
       | COMMAND                                                      |

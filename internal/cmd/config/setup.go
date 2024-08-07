@@ -275,6 +275,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
 	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
+	fc.Check(saveSyncTags(oldConfig.Config.Value.SyncTags, userInput.config.SyncTags, oldConfig))
 	return fc.Err
 }
 
@@ -422,6 +423,13 @@ func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config confi
 		return nil
 	}
 	return config.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
+}
+
+func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.SetSyncTags(newValue)
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
