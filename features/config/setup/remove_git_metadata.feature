@@ -27,6 +27,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-feature-strategy" is "rebase"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
     And local Git Town setting "sync-upstream" is "true"
+    And local Git Town setting "sync-tags" is "true"
     And local Git Town setting "push-new-branches" is "true"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "create-prototype-branches" is "true"
@@ -43,6 +44,7 @@ Feature: remove existing configuration in Git metadata
       | sync-feature-strategy                   | down enter                                    |
       | sync-perennial-strategy                 | down enter                                    |
       | sync-upstream                           | down enter                                    |
+      | sync-tags                               | down enter                                    |
       | enable push-new-branches                | down enter                                    |
       | disable the push hook                   | down enter                                    |
       | create-prototype-branches               | down enter                                    |
@@ -85,6 +87,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
+    And local Git Town setting "sync-tags" is now "false"
     And local Git Town setting "perennial-regex" now doesn't exist
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
@@ -114,6 +117,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "rebase"
     And local Git Town setting "sync-upstream" is now "true"
+    And local Git Town setting "sync-tags" is now "true"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
