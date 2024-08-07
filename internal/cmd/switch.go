@@ -102,6 +102,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

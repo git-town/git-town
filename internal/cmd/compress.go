@@ -152,6 +152,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

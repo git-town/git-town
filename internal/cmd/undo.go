@@ -109,6 +109,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

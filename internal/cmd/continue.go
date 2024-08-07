@@ -102,6 +102,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

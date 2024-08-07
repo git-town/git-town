@@ -152,6 +152,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,

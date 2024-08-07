@@ -142,6 +142,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              false,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
