@@ -31,7 +31,6 @@ Feature: change existing information in Git metadata
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
-  @this
   Scenario: result
     Then it runs the commands
       | COMMAND                                                      |
