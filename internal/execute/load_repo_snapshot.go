@@ -55,7 +55,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
-			err = args.Git.Fetch(args.Frontend)
+			err = args.Git.Fetch(args.Frontend, args.SyncTags)
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
@@ -85,6 +85,7 @@ type LoadRepoSnapshotArgs struct {
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	RootDir               gitdomain.RepoRootDir
+	SyncTags              configdomain.SyncTags
 	UnvalidatedConfig     config.UnvalidatedConfig
 	ValidateNoOpenChanges bool
 	Verbose               configdomain.Verbose

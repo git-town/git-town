@@ -180,6 +180,7 @@ func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, ver
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
+		SyncTags:              syncTags,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
