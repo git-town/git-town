@@ -24,7 +24,7 @@ Feature: don't sync tags while prepending
       | old    | git merge --no-edit --ff origin/old |
       |        | git merge --no-edit --ff main       |
       |        | git checkout -b new main            |
-    Then the initial tags exist now
+    And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,4 +34,4 @@ Feature: don't sync tags while prepending
       | old    | git branch -D new |
     And the initial commits exist
     And the initial lineage exists
-    Then the initial tags exist now
+    And the initial tags exist now

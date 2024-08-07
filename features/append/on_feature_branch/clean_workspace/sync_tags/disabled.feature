@@ -15,7 +15,7 @@ Feature: don't sync tags while appending
       | main   | git fetch --prune --no-tags |
       |        | git rebase origin/main      |
       |        | git checkout -b new         |
-    Then the initial tags exist now
+    And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -25,4 +25,4 @@ Feature: don't sync tags while appending
       | main   | git branch -D new |
     And the initial commits exist
     And the initial lineage exists
-    Then the initial tags exist now
+    And the initial tags exist now

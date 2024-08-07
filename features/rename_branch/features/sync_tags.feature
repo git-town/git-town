@@ -23,7 +23,7 @@ Feature: don't sync tags while renaming branches
       | new    | git push -u origin new      |
       |        | git push origin :old        |
       |        | git branch -D old           |
-    Then the initial tags exist now
+    And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,4 +36,4 @@ Feature: don't sync tags while renaming branches
       | old    | git branch -D new                         |
     And the initial commits exist
     And the initial lineage exists
-    Then the initial tags exist now
+    And the initial tags exist now

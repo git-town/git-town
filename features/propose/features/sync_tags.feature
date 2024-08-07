@@ -26,11 +26,11 @@ Feature: don't sync tags while proposing
       | feature | git merge --no-edit --ff origin/feature                            |
       |         | git merge --no-edit --ff main                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    Then the initial tags exist now
+    And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the initial commits exist
     And the initial lineage exists
-    Then the initial tags exist now
+    And the initial tags exist now

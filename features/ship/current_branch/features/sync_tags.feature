@@ -27,7 +27,7 @@ Feature: don't sync tags while shipping
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
-    Then the initial tags exist now
+    And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,4 +38,4 @@ Feature: don't sync tags while shipping
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    Then the initial tags exist now
+    And the initial tags exist now
