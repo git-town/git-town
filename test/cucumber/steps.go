@@ -1279,7 +1279,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^the initial tags exist$`, func(ctx context.Context) {
+	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
 		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
@@ -1443,7 +1443,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^these tags exist now$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
