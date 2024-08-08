@@ -84,7 +84,7 @@ func (self *UnvalidatedConfig) RemoteURL(remote gitdomain.Remote) Option[giturl.
 	return confighelpers.DetermineRemoteURL(text, self.Config.Value.HostingOriginHostname)
 }
 
-// RemoteURLString provides the URL for the "origin" remote.
+// RemoteURLString provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 func (self *UnvalidatedConfig) RemoteURLString(remote gitdomain.Remote) Option[string] {
 	remoteOverride := envconfig.OriginURLOverride()
