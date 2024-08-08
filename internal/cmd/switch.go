@@ -38,7 +38,7 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(verbose configdomain.Verbose, merge bool) error {
+func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
