@@ -191,7 +191,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       originURL,
 		})
 		if err != nil {
 			return data, false, err

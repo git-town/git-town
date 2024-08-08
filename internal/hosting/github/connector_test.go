@@ -117,12 +117,12 @@ func TestNewConnector(t *testing.T) {
 
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
-		originURL, has := giturl.Parse("git@github.com:git-town/docs.git").Get()
+		remoteURL, has := giturl.Parse("git@github.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{
@@ -135,12 +135,12 @@ func TestNewConnector(t *testing.T) {
 
 	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
-		originURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
+		remoteURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{
