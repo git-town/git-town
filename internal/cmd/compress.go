@@ -61,7 +61,7 @@ func compressCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], stack bool) error {
+func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -73,7 +73,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, stack)
+	data, exit, err := determineCompressBranchesData(repo, dryRun, verbose, message, compressEntireStack)
 	if err != nil || exit {
 		return err
 	}
@@ -113,7 +113,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 type compressBranchesData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToCompress  []compressBranchData
-	compressEntireStack bool
+	compressEntireStack configdomain.FullStack // TODO: delete this
 	config              config.ValidatedConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
@@ -132,7 +132,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack bool) (data compressBranchesData, exit bool, err error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
