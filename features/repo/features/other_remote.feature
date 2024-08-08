@@ -1,6 +1,5 @@
 Feature: display the repo at another remote
 
-  @debug @this
   Scenario: upstream remote
     Given a Git repo with origin
     And an additional "upstream" remote with URL "https://github.com/upstream/repo.git"
