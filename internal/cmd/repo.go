@@ -59,8 +59,14 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 }
 
 func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
+	var remoteURL Option[string]
+	if len(args) > 0 {
+		remoteURL = Some(args[0])
+	} else {
+		remoteURL = Some(repo.UnvalidatedConfig.OriginURLString())
+	}
 	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
+	if originURL, hasOriginURL := remoteURL.Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,

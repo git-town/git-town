@@ -3,7 +3,6 @@ package hosting
 import (
 	"github.com/git-town/git-town/v15/internal/cli/print"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/giturl"
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting/bitbucket"
 	"github.com/git-town/git-town/v15/internal/hosting/gitea"
@@ -14,6 +13,7 @@ import (
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
+
 	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
 	if !hasPlatform {
 		return None[hostingdomain.Connector](), nil
@@ -57,5 +57,5 @@ type NewConnectorArgs struct {
 	Config          configdomain.UnvalidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
-	OriginURL       giturl.Parts
+	OriginURL       string
 }
