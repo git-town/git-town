@@ -7,9 +7,5 @@ import (
 )
 
 func OriginURLOverride() Option[string] {
-	override := os.Getenv("GIT_TOWN_REMOTE")
-	if override == "" {
-		return None[string]()
-	}
-	return Some(override)
+	return NewOption(os.Getenv("GIT_TOWN_REMOTE"))
 }
