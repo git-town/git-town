@@ -83,7 +83,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge bool) error {
+func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	err := self.CheckoutBranchUncached(runner, name, merge)
 	if err != nil {
 		return err
@@ -97,7 +97,7 @@ func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.Loc
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge bool) error {
+func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	args := []string{"checkout", name.String()}
 	if merge {
 		args = append(args, "-m")
