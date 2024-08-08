@@ -70,7 +70,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.SyncAllBranches, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -82,7 +82,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, stack bool, dryRu
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(syncAllBranches, stack, repo, verbose)
+	data, exit, err := determineSyncData(syncAllBranches, syncStack, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -159,7 +159,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(syncAllBranches configdomain.SyncAllBranches, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
+func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -227,7 +227,7 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, stackFlag b
 	switch {
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
-	case stackFlag:
+	case syncStack.Enabled():
 		branchNamesToSync = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
