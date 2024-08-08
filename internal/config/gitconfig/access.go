@@ -43,6 +43,7 @@ func (self *Access) OriginRemote() string {
 	return strings.TrimSpace(output)
 }
 
+// provides the url of the Git remote with the given name
 func (self *Access) RemoteURL(remote gitdomain.Remote) (string, error) {
 	output, err := self.Query("git", "remote", "get-url", remote.String())
 	return strings.TrimSpace(output), err
