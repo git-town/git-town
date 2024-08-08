@@ -6,6 +6,6 @@ import (
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 )
 
-func OriginURLOverride() Option[string] {
+func RemoteURLOverride() Option[string] {
 	return NewOption(os.Getenv("GIT_TOWN_REMOTE"))
 }

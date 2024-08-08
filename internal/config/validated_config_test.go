@@ -42,7 +42,7 @@ func TestValidatedConfig(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("OriginURL", func(t *testing.T) {
+	t.Run("RemoteURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
 			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
@@ -56,7 +56,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.OriginURL().Get()
+			have, has := repo.Config.RemoteURL(gitdomain.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}

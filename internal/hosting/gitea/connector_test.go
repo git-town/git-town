@@ -84,7 +84,7 @@ func TestGitea(t *testing.T) {
 	// t.Run("NewProposalURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
-	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+	// 		RemoteURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
 	// 	})
@@ -101,7 +101,7 @@ func TestGitea(t *testing.T) {
 	// t.Run("RepositoryURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
-	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+	// 		RemoteURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
 	// 	})
@@ -122,7 +122,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
-	// 		OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+	// 		RemoteURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 	// 		APIToken:       "apiToken",
 	// 		Log:            log.Silent{},
 	// 	})
@@ -143,7 +143,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,
-	// 		OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
+	// 		RemoteURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
 	// 	})
@@ -160,7 +160,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	var originURL *giturl.Parts
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,
-	// 		OriginURL:      originURL,
+	// 		RemoteURL:      originURL,
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
 	// 	})
