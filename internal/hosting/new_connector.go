@@ -14,11 +14,7 @@ import (
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
-	originURL, hasOriginURL := args.OriginURL.Get()
-	if !hasOriginURL {
-		return None[hostingdomain.Connector](), nil
-	}
-	url, hasURL := giturl.Parse(originURL).Get()
+	url, hasURL := giturl.Parse(args.OriginURL).Get()
 	if !hasURL {
 		return None[hostingdomain.Connector](), nil
 	}
@@ -65,5 +61,5 @@ type NewConnectorArgs struct {
 	Config          configdomain.UnvalidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
-	OriginURL       Option[string]
+	OriginURL       string
 }
