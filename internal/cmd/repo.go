@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/execute"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
@@ -59,18 +60,20 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 }
 
 func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
-	// determine remote URL string
-	var remoteURLOpt Option[string]
+	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
-		remoteURLOpt = Some(args[0])
+		remoteOpt = Some(gitdomain.NewRemote(args[0]))
 	} else {
-		remoteURLOpt = repo.UnvalidatedConfig.OriginURLString()
+		remoteOpt = Some(gitdomain.RemoteOrigin)
 	}
-	remoteURL, hasRemoteURL := remoteURLOpt.Get()
-	if !hasRemoteURL {
+	remote, hasRemote := remoteOpt.Get()
+	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	// convert to giturl.Parts
+	remoteURL, err := repo.UnvalidatedConfig.GitConfig.RemoteURL(remote)
+	if err != nil {
+		return data, err
+	}
 	remoteURLParts := repo.UnvalidatedConfig.RemoteURLParts(remoteURL)
 	var connectorOpt Option[hostingdomain.Connector]
 	if remoteURL, hasRemoteURL := remoteURLParts.Get(); hasRemoteURL {
