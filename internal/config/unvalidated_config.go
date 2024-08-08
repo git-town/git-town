@@ -70,8 +70,8 @@ func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.Loca
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
-	text := self.OriginURLString()
-	if text == "" {
+	text, hasText := self.OriginURLString().Get()
+	if !hasText {
 		return None[giturl.Parts]()
 	}
 	return confighelpers.DetermineRemoteURL(text, self.Config.Value.HostingOriginHostname)
