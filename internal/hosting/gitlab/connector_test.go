@@ -85,12 +85,12 @@ func TestNewGitlabConnector(t *testing.T) {
 
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
-		originURL, has := giturl.Parse("git@gitlab.com:git-town/docs.git").Get()
+		remoteURL, has := giturl.Parse("git@gitlab.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
@@ -106,12 +106,12 @@ func TestNewGitlabConnector(t *testing.T) {
 
 	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
-		originURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
+		remoteURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
@@ -127,12 +127,12 @@ func TestNewGitlabConnector(t *testing.T) {
 
 	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
 		t.Parallel()
-		originURL, has := giturl.Parse("git@gitlab.domain:1234/group/project").Get()
+		remoteURL, has := giturl.Parse("git@gitlab.domain:1234/group/project").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{

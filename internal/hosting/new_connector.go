@@ -23,14 +23,14 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
-			OriginURL:       args.RemoteURL,
+			RemoteURL:       args.RemoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.Config.GiteaToken,
 			Log:       args.Log,
-			OriginURL: args.RemoteURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitHub:
@@ -38,7 +38,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
 			Log:       args.Log,
-			OriginURL: args.RemoteURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
@@ -46,7 +46,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  args.Config.GitLabToken,
 			Log:       args.Log,
-			OriginURL: args.RemoteURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), err
 	}
