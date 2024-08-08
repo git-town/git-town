@@ -109,13 +109,13 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 func NewConnector(args NewConnectorArgs) Connector {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP("https://"+args.OriginURL.Host, httpClient)
+	giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
 	return Connector{
 		APIToken: args.APIToken,
 		Data: hostingdomain.Data{
-			Hostname:     args.OriginURL.Host,
-			Organization: args.OriginURL.Org,
-			Repository:   args.OriginURL.Repo,
+			Hostname:     args.RemoteURL.Host,
+			Organization: args.RemoteURL.Org,
+			Repository:   args.RemoteURL.Repo,
 		},
 		client: giteaClient,
 		log:    args.Log,
@@ -125,5 +125,5 @@ func NewConnector(args NewConnectorArgs) Connector {
 type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GiteaToken]
 	Log       print.Logger
-	OriginURL giturl.Parts
+	RemoteURL giturl.Parts
 }

@@ -24,7 +24,7 @@ func TestBitbucketConnector(t *testing.T) {
 			must.True(t, has)
 			have := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: None[configdomain.HostingPlatform](),
-				OriginURL:       url,
+				RemoteURL:       url,
 			})
 			wantConfig := hostingdomain.Data{
 				Hostname:     "bitbucket.org",
@@ -40,7 +40,7 @@ func TestBitbucketConnector(t *testing.T) {
 			must.True(t, has)
 			have := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 				HostingPlatform: Some(configdomain.HostingPlatformBitbucket),
-				OriginURL:       url,
+				RemoteURL:       url,
 			})
 			wantConfig := hostingdomain.Data{
 				Hostname:     "custom-url.com",
@@ -57,7 +57,7 @@ func TestBitbucketConnector(t *testing.T) {
 		must.True(t, has)
 		connector := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: None[configdomain.HostingPlatform](),
-			OriginURL:       url,
+			RemoteURL:       url,
 		})
 		main := gitdomain.NewLocalBranchName("main")
 		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"), main, "", "")

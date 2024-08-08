@@ -121,8 +121,8 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	githubClient := github.NewClient(httpClient)
-	if args.OriginURL.Host != "github.com" {
-		url := "https://" + args.OriginURL.Host
+	if args.RemoteURL.Host != "github.com" {
+		url := "https://" + args.RemoteURL.Host
 		var err error
 		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
 		if err != nil {
@@ -132,9 +132,9 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
 		APIToken: args.APIToken,
 		Data: hostingdomain.Data{
-			Hostname:     args.OriginURL.Host,
-			Organization: args.OriginURL.Org,
-			Repository:   args.OriginURL.Repo,
+			Hostname:     args.RemoteURL.Host,
+			Organization: args.RemoteURL.Org,
+			Repository:   args.RemoteURL.Repo,
 		},
 		client: githubClient,
 		log:    args.Log,
@@ -144,7 +144,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GitHubToken]
 	Log       print.Logger
-	OriginURL giturl.Parts
+	RemoteURL giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
