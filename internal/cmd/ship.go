@@ -122,7 +122,6 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 
 type shipData struct {
 	allBranches                gitdomain.BranchInfos
-	shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent
 	branchToShip               gitdomain.BranchInfo
 	branchesSnapshot           gitdomain.BranchesSnapshot
 	canShipViaAPI              bool
@@ -139,6 +138,7 @@ type shipData struct {
 	proposalMessage            string
 	proposalsOfChildBranches   []hostingdomain.Proposal
 	remotes                    gitdomain.Remotes
+	shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent
 	stashSize                  gitdomain.StashSize
 	targetBranch               gitdomain.BranchInfo
 }
@@ -258,7 +258,6 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	return shipData{
 		allBranches:                branchesSnapshot.Branches,
-		shipIntoNonPerennialParent: shipIntoNonPerennialParent,
 		branchToShip:               *branchToShip,
 		branchesSnapshot:           branchesSnapshot,
 		canShipViaAPI:              canShipViaAPI,
@@ -275,6 +274,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 		proposalMessage:            proposalMessage,
 		proposalsOfChildBranches:   proposalsOfChildBranches,
 		remotes:                    remotes,
+		shipIntoNonPerennialParent: shipIntoNonPerennialParent,
 		stashSize:                  stashSize,
 		targetBranch:               *targetBranch,
 	}, false, nil
