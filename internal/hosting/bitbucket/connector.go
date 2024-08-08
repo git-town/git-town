@@ -23,16 +23,16 @@ type Connector struct {
 func NewConnector(args NewConnectorArgs) Connector {
 	return Connector{
 		Data: hostingdomain.Data{
-			Hostname:     args.OriginURL.Host,
-			Organization: args.OriginURL.Org,
-			Repository:   args.OriginURL.Repo,
+			Hostname:     args.RemoteURL.Host,
+			Organization: args.RemoteURL.Org,
+			Repository:   args.RemoteURL.Repo,
 		},
 	}
 }
 
 type NewConnectorArgs struct {
 	HostingPlatform Option[configdomain.HostingPlatform]
-	OriginURL       giturl.Parts
+	RemoteURL       giturl.Parts
 }
 
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {

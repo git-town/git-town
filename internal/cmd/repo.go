@@ -65,7 +65,7 @@ func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
 			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       originURL,
 		})
 		if err != nil {
 			return data, err

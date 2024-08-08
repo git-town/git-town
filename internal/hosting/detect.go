@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/hosting/gitlab"
 )
 
-func Detect(originURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
 	if userOverride.IsSome() {
 		return userOverride
 	}
@@ -21,7 +21,7 @@ func Detect(originURL giturl.Parts, userOverride Option[configdomain.HostingPlat
 		configdomain.HostingPlatformGitLab:    gitlab.Detect,
 	}
 	for platform, detector := range detectors {
-		if detector(originURL) {
+		if detector(remoteURL) {
 			return Some(platform)
 		}
 	}

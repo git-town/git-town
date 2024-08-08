@@ -118,7 +118,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       originURL,
 		})
 		if err != nil {
 			return err

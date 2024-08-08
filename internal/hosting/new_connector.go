@@ -14,7 +14,7 @@ import (
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
-	platform, hasPlatform := Detect(args.OriginURL, args.HostingPlatform).Get()
+	platform, hasPlatform := Detect(args.RemoteURL, args.HostingPlatform).Get()
 	if !hasPlatform {
 		return None[hostingdomain.Connector](), nil
 	}
@@ -23,14 +23,14 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
-			OriginURL:       args.OriginURL,
+			RemoteURL:       args.RemoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.Config.GiteaToken,
 			Log:       args.Log,
-			OriginURL: args.OriginURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitHub:
@@ -38,7 +38,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
 			Log:       args.Log,
-			OriginURL: args.OriginURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
@@ -46,7 +46,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  args.Config.GitLabToken,
 			Log:       args.Log,
-			OriginURL: args.OriginURL,
+			RemoteURL: args.RemoteURL,
 		})
 		return Some(connector), err
 	}
@@ -57,5 +57,5 @@ type NewConnectorArgs struct {
 	Config          configdomain.UnvalidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
-	OriginURL       giturl.Parts
+	RemoteURL       giturl.Parts
 }
