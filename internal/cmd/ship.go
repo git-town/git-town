@@ -223,7 +223,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       originURL,
 		})
 		if err != nil {
 			return data, false, err

@@ -25,19 +25,19 @@ When using SSH identities, run "git config %s <HOSTNAME>" where HOSTNAME matches
 func repoCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "repo",
-		Args:  cobra.NoArgs,
+		Use:   "repo [remote]",
+		Args:  cobra.MaximumNArgs(1),
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRepo(readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return executeRepo(args, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(verbose configdomain.Verbose) error {
+func executeRepo(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -49,7 +49,7 @@ func executeRepo(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineRepoData(repo)
+	data, err := determineRepoData(args, repo)
 	if err != nil {
 		return err
 	}
@@ -58,14 +58,27 @@ func executeRepo(verbose configdomain.Verbose) error {
 	return nil
 }
 
-func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
+func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
+	// determine remote URL string
+	var remoteURLOpt Option[string]
+	if len(args) > 0 {
+		remoteURLOpt = Some(args[0])
+	} else {
+		remoteURLOpt = repo.UnvalidatedConfig.OriginURLString()
+	}
+	remoteURL, hasRemoteURL := remoteURLOpt.Get()
+	if !hasRemoteURL {
+		return repoData{connector: nil}, nil
+	}
+	// convert to giturl.Parts
+	remoteURLParts := repo.UnvalidatedConfig.RemoteURLParts(remoteURL)
 	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
+	if remoteURL, hasRemoteURL := remoteURLParts.Get(); hasRemoteURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       remoteURL,
 		})
 		if err != nil {
 			return data, err

@@ -77,6 +77,13 @@ func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
 	return confighelpers.DetermineRemoteURL(text, self.Config.Value.HostingOriginHostname)
 }
 
+// OriginURL provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Caches its result so can be called repeatedly.
+func (self *UnvalidatedConfig) RemoteURLParts(remoteURL string) Option[giturl.Parts] {
+	return confighelpers.DetermineRemoteURL(remoteURL, self.Config.Value.HostingOriginHostname)
+}
+
 // OriginURLString provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 func (self *UnvalidatedConfig) OriginURLString() Option[string] {

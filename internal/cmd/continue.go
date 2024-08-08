@@ -144,7 +144,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
-			OriginURL:       originURL,
+			RemoteURL:       originURL,
 		})
 	}
 	return continueData{
