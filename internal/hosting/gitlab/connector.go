@@ -33,14 +33,14 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[hostingdomain.Proposal](), err
 	}
-	if len(mergeRequests) == 0 {
+	switch len(mergeRequests) {
+	case 0:
 		return None[hostingdomain.Proposal](), nil
-	}
-	if len(mergeRequests) > 1 {
+	case 1:
+		return Some(parseMergeRequest(mergeRequests[0])), nil
+	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
 	}
-	proposal := parseMergeRequest(mergeRequests[0])
-	return Some(proposal), nil
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
