@@ -8,5 +8,5 @@ Feature: sync all branches syncs the tags
       | origin-tag | origin   |
     And the current branch is "main"
     And Git Town setting "sync-tags" is "false"
-    When I run "git-town sync --all --verbose"
+    When I run "git-town sync --all"
     Then the initial tags exist now
