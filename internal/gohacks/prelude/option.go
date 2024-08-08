@@ -125,9 +125,11 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &self.value)
 }
 
-func NewStringOption(content string) Option[string] {
-	if len(content) > 0 {
-		return Some(content)
+// Creates a new Option containing None if the given value is the zero value, otherwise Some.
+func NewOption[T comparable](value T) Option[T] {
+	var zero T
+	if value == zero {
+		return None[T]()
 	}
-	return None[string]()
+	return Some(value)
 }
