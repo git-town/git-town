@@ -186,7 +186,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	}
 	initialBranchType := validatedConfig.Config.BranchType(initialBranch)
 	var connector Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURLString().Get(); hasOriginURL {
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,

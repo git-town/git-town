@@ -139,12 +139,14 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 	}
-	connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          repo.UnvalidatedConfig.Config.Get(),
-		HostingPlatform: validatedConfig.Config.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       validatedConfig.OriginURLString(),
-	})
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
+		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			Config:          repo.UnvalidatedConfig.Config.Get(),
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+	}
 	return continueData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,

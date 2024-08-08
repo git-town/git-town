@@ -18,26 +18,26 @@ import (
 const repoDesc = "Open the repository homepage in the browser"
 
 const repoHelp = `
-Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket. Derives the Git provider from the given remote if one exists, otherwise the "origin" remote. You can override remote detection with "git config %s <DRIVER>" where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
+Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket. Derives the Git provider from the "origin" remote. You can override this detection with "git config %s <DRIVER>" where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run "git config %s <HOSTNAME>" where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "repo [remote]",
-		Args:  cobra.MaximumNArgs(1),
+		Use:   "repo",
+		Args:  cobra.NoArgs,
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRepo(args, readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return executeRepo(readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(args []string, verbose configdomain.Verbose) error {
+func executeRepo(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -49,7 +49,7 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineRepoData(args, repo)
+	data, err := determineRepoData(repo)
 	if err != nil {
 		return err
 	}
@@ -58,22 +58,18 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 	return nil
 }
 
-func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
-	var remoteURL Option[string]
-	if len(args) > 0 {
-		remoteURL = Some(args[0])
-	} else {
-		remoteURL = Some(repo.UnvalidatedConfig.OriginURLString())
-	}
+func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
 	var connectorOpt Option[hostingdomain.Connector]
-	connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          repo.UnvalidatedConfig.Config.Get(),
-		HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
-		Log:             print.Logger{},
-		OriginURL:       remoteURL,
-	})
-	if err != nil {
-		return data, err
+	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			Config:          repo.UnvalidatedConfig.Config.Get(),
+			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
+			Log:             print.Logger{},
+			OriginURL:       originURL,
+		})
+		if err != nil {
+			return data, err
+		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
