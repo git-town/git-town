@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/execute"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
@@ -26,18 +27,18 @@ func repoCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo",
-		Args:  cobra.NoArgs,
+		Args:  cobra.MaximumNArgs(1),
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRepo(readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, arg []string) error {
+			return executeRepo(arg, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(verbose configdomain.Verbose) error {
+func executeRepo(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -49,11 +50,21 @@ func executeRepo(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineRepoData(repo)
-	if err != nil {
-		return err
+	var url string
+	if len(args) == 0 {
+		data, err := determineRepoData(repo)
+		if err != nil {
+			return err
+		}
+		url = data.connector.RepositoryURL()
+	} else {
+		remoteName := args[0]
+		url, err = repo.UnvalidatedConfig.GitConfig.RemoteURL(gitdomain.NewRemote(remoteName))
+		if err != nil {
+			return err
+		}
 	}
-	browser.Open(data.connector.RepositoryURL(), repo.Frontend, repo.Backend)
+	browser.Open(url, repo.Frontend, repo.Backend)
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }

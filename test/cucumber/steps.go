@@ -194,6 +194,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(name, content)
 	})
 
+	sc.Step(`^an additional "([^"]+)" remote with URL "([^"]+)"$`, func(ctx context.Context, remote, url string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.AddRemote(gitdomain.NewRemote(remote), url)
+	})
+
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()

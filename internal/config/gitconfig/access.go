@@ -34,13 +34,18 @@ func (self *Access) LoadLocal(updateOutdated bool) (configdomain.SingleSnapshot,
 }
 
 func (self *Access) OriginRemote() string {
-	output, err := self.Query("git", "remote", "get-url", gitdomain.RemoteOrigin.String())
+	output, err := self.RemoteURL(gitdomain.RemoteOrigin)
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
 		// If we get an error here, we simply don't use the origin remote.
 		return ""
 	}
 	return strings.TrimSpace(output)
+}
+
+func (self *Access) RemoteURL(remote gitdomain.Remote) (string, error) {
+	output, err := self.Query("git", "remote", "get-url", remote.String())
+	return strings.TrimSpace(output), err
 }
 
 func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
