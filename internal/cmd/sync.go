@@ -70,7 +70,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(all configdomain.SyncAllBranches, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.SyncAllBranches, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -82,7 +82,7 @@ func executeSync(all configdomain.SyncAllBranches, stack bool, dryRun configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(all, stack, repo, verbose)
+	data, exit, err := determineSyncData(syncAllBranches, stack, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
