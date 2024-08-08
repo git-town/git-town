@@ -122,7 +122,7 @@ func TestNewConnector(t *testing.T) {
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{
@@ -140,7 +140,7 @@ func TestNewConnector(t *testing.T) {
 		have, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Data{

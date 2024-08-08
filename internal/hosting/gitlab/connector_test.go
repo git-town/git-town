@@ -90,7 +90,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
@@ -111,7 +111,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
@@ -132,7 +132,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  configdomain.ParseGitLabToken("apiToken"),
 			Log:       print.Logger{},
-			OriginURL: originURL,
+			RemoteURL: originURL,
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
