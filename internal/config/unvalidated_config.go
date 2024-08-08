@@ -74,7 +74,7 @@ func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
 	if text == "" {
 		return None[giturl.Parts]()
 	}
-	return confighelpers.DetermineOriginURL(text, self.Config.Value.HostingOriginHostname)
+	return confighelpers.DetermineRemoteURL(text, self.Config.Value.HostingOriginHostname)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
