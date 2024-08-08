@@ -50,7 +50,7 @@ func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addToParentFlag, readToParentFlag := flags.ToParent()
+	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
 	cmd := cobra.Command{
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
@@ -67,7 +67,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose, toParent bool) error {
+func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose, toParent configdomain.ShipIntoNonperennialParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -121,29 +121,29 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 }
 
 type shipData struct {
-	allBranches              gitdomain.BranchInfos
-	allowNonPerennialParent  bool
-	branchToShip             gitdomain.BranchInfo
-	branchesSnapshot         gitdomain.BranchesSnapshot
-	canShipViaAPI            bool
-	childBranches            gitdomain.LocalBranchNames
-	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
-	dialogTestInputs         components.TestInputs
-	dryRun                   configdomain.DryRun
-	hasOpenChanges           bool
-	initialBranch            gitdomain.LocalBranchName
-	isShippingInitialBranch  bool
-	previousBranch           Option[gitdomain.LocalBranchName]
-	proposal                 Option[hostingdomain.Proposal]
-	proposalMessage          string
-	proposalsOfChildBranches []hostingdomain.Proposal
-	remotes                  gitdomain.Remotes
-	stashSize                gitdomain.StashSize
-	targetBranch             gitdomain.BranchInfo
+	allBranches                gitdomain.BranchInfos
+	branchToShip               gitdomain.BranchInfo
+	branchesSnapshot           gitdomain.BranchesSnapshot
+	canShipViaAPI              bool
+	childBranches              gitdomain.LocalBranchNames
+	config                     config.ValidatedConfig
+	connector                  Option[hostingdomain.Connector]
+	dialogTestInputs           components.TestInputs
+	dryRun                     configdomain.DryRun
+	hasOpenChanges             bool
+	initialBranch              gitdomain.LocalBranchName
+	isShippingInitialBranch    bool
+	previousBranch             Option[gitdomain.LocalBranchName]
+	proposal                   Option[hostingdomain.Proposal]
+	proposalMessage            string
+	proposalsOfChildBranches   []hostingdomain.Proposal
+	remotes                    gitdomain.Remotes
+	shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent
+	stashSize                  gitdomain.StashSize
+	targetBranch               gitdomain.BranchInfo
 }
 
-func determineShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, allowNonPerennialParent bool) (data shipData, exit bool, err error) {
+func determineShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent) (data shipData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -257,26 +257,26 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 		}
 	}
 	return shipData{
-		allBranches:              branchesSnapshot.Branches,
-		allowNonPerennialParent:  allowNonPerennialParent,
-		branchToShip:             *branchToShip,
-		branchesSnapshot:         branchesSnapshot,
-		canShipViaAPI:            canShipViaAPI,
-		childBranches:            childBranches,
-		config:                   validatedConfig,
-		connector:                connectorOpt,
-		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
-		hasOpenChanges:           repoStatus.OpenChanges,
-		initialBranch:            initialBranch,
-		isShippingInitialBranch:  isShippingInitialBranch,
-		previousBranch:           previousBranch,
-		proposal:                 proposalOpt,
-		proposalMessage:          proposalMessage,
-		proposalsOfChildBranches: proposalsOfChildBranches,
-		remotes:                  remotes,
-		stashSize:                stashSize,
-		targetBranch:             *targetBranch,
+		allBranches:                branchesSnapshot.Branches,
+		branchToShip:               *branchToShip,
+		branchesSnapshot:           branchesSnapshot,
+		canShipViaAPI:              canShipViaAPI,
+		childBranches:              childBranches,
+		config:                     validatedConfig,
+		connector:                  connectorOpt,
+		dialogTestInputs:           dialogTestInputs,
+		dryRun:                     dryRun,
+		hasOpenChanges:             repoStatus.OpenChanges,
+		initialBranch:              initialBranch,
+		isShippingInitialBranch:    isShippingInitialBranch,
+		previousBranch:             previousBranch,
+		proposal:                   proposalOpt,
+		proposalMessage:            proposalMessage,
+		proposalsOfChildBranches:   proposalsOfChildBranches,
+		remotes:                    remotes,
+		shipIntoNonPerennialParent: shipIntoNonPerennialParent,
+		stashSize:                  stashSize,
+		targetBranch:               *targetBranch,
 	}, false, nil
 }
 
@@ -371,7 +371,7 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 }
 
 func validateData(data shipData) error {
-	if !data.allowNonPerennialParent {
+	if !data.shipIntoNonPerennialParent {
 		err := ensureParentBranchIsMainOrPerennialBranch(data.branchToShip.LocalName.GetOrPanic(), data.targetBranch.LocalName.GetOrPanic(), data.config.Config, data.config.Config.Lineage)
 		if err != nil {
 			return err
