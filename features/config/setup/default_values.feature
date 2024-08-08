@@ -21,6 +21,7 @@ Feature: Accepting all default values leads to a working setup
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
       | sync-upstream               | enter |
+      | sync-tags                   | enter |
       | push-new-branches           | enter |
       | push-hook                   | enter |
       | create-prototype-branches   | enter |
@@ -40,6 +41,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "sync-feature-strategy" still doesn't exist
     And local Git Town setting "sync-perennial-strategy" still doesn't exist
     And local Git Town setting "sync-upstream" still doesn't exist
+    And local Git Town setting "sync-tags" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
     And the configuration file is now:
       """
@@ -82,6 +84,9 @@ Feature: Accepting all default values leads to a working setup
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = true
+
+      # Should "git sync" sync tags with origin?
+      sync-tags = true
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -165,6 +170,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "sync-feature-strategy" still doesn't exist
     And local Git Town setting "sync-perennial-strategy" still doesn't exist
     And local Git Town setting "sync-upstream" still doesn't exist
+    And local Git Town setting "sync-tags" still doesn't exist
     And local Git Town setting "perennial-regex" still doesn't exist
     And local Git Town setting "push-new-branches" still doesn't exist
     And local Git Town setting "push-hook" still doesn't exist

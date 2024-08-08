@@ -248,9 +248,12 @@ func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, ver
 		return data, exit, err
 	}
 	var shouldPushTags bool
-	if allFlag {
+	switch {
+	case validatedConfig.Config.SyncTags.IsFalse():
+		shouldPushTags = false
+	case allFlag:
 		shouldPushTags = true
-	} else {
+	default:
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)

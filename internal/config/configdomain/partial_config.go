@@ -33,6 +33,7 @@ type PartialConfig struct {
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
+	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
 }
 
@@ -63,6 +64,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	syncPrototypeStrategy, err := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
 	ec.Check(err)
+	syncTags, err := ParseSyncTags(snapshot[KeySyncTags], KeySyncTags.String())
+	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream.String())
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
@@ -92,6 +95,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 	}, ec.Err
 }
@@ -126,6 +130,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
+		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 	}
 }
@@ -157,6 +162,7 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
+		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
 	}
 }
