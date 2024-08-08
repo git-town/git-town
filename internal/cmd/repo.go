@@ -30,8 +30,8 @@ func repoCommand() *cobra.Command {
 		Args:  cobra.MaximumNArgs(1),
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, arg []string) error {
-			return executeRepo(arg, readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return executeRepo(args, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
