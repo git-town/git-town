@@ -70,21 +70,28 @@ func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.Loca
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
-	text, hasText := self.OriginURLString().Get()
+	return self.RemoteURL(gitdomain.RemoteOrigin)
+}
+
+// RemoteURL provides the URL for the given remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Caches its result so can be called repeatedly.
+func (self *UnvalidatedConfig) RemoteURL(remote gitdomain.Remote) Option[giturl.Parts] {
+	text, hasText := self.RemoteURLString(remote).Get()
 	if !hasText {
 		return None[giturl.Parts]()
 	}
 	return confighelpers.DetermineRemoteURL(text, self.Config.Value.HostingOriginHostname)
 }
 
-// OriginURLString provides the URL for the "origin" remote.
+// RemoteURLString provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func (self *UnvalidatedConfig) OriginURLString() Option[string] {
+func (self *UnvalidatedConfig) RemoteURLString(remote gitdomain.Remote) Option[string] {
 	remoteOverride := envconfig.OriginURLOverride()
 	if remoteOverride.IsSome() {
 		return remoteOverride
 	}
-	return self.GitConfig.OriginRemote()
+	return self.GitConfig.RemoteURL(remote)
 }
 
 func (self *UnvalidatedConfig) RemoveCreatePrototypeBranches() {
