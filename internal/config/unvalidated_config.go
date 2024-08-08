@@ -79,10 +79,10 @@ func (self *UnvalidatedConfig) OriginURL() Option[giturl.Parts] {
 
 // OriginURLString provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func (self *UnvalidatedConfig) OriginURLString() string {
-	remoteOverride := envconfig.OriginURLOverride()
-	if remoteOverride != "" {
-		return remoteOverride
+func (self *UnvalidatedConfig) OriginURLString() Option[string] {
+	remoteOverride, hasRemoteOverride := envconfig.OriginURLOverride().Get()
+	if hasRemoteOverride {
+		return Some(remoteOverride)
 	}
 	return self.GitConfig.OriginRemote()
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cli/colors"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/messages"
 )
 
@@ -33,14 +34,18 @@ func (self *Access) LoadLocal(updateOutdated bool) (configdomain.SingleSnapshot,
 	return self.load(configdomain.ConfigScopeLocal, updateOutdated)
 }
 
-func (self *Access) OriginRemote() string {
+func (self *Access) OriginRemote() Option[string] {
 	output, err := self.Query("git", "remote", "get-url", gitdomain.RemoteOrigin.String())
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
 		// If we get an error here, we simply don't use the origin remote.
-		return ""
+		return None[string]()
 	}
-	return strings.TrimSpace(output)
+	output = strings.TrimSpace(output)
+	if output == "" {
+		return None[string]()
+	}
+	return Some(output)
 }
 
 func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {

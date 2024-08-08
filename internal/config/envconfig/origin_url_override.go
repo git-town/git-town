@@ -1,7 +1,15 @@
 package envconfig
 
-import "os"
+import (
+	"os"
 
-func OriginURLOverride() string {
-	return os.Getenv("GIT_TOWN_REMOTE")
+	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+)
+
+func OriginURLOverride() Option[string] {
+	override := os.Getenv("GIT_TOWN_REMOTE")
+	if override == "" {
+		return None[string]()
+	}
+	return Some(override)
 }
