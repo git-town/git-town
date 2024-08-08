@@ -43,7 +43,7 @@ func Parse(url string) Option[Parts] {
 		Host: trimLast(matches[2]),
 		Org:  trimLast(matches[3]),
 		Repo: matches[4],
-		User: NewStringOption(trimLast(matches[1])),
+		User: NewOption(trimLast(matches[1])),
 	})
 }
 

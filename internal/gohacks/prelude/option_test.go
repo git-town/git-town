@@ -66,6 +66,18 @@ func TestOption(t *testing.T) {
 		})
 	})
 
+	t.Run("NewOption", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]Option[string]{
+			"":    None[string](),
+			"foo": Some("foo"),
+		}
+		for give, want := range tests {
+			have := NewOption(give)
+			must.Eq(t, want, have)
+		}
+	})
+
 	t.Run("Or", func(t *testing.T) {
 		t.Parallel()
 		t.Run("none or none = none", func(t *testing.T) {
