@@ -10,9 +10,6 @@ import (
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/execute"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/hosting"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -63,30 +60,4 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 	browser.Open(url, repo.Frontend, repo.Backend)
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
-}
-
-func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
-	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
-		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          repo.UnvalidatedConfig.Config.Get(),
-			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
-			Log:             print.Logger{},
-			OriginURL:       originURL,
-		})
-		if err != nil {
-			return data, err
-		}
-	}
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
-		return data, hostingdomain.UnsupportedServiceError()
-	}
-	return repoData{
-		connector: connector,
-	}, err
-}
-
-type repoData struct {
-	connector hostingdomain.Connector
 }
