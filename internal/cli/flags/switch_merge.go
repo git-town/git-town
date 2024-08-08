@@ -25,5 +25,4 @@ func SwitchMerge() (AddFunc, ReadMergeFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
 type ReadMergeFlagFunc func(*cobra.Command) configdomain.SwitchUsingMerge
