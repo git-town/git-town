@@ -331,8 +331,11 @@ func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (self *Commands) Fetch(runner gitdomain.Runner) error {
-	return runner.Run("git", "fetch", "--prune", "--tags")
+func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncTags) error {
+	if syncTags.IsTrue() {
+		return runner.Run("git", "fetch", "--prune", "--tags")
+	}
+	return runner.Run("git", "fetch", "--prune", "--no-tags")
 }
 
 // FetchUpstream fetches updates from the upstream remote.

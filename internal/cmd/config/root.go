@@ -67,6 +67,7 @@ func printConfig(config configdomain.UnvalidatedConfig) {
 	print.Entry("sync-feature strategy", config.SyncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.SyncPerennialStrategy.String())
 	print.Entry("sync with upstream", format.Bool(config.SyncUpstream.Bool()))
+	print.Entry("sync tags", format.Bool(config.SyncTags.IsTrue()))
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("hosting platform override", format.StringSetting(config.HostingPlatform.String()))

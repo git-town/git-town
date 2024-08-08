@@ -35,6 +35,7 @@ type UnvalidatedConfig struct {
 	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncPerennialStrategy    SyncPerennialStrategy
 	SyncPrototypeStrategy    SyncPrototypeStrategy
+	SyncTags                 SyncTags
 	SyncUpstream             SyncUpstream
 }
 
@@ -156,6 +157,7 @@ func DefaultConfig() UnvalidatedConfig {
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
 		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,
+		SyncTags:                 true,
 		SyncUpstream:             true,
 	}
 }

@@ -176,6 +176,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.SyncTags, aborted, err = dialog.SyncTags(config.Config.Value.SyncTags, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.Value.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -271,6 +275,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
 	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
+	fc.Check(saveSyncTags(oldConfig.Config.Value.SyncTags, userInput.config.SyncTags, oldConfig))
 	return fc.Err
 }
 
@@ -420,6 +425,13 @@ func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config confi
 	return config.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
 }
 
+func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.SetSyncTags(newValue)
+}
+
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	err := configfile.Save(&userInput.config)
 	if err != nil {
@@ -435,5 +447,6 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.RemoveSyncFeatureStrategy()
 	config.RemoveSyncPerennialStrategy()
 	config.RemoveSyncUpstream()
+	config.RemoveSyncTags()
 	return nil
 }
