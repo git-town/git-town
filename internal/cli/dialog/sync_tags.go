@@ -19,8 +19,8 @@ Should "git sync" sync tags with origin?
 )
 
 const (
-	SyncTagsEntryYes syncTagsEntry = `yes, sync tags`
-	SyncTagsEntryNo  syncTagsEntry = `no, don't sync tags`
+	SyncTagsEntryYes syncTagsEntry = `yes, sync Git tags`
+	SyncTagsEntryNo  syncTagsEntry = `no, don't sync Git tags`
 )
 
 func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, bool, error) {
