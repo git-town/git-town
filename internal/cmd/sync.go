@@ -70,7 +70,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.SyncAllBranches, stack bool, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -82,7 +82,7 @@ func executeSync(all, stack bool, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(all, stack, repo, verbose)
+	data, exit, err := determineSyncData(syncAllBranches, stack, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -159,7 +159,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
+func determineSyncData(syncAllBranches configdomain.SyncAllBranches, stackFlag bool, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -225,7 +225,7 @@ func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, ver
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case allFlag:
+	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case stackFlag:
 		branchNamesToSync = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
@@ -251,7 +251,7 @@ func determineSyncData(allFlag, stackFlag bool, repo execute.OpenRepoResult, ver
 	switch {
 	case validatedConfig.Config.SyncTags.IsFalse():
 		shouldPushTags = false
-	case allFlag:
+	case syncAllBranches.Enabled():
 		shouldPushTags = true
 	default:
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)
