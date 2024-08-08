@@ -157,10 +157,10 @@ func TestNewGiteaConnector(t *testing.T) {
 	//
 	// t.Run("no origin remote --> no connector", func(t *testing.T) {
 	// 	t.Parallel()
-	// 	var originURL *giturl.Parts
+	// 	var remoteURL *giturl.Parts
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,
-	// 		RemoteURL:      originURL,
+	// 		RemoteURL:      remoteURL,
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
 	// 	})
