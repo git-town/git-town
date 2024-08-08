@@ -6,12 +6,12 @@ import (
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 )
 
-func DetermineOriginURL(originURL string, originOverride Option[configdomain.HostingOriginHostname]) Option[giturl.Parts] {
-	url, hasURL := giturl.Parse(originURL).Get()
+func DetermineRemoteURL(urlStr string, override Option[configdomain.HostingOriginHostname]) Option[giturl.Parts] {
+	url, hasURL := giturl.Parse(urlStr).Get()
 	if !hasURL {
 		return None[giturl.Parts]()
 	}
-	if value, has := originOverride.Get(); has {
+	if value, has := override.Get(); has {
 		url.Host = value.String()
 	}
 	return Some(url)
