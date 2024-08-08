@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/execute"
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
@@ -25,19 +26,19 @@ When using SSH identities, run "git config %s <HOSTNAME>" where HOSTNAME matches
 func repoCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "repo",
-		Args:  cobra.NoArgs,
+		Use:   "repo [remote]",
+		Args:  cobra.MaximumNArgs(1),
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRepo(readVerboseFlag(cmd))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return executeRepo(args, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(verbose configdomain.Verbose) error {
+func executeRepo(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -49,7 +50,7 @@ func executeRepo(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineRepoData(repo)
+	data, err := determineRepoData(args, repo)
 	if err != nil {
 		return err
 	}
@@ -58,14 +59,24 @@ func executeRepo(verbose configdomain.Verbose) error {
 	return nil
 }
 
-func determineRepoData(repo execute.OpenRepoResult) (data repoData, err error) {
+func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
+	var remoteOpt Option[gitdomain.Remote]
+	if len(args) > 0 {
+		remoteOpt = Some(gitdomain.NewRemote(args[0]))
+	} else {
+		remoteOpt = Some(gitdomain.RemoteOrigin)
+	}
+	remote, hasRemote := remoteOpt.Get()
+	if !hasRemote {
+		return repoData{connector: nil}, nil
+	}
 	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := repo.UnvalidatedConfig.OriginURL().Get(); hasOriginURL {
+	if remoteURL, hasRemoteURL := repo.UnvalidatedConfig.RemoteURL(remote).Get(); hasRemoteURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          repo.UnvalidatedConfig.Config.Get(),
 			HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
 			Log:             print.Logger{},
-			RemoteURL:       originURL,
+			RemoteURL:       remoteURL,
 		})
 		if err != nil {
 			return data, err

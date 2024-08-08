@@ -1,9 +1,14 @@
-# git repo
+# git repo [remote]
 
 The _repo_ command ("show the repository") opens the homepage of the current
 repository in your default browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
 [Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
+
+### Arguments
+
+Shows the repository at the remote with the given name. If no remote is given,
+shows the repository at the `origin` remote.
 
 ### Configuration
 
