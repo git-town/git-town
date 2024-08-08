@@ -70,10 +70,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	remoteURL, err := repo.UnvalidatedConfig.GitConfig.RemoteURL(remote)
-	if err != nil {
-		return data, err
-	}
+	remoteURL := repo.UnvalidatedConfig.GitConfig.RemoteURL(remote)
 	remoteURLParts := repo.UnvalidatedConfig.RemoteURLParts(remoteURL)
 	var connectorOpt Option[hostingdomain.Connector]
 	if remoteURL, hasRemoteURL := remoteURLParts.Get(); hasRemoteURL {
