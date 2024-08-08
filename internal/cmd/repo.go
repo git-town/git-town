@@ -50,19 +50,15 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	var url string
+	var remoteName gitdomain.Remote
 	if len(args) == 0 {
-		data, err := determineRepoData(repo)
-		if err != nil {
-			return err
-		}
-		url = data.connector.RepositoryURL()
+		remoteName = gitdomain.RemoteOrigin
 	} else {
-		remoteName := args[0]
-		url, err = repo.UnvalidatedConfig.GitConfig.RemoteURL(gitdomain.NewRemote(remoteName))
-		if err != nil {
-			return err
-		}
+		remoteName = gitdomain.NewRemote(args[0])
+	}
+	url, err := repo.UnvalidatedConfig.GitConfig.RemoteURL(remoteName)
+	if err != nil {
+		return err
 	}
 	browser.Open(url, repo.Frontend, repo.Backend)
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
