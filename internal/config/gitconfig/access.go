@@ -41,11 +41,7 @@ func (self *Access) OriginRemote() Option[string] {
 		// If we get an error here, we simply don't use the origin remote.
 		return None[string]()
 	}
-	output = strings.TrimSpace(output)
-	if output == "" {
-		return None[string]()
-	}
-	return Some(output)
+	return NewOption(strings.TrimSpace(output))
 }
 
 func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
