@@ -39,19 +39,20 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
-	if len(pullRequests) == 0 {
+	switch len(pullRequests) {
+	case 0:
 		return None[hostingdomain.Proposal](), nil
-	}
-	if len(pullRequests) > 1 {
+	case 1:
+		pullRequest := pullRequests[0]
+		return Some(hostingdomain.Proposal{
+			MergeWithAPI: pullRequest.Mergeable,
+			Number:       int(pullRequest.Index),
+			Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
+			Title:        pullRequest.Title,
+		}), nil
+	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
-	pullRequest := pullRequests[0]
-	return Some(hostingdomain.Proposal{
-		MergeWithAPI: pullRequest.Mergeable,
-		Number:       int(pullRequest.Index),
-		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
-		Title:        pullRequest.Title,
-	}), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
