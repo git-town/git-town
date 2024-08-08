@@ -40,6 +40,9 @@ type ScenarioState struct {
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
+	// initialTags describes the tags before the WHEN steps ran.
+	initialTags Option[datatable.DataTable]
+
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
 	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
 
@@ -74,6 +77,10 @@ func (self *ScenarioState) CaptureState() {
 	if self.initialLineage.IsNone() && self.insideGitRepo {
 		lineage := self.fixture.DevRepo.GetOrPanic().LineageTable()
 		self.initialLineage = Some(lineage)
+	}
+	if self.initialTags.IsNone() && self.insideGitRepo {
+		tags := self.fixture.TagTable()
+		self.initialTags = Some(tags)
 	}
 }
 

@@ -55,4 +55,5 @@
   - [sync-feature-strategy](preferences/sync-feature-strategy.md)
   - [sync-perennial-strategy](preferences/sync-perennial-strategy.md)
   - [sync-prototype-strategy](preferences/sync-prototype-strategy.md)
+  - [sync-tags](preferences/sync-tags.md)
   - [sync-upstream](preferences/sync-upstream.md)

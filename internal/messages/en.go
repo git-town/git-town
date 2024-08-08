@@ -208,6 +208,7 @@ nd will be removed in future versions of Git Town.`
 	SyncFeatureBranches            = "Sync feature branches: %s\n"
 	SyncPerennialBranches          = "Sync perennial branches: %s\n"
 	SyncStatusNotRecognized        = "cannot determine the sync status for Git remote %q and branch name %q"
+	SyncTags                       = "Sync tags: %s\n"
 	SyncWithUpstream               = "Sync with upstream: %s\n"
 	UndoCreateOpcodeProblem        = "cannot create undo operations for %q: %w"
 	UndoMessage                    = `You can run "git town undo" to go back to where you started.`

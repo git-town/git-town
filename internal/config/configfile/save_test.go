@@ -57,6 +57,7 @@ func TestSave(t *testing.T) {
 			ShipDeleteTrackingBranch: true,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+			SyncTags:                 true,
 			SyncUpstream:             true,
 		}
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
@@ -102,6 +103,9 @@ create-prototype-branches = true
 # (GitHub, GitLab, etc) deletes head branches when
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
+
+# Should "git sync" sync tags with origin?
+sync-tags = true
 
 # Should "git sync" also fetch updates from the upstream remote?
 #
@@ -215,6 +219,9 @@ create-prototype-branches = false
 # (GitHub, GitLab, etc) deletes head branches when
 # merging pull requests through its UI.
 ship-delete-tracking-branch = true
+
+# Should "git sync" sync tags with origin?
+sync-tags = true
 
 # Should "git sync" also fetch updates from the upstream remote?
 #

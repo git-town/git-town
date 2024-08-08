@@ -114,6 +114,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[map[string]gitdomain.SHA](),
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
@@ -152,6 +153,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[map[string]gitdomain.SHA](),
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
@@ -538,6 +540,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[map[string]gitdomain.SHA](),
 			initialLineage:       None[datatable.DataTable](),
 			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
@@ -1279,6 +1282,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
+	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		currentTags := state.fixture.TagTable()
+		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
+		if errCount == 0 {
+			return
+		}
+		fmt.Println(errDiff)
+		panic("current tags are not the same as the initial commits")
+	})
+
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1432,7 +1446,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^these tags exist$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^these tags exist now$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)

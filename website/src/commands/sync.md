@@ -43,6 +43,9 @@ If the repository contains a Git remote called `upstream` and the
 [sync-upstream](../preferences/sync-upstream.md) setting is enabled, Git Town
 also downloads new commits from the upstream main branch.
 
+[sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
+tags with the `origin` remote.
+
 ### Why does git-sync update a branch before deleting it?
 
 "git sync" can delete branches if their tracking branch was deleted at the

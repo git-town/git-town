@@ -15,6 +15,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "sync-feature-strategy" is "merge"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
     And local Git Town setting "sync-upstream" is "true"
+    And local Git Town setting "sync-tags" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS  |
       | welcome                                   | enter |
@@ -27,6 +28,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-feature-strategy                     | enter |
       | sync-perennial-strategy                   | enter |
       | sync-upstream                             | enter |
+      | sync-tags                                 | enter |
       | enable push-new-branches                  | enter |
       | disable the push hook                     | enter |
       | create-prototype-branches                 | enter |
@@ -42,6 +44,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "sync-feature-strategy" now doesn't exist
     And local Git Town setting "sync-perennial-strategy" now doesn't exist
     And local Git Town setting "sync-upstream" now doesn't exist
+    And local Git Town setting "sync-tags" now doesn't exist
     And local Git Town setting "perennial-regex" now doesn't exist
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
@@ -88,6 +91,9 @@ Feature: migrate existing configuration in Git metadata to a config file
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = false
+
+      # Should "git sync" sync tags with origin?
+      sync-tags = false
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -160,3 +166,4 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "rebase"
     And local Git Town setting "sync-upstream" is now "true"
+    And local Git Town setting "sync-tags" is now "false"
