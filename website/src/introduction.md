@@ -1,12 +1,16 @@
 # High-level CLI for Git
 
-_Git is not a version control system but a framework for building your own
-custom version control system._
+Git Town solves the problem that using the Git CLI correctly is cumbersome and
+repetitive and therefore almost nobody uses Git correctly.
 
-Git Town solves the problem that using the Git CLI correctly is so cumbersome
-and repetitive that almost nobody uses Git correctly. Git Town provides
-additional Git commands that make creating, synchronizing, shipping, and cleanup
-of Git branches efficient. Supports mono-repos and stacked changes.
+That's not a design flaw of Git. Git is not a version control system, it's an
+intentionally generic framework for creating many different types of version
+control workflows.
+
+Git Town is automation for the most commonly used version control workflow:
+contributing to a centralized code repository. Git Town lets you use Git the way
+you do right now and provides additional Git commands to create a variety of
+branch types, keep them in sync with each other, and ship them.
 
 <br>
 <p align="center">
@@ -16,20 +20,13 @@ of Git branches efficient. Supports mono-repos and stacked changes.
 </p>
 <br>
 
-Git is a very flexible source code management system. The Git CLI (rightfully)
-supports all possible ways of using Git equally well. Git commands are generic
-building blocks for implementing your specific Git workflow. This generic design
-can make using the vanilla Git CLI repetitive in real life. As the screencast
-above demonstrates, typical development activities like creating, synchronizing,
-or shipping a feature branch can require running dozens of Git commands.
-
-Git Town adds commands to Git that implement these activities in one step. Git
-Town's commands are compatible with most common branching models like
+Git Town is compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
 [trunk-based development](https://trunkbaseddevelopment.com) and even committing
-straight into the main branch. See also this
+straight into the main branch. Git Town has special support for mono-repos and
+stacked changes. See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
 
 ## What our users say
