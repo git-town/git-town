@@ -18,14 +18,6 @@ const (
 	SyncStrategyRebase = SyncStrategy("rebase")
 )
 
-// provides all valid sync strategies
-func SyncStrategies() []SyncStrategy {
-	return []SyncStrategy{
-		SyncStrategyMerge,
-		SyncStrategyRebase,
-	}
-}
-
 func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
 	if text == "" {
 		return None[SyncStrategy](), nil
@@ -37,4 +29,12 @@ func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
 		}
 	}
 	return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
+}
+
+// provides all valid sync strategies
+func SyncStrategies() []SyncStrategy {
+	return []SyncStrategy{
+		SyncStrategyMerge,
+		SyncStrategyRebase,
+	}
 }
