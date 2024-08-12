@@ -9,14 +9,14 @@ This guide is for maintainers who make releases of Git Town.
   - verify that all newly added Git Town commands are not hidden
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `15.0.0`
-    - double-digits: `15.0`
+    - triple-digits: `15.1.0`
+    - double-digits: `15.1`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
     - update `github.com/git-town/git-town/v15/` everywhere in this repo
     - update `github.com/git-town/git-town/v15` (without trailing slash)
 - ship the branch
-- `git tag v15.0.0 && git push --tags`
+- `git tag v15.1.0 && git push --tags`
 - open the new release in the browser
 - copy the changelog into the release notes
 - publish the release
