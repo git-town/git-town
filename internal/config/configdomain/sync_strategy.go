@@ -18,15 +18,23 @@ const (
 	SyncStrategyRebase = SyncStrategy("rebase")
 )
 
-func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
-	switch strings.ToLower(text) {
-	case "":
-		return None[SyncStrategy](), nil
-	case "merge":
-		return Some(SyncStrategyMerge), nil
-	case "rebase":
-		return Some(SyncStrategyRebase), nil
-	default:
-		return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
+// provides all valid sync strategies
+func SyncStrategies() []SyncStrategy {
+	return []SyncStrategy{
+		SyncStrategyMerge,
+		SyncStrategyRebase,
 	}
+}
+
+func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
+	if text == "" {
+		return None[SyncStrategy](), nil
+	}
+	text = strings.ToLower(text)
+	for _, syncStrategy := range SyncStrategies() {
+		if syncStrategy.String() == text {
+			return Some(syncStrategy), nil
+		}
+	}
+	return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
 }
