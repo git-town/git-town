@@ -19,6 +19,7 @@ const (
 )
 
 func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
+	text = strings.TrimSpace(text)
 	if text == "" {
 		return None[SyncStrategy](), nil
 	}
