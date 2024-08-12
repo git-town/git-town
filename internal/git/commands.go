@@ -518,7 +518,7 @@ func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatu
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *Commands) ResetBranch(runner gitdomain.Runner, target gitdomain.LocalBranchName) error {
+func (self *Commands) ResetBranch(runner gitdomain.Runner, target gitdomain.BranchName) error {
 	return runner.Run("git", "reset", "--soft", target.String())
 }
 
