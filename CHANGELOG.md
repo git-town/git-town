@@ -2,6 +2,8 @@
 
 ## 15.1.0 (2024-08-09)
 
+Numerous thanks to @FirelightFlagboy, @Iron-Ham, @IvanVas, @JaredSharplin, @JustinBis, @TheHolyWaffle, @WhosNickDoglio, @alexus37, @alphatroya, @anikrajc, @blaggacao, @charlierudolph, @cjol, @connected-rmcleod, @cridasilva, @defunctzombie, @erik-rw, @kevgo, @pattiereaves, @sgarfinkel, @stephenwade, @teumas, @zodman for the super useful feedback, ideas, and code contributions to 31 shipped PRs and 19 resolved issues.
+
 #### New Features
 
 - `git repo` can now take the name of a remote to open the repo at that remote ([#1204](https://github.com/git-town/git-town/issues/1204)).
