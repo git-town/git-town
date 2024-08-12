@@ -4,10 +4,10 @@
 
 #### New Features
 
-- `git repo` can now take the name of a remote to open that repo ([#1204](https://github.com/git-town/git-town/issues/1204)).
-- You can now disable syncing of Git tags using the new `sync-tags` config option ([#3212](https://github.com/git-town/git-town/issues/3212)).
-- `git ship` can now ship into non-perennial parent branches ([#2605](https://github.com/git-town/git-town/issues/2605)).
-- You can now sync all branches in the current stack, and only those branches, using `git sync --stack` ([#3816](https://github.com/git-town/git-town/pull/3816)).
+- `git repo` can now take the name of a remote to open the repo at that remote ([#1204](https://github.com/git-town/git-town/issues/1204)).
+- The new `sync-tags` config option disables syncing of Git tags ([#3212](https://github.com/git-town/git-town/issues/3212)).
+- `git ship` can now ship into any type of parent branch with the `--to-parent` option ([#2605](https://github.com/git-town/git-town/issues/2605)).
+- `git sync --stack` syncs all branches in the current stack ([#3816](https://github.com/git-town/git-town/pull/3816)).
 
 ## 15.0.0 (2024-08-05)
 
