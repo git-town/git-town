@@ -479,11 +479,6 @@ func (self *Commands) RemotesUncached(querier gitdomain.Querier) (gitdomain.Remo
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
-// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (self *Commands) RemoveCommitsInCurrentBranch(runner gitdomain.Runner, parent gitdomain.LocalBranchName) error {
-	return runner.Run("git", "reset", "--soft", parent.String())
-}
-
 // RemoveGitAlias removes the given Git alias.
 func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
@@ -520,6 +515,11 @@ func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatu
 		RebaseInProgress: rebaseInProgress,
 		UntrackedChanges: hasUntrackedChanges,
 	}, nil
+}
+
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *Commands) ResetBranch(runner gitdomain.Runner, target gitdomain.BranchName) error {
+	return runner.Run("git", "reset", "--soft", target.String())
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
