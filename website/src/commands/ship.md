@@ -15,8 +15,8 @@ process.
 
 This command ships only direct children of the main branch. To ship a child
 branch, you need to first ship or [kill](kill.md) all its ancestor branches. If
-you really need to ship into a branch that isn't a perennial branch, you can
-override the protection with the `--to-parent` option.
+you really need to ship into a non-perennial branch, you can override the
+protection against that with the `--to-parent` option.
 
 The branch to ship must be in sync. If it isn't in sync, `git ship` will exit
 with an error. When that happens, run [git sync](sync.md) to get the branch in
