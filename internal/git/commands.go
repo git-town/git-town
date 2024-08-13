@@ -243,7 +243,7 @@ func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdo
 	return runner.Run("git", args...)
 }
 
-// PushBranch pushes the branch with the given name to origin.
+// pushes the branch with the given name to origin
 func (self *Commands) CreateTrackingBranch(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
@@ -352,7 +352,7 @@ func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...g
 	return None[gitdomain.LocalBranchName]()
 }
 
-// PushBranch pushes the branch with the given name to origin.
+// pushes the branch with the given name to origin.
 func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push", "--force-with-lease", "--force-if-includes"}
 	if noPushHook {

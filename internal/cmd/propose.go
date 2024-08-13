@@ -248,7 +248,7 @@ func proposeProgram(data proposeData) program.Program {
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       prog,
-			PushBranch:    true,
+			PushBranches:  true,
 		})
 	}
 	if data.initialBranchType == configdomain.BranchTypePrototypeBranch {

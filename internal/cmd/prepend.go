@@ -212,7 +212,7 @@ func prependProgram(data prependData) program.Program {
 				Config:        data.config.Config,
 				InitialBranch: data.initialBranch,
 				Program:       prog,
-				PushBranch:    true,
+				PushBranches:  true,
 				Remotes:       data.remotes,
 			})
 		}
