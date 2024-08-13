@@ -103,7 +103,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 			InitialBranch: data.initialBranch,
 			Remotes:       data.remotes,
 			Program:       NewMutable(&runProgram),
-			PushBranch:    pushBranches,
+			PushBranches:  pushBranches,
 		},
 		BranchesToSync: data.branchesToSync,
 		DryRun:         dryRun,
