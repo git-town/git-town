@@ -15,9 +15,9 @@ func TestUnvalidatedConfig(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
 		must.NoError(t, err)
-		must.True(t, repo.Config.Config.Offline.Bool())
+		must.True(t, repo.Config.Config.Offline.IsTrue())
 		err = repo.Config.SetOffline(false)
 		must.NoError(t, err)
-		must.False(t, repo.Config.Config.Offline.Bool())
+		must.False(t, repo.Config.Config.Offline.IsTrue())
 	})
 }

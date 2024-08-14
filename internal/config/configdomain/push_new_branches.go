@@ -10,12 +10,12 @@ import (
 // PushNewBranches indicates whether newly created branches should be pushed to the remote or not.
 type PushNewBranches bool
 
-func (self PushNewBranches) Bool() bool {
+func (self PushNewBranches) IsTrue() bool {
 	return bool(self)
 }
 
 func (self PushNewBranches) String() string {
-	return strconv.FormatBool(self.Bool())
+	return strconv.FormatBool(bool(self))
 }
 
 func ParsePushNewBranches(value, source string) (Option[PushNewBranches], error) {

@@ -86,7 +86,7 @@ func (self *UnvalidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName
 }
 
 func (self *UnvalidatedConfig) IsOnline() bool {
-	return self.Online().Bool()
+	return self.Online().IsTrue()
 }
 
 func (self *UnvalidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
@@ -127,7 +127,7 @@ func (self *UnvalidatedConfig) Online() Online {
 }
 
 func (self *UnvalidatedConfig) ShouldPushNewBranches() bool {
-	return self.PushNewBranches.Bool()
+	return self.PushNewBranches.IsTrue()
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
