@@ -17,11 +17,11 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                        |
-      | feature | git add -A                     |
-      |         | git commit -m "WIP on feature" |
-      |         | git checkout main              |
-      | main    | git branch -D feature          |
+      | BRANCH  | COMMAND                                          |
+      | feature | git add -A                                       |
+      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git checkout main                                |
+      | main    | git branch -D feature                            |
     And the current branch is now "main"
     And no uncommitted files exist
     And the branches are now
@@ -39,10 +39,10 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'WIP on feature' }} |
-      |         | git checkout feature                          |
-      | feature | git reset --soft HEAD~1                       |
+      | BRANCH  | COMMAND                                                         |
+      | main    | git branch feature {{ sha 'Committing WIP for git town undo' }} |
+      |         | git checkout feature                                            |
+      | feature | git reset --soft HEAD~1                                         |
     And the current branch is now "feature"
     And the uncommitted file still exists
     And the initial commits exist

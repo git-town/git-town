@@ -28,12 +28,12 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                    |
-      | new      | git add -A                 |
-      |          | git commit -m "WIP on new" |
-      |          | git checkout existing      |
-      | existing | git branch -D new          |
-      |          | git stash pop              |
+      | BRANCH   | COMMAND                                          |
+      | new      | git add -A                                       |
+      |          | git commit -m "Committing WIP for git town undo" |
+      |          | git checkout existing                            |
+      | existing | git branch -D new                                |
+      |          | git stash pop                                    |
     And the current branch is now "existing"
     And file "conflicting_file" still has content "conflicting content"
 
@@ -41,12 +41,12 @@ Feature: conflicts between uncommitted changes and the main branch
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                    |
-      | new      | git add -A                 |
-      |          | git commit -m "WIP on new" |
-      |          | git checkout existing      |
-      | existing | git branch -D new          |
-      |          | git stash pop              |
+      | BRANCH   | COMMAND                                          |
+      | new      | git add -A                                       |
+      |          | git commit -m "Committing WIP for git town undo" |
+      |          | git checkout existing                            |
+      | existing | git branch -D new                                |
+      |          | git stash pop                                    |
     And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist

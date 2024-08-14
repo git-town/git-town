@@ -18,13 +18,13 @@ Feature: delete a branch within a branch chain
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                     |
-      | beta   | git fetch --prune --tags    |
-      |        | git push origin :beta       |
-      |        | git add -A                  |
-      |        | git commit -m "WIP on beta" |
-      |        | git checkout alpha          |
-      | alpha  | git branch -D beta          |
+      | BRANCH | COMMAND                                          |
+      | beta   | git fetch --prune --tags                         |
+      |        | git push origin :beta                            |
+      |        | git add -A                                       |
+      |        | git commit -m "Committing WIP for git town undo" |
+      |        | git checkout alpha                               |
+      | alpha  | git branch -D beta                               |
     And it prints:
       """
       branch "gamma" is now a child of "alpha"
@@ -46,11 +46,11 @@ Feature: delete a branch within a branch chain
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                 |
-      | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta |
-      |        | git branch beta {{ sha 'WIP on beta' }}                 |
-      |        | git checkout beta                                       |
-      | beta   | git reset --soft HEAD~1                                 |
+      | BRANCH | COMMAND                                                      |
+      | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta      |
+      |        | git branch beta {{ sha 'Committing WIP for git town undo' }} |
+      |        | git checkout beta                                            |
+      | beta   | git reset --soft HEAD~1                                      |
     And the current branch is now "beta"
     And the uncommitted file still exists
     And the initial commits exist

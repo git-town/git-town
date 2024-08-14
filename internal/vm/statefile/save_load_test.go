@@ -54,7 +54,7 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.CommitOpenChanges{AddAll: true},
+				&opcodes.CommitOpenChanges{AddAll: true, Message: "my message"},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
@@ -219,7 +219,8 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "AddAll": true
+        "AddAll": true,
+        "Message": "my message"
       },
       "type": "CommitOpenChanges"
     },

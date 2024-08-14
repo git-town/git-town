@@ -17,13 +17,13 @@ Feature: dry-run deleting the current feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                        |
-      | current | git fetch --prune --tags       |
-      |         | git push origin :current       |
-      |         | git add -A                     |
-      |         | git commit -m "WIP on current" |
-      |         | git checkout other             |
-      | other   | git branch -D current          |
+      | BRANCH  | COMMAND                                          |
+      | current | git fetch --prune --tags                         |
+      |         | git push origin :current                         |
+      |         | git add -A                                       |
+      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git checkout other                               |
+      | other   | git branch -D current                            |
     And the current branch is still "current"
     And the uncommitted file still exists
     And the initial commits exist
