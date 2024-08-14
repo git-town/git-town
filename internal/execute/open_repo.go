@@ -79,7 +79,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		printCommands:    args.PrintCommands,
 	})
 	isOffline := unvalidatedConfig.Config.Value.Offline
-	if args.ValidateIsOnline && isOffline.Bool() {
+	if args.ValidateIsOnline && isOffline.IsTrue() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return emptyOpenRepoResult(), err
 	}

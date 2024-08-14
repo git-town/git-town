@@ -232,7 +232,7 @@ func determineShipData(args []string, repo execute.OpenRepoResult, dryRun config
 	canShipViaAPI := false
 	proposalMessage := ""
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
-		if !repo.IsOffline.Bool() {
+		if !repo.IsOffline.IsTrue() {
 			if branchToShip.HasTrackingBranch() {
 				proposalOpt, err = connector.FindProposal(branchNameToShip, targetBranchName)
 				if err != nil {

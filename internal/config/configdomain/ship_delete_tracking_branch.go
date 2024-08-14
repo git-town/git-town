@@ -10,12 +10,12 @@ import (
 // ShipDeleteTrackingBranch contains the configuration setting about whether to delete the tracking branch when shipping.
 type ShipDeleteTrackingBranch bool
 
-func (self ShipDeleteTrackingBranch) Bool() bool {
+func (self ShipDeleteTrackingBranch) IsTrue() bool {
 	return bool(self)
 }
 
 func (self ShipDeleteTrackingBranch) String() string {
-	return strconv.FormatBool(self.Bool())
+	return strconv.FormatBool(bool(self))
 }
 
 func ParseShipDeleteTrackingBranch(value, source string) (Option[ShipDeleteTrackingBranch], error) {

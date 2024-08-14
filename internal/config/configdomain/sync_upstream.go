@@ -10,12 +10,12 @@ import (
 // SyncUpstream contains the configuration setting whether to sync with the upstream remote.
 type SyncUpstream bool
 
-func (self SyncUpstream) Bool() bool {
+func (self SyncUpstream) IsTrue() bool {
 	return bool(self)
 }
 
 func (self SyncUpstream) String() string {
-	return strconv.FormatBool(self.Bool())
+	return strconv.FormatBool(bool(self))
 }
 
 func ParseSyncUpstream(value, source string) (Option[SyncUpstream], error) {
