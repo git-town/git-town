@@ -39,10 +39,10 @@ Feature: the branch to kill has a deleted tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                 |
-      |        | git commit -m "Committing WIP for undo" |
-      |        | git checkout old                        |
-      | old    | git reset --soft HEAD~1                 |
+      | BRANCH | COMMAND                                            |
+      | other  | git branch old {{ sha 'Committing WIP for undo' }} |
+      |        | git checkout old                                   |
+      | old    | git reset --soft HEAD~1                            |
     And the current branch is now "old"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
