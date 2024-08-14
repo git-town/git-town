@@ -74,7 +74,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 }
 
 func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
-	fmt.Println(format.Bool(config.Offline.Bool()))
+	fmt.Println(format.Bool(config.Offline.IsTrue()))
 }
 
 func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
