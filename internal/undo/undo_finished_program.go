@@ -20,7 +20,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.CommitOpenChanges{
 			AddAll:  true,
-			Message: "Committing WIP for undo",
+			Message: "Committing WIP for git town undo",
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
