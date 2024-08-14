@@ -20,7 +20,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     Then it runs the commands
       | BRANCH  | COMMAND                                                                   |
       | other   | git push --no-verify origin {{ sha 'current commit' }}:refs/heads/current |
-      |         | git branch current {{ sha 'WIP on current' }}                             |
+      |         | git branch current {{ sha 'Committing WIP for undo' }}                    |
       |         | git checkout current                                                      |
       | current | git reset --soft HEAD~1                                                   |
     And the current branch is now "current"
@@ -35,7 +35,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     Then it runs the commands
       | BRANCH  | COMMAND                                                       |
       | other   | git push origin {{ sha 'current commit' }}:refs/heads/current |
-      |         | git branch current {{ sha 'WIP on current' }}                 |
+      |         | git branch current {{ sha 'Committing WIP for undo' }}        |
       |         | git checkout current                                          |
       | current | git reset --soft HEAD~1                                       |
     And the current branch is now "current"
