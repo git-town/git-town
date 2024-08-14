@@ -127,7 +127,7 @@ func (self *UnvalidatedConfig) Online() Online {
 }
 
 func (self *UnvalidatedConfig) ShouldPushNewBranches() bool {
-	return self.PushNewBranches.Bool()
+	return self.PushNewBranches.IsTrue()
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
