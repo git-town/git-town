@@ -299,9 +299,9 @@ func (self *UnvalidatedConfig) SetSyncUpstream(value configdomain.SyncUpstream, 
 	self.Config.Value.SyncUpstream = value
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
-		return self.GitConfig.SetGlobalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+		return self.GitConfig.SetGlobalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
 	case configdomain.ConfigScopeLocal:
-		return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+		return self.GitConfig.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
 	}
 	panic(messages.ConfigScopeUnhandled)
 }

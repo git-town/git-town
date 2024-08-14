@@ -11,7 +11,7 @@ func PerennialBranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs)
 		updateCurrentPerennialBranchOpcode(args.Program, remoteBranch, args.Config.SyncPerennialStrategy)
 	}
 	if localBranch, hasLocalBranch := branch.LocalName.Get(); hasLocalBranch {
-		if localBranch == args.Config.MainBranch && args.Remotes.HasUpstream() && args.Config.SyncUpstream.Bool() {
+		if localBranch == args.Config.MainBranch && args.Remotes.HasUpstream() && args.Config.SyncUpstream.IsTrue() {
 			args.Program.Value.Add(&opcodes.FetchUpstream{Branch: args.Config.MainBranch})
 			args.Program.Value.Add(&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("upstream/" + args.Config.MainBranch.String())})
 		}
