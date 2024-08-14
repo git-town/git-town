@@ -14,7 +14,7 @@ func TestShipDeleteTrackingBranch(t *testing.T) {
 	t.Run("Bool", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.ShipDeleteTrackingBranch(true)
-		have := give.Bool()
+		have := give.IsTrue()
 		must.True(t, have)
 	})
 
