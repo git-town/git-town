@@ -86,7 +86,7 @@ func (self *UnvalidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName
 }
 
 func (self *UnvalidatedConfig) IsOnline() bool {
-	return self.Online().Bool()
+	return self.Online().IsTrue()
 }
 
 func (self *UnvalidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {

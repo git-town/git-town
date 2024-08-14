@@ -36,6 +36,6 @@ func ParseOffline(value, source string) (Option[Offline], error) {
 
 type Online bool
 
-func (online Online) Bool() bool {
+func (online Online) IsTrue() bool {
 	return bool(online)
 }
