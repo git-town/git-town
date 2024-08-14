@@ -18,7 +18,10 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
 		// Open changes in the middle of an unfinished command will be undone as well.
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
-		result.Value.Add(&opcodes.CommitOpenChanges{})
+		result.Value.Add(&opcodes.CommitOpenChanges{
+			AddAll:  true,
+			Message: "Committing WIP for git town undo",
+		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches))

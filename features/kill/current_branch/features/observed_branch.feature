@@ -17,12 +17,12 @@ Feature: delete the current observed branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                         |
-      | observed | git fetch --prune --tags        |
-      |          | git add -A                      |
-      |          | git commit -m "WIP on observed" |
-      |          | git checkout feature            |
-      | feature  | git branch -D observed          |
+      | BRANCH   | COMMAND                                          |
+      | observed | git fetch --prune --tags                         |
+      |          | git add -A                                       |
+      |          | git commit -m "Committing WIP for git town undo" |
+      |          | git checkout feature                             |
+      | feature  | git branch -D observed                           |
     And the current branch is now "feature"
     And no uncommitted files exist
     And the branches are now
@@ -40,10 +40,10 @@ Feature: delete the current observed branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                                         |
-      | feature  | git branch observed {{ sha 'WIP on observed' }} |
-      |          | git checkout observed                           |
-      | observed | git reset --soft HEAD~1                         |
+      | BRANCH   | COMMAND                                                          |
+      | feature  | git branch observed {{ sha 'Committing WIP for git town undo' }} |
+      |          | git checkout observed                                            |
+      | observed | git reset --soft HEAD~1                                          |
     And the current branch is now "observed"
     And the uncommitted file still exists
     And the initial commits exist

@@ -16,13 +16,13 @@ Feature: delete the current prototype branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                          |
-      | prototype | git fetch --prune --tags         |
-      |           | git push origin :prototype       |
-      |           | git add -A                       |
-      |           | git commit -m "WIP on prototype" |
-      |           | git checkout previous            |
-      | previous  | git branch -D prototype          |
+      | BRANCH    | COMMAND                                          |
+      | prototype | git fetch --prune --tags                         |
+      |           | git push origin :prototype                       |
+      |           | git add -A                                       |
+      |           | git commit -m "Committing WIP for git town undo" |
+      |           | git checkout previous                            |
+      | previous  | git branch -D prototype                          |
     And the current branch is now "previous"
     And no uncommitted files exist
     And the branches are now
@@ -40,7 +40,7 @@ Feature: delete the current prototype branch
     Then it runs the commands
       | BRANCH    | COMMAND                                                           |
       | previous  | git push origin {{ sha 'prototype commit' }}:refs/heads/prototype |
-      |           | git branch prototype {{ sha 'WIP on prototype' }}                 |
+      |           | git branch prototype {{ sha 'Committing WIP for git town undo' }} |
       |           | git checkout prototype                                            |
       | prototype | git reset --soft HEAD~1                                           |
     And the current branch is now "prototype"

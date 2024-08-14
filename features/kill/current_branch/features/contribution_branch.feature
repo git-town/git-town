@@ -17,12 +17,12 @@ Feature: delete the current contribution branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH       | COMMAND                             |
-      | contribution | git fetch --prune --tags            |
-      |              | git add -A                          |
-      |              | git commit -m "WIP on contribution" |
-      |              | git checkout feature                |
-      | feature      | git branch -D contribution          |
+      | BRANCH       | COMMAND                                          |
+      | contribution | git fetch --prune --tags                         |
+      |              | git add -A                                       |
+      |              | git commit -m "Committing WIP for git town undo" |
+      |              | git checkout feature                             |
+      | feature      | git branch -D contribution                       |
     And the current branch is now "feature"
     And no uncommitted files exist
     And the branches are now
@@ -40,10 +40,10 @@ Feature: delete the current contribution branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH       | COMMAND                                                 |
-      | feature      | git branch contribution {{ sha 'WIP on contribution' }} |
-      |              | git checkout contribution                               |
-      | contribution | git reset --soft HEAD~1                                 |
+      | BRANCH       | COMMAND                                                              |
+      | feature      | git branch contribution {{ sha 'Committing WIP for git town undo' }} |
+      |              | git checkout contribution                                            |
+      | contribution | git reset --soft HEAD~1                                              |
     And the current branch is now "contribution"
     And the uncommitted file still exists
     And the initial commits exist
