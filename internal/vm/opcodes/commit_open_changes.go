@@ -7,6 +7,7 @@ import (
 // CommitOpenChanges commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChanges struct {
+	AddAll                  bool
 	Message                 string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -16,9 +17,11 @@ func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
-	err := args.Git.StageFiles(args.Frontend, "-A")
-	if err != nil {
-		return err
+	if self.AddAll {
+		err := args.Git.StageFiles(args.Frontend, "-A")
+		if err != nil {
+			return err
+		}
 	}
 	return args.Git.CommitStagedChanges(args.Frontend, self.Message)
 }
