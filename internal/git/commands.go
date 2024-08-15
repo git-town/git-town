@@ -343,24 +343,6 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-// provides the commit message of the first commit in the branch with the given name
-func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (Option[string], error) {
-	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", mainBranch, branch), "--format=%h")
-	if err != nil {
-		return None[string](), err
-	}
-	hashes := stringslice.Lines(output)
-	if len(hashes) == 0 {
-		return None[string](), nil
-	}
-	hash := hashes[len(hashes)-1]
-	message, err := runner.QueryTrim("git", "log", "--format=%B", "-n", "1", hash)
-	if err != nil {
-		return None[string](), err
-	}
-	return Some(message), nil
-}
-
 func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(runner, branch) {
