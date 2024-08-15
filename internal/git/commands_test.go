@@ -816,6 +816,84 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ShouldPushBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch has no commits", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			must.NoError(t, err)
+			must.False(t, shouldPush)
+		})
+		t.Run("branch has local commits", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "local_file",
+				Message:     "add local file",
+			})
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			must.NoError(t, err)
+			must.True(t, shouldPush)
+		})
+		t.Run("branch has remote commits", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
+			origin.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "remote_file",
+				Message:     "add remote file",
+			})
+			local.Fetch()
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			must.NoError(t, err)
+			must.True(t, shouldPush)
+		})
+		t.Run("branch has different local and remote commits", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "local_file",
+				Message:     "add local file",
+			})
+			origin.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "remote_file",
+				Message:     "add remote file",
+			})
+			local.Fetch()
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			must.NoError(t, err)
+			must.True(t, shouldPush)
+		})
+	})
+
 	t.Run("StashEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("some stash entries", func(t *testing.T) {
