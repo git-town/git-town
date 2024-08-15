@@ -818,7 +818,6 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("ShouldPushBranch", func(t *testing.T) {
 		t.Parallel()
-
 		t.Run("both branches are empty", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
