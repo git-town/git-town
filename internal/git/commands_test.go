@@ -818,7 +818,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("ShouldPushBranch", func(t *testing.T) {
 		t.Parallel()
-		t.Run("both branches are empty", func(t *testing.T) {
+		t.Run("branch has no commits", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
