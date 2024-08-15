@@ -816,6 +816,55 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ShouldPushBranch", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("both branches are empty", func(t *testing.T) {
+			t.Parallel()
+			tracking := testruntime.Create(t)
+			repoDir := t.TempDir()
+			local := testruntime.Clone(tracking.TestRunner, repoDir)
+			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			local.PushCurrentBranch(local.TestRunner, false)
+			must.True(t, local.ShouldPushBranch(local.TestRunner))
+		})
+		t.Run("branch has commits that aren't on tracking", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			origin := testruntime.Create(t)
+			runtime.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
+			runtime.CreateAndCheckoutBranch(runtime.TestRunner, "branch")
+			runtime.PushCurrentBranch(runtime.TestRunner, false)
+			must.True(t, runtime.ShouldPushBranch(runtime.TestRunner))
+		})
+		t.Run("tracking branch has commits that aren't on local", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			origin := testruntime.Create(t)
+			runtime.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
+			runtime.CreateAndCheckoutBranch(runtime.TestRunner, "branch")
+			runtime.PushCurrentBranch(runtime.TestRunner, false)
+			origin.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "",
+				FileName:    "",
+				Locations:   []testgit.Location{},
+				Message:     "",
+				SHA:         "",
+			})
+			must.True(t, runtime.ShouldPushBranch(runtime.TestRunner))
+		})
+		t.Run("both branches have different commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			origin := testruntime.Create(t)
+			runtime.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
+			runtime.CreateAndCheckoutBranch(runtime.TestRunner, "branch")
+			runtime.PushCurrentBranch(runtime.TestRunner, false)
+			must.True(t, runtime.ShouldPushBranch(runtime.TestRunner))
+		})
+	})
+
 	t.Run("StashEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("some stash entries", func(t *testing.T) {
