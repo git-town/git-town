@@ -822,8 +822,10 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
-			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
-			local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
 			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
 			must.NoError(t, err)
 			must.False(t, shouldPush)
@@ -832,8 +834,10 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
-			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
-			local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
 				Branch:      "branch",
 				FileContent: "content",
@@ -848,8 +852,10 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
-			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
-			local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
 			origin.CreateCommit(testgit.Commit{
 				Branch:      "branch",
 				FileContent: "content",
@@ -865,8 +871,10 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
-			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
-			local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			must.NoError(t, err)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
 				Branch:      "branch",
 				FileContent: "content",
