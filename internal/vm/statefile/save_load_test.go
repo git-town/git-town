@@ -94,7 +94,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.FetchUpstream{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.ForcePushCurrentBranch{CheckEmpty: true},
+				&opcodes.ForcePushCurrentBranch{},
 				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.MergeParent{
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
@@ -310,9 +310,7 @@ func TestLoadSave(t *testing.T) {
       "type": "FetchUpstream"
     },
     {
-      "data": {
-        "CheckEmpty": true
-      },
+      "data": {},
       "type": "ForcePushCurrentBranch"
     },
     {

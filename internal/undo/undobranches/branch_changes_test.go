@@ -814,7 +814,7 @@ func TestChanges(t *testing.T) {
 			// reset the feature branch to the previous SHA
 			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: gitdomain.NewSHA("666666"), SetToSHA: gitdomain.NewSHA("333333"), Hard: true},
-			&opcodes.ForcePushCurrentBranch{CheckEmpty: false},
+			&opcodes.ForcePushCurrentBranch{},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 		}
