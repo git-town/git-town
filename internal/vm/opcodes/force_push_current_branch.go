@@ -14,7 +14,7 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, currentBranch, currentBranch.TrackingBranch())
+	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, currentBranch)
 	if err != nil {
 		return err
 	}
