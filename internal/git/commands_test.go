@@ -862,28 +862,29 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
-		// t.Run("both branches have different commits", func(t *testing.T) {
-		// 	t.Parallel()
-		// 	origin := testruntime.Create(t)
-		// 	local := testruntime.Clone(origin.TestRunner, t.TempDir())
-		// 	local.CreateAndCheckoutBranch(local.TestRunner, "branch")
-		// 	local.PushCurrentBranch(local.TestRunner, false)
-		// 	local.CreateCommit(testgit.Commit{
-		// 		Branch:      "branch",
-		// 		FileContent: "content",
-		// 		FileName:    "local_file",
-		// 		Message:     "add local file",
-		// 	})
-		// 	origin.CreateCommit(testgit.Commit{
-		// 		Branch:      "branch",
-		// 		FileContent: "content",
-		// 		FileName:    "remote_file",
-		// 		Message:     "add remote file",
-		// 	})
-		// 	shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
-		// 	must.NoError(t, err)
-		// 	must.True(t, shouldPush)
-		// })
+		t.Run("both branches have different commits", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local.CreateAndCheckoutBranch(local.TestRunner, "branch")
+			local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "local_file",
+				Message:     "add local file",
+			})
+			origin.CreateCommit(testgit.Commit{
+				Branch:      "branch",
+				FileContent: "content",
+				FileName:    "remote_file",
+				Message:     "add remote file",
+			})
+			local.Fetch()
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			must.NoError(t, err)
+			must.True(t, shouldPush)
+		})
 	})
 
 	t.Run("StashEntries", func(t *testing.T) {
