@@ -828,7 +828,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.False(t, shouldPush)
 		})
-		t.Run("branch has commits that aren't on tracking", func(t *testing.T) {
+		t.Run("branch has local commits", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
@@ -844,7 +844,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
-		t.Run("tracking branch has commits that aren't on local", func(t *testing.T) {
+		t.Run("branch has remote commits", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
@@ -861,7 +861,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
-		t.Run("both branches have different commits", func(t *testing.T) {
+		t.Run("branch has different local and remote commits", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.Create(t)
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
