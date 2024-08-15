@@ -16,33 +16,34 @@ Feature: compress the commits on a feature branch verbosely
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                         |
-      |         | git version                                     |
-      |         | git rev-parse --show-toplevel                   |
-      |         | git config -lz --includes --global              |
-      |         | git config -lz --includes --local               |
-      |         | git rev-parse --verify --abbrev-ref @{-1}       |
-      |         | git status --long --ignore-submodules           |
-      |         | git remote                                      |
-      |         | git rev-parse --abbrev-ref HEAD                 |
-      | feature | git fetch --prune --tags                        |
-      | <none>  | git stash list                                  |
-      |         | git branch -vva --sort=refname                  |
-      |         | git cherry -v main feature                      |
-      | feature | git add -A                                      |
-      |         | git stash                                       |
-      |         | git reset --soft main                           |
-      |         | git commit -m "commit 1"                        |
-      |         | git push --force-with-lease --force-if-includes |
-      | <none>  | git stash list                                  |
-      | feature | git stash pop                                   |
-      | <none>  | git branch -vva --sort=refname                  |
-      |         | git config -lz --includes --global              |
-      |         | git config -lz --includes --local               |
-      |         | git stash list                                  |
+      | BRANCH  | COMMAND                                            |
+      |         | git version                                        |
+      |         | git rev-parse --show-toplevel                      |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
+      |         | git rev-parse --verify --abbrev-ref @{-1}          |
+      |         | git status --long --ignore-submodules              |
+      |         | git remote                                         |
+      |         | git rev-parse --abbrev-ref HEAD                    |
+      | feature | git fetch --prune --tags                           |
+      | <none>  | git stash list                                     |
+      |         | git branch -vva --sort=refname                     |
+      |         | git cherry -v main feature                         |
+      | feature | git add -A                                         |
+      |         | git stash                                          |
+      |         | git reset --soft main                              |
+      |         | git commit -m "commit 1"                           |
+      | <none>  | git rev-list --left-right feature...origin/feature |
+      | feature | git push --force-with-lease --force-if-includes    |
+      | <none>  | git stash list                                     |
+      | feature | git stash pop                                      |
+      | <none>  | git branch -vva --sort=refname                     |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
+      |         | git stash list                                     |
     And it prints:
       """
-      Ran 23 shell commands
+      Ran 24 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
@@ -57,23 +58,24 @@ Feature: compress the commits on a feature branch verbosely
   Scenario: undo
     When I run "git-town undo --verbose"
     Then it runs the commands
-      | BRANCH  | COMMAND                                         |
-      |         | git version                                     |
-      |         | git rev-parse --show-toplevel                   |
-      |         | git config -lz --includes --global              |
-      |         | git config -lz --includes --local               |
-      |         | git status --long --ignore-submodules           |
-      |         | git stash list                                  |
-      |         | git branch -vva --sort=refname                  |
-      |         | git rev-parse --verify --abbrev-ref @{-1}       |
-      |         | git remote get-url origin                       |
-      | feature | git add -A                                      |
-      |         | git stash                                       |
-      | <none>  | git rev-parse --short HEAD                      |
-      | feature | git reset --hard {{ sha 'commit 3' }}           |
-      |         | git push --force-with-lease --force-if-includes |
-      | <none>  | git stash list                                  |
-      | feature | git stash pop                                   |
+      | BRANCH  | COMMAND                                            |
+      |         | git version                                        |
+      |         | git rev-parse --show-toplevel                      |
+      |         | git config -lz --includes --global                 |
+      |         | git config -lz --includes --local                  |
+      |         | git status --long --ignore-submodules              |
+      |         | git stash list                                     |
+      |         | git branch -vva --sort=refname                     |
+      |         | git rev-parse --verify --abbrev-ref @{-1}          |
+      |         | git remote get-url origin                          |
+      | feature | git add -A                                         |
+      |         | git stash                                          |
+      | <none>  | git rev-parse --short HEAD                         |
+      | feature | git reset --hard {{ sha 'commit 3' }}              |
+      | <none>  | git rev-list --left-right feature...origin/feature |
+      | feature | git push --force-with-lease --force-if-includes    |
+      | <none>  | git stash list                                     |
+      | feature | git stash pop                                      |
     And the current branch is still "feature"
     And the initial commits exist
     And the initial branches and lineage exist

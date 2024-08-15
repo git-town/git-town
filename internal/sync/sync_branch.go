@@ -123,7 +123,7 @@ func pushFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.Lo
 	case configdomain.SyncFeatureStrategyMerge:
 		list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
-		list.Value.Add(&opcodes.ForcePushCurrentBranch{CheckEmpty: true})
+		list.Value.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 }
 

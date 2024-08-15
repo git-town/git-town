@@ -593,8 +593,8 @@ func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname config
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
+func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch().String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}

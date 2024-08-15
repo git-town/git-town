@@ -826,7 +826,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
 			must.NoError(t, err)
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
 			must.False(t, shouldPush)
 		})
@@ -844,7 +844,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "local_file",
 				Message:     "add local file",
 			})
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -863,7 +863,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -888,7 +888,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", "origin/branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
