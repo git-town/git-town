@@ -16,13 +16,14 @@ Feature: dry-run compressing the commits on a feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
-      |         | git reset --soft main    |
-      |         | git commit -m "commit 1" |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git add -A                                      |
+      |         | git stash                                       |
+      |         | git reset --soft main                           |
+      |         | git commit -m "commit 1"                        |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And the initial commits exist
