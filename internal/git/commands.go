@@ -150,6 +150,11 @@ func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message strin
 	return runner.Run("git", "commit", "--no-edit")
 }
 
+// commits the currently staged changes, with commit message and author info matching the given commit
+func (self *Commands) CommitStagedChangesMatchingExistingCommit(runner gitdomain.Runner, existingCommit gitdomain.SHA) error {
+	return runner.Run("git", "commit", "--reuse-message="+existingCommit.String())
+}
+
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)
@@ -341,6 +346,24 @@ func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncT
 // FetchUpstream fetches updates from the upstream remote.
 func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
+}
+
+// provides the commit message of the first commit in the branch with the given name
+func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (Option[string], error) {
+	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", mainBranch, branch), "--format=%h")
+	if err != nil {
+		return None[string](), err
+	}
+	hashes := stringslice.Lines(output)
+	if len(hashes) == 0 {
+		return None[string](), nil
+	}
+	hash := hashes[len(hashes)-1]
+	message, err := runner.QueryTrim("git", "log", "--format=%B", "-n", "1", hash)
+	if err != nil {
+		return None[string](), err
+	}
+	return Some(message), nil
 }
 
 func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
@@ -593,8 +616,8 @@ func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname config
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
+func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch().String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
