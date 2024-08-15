@@ -150,11 +150,6 @@ func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message strin
 	return runner.Run("git", "commit", "--no-edit")
 }
 
-// commits the currently staged changes, with commit message and author info matching the given commit
-func (self *Commands) CommitStagedChangesMatchingExistingCommit(runner gitdomain.Runner, existingCommit gitdomain.SHA) error {
-	return runner.Run("git", "commit", "--reuse-message="+existingCommit.String())
-}
-
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)
