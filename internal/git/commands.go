@@ -442,6 +442,7 @@ func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook conf
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
+	fmt.Println("11111111111111111111", args)
 	return runner.Run("git", args...)
 }
 
