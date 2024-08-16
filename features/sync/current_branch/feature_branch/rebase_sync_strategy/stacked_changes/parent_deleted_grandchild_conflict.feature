@@ -6,13 +6,13 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | NAME       | TYPE    | PARENT | LOCATIONS     |
       | child      | feature | main   | local, origin |
       | grandchild | feature | child  | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is "child"
     And the commits
       | BRANCH     | LOCATION | MESSAGE                       | FILE NAME        | FILE CONTENT       |
       | main       | local    | conflicting main commit       | conflicting_file | main content       |
       | grandchild | local    | conflicting grandchild commit | conflicting_file | grandchild content |
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And origin deletes the "child" branch
+    And the current branch is "child" and the previous branch is "grandchild"
     When I run "git-town sync --all"
 
   Scenario: result
