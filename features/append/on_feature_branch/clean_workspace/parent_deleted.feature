@@ -7,9 +7,9 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | parent | feature | main   | local, origin |
       | child  | feature | parent |               |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE       | FILE NAME   | FILE CONTENT   |
-      | parent | local, origin | parent commit | parent_file | parent content |
-      | child  | local, origin | child commit  | child_file  | child content  |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | parent | local, origin | parent commit |
+      | child  | local, origin | child commit  |
     And origin ships the "parent" branch
     And the current branch is "child"
     When I run "git-town append new"
