@@ -954,7 +954,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
-		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
+		err := originRepo.SquashMerge(originRepo.TestRunner, gitdomain.NewLocalBranchName(branch))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
