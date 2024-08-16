@@ -96,6 +96,7 @@ func (self *Fixture) AddSubmoduleRepo() {
 func (self *Fixture) AddUpstream() {
 	devRepo := self.DevRepo.GetOrPanic()
 	upstreamRepo := testruntime.Clone(devRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
+	upstreamRepo.TestRunner.Verbose = devRepo.Verbose
 	self.UpstreamRepo = SomeP(&upstreamRepo)
 	devRepo.AddRemote(gitdomain.RemoteUpstream, upstreamRepo.WorkingDir)
 }
