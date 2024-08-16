@@ -958,12 +958,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip, mainBranch)
 		asserts.NoError(err)
-		fmt.Println("1111111111111111111111111", originRepo.TestRunner.Verbose)
 		originRepo.CheckoutBranch(mainBranch)
 		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
 		asserts.NoError(err)
 		originRepo.StageFiles("-A")
-		originRepo.Commit(originRepo.TestRunner, commitMessage, "ci@acme.com")
+		originRepo.Commit(originRepo.TestRunner, commitMessage, "CI <ci@acme.com>")
 		originRepo.RemoveBranch(branchToShip)
 	})
 

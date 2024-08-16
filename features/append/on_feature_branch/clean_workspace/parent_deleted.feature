@@ -11,45 +11,25 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | parent | local, origin | parent commit | parent_file | parent content |
       | child  | local, origin | child commit  | child_file  | child content  |
     And origin ships the "parent" branch
-    And inspect the repo
+    # And inspect the repo
     And the current branch is "child"
-    When I run "git-town append new -v"
+    When I run "git-town append new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                        |
-      |        | git version                                    |
-      |        | git rev-parse --show-toplevel                  |
-      |        | git config -lz --includes --global             |
-      |        | git config -lz --includes --local              |
-      |        | git status --long --ignore-submodules          |
-      |        | git remote                                     |
-      |        | git rev-parse --abbrev-ref HEAD                |
-      | child  | git fetch --prune --tags                       |
-      | <none> | git stash list                                 |
-      |        | git branch -vva --sort=refname                 |
-      |        | git rev-parse --verify --abbrev-ref @{-1}      |
-      | child  | git checkout main                              |
-      | main   | git rebase origin/main                         |
-      | <none> | git rev-list --left-right main...origin/main   |
-      | main   | git checkout parent                            |
-      | parent | git merge --no-edit --ff main                  |
-      | <none> | git diff main..parent                          |
-      | parent | git checkout child                             |
-      | child  | git merge --no-edit --ff origin/child          |
-      |        | git merge --no-edit --ff parent                |
-      | <none> | git rev-list --left-right child...origin/child |
-      | child  | git push                                       |
-      | <none> | git show-ref --verify --quiet refs/heads/child |
-      | child  | git checkout -b new                            |
-      | <none> | git show-ref --verify --quiet refs/heads/child |
-      |        | git config git-town-branch.new.parent child    |
-      |        | git show-ref --verify --quiet refs/heads/child |
-      |        | git branch -vva --sort=refname                 |
-      |        | git config -lz --includes --global             |
-      |        | git config -lz --includes --local              |
-      |        | git stash list                                 |
+      | BRANCH | COMMAND                               |
+      | child  | git fetch --prune --tags              |
+      |        | git checkout main                     |
+      | main   | git rebase origin/main                |
+      |        | git checkout parent                   |
+      | parent | git merge --no-edit --ff main         |
+      |        | git checkout main                     |
+      | main   | git branch -D parent                  |
+      |        | git checkout child                    |
+      | child  | git merge --no-edit --ff origin/child |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout -b new                   |
     And it prints:
       """
       deleted branch "parent"
@@ -67,14 +47,14 @@ Feature: append a branch to a branch whose parent was shipped on the remote
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                         |
-      | new    | git checkout child                              |
-      | child  | git reset --hard {{ sha 'child commit' }}       |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git branch parent {{ sha 'parent commit' }}     |
-      |        | git checkout child                              |
-      | child  | git branch -D new                               |
+      | BRANCH | COMMAND                                                |
+      | new    | git checkout child                                     |
+      | child  | git reset --hard {{ sha 'child commit' }}              |
+      |        | git push --force-with-lease --force-if-includes        |
+      |        | git checkout main                                      |
+      | main   | git reset --hard {{ sha 'initial commit' }}            |
+      |        | git branch parent {{ sha-before-run 'parent commit' }} |
+      |        | git checkout child                                     |
+      | child  | git branch -D new                                      |
     And the current branch is still "child"
     And the initial branches and lineage exist
