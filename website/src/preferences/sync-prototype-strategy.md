@@ -5,6 +5,11 @@ The `sync-prototype-strategy` setting specifies how to update local
 their parent and tracking branches. When not set, Git Town uses the
 [sync-feature-strategy](sync-feature-strategy.md).
 
+## options
+
+`sync-prototype-strategy` accepts the same options as
+[sync-feature-strategy](sync-feature-strategy.md#options).
+
 ## change this setting
 
 The best way to change this setting is via the
