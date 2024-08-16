@@ -227,6 +227,12 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file_2",
 				Message:     "commit message 2",
 			})
+			repo.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "content",
+				FileName:    "file_3",
+				Message:     "commit message 3",
+			})
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
