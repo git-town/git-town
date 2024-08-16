@@ -950,13 +950,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
+	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branchName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		branch := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
-		err := originRepo.MergeBranch(gitdomain.NewLocalBranchName(branch))
+		err := originRepo.MergeBranch(branch)
 		asserts.NoError(err)
-		originRepo.RemoveBranch(gitdomain.NewLocalBranchName(branch))
+		originRepo.RemoveBranch(branch)
 	})
 
 	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
