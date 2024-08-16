@@ -105,6 +105,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		fixture := fixtureFactory.CreateFixture(scenarioName)
 		if helpers.HasTag(scenarioTags, "@debug") {
 			fixture.DevRepo.GetOrPanic().Verbose = true
+			fixture.OriginRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
 			fixture:              fixture,
