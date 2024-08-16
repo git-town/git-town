@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
@@ -8,7 +9,7 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChanges struct {
 	AddAll                  bool
-	Message                 string
+	Message                 gitdomain.CommitMessage
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

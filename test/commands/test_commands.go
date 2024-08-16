@@ -63,8 +63,8 @@ func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (self *TestCommands) CommitStagedChanges(message string) {
-	self.MustRun("git", "commit", "-m", message)
+func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
+	self.MustRun("git", "commit", "-m", message.String())
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
@@ -88,8 +88,8 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fiel
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") || strings.EqualFold(commit.Message, ConfigFileCommitMessage) {
+		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
+		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
 			continue
 		}
 		if slices.Contains(fields, "FILE NAME") {
@@ -130,9 +130,9 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.CheckoutBranch(commit.Branch)
 	self.CreateFile(commit.FileName, commit.FileContent)
 	self.MustRun("git", "add", commit.FileName)
-	commands := []string{"commit", "-m", commit.Message}
+	commands := []string{"commit", "-m", commit.Message.String()}
 	if commit.Author != "" {
-		commands = append(commands, "--author="+commit.Author)
+		commands = append(commands, "--author="+commit.Author.String())
 	}
 	self.MustRun("git", commands...)
 }
