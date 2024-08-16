@@ -957,6 +957,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip, "main")
 		asserts.NoError(err)
+		if commitMessage.IsNone() {
+			panic("branch to ship contains no commits")
+		}
 		originRepo.CheckoutBranch("main")
 		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
 		asserts.NoError(err)
