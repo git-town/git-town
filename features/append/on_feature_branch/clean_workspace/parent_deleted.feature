@@ -11,7 +11,6 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | parent | local, origin | parent commit | parent_file | parent content |
       | child  | local, origin | child commit  | child_file  | child content  |
     And origin ships the "parent" branch
-    # And inspect the repo
     And the current branch is "child"
     When I run "git-town append new"
 
@@ -43,6 +42,15 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | BRANCH | PARENT |
       | child  | main   |
       | new    | child  |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | main   | local, origin | parent commit                  |
+      | child  | local, origin | child commit                   |
+      |        |               | parent commit                  |
+      |        |               | Merge branch 'main' into child |
+      | new    | local         | child commit                   |
+      |        |               | parent commit                  |
+      |        |               | Merge branch 'main' into child |
 
   Scenario: undo
     When I run "git-town undo"
