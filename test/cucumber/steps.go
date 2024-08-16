@@ -952,16 +952,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branchName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branch := gitdomain.NewLocalBranchName(branchName)
-		main := gitdomain.NewLocalBranchName("main")
+		branchToShip := gitdomain.NewLocalBranchName(branchName)
+		mainBranch := gitdomain.NewLocalBranchName("main")
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		originRepo.CheckoutBranch(main)
-		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branch, main)
+		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip, mainBranch)
 		asserts.NoError(err)
-		err = originRepo.SquashMerge(originRepo.TestRunner, branch)
+		fmt.Println("1111111111111111111111111", commitMessage)
+		originRepo.CheckoutBranch(mainBranch)
+		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
 		asserts.NoError(err)
+		originRepo.StageFiles("-A")
 		originRepo.Commit(originRepo.TestRunner, commitMessage, "ci@acme.com")
-		originRepo.RemoveBranch(branch)
+		originRepo.RemoveBranch(branchToShip)
 	})
 
 	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
