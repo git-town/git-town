@@ -198,10 +198,9 @@ func TestBackendCommands(t *testing.T) {
 			main := gitdomain.NewLocalBranchName("main")
 			repo.CreateFeatureBranch(branch, main)
 			repo.CreateCommit(testgit.Commit{
-				Branch:      branch,
-				FileContent: "content",
-				FileName:    "file",
-				Message:     "my commit message",
+				Branch:   branch,
+				FileName: "file",
+				Message:  "my commit message",
 			})
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
 			must.NoError(t, err)
@@ -215,22 +214,19 @@ func TestBackendCommands(t *testing.T) {
 			main := gitdomain.NewLocalBranchName("main")
 			repo.CreateFeatureBranch(branch, main)
 			repo.CreateCommit(testgit.Commit{
-				Branch:      branch,
-				FileContent: "content",
-				FileName:    "file_1",
-				Message:     "commit message 1",
+				Branch:   branch,
+				FileName: "file_1",
+				Message:  "commit message 1",
 			})
 			repo.CreateCommit(testgit.Commit{
-				Branch:      branch,
-				FileContent: "content",
-				FileName:    "file_2",
-				Message:     "commit message 2",
+				Branch:   branch,
+				FileName: "file_2",
+				Message:  "commit message 2",
 			})
 			repo.CreateCommit(testgit.Commit{
-				Branch:      branch,
-				FileContent: "content",
-				FileName:    "file_3",
-				Message:     "commit message 3",
+				Branch:   branch,
+				FileName: "file_3",
+				Message:  "commit message 3",
 			})
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
 			must.NoError(t, err)
