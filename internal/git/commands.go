@@ -143,9 +143,9 @@ func (self *Commands) CommitNoEdit(runner gitdomain.Runner) error {
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message string) error {
+func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message gitdomain.CommitMessage) error {
 	if message != "" {
-		return runner.Run("git", "commit", "-m", message)
+		return runner.Run("git", "commit", "-m", message.String())
 	}
 	return runner.Run("git", "commit", "--no-edit")
 }

@@ -10,12 +10,12 @@ import (
 
 // Commit describes a Git commit.
 type Commit struct {
-	Author      string `exhaustruct:"optional"`
+	Author      gitdomain.Author `exhaustruct:"optional"`
 	Branch      gitdomain.LocalBranchName
 	FileContent string    `exhaustruct:"optional"`
 	FileName    string    `exhaustruct:"optional"`
 	Locations   Locations `exhaustruct:"optional"`
-	Message     string
+	Message     gitdomain.CommitMessage
 	SHA         gitdomain.SHA `exhaustruct:"optional"`
 }
 
@@ -29,13 +29,13 @@ func (self *Commit) Set(name, value string) {
 	case "LOCATION":
 		self.Locations = NewLocations(value)
 	case "MESSAGE":
-		self.Message = value
+		self.Message = gitdomain.CommitMessage(value)
 	case "FILE NAME":
 		self.FileName = value
 	case "FILE CONTENT":
 		self.FileContent = value
 	case "AUTHOR":
-		self.Author = value
+		self.Author = gitdomain.Author(value)
 	default:
 		log.Fatalf("unknown Commit property: %s", name)
 	}
