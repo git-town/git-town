@@ -964,7 +964,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
 		asserts.NoError(err)
 		originRepo.StageFiles("-A")
-		originRepo.Commit(originRepo.TestRunner, commitMessage, "CI <ci@acme.com>")
+		err = originRepo.Commit(originRepo.TestRunner, commitMessage, "CI <ci@acme.com>")
+		asserts.NoError(err)
 		originRepo.RemoveBranch(branchToShip)
 	})
 

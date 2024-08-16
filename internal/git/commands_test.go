@@ -186,7 +186,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch is empty", func(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
-			repo.CreateAndCheckoutBranch(repo.TestRunner, "branch")
+			must.NoError(t, repo.CreateAndCheckoutBranch(repo.TestRunner, "branch"))
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "branch", "main")
 			must.NoError(t, err)
 			must.Eq(t, None[gitdomain.CommitMessage](), have)
