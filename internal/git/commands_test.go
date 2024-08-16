@@ -238,6 +238,12 @@ func TestBackendCommands(t *testing.T) {
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
 		})
+		t.Run("branch doesn't exist", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			_, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "zonk", "main")
+			must.Error(t, err)
+		})
 	})
 
 	t.Run("FirstExistingBranch", func(t *testing.T) {
