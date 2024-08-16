@@ -11,24 +11,45 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin ships the "parent" branch
+    And inspect the repo
     And the current branch is "child"
-    When I run "git-town append new"
+    When I run "git-town append new -v"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | child  | git fetch --prune --tags              |
-      |        | git checkout main                     |
-      | main   | git rebase origin/main                |
-      |        | git checkout parent                   |
-      | parent | git merge --no-edit --ff main         |
-      |        | git checkout main                     |
-      | main   | git branch -D parent                  |
-      |        | git checkout child                    |
-      | child  | git merge --no-edit --ff origin/child |
-      |        | git merge --no-edit --ff main         |
-      |        | git push                              |
-      |        | git checkout -b new                   |
+      | BRANCH | COMMAND                                        |
+      |        | git version                                    |
+      |        | git rev-parse --show-toplevel                  |
+      |        | git config -lz --includes --global             |
+      |        | git config -lz --includes --local              |
+      |        | git status --long --ignore-submodules          |
+      |        | git remote                                     |
+      |        | git rev-parse --abbrev-ref HEAD                |
+      | child  | git fetch --prune --tags                       |
+      | <none> | git stash list                                 |
+      |        | git branch -vva --sort=refname                 |
+      |        | git rev-parse --verify --abbrev-ref @{-1}      |
+      | child  | git checkout main                              |
+      | main   | git rebase origin/main                         |
+      | <none> | git rev-list --left-right main...origin/main   |
+      | main   | git checkout parent                            |
+      | parent | git merge --no-edit --ff main                  |
+      | <none> | git diff main..parent                          |
+      | parent | git checkout child                             |
+      | child  | git merge --no-edit --ff origin/child          |
+      |        | git merge --no-edit --ff parent                |
+      | <none> | git rev-list --left-right child...origin/child |
+      | child  | git push                                       |
+      | <none> | git show-ref --verify --quiet refs/heads/child |
+      | child  | git checkout -b new                            |
+      | <none> | git show-ref --verify --quiet refs/heads/child |
+      |        | git config git-town-branch.new.parent child    |
+      |        | git show-ref --verify --quiet refs/heads/child |
+      |        | git branch -vva --sort=refname                 |
+      |        | git config -lz --includes --global             |
+      |        | git config -lz --includes --local              |
+      |        | git stash list                                 |
     And it prints:
       """
       deleted branch "parent"
