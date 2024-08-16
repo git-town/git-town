@@ -85,6 +85,7 @@ func Types() []shared.Opcode {
 		&RemoveFromPerennialBranches{},
 		&RemoveGlobalConfig{},
 		&RemoveLocalConfig{},
+		&ResetCurrentBranch{},
 		&ResetCurrentBranchToSHA{},
 		&ResetRemoteBranchToSHA{},
 		&RestoreOpenChanges{},
