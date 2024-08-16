@@ -54,13 +54,13 @@ Feature: shipped parent branches in a stacked change
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH    | COMMAND                                           |
-      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}     |
-      |           | git push --force-with-lease --force-if-includes   |
-      |           | git checkout main                                 |
-      | main      | git reset --hard {{ sha 'initial commit' }}       |
-      |           | git branch feature-1 {{ sha 'feature-1 commit' }} |
-      |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
-      |           | git checkout feature-3                            |
+      | BRANCH    | COMMAND                                                      |
+      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                |
+      |           | git push --force-with-lease --force-if-includes              |
+      |           | git checkout main                                            |
+      | main      | git reset --hard {{ sha 'initial commit' }}                  |
+      |           | git branch feature-1 {{ sha-before-run 'feature-1 commit' }} |
+      |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
+      |           | git checkout feature-3                                       |
     And the current branch is still "feature-3"
     And the initial branches and lineage exist

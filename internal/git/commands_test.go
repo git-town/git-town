@@ -181,6 +181,66 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("FirstCommitMessageInBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch is empty", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			must.NoError(t, repo.CreateAndCheckoutBranch(repo.TestRunner, "branch"))
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "branch", "main")
+			must.NoError(t, err)
+			must.Eq(t, None[gitdomain.CommitMessage](), have)
+		})
+		t.Run("branch has one commit", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			branch := gitdomain.NewLocalBranchName("branch")
+			main := gitdomain.NewLocalBranchName("main")
+			repo.CreateFeatureBranch(branch, main)
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file",
+				Message:  "my commit message",
+			})
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
+			must.NoError(t, err)
+			want := Some(gitdomain.CommitMessage("my commit message"))
+			must.Eq(t, want, have)
+		})
+		t.Run("branch has multiple commits", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			branch := gitdomain.NewLocalBranchName("branch")
+			main := gitdomain.NewLocalBranchName("main")
+			repo.CreateFeatureBranch(branch, main)
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_1",
+				Message:  "commit message 1",
+			})
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_2",
+				Message:  "commit message 2",
+			})
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_3",
+				Message:  "commit message 3",
+			})
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
+			must.NoError(t, err)
+			want := Some(gitdomain.CommitMessage("commit message 1"))
+			must.Eq(t, want, have)
+		})
+		t.Run("branch doesn't exist", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			_, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "zonk", "main")
+			must.Error(t, err)
+		})
+	})
+
 	t.Run("FirstExistingBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("first branch matches", func(t *testing.T) {

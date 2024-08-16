@@ -37,13 +37,14 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                     |
-      | shipped | git add -A                                  |
-      |         | git stash                                   |
-      |         | git checkout main                           |
-      | main    | git reset --hard {{ sha 'initial commit' }} |
-      |         | git checkout shipped                        |
-      | shipped | git stash pop                               |
+      | BRANCH  | COMMAND                                       |
+      | shipped | git add -A                                    |
+      |         | git stash                                     |
+      |         | git checkout main                             |
+      | main    | git reset --hard {{ sha 'initial commit' }}   |
+      |         | git checkout shipped                          |
+      | shipped | git reset --hard {{ sha 'unshipped commit' }} |
+      |         | git stash pop                                 |
     And the current branch is now "shipped"
     And the uncommitted file still exists
     And these commits exist now
