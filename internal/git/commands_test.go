@@ -181,6 +181,11 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("FirstCommitMessageInBranch", func(t *testing.T) {
+		t.Parallel()
+
+	})
+
 	t.Run("FirstExistingBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("first branch matches", func(t *testing.T) {
