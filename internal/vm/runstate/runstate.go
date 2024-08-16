@@ -38,8 +38,7 @@ func EmptyRunState() RunState {
 	return RunState{} //exhaustruct:ignore
 }
 
-// AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
-// after all the opcodes for the current branch.
+// inserts a PushBranch opcode after all the opcodes for the current branch
 func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Commands, backend gitdomain.Querier) error {
 	popped := program.Program{}
 	for {
