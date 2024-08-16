@@ -502,7 +502,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateCommit(git.Commit{
 			Branch:   gitdomain.NewLocalBranchName(branch),
 			FileName: "new_file",
-			Message:  message,
+			Message:  gitdomain.CommitMessage(message),
 		})
 	})
 

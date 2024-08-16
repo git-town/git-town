@@ -94,13 +94,13 @@ func (self *CommitTableBuilder) Table(fields []string) DataTable {
 						row = append(row, locations)
 					}
 				case "MESSAGE":
-					row = append(row, commit.Message)
+					row = append(row, commit.Message.String())
 				case "FILE NAME":
 					row = append(row, commit.FileName)
 				case "FILE CONTENT":
 					row = append(row, commit.FileContent)
 				case "AUTHOR":
-					row = append(row, commit.Author)
+					row = append(row, commit.Author.String())
 				default:
 					panic("unknown table field: " + field)
 				}
