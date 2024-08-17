@@ -6,6 +6,7 @@ import (
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
+	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -21,5 +22,5 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Config.NoPushHook())
+	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Config.NoPushHook(), self.ForceIfIncludes)
 }
