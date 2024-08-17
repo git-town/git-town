@@ -371,8 +371,11 @@ func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...g
 }
 
 // pushes the branch with the given name to origin.
-func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
-	args := []string{"push", "--force-with-lease", "--force-if-includes"}
+func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook configdomain.NoPushHook, forceIfIncludes bool) error {
+	args := []string{"push", "--force-with-lease"}
+	if forceIfIncludes {
+		args = append(args, "--force-if-includes")
+	}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
