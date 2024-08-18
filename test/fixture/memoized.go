@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/git-town/git-town/v15/test/filesystem"
 	"github.com/git-town/git-town/v15/test/testruntime"
 )

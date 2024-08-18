@@ -5,9 +5,9 @@ import (
 
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/undo/undobranches"
 	"github.com/git-town/git-town/v15/internal/undo/undodomain"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

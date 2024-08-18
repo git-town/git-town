@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/git-town/git-town/v15/internal/vm/shared"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // ConnectorMergeProposal squash merges the branch with the given name into the current branch.

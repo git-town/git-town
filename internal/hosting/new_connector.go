@@ -4,12 +4,12 @@ import (
 	"github.com/git-town/git-town/v15/internal/cli/print"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/git/giturl"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting/bitbucket"
 	"github.com/git-town/git-town/v15/internal/hosting/gitea"
 	"github.com/git-town/git-town/v15/internal/hosting/github"
 	"github.com/git-town/git-town/v15/internal/hosting/gitlab"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.

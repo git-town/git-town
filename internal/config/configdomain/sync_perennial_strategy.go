@@ -1,7 +1,7 @@
 package configdomain
 
 import (
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.

@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // whether all created branches should be prototype

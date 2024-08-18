@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/subshell"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

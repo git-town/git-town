@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // Offline is a new-type for the "offline" configuration setting.

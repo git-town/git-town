@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/pkg"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.

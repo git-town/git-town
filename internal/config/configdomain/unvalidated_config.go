@@ -4,7 +4,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // UnvalidatedConfig is the Git Town configuration as read from disk.
