@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed

@@ -11,13 +11,13 @@ import (
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/execute"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/hosting"
 	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/git-town/git-town/v15/internal/skip"
 	"github.com/git-town/git-town/v15/internal/validate"
 	"github.com/git-town/git-town/v15/internal/vm/statefile"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

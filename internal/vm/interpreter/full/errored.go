@@ -6,11 +6,11 @@ import (
 
 	"github.com/git-town/git-town/v15/internal/cli/print"
 	"github.com/git-town/git-town/v15/internal/config/gitconfig"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
 	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 	"github.com/git-town/git-town/v15/internal/vm/statefile"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // errored is called when the given opcode has resulted in the given error.

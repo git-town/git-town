@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // SyncUpstream contains the configuration setting whether to sync with the upstream remote.

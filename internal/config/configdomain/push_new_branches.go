@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // PushNewBranches indicates whether newly created branches should be pushed to the remote or not.

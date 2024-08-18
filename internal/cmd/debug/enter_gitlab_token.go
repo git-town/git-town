@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cli/dialog"
 	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
