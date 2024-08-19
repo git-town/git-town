@@ -1,6 +1,3 @@
-# the version of mdbook to use
-MDBOOK_VERSION =
-
 build:  # transpiles the website to HTML
 	../tools/rta mdbook build
 
@@ -12,7 +9,7 @@ help:  # prints available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
 
 serve: ${mdbook_path}  # runs a local development server of the website
-	${mdbook_path} serve --open
+	../tools/mdbook serve --open
 
 test:  # tests the website
 	cd .. && make --no-print-dir docs
