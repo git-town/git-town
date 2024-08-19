@@ -9,7 +9,7 @@ help:  # prints available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
 
 serve: ${mdbook_path}  # runs a local development server of the website
-	../tools/mdbook serve --open
+	../tools/rta mdbook serve --open
 
 test:  # tests the website
 	cd .. && make --no-print-dir docs
