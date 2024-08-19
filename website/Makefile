@@ -18,10 +18,10 @@ test:  # tests the website
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/rta@${RTA_VERSION}:
-	@rm -f tools/rta*
-	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
-	@mv tools/rta tools/rta@${RTA_VERSION}
-	@ln -s rta@${RTA_VERSION} tools/rta
+../tools/rta@${RTA_VERSION}:
+	@rm -f ../tools/rta*
+	@(cd ../tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
+	@mv ../tools/rta ../tools/rta@${RTA_VERSION}
+	@ln -s rta@${RTA_VERSION} ../tools/rta
 
 .DEFAULT_GOAL := help
