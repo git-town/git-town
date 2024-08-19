@@ -1,5 +1,5 @@
 # the version of mdbook to use
-MDBOOK_VERSION = 0.4.15
+MDBOOK_VERSION =
 
 build:  # transpiles the website to HTML
 	../tools/rta mdbook build
