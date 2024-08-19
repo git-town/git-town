@@ -3,14 +3,14 @@ RTA_VERSION = 0.6.1  # run-that-app version to use
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
 	../tools/rta mdbook build
 
-clean: @${RTA_VERSION} # removes all build artifacts
+clean: ../tools/rta@${RTA_VERSION} # removes all build artifacts
 	../tools/rta mdbook clean
 	rm -rf bin
 
 help:  # prints available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
 
-serve: $@${RTA_VERSION}  # runs a local development server of the website
+serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
 	../tools/rta mdbook serve --open
 
 test:  # tests the website
