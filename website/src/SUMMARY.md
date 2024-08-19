@@ -4,7 +4,7 @@
 - [Q & A](questions.md)
 - [Install](install.md)
 - [Configuration](configuration.md)
-- [Integration](integration.md) into other tools
+- [Integration](integration.md)
 - [Commands](all-commands.md)
   - [Basic workflow](basic-commands.md)
     - [hack](commands/hack.md)
