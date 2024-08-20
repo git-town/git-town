@@ -286,15 +286,12 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 	result = make([]configdomain.BranchToSync, len(branchInfosToSync))
 	for b, branchInfoToSync := range branchInfosToSync {
 		var branchNameToSync gitdomain.BranchName
-		localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get()
-		if hasLocalBranchToSync {
+		if localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get(); hasLocalBranchToSync {
 			branchNameToSync = localBranchNameToSync.BranchName()
-		} else {
-			remoteBranchNameToSync, hasRemoteBranch := branchInfoToSync.RemoteName.Get()
-			if !hasRemoteBranch {
-				panic("branchinfo has neither local nor remote name")
-			}
+		} else if remoteBranchNameToSync, hasRemoteBranch := branchInfoToSync.RemoteName.Get(); hasRemoteBranch {
 			branchNameToSync = remoteBranchNameToSync.BranchName()
+		} else {
+			panic("branchinfo has neither local nor remote name")
 		}
 		var firstCommitMessage Option[gitdomain.CommitMessage]
 		if branchNameToSync != mainBranch.BranchName() {
