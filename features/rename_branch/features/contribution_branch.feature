@@ -3,23 +3,23 @@ Feature: rename a contribution branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME  | TYPE         | PARENT | LOCATIONS     |
-      | other | contribution | main   | local, origin |
-    And the current branch is "other"
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | contribution | contribution | main   | local, origin |
+    And the current branch is "contribution"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE             |
-      | other  | local, origin | experimental commit |
-    When I run "git-town rename-branch other new"
+      | BRANCH       | LOCATION      | MESSAGE             |
+      | contribution | local, origin | experimental commit |
+    When I run "git-town rename-branch contribution new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | other  | git fetch --prune --tags |
-      |        | git branch new other     |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-      |        | git push origin :other   |
-      |        | git branch -D other      |
+      | BRANCH       | COMMAND                       |
+      | contribution | git fetch --prune --tags      |
+      |              | git branch new contribution   |
+      |              | git checkout new              |
+      | new          | git push -u origin new        |
+      |              | git push origin :contribution |
+      |              | git branch -D contribution    |
     And the current branch is now "new"
     And the contribution branches are now "new"
     And these commits exist now
@@ -29,16 +29,16 @@ Feature: rename a contribution branch
       | BRANCH | PARENT |
 
   Scenario: undo
-    Given I ran "git-town rename-branch --force other new"
+    Given I ran "git-town rename-branch --force contribution new"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                          |
-      | new    | git branch other {{ sha 'experimental commit' }} |
-      |        | git push -u origin other                         |
-      |        | git push origin :new                             |
-      |        | git checkout other                               |
-      | other  | git branch -D new                                |
-    And the current branch is now "other"
-    And the contribution branches are now "other"
+      | BRANCH       | COMMAND                                                 |
+      | new          | git branch contribution {{ sha 'experimental commit' }} |
+      |              | git push -u origin contribution                         |
+      |              | git push origin :new                                    |
+      |              | git checkout contribution                               |
+      | contribution | git branch -D new                                       |
+    And the current branch is now "contribution"
+    And the contribution branches are now "contribution"
     And the initial commits exist
     And the initial branches and lineage exist
