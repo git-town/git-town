@@ -8,5 +8,5 @@ import (
 // all the information needed to sync a branch
 type BranchToSync struct {
 	BranchInfo         gitdomain.BranchInfo
-	FirstCommitMessage Option[gitdomain.CommitMessage]
+	FirstCommitMessage Option[gitdomain.CommitMessage] // commit message of the first commit on this branch
 }
