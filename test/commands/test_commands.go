@@ -114,14 +114,14 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *TestCommands) CreateBranch(name, parent gitdomain.LocalBranchName) {
+func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
-	self.CreateBranch(branch, parent)
+	self.CreateBranch(branch, parent.BranchName())
 	asserts.NoError(self.Config.SetParent(branch, parent))
 }
 
@@ -144,7 +144,7 @@ func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchNam
 }
 
 // creates a feature branch with the given name in this repository
-func (self *TestCommands) CreateFeatureBranch(name, parent gitdomain.LocalBranchName) {
+func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
@@ -172,7 +172,7 @@ func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 
 // creates a parked branch with the given name and parent in this repository
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent)
+	self.CreateFeatureBranch(name, parent.BranchName())
 	asserts.NoError(self.Config.AddToParkedBranches(name))
 }
 
@@ -184,7 +184,7 @@ func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) 
 
 // creates a prototype branch with the given name and parent in this repository
 func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent)
+	self.CreateFeatureBranch(name, parent.BranchName())
 	asserts.NoError(self.Config.AddToPrototypeBranches(name))
 }
 
