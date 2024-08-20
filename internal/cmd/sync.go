@@ -277,6 +277,7 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 	}, false, err
 }
 
+// determines the complete info needed to sync the given branches
 func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (result []configdomain.BranchToSync, err error) {
 	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	if err != nil {
