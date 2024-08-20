@@ -239,7 +239,7 @@ func TestBackendCommands(t *testing.T) {
 			_, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "zonk", "main")
 			must.Error(t, err)
 		})
-		t.Run("remotebranch", func(t *testing.T) {
+		t.Run("branch exists only at the remote", func(t *testing.T) {
 			t.Parallel()
 			origin := testruntime.CreateGitTown(t)
 			repoDir := t.TempDir()
@@ -263,6 +263,9 @@ func TestBackendCommands(t *testing.T) {
 				Message:  "commit message 3",
 			})
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+			repo.CheckoutBranch(main.LocalBranchName())
+			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
+			must.NoError(t, err)
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
