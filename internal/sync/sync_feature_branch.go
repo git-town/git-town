@@ -11,8 +11,10 @@ import (
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(args featureBranchArgs) {
 	syncArgs := syncFeatureBranchProgramArgs{
+		firstCommitMessage:  args.firstCommitMessage,
 		localName:           args.localName,
 		offline:             args.offline,
+		parent:              args.parent,
 		parentOtherWorktree: args.parentOtherWorktree,
 		program:             args.program,
 		pushBranches:        args.pushBranches,
@@ -23,17 +25,38 @@ func FeatureBranchProgram(args featureBranchArgs) {
 		syncFeatureBranchMergeProgram(syncArgs)
 	case configdomain.SyncStrategyRebase:
 		syncFeatureBranchRebaseProgram(syncArgs)
+	case configdomain.SyncStrategyCompress:
+		syncFeatureBranchCompressProgram(syncArgs)
 	}
 }
 
 type featureBranchArgs struct {
+	firstCommitMessage  Option[gitdomain.CommitMessage]
 	localName           gitdomain.LocalBranchName
-	offline             configdomain.Offline     // whether offline mode is enabled
+	offline             configdomain.Offline // whether offline mode is enabled
+	parent              gitdomain.BranchName
 	parentOtherWorktree bool                     // whether the parent of this branch exists on another worktre
 	program             Mutable[program.Program] // the program to update
 	pushBranches        configdomain.PushBranches
 	remoteName          Option[gitdomain.RemoteBranchName]
 	syncStrategy        configdomain.SyncStrategy // the sync-feature-strategy
+}
+
+func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
+	trackingBranch, hasTrackingBranch := args.remoteName.Get()
+	if hasTrackingBranch {
+		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
+	}
+	args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	if firstCommitMessage, branchHasCommits := args.firstCommitMessage.Get(); branchHasCommits {
+		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
+		args.program.Value.Add(&opcodes.CommitOpenChanges{AddAll: false, Message: firstCommitMessage})
+	}
+	if args.offline.IsFalse() {
+		if hasTrackingBranch {
+			args.program.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})
+		}
+	}
 }
 
 // syncs the given feature branch using the "merge" sync strategy
@@ -46,7 +69,6 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 
 // syncs the given feature branch using the "rebase" sync strategy
 func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
-	// rebase against parent
 	args.program.Value.Add(&opcodes.RebaseParent{
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
@@ -59,8 +81,10 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 }
 
 type syncFeatureBranchProgramArgs struct {
+	firstCommitMessage  Option[gitdomain.CommitMessage]
 	localName           gitdomain.LocalBranchName
 	offline             configdomain.Offline // whether offline mode is enabled
+	parent              gitdomain.BranchName
 	parentOtherWorktree bool
 	program             Mutable[program.Program]
 	pushBranches        configdomain.PushBranches

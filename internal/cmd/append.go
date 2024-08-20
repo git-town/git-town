@@ -104,7 +104,7 @@ func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomai
 type appendFeatureData struct {
 	allBranches               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
-	branchesToSync            gitdomain.BranchInfos
+	branchesToSync            []configdomain.BranchToSync
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
@@ -173,7 +173,10 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
+	}
 	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
 	return appendFeatureData{
@@ -197,14 +200,15 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 func appendProgram(data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
-		for _, branch := range data.branchesToSync {
-			sync.BranchProgram(branch, sync.BranchProgramArgs{
-				BranchInfos:   data.allBranches,
-				Config:        data.config.Config,
-				InitialBranch: data.initialBranch,
-				Program:       prog,
-				Remotes:       data.remotes,
-				PushBranches:  true,
+		for _, branchToSync := range data.branchesToSync {
+			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+				BranchInfos:        data.allBranches,
+				Config:             data.config.Config,
+				FirstCommitMessage: branchToSync.FirstCommitMessage,
+				InitialBranch:      data.initialBranch,
+				Program:            prog,
+				Remotes:            data.remotes,
+				PushBranches:       true,
 			})
 		}
 	}

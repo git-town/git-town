@@ -10,8 +10,9 @@ import (
 
 // BranchesProgram syncs all given branches.
 func BranchesProgram(args BranchesProgramArgs) {
-	for _, branch := range args.BranchesToSync {
-		BranchProgram(branch, args.BranchProgramArgs)
+	for _, branchToSync := range args.BranchesToSync {
+		args.BranchProgramArgs.FirstCommitMessage = branchToSync.FirstCommitMessage
+		BranchProgram(branchToSync.BranchInfo, args.BranchProgramArgs)
 	}
 	previousbranchCandidates := gitdomain.LocalBranchNames{}
 	finalBranchCandidates := gitdomain.LocalBranchNames{args.InitialBranch}
@@ -36,7 +37,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 
 type BranchesProgramArgs struct {
 	BranchProgramArgs
-	BranchesToSync gitdomain.BranchInfos
+	BranchesToSync []configdomain.BranchToSync
 	DryRun         configdomain.DryRun
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName

@@ -3,6 +3,7 @@ package execute
 import (
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // FailureCollector is an ErrorCollector wrapper that provides convenience functions to check fallible domain types.
@@ -16,6 +17,11 @@ type FailureCollector struct {
 }
 
 func (self *FailureCollector) BranchInfos(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
+	self.Check(err)
+	return value
+}
+
+func (self *FailureCollector) CommitMessageOpt(value Option[gitdomain.CommitMessage], err error) Option[gitdomain.CommitMessage] {
 	self.Check(err)
 	return value
 }

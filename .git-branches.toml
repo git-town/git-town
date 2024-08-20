@@ -8,5 +8,5 @@ main = "main"
 perennials = ["public"]
 
 [sync-strategy]
-feature-branches = "merge"
+feature-branches = "compress"
 perennial-branches = "rebase"

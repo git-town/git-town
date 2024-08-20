@@ -16,8 +16,9 @@ func (self SyncFeatureStrategy) SyncStrategy() SyncStrategy {
 }
 
 const (
-	SyncFeatureStrategyMerge  = SyncFeatureStrategy(SyncStrategyMerge)
-	SyncFeatureStrategyRebase = SyncFeatureStrategy(SyncStrategyRebase)
+	SyncFeatureStrategyMerge    = SyncFeatureStrategy(SyncStrategyMerge)
+	SyncFeatureStrategyRebase   = SyncFeatureStrategy(SyncStrategyRebase)
+	SyncFeatureStrategyCompress = SyncFeatureStrategy(SyncStrategyCompress)
 )
 
 func ParseSyncFeatureStrategy(text string) (Option[SyncFeatureStrategy], error) {

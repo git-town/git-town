@@ -1,0 +1,20 @@
+package opcodes
+
+import (
+	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/vm/shared"
+)
+
+// ResetCurrentBranch resets all commits in the current branch.
+type ResetCurrentBranchToParent struct {
+	CurrentBranch           gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
+}
+
+func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
+	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
+	if !hasParent {
+		return nil
+	}
+	return args.Git.ResetBranch(args.Frontend, parent.BranchName())
+}

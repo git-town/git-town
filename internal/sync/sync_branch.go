@@ -12,11 +12,10 @@ import (
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentOtherWorktree := false
 	localName, hasLocalName := branch.LocalName.Get()
-	if hasLocalName {
-		if parent, hasParent := args.Config.Lineage.Parent(localName).Get(); hasParent {
-			parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
-			parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		}
+	parent, hasParent := args.Config.Lineage.Parent(localName).Get()
+	if hasLocalName && hasParent {
+		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
+		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	}
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
@@ -24,22 +23,23 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		ExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
+		ExistingBranchProgram(args.Program, branch, parent.BranchName(), parentOtherWorktree, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
 
 type BranchProgramArgs struct {
-	BranchInfos   gitdomain.BranchInfos
-	Config        configdomain.ValidatedConfig
-	InitialBranch gitdomain.LocalBranchName
-	Program       Mutable[program.Program]
-	PushBranches  configdomain.PushBranches
-	Remotes       gitdomain.Remotes
+	BranchInfos        gitdomain.BranchInfos
+	Config             configdomain.ValidatedConfig
+	FirstCommitMessage Option[gitdomain.CommitMessage]
+	InitialBranch      gitdomain.LocalBranchName
+	Program            Mutable[program.Program]
+	PushBranches       configdomain.PushBranches
+	Remotes            gitdomain.Remotes
 }
 
 // ExistingBranchProgram provides the program to sync a particular branch.
-func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
+func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
@@ -54,8 +54,10 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
+			firstCommitMessage:  args.FirstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
+			parent:              parent,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
 			pushBranches:        args.PushBranches,
@@ -66,8 +68,10 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
+			firstCommitMessage:  args.FirstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
+			parent:              parent,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
 			pushBranches:        args.PushBranches,
@@ -80,8 +84,10 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(featureBranchArgs{
+			firstCommitMessage:  args.FirstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
+			parent:              parent,
 			parentOtherWorktree: parentOtherWorktree,
 			program:             list,
 			pushBranches:        false,
@@ -108,6 +114,8 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	case configdomain.SyncFeatureStrategyCompress:
+		args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	}
 }
 
@@ -124,6 +132,8 @@ func pushFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.Lo
 		list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
 		list.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
+	case configdomain.SyncFeatureStrategyCompress:
+		list.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})
 	}
 }
 

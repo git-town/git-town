@@ -14,8 +14,9 @@ type SyncStrategy string
 func (self SyncStrategy) String() string { return string(self) }
 
 const (
-	SyncStrategyMerge  = SyncStrategy("merge")
-	SyncStrategyRebase = SyncStrategy("rebase")
+	SyncStrategyMerge    = SyncStrategy("merge")
+	SyncStrategyRebase   = SyncStrategy("rebase")
+	SyncStrategyCompress = SyncStrategy("compress")
 )
 
 func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
@@ -37,5 +38,6 @@ func SyncStrategies() []SyncStrategy {
 	return []SyncStrategy{
 		SyncStrategyMerge,
 		SyncStrategyRebase,
+		SyncStrategyCompress,
 	}
 }

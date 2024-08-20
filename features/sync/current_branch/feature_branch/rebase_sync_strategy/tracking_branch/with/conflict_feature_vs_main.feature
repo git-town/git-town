@@ -107,3 +107,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
+    And all branches are now synchronized
+    And the current branch is still "feature"
+    And no rebase is in progress
+    And the uncommitted file still exists
+    And these committed files exist now
+      | BRANCH  | NAME             | CONTENT          |
+      | main    | conflicting_file | main content     |
+      | feature | conflicting_file | resolved content |
+      |         | feature_file     | feature content  |

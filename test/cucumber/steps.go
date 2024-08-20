@@ -616,6 +616,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if content == "" {
 			content = "resolved content"
 		}
+		content = strings.ReplaceAll(content, "\\n", "\n")
 		devRepo.CreateFile(filename, content)
 		devRepo.StageFiles(filename)
 	})
@@ -1529,6 +1530,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.MockCommand(tool)
+	})
+
+	// This step exists to avoid re-creating commits with the same commit message
+	// and timestamp as existing commits, because they will end up with the same SHA.
+	// This can cause flaky tests.
+	sc.Step(`wait 1 second to ensure new Git timestamps`, func() {
+		time.Sleep(1 * time.Second)
 	})
 }
 

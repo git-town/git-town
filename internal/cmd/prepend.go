@@ -105,7 +105,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 type prependData struct {
 	allBranches         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      gitdomain.BranchInfos
+	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
@@ -177,7 +177,25 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
+	branchesToSync := make([]configdomain.BranchToSync, len(branchNamesToSync))
+	for b, branchNameToSync := range branchNamesToSync {
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToSync).Get()
+		if !hasBranchInfo {
+			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToSync)
+		}
+		mainBranch := validatedConfig.Config.MainBranch
+		var firstCommitMessage Option[gitdomain.CommitMessage]
+		if branchNameToSync != mainBranch {
+			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync.BranchName(), validatedConfig.Config.MainBranch.BranchName())
+			if err != nil {
+				return data, false, err
+			}
+		}
+		branchesToSync[b] = configdomain.BranchToSync{
+			BranchInfo:         *branchInfo,
+			FirstCommitMessage: firstCommitMessage,
+		}
+	}
 	parent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	if !hasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
@@ -207,13 +225,14 @@ func prependProgram(data prependData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		for _, branchToSync := range data.branchesToSync {
-			sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-				BranchInfos:   data.allBranches,
-				Config:        data.config.Config,
-				InitialBranch: data.initialBranch,
-				Program:       prog,
-				PushBranches:  true,
-				Remotes:       data.remotes,
+			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+				BranchInfos:        data.allBranches,
+				Config:             data.config.Config,
+				FirstCommitMessage: branchToSync.FirstCommitMessage,
+				InitialBranch:      data.initialBranch,
+				Program:            prog,
+				PushBranches:       true,
+				Remotes:            data.remotes,
 			})
 		}
 	}

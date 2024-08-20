@@ -84,7 +84,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" is now "merge"
+    And local Git Town setting "sync-feature-strategy" is now "compress"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
     And local Git Town setting "sync-tags" is now "false"
