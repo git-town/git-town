@@ -7,8 +7,8 @@ Feature: rename a contribution branch
       | contribution | contribution | main   | local, origin |
     And the current branch is "contribution"
     And the commits
-      | BRANCH       | LOCATION      | MESSAGE             |
-      | contribution | local, origin | experimental commit |
+      | BRANCH       | LOCATION      | MESSAGE               |
+      | contribution | local, origin | somebody elses commit |
     When I run "git-town rename-branch contribution new"
 
   Scenario: result
@@ -23,8 +23,8 @@ Feature: rename a contribution branch
     And the current branch is now "new"
     And the contribution branches are now "new"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE             |
-      | new    | local, origin | experimental commit |
+      | BRANCH | LOCATION      | MESSAGE               |
+      | new    | local, origin | somebody elses commit |
     And this lineage exists now
       | BRANCH | PARENT |
 
@@ -32,12 +32,12 @@ Feature: rename a contribution branch
     Given I ran "git-town rename-branch --force contribution new"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH       | COMMAND                                                 |
-      | new          | git branch contribution {{ sha 'experimental commit' }} |
-      |              | git push -u origin contribution                         |
-      |              | git push origin :new                                    |
-      |              | git checkout contribution                               |
-      | contribution | git branch -D new                                       |
+      | BRANCH       | COMMAND                                                   |
+      | new          | git branch contribution {{ sha 'somebody elses commit' }} |
+      |              | git push -u origin contribution                           |
+      |              | git push origin :new                                      |
+      |              | git checkout contribution                                 |
+      | contribution | git branch -D new                                         |
     And the current branch is now "contribution"
     And the contribution branches are now "contribution"
     And the initial commits exist
