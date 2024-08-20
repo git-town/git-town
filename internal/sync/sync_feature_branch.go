@@ -52,7 +52,7 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
 		args.program.Value.Add(&opcodes.CommitOpenChanges{AddAll: false, Message: firstCommitMessage})
 	}
-	if args.offline.IsFalse() && hasTrackingBranch {
+	if hasTrackingBranch && args.offline.IsFalse() {
 		args.program.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})
 	}
 }
