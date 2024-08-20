@@ -245,8 +245,8 @@ func TestBackendCommands(t *testing.T) {
 			repoDir := t.TempDir()
 			repo := testruntime.Clone(origin.TestRunner, repoDir)
 			branch := gitdomain.NewLocalBranchName("branch")
-			main := gitdomain.NewLocalBranchName("main")
-			repo.CreateFeatureBranch(branch, main.TrackingBranch().BranchName())
+			main := gitdomain.NewRemoteBranchName("origin/main")
+			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
 				FileName: "file_1",
@@ -263,9 +263,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:  "commit message 3",
 			})
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
-			must.NoError(t, err)
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.TrackingBranch().BranchName())
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
