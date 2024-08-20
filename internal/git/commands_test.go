@@ -22,7 +22,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		branch := gitdomain.NewLocalBranchName("branch")
-		runtime.CreateBranch(branch, initial)
+		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch,
 			FileContent: "file1",
@@ -46,7 +46,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch")
-			runtime.CreateBranch(branch, initial)
+			runtime.CreateBranch(branch, initial.BranchName())
 			have, err := runtime.TestCommands.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
 			must.NoError(t, err)
 			must.False(t, have)
@@ -61,7 +61,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 1",
 			})
 			branch := gitdomain.NewLocalBranchName("branch")
-			runtime.CreateBranch(branch, initial)
+			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
 				FileContent: "modified content",
@@ -87,7 +87,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		branch := gitdomain.NewLocalBranchName("branch1")
-		runtime.CreateBranch(branch, initial)
+		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.TestCommands.CheckoutBranch(branch)
 		currentBranch, err := runtime.CurrentBranch(runtime.TestRunner)
 		must.NoError(t, err)
@@ -104,7 +104,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
-			runtime.CreateBranch(branch, initial)
+			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   branch,
 				FileName: "file1",
@@ -125,7 +125,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
-			runtime.CreateBranch(branch, initial)
+			runtime.CreateBranch(branch, initial.BranchName())
 			commits, err := runtime.Commands.CommitsInBranch(runtime.TestCommands, branch, Some(gitdomain.NewLocalBranchName("initial")))
 			must.NoError(t, err)
 			must.EqOp(t, 0, len(commits))
@@ -161,7 +161,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CheckoutBranch(initial)
 		branch := gitdomain.NewLocalBranchName("branch1")
-		runtime.CreateBranch(branch, initial)
+		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CheckoutBranch(branch)
 		branch, err := runtime.Commands.CurrentBranch(runtime.TestCommands)
 		must.NoError(t, err)
@@ -196,7 +196,7 @@ func TestBackendCommands(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			branch := gitdomain.NewLocalBranchName("branch")
 			main := gitdomain.NewLocalBranchName("main")
-			repo.CreateFeatureBranch(branch, main)
+			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
 				FileName: "file",
@@ -212,7 +212,7 @@ func TestBackendCommands(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			branch := gitdomain.NewLocalBranchName("branch")
 			main := gitdomain.NewLocalBranchName("main")
-			repo.CreateFeatureBranch(branch, main)
+			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
 				FileName: "file_1",
@@ -248,8 +248,8 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("b1")
 			branch2 := gitdomain.NewLocalBranchName("b2")
-			runtime.CreateBranch(branch1, initial)
-			runtime.CreateBranch(branch2, initial)
+			runtime.CreateBranch(branch1, initial.BranchName())
+			runtime.CreateBranch(branch2, initial.BranchName())
 			have := runtime.Commands.FirstExistingBranch(runtime.TestCommands, branch1, branch2)
 			want := Some(branch1)
 			must.Eq(t, want, have)
@@ -259,7 +259,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("b1")
 			branch2 := gitdomain.NewLocalBranchName("b2")
-			runtime.CreateBranch(branch2, initial)
+			runtime.CreateBranch(branch2, initial.BranchName())
 			have := runtime.Commands.FirstExistingBranch(runtime.TestCommands, branch1, branch2)
 			want := Some(branch2)
 			must.Eq(t, want, have)
@@ -280,8 +280,8 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch(gitdomain.NewLocalBranchName("b1"), initial)
-		runner.CreateBranch(gitdomain.NewLocalBranchName("b2"), initial)
+		runner.CreateBranch(gitdomain.NewLocalBranchName("b1"), initial.BranchName())
+		runner.CreateBranch(gitdomain.NewLocalBranchName("b2"), initial.BranchName())
 		must.True(t, runner.Commands.HasLocalBranch(runner.TestCommands, gitdomain.NewLocalBranchName("b1")))
 		must.True(t, runner.Commands.HasLocalBranch(runner.TestCommands, gitdomain.NewLocalBranchName("b2")))
 		must.False(t, runner.Commands.HasLocalBranch(runner.TestCommands, gitdomain.NewLocalBranchName("b3")))
@@ -346,7 +346,7 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				branch1 := gitdomain.NewLocalBranchName("branch1")
-				runtime.CreateBranch(branch1, initial)
+				runtime.CreateBranch(branch1, initial.BranchName())
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      branch1,
@@ -370,7 +370,7 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				branch1 := gitdomain.NewLocalBranchName("branch1")
-				runtime.CreateBranch(branch1, initial)
+				runtime.CreateBranch(branch1, initial.BranchName())
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      branch1,
@@ -833,8 +833,8 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature1"), initial)
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature2"), initial)
+		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature1"), initial.BranchName())
+		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature2"), initial.BranchName())
 		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature1"))
 		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature2"))
 		have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)

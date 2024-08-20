@@ -36,11 +36,11 @@ func TestFixture(t *testing.T) {
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewLocalBranchName("main"))
-			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewLocalBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d1"), gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("d2"), gitdomain.NewBranchName("main"))
 			originRepo := fixture.OriginRepo.GetOrPanic()
-			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o1"), gitdomain.NewLocalBranchName("initial"))
-			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o2"), gitdomain.NewLocalBranchName("initial"))
+			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o1"), gitdomain.NewBranchName("initial"))
+			originRepo.CreateBranch(gitdomain.NewLocalBranchName("o2"), gitdomain.NewBranchName("initial"))
 			// get branches
 			table := fixture.Branches()
 			// verify
@@ -55,11 +55,11 @@ func TestFixture(t *testing.T) {
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
-			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewBranchName("main"))
 			originRepo := fixture.OriginRepo.GetOrPanic()
-			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
-			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewLocalBranchName("main"))
+			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewBranchName("main"))
+			originRepo.CreateBranch(gitdomain.NewLocalBranchName("b2"), gitdomain.NewBranchName("main"))
 			// get branches
 			table := fixture.Branches()
 			// verify
@@ -130,7 +130,7 @@ func TestFixture(t *testing.T) {
 		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
 		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the origin branch
-		cloned.OriginRepo.GetOrPanic().CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
+		cloned.OriginRepo.GetOrPanic().CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewBranchName("main"))
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.GetOrPanic().LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
 		must.NoError(t, err)

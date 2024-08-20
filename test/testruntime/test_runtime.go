@@ -50,7 +50,7 @@ func Create(t *testing.T) TestRuntime {
 func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
-	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewLocalBranchName("initial"))
+	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewBranchName("initial"))
 	err := repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main"))
 	must.NoError(t, err)
 	err = repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{})
