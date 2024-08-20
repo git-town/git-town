@@ -1086,6 +1086,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
+	sc.Step(`^the contribution branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actual := devRepo.Config.LocalGitConfig.ContributionBranches
+		if len(actual) != 1 {
+			return fmt.Errorf("expected 1 contribution branch, got %q", actual)
+		}
+		if (actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
+		}
+		return nil
+	})
+
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		commits := git.FromGherkinTable(table)
@@ -1336,10 +1349,36 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the observed branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actual := devRepo.Config.LocalGitConfig.ObservedBranches
+		if len(actual) != 1 {
+			return fmt.Errorf("expected 1 observed branch, got %q", actual)
+		}
+		if (actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
+		}
+		return nil
+	})
+
 	sc.Step(`^the origin is "([^"]*)"$`, func(ctx context.Context, origin string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.SetTestOrigin(origin)
+	})
+
+	sc.Step(`^the parked branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actual := devRepo.Config.LocalGitConfig.ParkedBranches
+		if len(actual) != 1 {
+			return fmt.Errorf("expected 1 parked branch, got %q", actual)
+		}
+		if (actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
+		}
+		return nil
 	})
 
 	sc.Step(`^the perennial branches are "([^"]+)"$`, func(ctx context.Context, name string) error {
@@ -1380,6 +1419,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Commands.PreviouslyCheckedOutBranch(devRepo.TestRunner)
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^the prototype branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actual := devRepo.Config.LocalGitConfig.PrototypeBranches
+		if len(actual) != 1 {
+			return fmt.Errorf("expected 1 prototype branch, got %q", actual)
+		}
+		if (actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
 		}
 		return nil
 	})

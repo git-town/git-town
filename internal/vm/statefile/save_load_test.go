@@ -48,7 +48,11 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
+				&opcodes.AddToContributionBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.AddToObservedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.AddToPrototypeBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ChangeParent{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
@@ -116,7 +120,19 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseFeatureTrackingBranch{
 					RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
+				&opcodes.RemoveFromContributionBranches{
+					Branch: gitdomain.NewLocalBranchName("branch"),
+				},
+				&opcodes.RemoveFromObservedBranches{
+					Branch: gitdomain.NewLocalBranchName("branch"),
+				},
+				&opcodes.RemoveFromParkedBranches{
+					Branch: gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.RemoveFromPerennialBranches{
+					Branch: gitdomain.NewLocalBranchName("branch"),
+				},
+				&opcodes.RemoveFromPrototypeBranches{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.RemoveGlobalConfig{
@@ -202,7 +218,31 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
+      "type": "AddToContributionBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "AddToObservedBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "AddToParkedBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
       "type": "AddToPerennialBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "AddToPrototypeBranches"
     },
     {
       "data": {
@@ -374,7 +414,31 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
+      "type": "RemoveFromContributionBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "RemoveFromObservedBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "RemoveFromParkedBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
       "type": "RemoveFromPerennialBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "RemoveFromPrototypeBranches"
     },
     {
       "data": {
