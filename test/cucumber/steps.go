@@ -1532,9 +1532,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockCommand(tool)
 	})
 
-	// This step exists to avoid re-creating commits with the same commit message
-	// and timestamp as existing commits, because they will end up with the same SHA.
-	// This can cause flaky tests.
+	// This step exists to avoid re-creating commits with the same SHA as existing commits
+	// because that can cause flaky tests.
 	sc.Step(`wait 1 second to ensure new Git timestamps`, func() {
 		time.Sleep(1 * time.Second)
 	})
