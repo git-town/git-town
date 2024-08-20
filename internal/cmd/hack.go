@@ -243,24 +243,9 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
-	branchesToSync := make([]configdomain.BranchToSync, len(branchNamesToSync))
-	mainBranch := validatedConfig.Config.MainBranch
-	for b, branchNameToSync := range branchNamesToSync {
-		branchInfoToSync, hasBranchInfoToSync := branchesSnapshot.Branches.FindByLocalName(branchNameToSync).Get()
-		if !hasBranchInfoToSync {
-			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToSync)
-		}
-		var firstCommitMessage Option[gitdomain.CommitMessage]
-		if branchNameToSync != mainBranch {
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync.BranchName(), validatedConfig.Config.MainBranch.BranchName())
-			if err != nil {
-				return data, false, err
-			}
-		}
-		branchesToSync[b] = configdomain.BranchToSync{
-			BranchInfo:         *branchInfoToSync,
-			FirstCommitMessage: firstCommitMessage,
-		}
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
