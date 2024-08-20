@@ -1,16 +1,23 @@
 # High-level CLI for Git
 
 Git Town solves the problem that using the Git CLI correctly is cumbersome and
-repetitive and therefore almost nobody uses Git correctly.
+repetitive, and therefore many developers don't use Git to its full potential.
 
-That's not a design flaw of Git. Git is not a version control system, it's an
-intentionally generic framework for creating many different types of version
-control workflows.
+Git isn't just a version control system; it's a flexible framework for creating
+various version control workflows. This flexibility means that most of us end up
+using ad-hoc workflows, either in our heads or through custom Bash scripts
+tailored to our needs. These manual workflows often lack proper specifications
+and don't handle errors and edge cases well.
 
-Git Town is automation for the most commonly used version control workflow:
-contributing to a centralized code repository. Git Town lets you use Git the way
-you do right now and provides additional Git commands to create a variety of
-branch types, keep them in sync with each other, and ship them.
+Git Town is a reusable implementation of Git workflows for common usage
+scenarios like contributing to a centralized code repository on platforms like
+GitHub, GitLab, or Gitea. Think of Git Town as your Bash scripts for Git, but
+fully engineered with rock-solid support for many use cases, edge cases, and
+error conditions.
+
+With Git Town you can keep using Git the way you do now, but with extra commands
+to create various branch types, keep them in sync, compress, review, and ship
+them efficiently.
 
 <br>
 <p align="center">
