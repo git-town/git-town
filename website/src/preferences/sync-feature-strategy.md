@@ -54,7 +54,7 @@ This sync strategy is useful when you want all your pull requests to always
 consists of only one commit.
 
 Please be aware that this sync strategy leads to more merge conflicts than the
-"merge" sync strategy when more than one Git users make commits to the same
+"merge" sync strategy when more than one Git user makes commits to the same
 branch.
 
 ## change this setting
