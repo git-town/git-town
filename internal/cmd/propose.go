@@ -201,24 +201,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := make([]configdomain.BranchToSync, len(branchNamesToSync))
-	mainBranch := validatedConfig.Config.MainBranch
-	for b, branchNameToSync := range branchNamesToSync {
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToSync).Get()
-		if !hasBranchInfo {
-			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToSync)
-		}
-		var firstCommitMessage Option[gitdomain.CommitMessage]
-		if branchNameToSync != mainBranch {
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync.BranchName(), validatedConfig.Config.MainBranch.BranchName())
-			if err != nil {
-				return data, false, err
-			}
-		}
-		branchesToSync[b] = configdomain.BranchToSync{
-			BranchInfo:         *branchInfo,
-			FirstCommitMessage: firstCommitMessage,
-		}
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
 	}
 	var bodyText gitdomain.ProposalBody
 	if body != "" {
