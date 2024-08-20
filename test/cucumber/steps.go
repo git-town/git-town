@@ -955,7 +955,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip, "main")
+		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main")
 		asserts.NoError(err)
 		if commitMessage.IsNone() {
 			panic("branch to ship contains no commits")

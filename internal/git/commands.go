@@ -344,7 +344,7 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 }
 
 // provides the commit message of the first commit in the branch with the given name
-func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (Option[gitdomain.CommitMessage], error) {
+func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, mainBranch gitdomain.BranchName) (Option[gitdomain.CommitMessage], error) {
 	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", mainBranch, branch), "--format=%h")
 	if err != nil {
 		return None[gitdomain.CommitMessage](), err
