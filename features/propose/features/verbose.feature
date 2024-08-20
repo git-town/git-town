@@ -23,6 +23,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
+      |         | backend  | git log main..feature --format=%h                                  |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
       |         | backend  | git rev-list --left-right main...origin/main                       |
@@ -42,7 +43,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 29 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """

@@ -105,7 +105,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 type prependData struct {
 	allBranches         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      gitdomain.BranchInfos
+	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
@@ -177,7 +177,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync...))
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
+	}
 	parent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	if !hasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
@@ -207,13 +210,14 @@ func prependProgram(data prependData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		for _, branchToSync := range data.branchesToSync {
-			sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-				BranchInfos:   data.allBranches,
-				Config:        data.config.Config,
-				InitialBranch: data.initialBranch,
-				Program:       prog,
-				PushBranches:  true,
-				Remotes:       data.remotes,
+			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+				BranchInfos:        data.allBranches,
+				Config:             data.config.Config,
+				FirstCommitMessage: branchToSync.FirstCommitMessage,
+				InitialBranch:      data.initialBranch,
+				Program:            prog,
+				PushBranches:       true,
+				Remotes:            data.remotes,
 			})
 		}
 	}

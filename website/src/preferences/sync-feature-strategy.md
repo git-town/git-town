@@ -44,6 +44,19 @@ The rule of thumb is that pulling in new commits via `git sync` and cleaning up
 old commits must happen separately from each other. Only then can Git guarantee
 that the necessary force-push happens without losing commits.
 
+### compress
+
+When using the `compress` sync strategy, [git sync](../commands/sync.md) first
+merges the tracking and parent branches and then
+[compresses](../commands/compress.md) the synced branch.
+
+This sync strategy is useful when you want all your pull requests to always
+consists of only one commit.
+
+Please be aware that this sync strategy leads to more merge conflicts than the
+"merge" sync strategy when more than one Git user makes commits to the same
+branch.
+
 ## change this setting
 
 The best way to change this setting is via the

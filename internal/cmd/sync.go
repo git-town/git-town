@@ -98,12 +98,13 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       NewMutable(&runProgram),
-			PushBranches:  pushBranches,
+			BranchInfos:        data.allBranches,
+			Config:             data.config.Config,
+			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside sync.BranchesProgram
+			InitialBranch:      data.initialBranch,
+			Remotes:            data.remotes,
+			Program:            NewMutable(&runProgram),
+			PushBranches:       pushBranches,
 		},
 		BranchesToSync: data.branchesToSync,
 		DryRun:         dryRun,
@@ -148,7 +149,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 type syncData struct {
 	allBranches      gitdomain.BranchInfos
 	branchesSnapshot gitdomain.BranchesSnapshot
-	branchesToSync   gitdomain.BranchInfos
+	branchesToSync   []configdomain.BranchToSync
 	config           config.ValidatedConfig
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
@@ -257,7 +258,10 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
-	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
+	branchesToSync, err := branchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
+	}
 	return syncData{
 		allBranches:      branchesSnapshot.Branches,
 		branchesSnapshot: branchesSnapshot,
@@ -271,6 +275,37 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		shouldPushTags:   shouldPushTags,
 		stashSize:        stashSize,
 	}, false, err
+}
+
+// determines the complete info needed to sync the given branches
+func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (result []configdomain.BranchToSync, err error) {
+	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	if err != nil {
+		return result, err
+	}
+	result = make([]configdomain.BranchToSync, len(branchInfosToSync))
+	for b, branchInfoToSync := range branchInfosToSync {
+		var branchNameToSync gitdomain.BranchName
+		if localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get(); hasLocalBranchToSync {
+			branchNameToSync = localBranchNameToSync.BranchName()
+		} else if remoteBranchNameToSync, hasRemoteBranch := branchInfoToSync.RemoteName.Get(); hasRemoteBranch {
+			branchNameToSync = remoteBranchNameToSync.BranchName()
+		} else {
+			panic("branchinfo has neither local nor remote name")
+		}
+		var firstCommitMessage Option[gitdomain.CommitMessage]
+		if branchNameToSync != mainBranch.BranchName() {
+			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranch.BranchName())
+			if err != nil {
+				return result, err
+			}
+		}
+		result[b] = configdomain.BranchToSync{
+			BranchInfo:         branchInfoToSync,
+			FirstCommitMessage: firstCommitMessage,
+		}
+	}
+	return result, nil
 }
 
 // cleanupPerennialParentEntries removes outdated entries from the configuration.

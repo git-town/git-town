@@ -118,7 +118,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 type proposeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
-	branchesToSync    gitdomain.BranchInfos
+	branchesToSync    []configdomain.BranchToSync
 	config            config.ValidatedConfig
 	connector         Option[hostingdomain.Connector]
 	dialogTestInputs  components.TestInputs
@@ -201,7 +201,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
+	}
 	var bodyText gitdomain.ProposalBody
 	if body != "" {
 		bodyText = body
@@ -241,14 +244,15 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 
 func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	for _, branch := range data.branchesToSync {
-		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:   data.allBranches,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Remotes:       data.remotes,
-			Program:       prog,
-			PushBranches:  true,
+	for _, branchToSync := range data.branchesToSync {
+		sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+			BranchInfos:        data.allBranches,
+			Config:             data.config.Config,
+			FirstCommitMessage: branchToSync.FirstCommitMessage,
+			InitialBranch:      data.initialBranch,
+			Remotes:            data.remotes,
+			Program:            prog,
+			PushBranches:       true,
 		})
 	}
 	if data.initialBranchType == configdomain.BranchTypePrototypeBranch {

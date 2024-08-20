@@ -15,11 +15,6 @@ type FailureCollector struct {
 	gohacks.ErrorCollector `exhaustruct:"optional"`
 }
 
-func (self *FailureCollector) BranchInfos(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
-	self.Check(err)
-	return value
-}
-
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdomain.Remotes {

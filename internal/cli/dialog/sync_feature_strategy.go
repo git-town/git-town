@@ -23,14 +23,16 @@ hence their name.
 )
 
 const (
-	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
-	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
+	syncFeatureStrategyEntryMerge    syncFeatureStrategyEntry = `merge updates from the parent and tracking branch`
+	syncFeatureStrategyEntryRebase   syncFeatureStrategyEntry = `rebase branches against their parent and tracking branch`
+	syncFeatureStrategyEntryCompress syncFeatureStrategyEntry = `compress the branch after merging parent and tracking`
 )
 
 func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
 	entries := list.NewEntries(
 		syncFeatureStrategyEntryMerge,
 		syncFeatureStrategyEntryRebase,
+		syncFeatureStrategyEntryCompress,
 	)
 	var defaultPos int
 	switch existing {
@@ -38,8 +40,10 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 		defaultPos = 0
 	case configdomain.SyncFeatureStrategyRebase:
 		defaultPos = 1
+	case configdomain.SyncFeatureStrategyCompress:
+		defaultPos = 2
 	default:
-		panic("unknown sync-feature-strategy: " + existing.String())
+		panic("unknown sync strategy: " + existing.String())
 	}
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
@@ -62,6 +66,8 @@ func (self syncFeatureStrategyEntry) SyncFeatureStrategy() configdomain.SyncFeat
 		return configdomain.SyncFeatureStrategyMerge
 	case syncFeatureStrategyEntryRebase:
 		return configdomain.SyncFeatureStrategyRebase
+	case syncFeatureStrategyEntryCompress:
+		return configdomain.SyncFeatureStrategyCompress
 	}
 	panic("unhandled syncFeatureStrategyEntry: " + self)
 }

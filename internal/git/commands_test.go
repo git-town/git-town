@@ -239,6 +239,38 @@ func TestBackendCommands(t *testing.T) {
 			_, err := repo.FirstCommitMessageInBranch(repo.TestRunner, "zonk", "main")
 			must.Error(t, err)
 		})
+		t.Run("branch exists only at the remote", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.CreateGitTown(t)
+			repoDir := t.TempDir()
+			repo := testruntime.Clone(origin.TestRunner, repoDir)
+			branch := gitdomain.NewLocalBranchName("branch")
+			main := gitdomain.NewRemoteBranchName("origin/main")
+			repo.CreateFeatureBranch(branch, main.BranchName())
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_1",
+				Message:  "commit message 1",
+			})
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_2",
+				Message:  "commit message 2",
+			})
+			repo.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file_3",
+				Message:  "commit message 3",
+			})
+			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+			repo.CheckoutBranch(main.LocalBranchName())
+			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
+			must.NoError(t, err)
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
+			must.NoError(t, err)
+			want := Some(gitdomain.CommitMessage("commit message 1"))
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("FirstExistingBranch", func(t *testing.T) {

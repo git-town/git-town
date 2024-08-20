@@ -243,8 +243,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
-	var branchesToSync gitdomain.BranchInfos
-	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
+	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		allBranches:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
