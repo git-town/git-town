@@ -177,24 +177,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := make([]configdomain.BranchToSync, len(branchNamesToSync))
-	for b, branchNameToSync := range branchNamesToSync {
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToSync).Get()
-		if !hasBranchInfo {
-			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToSync)
-		}
-		mainBranch := validatedConfig.Config.MainBranch
-		var firstCommitMessage Option[gitdomain.CommitMessage]
-		if branchNameToSync != mainBranch {
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync.BranchName(), validatedConfig.Config.MainBranch.BranchName())
-			if err != nil {
-				return data, false, err
-			}
-		}
-		branchesToSync[b] = configdomain.BranchToSync{
-			BranchInfo:         *branchInfo,
-			FirstCommitMessage: firstCommitMessage,
-		}
+	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	if err != nil {
+		return data, false, err
 	}
 	parent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	if !hasParent {
