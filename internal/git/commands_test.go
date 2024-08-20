@@ -202,7 +202,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file",
 				Message:  "my commit message",
 			})
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("my commit message"))
 			must.Eq(t, want, have)
@@ -228,7 +228,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file_3",
 				Message:  "commit message 3",
 			})
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch, main)
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
