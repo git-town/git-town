@@ -263,7 +263,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:  "commit message 3",
 			})
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
-			repo.DeleteLocalBranch(repo.TestRunner, branch)
+			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
+			must.NoError(t, err)
 			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.TrackingBranch().BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
