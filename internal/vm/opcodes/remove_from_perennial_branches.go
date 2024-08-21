@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
+// removes the branch with the given name from the perennial branches list in the Git config
 type RemoveFromPerennialBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

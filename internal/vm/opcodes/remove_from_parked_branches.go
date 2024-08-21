@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// RemoveFromParkedBranches removes the branch with the given name as a parked branch.
+// removes the branch with the given name from the parked branches list in the Git config
 type RemoveFromParkedBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
