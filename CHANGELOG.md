@@ -1,5 +1,19 @@
 # Git Town Changelog
 
+## 15.2.0 (2024-08-21)
+
+Big thanks to @kevgo, @mball-agathos, @ruudk, @sergej-koscejev for contributing super useful feedback, ideas, and code to 32 shipped PRs and 5 resolved issues!
+
+#### New Features
+
+- The new "compress" sync strategy always compresses branches while syncing them ([#3320](https://github.com/git-town/git-town/issues/3320)).
+- Basic support for integrating Git Town into [lazygit](https://github.com/jesseduffield/lazygit) ([#3872](https://github.com/git-town/git-town/pull/3872)).
+
+#### Bug Fixes
+
+- Renaming branches now keeps their contribution, observed, parked, and prototype status ([#3864](https://github.com/git-town/git-town/issues/3864)).
+- The commands git town contribute, observe, park, and prototype now behave more correct and consistent ([#3880](https://github.com/git-town/git-town/pull/3880)).
+
 ## 15.1.0 (2024-08-09)
 
 Numerous thanks to @FirelightFlagboy, @Iron-Ham, @IvanVas, @JaredSharplin, @JustinBis, @TheHolyWaffle, @WhosNickDoglio, @alexus37, @alphatroya, @anikrajc, @blaggacao, @charlierudolph, @cjol, @connected-rmcleod, @cridasilva, @defunctzombie, @erik-rw, @kevgo, @pattiereaves, @sgarfinkel, @stephenwade, @teumas, @zodman for the super useful feedback, ideas, and code contributions to 31 shipped PRs and 19 resolved issues.
