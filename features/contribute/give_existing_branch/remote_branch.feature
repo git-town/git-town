@@ -23,10 +23,7 @@ Feature: make another remote branch a contribution branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH         | COMMAND                      |
-      | remote-feature | git add -A                   |
-      |                | git stash                    |
-      |                | git checkout main            |
+      | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-      |                | git stash pop                |
     And the current branch is now "main"
     And there are now no contribution branches
