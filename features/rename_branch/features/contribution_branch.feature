@@ -1,4 +1,3 @@
-@this
 Feature: rename a contribution branch
 
   Background:
