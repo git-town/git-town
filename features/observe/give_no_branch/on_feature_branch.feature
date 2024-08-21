@@ -3,9 +3,9 @@ Feature: observing the current feature branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE    | PARENT | LOCATIONS |
-      | branch | feature | main   | local     |
-    And the current branch is "branch"
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the current branch is "feature"
     And an uncommitted file
     When I run "git-town observe"
 
@@ -13,19 +13,19 @@ Feature: observing the current feature branch
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "feature" is now an observed branch
       """
-    And the current branch is still "branch"
-    And branch "branch" is now observed
+    And the current branch is still "feature"
+    And branch "feature" is now observed
     And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND       |
-      | branch | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And the current branch is still "branch"
+      | BRANCH  | COMMAND       |
+      | feature | git add -A    |
+      |         | git stash     |
+      |         | git stash pop |
+    And the current branch is still "feature"
     And there are now no observed branches
     And the uncommitted file still exists

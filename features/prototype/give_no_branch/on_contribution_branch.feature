@@ -3,29 +3,25 @@ Feature: prototype the current contribution branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE         | LOCATIONS |
-      | branch | contribution | local     |
-    And the current branch is "branch"
+      | NAME         | TYPE         | LOCATIONS |
+      | contribution | contribution | local     |
+    And the current branch is "contribution"
     When I run "git-town prototype"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now a prototype branch
+      branch "contribution" is now a prototype branch
       """
-    And the current branch is still "branch"
-    And branch "branch" is now prototype
+    And the current branch is still "contribution"
+    And branch "contribution" is now prototype
     And there are now no contribution branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | branch | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And the current branch is still "branch"
+    Then it runs no commands
+    And the current branch is still "contribution"
     And the initial branches and lineage exist
-    And branch "branch" is now a contribution branch
+    And branch "contribution" is now a contribution branch
     And there are now no prototype branches

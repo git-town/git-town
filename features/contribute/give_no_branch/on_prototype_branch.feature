@@ -3,28 +3,24 @@ Feature: make the current prototype branch a contribution branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE      | PARENT | LOCATIONS |
-      | branch | prototype | main   | local     |
-    And the current branch is "branch"
+      | NAME      | TYPE      | PARENT | LOCATIONS     |
+      | prototype | prototype | main   | local, origin |
+    And the current branch is "prototype"
     When I run "git-town contribute"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now a contribution branch
+      branch "prototype" is now a contribution branch
       """
-    And branch "branch" is now a contribution branch
-    And the current branch is still "branch"
+    And branch "prototype" is now a contribution branch
+    And the current branch is still "prototype"
     And there are now no prototype branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | branch | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And the current branch is still "branch"
-    And branch "branch" is now prototype
+    Then it runs no commands
+    And the current branch is still "prototype"
+    And branch "prototype" is now prototype
     And there are now no contribution branches

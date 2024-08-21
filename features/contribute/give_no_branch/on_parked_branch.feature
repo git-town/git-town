@@ -3,28 +3,24 @@ Feature: make the current parked branch a contribution branch
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE   | PARENT | LOCATIONS |
-      | branch | parked | main   | local     |
-    And the current branch is "branch"
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | parked | parked | main   | local, origin |
+    And the current branch is "parked"
     When I run "git-town contribute"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now a contribution branch
+      branch "parked" is now a contribution branch
       """
-    And branch "branch" is now a contribution branch
-    And the current branch is still "branch"
+    And branch "parked" is now a contribution branch
+    And the current branch is still "parked"
     And there are now no parked branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | branch | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And the current branch is still "branch"
-    And branch "branch" is now parked
+    Then it runs no commands
+    And the current branch is still "parked"
+    And branch "parked" is now parked
     And there are now no contribution branches
