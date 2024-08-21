@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v15/internal/cli/flags"
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v15/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +49,7 @@ func rootCmd() cobra.Command {
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
 	if showVersion {
-		fmt.Println("Git Town 15.1.0")
+		fmt.Println("Git Town " + config.GitTownVersion)
 		return nil
 	}
 	return cmd.Help()

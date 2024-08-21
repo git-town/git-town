@@ -2,6 +2,7 @@ package execute
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v15/internal/config"
@@ -22,6 +23,9 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	commandsCounter := NewMutable(new(gohacks.Counter))
+	if args.Verbose {
+		fmt.Println("Git Town " + config.GitTownVersion)
+	}
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
