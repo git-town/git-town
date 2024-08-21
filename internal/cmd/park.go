@@ -124,35 +124,13 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if err != nil {
 		return parkData{}, err
 	}
-	branchesToPark := commandconfig.BranchesAndTypes{}
-	var branchToCheckout Option[gitdomain.LocalBranchName]
-	switch len(args) {
-	case 0:
-		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-		if !hasCurrentBranch {
-			return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		branchesToPark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToPark.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
-		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			branchToCheckout = Some(branch)
-		} else {
-			branchToCheckout = None[gitdomain.LocalBranchName]()
-		}
-	default:
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
-	}
+	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return parkData{
 		allBranches:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
 		branchToCheckout:      branchToCheckout,
 		branchesToPark:        branchesToPark,
-	}, nil
+	}, err
 }
 
 func validateParkData(data parkData) error {

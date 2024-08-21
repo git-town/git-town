@@ -135,35 +135,13 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if err != nil {
 		return contributeData{}, err
 	}
-	branchesToMakeContribution := commandconfig.BranchesAndTypes{}
-	var branchToCheckout Option[gitdomain.LocalBranchName]
-	switch len(args) {
-	case 0:
-		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-		if !hasCurrentBranch {
-			return contributeData{}, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		branchesToMakeContribution.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMakeContribution.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
-		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			branchToCheckout = Some(branch)
-		} else {
-			branchToCheckout = None[gitdomain.LocalBranchName]()
-		}
-	default:
-		branchesToMakeContribution.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
-	}
+	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return contributeData{
 		allBranches:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
 		branchToCheckout:      branchToCheckout,
 		branchesToMark:        branchesToMakeContribution,
-	}, nil
+	}, err
 }
 
 func validateContributeData(data contributeData) error {

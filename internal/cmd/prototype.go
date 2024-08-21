@@ -122,32 +122,13 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if err != nil {
 		return prototypeData{}, err
 	}
-	branchesToPrototype := commandconfig.BranchesAndTypes{}
-	branchToCheckout := None[gitdomain.LocalBranchName]()
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return prototypeData{}, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	switch len(args) {
-	case 0:
-		branchesToPrototype.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToPrototype.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		trackingBranchName := branch.TrackingBranch()
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
-		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			branchToCheckout = Some(branch)
-		}
-	default:
-		branchesToPrototype.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-	}
+	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return prototypeData{
 		allBranches:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPrototype: branchesToPrototype,
 		checkout:            branchToCheckout,
-	}, nil
+	}, err
 }
 
 func validatePrototypeData(data prototypeData) error {

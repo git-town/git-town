@@ -135,33 +135,13 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if err != nil {
 		return observeData{}, err
 	}
-	branchesToObserve := commandconfig.BranchesAndTypes{}
-	branchToCheckout := None[gitdomain.LocalBranchName]()
-	switch len(args) {
-	case 0:
-		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-		if !hasCurrentBranch {
-			return observeData{}, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		branchesToObserve.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
-		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			branchToCheckout = Some(branch)
-		} else {
-			branchToCheckout = None[gitdomain.LocalBranchName]()
-		}
-	default:
-		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-	}
+	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
 		checkout:          branchToCheckout,
-	}, nil
+	}, err
 }
 
 func validateObserveData(data observeData) error {
