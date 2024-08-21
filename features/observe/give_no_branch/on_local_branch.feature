@@ -1,4 +1,4 @@
-Feature: observe the current local branch
+Feature: observe the current local feature branch
 
   Background:
     Given a Git repo with origin
