@@ -19,11 +19,7 @@ Feature: prototype the current branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND       |
-      | feature | git add -A    |
-      |         | git stash     |
-      |         | git stash pop |
+    Then it runs no commands
     And there are now no prototype branches
     And the current branch is still "feature"
     And the initial branches and lineage exist

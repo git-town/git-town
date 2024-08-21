@@ -37,11 +37,7 @@ Feature: prototype multiple other branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+    Then it runs no commands
     And there are now no prototype branches
     And branch "contribution" is now a contribution branch
     And branch "observed" is now observed
