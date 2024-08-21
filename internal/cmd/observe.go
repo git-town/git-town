@@ -135,7 +135,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if err != nil {
 		return observeData{}, err
 	}
-	branchesToObserve, branchToCheckout, err := execute.DetermineBranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return observeData{
 		allBranches:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
