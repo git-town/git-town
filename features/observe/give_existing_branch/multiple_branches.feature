@@ -1,4 +1,4 @@
-Feature: observing multiple branches
+Feature: observing multiple other branches
 
   Background:
     Given a Git repo with origin
@@ -8,7 +8,6 @@ Feature: observing multiple branches
       | contribution | contribution |        | local, origin |
       | parked       | parked       | main   | local, origin |
       | prototype    | prototype    | main   | local, origin |
-    And an uncommitted file
     When I run "git-town observe feature contribution parked prototype"
 
   Scenario: result
@@ -37,16 +36,10 @@ Feature: observing multiple branches
     And branch "prototype" is now observed
     And there are now no prototype branches
     And the current branch is still "main"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+    Then it runs no commands
     And there are now no observed branches
     And the initial branches exist
     And the current branch is still "main"
-    And the uncommitted file still exists

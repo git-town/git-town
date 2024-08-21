@@ -1,4 +1,4 @@
-Feature: cannot observe perennial branches
+Feature: observe the current perennial branch
 
   Background:
     Given a Git repo with origin

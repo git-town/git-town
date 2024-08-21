@@ -135,7 +135,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if err != nil {
 		return contributeData{}, err
 	}
-	branchesToMark := commandconfig.BranchesAndTypes{}
+	branchesToMakeContribution := commandconfig.BranchesAndTypes{}
 	var branchToCheckout Option[gitdomain.LocalBranchName]
 	switch len(args) {
 	case 0:
@@ -143,38 +143,31 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		if !hasCurrentBranch {
 			return contributeData{}, errors.New(messages.CurrentBranchCannotDetermine)
 		}
-		branchesToMark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
+		branchesToMakeContribution.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		trackingBranchName := branch.TrackingBranch()
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
-		if !hasBranchInfo {
-			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
-		}
-		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
+		branchesToMakeContribution.Add(branch, repo.UnvalidatedConfig.Config.Get())
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
+		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
 		} else {
 			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
+		branchesToMakeContribution.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return contributeData{
 		allBranches:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
 		branchToCheckout:      branchToCheckout,
-		branchesToMark:        branchesToMark,
+		branchesToMark:        branchesToMakeContribution,
 	}, nil
 }
 
 func validateContributeData(data contributeData) error {
 	for branchName, branchType := range data.branchesToMark {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotMakeContribution)
@@ -183,6 +176,14 @@ func validateContributeData(data contributeData) error {
 		case configdomain.BranchTypeContributionBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+		}
+		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		if hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
 		}
 	}
 	return nil

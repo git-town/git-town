@@ -1,33 +1,26 @@
-Feature: observing a parked branch
+Feature: observing the current parked branch
 
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE   | PARENT | LOCATIONS |
-      | branch | parked | main   | local     |
-    And the current branch is "branch"
-    And an uncommitted file
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | parked | parked | main   | local, origin |
+    And the current branch is "parked"
     When I run "git-town observe"
 
   Scenario: result
     Then it runs no commands
     And it prints:
       """
-      branch "branch" is now an observed branch
+      branch "parked" is now an observed branch
       """
-    And the current branch is still "branch"
-    And branch "branch" is now observed
+    And the current branch is still "parked"
+    And branch "parked" is now observed
     And there are now no parked branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | branch | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And the current branch is still "branch"
-    And branch "branch" is now parked
+    Then it runs no commands
+    And the current branch is still "parked"
+    And branch "parked" is now parked
     And there are now no observed branches
-    And the uncommitted file still exists

@@ -1,12 +1,11 @@
-Feature: cannot prototype perennial branches
+Feature: prototype the current perennial branch
 
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE      | LOCATIONS |
-      | branch | perennial | local     |
-    And the current branch is "branch"
-    And an uncommitted file
+      | NAME      | TYPE      | LOCATIONS |
+      | perennial | perennial | local     |
+    And the current branch is "perennial"
     When I run "git-town prototype"
 
   Scenario: result
@@ -15,15 +14,13 @@ Feature: cannot prototype perennial branches
       """
       cannot prototype perennial branches
       """
-    And the current branch is still "branch"
-    And the perennial branches are still "branch"
+    And the current branch is still "perennial"
+    And the perennial branches are still "perennial"
     And there are still no prototype branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
-    And the current branch is still "branch"
-    And the perennial branches are still "branch"
+    And the current branch is still "perennial"
+    And the perennial branches are still "perennial"
     And there are still no prototype branches
-    And the uncommitted file still exists
