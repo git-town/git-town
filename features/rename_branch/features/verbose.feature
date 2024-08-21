@@ -28,8 +28,8 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       | old    | frontend | git branch new old                            |
       |        | frontend | git checkout new                              |
-      |        | backend  | git config --unset git-town-branch.old.parent |
       |        | backend  | git config git-town-branch.new.parent main    |
+      |        | backend  | git config --unset git-town-branch.old.parent |
       | new    | frontend | git push -u origin new                        |
       |        | frontend | git push origin :old                          |
       |        | frontend | git branch -D old                             |
