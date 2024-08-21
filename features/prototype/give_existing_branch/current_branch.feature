@@ -1,4 +1,4 @@
-Feature: prototype the current branch
+Feature: prototype the current feature branch
 
   Background:
     Given a local Git repo
