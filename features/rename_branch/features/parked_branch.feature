@@ -8,7 +8,7 @@ Feature: rename a parked branch
     And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE             |
-      | parked | local, origin | experimental commit |
+      | parked | local, origin | low-priority commit |
     When I run "git-town rename-branch parked new"
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: rename a parked branch
     And the parked branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
-      | new    | local, origin | experimental commit |
+      | new    | local, origin | low-priority commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
@@ -33,7 +33,7 @@ Feature: rename a parked branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                           |
-      | new    | git branch parked {{ sha 'experimental commit' }} |
+      | new    | git branch parked {{ sha 'low-priority commit' }} |
       |        | git push -u origin parked                         |
       |        | git push origin :new                              |
       |        | git checkout parked                               |
