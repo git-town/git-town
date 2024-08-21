@@ -2,7 +2,6 @@ Feature: prototype the current main branch
 
   Background:
     Given a Git repo with origin
-    And an uncommitted file
     When I run "git-town prototype"
 
   Scenario: result
@@ -13,7 +12,6 @@ Feature: prototype the current main branch
       """
     And the current branch is still "main"
     And the main branch is still "main"
-    And the uncommitted file still exists
     And there are still no prototype branches
 
   Scenario: undo

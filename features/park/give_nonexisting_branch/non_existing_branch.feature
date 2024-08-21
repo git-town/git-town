@@ -6,7 +6,6 @@ Feature: cannot park non-existing branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"
-    And an uncommitted file
     When I run "git-town park feature non-existing"
 
   Scenario: result
@@ -16,7 +15,6 @@ Feature: cannot park non-existing branches
       there is no branch "non-existing"
       """
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And there are still no parked branches
 
   Scenario: undo

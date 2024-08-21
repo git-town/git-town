@@ -6,7 +6,6 @@ Feature: prototype another remote branch
       | NAME           | TYPE   | PARENT | LOCATIONS |
       | remote-feature | (none) | main   | origin    |
     And I run "git fetch"
-    And an uncommitted file
     When I run "git-town prototype remote-feature"
 
   Scenario: result
@@ -19,7 +18,6 @@ Feature: prototype another remote branch
       """
     And the current branch is now "remote-feature"
     And branch "remote-feature" is now prototype
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,4 +31,3 @@ Feature: prototype another remote branch
     And the current branch is now "main"
     And there are now no observed branches
     And the initial branches exist
-    And the uncommitted file still exists

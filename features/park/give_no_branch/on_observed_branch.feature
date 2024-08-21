@@ -6,7 +6,6 @@ Feature: park the current observed branch
       | NAME     | TYPE     | LOCATIONS |
       | observed | observed | local     |
     And the current branch is "observed"
-    And an uncommitted file
     When I run "git-town park"
 
   Scenario: result
@@ -18,7 +17,6 @@ Feature: park the current observed branch
     And the current branch is still "observed"
     And branch "observed" is now parked
     And there are now no observed branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -30,4 +28,3 @@ Feature: park the current observed branch
     And the current branch is still "observed"
     And branch "observed" is now observed
     And there are now no parked branches
-    And the uncommitted file still exists

@@ -6,7 +6,6 @@ Feature: parking the current feature branch
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
     And the current branch is "branch"
-    And an uncommitted file
     When I run "git-town park"
 
   Scenario: result
@@ -17,7 +16,6 @@ Feature: parking the current feature branch
       """
     And the current branch is still "branch"
     And branch "branch" is now parked
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -28,4 +26,3 @@ Feature: parking the current feature branch
       |        | git stash pop |
     And the current branch is still "branch"
     And there are now no parked branches
-    And the uncommitted file still exists

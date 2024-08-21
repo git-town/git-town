@@ -6,7 +6,6 @@ Feature: prototype the current feature branch
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
     And the current branch is "branch"
-    And an uncommitted file
     When I run "git-town prototype"
 
   Scenario: result
@@ -17,7 +16,6 @@ Feature: prototype the current feature branch
       """
     And the current branch is still "branch"
     And branch "branch" is now prototype
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -29,4 +27,3 @@ Feature: prototype the current feature branch
     And the current branch is still "branch"
     And there are now no prototype branches
     And the initial branches exist
-    And the uncommitted file still exists

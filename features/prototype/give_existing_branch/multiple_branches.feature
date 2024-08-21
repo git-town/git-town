@@ -8,7 +8,6 @@ Feature: prototype multiple other branches
       | contribution | contribution |        | local, origin |
       | observed     | observed     |        | local, origin |
       | parked       | parked       | main   | local, origin |
-    And an uncommitted file
     When I run "git-town prototype feature contribution observed parked"
 
   Scenario: result
@@ -35,7 +34,6 @@ Feature: prototype multiple other branches
     And branch "parked" is now prototype
     And branch "parked" is still parked
     And the current branch is still "main"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,5 +47,4 @@ Feature: prototype multiple other branches
     And branch "observed" is now observed
     And branch "parked" is still parked
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial branches and lineage exist

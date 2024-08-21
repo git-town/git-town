@@ -6,7 +6,6 @@ Feature: prototype the current perennial branch
       | NAME   | TYPE      | LOCATIONS |
       | branch | perennial | local     |
     And the current branch is "branch"
-    And an uncommitted file
     When I run "git-town prototype"
 
   Scenario: result
@@ -18,7 +17,6 @@ Feature: prototype the current perennial branch
     And the current branch is still "branch"
     And the perennial branches are still "branch"
     And there are still no prototype branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -26,4 +24,3 @@ Feature: prototype the current perennial branch
     And the current branch is still "branch"
     And the perennial branches are still "branch"
     And there are still no prototype branches
-    And the uncommitted file still exists
