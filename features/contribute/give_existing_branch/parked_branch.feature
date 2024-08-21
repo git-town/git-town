@@ -1,4 +1,4 @@
-Feature: make a parked branch a contribution branch
+Feature: make another parked branch a contribution branch
 
   Background:
     Given a Git repo with origin

@@ -1,11 +1,11 @@
-Feature: make a local branch a contribution branch
+Feature: make another local branch a contribution branch
 
   Background:
     Given a local Git repo
     And the branch
-      | NAME    | TYPE    | PARENT | LOCATIONS |
-      | feature | feature | main   | local     |
-    When I run "git-town contribute feature"
+      | NAME  | TYPE    | PARENT | LOCATIONS |
+      | local | feature | main   | local     |
+    When I run "git-town contribute local"
 
   Scenario: result
     Then it runs no commands
@@ -13,7 +13,7 @@ Feature: make a local branch a contribution branch
       """
       Branches you want to contribute to must have a remote branch because they are per definition other people's branches.
       """
-    And branch "feature" is still a feature branch
+    And branch "local" is still a feature branch
     And there are still no contribution branches
     And the current branch is still "main"
 
@@ -21,5 +21,5 @@ Feature: make a local branch a contribution branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "main"
-    And branch "feature" is still a feature branch
+    And branch "local" is still a feature branch
     And there are still no contribution branches

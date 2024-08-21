@@ -1,4 +1,4 @@
-Feature: make a known remote branch a contribution branch
+Feature: make a remote branch a contribution branch
 
   Background:
     Given a Git repo with origin

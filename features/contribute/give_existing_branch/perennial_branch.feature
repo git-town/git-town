@@ -1,4 +1,4 @@
-Feature: make a perennial branch a contribution branch
+Feature: make another perennial branch a contribution branch
 
   Background:
     Given a Git repo with origin

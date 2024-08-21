@@ -1,3 +1,4 @@
+@this
 Feature: make an existing contribution branch a contribution branch
 
   Background:
@@ -5,7 +6,8 @@ Feature: make an existing contribution branch a contribution branch
     And the branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
-    When I run "git-town contribute contribution"
+    And the current branch is "contribution"
+    When I run "git-town contribute"
 
   Scenario: result
     Then it runs no commands
