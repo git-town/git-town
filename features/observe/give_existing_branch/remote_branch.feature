@@ -1,4 +1,4 @@
-Feature: make another remote branch an observed branch
+Feature: make another remote feature branch an observed branch
 
   Background:
     Given a Git repo with origin
