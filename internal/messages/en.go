@@ -51,7 +51,7 @@ const (
 	ContinueMessage                   = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance              = "To continue by skipping the current branch, run \"git town skip\"."
 	ContributeBranchIsNowContribution = "branch %q is now a contribution branch\n"
-	ContributeBranchIsLocal           = "Branch %q is local only. Branches you want to contribute to must have a remote branch because they are per definition other people's branches."
+	ContributeBranchIsLocal           = "branch %q is local only - branches you want to contribute to must have a remote branch because they are per definition other people's branches"
 	ContributionBranchCannotPark      = "cannot park contribution branches"
 	ContributionBranchCannotPropose   = "cannot propose contribution branches"
 	ContributionBranchCannotShip      = "cannot ship contribution branches"
@@ -126,7 +126,7 @@ END OUTPUT FROM 'git branch -vva'
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
-	ObserveBranchIsLocal                  = "Branch %q is local only. Branches you want to observe must have a remote branch because they are per definition other people's branches."
+	ObserveBranchIsLocal                  = "branch %q is local only - branches you want to observe must have a remote branch because they are per definition other people's branches"
 	ObservedBranchIsNowObserved           = "branch %q is now an observed branch\n"
 	OfflineNotAllowed                     = "this command requires an active internet connection"
 	OpcodeUnknown                         = "unknown opcode: %q, run \"git town status reset\" to reset it"

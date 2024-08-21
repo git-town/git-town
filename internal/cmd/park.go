@@ -92,8 +92,8 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 type parkData struct {
 	allBranches           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	branchesToPark        commandconfig.BranchesAndTypes
 	branchToCheckout      Option[gitdomain.LocalBranchName]
+	branchesToPark        commandconfig.BranchesAndTypes
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -150,8 +150,8 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	return parkData{
 		allBranches:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
-		branchesToPark:        branchesToPark,
 		branchToCheckout:      branchToCheckout,
+		branchesToPark:        branchesToPark,
 	}, nil
 }
 
