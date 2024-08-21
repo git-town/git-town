@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// RemoveFromPrototypeBranches removes the branch with the given name as a prototype branch.
+// removes the branch with the given name from the prototype branches list in the Git config
 type RemoveFromPrototypeBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

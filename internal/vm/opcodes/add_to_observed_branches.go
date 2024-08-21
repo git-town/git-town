@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// registers the branch with the given name as a perennial branch in the Git config
-type AddToPerennialBranches struct {
+// registers the branch with the given name as an observed branch in the Git config
+type AddToObservedBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *AddToPerennialBranches) Run(args shared.RunArgs) error {
-	return args.Config.AddToPerennialBranches(self.Branch)
+func (self *AddToObservedBranches) Run(args shared.RunArgs) error {
+	return args.Config.AddToObservedBranches(self.Branch)
 }

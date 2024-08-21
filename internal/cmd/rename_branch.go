@@ -230,11 +230,26 @@ func renameBranchProgram(data renameBranchData) program.Program {
 				result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
 			} else {
-				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
-				parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get()
-				if hasParent {
+				if data.config.Config.IsPrototypeBranch(data.initialBranch) {
+					result.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: oldLocalBranch})
+					result.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.newBranch})
+				}
+				if data.config.Config.IsObservedBranch(data.initialBranch) {
+					result.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: oldLocalBranch})
+					result.Value.Add(&opcodes.AddToObservedBranches{Branch: data.newBranch})
+				}
+				if data.config.Config.IsContributionBranch(data.initialBranch) {
+					result.Value.Add(&opcodes.RemoveFromContributionBranches{Branch: oldLocalBranch})
+					result.Value.Add(&opcodes.AddToContributionBranches{Branch: data.newBranch})
+				}
+				if data.config.Config.IsParkedBranch(data.initialBranch) {
+					result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
+					result.Value.Add(&opcodes.AddToParkedBranches{Branch: data.newBranch})
+				}
+				if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 					result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 				}
+				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 			}
 		}
 		for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {

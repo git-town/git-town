@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// RemoveFromObservedBranches removes the branch with the given name as an observed branch.
+// removes the branch with the given name from the observed branches list in the Git config
 type RemoveFromObservedBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
