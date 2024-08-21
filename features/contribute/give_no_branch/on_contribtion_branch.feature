@@ -1,4 +1,3 @@
-@this
 Feature: make the current contribution branch a contribution branch
 
   Background:
