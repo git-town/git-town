@@ -19,10 +19,6 @@ Feature: make another parked branch a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+    Then it runs no commands
     And the current branch is still "main"
     And the parked branches are now "parked"
