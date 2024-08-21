@@ -1,4 +1,4 @@
-Feature: cannot prototype perennial branches
+Feature: prototype the current perennial branch
 
   Background:
     Given a Git repo with origin

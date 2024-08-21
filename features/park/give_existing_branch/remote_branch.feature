@@ -1,4 +1,4 @@
-Feature: park a remote branch
+Feature: park another remote branch
 
   Background:
     Given a Git repo with origin

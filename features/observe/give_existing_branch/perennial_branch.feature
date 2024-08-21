@@ -1,4 +1,4 @@
-Feature: observe a perennial branch
+Feature: make another perennial branch an observed branch
 
   Background:
     Given a Git repo with origin

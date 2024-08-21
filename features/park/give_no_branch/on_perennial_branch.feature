@@ -1,4 +1,4 @@
-Feature: cannot park perennial branches
+Feature: park the current perennial branch
 
   Background:
     Given a Git repo with origin

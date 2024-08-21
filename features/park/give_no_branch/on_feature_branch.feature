@@ -1,4 +1,4 @@
-Feature: parking the current branch
+Feature: parking the current feature branch
 
   Background:
     Given a Git repo with origin

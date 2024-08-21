@@ -1,4 +1,4 @@
-Feature: observe a remote branch
+Feature: make another remote branch an observed branch
 
   Background:
     Given a Git repo with origin

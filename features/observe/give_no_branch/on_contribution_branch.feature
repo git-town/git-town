@@ -1,4 +1,4 @@
-Feature: observing a contribution branch
+Feature: observe the current contribution branch
 
   Background:
     Given a Git repo with origin

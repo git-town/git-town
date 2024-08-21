@@ -1,4 +1,4 @@
-Feature: parking a contribution branch
+Feature: parking the current contribution branch
 
   Background:
     Given a Git repo with origin

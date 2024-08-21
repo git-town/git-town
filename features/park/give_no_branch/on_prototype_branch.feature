@@ -1,4 +1,4 @@
-Feature: parking the current prototype branch
+Feature: park the current prototype branch
 
   Background:
     Given a Git repo with origin

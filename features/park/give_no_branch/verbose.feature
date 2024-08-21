@@ -1,4 +1,4 @@
-Feature: park a branch verbosely
+Feature: park the current branch verbosely
 
   Background:
     Given a Git repo with origin

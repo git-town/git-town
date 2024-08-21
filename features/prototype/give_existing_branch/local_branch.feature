@@ -1,4 +1,4 @@
-Feature: park a local branch
+Feature: prototype another local branch
 
   Background:
     Given a local Git repo

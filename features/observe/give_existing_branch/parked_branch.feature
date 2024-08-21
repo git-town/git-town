@@ -1,4 +1,4 @@
-Feature: make a parked branch an observed branch
+Feature: make another parked branch an observed branch
 
   Background:
     Given a Git repo with origin

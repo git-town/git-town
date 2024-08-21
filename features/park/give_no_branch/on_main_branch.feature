@@ -1,4 +1,4 @@
-Feature: cannot park the main branch
+Feature: park the current main branch
 
   Background:
     Given a Git repo with origin

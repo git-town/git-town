@@ -1,4 +1,4 @@
-Feature: make a remote branch prototype
+Feature: prototype another remote branch
 
   Background:
     Given a Git repo with origin

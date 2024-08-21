@@ -1,4 +1,4 @@
-Feature: prototype a branch verbosely
+Feature: prototype the current branch verbosely
 
   Background:
     Given a Git repo with origin

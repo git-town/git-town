@@ -1,4 +1,4 @@
-Feature: provide the current branch as an argument to prototype
+Feature: prototype the current branch
 
   Background:
     Given a local Git repo

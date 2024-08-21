@@ -1,4 +1,4 @@
-Feature: parking multiple branches
+Feature: parking multiple other branches
 
   Background:
     Given a Git repo with origin

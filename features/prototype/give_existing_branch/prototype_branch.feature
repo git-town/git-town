@@ -1,4 +1,4 @@
-Feature: provide a branch that is already a prototype branch as an argument to prototype
+Feature: prototype another prototype branch
 
   Background:
     Given a Git repo with origin

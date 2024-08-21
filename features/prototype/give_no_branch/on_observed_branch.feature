@@ -1,4 +1,4 @@
-Feature: prototyping an observed branch
+Feature: prototype the current observed branch
 
   Background:
     Given a Git repo with origin

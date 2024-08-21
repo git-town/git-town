@@ -1,4 +1,4 @@
-Feature: can park the current local branch
+Feature: park the current local branch
 
   Background:
     Given a Git repo with origin

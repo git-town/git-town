@@ -1,4 +1,4 @@
-Feature: make an existing contribution branch an observed branch
+Feature: make another contribution branch an observed branch
 
   Background:
     Given a Git repo with origin

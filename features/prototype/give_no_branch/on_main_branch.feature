@@ -1,4 +1,4 @@
-Feature: cannot prototype the main branch
+Feature: prototype the current main branch
 
   Background:
     Given a Git repo with origin

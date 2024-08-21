@@ -1,4 +1,4 @@
-Feature: parking an observed branch
+Feature: park the current observed branch
 
   Background:
     Given a Git repo with origin

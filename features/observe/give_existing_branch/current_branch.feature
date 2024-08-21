@@ -6,7 +6,7 @@ Feature: make the current observed branch an observed branch
       | NAME     | TYPE     | LOCATIONS |
       | observed | observed | local     |
     And the current branch is "observed"
-    When I run "git-town observe"
+    When I run "git-town observe observed"
 
   Scenario: result
     Then it runs no commands

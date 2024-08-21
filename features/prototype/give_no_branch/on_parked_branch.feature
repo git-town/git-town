@@ -1,4 +1,4 @@
-Feature: making a parked branch a prototype
+Feature: prototype the current parked branch
 
   Background:
     Given a Git repo with origin

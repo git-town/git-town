@@ -1,4 +1,4 @@
-Feature: make multiple branches prototype
+Feature: prototype multiple other branches
 
   Background:
     Given a Git repo with origin

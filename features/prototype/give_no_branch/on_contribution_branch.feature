@@ -1,4 +1,4 @@
-Feature: make a contribution branch without parent a prototype
+Feature: prototype the current contribution branch
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: observe a branch verbosely
+Feature: observe the current branch verbosely
 
   Background:
     Given a Git repo with origin

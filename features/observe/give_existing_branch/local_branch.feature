@@ -1,4 +1,4 @@
-Feature: make a local branch an observed branch
+Feature: make the current local branch an observed branch
 
   Background:
     Given a local Git repo
