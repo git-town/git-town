@@ -22,6 +22,10 @@ the `-m <message>` flag, which works similar to the
 To compress all branches in a [branch stack](../stacked-changes.md) provide the
 `--stack` switch.
 
+If you want to compress your commits every time you sync, choose the
+[compress sync strategy](../preferences/sync-feature-strategy.md#compress) for
+the respective branch type.
+
 ### Example: compressing commits on a branch
 
 Assuming you have a feature branch with these commits:
