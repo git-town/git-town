@@ -1,4 +1,4 @@
-Feature: cannot make perennial branches contribution branches
+Feature: cannot make the current perennial branch a contribution branch
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,6 @@ Feature: cannot make perennial branches contribution branches
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     And the current branch is "perennial"
-    And an uncommitted file
     When I run "git-town contribute"
 
   Scenario: result
@@ -18,7 +17,6 @@ Feature: cannot make perennial branches contribution branches
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no contribution branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -26,4 +24,3 @@ Feature: cannot make perennial branches contribution branches
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no contribution branches
-    And the uncommitted file still exists

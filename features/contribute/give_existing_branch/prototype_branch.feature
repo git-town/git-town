@@ -5,7 +5,6 @@ Feature: make another prototype branch a contribution branch
     And the branch
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     When I run "git-town contribute prototype"
 
   Scenario: result

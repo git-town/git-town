@@ -1,5 +1,5 @@
 @this
-Feature: make an existing contribution branch a contribution branch
+Feature: make the current contribution branch a contribution branch
 
   Background:
     Given a Git repo with origin

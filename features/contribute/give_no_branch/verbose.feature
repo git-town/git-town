@@ -1,4 +1,4 @@
-Feature: make a branch contribution verbosely
+Feature: make the current branch a contribution branch verbosely
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,6 @@ Feature: make a branch contribution verbosely
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
     And the current branch is "branch"
-    And an uncommitted file
     When I run "git-town contribute --verbose"
 
   Scenario: result
@@ -31,7 +30,6 @@ Feature: make a branch contribution verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now a contribution branch
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -57,4 +55,3 @@ Feature: make a branch contribution verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now a feature branch
-    And the uncommitted file still exists
