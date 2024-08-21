@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// AddToPerennialBranches adds the branch with the given name as a perennial branch.
+// registers the branch with the given name as a perennial branch in the Git config
 type AddToPerennialBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

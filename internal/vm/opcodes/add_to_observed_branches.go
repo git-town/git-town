@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/vm/shared"
 )
 
-// adds the branch with the given name as a prototype branch
+// registers the branch with the given name as an observed branch in the Git config
 type AddToObservedBranches struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
