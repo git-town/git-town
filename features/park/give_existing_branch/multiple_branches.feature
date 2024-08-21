@@ -27,10 +27,6 @@ Feature: parking multiple other branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+    Then it runs no commands
     And there are now no parked branches
     And the current branch is still "main"

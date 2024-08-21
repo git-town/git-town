@@ -20,11 +20,7 @@ Feature: park the current observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH   | COMMAND       |
-      | observed | git add -A    |
-      |          | git stash     |
-      |          | git stash pop |
+    Then it runs no commands
     And the current branch is still "observed"
     And branch "observed" is now observed
     And there are now no parked branches
