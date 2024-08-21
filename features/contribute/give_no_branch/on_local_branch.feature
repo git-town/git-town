@@ -1,4 +1,4 @@
-Feature: cannot make the current local branch a contribution branch
+Feature: cannot make the current local feature branch a contribution branch
 
   Background:
     Given a Git repo with origin
