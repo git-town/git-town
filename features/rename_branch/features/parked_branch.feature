@@ -30,7 +30,6 @@ Feature: rename a parked branch
       | new    | main   |
 
   Scenario: undo
-    Given I ran "git-town rename-branch --force parked new"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                           |

@@ -1,3 +1,4 @@
+@this
 Feature: rename a contribution branch
 
   Background:
@@ -29,7 +30,6 @@ Feature: rename a contribution branch
       | BRANCH | PARENT |
 
   Scenario: undo
-    Given I ran "git-town rename-branch --force contribution new"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH       | COMMAND                                                   |

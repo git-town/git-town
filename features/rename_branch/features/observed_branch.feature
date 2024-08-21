@@ -29,7 +29,6 @@ Feature: rename an observed branch
       | BRANCH | PARENT |
 
   Scenario: undo
-    Given I ran "git-town rename-branch --force other new"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
