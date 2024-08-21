@@ -12,6 +12,7 @@ import (
 
 // provides the branches to make contribution, observed, parked, or prototype
 func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config configdomain.UnvalidatedConfig) (branchesToMark commandconfig.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
+	branchesToMark = commandconfig.BranchesAndTypes{}
 	switch len(args) {
 	case 0:
 		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
