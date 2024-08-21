@@ -11,7 +11,7 @@ Feature: make the current local branch an observed branch
     Then it runs no commands
     And it prints the error:
       """
-      Branches you want to observe must have a remote branch because they are per definition other people's branches.
+      branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """
     And branch "feature" is still a feature branch
     And there are still no observed branches

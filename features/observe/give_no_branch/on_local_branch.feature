@@ -12,7 +12,7 @@ Feature: observe the current local branch
     Then it runs no commands
     And it prints the error:
       """
-      Branch "feature" is local only. Branches you want to observe must have a remote branch because they are per definition other people's branches.
+      branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """
     And the current branch is still "feature"
     And there are still no observed branches
