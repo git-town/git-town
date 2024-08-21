@@ -3,9 +3,10 @@ Feature: observe the current branch verbosely
   Background:
     Given a Git repo with origin
     And the branch
-      | NAME   | TYPE    | PARENT | LOCATIONS |
-      | branch | feature | main   | local     |
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | branch | feature | main   | local, origin |
     And the current branch is "branch"
+    And an uncommitted file
     When I run "git-town observe --verbose"
 
   Scenario: result
@@ -30,6 +31,7 @@ Feature: observe the current branch verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now observed
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -55,3 +57,4 @@ Feature: observe the current branch verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now a feature branch
+    And the uncommitted file still exists

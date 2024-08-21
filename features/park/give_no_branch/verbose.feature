@@ -6,6 +6,7 @@ Feature: park the current branch verbosely
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
     And the current branch is "branch"
+    And an uncommitted file
     When I run "git-town park --verbose"
 
   Scenario: result
@@ -17,11 +18,12 @@ Feature: park the current branch verbosely
       |        | git config -lz --includes --local          |
       |        | git branch -vva --sort=refname             |
       |        | git config git-town.parked-branches branch |
+      |        | git branch -vva --sort=refname             |
       |        | git config -lz --includes --global         |
       |        | git config -lz --includes --local          |
     And it prints:
       """
-      Ran 8 shell commands
+      Ran 9 shell commands
       """
     And it prints:
       """
@@ -29,6 +31,7 @@ Feature: park the current branch verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now parked
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -54,3 +57,4 @@ Feature: park the current branch verbosely
       """
     And the current branch is still "branch"
     And branch "branch" is now a feature branch
+    And the uncommitted file still exists
