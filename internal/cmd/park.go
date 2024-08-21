@@ -59,8 +59,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateParkData(data)
-	if err != nil {
+	if err = validateParkData(data); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
@@ -71,9 +70,14 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	printParkedBranches(branchNames)
+	if branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get(); hasBranchToCheckout {
+		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, false); err != nil {
+			return err
+		}
+	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		Backend:               repo.Backend,
-		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginBranchesSnapshot: Some(data.beginBranchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "park",
 		CommandsCounter:       repo.CommandsCounter,
@@ -86,8 +90,10 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 }
 
 type parkData struct {
-	allBranches    gitdomain.BranchInfos
-	branchesToPark commandconfig.BranchesAndTypes
+	allBranches           gitdomain.BranchInfos
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchesToPark        commandconfig.BranchesAndTypes
+	branchToCheckout      Option[gitdomain.LocalBranchName]
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
@@ -119,26 +125,38 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 		return parkData{}, err
 	}
 	branchesToPark := commandconfig.BranchesAndTypes{}
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	if len(args) == 0 {
+	var branchToCheckout Option[gitdomain.LocalBranchName]
+	switch len(args) {
+	case 0:
+		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+		if !hasCurrentBranch {
+			return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
+		}
 		branchesToPark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-	} else {
+		branchToCheckout = None[gitdomain.LocalBranchName]()
+	case 1:
+		branch := gitdomain.NewLocalBranchName(args[0])
+		branchesToPark.Add(branch, repo.UnvalidatedConfig.Config.Get())
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
+		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
+			branchToCheckout = Some(branch)
+		} else {
+			branchToCheckout = None[gitdomain.LocalBranchName]()
+		}
+	default:
 		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
+		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return parkData{
-		allBranches:    branchesSnapshot.Branches,
-		branchesToPark: branchesToPark,
+		allBranches:           branchesSnapshot.Branches,
+		beginBranchesSnapshot: branchesSnapshot,
+		branchesToPark:        branchesToPark,
+		branchToCheckout:      branchToCheckout,
 	}, nil
 }
 
 func validateParkData(data parkData) error {
 	for branchName, branchType := range data.branchesToPark {
-		if !data.allBranches.HasLocalBranch(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotPark)
@@ -147,8 +165,11 @@ func validateParkData(data parkData) error {
 		case configdomain.BranchTypeParkedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePrototypeBranch:
-		default:
-			panic("unhandled branch type:" + branchType.String())
+		}
+		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 	}
 	return nil

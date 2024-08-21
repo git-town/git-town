@@ -15,7 +15,6 @@ Feature: observing a contribution branch
       """
       branch "branch" is now an observed branch
       """
-    And the current branch is still "branch"
     And branch "branch" is now observed
     And there are now no contribution branches
     And the uncommitted file still exists

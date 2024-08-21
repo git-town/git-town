@@ -136,24 +136,22 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		return observeData{}, err
 	}
 	branchesToObserve := commandconfig.BranchesAndTypes{}
-	checkout := None[gitdomain.LocalBranchName]()
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return observeData{}, errors.New(messages.CurrentBranchCannotDetermine)
-	}
+	branchToCheckout := None[gitdomain.LocalBranchName]()
 	switch len(args) {
 	case 0:
+		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+		if !hasCurrentBranch {
+			return observeData{}, errors.New(messages.CurrentBranchCannotDetermine)
+		}
 		branchesToObserve.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToObserve.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		trackingBranchName := branch.TrackingBranch()
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
-		if !hasBranchInfo {
-			return observeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
-		}
-		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			checkout = Some(branch)
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
+		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
+			branchToCheckout = Some(branch)
+		} else {
+			branchToCheckout = None[gitdomain.LocalBranchName]()
 		}
 	default:
 		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
@@ -162,15 +160,12 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		allBranches:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
-		checkout:          checkout,
+		checkout:          branchToCheckout,
 	}, nil
 }
 
 func validateObserveData(data observeData) error {
 	for branchName, branchType := range data.branchesToObserve {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
@@ -179,8 +174,14 @@ func validateObserveData(data observeData) error {
 		case configdomain.BranchTypeObservedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
-		default:
-			panic("unhandled branch type" + branchType.String())
+		}
+		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		if hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
 		}
 	}
 	return nil
