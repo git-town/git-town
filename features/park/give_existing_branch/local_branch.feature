@@ -1,4 +1,4 @@
-Feature: park another local branch
+Feature: park another local feature branch
 
   Background:
     Given a local Git repo

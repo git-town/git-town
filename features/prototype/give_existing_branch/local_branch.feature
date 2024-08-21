@@ -1,4 +1,4 @@
-Feature: prototype another local branch
+Feature: prototype another local feature branch
 
   Background:
     Given a local Git repo
