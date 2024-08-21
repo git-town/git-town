@@ -141,7 +141,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		beginBranchesSnapshot: branchesSnapshot,
 		branchToCheckout:      branchToCheckout,
 		branchesToMark:        branchesToMakeContribution,
-	}, nil
+	}, err
 }
 
 func validateContributeData(data contributeData) error {

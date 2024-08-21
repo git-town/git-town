@@ -128,7 +128,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPrototype: branchesToPrototype,
 		checkout:            branchToCheckout,
-	}, nil
+	}, err
 }
 
 func validatePrototypeData(data prototypeData) error {

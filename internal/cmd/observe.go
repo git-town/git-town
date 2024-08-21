@@ -141,7 +141,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
 		checkout:          branchToCheckout,
-	}, nil
+	}, err
 }
 
 func validateObserveData(data observeData) error {
