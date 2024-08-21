@@ -1,4 +1,4 @@
-Feature: make another local branch a contribution branch
+Feature: make another local feature branch a contribution branch
 
   Background:
     Given a local Git repo
