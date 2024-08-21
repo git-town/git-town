@@ -246,11 +246,10 @@ func renameBranchProgram(data renameBranchData) program.Program {
 					result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
 					result.Value.Add(&opcodes.AddToParkedBranches{Branch: data.newBranch})
 				}
-				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
-				parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get()
-				if hasParent {
+				if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 					result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 				}
+				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 			}
 		}
 		for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
