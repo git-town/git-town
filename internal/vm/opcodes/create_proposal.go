@@ -19,10 +19,6 @@ type CreateProposal struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *CreateProposal) Run(args shared.RunArgs) error {
 	parentBranch, hasParentBranch := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	if !hasParentBranch {

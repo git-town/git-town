@@ -12,10 +12,6 @@ type CommitOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
 	return args.Git.CommitStagedChanges(args.Frontend, self.Message)
 }

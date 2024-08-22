@@ -8,10 +8,6 @@ type ContinueMerge struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ContinueMerge) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {
 		return args.Git.CommitNoEdit(args.Frontend)

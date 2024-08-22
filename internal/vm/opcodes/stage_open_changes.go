@@ -8,10 +8,6 @@ type StageOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *StageOpenChanges) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *StageOpenChanges) Run(args shared.RunArgs) error {
 	return args.Git.StageFiles(args.Frontend, "-A")
 }

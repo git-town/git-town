@@ -14,10 +14,6 @@ func (self *ContinueRebase) CreateAbortProgram() []shared.Opcode {
 	}
 }
 
-func (self *ContinueRebase) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *ContinueRebase) Run(args shared.RunArgs) error {
 	repoStatus, err := args.Git.RepoStatus(args.Backend)
 	if err != nil {
