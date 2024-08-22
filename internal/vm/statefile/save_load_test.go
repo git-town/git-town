@@ -58,7 +58,7 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.CommitOpenChanges{AddAll: true, Message: "my message"},
+				&opcodes.CommitOpenChanges{Message: "my message"},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
@@ -172,6 +172,7 @@ func TestLoadSave(t *testing.T) {
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
+				&opcodes.StageOpenChanges{},
 				&opcodes.StashOpenChanges{},
 				&opcodes.UpdateProposalTarget{
 					ProposalNumber: 123,
@@ -259,7 +260,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "AddAll": true,
         "Message": "my message"
       },
       "type": "CommitOpenChanges"
@@ -509,6 +509,10 @@ func TestLoadSave(t *testing.T) {
         "Parent": "parent"
       },
       "type": "SquashMerge"
+    },
+    {
+      "data": {},
+      "type": "StageOpenChanges"
     },
     {
       "data": {},
