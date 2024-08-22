@@ -59,7 +59,6 @@ Feature: conflicts between uncommitted changes and the main branch
       you must resolve the conflicts before continuing
       """
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
