@@ -105,6 +105,7 @@ func Types() []shared.Opcode {
 		&SetParent{},
 		&SetParentIfBranchExists{},
 		&SkipCurrentBranch{},
+		&StageOpenChanges{},
 		&StashOpenChanges{},
 		&SquashMerge{},
 		&UndoLastCommit{},
