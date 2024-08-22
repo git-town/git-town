@@ -4,6 +4,7 @@ const (
 	UndoContinueGuidance              = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	AliasedCommands                   = "Aliased commands: %s\n"
 	ArgumentUnknown                   = "unknown argument: %q"
+	ApiProposalLookupStart            = "looking for proposal online ... "
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
@@ -78,7 +79,6 @@ const (
 	GiteaToken                        = "Gitea token: %s\n"
 	GitAnotherProcessIsRunningRetry   = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitHubEnterpriseInitializeError   = "cannot initialize GitHub Enterprise client: %s"
-	GitHubProposalLookupStart         = "looking for proposal on GitHub ... "
 	GitHubToken                       = "GitHub token: %s\n"
 	GitLabToken                       = "GitLab token: %s\n"
 	GitOutputIrregular                = `

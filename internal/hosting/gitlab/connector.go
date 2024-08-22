@@ -29,10 +29,13 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		SourceBranch: gitlab.Ptr(branch.String()),
 		TargetBranch: gitlab.Ptr(target.String()),
 	}
+	self.log.Start(messages.ApiProposalLookupStart)
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
+		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
+	self.log.Success()
 	switch len(mergeRequests) {
 	case 0:
 		return None[hostingdomain.Proposal](), nil
