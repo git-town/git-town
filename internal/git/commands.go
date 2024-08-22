@@ -330,6 +330,11 @@ func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
 }
 
+// DropStash removes the most recent stash entry
+func (self *Commands) DropStash(runner gitdomain.Runner) error {
+	return runner.Run("git", "stash", "drop")
+}
+
 // Fetch retrieves the updates from the origin repo.
 func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncTags) error {
 	if syncTags.IsTrue() {

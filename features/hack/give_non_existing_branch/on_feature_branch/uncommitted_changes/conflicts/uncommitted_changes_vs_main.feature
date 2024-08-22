@@ -62,7 +62,9 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND        |
+      | new    | git stash drop |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
@@ -80,7 +82,6 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash             |
       |          | git checkout existing |
       | existing | git branch -D new     |
-      |          | git stash pop         |
       |          | git stash pop         |
     And the current branch is now "existing"
     And the initial commits exist
