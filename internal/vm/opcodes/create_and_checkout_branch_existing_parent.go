@@ -12,10 +12,6 @@ type CreateAndCheckoutBranchExistingParent struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CreateAndCheckoutBranchExistingParent) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {

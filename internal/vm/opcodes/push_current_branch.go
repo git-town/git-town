@@ -11,10 +11,6 @@ type PushCurrentBranch struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *PushCurrentBranch) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{self}
-}
-
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
 	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch)
 	if err != nil {
