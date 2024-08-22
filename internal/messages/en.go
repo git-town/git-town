@@ -112,7 +112,6 @@ END OUTPUT FROM 'git branch -vva'
 	HostingGiteaNotImplemented            = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI            = "Gitea API: Updating base branch for PR #%d to #%s"
 	HostingGithubMergingViaAPI            = "GitHub API: merging PR #%d ... "
-	HostingGithubUpdatePRViaAPI           = "GitHub API: updating base branch for PR #%d ... "
 	HostingPlatformUnknown                = "unknown hosting platform: %q"
 	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`
