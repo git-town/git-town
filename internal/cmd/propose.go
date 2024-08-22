@@ -186,7 +186,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil || exit {
 		return data, exit, err
 	}
-	initialBranchType := validatedConfig.Config.BranchType(branchToPropose)
+	branchTypeToPropose := validatedConfig.Config.BranchType(branchToPropose)
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -229,7 +229,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		allBranches:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
-		branchTypeToPropose: initialBranchType,
+		branchTypeToPropose: branchTypeToPropose,
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
