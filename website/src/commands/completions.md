@@ -24,6 +24,12 @@ source <(git-town completions zsh)
 
 To load completions for each session, add the above line to your `.zshrc`.
 
+To fix the error message `command not found: compdef`, run
+
+```zsh
+autoload -Uz compinit
+```
+
 ## Fish
 
 To load autocompletions for Fish, run this command:
