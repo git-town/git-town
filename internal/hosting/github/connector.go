@@ -87,9 +87,8 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
-	self.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	targetName := target.String()
-	self.log.Start("updating proposal target on GitHub ...")
+	self.log.Start(messages.APIProposalUpdateStart)
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
