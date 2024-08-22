@@ -320,7 +320,7 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-// DropStash restores stashed-away changes into the workspace.
+// DropStash removes the most recent stash entry
 func (self *Commands) DropStash(runner gitdomain.Runner) error {
 	return runner.Run("git", "stash", "drop")
 }
