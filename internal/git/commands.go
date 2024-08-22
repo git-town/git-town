@@ -320,11 +320,6 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-// DropStash removes the most recent stash entry
-func (self *Commands) DropStash(runner gitdomain.Runner) error {
-	return runner.Run("git", "stash", "drop")
-}
-
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
@@ -333,6 +328,11 @@ func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch g
 // DiscardOpenChanges deletes all uncommitted changes.
 func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
+}
+
+// DropStash removes the most recent stash entry
+func (self *Commands) DropStash(runner gitdomain.Runner) error {
+	return runner.Run("git", "stash", "drop")
 }
 
 // Fetch retrieves the updates from the origin repo.
