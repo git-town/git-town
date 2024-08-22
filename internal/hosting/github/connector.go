@@ -32,14 +32,17 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start("looking for proposal on GitHub ... ")
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
 		State: "open",
 	})
 	if err != nil {
+		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
+	self.log.Success()
 	if len(pullRequests) == 0 {
 		return None[hostingdomain.Proposal](), nil
 	}
@@ -86,6 +89,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	self.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	targetName := target.String()
+	self.log.Start("updating proposal target on GitHub ...")
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
