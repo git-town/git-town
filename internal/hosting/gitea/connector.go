@@ -29,6 +29,7 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -36,8 +37,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		State: gitea.StateOpen,
 	})
 	if err != nil {
+		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
+	self.log.Success()
 	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
 	switch len(pullRequests) {
 	case 0:
@@ -69,15 +72,20 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
+	self.log.Start(messages.HostingGithubMergingViaAPI, number)
 	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Subject,
 		Message: commitMessageParts.Text,
 	})
 	if err != nil {
+		self.log.Failed(err)
 		return err
 	}
+	self.log.Success()
+	self.log.Start(messages.APIProposalLookupStart)
 	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	self.log.Success()
 	return err
 }
 

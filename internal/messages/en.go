@@ -4,6 +4,8 @@ const (
 	UndoContinueGuidance              = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	AliasedCommands                   = "Aliased commands: %s\n"
 	ArgumentUnknown                   = "unknown argument: %q"
+	APIProposalLookupStart            = "looking for proposal online ... "
+	APIProposalUpdateStart            = "updating proposal target online ..."
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
@@ -110,7 +112,6 @@ END OUTPUT FROM 'git branch -vva'
 	HostingGiteaNotImplemented            = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI            = "Gitea API: Updating base branch for PR #%d to #%s"
 	HostingGithubMergingViaAPI            = "GitHub API: merging PR #%d ... "
-	HostingGithubUpdatePRViaAPI           = "GitHub API: updating base branch for PR #%d ... "
 	HostingPlatformUnknown                = "unknown hosting platform: %q"
 	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`
