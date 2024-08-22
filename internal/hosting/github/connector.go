@@ -32,7 +32,7 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start("looking for proposal on GitHub ... ")
+	self.log.Start(messages.GitHubProposalLookupStart)
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),

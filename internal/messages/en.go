@@ -78,6 +78,7 @@ const (
 	GiteaToken                        = "Gitea token: %s\n"
 	GitAnotherProcessIsRunningRetry   = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitHubEnterpriseInitializeError   = "cannot initialize GitHub Enterprise client: %s"
+	GitHubProposalLookupStart         = "looking for proposal on GitHub ... "
 	GitHubToken                       = "GitHub token: %s\n"
 	GitLabToken                       = "GitLab token: %s\n"
 	GitOutputIrregular                = `
