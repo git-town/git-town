@@ -1,17 +1,21 @@
 package subshell
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/signal"
 	"runtime"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/git-town/git-town/v15/internal/cli/colors"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks"
+	"github.com/git-town/git-town/v15/internal/messages"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
@@ -71,26 +75,43 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 		args = append([]string{"/C", cmd}, args...)
 		cmd = "cmd"
 	}
-	subProcess := exec.Command(cmd, args...) // #nosec
-	subProcess.Stderr = os.Stderr
-	subProcess.Stdin = os.Stdin
-	subProcess.Stdout = os.Stdout
-	err = subProcess.Start()
-	if err != nil {
-		return err
+	concurrentGitRetriesLeft := concurrentGitRetries
+	for {
+		subProcess := exec.Command(cmd, args...)
+		var stderrBuffer bytes.Buffer // we only need to look at STDERR since that's where Git will print error messages
+		subProcess.Stderr = io.MultiWriter(os.Stderr, &stderrBuffer)
+		subProcess.Stdin = os.Stdin
+		subProcess.Stdout = os.Stdout
+		err = subProcess.Start()
+		if err != nil {
+			return err
+		}
+		interrupt := make(chan os.Signal, 1)
+		signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
+		go func() {
+			<-interrupt
+			if err := subProcess.Process.Release(); err == nil {
+				// process has already finished, no need to kill
+				return
+			}
+			fmt.Printf("Abort detected, shutting down %q gracefully ...", strings.Join(append([]string{cmd}, args...), " "))
+			if err := subProcess.Process.Kill(); err != nil {
+				fmt.Println("Error killing subprocess:", err)
+			}
+		}()
+		err = subProcess.Wait()
+		if err == nil {
+			break
+		}
+		if !containsConcurrentGitAccess(stderrBuffer.String()) {
+			break
+		}
+		concurrentGitRetriesLeft -= 1
+		if concurrentGitRetriesLeft == 0 {
+			break
+		}
+		fmt.Println(colors.Bold().Styled("\n" + messages.GitAnotherProcessIsRunningRetry + "\n"))
+		time.Sleep(concurrentGitRetryDelay)
 	}
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, syscall.SIGINT) // Listen for Ctrl-C
-	go func() {
-		<-interrupt
-		if err := subProcess.Process.Release(); err == nil {
-			// process has already finished, no need to kill
-			return
-		}
-		fmt.Printf("Abort detected, shutting down %q gracefully ...", strings.Join(append([]string{cmd}, args...), " "))
-		if err := subProcess.Process.Kill(); err != nil {
-			fmt.Println("Error killing subprocess:", err)
-		}
-	}()
-	return subProcess.Wait()
+	return err
 }

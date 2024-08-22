@@ -5,12 +5,14 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v15/internal/cli/colors"
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks"
 	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v15/internal/messages"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
@@ -48,14 +50,31 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 		subProcess.Dir = dir
 	}
 	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-	outputBytes, err := subProcess.CombinedOutput()
-	if err != nil {
-		err = ErrorDetails(executable, args, err, outputBytes)
+	concurrentGitRetriesLeft := concurrentGitRetries
+	var outputText string
+	var outputBytes []byte
+	var err error
+	for {
+		outputBytes, err = subProcess.CombinedOutput()
+		outputText = string(outputBytes)
+		if err == nil {
+			break
+		}
+		if !containsConcurrentGitAccess(outputText) {
+			err = ErrorDetails(executable, args, err, outputBytes)
+			break
+		}
+		concurrentGitRetriesLeft -= 1
+		if concurrentGitRetriesLeft == 0 {
+			break
+		}
+		fmt.Println(messages.GitAnotherProcessIsRunningRetry)
+		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
-	return string(outputBytes), err
+	return outputText, err
 }
 
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
@@ -69,6 +88,10 @@ OUTPUT START
 %s
 OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
+}
+
+func containsConcurrentGitAccess(text string) bool {
+	return strings.Contains(text, "fatal: Unable to create '") && strings.Contains(text, "index.lock': File exists.")
 }
 
 func printHeader(cmd string, args ...string) {
