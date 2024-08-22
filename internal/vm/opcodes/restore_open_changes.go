@@ -12,6 +12,10 @@ type RestoreOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
+func (self *RestoreOpenChanges) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{&DropStash{}}
+}
+
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
 	stashSize, err := args.Git.StashSize(args.Backend)
 	if err != nil {

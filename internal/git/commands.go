@@ -320,6 +320,11 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
+// DropStash restores stashed-away changes into the workspace.
+func (self *Commands) DropStash(runner gitdomain.Runner) error {
+	return runner.Run("git", "stash", "drop")
+}
+
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
