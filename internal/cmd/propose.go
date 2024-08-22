@@ -116,21 +116,22 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 }
 
 type proposeData struct {
-	allBranches       gitdomain.BranchInfos
-	branchesSnapshot  gitdomain.BranchesSnapshot
-	branchesToSync    []configdomain.BranchToSync
-	config            config.ValidatedConfig
-	connector         Option[hostingdomain.Connector]
-	dialogTestInputs  components.TestInputs
-	dryRun            configdomain.DryRun
-	hasOpenChanges    bool
-	initialBranch     gitdomain.LocalBranchName
-	initialBranchType configdomain.BranchType
-	previousBranch    Option[gitdomain.LocalBranchName]
-	proposalBody      gitdomain.ProposalBody
-	proposalTitle     gitdomain.ProposalTitle
-	remotes           gitdomain.Remotes
-	stashSize         gitdomain.StashSize
+	allBranches         gitdomain.BranchInfos
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToSync      []configdomain.BranchToSync
+	branchToPropose     gitdomain.LocalBranchName
+	branchTypeToPropose configdomain.BranchType
+	config              config.ValidatedConfig
+	connector           Option[hostingdomain.Connector]
+	dialogTestInputs    components.TestInputs
+	dryRun              configdomain.DryRun
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
+	proposalBody        gitdomain.ProposalBody
+	proposalTitle       gitdomain.ProposalTitle
+	remotes             gitdomain.Remotes
+	stashSize           gitdomain.StashSize
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -169,6 +170,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	branchToPropose := initialBranch
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesSnapshot:   branchesSnapshot,
@@ -184,7 +186,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil || exit {
 		return data, exit, err
 	}
-	initialBranchType := validatedConfig.Config.BranchType(initialBranch)
+	initialBranchType := validatedConfig.Config.BranchType(branchToPropose)
 	var connector Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -200,7 +202,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if connector.IsNone() {
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
@@ -224,21 +226,21 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	return proposeData{
-		allBranches:       branchesSnapshot.Branches,
-		branchesSnapshot:  branchesSnapshot,
-		branchesToSync:    branchesToSync,
-		config:            validatedConfig,
-		connector:         connector,
-		dialogTestInputs:  dialogTestInputs,
-		dryRun:            dryRun,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     initialBranch,
-		initialBranchType: initialBranchType,
-		previousBranch:    previousBranch,
-		proposalBody:      bodyText,
-		proposalTitle:     title,
-		remotes:           remotes,
-		stashSize:         stashSize,
+		allBranches:         branchesSnapshot.Branches,
+		branchesSnapshot:    branchesSnapshot,
+		branchesToSync:      branchesToSync,
+		branchTypeToPropose: initialBranchType,
+		config:              validatedConfig,
+		connector:           connector,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		previousBranch:      previousBranch,
+		proposalBody:        bodyText,
+		proposalTitle:       title,
+		remotes:             remotes,
+		stashSize:           stashSize,
 	}, false, err
 }
 
@@ -255,8 +257,8 @@ func proposeProgram(data proposeData) program.Program {
 			PushBranches:       true,
 		})
 	}
-	if data.initialBranchType == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.initialBranch})
+	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
+		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
 	}
 	previousBranchCandidates := gitdomain.LocalBranchNames{}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
@@ -269,7 +271,7 @@ func proposeProgram(data proposeData) program.Program {
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	prog.Value.Add(&opcodes.CreateProposal{
-		Branch:        data.initialBranch,
+		Branch:        data.branchToPropose,
 		MainBranch:    data.config.Config.MainBranch,
 		ProposalBody:  data.proposalBody,
 		ProposalTitle: data.proposalTitle,
@@ -278,8 +280,7 @@ func proposeProgram(data proposeData) program.Program {
 }
 
 func validateProposeData(data proposeData) error {
-	initialBranchType := data.config.Config.BranchType(data.initialBranch)
-	switch initialBranchType {
+	switch data.branchTypeToPropose {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -291,5 +292,5 @@ func validateProposeData(data proposeData) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPropose)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %v", initialBranchType))
+	panic(fmt.Sprintf("unhandled branch type: %v", data.branchTypeToPropose))
 }
