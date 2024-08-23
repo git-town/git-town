@@ -112,9 +112,10 @@ type NewConnectorArgs struct {
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {
 	return hostingdomain.Proposal{
+		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,
-		MergeWithAPI: true,
+		URL:          mergeRequest.WebURL,
 	}
 }

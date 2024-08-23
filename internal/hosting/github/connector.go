@@ -157,5 +157,6 @@ func parsePullRequest(pullRequest *github.PullRequest) hostingdomain.Proposal {
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:        pullRequest.GetTitle(),
 		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
+		URL:          *pullRequest.HTMLURL,
 	}
 }

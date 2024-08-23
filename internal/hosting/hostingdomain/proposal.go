@@ -16,4 +16,7 @@ type Proposal struct {
 
 	// textual title of the proposal
 	Title string
+
+	// the URL of this proposal
+	URL string
 }
