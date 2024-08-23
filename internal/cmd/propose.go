@@ -117,10 +117,10 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 
 type proposeData struct {
 	allBranches         gitdomain.BranchInfos
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      []configdomain.BranchToSync
 	branchToPropose     gitdomain.LocalBranchName
 	branchTypeToPropose configdomain.BranchType
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
@@ -227,9 +227,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	}
 	return proposeData{
 		allBranches:         branchesSnapshot.Branches,
+		branchToPropose:     branchToPropose,
+		branchTypeToPropose: branchTypeToPropose,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
-		branchTypeToPropose: branchTypeToPropose,
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
