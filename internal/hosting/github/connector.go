@@ -33,6 +33,16 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
+	if proposalURLOverride, hasOverride := hostingdomain.ReadProposalOverride().Get(); hasOverride {
+		self.log.Success()
+		return Some(hostingdomain.Proposal{
+			MergeWithAPI: true,
+			Number:       123,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		}), nil
+	}
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),

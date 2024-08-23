@@ -45,6 +45,9 @@ type TestRunner struct {
 	// content of the GIT_TOWN_REMOTE environment variable
 	testOrigin Option[string]
 
+	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
+	ProposalOverride Option[string]
+
 	// indicates whether the current test has created the binDir
 	usesBinDir bool
 }
@@ -198,6 +201,9 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
 	}
+	if proposalOverride, hasProposalOverride := self.ProposalOverride.Get(); hasProposalOverride {
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_TEST_PROPOSAL", proposalOverride)
+	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {
 		opts.Env = envvars.PrependPath(opts.Env, self.BinDir)
@@ -269,6 +275,11 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 func (self *TestRunner) Run(name string, arguments ...string) error {
 	_, err := self.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
 	return err
+}
+
+// SetTestOrigin adds the given environment variable to subsequent runs of commands.
+func (self *TestRunner) SetProposalOverride(content string) {
+	self.ProposalOverride = Some(content)
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
