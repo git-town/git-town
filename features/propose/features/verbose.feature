@@ -9,6 +9,7 @@ Feature: display all executed Git commands
     And tool "open" is installed
     And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town.git"
+    And a proposal for this branch does not exist
     When I run "git-town propose --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
@@ -23,6 +24,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
+      | <none>  | frontend | looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%h                                  |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
