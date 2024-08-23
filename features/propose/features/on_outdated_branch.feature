@@ -17,6 +17,7 @@ Feature: sync before proposing
       |        | origin   | origin child commit  |
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
+    Given a proposal for this branch does not exist
     And the current branch is "child"
     And an uncommitted file
     When I run "git-town propose"
@@ -25,7 +26,8 @@ Feature: sync before proposing
     Then it runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      |        | git add -A                                                                |
+      | <none> | looking for proposal online ... ok                                        |
+      | child  | git add -A                                                                |
       |        | git stash                                                                 |
       |        | git checkout main                                                         |
       | main   | git rebase origin/main                                                    |

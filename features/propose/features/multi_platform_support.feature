@@ -11,6 +11,7 @@ Feature: support many browsers and operating systems
   Scenario Outline:
     And the origin is "https://github.com/git-town/git-town.git"
     And tool "<TOOL>" is installed
+    Given a proposal for this branch does not exist
     When I run "git-town propose"
     Then "<TOOL>" launches a new proposal with this url in my browser:
       """
