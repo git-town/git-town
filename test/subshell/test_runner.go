@@ -14,6 +14,7 @@ import (
 
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v15/internal/subshell"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/git-town/git-town/v15/test/asserts"
@@ -202,7 +203,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
 	}
 	if proposalOverride, hasProposalOverride := self.ProposalOverride.Get(); hasProposalOverride {
-		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_TEST_PROPOSAL", proposalOverride)
+		opts.Env = envvars.Replace(opts.Env, hostingdomain.OverrideKey, proposalOverride)
 	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {

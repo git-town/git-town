@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
 	"github.com/git-town/git-town/v15/internal/config/configfile"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/git-town/git-town/v15/test/asserts"
 	"github.com/git-town/git-town/v15/test/commands"
@@ -204,6 +205,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()
+	})
+
+	sc.Step(`^a proposal for this branch does not exist`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.TestRunner.ProposalOverride = Some(hostingdomain.OverrideNoProposal)
+	})
+
+	sc.Step(`^a proposal for this branch exists at "([^"]+)"`, func(ctx context.Context, url string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
 	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
@@ -1240,12 +1253,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
 		}
 		return nil
-	})
-
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"`, func(ctx context.Context, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
 	sc.Step(`^the home directory contains file "([^"]+)" with content$`, func(ctx context.Context, filename string, docString *godog.DocString) error {

@@ -33,8 +33,12 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	if proposalURLOverride, hasOverride := hostingdomain.ReadProposalOverride().Get(); hasOverride {
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	if len(proposalURLOverride) > 0 {
 		self.log.Success()
+		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+			return None[hostingdomain.Proposal](), nil
+		}
 		return Some(hostingdomain.Proposal{
 			MergeWithAPI: true,
 			Number:       123,
