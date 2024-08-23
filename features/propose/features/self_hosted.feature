@@ -7,13 +7,12 @@ Feature: self-hosted service
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
+    And a proposal for this branch does not exist
 
-  @this
   Scenario Outline: self hosted
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git Town setting "hosting-platform" is "<PLATFORM>"
-    And a proposal for this branch does not exist
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """
