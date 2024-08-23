@@ -187,9 +187,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		return data, exit, err
 	}
 	branchTypeToPropose := validatedConfig.Config.BranchType(branchToPropose)
-	var connector Option[hostingdomain.Connector]
+	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
 			Config:          *validatedConfig.Config.UnvalidatedConfig,
 			HostingPlatform: validatedConfig.Config.HostingPlatform,
 			Log:             print.Logger{},
@@ -199,7 +199,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			return data, false, err
 		}
 	}
-	if connector.IsNone() {
+	if connectorOpt.IsNone() {
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
@@ -232,7 +232,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
-		connector:           connector,
+		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
