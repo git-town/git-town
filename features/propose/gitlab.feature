@@ -4,6 +4,7 @@ Feature: GitLab support
   Background:
     Given a Git repo with origin
     And tool "open" is installed
+    And a proposal for this branch does not exist
 
   Scenario Outline: creating proposals
     Given the branch

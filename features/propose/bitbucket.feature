@@ -7,6 +7,7 @@ Feature: Bitbucket support
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
+    And a proposal for this branch does not exist
 
   Scenario Outline: normal origin
     Given the origin is "<ORIGIN>"
@@ -32,6 +33,7 @@ Feature: Bitbucket support
       | ssh://username@bitbucket.org/git-town/git-town.git   |
       | ssh://username@bitbucket.org/git-town/git-town       |
 
+  @this
   Scenario Outline: origin includes path that looks like a URL
     Given the origin is "<ORIGIN>"
     And tool "open" is installed
