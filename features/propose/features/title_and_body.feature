@@ -8,6 +8,7 @@ Feature: Prepopulate title and body
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the origin is "ssh://git@github.com/git-town/git-town.git"
+    And a proposal for this branch does not exist
     And tool "open" is installed
 
   Scenario: provide title and body via CLI

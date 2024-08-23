@@ -73,10 +73,11 @@ func Initialize(workingDir, homeDir, binDir string) TestRuntime {
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
 	testRunner := testshell.TestRunner{
-		BinDir:     binDir,
-		HomeDir:    homeDir,
-		Verbose:    false,
-		WorkingDir: workingDir,
+		BinDir:           binDir,
+		HomeDir:          homeDir,
+		ProposalOverride: None[string](),
+		Verbose:          false,
+		WorkingDir:       workingDir,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},

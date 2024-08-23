@@ -9,6 +9,7 @@ Feature: use a SSH identity
     And tool "open" is installed
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git Town setting "hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
+    And a proposal for this branch does not exist
     And the current branch is "feature"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:

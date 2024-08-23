@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/git-town/git-town/v15/internal/browser"
 	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v15/internal/cli/flags"
 	"github.com/git-town/git-town/v15/internal/cli/print"
@@ -79,8 +80,9 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 	if err != nil || exit {
 		return err
 	}
-	if err = validateProposeData(data); err != nil {
-		return err
+	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
+		browser.Open(existingProposalURL, repo.Frontend, repo.Backend)
+		return nil
 	}
 	runProgram := proposeProgram(data)
 	runState := runstate.RunState{
@@ -125,6 +127,7 @@ type proposeData struct {
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
+	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -187,6 +190,13 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		return data, exit, err
 	}
 	branchTypeToPropose := validatedConfig.Config.BranchType(branchToPropose)
+	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
+		return data, false, err
+	}
+	parentOfBranchToPropose, hasParentBranch := validatedConfig.Config.Lineage.Parent(branchToPropose).Get()
+	if !hasParentBranch {
+		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
+	}
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
@@ -199,8 +209,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			return data, false, err
 		}
 	}
-	if connectorOpt.IsNone() {
+	existingProposalURL := None[string]()
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
 		return data, false, hostingdomain.UnsupportedServiceError()
+	}
+	existingProposalOpt, err := connector.FindProposal(initialBranch, parentOfBranchToPropose)
+	if err != nil {
+		existingProposalOpt = None[hostingdomain.Proposal]()
+	}
+	if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
+		existingProposalURL = Some(existingProposal.URL)
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
@@ -235,6 +254,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
+		existingProposalURL: existingProposalURL,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		previousBranch:      previousBranch,
@@ -280,8 +300,8 @@ func proposeProgram(data proposeData) program.Program {
 	return prog.Get()
 }
 
-func validateProposeData(data proposeData) error {
-	switch data.branchTypeToPropose {
+func validateBranchTypeToPropose(branchType configdomain.BranchType) error {
+	switch branchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -293,5 +313,5 @@ func validateProposeData(data proposeData) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPropose)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %v", data.branchTypeToPropose))
+	return nil
 }

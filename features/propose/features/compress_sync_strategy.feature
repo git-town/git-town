@@ -13,14 +13,16 @@ Feature: proposing using the "compress" sync strategy
       | existing | origin   | remote existing commit  |
     And the current branch is "existing"
     And Git Town setting "sync-feature-strategy" is "compress"
-    And wait 1 second to ensure new Git timestamps
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
+    And wait 1 second to ensure new Git timestamps
+    And a proposal for this branch does not exist
     When I run "git-town propose"
     Then it runs the commands
       | BRANCH   | COMMAND                                                             |
       | existing | git fetch --prune --tags                                            |
-      |          | git checkout main                                                   |
+      | <none>   | looking for proposal online ... ok                                  |
+      | existing | git checkout main                                                   |
       | main     | git rebase origin/main                                              |
       |          | git checkout existing                                               |
       | existing | git merge --no-edit --ff origin/existing                            |

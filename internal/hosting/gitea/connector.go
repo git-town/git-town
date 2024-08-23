@@ -30,6 +30,20 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	if len(proposalURLOverride) > 0 {
+		self.log.Success()
+		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+			return None[hostingdomain.Proposal](), nil
+		}
+		return Some(hostingdomain.Proposal{
+			MergeWithAPI: true,
+			Number:       123,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		}), nil
+	}
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -52,6 +66,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			Number:       int(pullRequest.Index),
 			Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 			Title:        pullRequest.Title,
+			URL:          pullRequest.HTMLURL,
 		}), nil
 	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)

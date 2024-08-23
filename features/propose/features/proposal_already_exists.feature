@@ -1,28 +1,28 @@
 @skipWindows
-Feature: print the URL when the browser crashes
+Feature: open the page of an already existing proposal
 
-  Background:
+  Background: proposing changes
     Given a Git repo with origin
     And the branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
+    And tool "open" is installed
     And the current branch is "feature"
-    And the origin is "git@github.com:git-town/git-town"
+    And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
-    And tool "open" is broken
-    When I run "git-town propose"
 
-  Scenario: result
+  Scenario: a PR for this branch exists already
+    When I run "git-town propose"
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
       | <none>  | looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
-    And it prints:
-      """
-      Please open in a browser: https://github.com/git-town/git-town/pull/123
-      """
+    And the current branch is still "feature"
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
+    And the current branch is still "feature"
+    And the initial commits exist

@@ -13,16 +13,18 @@ Feature: merge conflict
       | feature | local         | feature commit | conflicting_file | feature content |
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
+    And a proposal for this branch does not exists
     When I run "git-town propose"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | feature | git fetch --prune --tags      |
-      |         | git checkout main             |
-      | main    | git rebase origin/main        |
-      |         | git checkout feature          |
-      | feature | git merge --no-edit --ff main |
+      | BRANCH  | COMMAND                            |
+      | feature | git fetch --prune --tags           |
+      | <none>  | looking for proposal online ... ok |
+      | feature | git checkout main                  |
+      | main    | git rebase origin/main             |
+      |         | git checkout feature               |
+      | feature | git merge --no-edit --ff main      |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
