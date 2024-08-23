@@ -16,7 +16,7 @@ Feature: proposing using the "compress" sync strategy
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     And wait 1 second to ensure new Git timestamps
-    Given a proposal for this branch does not exist
+    And a proposal for this branch does not exist
     When I run "git-town propose"
     Then it runs the commands
       | BRANCH   | COMMAND                                                             |

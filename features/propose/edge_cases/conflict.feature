@@ -13,7 +13,7 @@ Feature: merge conflict
       | feature | local         | feature commit | conflicting_file | feature content |
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
-    Given a proposal for this branch does not exists
+    And a proposal for this branch does not exists
     When I run "git-town propose"
 
   Scenario: result

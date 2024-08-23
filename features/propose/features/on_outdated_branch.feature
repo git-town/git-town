@@ -17,7 +17,7 @@ Feature: sync before proposing
       |        | origin   | origin child commit  |
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
-    Given a proposal for this branch does not exist
+    And a proposal for this branch does not exist
     And the current branch is "child"
     And an uncommitted file
     When I run "git-town propose"

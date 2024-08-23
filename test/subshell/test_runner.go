@@ -34,6 +34,9 @@ type TestRunner struct {
 	// the directory that contains the global Git configuration
 	HomeDir string
 
+	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
+	ProposalOverride Option[string]
+
 	// whether to log the output of subshell commands
 	Verbose configdomain.Verbose
 
@@ -45,9 +48,6 @@ type TestRunner struct {
 
 	// content of the GIT_TOWN_REMOTE environment variable
 	testOrigin Option[string]
-
-	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
-	ProposalOverride Option[string]
 
 	// indicates whether the current test has created the binDir
 	usesBinDir bool

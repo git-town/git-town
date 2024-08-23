@@ -8,7 +8,7 @@ Feature: print the URL when the browser crashes
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town"
-    Given a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
+    And a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
     And tool "open" is broken
     When I run "git-town propose"
 
