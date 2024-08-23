@@ -24,12 +24,26 @@ type Connector struct {
 }
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	if len(proposalURLOverride) > 0 {
+		self.log.Success()
+		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+			return None[hostingdomain.Proposal](), nil
+		}
+		return Some(hostingdomain.Proposal{
+			MergeWithAPI: true,
+			Number:       123,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		}), nil
+	}
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
 		TargetBranch: gitlab.Ptr(target.String()),
 	}
-	self.log.Start(messages.APIProposalLookupStart)
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err)

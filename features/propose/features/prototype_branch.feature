@@ -9,6 +9,7 @@ Feature: Create proposals for prototype branches
     And the current branch is "prototype"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
+    And a proposal for this branch does not exist
     When I run "git-town propose"
 
   Scenario: result
