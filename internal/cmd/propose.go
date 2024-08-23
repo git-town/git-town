@@ -190,7 +190,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		return data, exit, err
 	}
 	branchTypeToPropose := validatedConfig.Config.BranchType(branchToPropose)
-	if err = validateProposeData(data); err != nil {
+	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
 		return data, false, err
 	}
 	parentOfBranchToPropose, hasParentBranch := validatedConfig.Config.Lineage.Parent(branchToPropose).Get()
@@ -300,8 +300,8 @@ func proposeProgram(data proposeData) program.Program {
 	return prog.Get()
 }
 
-func validateProposeData(data proposeData) error {
-	switch data.branchTypeToPropose {
+func validateBranchTypeToPropose(branchType configdomain.BranchType) error {
+	switch branchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -313,4 +313,5 @@ func validateProposeData(data proposeData) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPropose)
 	}
+	return nil
 }

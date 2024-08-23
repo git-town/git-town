@@ -8,6 +8,7 @@ Feature: Bitbucket support
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
 
+  @this
   Scenario Outline: normal origin
     Given the origin is "<ORIGIN>"
     And tool "open" is installed
