@@ -9,6 +9,7 @@ Feature: Create proposals for parked branches
     And the current branch is "parked"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
+    Given a proposal for this branch does not exist
     When I run "git-town propose"
 
   Scenario: result
