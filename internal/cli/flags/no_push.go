@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +15,7 @@ func NoPush() (AddFunc, ReadNoPushFlagFunc) {
 	readFlag := func(cmd *cobra.Command) configdomain.PushBranches {
 		value, err := cmd.Flags().GetBool(noPushLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), noPushLong))
+			panic(err)
 		}
 		return configdomain.PushBranches(!value)
 	}

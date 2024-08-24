@@ -1,9 +1,6 @@
 package flags
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +13,7 @@ func Version() (AddFunc, ReadBoolFlagFunc) {
 	readFlag := func(cmd *cobra.Command) bool {
 		value, err := cmd.Flags().GetBool(versionLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), versionLong))
+			panic(err)
 		}
 		return value
 	}
