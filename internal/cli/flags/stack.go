@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +15,7 @@ func Stack(description string) (AddFunc, ReadStackFlagFunc) {
 	readFlag := func(cmd *cobra.Command) configdomain.FullStack {
 		value, err := cmd.Flags().GetBool(stackLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), stackLong))
+			panic(err)
 		}
 		return configdomain.FullStack(value)
 	}

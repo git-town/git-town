@@ -76,7 +76,6 @@ const (
 	FileReadProblem                   = "cannot read file %q: %w"
 	FileStatProblem                   = "cannot check file %q: %w"
 	FileWriteProblem                  = "cannot write file %q: %w"
-	FlagStringDoesntExist             = "command %q does not have a string %q flag"
 	GiteaToken                        = "Gitea token: %s\n"
 	GitAnotherProcessIsRunningRetry   = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitHubEnterpriseInitializeError   = "cannot initialize GitHub Enterprise client: %s"

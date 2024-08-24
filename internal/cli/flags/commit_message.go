@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -22,7 +19,7 @@ func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	readFlag := func(cmd *cobra.Command) Option[gitdomain.CommitMessage] {
 		value, err := cmd.Flags().GetString(commitMessageLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
+			panic(err)
 		}
 		if value == "" {
 			return None[gitdomain.CommitMessage]()

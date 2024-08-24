@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +18,7 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	readFlag := func(cmd *cobra.Command) gitdomain.ProposalBodyFile {
 		value, err := cmd.Flags().GetString(bodyFileLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), commitMessageLong))
+			panic(err)
 		}
 		return gitdomain.ProposalBodyFile(value)
 	}

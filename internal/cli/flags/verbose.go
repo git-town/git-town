@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +18,7 @@ func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	readFlag := func(cmd *cobra.Command) configdomain.Verbose {
 		value, err := cmd.Flags().GetBool(verboseLong)
 		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), verboseLong))
+			panic(err)
 		}
 		return configdomain.Verbose(value)
 	}
