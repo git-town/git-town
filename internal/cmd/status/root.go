@@ -20,6 +20,7 @@ import (
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
 func RootCommand() *cobra.Command {
+	addPendingFlag, readPendingFlag := flags.Pending()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
@@ -28,15 +29,16 @@ func RootCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeStatus(readVerboseFlag(cmd))
+			return executeStatus(readPendingFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addPendingFlag(&cmd)
 	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
 	return &cmd
 }
 
-func executeStatus(verbose configdomain.Verbose) error {
+func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -46,13 +48,16 @@ func executeStatus(verbose configdomain.Verbose) error {
 		Verbose:          verbose,
 	})
 	if err != nil {
+		if pending {
+			return nil
+		}
 		return err
 	}
 	data, err := loadDisplayStatusData(repo.RootDir)
 	if err != nil {
 		return err
 	}
-	displayStatus(data)
+	displayStatus(data, pending)
 	print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
 	return nil
 }
@@ -77,24 +82,30 @@ func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusD
 	}, nil
 }
 
-func displayStatus(data displayStatusData) {
+func displayStatus(data displayStatusData, pending configdomain.Pending) {
 	state, hasState := data.state.Get()
 	if !hasState {
-		fmt.Println(messages.StatusFileNotFound)
+		if !pending {
+			fmt.Println(messages.StatusFileNotFound)
+		}
 		return
 	}
 	if state.IsFinished() {
-		displayFinishedStatus(state)
+		displayFinishedStatus(state, pending)
 	} else {
-		displayUnfinishedStatus(state)
+		displayUnfinishedStatus(state, pending)
 	}
 }
 
-func displayUnfinishedStatus(state runstate.RunState) {
+func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pending) {
 	unfinishedDetails, hasUnfinishedDetails := state.UnfinishedDetails.Get()
 	if hasUnfinishedDetails {
-		timeDiff := time.Since(unfinishedDetails.EndTime)
-		fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+		if pending {
+			fmt.Println(state.Command)
+		} else {
+			timeDiff := time.Since(unfinishedDetails.EndTime)
+			fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+		}
 	}
 	if state.HasAbortProgram() {
 		fmt.Println(messages.UndoMessage)
@@ -109,7 +120,9 @@ func displayUnfinishedStatus(state runstate.RunState) {
 	}
 }
 
-func displayFinishedStatus(state runstate.RunState) {
-	fmt.Printf(messages.PreviousCommandFinished, state.Command)
-	fmt.Println(messages.UndoMessage)
+func displayFinishedStatus(state runstate.RunState, pending configdomain.Pending) {
+	if !pending {
+		fmt.Printf(messages.PreviousCommandFinished, state.Command)
+		fmt.Println(messages.UndoMessage)
+	}
 }
