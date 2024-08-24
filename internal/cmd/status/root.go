@@ -52,7 +52,7 @@ func executeStatus(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	displayStatus(*data)
+	displayStatus(data)
 	print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
 	return nil
 }
@@ -62,16 +62,16 @@ type displayStatusData struct {
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (*displayStatusData, error) {
+func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusData, err error) {
 	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 	state, err := statefile.Load(rootDir)
 	if err != nil {
-		return nil, err
+		return result, err
 	}
-	return &displayStatusData{
+	return displayStatusData{
 		filepath: filepath,
 		state:    state,
 	}, nil
