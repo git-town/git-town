@@ -58,7 +58,9 @@ func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) e
 		return err
 	}
 	displayStatus(data, pending)
-	print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
+	if !pending {
+		print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
+	}
 	return nil
 }
 
@@ -99,14 +101,14 @@ func displayStatus(data displayStatusData, pending configdomain.Pending) {
 
 func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pending) {
 	unfinishedDetails, hasUnfinishedDetails := state.UnfinishedDetails.Get()
-	if hasUnfinishedDetails {
-		if pending {
-			fmt.Println(state.Command)
-		} else {
-			timeDiff := time.Since(unfinishedDetails.EndTime)
-			fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	if pending {
+		if hasUnfinishedDetails {
+			fmt.Print(state.Command)
 		}
+		return
 	}
+	timeDiff := time.Since(unfinishedDetails.EndTime)
+	fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
 	if state.HasAbortProgram() {
 		fmt.Println(messages.UndoMessage)
 	}
