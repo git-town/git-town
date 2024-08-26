@@ -2,6 +2,72 @@
 
 This page describes how to integrate Git Town into other applications.
 
+## Shell prompt
+
+You can display a reminder for running `git town continue` to finish a pending
+Git Town command in your shell prompt. Here is how this could look like:
+
+<img width="108" height="31" src="shell_prompt_example.gif">
+
+### Bash
+
+To add the above status indicator to your shell prompt in Bash, add something
+like this to your `.bashrc` file:
+
+```bash
+function git_town_status {
+    local pending_gittown_command=$(git town status --pending)
+    if [ -n "$pending_gittown_command" ]; then
+      echo -e " \033[30;43m $pending_gittown_command \033[0m "
+    fi
+}
+
+PS1='$(git_town_status)> '
+```
+
+### Zsh
+
+For zsh, customize the `~/.zshrc` file:
+
+```zsh
+git_town_status() {
+  local git_status
+  git_status=$(git town status --pending)
+  if [[ -n "$git_status" ]]; then
+    echo "%K{yellow}%F{black} $git_status %f%k "
+  fi
+}
+
+setopt PROMPT_SUBST
+PROMPT='$(git_town_status)> '
+```
+
+### Fish
+
+To add this example to your
+[Fish shell prompt](https://fishshell.com/docs/current/cmds/fish_prompt.html),
+edit file `~/.config/fish/config.fish` and overwrite the `fish_prompt` function:
+
+```zsh
+function fish_prompt
+
+  # get the name of the pending Git Town command
+  # by running "git town status --pending"
+  set -f pending_gittown_command (git-town status --pending)
+
+  # if there is a pending command, format it black on yellow
+  # with padding on both sides, otherwise print nothing
+  if [ -n "$pending_gittown_command" ]
+    set -f yellow_pending_gittown_command (set_color -b yellow)(set_color black)(echo " $pending_gittown_command ")(set_color normal)' '
+  else
+    set -f yellow_pending_gittown_command ''
+  end
+
+  # display the prompt in the shell
+  printf '%s> ' $yellow_pending_gittown_command
+end
+```
+
 ## [Lazygit](https://github.com/jesseduffield/lazygit)
 
 Example lazygit configuration file to integrate Git Town:
