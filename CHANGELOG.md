@@ -8,7 +8,7 @@ Massive thanks to @ChiefMateStarbuck, @IvanVas, @WhosNickDoglio, @alphatroya, @c
 
 #### New Features
 
-- Automatic retry for concurrent Git access: Git Town now waits and retries Git operations if another Git process is running concurrently. Super handy when your IDEs is running Git commands in the background again ([#3629](https://github.com/git-town/git-town/issues/3629)).
+- Automatic retry for concurrent Git access: Git Town now waits and retries Git operations if another Git process is running concurrently. Super handy when your IDEs is running Git commands in the background ([#3629](https://github.com/git-town/git-town/issues/3629)).
 - Shell prompt status indicator: If a Git Town command gets interrupted by a merge conflict, you can now add the name of the pending Git Town command to your shell prompt. This reminds you to run `git town continue` to finish the job ([#2208](https://github.com/git-town/git-town/issues/2208)).
 - `git town propose` now takes you directly to the existing proposal's webpage if one already exists ([#2362](https://github.com/git-town/git-town/issues/2362)).
 - API activity logs. Git Town now logs its communication with hosting APIs in the CLI output. This shows you what Git Town is doing and where slowness is coming from ([#3892](https://github.com/git-town/git-town/pull/3892)).
