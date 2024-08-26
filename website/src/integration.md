@@ -50,20 +50,12 @@ edit file `~/.config/fish/config.fish` and overwrite the `fish_prompt` function:
 
 ```zsh
 function fish_prompt
-
-  # get the name of the pending Git Town command
-  # by running "git town status --pending"
   set -f pending_gittown_command (git-town status --pending)
-
-  # if there is a pending command, format it black on yellow
-  # with padding on both sides, otherwise print nothing
   if [ -n "$pending_gittown_command" ]
     set -f yellow_pending_gittown_command (set_color -b yellow)(set_color black)(echo " $pending_gittown_command ")(set_color normal)' '
   else
     set -f yellow_pending_gittown_command ''
   end
-
-  # display the prompt in the shell
   printf '%s> ' $yellow_pending_gittown_command
 end
 ```
