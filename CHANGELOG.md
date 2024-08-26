@@ -2,23 +2,23 @@
 
 ## 15.3.0 (2024-08-26)
 
-Git Town 15.3 provides important quality-of-life improvements for Git Town users.
+Git Town 15.3 brings sweet quality-of-life improvements.
 
 Massive thanks to @ChiefMateStarbuck, @IvanVas, @WhosNickDoglio, @alphatroya, @charlierudolph, @cirego, @erik-rw, @gstamp, @guusw, @kelbyers, @kevgo, @marcelpanse, @nishchay-manwani-glean, @rnystrom, @ruigomeseu, @sergej-koscejev for helping evolve Git Town with useful feedback, ideas, and code contributions to 21 shipped PRs and 14 resolved issues!
 
 #### New Features
 
-- Git Town now automatically waits and retries Git operations if it encounters concurrent access by another Git process. These problems happen for example when using IDEs that run Git commands in the background ([#3629](https://github.com/git-town/git-town/issues/3629)).
-- Git Town now provides support for status indicators in your shell prompt. If a Git Town command got interrupted by a merge conflict, you can now add the name of the pending Git Town command to your shell prompt. This helps you remember to run `git town continue` to finish the pending command ([#2208](https://github.com/git-town/git-town/issues/2208)).
-- When you run `git town propose` and a proposal for the branch to propose already exists, you are now taken directly to the website of that proposal ([#2362](https://github.com/git-town/git-town/issues/2362)).
-- Git Town now prints a status indicator in the CLI output when it makes API requests. This helps you see better what Git Town is currently doing and how slowness is coming from ([#3892](https://github.com/git-town/git-town/pull/3892)).
+- Automatic retry for concurrent Git access: Git Town now waits and retries Git operations if another Git process is running concurrently. Super handy when your IDEs is running Git commands in the background again ([#3629](https://github.com/git-town/git-town/issues/3629)).
+- Shell prompt status indicator: If a Git Town command gets interrupted by a merge conflict, you can now add the name of the pending Git Town command to your shell prompt. This reminds you to run `git town continue` to finish the job ([#2208](https://github.com/git-town/git-town/issues/2208)).
+- `git town propose` now takes you directly to the existing proposal's webpage if one already exists ([#2362](https://github.com/git-town/git-town/issues/2362)).
+- API activity logs. Git Town now logs its communication with hosting APIs in the CLI output. This shows you what Git Town is doing and where slowness is coming from ([#3892](https://github.com/git-town/git-town/pull/3892)).
 - `git town kill` no longer asks for the ancestry of branches it is about to delete as long as these branches don't have descendents ([#3870](https://github.com/git-town/git-town/issues/3870)).
 - Setting up shell autocompletion on ZSH is now better documented ([#3889](https://github.com/git-town/git-town/pull/3889)).
 
 ### Bug Fixes
 
-- If you have a merge conflict between your uncommitted changes and branch ancestry, Git Town commands will fail when running `git stash pop` at the end. Previously when running `git town continue` it tried to pop the stash again, causing the same merge conflict to happen again. Now Git Town assumes that you have resolved the merge conflicts when running `git town continue` and deletes the stash entry instead. To re-apply the conflicting stash entry manually run `git stash pop` manually before running `git town continue`. This prevents outdated entries on the Git stash ([#3886](https://github.com/git-town/git-town/pull/3886)).
-- `git town continue` now re-runs all failed Git operations. This helps Git Town recover from a wider range of unexpected problems ([#3887](https://github.com/git-town/git-town/pull/3887), [#3885](https://github.com/git-town/git-town/pull/3885)).
+- If you have a merge conflict between your uncommitted changes and branch ancestry, Git Town commands will fail when running `git stash pop` at the end. Previously when running `git town continue` it tried to pop the stash again, causing the same merge conflict to happen again. Now Git Town assumes you have resolved the merge conflicts when running `git town continue` and deletes the stash entry. If you need to re-apply the conflicting stash entry, run `git stash pop` manually before running `git town continue`. This keeps your Git stash clean ([#3886](https://github.com/git-town/git-town/pull/3886)).
+- `git town continue` now re-runs all failed Git operations, helping recover from a wider range of unexpected issues ([#3887](https://github.com/git-town/git-town/pull/3887), [#3885](https://github.com/git-town/git-town/pull/3885)).
 
 ## 15.2.0 (2024-08-21)
 
