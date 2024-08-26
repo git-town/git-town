@@ -15,7 +15,7 @@ Massive thanks to @ChiefMateStarbuck, @IvanVas, @WhosNickDoglio, @alphatroya, @c
 - `git town kill` no longer asks for the ancestry of branches it is about to delete as long as these branches don't have descendents ([#3870](https://github.com/git-town/git-town/issues/3870)).
 - Setting up shell autocompletion on ZSH is now better documented ([#3889](https://github.com/git-town/git-town/pull/3889)).
 
-### Bug Fixes
+#### Bug Fixes
 
 - If you have a merge conflict between your uncommitted changes and branch ancestry, Git Town commands will fail when running `git stash pop` at the end. Previously when running `git town continue` it tried to pop the stash again, causing the same merge conflict to happen again. Now Git Town assumes you have resolved the merge conflicts when running `git town continue` and deletes the stash entry. If you need to re-apply the conflicting stash entry, run `git stash pop` manually before running `git town continue`. This keeps your Git stash clean ([#3886](https://github.com/git-town/git-town/pull/3886)).
 - `git town continue` now re-runs all failed Git operations, helping recover from a wider range of unexpected issues ([#3887](https://github.com/git-town/git-town/pull/3887), [#3885](https://github.com/git-town/git-town/pull/3885)).
