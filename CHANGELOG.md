@@ -2,7 +2,7 @@
 
 ## 15.3.0 (2024-08-26)
 
-Git Town 15.3 provides important quality-of-life improvements for people using Git Town.
+Git Town 15.3 provides important quality-of-life improvements for Git Town users.
 
 Massive thanks to @ChiefMateStarbuck, @IvanVas, @WhosNickDoglio, @alphatroya, @charlierudolph, @cirego, @erik-rw, @gstamp, @guusw, @kelbyers, @kevgo, @marcelpanse, @nishchay-manwani-glean, @rnystrom, @ruigomeseu, @sergej-koscejev for helping evolve Git Town with useful feedback, ideas, and code contributions to 21 shipped PRs and 14 resolved issues!
 
