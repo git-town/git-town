@@ -51,7 +51,6 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 	prog := NewMutable(&program.Program{})
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
 	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
-	// update the proposals of child branches
 	updateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
 	prog.Value.Add(&opcodes.Checkout{Branch: sharedData.targetBranchName})
 	prog.Value.Add(&opcodes.ConnectorMergeProposal{
