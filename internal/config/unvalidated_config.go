@@ -281,7 +281,6 @@ func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.Sh
 	panic(messages.ConfigScopeUnhandled)
 }
 
-// SetShipStrategy updates the configured delete-tracking-branch strategy.
 func (self *UnvalidatedConfig) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	self.Config.Value.ShipStrategy = value
 	switch scope {
