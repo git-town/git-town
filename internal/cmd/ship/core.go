@@ -27,18 +27,15 @@ const shipCommand = "ship"
 const shipDesc = "Deliver a completed feature branch"
 
 const shipHelp = `
-Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
+Merges the given or current feature branch into its parent.
+How exactly this happen depends on the configured ship-strategy.
 
-Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
+Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first or provide the --to-parent flag.
 
-If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
+To use the online functionality, configure a personal access token with the "repo" scope
+and run Run 'git config %s <token>' (optionally add the '--global' flag).
 
-1. Get a GitHub personal access token with the "repo" scope
-2. Run 'git config %s <token>' (optionally add the '--global' flag)
-
-Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API. It will also update the base branch for any pull requests against that branch.
-
-If your origin server deletes shipped branches, for example GitHub's feature to automatically delete head branches, run "git config %s false" and Git Town will leave it up to your origin server to delete the tracking branch of the branch you are shipping.`
+If your origin server deletes shipped branches, disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -49,7 +46,7 @@ func Cmd() *cobra.Command {
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
-		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
+		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readToParentFlag(cmd))
 		},
