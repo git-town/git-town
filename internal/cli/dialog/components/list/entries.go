@@ -9,7 +9,7 @@ import (
 // Entries provides methods for a collection of Entry instances.
 type Entries[S fmt.Stringer] []Entry[S]
 
-// NewEnabledListEntries creates Entries for the given data types.
+// creates an Entries instance containing the given records
 func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
@@ -22,7 +22,7 @@ func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	return result
 }
 
-// AllDisabled indicates whether all entries in this list are disabled.
+// indicates whether all entries in this list are disabled
 func (self Entries[S]) AllDisabled() bool {
 	for _, entry := range self {
 		if entry.Enabled {
@@ -32,10 +32,10 @@ func (self Entries[S]) AllDisabled() bool {
 	return true
 }
 
-// IndexWithText provides the index of the element with the given text.
-func (self Entries[S]) Index(text string) Option[int] {
+// provides the index of the element that has the given value
+func (self Entries[S]) Index(value string) Option[int] {
 	for e, entry := range self {
-		if entry.Data.String() == text {
+		if entry.Data.String() == value {
 			return Some(e)
 		}
 	}
