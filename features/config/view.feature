@@ -4,6 +4,7 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the branches
       | NAME           | TYPE         | PARENT | LOCATIONS |
@@ -18,6 +19,7 @@ Feature: show the configuration
       | parked-2       | parked       | main   | local     |
     And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
+    And local Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town config"
     Then it prints:
       """
@@ -33,6 +35,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
+        ship strategy: squash-merge
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
