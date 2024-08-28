@@ -27,6 +27,7 @@ const (
 )
 
 func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
+	// TODO: use list and list.Index here
 	entries := []shipDeleteTrackingBranchEntry{
 		ShipDeleteTrackingBranchEntryYes,
 		ShipDeleteTrackingBranchEntryNo,
