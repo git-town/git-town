@@ -29,10 +29,10 @@ const (
 )
 
 func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
-	entries := list.NewEntries(
+	entries := []pushHookEntry{
 		pushHookEntryEnabled,
 		pushHookEntryDisabled,
-	)
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -44,7 +44,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 		return true, aborted, err
 	}
 	fmt.Printf(messages.PushHook, components.FormattedSelection(selection.String(), aborted))
-	return selection.Data.PushHook(), aborted, err
+	return selection.PushHook(), aborted, err
 }
 
 type pushHookEntry string

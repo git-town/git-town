@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -59,6 +60,40 @@ func TestLocalBranchNames(t *testing.T) {
 			have := branches.Hoist(gitdomain.NewLocalBranchName("zonk"))
 			want := gitdomain.NewLocalBranchNames("one", "two", "three")
 			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("Index", func(t *testing.T) {
+		t.Parallel()
+		t.Run("element is in collection", func(t *testing.T) {
+			t.Parallel()
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
+			have := branches.Index("two")
+			want := Some(1)
+			must.Eq(t, want, have)
+		})
+		t.Run("element is not in collection", func(t *testing.T) {
+			t.Parallel()
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
+			have := branches.Index("zonk")
+			want := None[int]()
+			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("IndexOr", func(t *testing.T) {
+		t.Parallel()
+		t.Run("element is in collection", func(t *testing.T) {
+			t.Parallel()
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
+			have := branches.IndexOr("two", 0)
+			must.EqOp(t, 1, have)
+		})
+		t.Run("element is not in collection", func(t *testing.T) {
+			t.Parallel()
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
+			have := branches.IndexOr("zonk", 5)
+			must.EqOp(t, 5, have)
 		})
 	})
 

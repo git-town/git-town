@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v15/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 type LocalBranchNames []LocalBranchName
@@ -61,6 +62,25 @@ func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
 		result = append(LocalBranchNames{needle}, result...)
 	}
 	return result
+}
+
+// Index provides the index of the element with the given text.
+func (self LocalBranchNames) Index(needle LocalBranchName) Option[int] {
+	for e, entry := range self {
+		if entry == needle {
+			return Some(e)
+		}
+	}
+	return None[int]()
+}
+
+// IndexWithTextOr provides the index of the element with the given text
+// or the given default index if the element isn't in this collection.
+func (self LocalBranchNames) IndexOr(needle LocalBranchName, defaultIndex int) int {
+	if index, found := self.Index(needle).Get(); found {
+		return index
+	}
+	return defaultIndex
 }
 
 // Join provides the names of all branches in this collection connected by the given separator.

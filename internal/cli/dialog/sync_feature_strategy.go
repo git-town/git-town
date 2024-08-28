@@ -29,11 +29,11 @@ const (
 )
 
 func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := list.NewEntries(
+	entries := []syncFeatureStrategyEntry{
 		syncFeatureStrategyEntryMerge,
 		syncFeatureStrategyEntryRebase,
 		syncFeatureStrategyEntryCompress,
-	)
+	}
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncFeatureStrategyMerge:
@@ -51,7 +51,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
 	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(cutSelection, aborted))
-	return selection.Data.SyncFeatureStrategy(), aborted, err
+	return selection.SyncFeatureStrategy(), aborted, err
 }
 
 type syncFeatureStrategyEntry string

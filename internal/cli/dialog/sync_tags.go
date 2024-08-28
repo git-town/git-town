@@ -24,10 +24,10 @@ const (
 )
 
 func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, bool, error) {
-	entries := list.NewEntries(
+	entries := []syncTagsEntry{
 		SyncTagsEntryYes,
 		SyncTagsEntryNo,
-	)
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -38,8 +38,8 @@ func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (conf
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.SyncTags, components.FormattedSelection(selection.Data.Short(), aborted))
-	return selection.Data.SyncTags(), aborted, err
+	fmt.Printf(messages.SyncTags, components.FormattedSelection(selection.Short(), aborted))
+	return selection.SyncTags(), aborted, err
 }
 
 type syncTagsEntry string
