@@ -18,6 +18,7 @@ func TestIndex(t *testing.T) {
 		want := Some(1)
 		must.Eq(t, want, have)
 	})
+
 	t.Run("does not contain the element", func(t *testing.T) {
 		t.Parallel()
 		haystack := []int{1, 2, 3}
