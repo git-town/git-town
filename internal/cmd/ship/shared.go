@@ -21,7 +21,6 @@ import (
 
 // data that all ship strategies use
 type sharedShipData struct {
-	allBranches                gitdomain.BranchInfos
 	branchNameToShip           gitdomain.LocalBranchName
 	branchToShip               gitdomain.BranchInfo
 	branchesSnapshot           gitdomain.BranchesSnapshot
@@ -144,7 +143,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		}
 	}
 	return sharedShipData{
-		allBranches:                branchesSnapshot.Branches,
 		branchNameToShip:           branchNameToShip,
 		branchToShip:               *branchToShip,
 		branchesSnapshot:           branchesSnapshot,
