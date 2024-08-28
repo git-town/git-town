@@ -39,7 +39,7 @@ ship-strategy = "api"
 
 ### Git metadata
 
-To manually configure the ship-strategy in Git metadata, run this command:
+To manually configure the ship-strategy in Git metadata, run:
 
 ```
 git config [--global] git-town.ship-strategy <api|squash-merge>
