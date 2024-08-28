@@ -129,17 +129,15 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		}
 	}
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
-		if !repo.IsOffline.IsTrue() {
-			if branchToShip.HasTrackingBranch() {
-				for _, childBranch := range childBranches {
-					childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
-					if err != nil {
-						return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
-					}
-					childProposal, hasChildProposal := childProposalOpt.Get()
-					if hasChildProposal {
-						proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-					}
+		if !repo.IsOffline.IsTrue() && branchToShip.HasTrackingBranch() {
+			for _, childBranch := range childBranches {
+				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
+				if err != nil {
+					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				}
+				childProposal, hasChildProposal := childProposalOpt.Get()
+				if hasChildProposal {
+					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
 				}
 			}
 		}
