@@ -39,8 +39,8 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 	if err != nil || aborted {
 		return configdomain.ShipStrategyAPI, aborted, err
 	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Data.Short(), aborted))
-	return selection.Data.ShipStrategy(), aborted, err
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Short(), aborted))
+	return selection.ShipStrategy(), aborted, err
 }
 
 type shipStrategyEntry string
