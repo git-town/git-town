@@ -37,6 +37,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | ship-delete-tracking-branch               | enter |
       | save config to config file                | enter |
 
+  @debug @this
   Scenario: result
     Then it runs no commands
     And the main branch is now not set
@@ -93,8 +94,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # Options:
       #
-      # - api: Git Town presses the "merge" button on your code hosting platform
-      # - squash-merge: Git Town squash-merges the feature branch on your local machine for you
+      # - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+      # - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
       #
       # All options update proposals of child branches and remove the shipped branch locally and remotely.
       ship-strategy = "squash-merge"

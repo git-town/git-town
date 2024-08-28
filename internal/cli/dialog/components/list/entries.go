@@ -34,8 +34,11 @@ func (self Entries[S]) AllDisabled() bool {
 
 // provides the index of the element that serializes to the given value
 func (self Entries[S]) Index(value string) Option[int] {
+	fmt.Println("111111111111111111111")
 	for e, entry := range self {
+		fmt.Println("22222222222222222222222", entry)
 		if entry.Data.String() == value {
+			fmt.Println("3333333333333333333333")
 			return Some(e)
 		}
 	}

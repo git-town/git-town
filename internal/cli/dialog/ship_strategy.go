@@ -63,3 +63,13 @@ func (self shipStrategyEntry) Short() string {
 func (self shipStrategyEntry) String() string {
 	return string(self)
 }
+
+func shipStrategyEntryIndex(entries []shipStrategyEntry, needle configdomain.ShipStrategy) int {
+	needleText := needle.String()
+	for e, entry := range entries {
+		if entry.Short() == needleText {
+			return e
+		}
+	}
+	return 0
+}
