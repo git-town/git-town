@@ -10,10 +10,12 @@ import (
 	"github.com/git-town/git-town/v15/internal/execute"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v15/internal/messages"
 	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v15/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v15/internal/vm/opcodes"
 	"github.com/git-town/git-town/v15/internal/vm/program"
 	"github.com/git-town/git-town/v15/internal/vm/runstate"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
@@ -134,6 +136,15 @@ func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.Lo
 		return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
 	}
 	return nil
+}
+
+func updateChildBranchProposals(prog *program.Program, proposals []hostingdomain.Proposal, targetBranch gitdomain.LocalBranchName) {
+	for _, childProposal := range proposals {
+		prog.Add(&opcodes.UpdateProposalTarget{
+			ProposalNumber: childProposal.Number,
+			NewTarget:      targetBranch,
+		})
+	}
 }
 
 func validateShippableBranchType(branchType configdomain.BranchType) error {
