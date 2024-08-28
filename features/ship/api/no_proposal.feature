@@ -1,4 +1,4 @@
-Feature: ship a branch without proposal via API
+Feature: cannot ship a branch without proposal via API
 
   Background:
     Given a Git repo with origin

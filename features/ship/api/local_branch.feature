@@ -1,4 +1,4 @@
-Feature: ship a local branch via API
+Feature: cannot ship a local branch via API
 
   Background:
     Given a Git repo with origin
