@@ -30,7 +30,9 @@ const shipHelp = `
 Merges the given or current feature branch into its parent.
 How exactly this happen depends on the configured ship-strategy.
 
-Ships only direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first or provide the --to-parent flag.
+Ships only direct children of the main branch.
+To ship a child branch, ship or kill all ancestor branches first
+or ship with the "--to-parent" flag.
 
 To use the online functionality, configure a personal access token with the "repo" scope
 and run Run 'git config %s <token>' (optionally add the '--global' flag).
