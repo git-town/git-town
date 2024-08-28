@@ -37,7 +37,8 @@ or ship with the "--to-parent" flag.
 To use the online functionality, configure a personal access token with the "repo" scope
 and run Run 'git config %s <token>' (optionally add the '--global' flag).
 
-If your origin server deletes shipped branches, disable the ship-delete-tracking-branch configuration setting.`
+If your origin server deletes shipped branches,
+disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
