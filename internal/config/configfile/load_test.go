@@ -18,6 +18,7 @@ func TestConfigfile(t *testing.T) {
 push-hook = true
 push-new-branches = true
 ship-delete-tracking-branch = false
+ship-strategy = "api"
 sync-tags = false
 sync-upstream = true
 
@@ -45,6 +46,7 @@ perennial-branches = "rebase"
 			rebase := "rebase"
 			releaseRegex := "release-.*"
 			shipDeleteTrackingBranch := false
+			shipStrategy := "api"
 			syncTags := false
 			syncUpstream := true
 			want := configfile.Data{
@@ -64,6 +66,7 @@ perennial-branches = "rebase"
 				PushHook:                 &pushHook,
 				PushNewbranches:          &pushNewBranches,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
+				ShipStrategy:             &shipStrategy,
 				SyncTags:                 &syncTags,
 				SyncUpstream:             &syncUpstream,
 			}

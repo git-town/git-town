@@ -30,6 +30,7 @@ type PartialConfig struct {
 	PushHook                 Option[PushHook]
 	PushNewBranches          Option[PushNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
+	ShipStrategy             Option[ShipStrategy]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
@@ -57,6 +58,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	pushNewBranches, err := ParsePushNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches.String())
 	ec.Check(err)
 	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch.String())
+	ec.Check(err)
+	shipStrategy, err := ParseShipStrategy(snapshot[KeyShipStrategy])
 	ec.Check(err)
 	syncFeatureStrategy, err := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
 	ec.Check(err)
@@ -92,6 +95,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		ShipStrategy:             shipStrategy,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
@@ -127,6 +131,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		PushNewBranches:          other.PushNewBranches.Or(self.PushNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
+		ShipStrategy:             other.ShipStrategy.Or(self.ShipStrategy),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
@@ -159,6 +164,7 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
 		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
+		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),

@@ -32,6 +32,7 @@ type UnvalidatedConfig struct {
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
+	ShipStrategy             ShipStrategy
 	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncPerennialStrategy    SyncPerennialStrategy
 	SyncPrototypeStrategy    SyncPrototypeStrategy
@@ -154,6 +155,7 @@ func DefaultConfig() UnvalidatedConfig {
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
+		ShipStrategy:             ShipStrategyAPI,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
 		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,

@@ -23,6 +23,7 @@ Feature: enter the GitLab API token
       | push-new-branches             | enter             |                                             |
       | push-hook                     | enter             |                                             |
       | create-prototype-branches     | enter             |                                             |
+      | ship-strategy                 | enter             |                                             |
       | ship-delete-tracking-branch   | enter             |                                             |
       | save config to Git metadata   | down enter        |                                             |
     Then it runs the commands
@@ -49,6 +50,7 @@ Feature: enter the GitLab API token
       | push-new-branches           | enter             |                                             |
       | push-hook                   | enter             |                                             |
       | create-prototype-branches   | enter             |                                             |
+      | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then it runs the commands

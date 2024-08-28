@@ -20,6 +20,7 @@ Feature: override an existing Git alias
       | push-new-branches           | enter   |
       | push-hook                   | enter   |
       | create-prototype-branches   | enter   |
+      | ship-strategy               | enter   |
       | ship-delete-tracking-branch | enter   |
       | save config to config file  | enter   |
 

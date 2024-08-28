@@ -164,6 +164,10 @@ func (self *UnvalidatedConfig) RemoveShipDeleteTrackingBranch() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch)
 }
 
+func (self *UnvalidatedConfig) RemoveShipStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyShipStrategy)
+}
+
 func (self *UnvalidatedConfig) RemoveSyncFeatureStrategy() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncFeatureStrategy)
 }
@@ -273,6 +277,18 @@ func (self *UnvalidatedConfig) SetShipDeleteTrackingBranch(value configdomain.Sh
 		return self.GitConfig.SetGlobalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 	case configdomain.ConfigScopeLocal:
 		return self.GitConfig.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+	}
+	panic(messages.ConfigScopeUnhandled)
+}
+
+// SetShipStrategy updates the configured delete-tracking-branch strategy.
+func (self *UnvalidatedConfig) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
+	self.Config.Value.ShipStrategy = value
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		return self.GitConfig.SetGlobalConfigValue(configdomain.KeyShipStrategy, value.String())
+	case configdomain.ConfigScopeLocal:
+		return self.GitConfig.SetLocalConfigValue(configdomain.KeyShipStrategy, value.String())
 	}
 	panic(messages.ConfigScopeUnhandled)
 }
