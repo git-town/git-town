@@ -98,13 +98,13 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	switch validatedConfig.Config.BranchType(branchNameToShip) {
 	case configdomain.BranchTypeContributionBranch:
 		return data, false, errors.New(messages.ContributionBranchCannotShip)
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	case configdomain.BranchTypeMainBranch:
 		return data, false, errors.New(messages.MainBranchCannotShip)
 	case configdomain.BranchTypeObservedBranch:
 		return data, false, errors.New(messages.ObservedBranchCannotShip)
 	case configdomain.BranchTypePerennialBranch:
 		return data, false, errors.New(messages.PerennialBranchCannotShip)
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
