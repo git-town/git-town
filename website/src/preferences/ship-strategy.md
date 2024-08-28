@@ -31,8 +31,7 @@ The best way to change this setting is via the
 
 ### config file
 
-In the [config file](../configuration-file.md) the ship-strategy is listed as
-`ship-strategy`:
+Set the ship-strategy in the [config file](../configuration-file.md):
 
 ```toml
 ship-strategy = "api"
