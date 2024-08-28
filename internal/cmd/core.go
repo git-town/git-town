@@ -32,7 +32,7 @@ func Execute() error {
 	rootCmd.AddCommand(repoCommand())
 	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())
-	rootCmd.AddCommand(ship.ShipCmd())
+	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(syncCmd())

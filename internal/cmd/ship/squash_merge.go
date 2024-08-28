@@ -2,6 +2,7 @@ package ship
 
 import (
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v15/internal/execute"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
 	"github.com/git-town/git-town/v15/internal/vm/opcodes"
 	"github.com/git-town/git-town/v15/internal/vm/program"
@@ -9,10 +10,17 @@ import (
 )
 
 type shipDataSquashMerge struct {
+	remotes gitdomain.Remotes
 }
 
-func determineSquashMergeData(data sharedShipData) (shipDataSquashMerge, error) {
-	return shipDataSquashMerge{}, nil
+func determineSquashMergeData(repo execute.OpenRepoResult) (result shipDataSquashMerge, err error) {
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return result, err
+	}
+	return shipDataSquashMerge{
+		remotes: remotes,
+	}, nil
 }
 
 func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataSquashMerge, commitMessage Option[gitdomain.CommitMessage]) program.Program {
@@ -23,7 +31,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataS
 		prog.Value.Add(&opcodes.Checkout{Branch: sharedData.targetBranchName})
 	}
 	// update the proposals of child branches
-	if sharedData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
+	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
 		for _, childProposal := range sharedData.proposalsOfChildBranches {
 			prog.Value.Add(&opcodes.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
@@ -32,7 +40,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataS
 		}
 	}
 	prog.Value.Add(&opcodes.SquashMerge{Branch: sharedData.branchNameToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
-	if sharedData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
+	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {

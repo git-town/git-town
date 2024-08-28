@@ -34,7 +34,6 @@ type sharedShipData struct {
 	isShippingInitialBranch    bool
 	previousBranch             Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches   []hostingdomain.Proposal
-	remotes                    gitdomain.Remotes
 	shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent
 	stashSize                  gitdomain.StashSize
 	targetBranch               gitdomain.BranchInfo
@@ -68,10 +67,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
@@ -156,7 +151,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		isShippingInitialBranch:    isShippingInitialBranch,
 		previousBranch:             previousBranch,
 		proposalsOfChildBranches:   proposalsOfChildBranches,
-		remotes:                    remotes,
 		shipIntoNonPerennialParent: shipIntoNonPerennialParent,
 		stashSize:                  stashSize,
 		targetBranch:               *targetBranch,

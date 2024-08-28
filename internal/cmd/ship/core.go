@@ -38,7 +38,7 @@ Now anytime you ship a branch with a pull request on GitHub, it will squash merg
 
 If your origin server deletes shipped branches, for example GitHub's feature to automatically delete head branches, run "git config %s false" and Git Town will leave it up to your origin server to delete the tracking branch of the branch you are shipping.`
 
-func ShipCmd() *cobra.Command {
+func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
@@ -88,7 +88,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		}
 		shipProgram = shipAPIProgram(sharedData, apiData, message)
 	case configdomain.ShipStrategySquashMerge:
-		squashMergeData, err := determineSquashMergeData(sharedData)
+		squashMergeData, err := determineSquashMergeData(repo)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
@@ -21,10 +22,9 @@ type shipDataAPI struct {
 }
 
 func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {
-	proposalMessage := ""
 	connector, hasConnector := sharedData.connector.Get()
 	if !hasConnector {
-		return result, fmt.Errorf(messages.ShipAPIConnectorRequired)
+		return result, errors.New(messages.ShipAPIConnectorRequired)
 	}
 	proposalOpt, err := connector.FindProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
 	if err != nil {
@@ -34,7 +34,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	if !hasProposal {
 		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
 	}
-	proposalMessage = connector.DefaultProposalMessage(proposal)
+	proposalMessage := connector.DefaultProposalMessage(proposal)
 	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShip.RemoteName.Get()
 	if !hasRemoteBranchToShip {
 		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchNameToShip)
