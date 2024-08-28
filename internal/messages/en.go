@@ -196,7 +196,7 @@ nd will be removed in future versions of Git Town.`
 	ShipBranchNothingToDo          = "the branch %q has no shippable changes"
 	ShipChildBranch                = "shipping this branch would ship %s as well,\nplease ship %q first"
 	ShipDeletesTrackingBranches    = "Ship deletes tracking branches: %s\n"
-	ShipAPINoProposal              = "cannot ship via API since branch %q has no proposal"
+	ShipAPINoProposal              = "cannot ship branch %q via API because it has no proposal"
 	ShipAPINoRemoteBranch          = "cannot ship branch %q via API because it has no remote branch"
 	ShipOpenChanges                = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShippableChangesProblem        = "cannot determine whether branch %q has shippable changes: %w"
