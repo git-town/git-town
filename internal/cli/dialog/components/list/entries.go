@@ -1,6 +1,10 @@
 package list
 
-import "fmt"
+import (
+	"fmt"
+
+	. "github.com/git-town/git-town/v15/pkg/prelude"
+)
 
 // Entries provides methods for a collection of Entry instances.
 type Entries[S fmt.Stringer] []Entry[S]
@@ -29,11 +33,11 @@ func (self Entries[S]) AllDisabled() bool {
 }
 
 // IndexWithText provides the index of the element with the given text.
-func (self Entries[S]) IndexWithText(text string) (found bool, index int) {
+func (self Entries[S]) Index(text string) Option[int] {
 	for e, entry := range self {
 		if entry.Data.String() == text {
-			return true, e
+			return Some(e)
 		}
 	}
-	return false, 0
+	return None[int]()
 }
