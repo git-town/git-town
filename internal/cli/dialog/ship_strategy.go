@@ -34,7 +34,7 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 		ShipStrategyEntryAPI,
 		ShipStrategyEntrySquashMerge,
 	}
-	defaultPos := entries.Pos(shipStrategyEntry(existing))
+	defaultPos := entries.Index(existing)
 	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.ShipStrategyAPI, aborted, err
@@ -66,9 +66,9 @@ func (self shipStrategyEntry) String() string {
 
 type ShipStrategyEntries []shipStrategyEntry
 
-func (self ShipStrategyEntries) Pos(selection shipStrategyEntry) int {
+func (self ShipStrategyEntries) Index(selection configdomain.ShipStrategy) int {
 	for e, entry := range self {
-		if entry == selection {
+		if entry.ShipStrategy() == selection {
 			return e
 		}
 	}
