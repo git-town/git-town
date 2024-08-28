@@ -22,6 +22,10 @@ type shipDataAPI struct {
 }
 
 func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {
+	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShip.RemoteName.Get()
+	if !hasRemoteBranchToShip {
+		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchNameToShip)
+	}
 	connector, hasConnector := sharedData.connector.Get()
 	if !hasConnector {
 		return result, errors.New(messages.ShipAPIConnectorRequired)
@@ -35,10 +39,6 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
 	}
 	proposalMessage := connector.DefaultProposalMessage(proposal)
-	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShip.RemoteName.Get()
-	if !hasRemoteBranchToShip {
-		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchNameToShip)
-	}
 	return shipDataAPI{
 		branchToShipRemoteName: branchToShipRemoteName,
 		connector:              connector,
