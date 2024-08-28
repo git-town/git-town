@@ -128,16 +128,6 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	})
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch, parentBranch gitdomain.LocalBranchName, config configdomain.ValidatedConfig, lineage configdomain.Lineage) error {
-	if !config.IsMainOrPerennialBranch(parentBranch) {
-		ancestors := lineage.Ancestors(branch)
-		ancestorsWithoutMainOrPerennial := ancestors[1:]
-		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
-	}
-	return nil
-}
-
 func updateChildBranchProposals(prog *program.Program, proposals []hostingdomain.Proposal, targetBranch gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.UpdateProposalTarget{
@@ -165,9 +155,13 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent) error {
 	if !toParent {
-		err := ensureParentBranchIsMainOrPerennialBranch(data.branchToShip.LocalName.GetOrPanic(), data.targetBranch.LocalName.GetOrPanic(), data.config.Config, data.config.Config.Lineage)
-		if err != nil {
-			return err
+		branch := data.branchToShip.LocalName.GetOrPanic()
+		parentBranch := data.targetBranch.LocalName.GetOrPanic()
+		if !data.config.Config.IsMainOrPerennialBranch(parentBranch) {
+			ancestors := data.config.Config.Lineage.Ancestors(branch)
+			ancestorsWithoutMainOrPerennial := ancestors[1:]
+			oldestAncestor := ancestorsWithoutMainOrPerennial[0]
+			return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
 		}
 	}
 	switch data.branchToShip.SyncStatus {
