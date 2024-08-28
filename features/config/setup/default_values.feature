@@ -85,8 +85,8 @@ Feature: Accepting all default values leads to a working setup
       #
       # Options:
       #
-      # - api: Git Town presses the "merge" button on your code hosting platform
-      # - squash-merge: Git Town squash-merges the feature branch on your local machine for you
+      # - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+      # - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
       #
       # All options update proposals of child branches and remove the shipped branch locally and remotely.
       ship-strategy = "api"
