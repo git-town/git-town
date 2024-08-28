@@ -10,7 +10,7 @@ Feature: cannot ship a local branch via API
       | feature | local    | feature commit |
     And the current branch is "feature"
     And Git Town setting "ship-strategy" is "api"
-    Given the origin is "git@github.com:git-town/git-town.git"
+    And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
     When I run "git-town ship -m done"
 
