@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v15/internal/gohacks/slice"
 	"github.com/git-town/git-town/v15/internal/messages"
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
@@ -24,7 +25,7 @@ This branch is often called "main", "master", or "development".
 func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	cursor := 0
 	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
-		cursor = localBranches.IndexOr(defaultEntry, 0)
+		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)
 	}
 	selection, aborted, err := components.RadioList(list.NewEntries(localBranches...), cursor, mainBranchTitle, MainBranchHelp, inputs)
 	fmt.Printf(messages.MainBranch, components.FormattedSelection(selection.String(), aborted))

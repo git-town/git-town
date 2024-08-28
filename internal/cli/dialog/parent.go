@@ -26,7 +26,7 @@ Most of the time this is the main branch (%v).
 // Parent lets the user select the parent branch for the given branch.
 func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	parentCandidates := ParentCandidateNames(args)
-	cursor := parentCandidates.IndexOr(args.DefaultChoice, 0)
+	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := components.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
