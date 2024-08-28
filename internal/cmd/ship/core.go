@@ -1,7 +1,6 @@
 package ship
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v15/internal/cli/flags"
@@ -135,22 +134,6 @@ func updateChildBranchProposals(prog *program.Program, proposals []hostingdomain
 			NewTarget:      targetBranch,
 		})
 	}
-}
-
-func validateShippableBranchType(branchType configdomain.BranchType) error {
-	switch branchType {
-	case configdomain.BranchTypeContributionBranch:
-		return errors.New(messages.ContributionBranchCannotShip)
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
-		return nil
-	case configdomain.BranchTypeMainBranch:
-		return errors.New(messages.MainBranchCannotShip)
-	case configdomain.BranchTypeObservedBranch:
-		return errors.New(messages.ObservedBranchCannotShip)
-	case configdomain.BranchTypePerennialBranch:
-		return errors.New(messages.PerennialBranchCannotShip)
-	}
-	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
 }
 
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent) error {

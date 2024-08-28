@@ -95,8 +95,16 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if err = validateShippableBranchType(validatedConfig.Config.BranchType(branchNameToShip)); err != nil {
-		return data, false, err
+	switch validatedConfig.Config.BranchType(branchNameToShip) {
+	case configdomain.BranchTypeContributionBranch:
+		return data, false, errors.New(messages.ContributionBranchCannotShip)
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case configdomain.BranchTypeMainBranch:
+		return data, false, errors.New(messages.MainBranchCannotShip)
+	case configdomain.BranchTypeObservedBranch:
+		return data, false, errors.New(messages.ObservedBranchCannotShip)
+	case configdomain.BranchTypePerennialBranch:
+		return data, false, errors.New(messages.PerennialBranchCannotShip)
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
