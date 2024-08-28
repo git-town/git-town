@@ -25,5 +25,9 @@ Feature: unknown ship strategy
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
+    And it prints the error:
+      """
+      unknown ship strategy: "zonk"
+      """
     And the initial branches and lineage exist
     And the initial commits exist
