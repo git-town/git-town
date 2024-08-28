@@ -58,6 +58,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 			NewTarget:      localTargetBranch,
 		})
 	}
+	prog.Value.Add(&opcodes.Checkout{Branch: sharedData.targetBranchName})
 	prog.Value.Add(&opcodes.ConnectorMergeProposal{
 		Branch:          branchToShipLocal,
 		ProposalNumber:  apiData.proposal.Number,
