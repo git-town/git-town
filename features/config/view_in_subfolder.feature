@@ -24,6 +24,7 @@ Feature: show the configuration from a subfolder
         offline: no
         run pre-push hook: yes
         push new branches: no
+        ship strategy: api
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
