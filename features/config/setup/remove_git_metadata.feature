@@ -31,6 +31,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "push-new-branches" is "true"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "create-prototype-branches" is "true"
+    And local Git Town setting "ship-strategy" is "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
@@ -48,6 +49,7 @@ Feature: remove existing configuration in Git metadata
       | enable push-new-branches                | down enter                                    |
       | disable the push hook                   | down enter                                    |
       | create-prototype-branches               | down enter                                    |
+      | change ship-strategy                    | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
       | save config to Git metadata             | down enter                                    |
 
@@ -91,6 +93,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "perennial-regex" now doesn't exist
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
+    And local Git Town setting "ship-strategy" is now "api"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
 
   Scenario: undo
@@ -120,4 +123,5 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-tags" is now "true"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
+    And local Git Town setting "ship-strategy" is now "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"

@@ -25,6 +25,7 @@ Feature: Accepting all default values leads to a working setup
       | push-new-branches           | enter |
       | push-hook                   | enter |
       | create-prototype-branches   | enter |
+      | ship-strategy               | enter |
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
 
@@ -42,6 +43,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "sync-perennial-strategy" still doesn't exist
     And local Git Town setting "sync-upstream" still doesn't exist
     And local Git Town setting "sync-tags" still doesn't exist
+    And local Git Town setting "ship-strategy" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
     And the configuration file is now:
       """
@@ -78,6 +80,16 @@ Feature: Accepting all default values leads to a working setup
       #
       # More info at https://www.git-town.com/preferences/create-prototype-branches.
       create-prototype-branches = false
+
+      # Which method should Git Town use to ship feature branches?
+      #
+      # Options:
+      #
+      # - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+      # - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+      #
+      # All options update proposals of child branches and remove the shipped branch locally and remotely.
+      ship-strategy = "api"
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
@@ -174,4 +186,5 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "perennial-regex" still doesn't exist
     And local Git Town setting "push-new-branches" still doesn't exist
     And local Git Town setting "push-hook" still doesn't exist
+    And local Git Town setting "ship-strategy" still doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" still doesn't exist

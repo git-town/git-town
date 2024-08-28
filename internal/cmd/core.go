@@ -4,6 +4,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v15/internal/cmd/config"
 	"github.com/git-town/git-town/v15/internal/cmd/debug"
+	"github.com/git-town/git-town/v15/internal/cmd/ship"
 	"github.com/git-town/git-town/v15/internal/cmd/status"
 )
 
@@ -31,7 +32,7 @@ func Execute() error {
 	rootCmd.AddCommand(repoCommand())
 	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())
-	rootCmd.AddCommand(shipCmd())
+	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(syncCmd())

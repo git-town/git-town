@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 16.0.0 (unreleased)
+
+#### BREAKING CHANGES
+
+`git town ship` now distinguishes separate shipping strategies. The default strategy is to ship via the API, i.e. `git town ship` just presses the "merge" button in the web UI of your code hosting service for you. If you want to keep shipping using squash-merges, you now need to configure the `squash-merge` sync strategy.
+
 ## 15.3.0 (2024-08-26)
 
 Git Town 15.3 brings sweet quality-of-life improvements.

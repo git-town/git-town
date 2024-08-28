@@ -54,6 +54,7 @@ func TestSave(t *testing.T) {
 			PerennialRegex:           None[configdomain.PerennialRegex](),
 			PushHook:                 true,
 			PushNewBranches:          false,
+			ShipStrategy:             configdomain.ShipStrategySquashMerge,
 			ShipDeleteTrackingBranch: true,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
@@ -97,6 +98,16 @@ push-new-branches = false
 #
 # More info at https://www.git-town.com/preferences/create-prototype-branches.
 create-prototype-branches = true
+
+# Which method should Git Town use to ship feature branches?
+#
+# Options:
+#
+# - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+# - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+#
+# All options update proposals of child branches and remove the shipped branch locally and remotely.
+ship-strategy = "squash-merge"
 
 # Should "git ship" delete the tracking branch?
 # You want to disable this if your code hosting platform
@@ -213,6 +224,16 @@ push-new-branches = false
 #
 # More info at https://www.git-town.com/preferences/create-prototype-branches.
 create-prototype-branches = false
+
+# Which method should Git Town use to ship feature branches?
+#
+# Options:
+#
+# - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+# - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+#
+# All options update proposals of child branches and remove the shipped branch locally and remotely.
+ship-strategy = "api"
 
 # Should "git ship" delete the tracking branch?
 # You want to disable this if your code hosting platform

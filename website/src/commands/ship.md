@@ -5,17 +5,15 @@ to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git ship` is for edge cases like
 developing in [offline mode](../preferences/offline.md)._
 
-The _ship_ command ("let's ship this feature") squash-merges a completed feature
-branch into the main branch and removes the feature branch. After the merge it
-pushes the main branch to share the new commit on it with the rest of the world.
+The _ship_ command ("let's ship this feature") merges a completed feature branch
+into the main branch and removes the feature branch.
 
-Git ship opens the default editor with a prepopulated commit message that you
-can modify. You can submit an empty commit message to abort the shipping
-process.
+How exactly it does that depends on the configured
+[ship-strategy](../preferences/ship-strategy.md).
 
 This command ships only direct children of the main branch. To ship a child
 branch, you need to first ship or [kill](kill.md) all its ancestor branches. If
-you really need to ship into a non-perennial branch, you can override the
+you really want to ship into a non-perennial branch, you can override the
 protection against that with the `--to-parent` option.
 
 The branch to ship must be in sync. If it isn't in sync, `git ship` will exit

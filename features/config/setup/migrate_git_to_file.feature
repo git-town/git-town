@@ -11,6 +11,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "create-prototype-branches" is "true"
+    And local Git Town setting "ship-strategy" is "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     And local Git Town setting "sync-feature-strategy" is "merge"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
@@ -32,7 +33,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | enable push-new-branches                  | enter |
       | disable the push hook                     | enter |
       | create-prototype-branches                 | enter |
-      | disable ship-delete-tracking-branch       | enter |
+      | ship-strategy                             | enter |
+      | ship-delete-tracking-branch               | enter |
       | save config to config file                | enter |
 
   Scenario: result
@@ -49,6 +51,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
     And local Git Town setting "create-prototype-branches" now doesn't exist
+    And local Git Town setting "ship-strategy" now doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
     And the configuration file is now:
       """
@@ -85,6 +88,16 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # More info at https://www.git-town.com/preferences/create-prototype-branches.
       create-prototype-branches = true
+
+      # Which method should Git Town use to ship feature branches?
+      #
+      # Options:
+      #
+      # - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
+      # - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+      #
+      # All options update proposals of child branches and remove the shipped branch locally and remotely.
+      ship-strategy = "squash-merge"
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
@@ -162,6 +175,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "perennial-regex" is now "release-.*"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
+    And local Git Town setting "ship-strategy" is now "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "rebase"

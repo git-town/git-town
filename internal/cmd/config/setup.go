@@ -192,6 +192,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.ShipStrategy, aborted, err = dialog.ShipStrategy(config.Config.Value.ShipStrategy, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.Value.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -271,6 +275,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(savePerennialRegex(oldConfig.Config.Value.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.Config.Value.PushHook, userInput.config.PushHook, oldConfig))
 	fc.Check(savePushNewBranches(oldConfig.Config.Value.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
+	fc.Check(saveShipStrategy(oldConfig.Config.Value.ShipStrategy, userInput.config.ShipStrategy, oldConfig))
 	fc.Check(saveShipDeleteTrackingBranch(oldConfig.Config.Value.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
 	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
 	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
@@ -404,6 +409,13 @@ func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrac
 	return config.SetShipDeleteTrackingBranch(newValue, configdomain.ConfigScopeLocal)
 }
 
+func saveShipStrategy(oldValue, newValue configdomain.ShipStrategy, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.SetShipStrategy(newValue, configdomain.ConfigScopeLocal)
+}
+
 func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
@@ -443,6 +455,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.RemovePerennialRegex()
 	config.RemovePushNewBranches()
 	config.RemovePushHook()
+	config.RemoveShipStrategy()
 	config.RemoveShipDeleteTrackingBranch()
 	config.RemoveSyncFeatureStrategy()
 	config.RemoveSyncPerennialStrategy()

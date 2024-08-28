@@ -30,6 +30,8 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.PushNewBranches))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.CreatePrototypeBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("create-prototype-branches = %t\n\n", config.CreatePrototypeBranches))
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipStrategyHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("ship-strategy = %q\n\n", config.ShipStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipDeleteTrackingBranchHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("ship-delete-tracking-branch = %t\n\n", config.ShipDeleteTrackingBranch))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncTagsHelp)) + "\n")

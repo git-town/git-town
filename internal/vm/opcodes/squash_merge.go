@@ -30,6 +30,8 @@ func (self *SquashMerge) CreateAutomaticUndoError() error {
 }
 
 func (self *SquashMerge) Run(args shared.RunArgs) error {
+	// TODO: extract into separate opcodes for Git resilience
+	// Possible create a SquashMergeProgram function that returns these opcodes
 	err := args.Git.SquashMerge(args.Frontend, self.Branch)
 	if err != nil {
 		return err
