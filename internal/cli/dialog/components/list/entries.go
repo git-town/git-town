@@ -31,13 +31,3 @@ func (self Entries[S]) AllDisabled() bool {
 	}
 	return true
 }
-
-// provides the index of the element that serializes to the given value
-func (self Entries[S]) Index(value string) Option[int] {
-	for e, entry := range self {
-		if entry.Data.String() == value {
-			return Some(e)
-		}
-	}
-	return None[int]()
-}
