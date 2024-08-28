@@ -30,12 +30,12 @@ const (
 )
 
 func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
-	entries := list.NewEntries(
+	entries := []shipStrategyEntry{
 		ShipStrategyEntryAPI,
 		ShipStrategyEntrySquashMerge,
-	)
-	defaultPos := entries.Index(existing.String()).GetOrElse(0)
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	}
+	defaultPos := shipStrategyEntryIndex(entries, existing)
+	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.ShipStrategyAPI, aborted, err
 	}

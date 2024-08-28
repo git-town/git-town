@@ -37,7 +37,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | ship-delete-tracking-branch               | enter |
       | save config to config file                | enter |
 
-  @debug @this
   Scenario: result
     Then it runs no commands
     And the main branch is now not set
