@@ -28,10 +28,10 @@ const (
 )
 
 func CreatePrototypeBranches(existing configdomain.CreatePrototypeBranches, inputs components.TestInput) (configdomain.CreatePrototypeBranches, bool, error) {
-	entries := list.NewEntries(
+	entries := []createPrototypeBranchesEntry{
 		createPrototypeBranchesEntryEnabled,
 		createPrototypeBranchesEntryDisabled,
-	)
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -43,7 +43,7 @@ func CreatePrototypeBranches(existing configdomain.CreatePrototypeBranches, inpu
 		return false, aborted, err
 	}
 	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection.Data.CreatePrototypeBranches(), aborted, err
+	return selection.CreatePrototypeBranches(), aborted, err
 }
 
 type createPrototypeBranchesEntry string
