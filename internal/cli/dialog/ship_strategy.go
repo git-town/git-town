@@ -63,14 +63,3 @@ func (self shipStrategyEntry) Short() string {
 func (self shipStrategyEntry) String() string {
 	return string(self)
 }
-
-type ShipStrategyEntries []shipStrategyEntry
-
-func (self ShipStrategyEntries) Index(selection configdomain.ShipStrategy) int {
-	for e, entry := range self {
-		if entry.ShipStrategy() == selection {
-			return e
-		}
-	}
-	return 0
-}
