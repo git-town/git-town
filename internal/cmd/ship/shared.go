@@ -21,26 +21,25 @@ import (
 
 // data that all ship strategies use
 type sharedShipData struct {
-	branchNameToShip           gitdomain.LocalBranchName
-	branchToShip               gitdomain.BranchInfo
-	branchesSnapshot           gitdomain.BranchesSnapshot
-	childBranches              gitdomain.LocalBranchNames
-	config                     config.ValidatedConfig
-	connector                  Option[hostingdomain.Connector]
-	dialogTestInputs           components.TestInputs
-	dryRun                     configdomain.DryRun
-	hasOpenChanges             bool
-	initialBranch              gitdomain.LocalBranchName
-	isShippingInitialBranch    bool
-	previousBranch             Option[gitdomain.LocalBranchName]
-	proposalsOfChildBranches   []hostingdomain.Proposal
-	shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent
-	stashSize                  gitdomain.StashSize
-	targetBranch               gitdomain.BranchInfo
-	targetBranchName           gitdomain.LocalBranchName
+	branchNameToShip         gitdomain.LocalBranchName
+	branchToShip             gitdomain.BranchInfo
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	childBranches            gitdomain.LocalBranchNames
+	config                   config.ValidatedConfig
+	connector                Option[hostingdomain.Connector]
+	dialogTestInputs         components.TestInputs
+	dryRun                   configdomain.DryRun
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	isShippingInitialBranch  bool
+	previousBranch           Option[gitdomain.LocalBranchName]
+	proposalsOfChildBranches []hostingdomain.Proposal
+	stashSize                gitdomain.StashSize
+	targetBranch             gitdomain.BranchInfo
+	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, shipIntoNonPerennialParent configdomain.ShipIntoNonperennialParent) (data sharedShipData, exit bool, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data sharedShipData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -138,22 +137,21 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		}
 	}
 	return sharedShipData{
-		branchNameToShip:           branchNameToShip,
-		branchToShip:               *branchToShip,
-		branchesSnapshot:           branchesSnapshot,
-		childBranches:              childBranches,
-		config:                     validatedConfig,
-		connector:                  connectorOpt,
-		dialogTestInputs:           dialogTestInputs,
-		dryRun:                     dryRun,
-		hasOpenChanges:             repoStatus.OpenChanges,
-		initialBranch:              initialBranch,
-		isShippingInitialBranch:    isShippingInitialBranch,
-		previousBranch:             previousBranch,
-		proposalsOfChildBranches:   proposalsOfChildBranches,
-		shipIntoNonPerennialParent: shipIntoNonPerennialParent,
-		stashSize:                  stashSize,
-		targetBranch:               *targetBranch,
-		targetBranchName:           targetBranchName,
+		branchNameToShip:         branchNameToShip,
+		branchToShip:             *branchToShip,
+		branchesSnapshot:         branchesSnapshot,
+		childBranches:            childBranches,
+		config:                   validatedConfig,
+		connector:                connectorOpt,
+		dialogTestInputs:         dialogTestInputs,
+		dryRun:                   dryRun,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		isShippingInitialBranch:  isShippingInitialBranch,
+		previousBranch:           previousBranch,
+		proposalsOfChildBranches: proposalsOfChildBranches,
+		stashSize:                stashSize,
+		targetBranch:             *targetBranch,
+		targetBranchName:         targetBranchName,
 	}, false, nil
 }

@@ -71,11 +71,11 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args, repo, dryRun, verbose, toParent)
+	sharedData, exit, err := determineSharedShipData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = validateSharedData(sharedData)
+	err = validateSharedData(sharedData, toParent)
 	if err != nil {
 		return err
 	}
@@ -165,8 +165,8 @@ func validateSyncStatus(syncStatus gitdomain.SyncStatus, branchToShip gitdomain.
 	return nil
 }
 
-func validateSharedData(data sharedShipData) error {
-	if !data.shipIntoNonPerennialParent {
+func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent) error {
+	if !toParent {
 		err := ensureParentBranchIsMainOrPerennialBranch(data.branchToShip.LocalName.GetOrPanic(), data.targetBranch.LocalName.GetOrPanic(), data.config.Config, data.config.Config.Lineage)
 		if err != nil {
 			return err
