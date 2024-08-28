@@ -163,19 +163,6 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
 }
 
-func validateSyncStatus(syncStatus gitdomain.SyncStatus, branchToShip gitdomain.LocalBranchName) error {
-	switch syncStatus {
-	case gitdomain.SyncStatusDeletedAtRemote:
-		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, branchToShip)
-	case gitdomain.SyncStatusNotInSync:
-		return fmt.Errorf(messages.ShipBranchNotInSync, branchToShip)
-	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, branchToShip)
-	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
-	}
-	return nil
-}
-
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent) error {
 	if !toParent {
 		err := ensureParentBranchIsMainOrPerennialBranch(data.branchToShip.LocalName.GetOrPanic(), data.targetBranch.LocalName.GetOrPanic(), data.config.Config, data.config.Config.Lineage)
@@ -183,16 +170,19 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 			return err
 		}
 	}
-	if err := validateSyncStatus(data.branchToShip.SyncStatus, data.branchNameToShip); err != nil {
-		return err
+	switch data.branchToShip.SyncStatus {
+	case gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchNameToShip)
+	case gitdomain.SyncStatusNotInSync:
+		return fmt.Errorf(messages.ShipBranchNotInSync, data.branchNameToShip)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchNameToShip)
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
 	}
 	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
 			return validate.NoOpenChanges(data.hasOpenChanges)
 		}
-	}
-	if err := validateSyncStatus(data.branchToShip.SyncStatus, data.branchNameToShip); err != nil {
-		return err
 	}
 	return nil
 }
