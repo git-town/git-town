@@ -52,6 +52,7 @@ Feature: show the configuration
     And the configuration file:
       """
       push-new-branches = true
+      ship-strategy = "squash-merge"
       ship-delete-tracking-branch = true
       sync-upstream = true
       sync-tags = false
@@ -84,6 +85,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: yes
+        ship strategy: squash-merge
         ship deletes the tracking branch: yes
         sync-feature strategy: rebase
         sync-perennial strategy: merge
@@ -111,6 +113,7 @@ Feature: show the configuration
     And the main branch is "git-main"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
+    And Git Town setting "ship-strategy" is "squash-merge"
     And Git Town setting "ship-delete-tracking-branch" is "false"
     And Git Town setting "sync-upstream" is "false"
     And Git Town setting "sync-tags" is "false"
@@ -119,6 +122,7 @@ Feature: show the configuration
     And the configuration file:
       """
       push-new-branches = true
+      ship-strategy = "api"
       ship-delete-tracking-branch = true
       sync-upstream = true
       sync-tags = true
@@ -151,6 +155,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
+        ship strategy: squash-merge
         ship deletes the tracking branch: no
         sync-feature strategy: merge
         sync-perennial strategy: merge
@@ -188,6 +193,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
+        ship strategy: api
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
@@ -227,6 +233,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
+        ship strategy: api
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
