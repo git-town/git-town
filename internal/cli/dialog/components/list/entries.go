@@ -2,8 +2,6 @@ package list
 
 import (
 	"fmt"
-
-	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
 // Entries provides methods for a collection of Entry instances.
