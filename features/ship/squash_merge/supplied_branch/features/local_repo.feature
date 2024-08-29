@@ -1,7 +1,7 @@
 Feature: ship the supplied feature branch in a local repo
 
   Background:
-    Given a local Git repo clone
+    Given a local Git repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |

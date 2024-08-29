@@ -137,7 +137,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`a local Git repo`, func(ctx context.Context) (context.Context, error) {
+	sc.Step(`^a local Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
