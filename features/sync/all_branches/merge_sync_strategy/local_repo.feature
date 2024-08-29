@@ -1,7 +1,7 @@
 Feature: syncs all feature branches (in a local repo)
 
   Background:
-    Given a local Git repo clone
+    Given a local Git repo
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | alpha | feature | main   | local     |

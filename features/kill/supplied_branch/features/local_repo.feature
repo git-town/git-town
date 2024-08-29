@@ -1,7 +1,7 @@
 Feature: local repository
 
   Background:
-    Given a local Git repo clone
+    Given a local Git repo
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | good  | feature | main   | local     |

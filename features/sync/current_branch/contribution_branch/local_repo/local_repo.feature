@@ -1,7 +1,7 @@
 Feature: sync the current contribution branch in a local repo
 
   Background:
-    Given a local Git repo clone
+    Given a local Git repo
     And the branch
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
