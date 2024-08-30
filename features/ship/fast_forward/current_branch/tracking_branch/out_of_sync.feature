@@ -1,4 +1,4 @@
-Feature: does not ship an out-of-sync branch
+Feature: does not ship out-of-sync branches
 
   Background:
     Given a Git repo with origin
