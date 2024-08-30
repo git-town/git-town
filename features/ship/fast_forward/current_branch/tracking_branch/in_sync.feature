@@ -1,4 +1,3 @@
-@skipWindows
 Feature: ship an omni-branch via the fast-forward strategy
 
   Background:
