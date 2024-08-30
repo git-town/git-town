@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v15/internal/cli/flags"
@@ -76,7 +77,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil || exit {
 		return err
 	}
-	err = validateSharedData(sharedData, toParent)
+	err = validateSharedData(sharedData, toParent, message)
 	if err != nil {
 		return err
 	}
@@ -88,8 +89,14 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 			return err
 		}
 		shipProgram = shipAPIProgram(sharedData, apiData, message)
+	case configdomain.ShipStragegyFastForward:
+		mergeData, err := determineMergeData(repo)
+		if err != nil {
+			return err
+		}
+		shipProgram = shipProgramFastForward(sharedData, mergeData)
 	case configdomain.ShipStrategySquashMerge:
-		squashMergeData, err := determineSquashMergeData(repo)
+		squashMergeData, err := determineMergeData(repo)
 		if err != nil {
 			return err
 		}
@@ -136,7 +143,10 @@ func updateChildBranchProposals(prog *program.Program, proposals []hostingdomain
 	}
 }
 
-func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent) error {
+func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent, message Option[gitdomain.CommitMessage]) error {
+	if data.config.Config.ShipStrategy == configdomain.ShipStragegyFastForward && message.IsSome() {
+		return errors.New(messages.ShipMessageWithFastForward)
+	}
 	if !toParent {
 		branch := data.branchToShip.LocalName.GetOrPanic()
 		parentBranch := data.targetBranch.LocalName.GetOrPanic()

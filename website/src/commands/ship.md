@@ -5,6 +5,11 @@ to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git ship` is for edge cases like
 developing in [offline mode](../preferences/offline.md)._
 
+_The only exception is when shipping [stacked changes](../stacked-changes.md).
+Use the
+[fast-forward ship strategy](../preferences/ship-strategy.md#fast-forward) in
+this case to avoid empty merge conflicts._
+
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch.
 

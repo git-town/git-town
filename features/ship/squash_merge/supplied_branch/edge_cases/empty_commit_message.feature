@@ -30,7 +30,7 @@ Feature: abort the ship via empty commit message
       | other  | git stash pop                   |
     And it prints the error:
       """
-      aborted because commit exited with error
+      aborted because merge exited with error
       """
     And the current branch is still "other"
     And the uncommitted file still exists

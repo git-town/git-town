@@ -28,7 +28,7 @@ Feature: change existing information in Git metadata
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
       | create-prototype-branches                 | down enter             |
-      | set ship-strategy to "squash-merge"       | down enter             |
+      | set ship-strategy to "fast-forward"       | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
@@ -77,7 +77,7 @@ Feature: change existing information in Git metadata
     And local Git Town setting "perennial-regex" is now "3366"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "ship-strategy" is now "squash-merge"
+    And local Git Town setting "ship-strategy" is now "fast-forward"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
 
   Scenario: undo

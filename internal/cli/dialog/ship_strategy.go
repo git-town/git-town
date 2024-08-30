@@ -18,20 +18,23 @@ Which method should Git Town use to ship feature branches?
 Options:
 
 - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
-- squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+- fast-forward: fast-forward the main branch to point to the feature branch commits on your local machine
+- squash-merge: squash-merge the feature branch into its parent branch on your local machine
 
 All options update proposals of child branches and remove the shipped branch locally and remotely.
 `
 )
 
 const (
-	ShipStrategyEntryAPI         shipStrategyEntry = `api: "git ship" presses the "merge" button on your code hosting platform for you`
+	ShipStrategyEntryAPI         shipStrategyEntry = `api: press the "merge" button on your code hosting platform for you`
+	ShipStrategyEntryFastForward shipStrategyEntry = `fast-forward: fast-forward the main branch to point to the commits on the feature branch`
 	ShipStrategyEntrySquashMerge shipStrategyEntry = `squash-merge: "git ship" squash-merges the branch on your local machine`
 )
 
 func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
 	entries := []shipStrategyEntry{
 		ShipStrategyEntryAPI,
+		ShipStrategyEntryFastForward,
 		ShipStrategyEntrySquashMerge,
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
@@ -49,6 +52,8 @@ func (self shipStrategyEntry) ShipStrategy() configdomain.ShipStrategy {
 	switch self {
 	case ShipStrategyEntryAPI:
 		return configdomain.ShipStrategyAPI
+	case ShipStrategyEntryFastForward:
+		return configdomain.ShipStragegyFastForward
 	case ShipStrategyEntrySquashMerge:
 		return configdomain.ShipStrategySquashMerge
 	}

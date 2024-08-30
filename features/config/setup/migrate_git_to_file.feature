@@ -94,7 +94,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       # Options:
       #
       # - api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
-      # - squash-merge: Git Town squash-merges the feature branch into its parent branch on your local machine
+      # - fast-forward: fast-forward the main branch to point to the feature branch commits on your local machine
+      # - squash-merge: squash-merge the feature branch into its parent branch on your local machine
       #
       # All options update proposals of child branches and remove the shipped branch locally and remotely.
       ship-strategy = "squash-merge"

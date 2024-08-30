@@ -24,7 +24,7 @@ Feature: abort the ship by empty commit message
       |         | git checkout feature            |
     And it prints the error:
       """
-      aborted because commit exited with error
+      aborted because merge exited with error
       """
     And the current branch is still "feature"
     And the initial commits exist

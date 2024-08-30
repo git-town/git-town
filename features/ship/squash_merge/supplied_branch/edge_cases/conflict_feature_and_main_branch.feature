@@ -32,7 +32,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       """
     And it prints the error:
       """
-      aborted because commit exited with error
+      aborted because merge exited with error
       """
     And the current branch is still "other"
     And the uncommitted file still exists
