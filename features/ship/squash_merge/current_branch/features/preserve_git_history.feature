@@ -9,7 +9,7 @@ Feature: preserve the previous Git branch
     And Git Town setting "ship-strategy" is "squash-merge"
 
   Scenario: current branch gone
-    And the commits
+    Given the commits
       | BRANCH  | LOCATION |
       | current | local    |
     And the current branch is "current" and the previous branch is "previous"
@@ -27,7 +27,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
-    And the branches
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the commits

@@ -18,8 +18,15 @@ refactoring, reviewing, and resolving merge conflicts on such
 single-responsibility branches is easier than with branches that combine
 unrelated changes.
 
-Git Town supports stacked changes naturally as part of its bigger picture about
-branch ancestry.
+Git Town provides wide reaching support for stacked changes. When using stacked
+changes, try to fast-forward your feature branches into the main branch to avoid
+empty merge conflicts when syncing the stack later. On GitLab that's
+[straightforward](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+GitHub does not provide a fast-forward merge option out of the box but you can
+achieve it with the
+[fast-forward ship strategy](preferences/ship-strategy.md#fast-forward) together
+with the [compress](preferences/sync-feature-strategy.md#compress) or
+[rebase](preferences/sync-feature-strategy.md#rebase) sync strategy.
 
 ## Example
 

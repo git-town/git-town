@@ -423,6 +423,10 @@ func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomai
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
+func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "merge", "--ff-only", branch.String())
+}
+
 // NavigateToDir changes into the root directory of the current repository.
 func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())

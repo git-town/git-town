@@ -9,21 +9,21 @@ import (
 	. "github.com/git-town/git-town/v15/pkg/prelude"
 )
 
-type shipDataSquashMerge struct {
+type shipDataMerge struct {
 	remotes gitdomain.Remotes
 }
 
-func determineSquashMergeData(repo execute.OpenRepoResult) (result shipDataSquashMerge, err error) {
+func determineMergeData(repo execute.OpenRepoResult) (result shipDataMerge, err error) {
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return result, err
 	}
-	return shipDataSquashMerge{
+	return shipDataMerge{
 		remotes: remotes,
 	}, nil
 }
 
-func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataSquashMerge, commitMessage Option[gitdomain.CommitMessage]) program.Program {
+func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := NewMutable(&program.Program{})
 	prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()

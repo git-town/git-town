@@ -1,4 +1,4 @@
-Feature: shipping a branch that is checked out in another worktree
+Feature: branch was deleted at the remote
 
   Background:
     Given a Git repo with origin
@@ -10,9 +10,9 @@ Feature: shipping a branch that is checked out in another worktree
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
-    And branch "feature" is active in another worktree
-    And Git Town setting "ship-strategy" is "squash-merge"
-    When I run "git-town ship feature" and enter "feature done" for the commit message
+    And origin deletes the "feature" branch
+    And Git Town setting "ship-strategy" is "fast-forward"
+    When I run "git-town ship feature"
 
   Scenario: result
     Then it runs the commands
@@ -20,7 +20,7 @@ Feature: shipping a branch that is checked out in another worktree
       | other  | git fetch --prune --tags |
     And it prints the error:
       """
-      branch "feature" is active in another worktree
+      branch "feature" was deleted at the remote
       """
 
   Scenario: undo

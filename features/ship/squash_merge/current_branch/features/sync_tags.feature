@@ -1,3 +1,4 @@
+# TODO: delete this
 @smoke
 Feature: don't sync tags while shipping
 

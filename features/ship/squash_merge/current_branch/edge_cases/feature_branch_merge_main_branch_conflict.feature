@@ -27,7 +27,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       """
     And it prints the error:
       """
-      aborted because commit exited with error
+      aborted because merge exited with error
       """
     And the current branch is still "feature"
     And no merge is in progress
