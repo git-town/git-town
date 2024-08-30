@@ -5,10 +5,10 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
+    And the current branch is "feature"
     And Git Town setting "ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
