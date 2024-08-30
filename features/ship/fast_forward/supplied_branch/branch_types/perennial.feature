@@ -1,4 +1,4 @@
-Feature: does not ship perennial branches
+Feature: does not ship perennial branches using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
