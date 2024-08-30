@@ -1,4 +1,4 @@
-Feature: handle conflicts between the supplied feature branch and the main branch
+Feature: does not ship an unsynced feature branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
@@ -7,9 +7,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | feature | main   | local     |
       | other   | feature | main   | local     |
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local    | conflicting main commit    | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE                 |
+      | main    | local    | main commit             |
+      | feature | local    | unsynced feature commit |
     And the current branch is "other"
     And an uncommitted file
     And Git Town setting "ship-strategy" is "fast-forward"
