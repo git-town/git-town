@@ -1,4 +1,4 @@
-Feature: does not ship with uncommitted changes using the fast-forward strategy
+Feature: does not ship uncommitted changes using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
