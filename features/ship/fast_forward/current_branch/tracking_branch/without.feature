@@ -1,4 +1,4 @@
-Feature: ship a local feature branch using the FF stratetgy
+Feature: ship a local feature branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
