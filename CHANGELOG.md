@@ -2,9 +2,9 @@
 
 ## 16.0.0 (unreleased)
 
-Git Town 16 brings back the "git ship" command in a big way.
+Git Town 16 brings the "git ship" command back in a big way: Git Town now supports shipping stacked changes without merge conflicts - even on platforms that don't support it natively like GitHub!
 
-Big thanks to @FFdhorkin, @antoineMoPa, @breml, @bryanlarsen, @buscape, @kevgo, @tranhl, @zeronacer for the great feedback that led to this awesome new solution! 9 shipped PRs and 7 resolved issues in this release.
+Big thanks to @FFdhorkin, @antoineMoPa, @breml, @bryanlarsen, @buscape, @kevgo, @tranhl, @zeronacer for the great feedback that led to this awesome new solution! This releaese contains 9 shipped PRs and 7 resolved issues.
 
 #### BREAKING CHANGES
 
@@ -13,9 +13,9 @@ The default behavior of `git ship` tightens. Previously it shipped via the API i
 #### New Features
 
 - You can now configure how Git Town ships branches via the new `ship-strategy` configuration setting. Possible options are:
-  - "api" ships the branch by merging its proposal via the API of your code hosting platform.
-  - "fast-forward" is a new shipping strategy that prevents the false merge conflicts you get when shipping a branch from a stack. It merges the branch to ship via `git merge --ff-only` into its parent (typically the main branch) on your local machine and then pushes the new commit(s) to the remote main branch.
-  - "squash-merge" as before merges the branch to ship via `git merge --squash` into its parent and commits the result.
+  - `api` ships the branch by merging its proposal via the API of your code hosting platform.
+  - `fast-forward` is a new shipping strategy that prevents the false merge conflicts you get when shipping a branch from a stack using squashes or merges. It merges the branch to ship via `git merge --ff-only` into its parent (typically the main branch) on your local machine and then pushes the new commits to the remote main branch.
+  - `squash-merge` as before merges the branch to ship via `git merge --squash` into its parent.
 
 ## 15.3.0 (2024-08-26)
 
