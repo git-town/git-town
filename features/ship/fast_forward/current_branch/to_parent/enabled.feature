@@ -2,14 +2,14 @@ Feature: allowing shipping into a feature branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
       |        |               | alpha 2 | alpha_2   | alpha 2      |
-    And the branch
+    And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits

@@ -3,7 +3,7 @@ Feature: shipping a prototype branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
     And the commits

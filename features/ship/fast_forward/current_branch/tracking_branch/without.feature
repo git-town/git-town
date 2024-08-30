@@ -2,7 +2,7 @@ Feature: ship a local feature branch using the FF stratetgy
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the commits

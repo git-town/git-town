@@ -27,7 +27,7 @@ Feature: preserve the previous Git branch when shipping using the fast-forward s
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
-    Given the branch
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the commits

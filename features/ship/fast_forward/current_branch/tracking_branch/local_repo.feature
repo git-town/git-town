@@ -2,7 +2,7 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"

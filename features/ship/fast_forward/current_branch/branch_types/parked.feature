@@ -2,7 +2,7 @@ Feature: shipping a parked branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the commits

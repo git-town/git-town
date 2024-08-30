@@ -2,7 +2,7 @@ Feature: does not ship an empty branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | empty | feature | main   | local     |
     And the commits

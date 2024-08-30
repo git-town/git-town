@@ -2,7 +2,7 @@ Feature: cannot ship perennial branches using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
     And the commits
