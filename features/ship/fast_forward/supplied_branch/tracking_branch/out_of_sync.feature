@@ -1,4 +1,4 @@
-Feature: refuses shipping a branch with conflicts between the supplied feature branch and its tracking branch using the fast-forward strategy
+Feature: does not ship the given out-of-sync branch using the fast-forward strategy
 
   Background:
     Given a Git repo with origin
