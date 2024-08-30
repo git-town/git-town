@@ -1,3 +1,4 @@
+@skipWindows
 Feature: ask for missing configuration information
 
   Scenario: unconfigured
