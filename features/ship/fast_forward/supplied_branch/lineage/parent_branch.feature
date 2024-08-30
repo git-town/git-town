@@ -24,6 +24,10 @@ Feature: ship a parent branch using the fast-forward strategy
       |        | git push origin :parent    |
       |        | git checkout child         |
       | child  | git branch -D parent       |
+    And it prints:
+      """
+      branch "child" is now a child of "main"
+      """
     And the current branch is now "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
