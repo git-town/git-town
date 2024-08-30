@@ -2,7 +2,7 @@ Feature: sync the current observed branch in a local repo
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME  | TYPE     | LOCATIONS |
       | other | observed | local     |
     And the commits

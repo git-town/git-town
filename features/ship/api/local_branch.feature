@@ -2,7 +2,7 @@ Feature: cannot ship a local branch via API
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the commits

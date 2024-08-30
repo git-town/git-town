@@ -2,7 +2,7 @@ Feature: sync the current omni feature branch using the "compress" sync-feature 
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git Town setting "sync-feature-strategy" is "compress"

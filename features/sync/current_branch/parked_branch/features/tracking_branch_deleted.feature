@@ -2,7 +2,7 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the current branch is "parked"

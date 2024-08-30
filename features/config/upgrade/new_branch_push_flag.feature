@@ -2,7 +2,7 @@ Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And <LOCATION> Git Town setting "new-branch-push-flag" is "true"

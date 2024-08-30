@@ -2,7 +2,7 @@ Feature: make another observed branch an observed branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed |        | local, origin |
     When I run "git-town observe observed"

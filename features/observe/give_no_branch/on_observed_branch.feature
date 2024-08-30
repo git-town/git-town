@@ -2,7 +2,7 @@ Feature: observe the current observed branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME     | TYPE     | LOCATIONS |
       | observed | observed | local     |
     And the current branch is "observed"

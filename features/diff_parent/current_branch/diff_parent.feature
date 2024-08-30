@@ -5,7 +5,7 @@ Feature: view changes made on the current feature branch
     Given a Git repo with origin
 
   Scenario: feature branch
-    Given the branch
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"

@@ -2,7 +2,7 @@ Feature: does not compress perennial branches
 
   Scenario: on perennial branch
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | perennial | perennial |        | local, origin |
     And the current branch is "perennial"

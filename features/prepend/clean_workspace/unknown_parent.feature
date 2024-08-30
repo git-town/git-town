@@ -2,7 +2,7 @@ Feature: ask for missing parent information
 
   Scenario:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME | TYPE   | LOCATIONS |
       | old  | (none) | local     |
     And the current branch is "old"

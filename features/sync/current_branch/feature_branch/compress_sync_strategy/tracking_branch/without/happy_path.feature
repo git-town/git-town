@@ -2,7 +2,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the commits

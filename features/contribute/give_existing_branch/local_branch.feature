@@ -2,7 +2,7 @@ Feature: make another local feature branch a contribution branch
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | local | feature | main   | local     |
     When I run "git-town contribute local"

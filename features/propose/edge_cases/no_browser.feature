@@ -3,7 +3,7 @@ Feature: print the URL when no browser installed
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the origin is "git@github.com:git-town/git-town"

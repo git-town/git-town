@@ -2,7 +2,7 @@ Feature: does not compress contribution branches
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
     And the current branch is "contribution"

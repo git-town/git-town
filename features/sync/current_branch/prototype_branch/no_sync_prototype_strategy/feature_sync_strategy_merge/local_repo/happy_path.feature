@@ -2,7 +2,7 @@ Feature: sync the current prototype branch in a local repo
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS |
       | prototype | prototype | main   | local     |
     And the commits

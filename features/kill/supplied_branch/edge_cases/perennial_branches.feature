@@ -4,7 +4,7 @@ Feature: does not kill perennial branches
     Given a Git repo with origin
 
   Scenario: main branch
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     Given the current branch is "feature"
@@ -20,7 +20,7 @@ Feature: does not kill perennial branches
     And the initial branches and lineage exist
 
   Scenario: perennial branch
-    And the branch
+    And the branches
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
     And the current branch is "main"

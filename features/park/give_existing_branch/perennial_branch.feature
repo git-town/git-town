@@ -2,7 +2,7 @@ Feature: park another perennial branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     When I run "git-town park perennial"

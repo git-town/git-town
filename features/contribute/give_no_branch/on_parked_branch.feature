@@ -2,7 +2,7 @@ Feature: make the current parked branch a contribution branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the current branch is "parked"

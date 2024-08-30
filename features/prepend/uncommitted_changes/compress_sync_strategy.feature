@@ -2,7 +2,7 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the current branch is "old"

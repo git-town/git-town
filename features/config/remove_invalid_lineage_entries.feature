@@ -2,7 +2,7 @@ Feature: remove parent entries for perennial branches
 
   Scenario: child is its own parent
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And Git Town parent setting for branch "feature" is "feature"

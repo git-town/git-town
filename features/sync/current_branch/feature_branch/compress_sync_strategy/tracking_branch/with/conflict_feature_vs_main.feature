@@ -3,7 +3,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git Town setting "sync-feature-strategy" is "compress"

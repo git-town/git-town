@@ -2,7 +2,7 @@ Feature: offline mode
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And offline mode is enabled

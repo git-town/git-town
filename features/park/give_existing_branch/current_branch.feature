@@ -2,7 +2,7 @@ Feature: park the current parked branch
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS |
       | parked | parked | main   | local     |
     And the current branch is "parked"
