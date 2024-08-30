@@ -7,9 +7,9 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
       | feature | feature | main   | local, origin |
       | other   | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | origin   | conflicting origin commit | conflicting_file | origin content |
+      | BRANCH  | LOCATION | MESSAGE       |
+      | feature | local    | local commit  |
+      |         | origin   | origin commit |
     And the current branch is "other"
     And an uncommitted file
     And Git Town setting "ship-strategy" is "fast-forward"
