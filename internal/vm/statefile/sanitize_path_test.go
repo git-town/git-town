@@ -3,8 +3,8 @@ package statefile_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/vm/statefile"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/vm/statefile"
 	"github.com/shoenig/test/must"
 )
 

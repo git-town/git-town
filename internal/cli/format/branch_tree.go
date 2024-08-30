@@ -1,8 +1,8 @@
 package format
 
 import (
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 )
 
 // BranchTree provids a printable version of the given branch tree.

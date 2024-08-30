@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
-	"github.com/git-town/git-town/v15/test/filesystem"
-	"github.com/git-town/git-town/v15/test/testruntime"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/filesystem"
+	"github.com/git-town/git-town/v16/test/testruntime"
 )
 
 // A fully populated Git repos template for testing.

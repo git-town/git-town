@@ -3,10 +3,10 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 )
 
 const squashCommitAuthorTitle = `Squash commit author`

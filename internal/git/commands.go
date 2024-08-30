@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks/cache"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v15/internal/messages"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/cache"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v16/internal/messages"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.

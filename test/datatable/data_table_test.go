@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/git-town/git-town/v15/test/datatable"
+	"github.com/git-town/git-town/v16/test/datatable"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"github.com/shoenig/test/must"
 )

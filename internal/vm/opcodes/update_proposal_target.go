@@ -3,10 +3,10 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
+	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
 // UpdateProposalTarget updates the target of the proposal with the given number at the code hosting platform.

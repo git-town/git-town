@@ -2,11 +2,20 @@
 
 ## 16.0.0 (unreleased)
 
-Git Town 16 brings back the "git ship" command in a big way: Git Town can now perform fast-forward merges on GitHub for you!
+Git Town 16 brings the "git ship" command back in a big way: Git Town now supports shipping stacked changes without merge conflicts - even on platforms that don't support it natively, like GitHub!
+
+Big thanks to @FFdhorkin, @antoineMoPa, @breml, @bryanlarsen, @buscape, @kevgo, @tranhl, @zeronacer for the great feedback that led to this awesome new solution! This releaese contains 9 shipped PRs and 7 resolved issues.
 
 #### BREAKING CHANGES
 
-`git town ship` now distinguishes separate shipping strategies. The default strategy is to ship via the API, i.e. `git town ship` just presses the "merge" button in the web UI of your code hosting service for you. If you want to keep shipping using squash-merges, you now need to configure the `squash-merge` sync strategy.
+The default behavior of `git ship` tightens. Previously it shipped via the API if an API key is configured, and without an API key it did a local squash-merge. The new default behavior is to ship only via API or not at all. The new default behavior is safer because it only automates what the user would normally do online. You can specify a different behavior for `git ship` via the new `ship-strategy` configuration option (see below).
+
+#### New Features
+
+- You can now configure how Git Town ships branches via the new `ship-strategy` configuration setting. Possible options are:
+  - `api` ships the branch by merging its proposal via the API of your code hosting platform.
+  - `fast-forward` is a new shipping strategy that prevents the false merge conflicts you get when shipping a branch from a stack using squashes or merges. It merges the branch to ship via `git merge --ff-only` into its parent (typically the main branch) on your local machine and then pushes the new commits to the remote main branch.
+  - `squash-merge` as before merges the branch to ship via `git merge --squash` into its parent.
 
 ## 15.3.0 (2024-08-26)
 

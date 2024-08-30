@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/v15
+module github.com/git-town/git-town/v16
 
 go 1.22
 

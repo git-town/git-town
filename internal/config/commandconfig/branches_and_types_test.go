@@ -3,10 +3,10 @@ package commandconfig_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/config/commandconfig"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/config/commandconfig"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

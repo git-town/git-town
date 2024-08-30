@@ -3,8 +3,8 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

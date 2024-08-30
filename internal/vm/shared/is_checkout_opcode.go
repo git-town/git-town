@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/git-town/git-town/v15/internal/gohacks"
+	"github.com/git-town/git-town/v16/internal/gohacks"
 )
 
 func IsCheckoutOpcode(opcode Opcode) bool {

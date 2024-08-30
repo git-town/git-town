@@ -3,7 +3,7 @@ package datatable_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/test/datatable"
+	"github.com/git-town/git-town/v16/test/datatable"
 	"github.com/shoenig/test/must"
 )
 

@@ -19,20 +19,21 @@ manually.
 
 ### fast-forward
 
-When using the `fast-forward` ship strategy, the `git ship` command merges your
-feature branch into the parent branch using the `--ff-only` option. This ensures
-that the parent branch will have the exact same commits as your feature branch.
+The `fast-forward` ship strategy prevents false merge conflicts when using
+[stacked changes](../stacked-changes.md). It merges the branch to ship into its
+parent (typically the main branch) by running
+[git merge --ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only)
+and then pushes the new commits on the parent branch to origin. This way the
+parent branch contains the exact same commits as the branch that has just been
+shipped.
 
-The `fast-forward` strategy is ideal for shipping
-[stacked changes](../stacked-changes.md) because it avoids the empty merge
-conflicts that can occur when squash-merging in this context. For more details,
-check out this
+For details why this is needed check out this
 [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
 
-Performing a local merge and pushing the new commits on your main branch works
-on GitHub even if your main branch is protected! GitHub recognizes that the
-commits have already been tested by CI and allows them to be pushed. Just make
-sure the branch passes CI tests. For more information, see
+This works on GitHub even if your main branch is protected as long as the
+associated proposal is green and has been approved! GitHub recognizes that the
+commits you push have already been tested and approved and allows them to be
+pushed. For more information, see
 [this StackOverflow answer](https://stackoverflow.com/questions/60597400/how-to-do-a-fast-forward-merge-on-github/66906599#66906599).
 
 A limitation of the `fast-forward` ship strategy is that your feature branch

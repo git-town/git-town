@@ -3,8 +3,8 @@ package gitea_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/giturl"
-	"github.com/git-town/git-town/v15/internal/hosting/gitea"
+	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/hosting/gitea"
 	"github.com/shoenig/test/must"
 )
 

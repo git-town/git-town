@@ -3,12 +3,12 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cli/print"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
+	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/execute"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
