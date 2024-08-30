@@ -6,9 +6,9 @@ Feature: does not ship out-of-sync branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | origin   | conflicting origin commit | conflicting_file | origin content |
+      | BRANCH  | LOCATION | MESSAGE                |
+      | feature | local    | unsynced local commit  |
+      |         | origin   | unsynced origin commit |
     And the current branch is "feature"
     And Git Town setting "ship-strategy" is "fast-forward"
     When I run "git-town ship"
