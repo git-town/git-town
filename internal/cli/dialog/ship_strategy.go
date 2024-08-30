@@ -26,7 +26,7 @@ All options update proposals of child branches and remove the shipped branch loc
 )
 
 const (
-	ShipStrategyEntryAPI         shipStrategyEntry = `api: press the "merge" button on your code hosting platform via the code hosting API`
+	ShipStrategyEntryAPI         shipStrategyEntry = `api: merge the proposal on your code hosting platform via the code hosting API`
 	ShipStrategyEntryFastForward shipStrategyEntry = `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`
 	ShipStrategyEntrySquashMerge shipStrategyEntry = `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`
 )
