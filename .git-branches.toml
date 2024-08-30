@@ -1,5 +1,6 @@
 push-hook = true
 push-new-branches = false
+ship-strategy = "fast-forward"
 ship-delete-tracking-branch = false
 sync-upstream = true
 
