@@ -983,15 +983,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(branchToShip)
 	})
 
-	sc.Step(`^the branch(es)?$`, func(ctx context.Context, plural string, table *godog.Table) {
-		providedPlural := len(plural) > 0
-		providedMultipleBranches := len(table.Rows) > 2
-		if providedPlural && !providedMultipleBranches {
-			panic(`you said "the branches" but only 1 branch provided`)
-		}
-		if !providedPlural && providedMultipleBranches {
-			panic(`you said "the branch" but more than 1 branch provided`)
-		}
+	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime

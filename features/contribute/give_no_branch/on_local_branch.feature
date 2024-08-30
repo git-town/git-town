@@ -2,7 +2,7 @@ Feature: cannot make the current local feature branch a contribution branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"

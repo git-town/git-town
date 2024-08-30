@@ -12,7 +12,7 @@ Feature: does not diff perennial branches
       """
 
   Scenario: perennial branch
-    Given the branch
+    Given the branches
       | NAME | TYPE      | LOCATIONS |
       | qa   | perennial | local     |
     When I run "git-town diff-parent qa"

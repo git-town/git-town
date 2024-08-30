@@ -2,7 +2,7 @@ Feature: observe the current perennial branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     And the current branch is "perennial"

@@ -7,7 +7,7 @@ Feature: GitHub support
     And a proposal for this branch does not exist
 
   Scenario Outline: normal origin
-    Given the branch
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
@@ -30,7 +30,7 @@ Feature: GitHub support
       | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given the branch
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
@@ -51,7 +51,7 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com         |
 
   Scenario Outline: proper URL encoding
-    Given the branch
+    Given the branches
       | NAME          | TYPE    | PARENT | LOCATIONS     |
       | <BRANCH_NAME> | feature | main   | local, origin |
     And the current branch is "<BRANCH_NAME>"

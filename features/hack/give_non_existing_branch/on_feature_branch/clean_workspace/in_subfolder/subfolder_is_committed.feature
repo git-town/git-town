@@ -2,7 +2,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits

@@ -2,7 +2,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git Town setting "sync-feature-strategy" is "rebase"

@@ -2,7 +2,7 @@ Feature: does not ship an empty branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | empty | feature | main   | local     |
     And the current branch is "empty"

@@ -14,7 +14,7 @@ Feature: describe the status of the current/last Git Town command
       """
 
   Scenario: Git Town command in progress
-    Given the branch
+    Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"

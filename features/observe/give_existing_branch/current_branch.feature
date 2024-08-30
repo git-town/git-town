@@ -2,7 +2,7 @@ Feature: make the current observed branch an observed branch
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME     | TYPE     | LOCATIONS |
       | observed | observed | local     |
     And the current branch is "observed"

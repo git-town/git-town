@@ -2,7 +2,7 @@ Feature: park another local feature branch
 
   Background:
     Given a local Git repo
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     When I run "git-town park feature"

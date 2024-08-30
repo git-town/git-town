@@ -2,7 +2,7 @@ Feature: parking the current contribution branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
     And the current branch is "contribution"

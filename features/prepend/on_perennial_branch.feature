@@ -15,7 +15,7 @@ Feature: does not prepend perennial branches
     And the current branch is still "main"
 
   Scenario: on perennial branch
-    Given the branch
+    Given the branches
       | NAME       | TYPE      | LOCATIONS     |
       | production | perennial | local, origin |
     And the current branch is "production"

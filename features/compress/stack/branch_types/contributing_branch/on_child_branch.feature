@@ -2,14 +2,14 @@ Feature: does not compress contribution branches in the stack
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
     And the commits
       | BRANCH       | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT   |
       | contribution | local, origin | contribution 1 | contribution_1 | contribution 1 |
       |              |               | contribution 2 | contribution_2 | contribution 2 |
-    And the branch
+    And the branches
       | NAME  | TYPE    | PARENT       | LOCATIONS     |
       | child | feature | contribution | local, origin |
     And the commits

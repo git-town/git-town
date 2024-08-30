@@ -2,7 +2,7 @@ Feature: do not undo branches that were created while resolving conflicts
 
   Background: I fetch updates while resolving merge conflicts
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
     And the current branch is "feature-1"

@@ -3,7 +3,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits

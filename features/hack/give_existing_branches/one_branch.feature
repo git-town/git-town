@@ -2,7 +2,7 @@ Feature: making a branch a feature branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME         | TYPE         | LOCATIONS |
       | contribution | contribution | local     |
     When I run "git-town hack contribution"

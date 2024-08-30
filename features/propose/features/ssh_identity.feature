@@ -3,7 +3,7 @@ Feature: use a SSH identity
 
   Scenario Outline: ssh identity
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And tool "open" is installed

@@ -2,7 +2,7 @@ Feature: does not ship perennial branches
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
     And an uncommitted file

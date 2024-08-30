@@ -2,7 +2,7 @@ Feature: make another perennial branch a contribution branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
     When I run "git-town contribute perennial"

@@ -2,7 +2,7 @@ Feature: already existing local branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
     And an uncommitted file

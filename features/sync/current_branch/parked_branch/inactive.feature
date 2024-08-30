@@ -2,7 +2,7 @@ Feature: inactive parked branches don't get synced
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
     And the commits

@@ -2,7 +2,7 @@ Feature: make another contribution branch a contribution branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
     When I run "git-town contribute contribution"

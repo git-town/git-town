@@ -14,7 +14,7 @@ Feature: cannot set parent of perennial branches
     And the current branch is still "main"
 
   Scenario: on perennial branch
-    Given the branch
+    Given the branches
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
     And the current branch is "qa"

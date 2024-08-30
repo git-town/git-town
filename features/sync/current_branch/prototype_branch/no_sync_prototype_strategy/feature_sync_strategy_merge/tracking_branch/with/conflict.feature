@@ -2,7 +2,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
     And the current branch is "prototype"

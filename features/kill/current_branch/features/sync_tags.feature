@@ -2,7 +2,7 @@ Feature: don't sync tags while deleting branches
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |
     And the tags
