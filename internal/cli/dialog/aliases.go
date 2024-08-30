@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v15/internal/cli/colors"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v16/internal/cli/colors"
+	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/muesli/termenv"
 )
 

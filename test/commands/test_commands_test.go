@@ -7,12 +7,12 @@ import (
 	"testing"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/test/filesystem"
-	"github.com/git-town/git-town/v15/test/fixture"
-	"github.com/git-town/git-town/v15/test/git"
-	"github.com/git-town/git-town/v15/test/testruntime"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/test/filesystem"
+	"github.com/git-town/git-town/v16/test/fixture"
+	"github.com/git-town/git-town/v16/test/git"
+	"github.com/git-town/git-town/v16/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

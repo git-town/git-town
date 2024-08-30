@@ -3,12 +3,12 @@ package bitbucket_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/git/giturl"
-	"github.com/git-town/git-town/v15/internal/hosting/bitbucket"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

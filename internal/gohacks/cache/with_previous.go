@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/git-town/git-town/v15/internal/messages"
+import "github.com/git-town/git-town/v16/internal/messages"
 
 // WithPrevious is a cache implementation for arbitrary data structures that keeps track of the current and previous values.
 // The zero value is an empty cache.

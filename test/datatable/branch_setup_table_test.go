@@ -5,11 +5,11 @@ import (
 
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
-	"github.com/git-town/git-town/v15/test/datatable"
-	"github.com/git-town/git-town/v15/test/git"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/datatable"
+	"github.com/git-town/git-town/v16/test/git"
 	"github.com/shoenig/test/must"
 )
 

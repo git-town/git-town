@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v15/pkg/set"
-	"github.com/git-town/git-town/v15/test/asserts"
+	"github.com/git-town/git-town/v16/pkg/set"
+	"github.com/git-town/git-town/v16/test/asserts"
 )
 
 var unusedWhitelist = []string{ //nolint:gochecknoglobals

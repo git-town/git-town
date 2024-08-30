@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/shoenig/test/must"
 )
 

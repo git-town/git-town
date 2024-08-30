@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // GitHubToken is a bearer token to use with the GitHub API.

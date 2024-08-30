@@ -1,4 +1,4 @@
 package config
 
 // the current Git Town version
-const GitTownVersion = "15.3.0"
+const GitTownVersion = "16.0.0"

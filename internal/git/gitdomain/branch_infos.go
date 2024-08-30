@@ -3,8 +3,8 @@ package gitdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/messages"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/messages"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // BranchInfos contains the BranchInfos for all branches in a repo.

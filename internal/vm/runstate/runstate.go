@@ -4,14 +4,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v15/internal/vm/opcodes"
-	"github.com/git-town/git-town/v15/internal/vm/program"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v16/internal/vm/opcodes"
+	"github.com/git-town/git-town/v16/internal/vm/program"
+	"github.com/git-town/git-town/v16/internal/vm/shared"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // RunState represents the current state of a Git Town command,

@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/pkg/prelude"
+	"github.com/git-town/git-town/v16/internal/gohacks"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // Offline is a new-type for the "offline" configuration setting.

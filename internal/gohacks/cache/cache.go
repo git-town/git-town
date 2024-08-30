@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/git-town/git-town/v15/internal/messages"
+import "github.com/git-town/git-town/v16/internal/messages"
 
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
