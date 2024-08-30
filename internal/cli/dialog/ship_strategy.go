@@ -17,18 +17,18 @@ Which method should Git Town use to ship feature branches?
 
 Options:
 
-- api: Git Town presses the "merge" button on your code hosting platform for you by talking to the code hosting API
-- fast-forward: fast-forward the main branch to point to the feature branch commits on your local machine
-- squash-merge: squash-merge the feature branch into its parent branch on your local machine
+- api: press the "merge" button on your code hosting platform via the code hosting API
+- fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
+- squash-merge: in your local repo, squash-merge the feature branch into its parent branch
 
 All options update proposals of child branches and remove the shipped branch locally and remotely.
 `
 )
 
 const (
-	ShipStrategyEntryAPI         shipStrategyEntry = `api: press the "merge" button on your code hosting platform for you`
-	ShipStrategyEntryFastForward shipStrategyEntry = `fast-forward: fast-forward the main branch to point to the commits on the feature branch`
-	ShipStrategyEntrySquashMerge shipStrategyEntry = `squash-merge: "git ship" squash-merges the branch on your local machine`
+	ShipStrategyEntryAPI         shipStrategyEntry = `api: press the "merge" button on your code hosting platform via the code hosting API`
+	ShipStrategyEntryFastForward shipStrategyEntry = `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`
+	ShipStrategyEntrySquashMerge shipStrategyEntry = `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`
 )
 
 func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
