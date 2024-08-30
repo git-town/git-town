@@ -1,4 +1,4 @@
-Feature: handle conflicts between the shipped branch and its tracking branch
+Feature: does not ship an out-of-sync branch
 
   Background:
     Given a Git repo with origin
