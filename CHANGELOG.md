@@ -2,7 +2,7 @@
 
 ## 16.0.0 (unreleased)
 
-Git Town 16 brings the "git ship" command back in a big way: Git Town now supports shipping stacked changes without merge conflicts - even on platforms that don't support it natively like GitHub!
+Git Town 16 brings the "git ship" command back in a big way: Git Town now supports shipping stacked changes without merge conflicts - even on platforms that don't support it natively, like GitHub!
 
 Big thanks to @FFdhorkin, @antoineMoPa, @breml, @bryanlarsen, @buscape, @kevgo, @tranhl, @zeronacer for the great feedback that led to this awesome new solution! This releaese contains 9 shipped PRs and 7 resolved issues.
 
