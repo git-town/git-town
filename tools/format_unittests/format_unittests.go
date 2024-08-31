@@ -47,7 +47,7 @@ func IsGoTestFile(path string) bool {
 
 func FormatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
-	var newLines []string
+	newLines := make([]string, 0, len(lines))
 	previousLineEmpty := false
 	for _, line := range lines {
 		if IsTopLevelRunLine(line) && !previousLineEmpty {
