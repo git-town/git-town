@@ -172,9 +172,10 @@ func (self *DataTable) String() string {
 		return ""
 	}
 	// determine how to format each column
-	var formatStrings []string
-	for _, width := range self.widths() {
-		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
+	widths := self.widths()
+	formatStrings := make([]string, len(widths))
+	for w, width := range widths {
+		formatStrings[w] = fmt.Sprintf("| %%-%dv ", width)
 	}
 	// render the self using this format
 	result := ""
