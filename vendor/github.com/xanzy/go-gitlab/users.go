@@ -17,11 +17,15 @@
 package gitlab
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 // List a couple of standard errors.
@@ -84,6 +88,7 @@ type User struct {
 	LastActivityOn                 *ISOTime           `json:"last_activity_on"`
 	ColorSchemeID                  int                `json:"color_scheme_id"`
 	IsAdmin                        bool               `json:"is_admin"`
+	IsAuditor                      bool               `json:"is_auditor"`
 	AvatarURL                      string             `json:"avatar_url"`
 	CanCreateGroup                 bool               `json:"can_create_group"`
 	CanCreateProject               bool               `json:"can_create_project"`
@@ -110,6 +115,23 @@ type User struct {
 type UserIdentity struct {
 	Provider  string `json:"provider"`
 	ExternUID string `json:"extern_uid"`
+}
+
+// UserAvatar represents a GitLab user avatar.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/users.html
+type UserAvatar struct {
+	Filename string
+	Image    io.Reader
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (a *UserAvatar) MarshalJSON() ([]byte, error) {
+	if a.Filename == "" && a.Image == nil {
+		return []byte(`""`), nil
+	}
+	type alias UserAvatar
+	return json.Marshal((*alias)(a))
 }
 
 // ListUsersOptions represents the available ListUsers() options.
@@ -188,37 +210,53 @@ func (s *UsersService) GetUser(user int, opt GetUsersOptions, options ...Request
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/users.html#user-creation
 type CreateUserOptions struct {
-	Email               *string `url:"email,omitempty" json:"email,omitempty"`
-	Password            *string `url:"password,omitempty" json:"password,omitempty"`
-	ResetPassword       *bool   `url:"reset_password,omitempty" json:"reset_password,omitempty"`
-	ForceRandomPassword *bool   `url:"force_random_password,omitempty" json:"force_random_password,omitempty"`
-	Username            *string `url:"username,omitempty" json:"username,omitempty"`
-	Name                *string `url:"name,omitempty" json:"name,omitempty"`
-	Skype               *string `url:"skype,omitempty" json:"skype,omitempty"`
-	Linkedin            *string `url:"linkedin,omitempty" json:"linkedin,omitempty"`
-	Twitter             *string `url:"twitter,omitempty" json:"twitter,omitempty"`
-	WebsiteURL          *string `url:"website_url,omitempty" json:"website_url,omitempty"`
-	Organization        *string `url:"organization,omitempty" json:"organization,omitempty"`
-	JobTitle            *string `url:"job_title,omitempty" json:"job_title,omitempty"`
-	ProjectsLimit       *int    `url:"projects_limit,omitempty" json:"projects_limit,omitempty"`
-	ExternUID           *string `url:"extern_uid,omitempty" json:"extern_uid,omitempty"`
-	Provider            *string `url:"provider,omitempty" json:"provider,omitempty"`
-	Bio                 *string `url:"bio,omitempty" json:"bio,omitempty"`
-	Location            *string `url:"location,omitempty" json:"location,omitempty"`
-	Admin               *bool   `url:"admin,omitempty" json:"admin,omitempty"`
-	CanCreateGroup      *bool   `url:"can_create_group,omitempty" json:"can_create_group,omitempty"`
-	SkipConfirmation    *bool   `url:"skip_confirmation,omitempty" json:"skip_confirmation,omitempty"`
-	External            *bool   `url:"external,omitempty" json:"external,omitempty"`
-	PrivateProfile      *bool   `url:"private_profile,omitempty" json:"private_profile,omitempty"`
-	Note                *string `url:"note,omitempty" json:"note,omitempty"`
-	ThemeID             *int    `url:"theme_id,omitempty" json:"theme_id,omitempty"`
+	Admin               *bool       `url:"admin,omitempty" json:"admin,omitempty"`
+	Avatar              *UserAvatar `url:"-" json:"-"`
+	Bio                 *string     `url:"bio,omitempty" json:"bio,omitempty"`
+	CanCreateGroup      *bool       `url:"can_create_group,omitempty" json:"can_create_group,omitempty"`
+	Email               *string     `url:"email,omitempty" json:"email,omitempty"`
+	External            *bool       `url:"external,omitempty" json:"external,omitempty"`
+	ExternUID           *string     `url:"extern_uid,omitempty" json:"extern_uid,omitempty"`
+	ForceRandomPassword *bool       `url:"force_random_password,omitempty" json:"force_random_password,omitempty"`
+	JobTitle            *string     `url:"job_title,omitempty" json:"job_title,omitempty"`
+	Linkedin            *string     `url:"linkedin,omitempty" json:"linkedin,omitempty"`
+	Location            *string     `url:"location,omitempty" json:"location,omitempty"`
+	Name                *string     `url:"name,omitempty" json:"name,omitempty"`
+	Note                *string     `url:"note,omitempty" json:"note,omitempty"`
+	Organization        *string     `url:"organization,omitempty" json:"organization,omitempty"`
+	Password            *string     `url:"password,omitempty" json:"password,omitempty"`
+	PrivateProfile      *bool       `url:"private_profile,omitempty" json:"private_profile,omitempty"`
+	ProjectsLimit       *int        `url:"projects_limit,omitempty" json:"projects_limit,omitempty"`
+	Provider            *string     `url:"provider,omitempty" json:"provider,omitempty"`
+	ResetPassword       *bool       `url:"reset_password,omitempty" json:"reset_password,omitempty"`
+	SkipConfirmation    *bool       `url:"skip_confirmation,omitempty" json:"skip_confirmation,omitempty"`
+	Skype               *string     `url:"skype,omitempty" json:"skype,omitempty"`
+	ThemeID             *int        `url:"theme_id,omitempty" json:"theme_id,omitempty"`
+	Twitter             *string     `url:"twitter,omitempty" json:"twitter,omitempty"`
+	Username            *string     `url:"username,omitempty" json:"username,omitempty"`
+	WebsiteURL          *string     `url:"website_url,omitempty" json:"website_url,omitempty"`
 }
 
 // CreateUser creates a new user. Note only administrators can create new users.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/users.html#user-creation
 func (s *UsersService) CreateUser(opt *CreateUserOptions, options ...RequestOptionFunc) (*User, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodPost, "users", opt, options)
+	var err error
+	var req *retryablehttp.Request
+
+	if opt.Avatar == nil {
+		req, err = s.client.NewRequest(http.MethodPost, "users", opt, options)
+	} else {
+		req, err = s.client.UploadRequest(
+			http.MethodPost,
+			"users",
+			opt.Avatar.Image,
+			opt.Avatar.Filename,
+			UploadAvatar,
+			opt,
+			options,
+		)
+	}
 	if err != nil {
 		return nil, nil, err
 	}
@@ -236,30 +274,31 @@ func (s *UsersService) CreateUser(opt *CreateUserOptions, options ...RequestOpti
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/users.html#user-modification
 type ModifyUserOptions struct {
-	Email              *string `url:"email,omitempty" json:"email,omitempty"`
-	Password           *string `url:"password,omitempty" json:"password,omitempty"`
-	Username           *string `url:"username,omitempty" json:"username,omitempty"`
-	Name               *string `url:"name,omitempty" json:"name,omitempty"`
-	Skype              *string `url:"skype,omitempty" json:"skype,omitempty"`
-	Linkedin           *string `url:"linkedin,omitempty" json:"linkedin,omitempty"`
-	Twitter            *string `url:"twitter,omitempty" json:"twitter,omitempty"`
-	WebsiteURL         *string `url:"website_url,omitempty" json:"website_url,omitempty"`
-	Organization       *string `url:"organization,omitempty" json:"organization,omitempty"`
-	JobTitle           *string `url:"job_title,omitempty" json:"job_title,omitempty"`
-	ProjectsLimit      *int    `url:"projects_limit,omitempty" json:"projects_limit,omitempty"`
-	ExternUID          *string `url:"extern_uid,omitempty" json:"extern_uid,omitempty"`
-	Provider           *string `url:"provider,omitempty" json:"provider,omitempty"`
-	Bio                *string `url:"bio,omitempty" json:"bio,omitempty"`
-	Location           *string `url:"location,omitempty" json:"location,omitempty"`
-	Admin              *bool   `url:"admin,omitempty" json:"admin,omitempty"`
-	CanCreateGroup     *bool   `url:"can_create_group,omitempty" json:"can_create_group,omitempty"`
-	SkipReconfirmation *bool   `url:"skip_reconfirmation,omitempty" json:"skip_reconfirmation,omitempty"`
-	External           *bool   `url:"external,omitempty" json:"external,omitempty"`
-	PrivateProfile     *bool   `url:"private_profile,omitempty" json:"private_profile,omitempty"`
-	Note               *string `url:"note,omitempty" json:"note,omitempty"`
-	ThemeID            *int    `url:"theme_id,omitempty" json:"theme_id,omitempty"`
-	PublicEmail        *string `url:"public_email,omitempty" json:"public_email,omitempty"`
-	CommitEmail        *string `url:"commit_email,omitempty" json:"commit_email,omitempty"`
+	Admin              *bool       `url:"admin,omitempty" json:"admin,omitempty"`
+	Avatar             *UserAvatar `url:"-" json:"avatar,omitempty"`
+	Bio                *string     `url:"bio,omitempty" json:"bio,omitempty"`
+	CanCreateGroup     *bool       `url:"can_create_group,omitempty" json:"can_create_group,omitempty"`
+	CommitEmail        *string     `url:"commit_email,omitempty" json:"commit_email,omitempty"`
+	Email              *string     `url:"email,omitempty" json:"email,omitempty"`
+	External           *bool       `url:"external,omitempty" json:"external,omitempty"`
+	ExternUID          *string     `url:"extern_uid,omitempty" json:"extern_uid,omitempty"`
+	JobTitle           *string     `url:"job_title,omitempty" json:"job_title,omitempty"`
+	Linkedin           *string     `url:"linkedin,omitempty" json:"linkedin,omitempty"`
+	Location           *string     `url:"location,omitempty" json:"location,omitempty"`
+	Name               *string     `url:"name,omitempty" json:"name,omitempty"`
+	Note               *string     `url:"note,omitempty" json:"note,omitempty"`
+	Organization       *string     `url:"organization,omitempty" json:"organization,omitempty"`
+	Password           *string     `url:"password,omitempty" json:"password,omitempty"`
+	PrivateProfile     *bool       `url:"private_profile,omitempty" json:"private_profile,omitempty"`
+	ProjectsLimit      *int        `url:"projects_limit,omitempty" json:"projects_limit,omitempty"`
+	Provider           *string     `url:"provider,omitempty" json:"provider,omitempty"`
+	PublicEmail        *string     `url:"public_email,omitempty" json:"public_email,omitempty"`
+	SkipReconfirmation *bool       `url:"skip_reconfirmation,omitempty" json:"skip_reconfirmation,omitempty"`
+	Skype              *string     `url:"skype,omitempty" json:"skype,omitempty"`
+	ThemeID            *int        `url:"theme_id,omitempty" json:"theme_id,omitempty"`
+	Twitter            *string     `url:"twitter,omitempty" json:"twitter,omitempty"`
+	Username           *string     `url:"username,omitempty" json:"username,omitempty"`
+	WebsiteURL         *string     `url:"website_url,omitempty" json:"website_url,omitempty"`
 }
 
 // ModifyUser modifies an existing user. Only administrators can change attributes
@@ -267,9 +306,23 @@ type ModifyUserOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/users.html#user-modification
 func (s *UsersService) ModifyUser(user int, opt *ModifyUserOptions, options ...RequestOptionFunc) (*User, *Response, error) {
+	var err error
+	var req *retryablehttp.Request
 	u := fmt.Sprintf("users/%d", user)
 
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
+	if opt.Avatar == nil || (opt.Avatar.Filename == "" && opt.Avatar.Image == nil) {
+		req, err = s.client.NewRequest(http.MethodPut, u, opt, options)
+	} else {
+		req, err = s.client.UploadRequest(
+			http.MethodPut,
+			u,
+			opt.Avatar.Image,
+			opt.Avatar.Filename,
+			UploadAvatar,
+			opt,
+			options,
+		)
+	}
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1495,6 +1548,35 @@ func (s *UsersService) CreateUserRunner(opts *CreateUserRunnerOptions, options .
 // GitLab API docs: https://docs.gitlab.com/ee/api/users.html#create-service-account-user
 func (s *UsersService) CreateServiceAccountUser(options ...RequestOptionFunc) (*User, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPost, "service_accounts", nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	usr := new(User)
+	resp, err := s.client.Do(req, usr)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return usr, resp, nil
+}
+
+// UploadAvatar uploads an avatar to the current user.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/users.html#upload-a-current-user-avatar
+func (s *UsersService) UploadAvatar(avatar io.Reader, filename string, options ...RequestOptionFunc) (*User, *Response, error) {
+	u := "user/avatar"
+
+	req, err := s.client.UploadRequest(
+		http.MethodPut,
+		u,
+		avatar,
+		filename,
+		UploadAvatar,
+		nil,
+		options,
+	)
 	if err != nil {
 		return nil, nil, err
 	}

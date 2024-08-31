@@ -34,9 +34,9 @@ type PipelinesService struct {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/pipelines.html
 type PipelineVariable struct {
-	Key          string `json:"key"`
-	Value        string `json:"value"`
-	VariableType string `json:"variable_type"`
+	Key          string            `json:"key"`
+	Value        string            `json:"value"`
+	VariableType VariableTypeValue `json:"variable_type"`
 }
 
 // Pipeline represents a GitLab pipeline.
@@ -309,9 +309,9 @@ type CreatePipelineOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/pipelines.html#create-a-new-pipeline
 type PipelineVariableOptions struct {
-	Key          *string `url:"key,omitempty" json:"key,omitempty"`
-	Value        *string `url:"value,omitempty" json:"value,omitempty"`
-	VariableType *string `url:"variable_type,omitempty" json:"variable_type,omitempty"`
+	Key          *string            `url:"key,omitempty" json:"key,omitempty"`
+	Value        *string            `url:"value,omitempty" json:"value,omitempty"`
+	VariableType *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
 // CreatePipeline creates a new project pipeline.

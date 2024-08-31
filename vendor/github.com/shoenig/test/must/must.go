@@ -8,18 +8,18 @@ package must
 import (
 	"io"
 	"io/fs"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 
 	"github.com/shoenig/test/interfaces"
 	"github.com/shoenig/test/internal/assertions"
-	"github.com/shoenig/test/internal/brokenfs"
 	"github.com/shoenig/test/internal/constraints"
 	"github.com/shoenig/test/internal/util"
 	"github.com/shoenig/test/wait"
 )
+
+// ErrorAssertionFunc allows passing Error and NoError in table driven tests
+type ErrorAssertionFunc func(t T, err error, settings ...Setting)
 
 // Nil asserts a is nil.
 func Nil(t T, a any, settings ...Setting) {
@@ -223,7 +223,7 @@ func SliceNotContains[A any](t T, slice []A, item A, settings ...Setting) {
 	invoke(t, assertions.SliceNotContains(slice, item), settings...)
 }
 
-// SliceNotContainsFunc asserts item does not exist inslice, using eq to compare
+// SliceNotContainsFunc asserts item does not exist in slice, using eq to compare
 // elements.
 func SliceNotContainsFunc[A, B any](t T, slice []A, item B, eq func(a A, b B) bool, settings ...Setting) {
 	t.Helper()
@@ -414,7 +414,7 @@ func MapEqFunc[M1, M2 interfaces.Map[K, V], K comparable, V any](t T, exp M1, va
 }
 
 // MapEqual asserts maps exp and val contain the same key/val pairs, using Equal
-// method to compare vals
+// method to compare val
 func MapEqual[M interfaces.MapEqualFunc[K, V], K comparable, V interfaces.EqualFunc[V]](t T, exp, val M, settings ...Setting) {
 	t.Helper()
 	invoke(t, assertions.MapEqual(exp, val), settings...)
@@ -546,9 +546,7 @@ func FileExistsFS(t T, system fs.FS, file string, settings ...Setting) {
 // FileExists asserts file exists on the OS filesystem.
 func FileExists(t T, file string, settings ...Setting) {
 	t.Helper()
-	dir := filepath.Dir(file)
-	file = filepath.Base(file)
-	invoke(t, assertions.FileExistsFS(os.DirFS(dir), file), settings...)
+	invoke(t, assertions.FileExists(file), settings...)
 }
 
 // FileNotExistsFS asserts file does not exist on the fs.FS filesystem.
@@ -563,9 +561,7 @@ func FileNotExistsFS(t T, system fs.FS, file string, settings ...Setting) {
 // FileNotExists asserts file does not exist on the OS filesystem.
 func FileNotExists(t T, file string, settings ...Setting) {
 	t.Helper()
-	dir := filepath.Dir(file)
-	file = filepath.Base(file)
-	invoke(t, assertions.FileNotExistsFS(os.DirFS(dir), file), settings...)
+	invoke(t, assertions.FileNotExists(file), settings...)
 }
 
 // DirExistsFS asserts directory exists on the fs.FS filesystem.
@@ -581,8 +577,7 @@ func DirExistsFS(t T, system fs.FS, directory string, settings ...Setting) {
 // DirExists asserts directory exists on the OS filesystem.
 func DirExists(t T, directory string, settings ...Setting) {
 	t.Helper()
-	directory = strings.TrimPrefix(directory, "/")
-	invoke(t, assertions.DirExistsFS(os.DirFS(brokenfs.Root), directory), settings...)
+	invoke(t, assertions.DirExists(directory), settings...)
 }
 
 // DirNotExistsFS asserts directory does not exist on the fs.FS filesystem.
@@ -597,8 +592,7 @@ func DirNotExistsFS(t T, system fs.FS, directory string, settings ...Setting) {
 // DirNotExists asserts directory does not exist on the OS filesystem.
 func DirNotExists(t T, directory string, settings ...Setting) {
 	t.Helper()
-	directory = strings.TrimPrefix(directory, "/")
-	invoke(t, assertions.DirNotExistsFS(os.DirFS(brokenfs.Root), directory), settings...)
+	invoke(t, assertions.DirNotExists(directory), settings...)
 }
 
 // FileModeFS asserts the file or directory at path on fs.FS has exactly the given permission bits.
@@ -613,8 +607,7 @@ func FileModeFS(t T, system fs.FS, path string, permissions fs.FileMode, setting
 // FileMode asserts the file or directory at path on the OS filesystem has exactly the given permission bits.
 func FileMode(t T, path string, permissions fs.FileMode, settings ...Setting) {
 	t.Helper()
-	path = strings.TrimPrefix(path, "/")
-	invoke(t, assertions.FileModeFS(os.DirFS(brokenfs.Root), path, permissions), settings...)
+	invoke(t, assertions.FileMode(path, permissions), settings...)
 }
 
 // DirModeFS asserts the directory at path on fs.FS has exactly the given permission bits.
@@ -629,8 +622,7 @@ func DirModeFS(t T, system fs.FS, path string, permissions fs.FileMode, settings
 // DirMode asserts the directory at path on the OS filesystem has exactly the given permission bits.
 func DirMode(t T, path string, permissions fs.FileMode, settings ...Setting) {
 	t.Helper()
-	path = strings.TrimPrefix(path, "/")
-	invoke(t, assertions.DirModeFS(os.DirFS(brokenfs.Root), path, permissions), settings...)
+	invoke(t, assertions.DirMode(path, permissions), settings...)
 }
 
 // FileContainsFS asserts the file on fs.FS contains content as a substring.
@@ -646,8 +638,7 @@ func FileContainsFS(t T, system fs.FS, file, content string, settings ...Setting
 // FileContains asserts the file on the OS filesystem contains content as a substring.
 func FileContains(t T, file, content string, settings ...Setting) {
 	t.Helper()
-	file = strings.TrimPrefix(file, "/")
-	invoke(t, assertions.FileContainsFS(os.DirFS(brokenfs.Root), file, content), settings...)
+	invoke(t, assertions.FileContains(file, content), settings...)
 }
 
 // FilePathValid asserts path is a valid file path.

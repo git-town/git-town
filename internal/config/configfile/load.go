@@ -24,7 +24,7 @@ func Load(rootDir gitdomain.RepoRootDir) (Option[configdomain.PartialConfig], er
 	configPath := filepath.Join(rootDir.String(), FileName)
 	file, err := os.Open(configPath)
 	if err != nil {
-		return None[configdomain.PartialConfig](), nil //nolint:nilerr
+		return None[configdomain.PartialConfig](), nil
 	}
 	defer file.Close()
 	bytes, err := io.ReadAll(file)

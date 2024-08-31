@@ -256,6 +256,17 @@ func BuildState(v BuildStateValue) *BuildStateValue {
 	return Ptr(v)
 }
 
+// CommentEventAction identifies if a comment has been newly created or updated.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#comment-events
+type CommentEventAction string
+
+const (
+	CommentEventActionCreate CommentEventAction = "create"
+	CommentEventActionUpdate CommentEventAction = "update"
+)
+
 // ContainerRegistryStatus represents the status of a Container Registry.
 //
 // GitLab API docs:
@@ -685,6 +696,46 @@ const (
 func ProjectCreationLevel(v ProjectCreationLevelValue) *ProjectCreationLevelValue {
 	return Ptr(v)
 }
+
+// ProjectHookEvent represents a project hook event.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/projects.html#hook-events
+type ProjectHookEvent string
+
+// List of available project hook events.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/projects.html#hook-events
+const (
+	ProjectHookEventPush                ProjectHookEvent = "push_events"
+	ProjectHookEventTagPush             ProjectHookEvent = "tag_push_events"
+	ProjectHookEventIssues              ProjectHookEvent = "issues_events"
+	ProjectHookEventConfidentialIssues  ProjectHookEvent = "confidential_issues_events"
+	ProjectHookEventNote                ProjectHookEvent = "note_events"
+	ProjectHookEventMergeRequests       ProjectHookEvent = "merge_requests_events"
+	ProjectHookEventJob                 ProjectHookEvent = "job_events"
+	ProjectHookEventPipeline            ProjectHookEvent = "pipeline_events"
+	ProjectHookEventWiki                ProjectHookEvent = "wiki_page_events"
+	ProjectHookEventReleases            ProjectHookEvent = "releases_events"
+	ProjectHookEventEmoji               ProjectHookEvent = "emoji_events"
+	ProjectHookEventResourceAccessToken ProjectHookEvent = "resource_access_token_events"
+)
+
+// ResourceGroupProcessMode represents a process mode for a resource group
+// within a GitLab project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/ci/resource_groups/index.html#process-modes
+type ResourceGroupProcessMode string
+
+// List of available resource group process modes.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/ci/resource_groups/index.html#process-modes
+const (
+	Unordered   ResourceGroupProcessMode = "unordered"
+	OldestFirst ResourceGroupProcessMode = "oldest_first"
+	NewestFirst ResourceGroupProcessMode = "newest_first"
+)
 
 // SharedRunnersSettingValue determines whether shared runners are enabled for a
 // group’s subgroups and projects.

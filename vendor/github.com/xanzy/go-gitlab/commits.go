@@ -35,24 +35,25 @@ type CommitsService struct {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/commits.html
 type Commit struct {
-	ID             string            `json:"id"`
-	ShortID        string            `json:"short_id"`
-	Title          string            `json:"title"`
-	AuthorName     string            `json:"author_name"`
-	AuthorEmail    string            `json:"author_email"`
-	AuthoredDate   *time.Time        `json:"authored_date"`
-	CommitterName  string            `json:"committer_name"`
-	CommitterEmail string            `json:"committer_email"`
-	CommittedDate  *time.Time        `json:"committed_date"`
-	CreatedAt      *time.Time        `json:"created_at"`
-	Message        string            `json:"message"`
-	ParentIDs      []string          `json:"parent_ids"`
-	Stats          *CommitStats      `json:"stats"`
-	Status         *BuildStateValue  `json:"status"`
-	LastPipeline   *PipelineInfo     `json:"last_pipeline"`
-	ProjectID      int               `json:"project_id"`
-	Trailers       map[string]string `json:"trailers"`
-	WebURL         string            `json:"web_url"`
+	ID               string            `json:"id"`
+	ShortID          string            `json:"short_id"`
+	Title            string            `json:"title"`
+	AuthorName       string            `json:"author_name"`
+	AuthorEmail      string            `json:"author_email"`
+	AuthoredDate     *time.Time        `json:"authored_date"`
+	CommitterName    string            `json:"committer_name"`
+	CommitterEmail   string            `json:"committer_email"`
+	CommittedDate    *time.Time        `json:"committed_date"`
+	CreatedAt        *time.Time        `json:"created_at"`
+	Message          string            `json:"message"`
+	ParentIDs        []string          `json:"parent_ids"`
+	Stats            *CommitStats      `json:"stats"`
+	Status           *BuildStateValue  `json:"status"`
+	LastPipeline     *PipelineInfo     `json:"last_pipeline"`
+	ProjectID        int               `json:"project_id"`
+	Trailers         map[string]string `json:"trailers"`
+	ExtendedTrailers map[string]string `json:"extended_trailers"`
+	WebURL           string            `json:"web_url"`
 }
 
 // CommitStats represents the number of added and deleted files in a commit.
@@ -151,11 +152,19 @@ func (s *CommitsService) GetCommitRefs(pid interface{}, sha string, opt *GetComm
 	return cs, resp, nil
 }
 
+// GetCommitOptions represents the available GetCommit() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/commits.html#get-a-single-commit
+type GetCommitOptions struct {
+	Stats *bool `url:"stats,omitempty" json:"stats,omitempty"`
+}
+
 // GetCommit gets a specific commit identified by the commit hash or name of a
 // branch or tag.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/commits.html#get-a-single-commit
-func (s *CommitsService) GetCommit(pid interface{}, sha string, options ...RequestOptionFunc) (*Commit, *Response, error) {
+func (s *CommitsService) GetCommit(pid interface{}, sha string, opt *GetCommitOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -165,7 +174,7 @@ func (s *CommitsService) GetCommit(pid interface{}, sha string, options ...Reque
 	}
 	u := fmt.Sprintf("projects/%s/repository/commits/%s", PathEscape(project), url.PathEscape(sha))
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}

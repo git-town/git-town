@@ -189,7 +189,8 @@ func (s Style) String() string {
 
 // Copy returns a copy of this style, including any underlying string values.
 //
-// Deprecated: to copy just use assignment (i.e. a := b). All methods also return a new style.
+// Deprecated: to copy just use assignment (i.e. a := b). All methods also
+// return a new style.
 func (s Style) Copy() Style {
 	return s
 }
@@ -306,9 +307,7 @@ func (s Style) Render(strs ...string) string {
 		te = te.Underline()
 	}
 	if reverse {
-		if reverse {
-			teWhitespace = teWhitespace.Reverse()
-		}
+		teWhitespace = teWhitespace.Reverse()
 		te = te.Reverse()
 	}
 	if blink {

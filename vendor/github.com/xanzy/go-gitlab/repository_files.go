@@ -215,6 +215,7 @@ func (s *RepositoryFilesService) GetFileBlame(pid interface{}, file string, opt 
 // https://docs.gitlab.com/ee/api/repository_files.html#get-raw-file-from-repository
 type GetRawFileOptions struct {
 	Ref *string `url:"ref,omitempty" json:"ref,omitempty"`
+	LFS *bool   `url:"lfs,omitempty" json:"lfs,omitempty"`
 }
 
 // GetRawFile allows you to receive the raw file in repository.

@@ -5,11 +5,11 @@ deadcode 0.16.1
 ireturn 0.3.0
 ghokin 3.6.0
 depth 1.2.1
-dprint 0.46.1
-gofumpt 0.6.0
-golangci-lint 1.59.0
-goreleaser 1.26.2
+dprint 0.47.2
+gofumpt 0.7.0
+golangci-lint 1.60.3
+goreleaser 2.2.0
 mdbook 0.4.40
-scc 3.3.4
-shellcheck system 0.10.0
-shfmt 3.8.0
+scc 3.3.5
+shellcheck system@* 0.10.0
+shfmt 3.9.0
