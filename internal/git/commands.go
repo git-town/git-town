@@ -39,13 +39,14 @@ func (self *Commands) AbortRebase(runner gitdomain.Runner) error {
 func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
 	output, err := querier.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
-		return []gitdomain.Author{}, err
+		return []gitdomain.Author(nil), err
 	}
-	result := []gitdomain.Author{}
-	for _, line := range stringslice.Lines(output) {
+	lines := stringslice.Lines(output)
+	result := make([]gitdomain.Author, len(lines))
+	for l, line := range lines {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
-		result = append(result, gitdomain.Author(parts[1]))
+		result[l] = gitdomain.Author(parts[1])
 	}
 	return result, nil
 }
