@@ -31,10 +31,10 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
 	result.Value.AddProgram(args.RunState.FinalUndoProgram)
-	previousBranchCandidates := gitdomain.LocalBranchNames{}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{}
 	if initialBranch, hasInitialBranch := args.RunState.BeginBranchesSnapshot.Active.Get(); hasInitialBranch {
 		result.Value.Add(&opcodes.Checkout{Branch: initialBranch})
-		previousBranchCandidates = append(previousBranchCandidates, initialBranch)
+		previousBranchCandidates = append(previousBranchCandidates, Some(initialBranch))
 	}
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,

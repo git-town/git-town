@@ -168,7 +168,8 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
+	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	previousBranch, hasPreviousBranch := previousBranchOpt.Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
@@ -222,7 +223,7 @@ func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         hasLocalBranchToKill && data.initialBranch != localBranchNameToKill && data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.initialBranch},
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(data.previousBranch), Some(data.initialBranch)},
 	})
 	return prog.Get(), undoProg.Get()
 }

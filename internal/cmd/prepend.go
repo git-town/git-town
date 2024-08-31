@@ -241,10 +241,7 @@ func prependProgram(data prependData) program.Program {
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
 		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
-	previousBranchCandidates := gitdomain.LocalBranchNames{}
-	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
-		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
-	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,

@@ -262,10 +262,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			}
 		}
 		result.Value.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
-		previousBranchCandidates := gitdomain.LocalBranchNames{data.newBranch}
-		if previousBranch, hasPrepreviousBranch := data.previousBranch.Get(); hasPrepreviousBranch {
-			previousBranchCandidates = append(gitdomain.LocalBranchNames{previousBranch}, previousBranchCandidates...)
-		}
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
 		cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
 			RunInGitRoot:             false,

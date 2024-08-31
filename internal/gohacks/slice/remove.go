@@ -1,13 +1,13 @@
 package slice
 
 // Remove provides the given list without the given element.
-func Remove[S ~[]C, C comparable](list S, value C) S { //nolint:ireturn
-	if len(list) == 0 {
-		return list
+func Remove[S ~[]C, C comparable](haystack S, needle C) S { //nolint:ireturn
+	if len(haystack) == 0 {
+		return haystack
 	}
-	result := make([]C, 0, len(list)-1)
-	for _, element := range list {
-		if element != value {
+	result := make([]C, 0, len(haystack)-1)
+	for _, element := range haystack {
+		if element != needle {
 			result = append(result, element)
 		}
 	}
