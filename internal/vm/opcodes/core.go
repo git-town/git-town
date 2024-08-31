@@ -13,7 +13,7 @@ import (
 type undeclaredOpcodeMethods struct{}
 
 func (self *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
-	return []shared.Opcode{}
+	return []shared.Opcode(nil)
 }
 
 func (self *undeclaredOpcodeMethods) CreateAutomaticUndoError() error {
@@ -21,7 +21,7 @@ func (self *undeclaredOpcodeMethods) CreateAutomaticUndoError() error {
 }
 
 func (self *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{}
+	return []shared.Opcode(nil)
 }
 
 func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
