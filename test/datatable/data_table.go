@@ -190,13 +190,14 @@ func (self *DataTable) String() string {
 
 // columns provides the self data organized into columns.
 func (self *DataTable) columns() [][]string {
-	var result [][]string
-	for column := range self.Cells[0] {
+	columns := self.Cells[0]
+	result := make([][]string, len(columns))
+	for c := range columns {
 		var colData []string
 		for row := range self.Cells {
-			colData = append(colData, self.Cells[row][column])
+			colData = append(colData, self.Cells[row][c])
 		}
-		result = append(result, colData)
+		result[c] = colData
 	}
 	return result
 }
