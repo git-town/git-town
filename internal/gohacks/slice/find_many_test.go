@@ -30,19 +30,17 @@ func TestFindMany(t *testing.T) {
 
 	t.Run("haystack is empty", func(t *testing.T) {
 		t.Parallel()
-		haystack := []string{}
+		haystack := []string(nil)
 		needles := []string{"one", "two"}
 		have := slice.FindMany(haystack, needles)
-		want := []int{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 
 	t.Run("no needles given", func(t *testing.T) {
 		t.Parallel()
 		haystack := []string{"one", "two", "three"}
-		needles := []string{}
+		needles := []string(nil)
 		have := slice.FindMany(haystack, needles)
-		want := []int{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 }
