@@ -516,9 +516,9 @@ type PlayJobOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/jobs.html#run-a-job
 type JobVariableOptions struct {
-	Key          *string `url:"key,omitempty" json:"key,omitempty"`
-	Value        *string `url:"value,omitempty" json:"value,omitempty"`
-	VariableType *string `url:"variable_type,omitempty" json:"variable_type,omitempty"`
+	Key          *string            `url:"key,omitempty" json:"key,omitempty"`
+	Value        *string            `url:"value,omitempty" json:"value,omitempty"`
+	VariableType *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
 // PlayJob triggers a manual action to start a job.

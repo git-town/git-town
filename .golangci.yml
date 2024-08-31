@@ -7,6 +7,7 @@ linters:
     - dupl # too many false positives
     - err113 # this leads to lots of unnecessary allocations and boilerplate
     - execinquery # deprecated
+    - exportloopref # deprecated
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
     - forbidigo # Git Town prints a lot to the CLI
     - forcetypeassert

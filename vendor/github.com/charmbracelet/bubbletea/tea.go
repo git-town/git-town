@@ -97,6 +97,7 @@ const (
 	// feature is on by default.
 	withoutCatchPanics
 	withoutBracketedPaste
+	withReportFocus
 )
 
 // channelHandlers manages the series of channels returned by various processes.
@@ -151,6 +152,9 @@ type Program struct {
 	previousOutputState *term.State
 	renderer            renderer
 
+	// the environment variables for the program, defaults to os.Environ().
+	environ []string
+
 	// where to read inputs from, this will usually be os.Stdin.
 	input io.Reader
 	// ttyInput is null if input is not a TTY.
@@ -164,6 +168,7 @@ type Program struct {
 	ignoreSignals      uint32
 
 	bpWasActive bool // was the bracketed paste mode active before releasing the terminal?
+	reportFocus bool // was focus reporting active before releasing the terminal?
 
 	filter func(Model, Msg) Msg
 
@@ -180,6 +185,22 @@ func Quit() Msg {
 // QuitMsg signals that the program should quit. You can send a QuitMsg with
 // Quit.
 type QuitMsg struct{}
+
+// Suspend is a special command that tells the Bubble Tea program to suspend.
+func Suspend() Msg {
+	return SuspendMsg{}
+}
+
+// SuspendMsg signals the program should suspend.
+// This usually happens when ctrl+z is pressed on common programs, but since
+// bubbletea puts the terminal in raw mode, we need to handle it in a
+// per-program basis.
+// You can send this message with Suspend.
+type SuspendMsg struct{}
+
+// ResumeMsg can be listen to to do something once a program is resumed back
+// from a suspend state.
+type ResumeMsg struct{}
 
 // NewProgram creates a new Program.
 func NewProgram(model Model, opts ...ProgramOption) *Program {
@@ -204,6 +225,11 @@ func NewProgram(model Model, opts ...ProgramOption) *Program {
 	// if no output was set, set it to stdout
 	if p.output == nil {
 		p.output = os.Stdout
+	}
+
+	// if no environment was set, set it to os.Environ()
+	if p.environ == nil {
+		p.environ = os.Environ()
 	}
 
 	return p
@@ -327,6 +353,11 @@ func (p *Program) eventLoop(model Model, cmds chan Cmd) (Model, error) {
 			case QuitMsg:
 				return model, nil
 
+			case SuspendMsg:
+				if suspendSupported {
+					p.suspend()
+				}
+
 			case clearScreenMsg:
 				p.renderer.clearScreen()
 
@@ -360,6 +391,12 @@ func (p *Program) eventLoop(model Model, cmds chan Cmd) (Model, error) {
 
 			case disableBracketedPasteMsg:
 				p.renderer.disableBracketedPaste()
+
+			case enableReportFocusMsg:
+				p.renderer.enableReportFocus()
+
+			case disableReportFocusMsg:
+				p.renderer.disableReportFocus()
 
 			case execMsg:
 				// NB: this blocks.
@@ -401,6 +438,9 @@ func (p *Program) eventLoop(model Model, cmds chan Cmd) (Model, error) {
 
 			case setWindowTitleMsg:
 				p.SetWindowTitle(string(msg))
+
+			case windowSizeMsg:
+				go p.checkResize()
 			}
 
 			// Process internal messages for the renderer.
@@ -510,6 +550,9 @@ func (p *Program) Run() (Model, error) {
 		p.renderer.enableMouseAllMotion()
 		p.renderer.enableMouseSGRMode()
 	}
+	if p.startupOptions&withReportFocus != 0 {
+		p.renderer.enableReportFocus()
+	}
 
 	// Start the renderer.
 	p.renderer.start()
@@ -550,7 +593,7 @@ func (p *Program) Run() (Model, error) {
 	model, err := p.eventLoop(model, cmds)
 	killed := p.ctx.Err() != nil
 	if killed {
-		err = ErrProgramKilled
+		err = fmt.Errorf("%w: %s", ErrProgramKilled, p.ctx.Err())
 	} else {
 		// Ensure we rendered the final state of the model.
 		p.renderer.write(model.View())
@@ -652,15 +695,19 @@ func (p *Program) shutdown(kill bool) {
 // reader. You can return control to the Program with RestoreTerminal.
 func (p *Program) ReleaseTerminal() error {
 	atomic.StoreUint32(&p.ignoreSignals, 1)
-	p.cancelReader.Cancel()
+	if p.cancelReader != nil {
+		p.cancelReader.Cancel()
+	}
+
 	p.waitForReadLoop()
 
 	if p.renderer != nil {
 		p.renderer.stop()
+		p.altScreenWasActive = p.renderer.altScreen()
+		p.bpWasActive = p.renderer.bracketedPasteActive()
+		p.reportFocus = p.renderer.reportFocus()
 	}
 
-	p.altScreenWasActive = p.renderer.altScreen()
-	p.bpWasActive = p.renderer.bracketedPasteActive()
 	return p.restoreTerminalState()
 }
 
@@ -687,6 +734,9 @@ func (p *Program) RestoreTerminal() error {
 	}
 	if p.bpWasActive {
 		p.renderer.enableBracketedPaste()
+	}
+	if p.reportFocus {
+		p.renderer.enableReportFocus()
 	}
 
 	// If the output is a terminal, it may have been resized while another

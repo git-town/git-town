@@ -233,19 +233,19 @@ func EqJSON(exp, val string) (s string) {
 	var expA, expB any
 
 	if err := json.Unmarshal([]byte(exp), &expA); err != nil {
-		s = fmt.Sprintf("failed to unmarshal first argument as json: %v\n", err)
+		s = fmt.Sprintf("failed to unmarshal first argument as JSON: %v\n", err)
 		return
 	}
 
 	if err := json.Unmarshal([]byte(val), &expB); err != nil {
-		s = fmt.Sprintf("failed to unmarshal second argument as json: %v\n", err)
+		s = fmt.Sprintf("failed to unmarshal second argument as JSON: %v\n", err)
 		return
 	}
 
 	if !reflect.DeepEqual(expA, expB) {
 		jsonA, _ := json.Marshal(expA)
 		jsonB, _ := json.Marshal(expB)
-		s = "expected equality via json marshalling\n"
+		s = "expected equality via JSON marshalling\n"
 		s += diff(string(jsonA), string(jsonB), nil)
 		return
 	}
@@ -263,7 +263,7 @@ func ValidJSONBytes(input []byte) (s string) {
 
 func validJSON(input []byte) (s string) {
 	if !json.Valid([]byte(input)) {
-		return "expected input to be valid json\n"
+		return "expected input to be valid JSON\n"
 	}
 	return
 }
@@ -975,6 +975,29 @@ func MapNotContainsValueEqual[M ~map[K]V, K comparable, V interfaces.EqualFunc[V
 	})
 }
 
+func FileExists(file string) (s string) {
+	info, err := os.Stat(file)
+	if errors.Is(err, fs.ErrNotExist) {
+		s = "expected file to exist\n"
+		s += bullet(" name: %s\n", file)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	if err != nil {
+		s = "got an unexpected error\n"
+		s += bullet("name: %s\n", file)
+		s += bullet("error: %s\n", err)
+		return
+	}
+
+	if info.IsDir() {
+		s = "expected file but is a directory\n"
+		s += bullet("name: %s\n", file)
+		return
+	}
+	return
+}
+
 func FileExistsFS(system fs.FS, file string) (s string) {
 	info, err := fs.Stat(system, file)
 	if errors.Is(err, fs.ErrNotExist) {
@@ -983,11 +1006,31 @@ func FileExistsFS(system fs.FS, file string) (s string) {
 		s += bullet("error: %s\n", err)
 		return
 	}
+	if err != nil {
+		s = "got an unexpected error\n"
+		s += bullet("name: %s\n", file)
+		s += bullet("error: %s\n", err)
+		return
+	}
 
-	// other errors - file probably exists but cannot be read
 	if info.IsDir() {
 		s = "expected file but is a directory\n"
 		s += bullet("name: %s\n", file)
+		return
+	}
+	return
+}
+
+func FileNotExists(file string) (s string) {
+	_, err := os.Stat(file)
+	if err == nil {
+		s = "expected file to not exist\n"
+		s += bullet("name: %s\n", file)
+		return
+	}
+	if !errors.Is(err, fs.ErrNotExist) {
+		s = "expected not existing file but got different error\n"
+		s += bullet("error: %s\n", err)
 		return
 	}
 	return
@@ -1008,17 +1051,54 @@ func FileNotExistsFS(system fs.FS, file string) (s string) {
 	return
 }
 
-func DirExistsFS(system fs.FS, directory string) (s string) {
-	info, err := fs.Stat(system, directory)
-	if os.IsNotExist(err) {
+func DirExists(directory string) (s string) {
+	info, err := os.Stat(directory)
+	if errors.Is(err, fs.ErrNotExist) {
 		s = "expected directory to exist\n"
 		s += bullet(" name: %s\n", directory)
 		s += bullet("error: %s\n", err)
 		return
 	}
-	// other errors - directory probably exists but cannot be read
+	if err != nil {
+		s = "got an unexpected error\n"
+		s += bullet("name: %s\n", directory)
+		s += bullet("error: %s\n", err)
+		return
+	}
 	if !info.IsDir() {
 		s = "expected directory but is a file\n"
+		s += bullet("name: %s\n", directory)
+		return
+	}
+	return
+}
+
+func DirExistsFS(system fs.FS, directory string) (s string) {
+	info, err := fs.Stat(system, directory)
+	if errors.Is(err, fs.ErrNotExist) {
+		s = "expected directory to exist\n"
+		s += bullet(" name: %s\n", directory)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	if err != nil {
+		s = "got an unexpected error\n"
+		s += bullet("name: %s\n", directory)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	if !info.IsDir() {
+		s = "expected directory but is a file\n"
+		s += bullet("name: %s\n", directory)
+		return
+	}
+	return
+}
+
+func DirNotExists(directory string) (s string) {
+	_, err := os.Stat(directory)
+	if !errors.Is(err, fs.ErrNotExist) {
+		s = "expected directory to not exist\n"
 		s += bullet("name: %s\n", directory)
 		return
 	}
@@ -1035,6 +1115,25 @@ func DirNotExistsFS(system fs.FS, directory string) (s string) {
 	return
 }
 
+func FileMode(path string, permissions fs.FileMode) (s string) {
+	info, err := os.Stat(path)
+	if err != nil {
+		s = "expected to stat path\n"
+		s += bullet(" name: %s\n", path)
+		s += bullet("error: %s\n", err)
+		return
+	}
+
+	mode := info.Mode()
+	if permissions != mode {
+		s = "expected different file permissions\n"
+		s += bullet("name: %s\n", path)
+		s += bullet(" exp: %s\n", permissions)
+		s += bullet(" got: %s\n", mode)
+	}
+	return
+}
+
 func FileModeFS(system fs.FS, path string, permissions fs.FileMode) (s string) {
 	info, err := fs.Stat(system, path)
 	if err != nil {
@@ -1044,6 +1143,29 @@ func FileModeFS(system fs.FS, path string, permissions fs.FileMode) (s string) {
 		return
 	}
 
+	mode := info.Mode()
+	if permissions != mode {
+		s = "expected different file permissions\n"
+		s += bullet("name: %s\n", path)
+		s += bullet(" exp: %s\n", permissions)
+		s += bullet(" got: %s\n", mode)
+	}
+	return
+}
+
+func DirMode(path string, permissions fs.FileMode) (s string) {
+	info, err := os.Stat(path)
+	if err != nil {
+		s = "expected to stat path\n"
+		s += bullet(" name: %s\n", path)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	if !info.IsDir() {
+		s = "expected to stat a directory\n"
+		s += bullet("name: %s\n", path)
+		return
+	}
 	mode := info.Mode()
 	if permissions != mode {
 		s = "expected different file permissions\n"
@@ -1073,6 +1195,25 @@ func DirModeFS(system fs.FS, path string, permissions fs.FileMode) (s string) {
 		s += bullet("name: %s\n", path)
 		s += bullet(" exp: %s\n", permissions)
 		s += bullet(" got: %s\n", mode)
+	}
+	return
+}
+
+func FileContains(file, content string) (s string) {
+	b, err := os.ReadFile(file)
+	if err != nil {
+		s = "expected to read file\n"
+		s += bullet(" name: %s\n", file)
+		s += bullet("error: %s\n", err)
+		return
+	}
+	actual := string(b)
+	if !strings.Contains(string(b), content) {
+		s = "expected file contents\n"
+		s += bullet("  name: %s\n", file)
+		s += bullet("wanted: %s\n", content)
+		s += bullet("actual: %s\n", actual)
+		return
 	}
 	return
 }

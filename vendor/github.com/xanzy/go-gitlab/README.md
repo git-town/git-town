@@ -160,11 +160,11 @@ func main() {
 
 	// Create new project
 	p := &gitlab.CreateProjectOptions{
-		Name:                 gitlab.Ptr("My Project"),
-		Description:          gitlab.Ptr("Just a test project to play with"),
-		MergeRequestsEnabled: gitlab.Ptr(true),
-		SnippetsEnabled:      gitlab.Ptr(true),
-		Visibility:           gitlab.Ptr(gitlab.PublicVisibility),
+		Name:                     gitlab.Ptr("My Project"),
+		Description:              gitlab.Ptr("Just a test project to play with"),
+		MergeRequestsAccessLevel: gitlab.Ptr(gitlab.EnabledAccessControl),
+		SnippetsAccessLevel:      gitlab.Ptr(gitlab.EnabledAccessControl),
+		Visibility:               gitlab.Ptr(gitlab.PublicVisibility),
 	}
 	project, _, err := git.Projects.CreateProject(p)
 	if err != nil {

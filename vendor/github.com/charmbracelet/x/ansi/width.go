@@ -19,13 +19,7 @@ func Strip(s string) string {
 	// This implements a subset of the Parser to only collect runes and
 	// printable characters.
 	for i := 0; i < len(s); i++ {
-		var state, action byte
-		if pstate != parser.Utf8State {
-			state, action = parser.Table.Transition(pstate, s[i])
-		}
-
-		switch {
-		case pstate == parser.Utf8State:
+		if pstate == parser.Utf8State {
 			// During this state, collect rw bytes to form a valid rune in the
 			// buffer. After getting all the rune bytes into the buffer,
 			// transition to GroundState and reset the counters.
@@ -37,16 +31,19 @@ func Strip(s string) string {
 			pstate = parser.GroundState
 			ri = 0
 			rw = 0
-		case action == parser.PrintAction:
-			// This action happens when we transition to the Utf8State.
-			if w := utf8ByteLen(s[i]); w > 1 {
-				rw = w
+			continue
+		}
+
+		state, action := parser.Table.Transition(pstate, s[i])
+		switch action {
+		case parser.CollectAction:
+			if state == parser.Utf8State {
+				// This action happens when we transition to the Utf8State.
+				rw = utf8ByteLen(s[i])
 				buf.WriteByte(s[i])
 				ri++
-				break
 			}
-			fallthrough
-		case action == parser.ExecuteAction:
+		case parser.PrintAction, parser.ExecuteAction:
 			// collects printable ASCII and non-printable characters
 			buf.WriteByte(s[i])
 		}
@@ -69,5 +66,30 @@ func StringWidth(s string) int {
 	if s == "" {
 		return 0
 	}
-	return uniseg.StringWidth(Strip(s))
+
+	var (
+		pstate  = parser.GroundState // initial state
+		cluster string
+		width   int
+	)
+
+	for i := 0; i < len(s); i++ {
+		state, action := parser.Table.Transition(pstate, s[i])
+		if state == parser.Utf8State {
+			var w int
+			cluster, _, w, _ = uniseg.FirstGraphemeClusterInString(s[i:], -1)
+			width += w
+			i += len(cluster) - 1
+			pstate = parser.GroundState
+			continue
+		}
+
+		if action == parser.PrintAction {
+			width++
+		}
+
+		pstate = state
+	}
+
+	return width
 }

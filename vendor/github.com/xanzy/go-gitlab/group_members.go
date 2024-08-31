@@ -158,6 +158,32 @@ func (s *GroupMembersService) GetGroupMember(gid interface{}, user int, options 
 	return gm, resp, nil
 }
 
+// GetInheritedGroupMember get a member of a group or project, including
+// inherited and invited members
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/members.html#get-a-member-of-a-group-or-project-including-inherited-and-invited-members
+func (s *GroupMembersService) GetInheritedGroupMember(gid interface{}, user int, options ...RequestOptionFunc) (*GroupMember, *Response, error) {
+	group, err := parseID(gid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("groups/%s/members/all/%d", PathEscape(group), user)
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	gm := new(GroupMember)
+	resp, err := s.client.Do(req, gm)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return gm, resp, err
+}
+
 // BillableGroupMember represents a GitLab billable group member.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/members.html#list-all-billable-members-of-a-group

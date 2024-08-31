@@ -10,7 +10,24 @@ import (
 	"github.com/muesli/cancelreader"
 )
 
+func (p *Program) suspend() {
+	if err := p.ReleaseTerminal(); err != nil {
+		// If we can't release input, abort.
+		return
+	}
+
+	suspendProcess()
+
+	_ = p.RestoreTerminal()
+	go p.Send(ResumeMsg{})
+}
+
 func (p *Program) initTerminal() error {
+	if _, ok := p.renderer.(*nilRenderer); ok {
+		// No need to initialize the terminal if we're not rendering
+		return nil
+	}
+
 	if err := p.initInput(); err != nil {
 		return err
 	}
@@ -26,6 +43,10 @@ func (p *Program) restoreTerminalState() error {
 		p.renderer.disableBracketedPaste()
 		p.renderer.showCursor()
 		p.disableMouse()
+
+		if p.renderer.reportFocus() {
+			p.renderer.disableReportFocus()
+		}
 
 		if p.renderer.altScreen() {
 			p.renderer.exitAltScreen()
