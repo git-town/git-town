@@ -174,11 +174,11 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{
-		branches:         branchesSnapshot.Branches,
 		branchNameToKill: branchNameToKill,
+		branches:         branchesSnapshot.Branches,
 		initialBranch:    initialBranch,
-		previousBranch:   previousBranchOpt,
 		mainBranch:       validatedConfig.Config.MainBranch,
+		previousBranch:   previousBranchOpt,
 	})
 	localBranchToKill, hasLocalBranchToKill := branchToKill.LocalName.Get()
 	var parentBranch Option[gitdomain.LocalBranchName]
@@ -280,11 +280,11 @@ func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName 
 }
 
 type branchWhenDoneArgs struct {
-	branches         gitdomain.BranchInfos
 	branchNameToKill gitdomain.LocalBranchName
+	branches         gitdomain.BranchInfos
 	initialBranch    gitdomain.LocalBranchName
-	previousBranch   Option[gitdomain.LocalBranchName]
 	mainBranch       gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
 }
 
 func validateKillData(data killData) error {
