@@ -17,6 +17,7 @@ func NewOrderedSet[T comparable](elements ...T) OrderedSet[T] {
 
 // Add provides a new OrderedSet with the given element added.
 // The element is only added if it doesn't exist in the original set.
+// TODO: rename os to self
 func (os OrderedSet[T]) Add(element T) OrderedSet[T] {
 	if !os.Contains(element) {
 		return OrderedSet[T]{append(os.elements, element)}
