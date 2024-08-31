@@ -7,7 +7,7 @@ type Collector struct {
 }
 
 func NewCollector() Collector {
-	data := []string{}
+	var data []string
 	return Collector{
 		data: &data,
 	}
@@ -21,7 +21,7 @@ func (self Collector) Add(text string) {
 // Result provides all accumulated string instances.
 func (self Collector) Result() []string {
 	if self.data == nil {
-		return []string{}
+		return []string(nil)
 	}
 	return *self.data
 }

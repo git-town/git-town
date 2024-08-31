@@ -46,7 +46,6 @@ func TestLinesWithPrefix(t *testing.T) {
 			"two",
 		}
 		have := stringslice.LinesWithPrefix(lines, "zonk")
-		want := []string{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 }

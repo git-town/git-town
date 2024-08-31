@@ -22,7 +22,7 @@ func TestLongest(t *testing.T) {
 			want: 0,
 		},
 		{
-			give: []string{},
+			give: []string(nil),
 			want: 0,
 		},
 	}
