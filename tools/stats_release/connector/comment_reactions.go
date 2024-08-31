@@ -9,11 +9,11 @@ import (
 )
 
 func (gh Connector) CommentReactions(comment github.IssueComment) []*github.Reaction {
-	result := []*github.Reaction{}
 	if *comment.Reactions.TotalCount == 0 {
-		return result
+		return []*github.Reaction(nil)
 	}
 	fmt.Printf("loading reactions to comment #%d ", comment.GetID())
+	var result []*github.Reaction
 	for page := 1; ; page++ {
 		reactions, response, err := gh.client.Reactions.ListIssueCommentReactions(gh.context, org, repo, *comment.ID, &github.ListOptions{
 			Page:    page,
