@@ -14,11 +14,11 @@ func BranchesProgram(args BranchesProgramArgs) {
 		args.BranchProgramArgs.FirstCommitMessage = branchToSync.FirstCommitMessage
 		BranchProgram(branchToSync.BranchInfo, args.BranchProgramArgs)
 	}
-	previousbranchCandidates := gitdomain.LocalBranchNames{}
+	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{args.PreviousBranch}
+	// TODO: make this a list of options
 	finalBranchCandidates := gitdomain.LocalBranchNames{args.InitialBranch}
 	if previousBranch, hasPreviousBranch := args.PreviousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
-		previousbranchCandidates = append(previousbranchCandidates, previousBranch)
 	}
 	args.Program.Value.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,

@@ -253,10 +253,7 @@ func compressProgram(data compressBranchesData) program.Program {
 		compressBranchProgram(prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
 	prog.Value.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
-	previousBranchCandidates := gitdomain.LocalBranchNames{}
-	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
-		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
-	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,

@@ -71,10 +71,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
-	previousBranchCandidates := gitdomain.LocalBranchNames{}
-	if previousBranch, hasPreviousBranch := sharedData.previousBranch.Get(); hasPreviousBranch {
-		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
-	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   sharedData.dryRun,
 		RunInGitRoot:             true,

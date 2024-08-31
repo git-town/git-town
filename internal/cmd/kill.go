@@ -222,7 +222,7 @@ func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         hasLocalBranchToKill && data.initialBranch != localBranchNameToKill && data.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{data.previousBranch, data.initialBranch},
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(data.previousBranch), Some(data.initialBranch)},
 	})
 	return prog.Get(), undoProg.Get()
 }

@@ -54,10 +54,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 		prog.Value.Add(&opcodes.Checkout{Branch: sharedData.initialBranch})
 	}
 	prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: sharedData.branchNameToShip})
-	previousBranchCandidates := gitdomain.LocalBranchNames{}
-	if previousBranch, hasPreviousBranch := sharedData.previousBranch.Get(); hasPreviousBranch {
-		previousBranchCandidates = append(previousBranchCandidates, previousBranch)
-	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   sharedData.dryRun,
 		RunInGitRoot:             true,
