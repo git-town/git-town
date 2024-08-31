@@ -8,7 +8,7 @@ depth 1.2.1
 dprint 0.47.2
 gofumpt 0.7.0
 golangci-lint 1.60.3
-goreleaser 2.2.0
+goreleaser 1.26.2
 mdbook 0.4.40
 scc 3.3.5
 shellcheck system@* 0.10.0
