@@ -204,9 +204,10 @@ func (self *DataTable) columns() [][]string {
 
 // widths provides the widths of all columns.
 func (self *DataTable) widths() []int {
-	var result []int
-	for _, column := range self.columns() {
-		result = append(result, stringslice.Longest(column))
+	columns := self.columns()
+	result := make([]int, len(columns))
+	for c, column := range columns {
+		result[c] = stringslice.Longest(column)
 	}
 	return result
 }
