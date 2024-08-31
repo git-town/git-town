@@ -17,17 +17,16 @@ func NewOrderedSet[T comparable](elements ...T) OrderedSet[T] {
 
 // Add provides a new OrderedSet with the given element added.
 // The element is only added if it doesn't exist in the original set.
-// TODO: rename os to self
-func (os OrderedSet[T]) Add(element T) OrderedSet[T] {
-	if !os.Contains(element) {
-		return OrderedSet[T]{append(os.elements, element)}
+func (self OrderedSet[T]) Add(element T) OrderedSet[T] {
+	if !self.Contains(element) {
+		return OrderedSet[T]{append(self.elements, element)}
 	}
-	return os
+	return self
 }
 
 // Contains indicates whether this Set contains the given element.
-func (os OrderedSet[T]) Contains(element T) bool {
-	for _, existing := range os.elements {
+func (self OrderedSet[T]) Contains(element T) bool {
+	for _, existing := range self.elements {
 		if element == existing {
 			return true
 		}
@@ -36,13 +35,13 @@ func (os OrderedSet[T]) Contains(element T) bool {
 }
 
 // Elements provides the elements of this os in the order they were received.
-func (os OrderedSet[T]) Elements() []T {
-	return os.elements
+func (self OrderedSet[T]) Elements() []T {
+	return self.elements
 }
 
-func (os OrderedSet[T]) Join(sep string) string {
-	texts := make([]string, len(os.elements))
-	for e, element := range os.elements {
+func (self OrderedSet[T]) Join(sep string) string {
+	texts := make([]string, len(self.elements))
+	for e, element := range self.elements {
 		texts[e] = fmt.Sprintf("%v", element)
 	}
 	return strings.Join(texts, sep)
