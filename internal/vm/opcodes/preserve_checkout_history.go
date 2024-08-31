@@ -27,9 +27,11 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	if !hasExpectedPreviousBranch || actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}
-	err := args.Git.CheckoutBranchUncached(args.Backend, expectedPreviousBranch, false)
-	if err != nil {
-		return err
-	}
-	return args.Git.CheckoutBranchUncached(args.Backend, currentBranch, false)
+	// We	need to ignore errors here because failing to set the Git branch history
+	// is not an error condition.
+	// This operation can fail for a number of reasons like the previous branch being
+	// checked out in another worktree, or concurrent Git access
+	_ = args.Git.CheckoutBranchUncached(args.Backend, expectedPreviousBranch, false)
+	_ = args.Git.CheckoutBranchUncached(args.Backend, currentBranch, false)
+	return nil
 }

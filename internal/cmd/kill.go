@@ -113,7 +113,7 @@ type killData struct {
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	parentBranch     Option[gitdomain.LocalBranchName]
-	previousBranch   gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
 	stashSize        gitdomain.StashSize
 }
 
@@ -168,21 +168,18 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	var branchWhenDone gitdomain.LocalBranchName
-	if branchNameToKill == initialBranch {
-		if !hasPreviousBranch || previousBranch == initialBranch {
-			branchWhenDone = validatedConfig.Config.MainBranch
-		} else {
-			branchWhenDone = previousBranch
-		}
-	} else {
-		branchWhenDone = initialBranch
-	}
+	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{
+		branches:         branchesSnapshot.Branches,
+		branchNameToKill: branchNameToKill,
+		initialBranch:    initialBranch,
+		previousBranch:   previousBranchOpt,
+		mainBranch:       validatedConfig.Config.MainBranch,
+	})
 	localBranchToKill, hasLocalBranchToKill := branchToKill.LocalName.Get()
 	var parentBranch Option[gitdomain.LocalBranchName]
 	if hasLocalBranchToKill {
@@ -201,7 +198,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		parentBranch:     parentBranch,
-		previousBranch:   previousBranch,
+		previousBranch:   previousBranchOpt,
 		stashSize:        stashSize,
 	}, false, nil
 }
@@ -261,6 +258,33 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 			})
 		}
 	}
+}
+
+func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
+	if args.branchNameToKill != args.initialBranch {
+		return args.initialBranch
+	}
+	// here we are killing the initial branch
+	previousBranch, hasPreviousBranch := args.previousBranch.Get()
+	if !hasPreviousBranch || previousBranch == args.initialBranch {
+		return args.mainBranch
+	}
+	// here we could return the previous branch
+	if previousBranchInfo, hasPreviousBranchInfo := args.branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
+		if previousBranchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree {
+			return previousBranch
+		}
+	}
+	// here the previous branch is checked out in another worktree --> cannot return it
+	return args.mainBranch
+}
+
+type branchWhenDoneArgs struct {
+	branches         gitdomain.BranchInfos
+	branchNameToKill gitdomain.LocalBranchName
+	initialBranch    gitdomain.LocalBranchName
+	previousBranch   Option[gitdomain.LocalBranchName]
+	mainBranch       gitdomain.LocalBranchName
 }
 
 func validateKillData(data killData) error {
