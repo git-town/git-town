@@ -58,8 +58,7 @@ func TestBranchSpan(t *testing.T) {
 				}),
 			}
 			have := branchSpan.BranchNames()
-			want := []gitdomain.BranchName{}
-			must.Eq(t, want, have)
+			must.Len(t, 0, have)
 		})
 	})
 

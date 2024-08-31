@@ -55,10 +55,11 @@ func DefaultCommit() Commit {
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
 func FromGherkinTable(table *godog.Table) []Commit {
 	columnNames := helpers.TableFields(table)
-	lastBranch := ""
-	lastLocationName := ""
-	result := []Commit{}
-	for _, row := range table.Rows[1:] {
+	var lastBranch string
+	var lastLocationName string
+	rows := table.Rows[1:]
+	result := make([]Commit, len(rows))
+	for r, row := range rows {
 		commit := DefaultCommit()
 		for cellNo, cell := range row.Cells {
 			columnName := columnNames[cellNo]
@@ -79,7 +80,7 @@ func FromGherkinTable(table *godog.Table) []Commit {
 			}
 			commit.Set(columnName, cellValue)
 		}
-		result = append(result, commit)
+		result[r] = commit
 	}
 	return result
 }

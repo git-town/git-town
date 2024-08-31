@@ -72,7 +72,7 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 	var templateOnce sync.Once
 	result := DataTable{}
 	for row := range self.Cells {
-		cells := []string{}
+		var cells []string
 		for col := range self.Cells[row] {
 			cell := self.Cells[row][col]
 			if strings.Contains(cell, "{{") {
@@ -172,9 +172,10 @@ func (self *DataTable) String() string {
 		return ""
 	}
 	// determine how to format each column
-	formatStrings := []string{}
-	for _, width := range self.widths() {
-		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
+	widths := self.widths()
+	formatStrings := make([]string, len(widths))
+	for w, width := range widths {
+		formatStrings[w] = fmt.Sprintf("| %%-%dv ", width)
 	}
 	// render the self using this format
 	result := ""
@@ -189,22 +190,24 @@ func (self *DataTable) String() string {
 
 // columns provides the self data organized into columns.
 func (self *DataTable) columns() [][]string {
-	result := [][]string{}
-	for column := range self.Cells[0] {
-		colData := []string{}
+	columns := self.Cells[0]
+	result := make([][]string, len(columns))
+	for c := range columns {
+		var colData []string
 		for row := range self.Cells {
-			colData = append(colData, self.Cells[row][column])
+			colData = append(colData, self.Cells[row][c])
 		}
-		result = append(result, colData)
+		result[c] = colData
 	}
 	return result
 }
 
 // widths provides the widths of all columns.
 func (self *DataTable) widths() []int {
-	result := []int{}
-	for _, column := range self.columns() {
-		result = append(result, stringslice.Longest(column))
+	columns := self.columns()
+	result := make([]int, len(columns))
+	for c, column := range columns {
+		result[c] = stringslice.Longest(column)
 	}
 	return result
 }

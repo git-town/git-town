@@ -74,7 +74,7 @@ func TOMLComment(text string) string {
 	if text == "" {
 		return ""
 	}
-	result := []string{}
+	var result []string
 	for _, line := range strings.Split(text, "\n") {
 		if line == "" {
 			result = append(result, "#")

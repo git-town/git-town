@@ -68,7 +68,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
-		TouchedBranches:       []gitdomain.BranchName{},
+		TouchedBranches:       []gitdomain.BranchName(nil),
 		Verbose:               verbose,
 	})
 }

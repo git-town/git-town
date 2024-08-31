@@ -23,8 +23,7 @@ func TestGetAll(t *testing.T) {
 		t.Parallel()
 		give := []Option[int]{None[int](), None[int]()}
 		have := slice.GetAll(give)
-		want := []int{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 
 	t.Run("mixed values", func(t *testing.T) {
@@ -37,9 +36,8 @@ func TestGetAll(t *testing.T) {
 
 	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
-		give := []Option[int]{}
+		give := []Option[int](nil)
 		have := slice.GetAll(give)
-		want := []int{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 }

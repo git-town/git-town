@@ -29,10 +29,9 @@ func TestHoist(t *testing.T) {
 
 	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
-		list := []string{}
+		list := []string(nil)
 		have := slice.Hoist(list, "initial")
-		want := []string{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 
 	t.Run("aliased slice type", func(t *testing.T) {

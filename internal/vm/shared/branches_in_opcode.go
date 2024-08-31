@@ -7,7 +7,7 @@ import (
 )
 
 func BranchesInOpcode(code Opcode) []gitdomain.BranchName {
-	result := []gitdomain.BranchName{}
+	var result []gitdomain.BranchName
 	valueOfSelf := reflect.ValueOf(code).Elem()
 	typeOfSelf := valueOfSelf.Type()
 	for i := range valueOfSelf.NumField() {

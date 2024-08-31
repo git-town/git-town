@@ -35,7 +35,7 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{}
 			have.Add()
-			must.Eq(t, []shared.Opcode{}, have)
+			must.Len(t, 0, have)
 		})
 	})
 
@@ -157,7 +157,7 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{}
 			give.Prepend()
-			must.Eq(t, []shared.Opcode{}, give)
+			must.Len(t, 0, give)
 		})
 		t.Run("used as a higher-level function", func(t *testing.T) {
 			t.Parallel()

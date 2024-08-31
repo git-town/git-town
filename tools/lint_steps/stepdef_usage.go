@@ -37,7 +37,7 @@ func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 
 // provides all elements of the given defined steps that aren't used in the given executed steps
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
-	unusedStepDefs := []StepDefinition{}
+	var unusedStepDefs []StepDefinition
 	for _, stepDefRE := range CreateStepRegexes(definedSteps) {
 		if slices.Contains(unusedWhitelist, stepDefRE.regex.String()) {
 			continue
@@ -60,7 +60,7 @@ func FindUsedStepsIn(fileContent string) []string {
 	if stepUsageRE == nil {
 		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
 	}
-	result := []string{}
+	var result []string
 	for _, line := range strings.Split(fileContent, "\n") {
 		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
 		if len(matches) > 0 {

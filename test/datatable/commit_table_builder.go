@@ -76,7 +76,7 @@ func (self *CommitTableBuilder) Table(fields []string) DataTable {
 		SHAs := self.commitsInBranch[branch]
 		for _, SHA := range SHAs.Elements() {
 			commit := self.commits[SHA]
-			row := []string{}
+			var row []string
 			for _, field := range fields {
 				switch field {
 				case "BRANCH":

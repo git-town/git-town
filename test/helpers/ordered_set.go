@@ -17,6 +17,7 @@ func NewOrderedSet[T comparable](elements ...T) OrderedSet[T] {
 
 // Add provides a new OrderedSet with the given element added.
 // The element is only added if it doesn't exist in the original set.
+// TODO: rename os to self
 func (os OrderedSet[T]) Add(element T) OrderedSet[T] {
 	if !os.Contains(element) {
 		return OrderedSet[T]{append(os.elements, element)}
@@ -40,9 +41,9 @@ func (os OrderedSet[T]) Elements() []T {
 }
 
 func (os OrderedSet[T]) Join(sep string) string {
-	texts := []string{}
-	for _, element := range os.elements {
-		texts = append(texts, fmt.Sprintf("%v", element))
+	texts := make([]string, len(os.elements))
+	for e, element := range os.elements {
+		texts[e] = fmt.Sprintf("%v", element)
 	}
 	return strings.Join(texts, sep)
 }

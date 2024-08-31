@@ -26,7 +26,7 @@ func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 	if self.enteredEmptyCommitMessage {
 		return []shared.Opcode{&DiscardOpenChanges{}}
 	}
-	return []shared.Opcode{}
+	return []shared.Opcode(nil)
 }
 
 func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {

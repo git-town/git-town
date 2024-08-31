@@ -19,7 +19,7 @@ func Footer(verbose configdomain.Verbose, commandsCount gohacks.Counter, finalMe
 
 // NoFinalMessages can be used by callers of PrintFooter to indicate
 // that the command has no final messages to print.
-var NoFinalMessages = []string{} //nolint:gochecknoglobals
+var NoFinalMessages []string //nolint:gochecknoglobals
 
 // Messages prints the given messages to the user.
 func Messages(messages []string) {

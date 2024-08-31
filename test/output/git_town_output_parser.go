@@ -30,7 +30,7 @@ func (self CommandType) String() string { return string(self) }
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
-	result := []ExecutedGitCommand{}
+	var result []ExecutedGitCommand
 	for _, line := range strings.Split(output, "\n") {
 		if lineContainsFrontendCommand(line) {
 			if line, hasLine := parseFrontendLine(line).Get(); hasLine {

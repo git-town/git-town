@@ -115,7 +115,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
-	proposalsOfChildBranches := []hostingdomain.Proposal{}
+	var proposalsOfChildBranches []hostingdomain.Proposal
 	var connectorOpt Option[hostingdomain.Connector]
 	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
 		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{

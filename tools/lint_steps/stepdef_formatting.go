@@ -6,7 +6,7 @@ import (
 )
 
 func CheckStepDefinitions(fileContent string) []StepDefinition {
-	result := []StepDefinition{}
+	var result []StepDefinition
 	re := regexp.MustCompile(`sc\.Step\(['"]`)
 	for l, line := range strings.Split(fileContent, "\n") {
 		match := re.FindAllString(line, -1)

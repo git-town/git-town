@@ -116,7 +116,7 @@ func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) e
 }
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
-	result := []*gitea.PullRequest{}
+	result := []*gitea.PullRequest(nil)
 	headName := organization + "/" + branch.String()
 	for p := range pullRequests {
 		pullRequest := pullRequests[p]

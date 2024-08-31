@@ -43,7 +43,7 @@ func TestSet(t *testing.T) {
 		t.Run("no initial value", func(t *testing.T) {
 			t.Parallel()
 			set := set.New[int]()
-			must.Eq(t, []int{}, set.Values())
+			must.Len(t, 0, set.Values())
 		})
 
 		t.Run("one initial value", func(t *testing.T) {
@@ -65,8 +65,7 @@ func TestSet(t *testing.T) {
 		t.Run("no values", func(t *testing.T) {
 			set := set.New[int]()
 			have := set.Values()
-			want := []int{}
-			must.Eq(t, want, have)
+			must.Len(t, 0, have)
 		})
 
 		t.Run("with values", func(t *testing.T) {
