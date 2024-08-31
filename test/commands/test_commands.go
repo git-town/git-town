@@ -71,7 +71,7 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	result := []git.Commit{}
+	var result []git.Commit
 	for _, branch := range branches {
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
@@ -85,7 +85,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fields []string) []git.Commit {
 	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
-	result := []git.Commit{}
+	var result []git.Commit
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
@@ -235,7 +235,7 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	result := []string{}
+	var result []string
 	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
 		if file != "" {
@@ -439,7 +439,7 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
-	result := []string{}
+	var result []string
 	for _, line := range strings.Split(output, "\n") {
 		result = append(result, strings.TrimSpace(line))
 	}
@@ -449,7 +449,7 @@ func (self *TestCommands) Tags() []string {
 // UncommittedFiles provides the names of the files not committed into Git.
 func (self *TestCommands) UncommittedFiles() []string {
 	output := self.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
-	result := []string{}
+	var result []string
 	for _, line := range stringslice.Lines(output) {
 		if line == "" {
 			continue

@@ -186,7 +186,7 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			}),
-			UndoablePerennialCommits: []gitdomain.SHA{},
+			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		}
 
 		wantJSON := `
@@ -535,7 +535,7 @@ func TestLoadSave(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
-  "UndoablePerennialCommits": [],
+  "UndoablePerennialCommits": null,
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

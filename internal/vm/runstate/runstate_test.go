@@ -59,7 +59,7 @@ func TestRunState(t *testing.T) {
 			BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
 			BeginConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
 			BeginStashSize:           0,
-			UndoablePerennialCommits: []gitdomain.SHA{},
+			UndoablePerennialCommits: []gitdomain.SHA(nil),
 			TouchedBranches:          []gitdomain.BranchName{"branch-1", "branch-2"},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
@@ -123,7 +123,7 @@ func TestRunState(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
-  "UndoablePerennialCommits": [],
+  "UndoablePerennialCommits": null,
   "UnfinishedDetails": null
 }`[1:]
 		must.EqOp(t, want, string(encoded))
