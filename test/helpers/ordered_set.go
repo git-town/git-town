@@ -41,8 +41,8 @@ func (os OrderedSet[T]) Elements() []T {
 
 func (os OrderedSet[T]) Join(sep string) string {
 	texts := make([]string, len(os.elements))
-	for _, element := range os.elements {
-		texts = append(texts, fmt.Sprintf("%v", element))
+	for e, element := range os.elements {
+		texts[e] = fmt.Sprintf("%v", element)
 	}
 	return strings.Join(texts, sep)
 }
