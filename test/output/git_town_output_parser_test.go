@@ -66,7 +66,6 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		t.Parallel()
 		give := "hello world"
 		have := output.GitCommandsInGitTownOutput(give)
-		want := []output.ExecutedGitCommand{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 }
