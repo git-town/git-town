@@ -22,7 +22,6 @@ func TestFindAll(t *testing.T) {
 		t.Parallel()
 		list := []int{1, 2, 3}
 		have := slice.FindAll(list, 4)
-		want := []int{}
-		must.Eq(t, want, have)
+		must.Len(t, 0, have)
 	})
 }
