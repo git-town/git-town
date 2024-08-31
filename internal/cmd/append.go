@@ -226,8 +226,7 @@ func appendProgram(data appendFeatureData) program.Program {
 	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch)}
-	previousBranchCandidates = append(previousBranchCandidates, data.previousBranch)
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
