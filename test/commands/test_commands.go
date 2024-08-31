@@ -85,8 +85,9 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fields []string) []git.Commit {
 	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
-	var result []git.Commit
-	for _, line := range strings.Split(output, "\n") {
+	lines := strings.Split(output, "\n")
+	result := make([]git.Commit, 0, len(lines))
+	for _, line := range lines {
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
