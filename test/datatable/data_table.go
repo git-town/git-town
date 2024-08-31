@@ -72,7 +72,7 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 	var templateOnce sync.Once
 	result := DataTable{}
 	for row := range self.Cells {
-		cells := []string{}
+		var cells []string
 		for col := range self.Cells[row] {
 			cell := self.Cells[row][col]
 			if strings.Contains(cell, "{{") {
@@ -172,7 +172,7 @@ func (self *DataTable) String() string {
 		return ""
 	}
 	// determine how to format each column
-	formatStrings := []string{}
+	var formatStrings []string
 	for _, width := range self.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
@@ -189,9 +189,9 @@ func (self *DataTable) String() string {
 
 // columns provides the self data organized into columns.
 func (self *DataTable) columns() [][]string {
-	result := [][]string{}
+	var result [][]string
 	for column := range self.Cells[0] {
-		colData := []string{}
+		var colData []string
 		for row := range self.Cells {
 			colData = append(colData, self.Cells[row][column])
 		}
@@ -202,7 +202,7 @@ func (self *DataTable) columns() [][]string {
 
 // widths provides the widths of all columns.
 func (self *DataTable) widths() []int {
-	result := []int{}
+	var result []int
 	for _, column := range self.columns() {
 		result = append(result, stringslice.Longest(column))
 	}
