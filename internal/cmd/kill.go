@@ -168,8 +168,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, exit, err
 	}
 	branchTypeToKill := validatedConfig.Config.BranchType(branchNameToKill)
-	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	previousBranch, hasPreviousBranch := previousBranchOpt.Get()
+	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
