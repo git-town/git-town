@@ -20,7 +20,7 @@ func TestFirstElementOr(t *testing.T) {
 
 	t.Run("list is empty", func(t *testing.T) {
 		t.Parallel()
-		list := []string{}
+		list := []string(nil)
 		have := slice.FirstElementOr(list, "other")
 		want := "other"
 		must.EqOp(t, want, have)
