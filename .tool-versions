@@ -11,5 +11,5 @@ golangci-lint 1.60.3
 goreleaser 1.26.2
 mdbook 0.4.40
 scc 3.3.5
-shellcheck system@* 0.10.0
+shellcheck system 0.10.0
 shfmt 3.9.0
