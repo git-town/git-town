@@ -440,9 +440,10 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
-	var result []string
-	for _, line := range strings.Split(output, "\n") {
-		result = append(result, strings.TrimSpace(line))
+	lines := strings.Split(output, "\n")
+	result := make([]string, len(lines))
+	for l, line := range lines {
+		result[l] = strings.TrimSpace(line)
 	}
 	return result
 }
