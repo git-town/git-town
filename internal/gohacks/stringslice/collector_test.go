@@ -13,7 +13,7 @@ func TestCollector(t *testing.T) {
 	t.Run("owned variable", func(t *testing.T) {
 		t.Parallel()
 		collector := stringslice.NewCollector()
-		must.Eq(t, []string{}, collector.Result())
+		must.Len(t, 0, collector.Result())
 		collector.Add("one")
 		collector.Add("two")
 		must.Eq(t, []string{"one", "two"}, collector.Result())
