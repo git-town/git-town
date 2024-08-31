@@ -21,8 +21,8 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	currentBranch := args.Git.CurrentBranchCache.Value()
 	actualPreviousBranch := args.Git.CurrentBranchCache.Previous()
 	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
-	candidateOptsWithoutCurrent := slice.Remove(self.PreviousBranchCandidates, Some(currentBranch))
-	candidatesWithoutCurrent := slice.GetAll(candidateOptsWithoutCurrent)
+	candidates := slice.GetAll(self.PreviousBranchCandidates)
+	candidatesWithoutCurrent := slice.Remove(candidates, currentBranch)
 	expectedPreviousBranch, hasExpectedPreviousBranch := args.Git.FirstExistingBranch(args.Backend, candidatesWithoutCurrent...).Get()
 	if !hasExpectedPreviousBranch || actualPreviousBranch == expectedPreviousBranch {
 		return nil
