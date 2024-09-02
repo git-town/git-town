@@ -57,12 +57,5 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
       |        | git checkout child                                                                              |
     And the current branch is still "child"
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE              |
-      | main   | local    | local main commit    |
-      |        | origin   | origin main commit   |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
+    And the initial commits exist
     And the initial branches and lineage exist
