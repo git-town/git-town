@@ -15,6 +15,12 @@
       "type": "testFileLine",
       "files": "**/*.feature",
       "run": "make cukethis"
+    },
+
+    {
+      "type": "testFile",
+      "files": "**/*_test.go",
+      "run": "go test {{file}}"
     }
   ],
   "options": {
