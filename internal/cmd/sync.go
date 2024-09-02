@@ -48,6 +48,7 @@ If the repository contains an "upstream" remote, syncs the main branch with its 
 
 func syncCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.All()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
@@ -59,10 +60,11 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
+			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
+	addDetachedFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addNoPushFlag(&cmd)
@@ -70,7 +72,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -82,7 +84,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(syncAllBranches, syncStack, repo, verbose)
+	data, exit, err := determineSyncData(syncAllBranches, syncStack, repo, verbose, detached)
 	if err != nil || exit {
 		return err
 	}
@@ -151,6 +153,7 @@ type syncData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToSync   []configdomain.BranchToSync
 	config           config.ValidatedConfig
+	detached         configdomain.Detached
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
@@ -160,7 +163,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data syncData, exit bool, err error) {
+func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -258,6 +261,9 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
+	if detached {
+		allBranchNamesToSync = validatedConfig.Config.RemovePerennialRoot(allBranchNamesToSync)
+	}
 	branchesToSync, err := branchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
@@ -267,6 +273,7 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		branchesSnapshot: branchesSnapshot,
 		branchesToSync:   branchesToSync,
 		config:           validatedConfig,
+		detached:         detached,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,

@@ -58,3 +58,17 @@ func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName)
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
 }
+
+// provides this collection without the perennial branch at the root
+func (self ValidatedConfig) RemovePerennialRoot(stack gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+	if len(stack) == 0 {
+		return stack
+	}
+	if len(stack) == 1 {
+		if self.IsMainOrPerennialBranch(stack[0]) {
+			return gitdomain.LocalBranchNames{}
+		}
+		return stack
+	}
+	return stack[1:]
+}
