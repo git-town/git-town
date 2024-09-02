@@ -1,4 +1,4 @@
-Feature: syncing a stacked feature branch using --no-push
+Feature: detached syncing a stacked feature branch using --no-push
 
   Background:
     Given a Git repo with origin
