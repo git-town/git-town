@@ -3,55 +3,55 @@ Feature: detached syncing a stacked feature branch using --no-push
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME   | TYPE    | PARENT | LOCATIONS     |
-      | parent | feature | main   | local, origin |
-      | child  | feature | parent | local, origin |
-    And the current branch is "child"
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
+    And the current branch is "beta"
     And the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | main   | local    | local main commit    |
-      |        | origin   | origin main commit   |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
+      | BRANCH | LOCATION | MESSAGE             |
+      | main   | local    | local main commit   |
+      |        | origin   | origin main commit  |
+      | beta   | local    | local beta commit   |
+      |        | origin   | origin beta commit  |
+      | alpha  | local    | local alpha commit  |
+      |        | origin   | origin alpha commit |
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push --detached"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
-      | child  | git fetch --prune --tags |
-      |        | git checkout parent      |
-      | parent | git rebase main          |
-      |        | git rebase origin/parent |
-      |        | git checkout child       |
-      | child  | git rebase parent        |
-      |        | git rebase origin/child  |
-    And the current branch is still "child"
+      | beta   | git fetch --prune --tags |
+      |        | git checkout alpha       |
+      | alpha  | git rebase main          |
+      |        | git rebase origin/alpha  |
+      |        | git checkout beta        |
+      | beta   | git rebase alpha         |
+      |        | git rebase origin/beta   |
+    And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE              |
-      | main   | local         | local main commit    |
-      |        | origin        | origin main commit   |
-      | child  | local, origin | origin child commit  |
-      |        | local         | origin parent commit |
-      |        |               | local main commit    |
-      |        |               | local parent commit  |
-      |        |               | local child commit   |
-      | parent | local, origin | origin parent commit |
-      |        | local         | local main commit    |
-      |        |               | local parent commit  |
+      | BRANCH | LOCATION      | MESSAGE             |
+      | main   | local         | local main commit   |
+      |        | origin        | origin main commit  |
+      | alpha  | local, origin | origin alpha commit |
+      |        | local         | local main commit   |
+      |        |               | local alpha commit  |
+      | beta   | local, origin | origin beta commit  |
+      |        | local         | origin alpha commit |
+      |        |               | local main commit   |
+      |        |               | local alpha commit  |
+      |        |               | local beta commit   |
     And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                          |
-      | child  | git reset --hard {{ sha 'local child commit' }}  |
-      |        | git checkout parent                              |
-      | parent | git reset --hard {{ sha 'local parent commit' }} |
-      |        | git checkout child                               |
+      | BRANCH | COMMAND                                         |
+      | beta   | git checkout alpha                              |
+      | alpha  | git reset --hard {{ sha 'local alpha commit' }} |
+      |        | git checkout beta                               |
+      | beta   | git reset --hard {{ sha 'local beta commit' }}  |
 
-    And the current branch is still "child"
+    And the current branch is still "beta"
     And the initial commits exist
     And the initial branches and lineage exist
