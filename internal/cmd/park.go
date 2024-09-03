@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -93,7 +92,7 @@ type parkData struct {
 	allBranches           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	branchToCheckout      Option[gitdomain.LocalBranchName]
-	branchesToPark        commandconfig.BranchesAndTypes
+	branchesToPark        configdomain.BranchesAndTypes
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {

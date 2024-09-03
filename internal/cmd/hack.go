@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git"
@@ -108,7 +107,7 @@ type hackData = Either[appendFeatureData, convertToFeatureData]
 // this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
 type convertToFeatureData struct {
 	config         config.ValidatedConfig
-	targetBranches commandconfig.BranchesAndTypes
+	targetBranches configdomain.BranchesAndTypes
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
@@ -223,7 +222,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
-			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
+			targetBranches: configdomain.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
 		})
 		return data, false, nil
 	}

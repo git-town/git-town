@@ -1,9 +1,8 @@
-package commandconfig_test
+package configdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -15,7 +14,7 @@ func TestBranchesAndTypes(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
-		have := commandconfig.BranchesAndTypes{}
+		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 		}
@@ -28,7 +27,7 @@ func TestBranchesAndTypes(t *testing.T) {
 
 	t.Run("AddMany", func(t *testing.T) {
 		t.Parallel()
-		have := commandconfig.BranchesAndTypes{}
+		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
@@ -43,7 +42,7 @@ func TestBranchesAndTypes(t *testing.T) {
 
 	t.Run("Keys", func(t *testing.T) {
 		t.Parallel()
-		give := commandconfig.BranchesAndTypes{
+		give := configdomain.BranchesAndTypes{
 			"main":      configdomain.BranchTypeMainBranch,
 			"perennial": configdomain.BranchTypePerennialBranch,
 		}
