@@ -15,9 +15,6 @@ type PerennialRegex struct {
 
 // MatchesBranch indicates whether the given branch matches this PerennialRegex.
 func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool {
-	if self.text == "" {
-		return false
-	}
 	return self.regex.MatchString(branch.String())
 }
 
