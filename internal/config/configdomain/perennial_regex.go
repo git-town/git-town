@@ -10,14 +10,17 @@ import (
 )
 
 // PerennialRegex contains the "branches.perennial-regex" setting.
-type PerennialRegex string
+type PerennialRegex struct {
+	regex Option[*regexp.Regexp]
+	text  string
+}
 
 // MatchesBranch indicates whether the given branch matches this PerennialRegex.
 func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool {
-	if self == "" {
+	if self.text == "" {
 		return false
 	}
-	re, err := regexp.Compile(string(self))
+	re, err := regexp.Compile(self.text)
 	if err != nil {
 		fmt.Println(colors.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self, err.Error())))
 		return false
@@ -25,13 +28,23 @@ func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool 
 	return re.MatchString(branch.String())
 }
 
+func (self PerennialRegex) Regex() *regexp.Regexp {
+	if self.regex.IsNone() {
+		self.regex = Some(regexp.MustCompile(self.text))
+	}
+	return self.regex.GetOrPanic()
+}
+
 func (self PerennialRegex) String() string {
-	return string(self)
+	return self.text
 }
 
 func ParsePerennialRegex(value string) Option[PerennialRegex] {
 	if value == "" {
 		return None[PerennialRegex]()
 	}
-	return Some(PerennialRegex(value))
+	return Some(PerennialRegex{
+		regex: None[*regexp.Regexp](),
+		text:  value,
+	})
 }
