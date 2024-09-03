@@ -11,7 +11,7 @@ import (
 
 // PerennialRegex contains the "branches.perennial-regex" setting.
 type PerennialRegex struct {
-	regex Option[*regexp.Regexp]
+	cache Option[*regexp.Regexp]
 	text  string
 }
 
@@ -29,10 +29,10 @@ func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool 
 }
 
 func (self PerennialRegex) Regex() *regexp.Regexp {
-	if self.regex.IsNone() {
-		self.regex = Some(regexp.MustCompile(self.text))
+	if self.cache.IsNone() {
+		self.cache = Some(regexp.MustCompile(self.text))
 	}
-	return self.regex.GetOrPanic()
+	return self.cache.GetOrPanic()
 }
 
 func (self PerennialRegex) String() string {
@@ -44,7 +44,7 @@ func ParsePerennialRegex(value string) Option[PerennialRegex] {
 		return None[PerennialRegex]()
 	}
 	return Some(PerennialRegex{
-		regex: None[*regexp.Regexp](),
+		cache: None[*regexp.Regexp](),
 		text:  value,
 	})
 }
