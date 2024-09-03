@@ -4,62 +4,62 @@ Feature: sync the current feature branch with a tracking branch using the "merge
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME   | TYPE    | PARENT | LOCATIONS     |
-      | parent | feature | main   | local, origin |
-      | child  | feature | parent | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | main   | local    | local main commit    |
-      |        | origin   | origin main commit   |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
-    And the current branch is "child"
+      | BRANCH | LOCATION | MESSAGE             |
+      | main   | local    | local main commit   |
+      |        | origin   | origin main commit  |
+      | alpha  | local    | local alpha commit  |
+      |        | origin   | origin alpha commit |
+      | beta   | local    | local beta commit   |
+      |        | origin   | origin beta commit  |
+    And the current branch is "beta"
     When I run "git-town sync --detached"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                |
-      | child  | git fetch --prune --tags               |
-      |        | git checkout parent                    |
-      | parent | git merge --no-edit --ff origin/parent |
-      |        | git merge --no-edit --ff main          |
-      |        | git push                               |
-      |        | git checkout child                     |
-      | child  | git merge --no-edit --ff origin/child  |
-      |        | git merge --no-edit --ff parent        |
-      |        | git push                               |
-    And the current branch is still "child"
+      | BRANCH | COMMAND                               |
+      | beta   | git fetch --prune --tags              |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff main         |
+      |        | git push                              |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git merge --no-edit --ff alpha        |
+      |        | git push                              |
+    And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local         | local main commit                                        |
-      |        | origin        | origin main commit                                       |
-      | child  | local, origin | local child commit                                       |
-      |        |               | origin child commit                                      |
-      |        |               | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
-      |        |               | Merge branch 'parent' into child                         |
-      | parent | local, origin | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
+      | BRANCH | LOCATION      | MESSAGE                                                |
+      | main   | local         | local main commit                                      |
+      |        | origin        | origin main commit                                     |
+      | alpha  | local, origin | local alpha commit                                     |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
+      |        |               | local main commit                                      |
+      |        |               | Merge branch 'main' into alpha                         |
+      | beta   | local, origin | local beta commit                                      |
+      |        |               | origin beta commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/beta' into beta   |
+      |        |               | local alpha commit                                     |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
+      |        |               | local main commit                                      |
+      |        |               | Merge branch 'main' into alpha                         |
+      |        |               | Merge branch 'alpha' into beta                         |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                                              |
-      | child  | git reset --hard {{ sha 'local child commit' }}                                      |
-      |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                  |
-      | parent | git reset --hard {{ sha 'local parent commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                   |
-    And the current branch is still "child"
+      | BRANCH | COMMAND                                                                            |
+      | beta   | git checkout alpha                                                                 |
+      | alpha  | git reset --hard {{ sha 'local alpha commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'origin alpha commit' }}:alpha |
+      |        | git checkout beta                                                                  |
+      | beta   | git reset --hard {{ sha 'local beta commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'origin beta commit' }}:beta   |
+    And the current branch is still "beta"
     And the initial commits exist
     And the initial branches and lineage exist
