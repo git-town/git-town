@@ -23,7 +23,7 @@ func (self VerifiedRegex) String() string {
 }
 
 func parseRegex(value string) (Option[VerifiedRegex], error) {
-	if value == "" {
+	if len(value) == 0 {
 		return None[VerifiedRegex](), nil
 	}
 	re, err := regexp.Compile(value)
