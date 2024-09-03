@@ -110,5 +110,4 @@ func TestValidatedConfig(t *testing.T) {
 			must.Eq(t, want, have)
 		}
 	})
-
 }
