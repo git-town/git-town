@@ -98,12 +98,12 @@ func TestValidatedConfig(t *testing.T) {
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{
-			{main}:                                   {},                                 // only the main branch
-			{perennial}:                              {},                                 // only a perennial branch
-			{main, feature1, feature2}:               {feature1, feature2},               // stack rooted in the main branch
-			{perennial, feature1, feature2}:          {feature1, feature2},               // stack rooted in a perennial branch
-			{main, feature1, observed, feature2}:     {feature1, observed, feature2},     // stack rooted in a perennial branch
-			{main, feature1, contribution, feature2}: {feature1, contribution, feature2}, // stack rooted in a perennial branch
+			{main}:                                   {},
+			{perennial}:                              {},
+			{main, feature1, feature2}:               {feature1, feature2},
+			{perennial, feature1, feature2}:          {feature1, feature2},
+			{main, feature1, observed, feature2}:     {feature1, observed, feature2},
+			{main, feature1, contribution, feature2}: {feature1, contribution, feature2},
 		}
 		for give, want := range tests {
 			have := config.RemovePerennialRoot(*give)
