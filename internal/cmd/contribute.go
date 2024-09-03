@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -100,7 +99,7 @@ type contributeData struct {
 	allBranches           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	branchToCheckout      Option[gitdomain.LocalBranchName]
-	branchesToMark        commandconfig.BranchesAndTypes
+	branchesToMark        configdomain.BranchesAndTypes
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
@@ -109,7 +108,7 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
+func removeNonContributionBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:

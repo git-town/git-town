@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -90,7 +89,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 type prototypeData struct {
 	allBranches         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToPrototype commandconfig.BranchesAndTypes
+	branchesToPrototype configdomain.BranchesAndTypes
 	checkout            Option[gitdomain.LocalBranchName]
 }
 
@@ -100,7 +99,7 @@ func printPrototypeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonPrototypeBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
+func removeNonPrototypeBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:

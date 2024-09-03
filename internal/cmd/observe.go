@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/commandconfig"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -99,7 +98,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 type observeData struct {
 	allBranches       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
-	branchesToObserve commandconfig.BranchesAndTypes
+	branchesToObserve configdomain.BranchesAndTypes
 	checkout          Option[gitdomain.LocalBranchName]
 }
 
@@ -109,7 +108,7 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
+func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
