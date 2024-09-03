@@ -262,7 +262,7 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 	}
 	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	if detached {
-		allBranchNamesToSync = validatedConfig.Config.RemovePerennialRoot(allBranchNamesToSync)
+		allBranchNamesToSync = validatedConfig.Config.RemovePerennials(allBranchNamesToSync)
 	}
 	branchesToSync, err := branchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
