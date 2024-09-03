@@ -28,23 +28,17 @@ Feature: sync all feature branches
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                               |
-      | alpha      | git fetch --prune --tags              |
-      |            | git merge --no-edit --ff origin/alpha |
-      |            | git merge --no-edit --ff main         |
-      |            | git checkout beta                     |
-      | beta       | git merge --no-edit --ff origin/beta  |
-      |            | git merge --no-edit --ff main         |
-      |            | git checkout observed                 |
-      | observed   | git rebase origin/observed            |
-      |            | git checkout production               |
-      | production | git rebase origin/production          |
-      |            | git push                              |
-      |            | git checkout qa                       |
-      | qa         | git rebase origin/qa                  |
-      |            | git push                              |
-      |            | git checkout alpha                    |
-      | alpha      | git push --tags                       |
+      | BRANCH   | COMMAND                               |
+      | alpha    | git fetch --prune --tags              |
+      |          | git merge --no-edit --ff origin/alpha |
+      |          | git merge --no-edit --ff main         |
+      |          | git checkout beta                     |
+      | beta     | git merge --no-edit --ff origin/beta  |
+      |          | git merge --no-edit --ff main         |
+      |          | git checkout observed                 |
+      | observed | git rebase origin/observed            |
+      |          | git checkout alpha                    |
+      | alpha    | git push --tags                       |
     And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
@@ -55,10 +49,10 @@ Feature: sync all feature branches
       |            | local         | local observed commit    |
       | parked     | local         | local parked commit      |
       |            | origin        | origin parked commit     |
-      | production | local, origin | origin production commit |
-      |            |               | local production commit  |
-      | qa         | local, origin | qa origin commit         |
-      |            |               | qa local commit          |
+      | production | local         | local production commit  |
+      |            | origin        | origin production commit |
+      | qa         | local         | qa local commit          |
+      |            | origin        | qa origin commit         |
 
   Scenario: undo
     When I run "git-town undo"
@@ -77,8 +71,8 @@ Feature: sync all feature branches
       |            | origin        | origin observed commit   |
       | parked     | local         | local parked commit      |
       |            | origin        | origin parked commit     |
-      | production | local, origin | origin production commit |
-      |            |               | local production commit  |
-      | qa         | local, origin | qa origin commit         |
-      |            |               | qa local commit          |
+      | production | local         | local production commit  |
+      |            | origin        | origin production commit |
+      | qa         | local         | qa local commit          |
+      |            | origin        | qa origin commit         |
     And the initial branches and lineage exist
