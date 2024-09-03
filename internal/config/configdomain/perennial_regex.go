@@ -13,14 +13,6 @@ type PerennialRegex struct {
 	text  string
 }
 
-func ParsePerennialRegex(value string) (Option[PerennialRegex], error) {
-	if value == "" {
-		return None[PerennialRegex](), nil
-	}
-	re, err := regexp.Compile(value)
-	return Some(PerennialRegex{regex: re, text: value}), err
-}
-
 // MatchesBranch indicates whether the given branch matches this PerennialRegex.
 func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool {
 	if self.text == "" {
@@ -31,4 +23,12 @@ func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool 
 
 func (self PerennialRegex) String() string {
 	return self.text
+}
+
+func ParsePerennialRegex(value string) (Option[PerennialRegex], error) {
+	if value == "" {
+		return None[PerennialRegex](), nil
+	}
+	re, err := regexp.Compile(value)
+	return Some(PerennialRegex{regex: re, text: value}), err
 }
