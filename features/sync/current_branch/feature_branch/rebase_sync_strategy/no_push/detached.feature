@@ -11,10 +11,10 @@ Feature: detached syncing a stacked feature branch using --no-push
       | BRANCH | LOCATION | MESSAGE             |
       | main   | local    | local main commit   |
       |        | origin   | origin main commit  |
-      | beta   | local    | local beta commit   |
-      |        | origin   | origin beta commit  |
       | alpha  | local    | local alpha commit  |
       |        | origin   | origin alpha commit |
+      | beta   | local    | local beta commit   |
+      |        | origin   | origin beta commit  |
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push --detached"
 
