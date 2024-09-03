@@ -24,10 +24,9 @@ By default this command syncs only the current branch. The `--all` parameter
 makes Git Town sync all local branches. The `--stack` parameter makes Git Town
 sync all branches in the stack that the current branch belongs to.
 
-The `--detached` flag makes `git sync` not pull updates from the main branch or
-the perennial branch at the root of the branch collection to sync. This allows
-keeping your branches in sync with each other and control when you pull new
-changes from other developers into your branches.
+The `--detached` flag stops pulling updates from the main or perennial branches.
+This allows you to keep your branches in sync with each other and decide when to
+pull in changes from other developers.
 
 The `--dry-run` parameter allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
