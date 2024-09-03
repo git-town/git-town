@@ -52,10 +52,12 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")
+		must.NoError(t, err)
 		config := configdomain.UnvalidatedConfig{
 			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-			PerennialRegex:    configdomain.ParsePerennialRegex("release-.*"),
+			PerennialRegex:    perennialRegexOpt,
 		}
 		tests := map[string]bool{
 			"main":      false,

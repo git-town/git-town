@@ -73,6 +73,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
+	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
@@ -90,7 +92,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Offline:                  offline,
 		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyParkedBranches]),
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
-		PerennialRegex:           ParsePerennialRegex(snapshot[KeyPerennialRegex]),
+		PerennialRegex:           perennialRegex,
 		PrototypeBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPrototypeBranches]),
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
