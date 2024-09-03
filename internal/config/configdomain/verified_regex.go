@@ -22,10 +22,10 @@ func (self VerifiedRegex) String() string {
 	return self.text
 }
 
-func parseRegex(value string) (Option[VerifiedRegex], error) {
-	if len(value) == 0 {
+func parseRegex(text string) (Option[VerifiedRegex], error) {
+	if len(text) == 0 {
 		return None[VerifiedRegex](), nil
 	}
-	re, err := regexp.Compile(value)
-	return Some(VerifiedRegex{regex: re, text: value}), err
+	regex, err := regexp.Compile(text)
+	return Some(VerifiedRegex{regex, text}), err
 }
