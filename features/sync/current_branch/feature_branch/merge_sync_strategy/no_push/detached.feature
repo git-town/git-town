@@ -3,10 +3,10 @@ Feature: detached syncing a stacked feature branch using --no-push
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | (none)  |        | local, origin |
-      | alpha   | feature | main   | local, origin |
-      | beta    | feature | alpha  | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | other | (none)  |        | local, origin |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
     And the current branch is "beta"
     And the commits
       | BRANCH | LOCATION | MESSAGE             |
