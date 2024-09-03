@@ -100,7 +100,7 @@ func TestValidatedConfig(t *testing.T) {
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{
 			{main}:                           {},
-			{perennial1}:                     {},
+			{perennial1, perennial2}:         {},
 			{main, feature1, feature2}:       {feature1, feature2},
 			{perennial1, feature1, feature2}: {feature1, feature2},
 			{main, feature1, observed, contribution, feature2}: {feature1, observed, contribution, feature2},
