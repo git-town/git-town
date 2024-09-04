@@ -1,6 +1,8 @@
 package configdomain
 
 import (
+	"fmt"
+
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
@@ -16,26 +18,26 @@ const (
 	BranchTypePrototypeBranch
 )
 
-func ParseBranchType(name string) Option[BranchType] {
-	switch name {
+func ParseBranchType(text string) (Option[BranchType], error) {
+	switch text {
 	case "contribution":
-		return Some(BranchTypeContributionBranch)
+		return Some(BranchTypeContributionBranch), nil
 	case "feature":
-		return Some(BranchTypeFeatureBranch)
+		return Some(BranchTypeFeatureBranch), nil
 	case "main":
-		return Some(BranchTypeMainBranch)
+		return Some(BranchTypeMainBranch), nil
 	case "observed":
-		return Some(BranchTypeObservedBranch)
+		return Some(BranchTypeObservedBranch), nil
 	case "parked":
-		return Some(BranchTypeParkedBranch)
+		return Some(BranchTypeParkedBranch), nil
 	case "perennial":
-		return Some(BranchTypePerennialBranch)
+		return Some(BranchTypePerennialBranch), nil
 	case "prototype":
-		return Some(BranchTypePrototypeBranch)
+		return Some(BranchTypePrototypeBranch), nil
 	case "(none)":
-		return None[BranchType]()
+		return None[BranchType](), nil
 	}
-	panic("unknown branch type: " + name)
+	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
 }
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
