@@ -13,7 +13,7 @@ const (
 // provides type-safe access to the CLI arguments of type gitdomain.ProposalBodyFile
 func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(bodyFileLong, bodyFileShort, "", "Read the proposal body from the given file (use \"-\" to read from STDIN)")
+		cmd.Flags().StringP(bodyFileLong, bodyFileShort, "", "Read the proposal body from the given file (use \"-\" to read from STDIN)")
 	}
 	readFlag := func(cmd *cobra.Command) gitdomain.ProposalBodyFile {
 		value, err := cmd.Flags().GetString(bodyFileLong)

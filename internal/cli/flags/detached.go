@@ -10,7 +10,7 @@ const detachedLong = "detached"
 // type-safe access to the CLI arguments of type configdomain.Detached
 func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
+		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.Detached {
 		value, err := cmd.Flags().GetBool(detachedLong)

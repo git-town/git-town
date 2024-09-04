@@ -13,7 +13,7 @@ const (
 // type-safe access to the CLI arguments of type configdomain.Pending
 func Pending() (AddFunc, ReadPendingFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(pendingLong, pendingShort, false, "display just the name of the pending Git Town command")
+		cmd.Flags().BoolP(pendingLong, pendingShort, false, "display just the name of the pending Git Town command")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.Pending {
 		value, err := cmd.Flags().GetBool(pendingLong)
