@@ -14,7 +14,7 @@ const (
 // type-safe access to the CLI arguments of type gitdomain.CommitMessage
 func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(commitMessageLong, commitMessageShort, "", desc)
+		cmd.Flags().StringP(commitMessageLong, commitMessageShort, "", desc)
 	}
 	readFlag := func(cmd *cobra.Command) Option[gitdomain.CommitMessage] {
 		value, err := cmd.Flags().GetString(commitMessageLong)

@@ -10,7 +10,7 @@ const forceLong = "force"
 // type-safe access to the CLI arguments of type configdomain.Force
 func Force(desc string) (AddFunc, ReadForceFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(forceLong, "f", false, desc)
+		cmd.Flags().BoolP(forceLong, "f", false, desc)
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.Force {
 		value, err := cmd.Flags().GetBool(forceLong)

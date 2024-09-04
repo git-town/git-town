@@ -10,7 +10,7 @@ const allLong = "all"
 // type-safe access to the CLI arguments of type configdomain.SyncAllBranches
 func All() (AddFunc, ReadAllFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(allLong, "a", false, "sync all local branches")
+		cmd.Flags().BoolP(allLong, "a", false, "sync all local branches")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.SyncAllBranches {
 		value, err := cmd.Flags().GetBool(allLong)

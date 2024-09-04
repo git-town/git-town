@@ -10,7 +10,7 @@ const shipIntoNonPerennialParentLong = "to-parent"
 // type-safe access to the CLI arguments of type configdomain.ShipIntoNonPerennialParentLong
 func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
+		cmd.Flags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
 	}
 	readFlag := func(cmd *cobra.Command) configdomain.ShipIntoNonperennialParent {
 		value, err := cmd.Flags().GetBool(shipIntoNonPerennialParentLong)
