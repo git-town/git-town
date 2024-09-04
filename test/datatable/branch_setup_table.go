@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/asserts"
 	testgit "github.com/git-town/git-town/v16/test/git"
 )
 
@@ -29,7 +30,9 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 			case "NAME":
 				name = Some(gitdomain.NewLocalBranchName(cell.Value))
 			case "TYPE":
-				branchType = configdomain.ParseBranchType(cell.Value)
+				var err error
+				branchType, err = configdomain.ParseBranchType(cell.Value)
+				asserts.NoError(err)
 			case "PARENT":
 				if cell.Value != "" {
 					parent = Some(gitdomain.NewLocalBranchName(cell.Value))
