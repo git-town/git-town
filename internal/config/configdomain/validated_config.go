@@ -16,7 +16,7 @@ type ValidatedConfig struct {
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
-	if self.IsMainBranch(self.MainBranch) {
+	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
 	if self.IsPerennialBranch(branch) {
