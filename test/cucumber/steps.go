@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -249,7 +250,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.Config.IsContributionBranch(branch) {
+		if !slices.Contains(devRepo.Config.Config.ContributionBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
@@ -274,7 +275,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.Config.IsObservedBranch(branch) {
+		if !slices.Contains(devRepo.Config.Config.ObservedBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't observed as expected.\nObserved branches: %s",
 				branch,
@@ -288,7 +289,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.Config.IsParkedBranch(branch) {
+		if !slices.Contains(devRepo.Config.Config.ParkedBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't parked as expected.\nParked branches: %s",
 				branch,
@@ -316,7 +317,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.Config.IsPrototypeBranch(branch) {
+		if !slices.Contains(devRepo.Config.Config.PrototypeBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,

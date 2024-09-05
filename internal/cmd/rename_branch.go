@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
@@ -232,19 +233,19 @@ func renameBranchProgram(data renameBranchData) program.Program {
 				result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
 			} else {
-				if data.config.Config.IsPrototypeBranch(data.initialBranch) {
+				if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
 					result.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: oldLocalBranch})
 					result.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.newBranch})
 				}
-				if data.config.Config.IsObservedBranch(data.initialBranch) {
+				if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
 					result.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: oldLocalBranch})
 					result.Value.Add(&opcodes.AddToObservedBranches{Branch: data.newBranch})
 				}
-				if data.config.Config.IsContributionBranch(data.initialBranch) {
+				if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {
 					result.Value.Add(&opcodes.RemoveFromContributionBranches{Branch: oldLocalBranch})
 					result.Value.Add(&opcodes.AddToContributionBranches{Branch: data.newBranch})
 				}
-				if data.config.Config.IsParkedBranch(data.initialBranch) {
+				if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
 					result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
 					result.Value.Add(&opcodes.AddToParkedBranches{Branch: data.newBranch})
 				}

@@ -16,18 +16,22 @@ type ValidatedConfig struct {
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
-	switch {
-	case self.IsMainBranch(branch):
+	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
-	case self.IsPerennialBranch(branch):
+	}
+	if self.IsPerennialBranch(branch) {
 		return BranchTypePerennialBranch
-	case self.IsContributionBranch(branch):
+	}
+	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
-	case self.IsObservedBranch(branch):
+	}
+	if slices.Contains(self.ObservedBranches, branch) {
 		return BranchTypeObservedBranch
-	case self.IsParkedBranch(branch):
+	}
+	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
-	case self.IsPrototypeBranch(branch):
+	}
+	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
