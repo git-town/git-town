@@ -32,6 +32,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 			return config.EmptyValidatedConfig(), aborted, err
 		}
 		mainBranch = validatedMain
+		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch
 		if err = args.Unvalidated.SetMainBranch(validatedMain); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
@@ -45,6 +46,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
+		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           args.Unvalidated.Config.Get(),
 		DefaultChoice:    mainBranch,
@@ -83,6 +85,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 
 type ConfigArgs struct {
 	Backend            gitdomain.RunnerQuerier
+	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	DialogTestInputs   components.TestInputs

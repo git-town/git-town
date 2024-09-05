@@ -40,6 +40,16 @@ func ParseBranchType(text string) (Option[BranchType], error) {
 	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
 }
 
+func (self BranchType) MustKnowParent() bool {
+	switch self {
+	case BranchTypeMainBranch, BranchTypePerennialBranch, BranchTypeContributionBranch, BranchTypeObservedBranch:
+		return false
+	case BranchTypeFeatureBranch, BranchTypeParkedBranch, BranchTypePrototypeBranch:
+		return true
+	}
+	panic("unhandled branch type" + self.String())
+}
+
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	switch self {
@@ -50,7 +60,7 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	case BranchTypeParkedBranch:
 		return isInitialBranch
 	}
-	panic("unhandled branch type")
+	panic("unhandled branch type" + self.String())
 }
 
 func (self BranchType) String() string {
