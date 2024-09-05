@@ -263,17 +263,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if devRepo.Config.Config.IsParkedBranch(branch) {
-			return fmt.Errorf("branch %q is parked", branch)
-		}
-		if devRepo.Config.Config.IsObservedBranch(branch) {
-			return fmt.Errorf("branch %q is observed", branch)
-		}
-		if devRepo.Config.Config.IsContributionBranch(branch) {
-			return fmt.Errorf("branch %q is contribution", branch)
-		}
-		if devRepo.Config.Config.IsPerennialBranch(branch) {
-			return fmt.Errorf("branch %q is perennial", branch)
+		branchType := devRepo.Config.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeFeatureBranch {
+			return fmt.Errorf("branch %q is a %s", branch, branchType)
 		}
 		return nil
 	})
