@@ -9,14 +9,6 @@ import (
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
 
-func NewBranchesAndTypes(branches gitdomain.LocalBranchNames, config ValidatedConfig) BranchesAndTypes {
-	result := make(BranchesAndTypes, len(branches))
-	for _, branch := range branches {
-		result[branch] = config.BranchType(branch)
-	}
-	return result
-}
-
 func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig UnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }

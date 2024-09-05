@@ -152,8 +152,10 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,

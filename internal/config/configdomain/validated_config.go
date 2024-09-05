@@ -33,6 +33,14 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 	return BranchTypeFeatureBranch
 }
 
+func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
+	result := make(BranchesAndTypes, len(branches))
+	for _, branch := range branches {
+		result[branch] = self.BranchType(branch)
+	}
+	return result
+}
+
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {

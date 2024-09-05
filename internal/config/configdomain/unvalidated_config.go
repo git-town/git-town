@@ -58,6 +58,14 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	return BranchTypeFeatureBranch
 }
 
+func (self *UnvalidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
+	result := make(BranchesAndTypes, len(branches))
+	for _, branch := range branches {
+		result[branch] = self.BranchType(branch)
+	}
+	return result
+}
+
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *UnvalidatedConfig) ContainsLineage() bool {
 	return self.Lineage.Len() > 0
@@ -113,10 +121,6 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 		return append(gitdomain.LocalBranchNames{mainBranch}, self.PerennialBranches...)
 	}
 	return self.PerennialBranches
-}
-
-func (self *UnvalidatedConfig) MustKnowParent(branch gitdomain.LocalBranchName) bool {
-	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsContributionBranch(branch) && !self.IsObservedBranch(branch)
 }
 
 func (self *UnvalidatedConfig) NoPushHook() NoPushHook {

@@ -212,8 +212,10 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		DialogTestInputs:   dialogTestInputs,
@@ -236,8 +238,10 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
+	branchesAndTypes = repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
 		DialogTestInputs:   dialogTestInputs,

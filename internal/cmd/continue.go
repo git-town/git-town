@@ -110,8 +110,10 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 		return data, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,

@@ -204,8 +204,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 			branchesToValidate = targetBranches
 		}
 	}
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToValidate,
 		DialogTestInputs:   dialogTestInputs,
@@ -222,7 +224,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
-			targetBranches: configdomain.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
+			targetBranches: validatedConfig.Config.BranchesAndTypes(branchesToValidate),
 		})
 		return data, false, nil
 	}

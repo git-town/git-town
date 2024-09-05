@@ -14,7 +14,8 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 	branchesToVerify := args.BranchesToVerify
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
-		if !args.Config.MustKnowParent(branchToVerify) {
+		branchType, hasBranchType := args.BranchesAndTypes[branchToVerify]
+		if hasBranchType && !branchType.MustKnowParent() {
 			continue
 		}
 		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {
@@ -46,6 +47,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 }
 
 type LineageArgs struct {
+	BranchesAndTypes configdomain.BranchesAndTypes
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           configdomain.UnvalidatedConfig
 	DefaultChoice    gitdomain.LocalBranchName
