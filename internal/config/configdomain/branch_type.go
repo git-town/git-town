@@ -68,17 +68,17 @@ func (self BranchType) String() string {
 	case BranchTypeContributionBranch:
 		return "contribution branch"
 	case BranchTypeFeatureBranch:
-		return "feature branch"
+		return "feature"
 	case BranchTypeMainBranch:
-		return "main branch"
+		return "main"
 	case BranchTypeObservedBranch:
-		return "observed branch"
+		return "observed"
 	case BranchTypeParkedBranch:
-		return "parked branch"
+		return "parked"
 	case BranchTypePerennialBranch:
-		return "perennial branch"
+		return "perennial"
 	case BranchTypePrototypeBranch:
-		return "prototype branch"
+		return "prototype"
 	}
 	panic("unhandled branch type")
 }
