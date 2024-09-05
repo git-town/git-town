@@ -16,18 +16,27 @@ type ValidatedConfig struct {
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
-	switch {
-	case self.IsMainBranch(branch):
+	if branch == self.MainBranch {
 		return BranchTypeMainBranch
-	case self.IsPerennialBranch(branch):
+	}
+	if slices.Contains(self.PerennialBranches, branch) {
 		return BranchTypePerennialBranch
-	case self.IsContributionBranch(branch):
+	}
+	if perennialRegex, hasPerennialRegex := self.PerennialRegex.Get(); hasPerennialRegex {
+		if perennialRegex.MatchesBranch(branch) {
+			return BranchTypePerennialBranch
+		}
+	}
+	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
-	case self.IsObservedBranch(branch):
+	}
+	if slices.Contains(self.ObservedBranches, branch) {
 		return BranchTypeObservedBranch
-	case self.IsParkedBranch(branch):
+	}
+	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
-	case self.IsPrototypeBranch(branch):
+	}
+	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
@@ -51,16 +60,6 @@ func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
-}
-
-func (self *ValidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PerennialBranches, branch) {
-		return true
-	}
-	if perennialRegex, hasPerennialRegex := self.PerennialRegex.Get(); hasPerennialRegex {
-		return perennialRegex.MatchesBranch(branch)
-	}
-	return false
 }
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {

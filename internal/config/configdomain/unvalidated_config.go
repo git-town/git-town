@@ -40,19 +40,24 @@ type UnvalidatedConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
+// indicates the branch type of the given branch
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
-	switch {
-	case self.IsMainBranch(branch):
+	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
-	case self.IsPerennialBranch(branch):
+	}
+	if self.IsPerennialBranch(branch) {
 		return BranchTypePerennialBranch
-	case self.IsContributionBranch(branch):
+	}
+	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
-	case self.IsObservedBranch(branch):
+	}
+	if slices.Contains(self.ObservedBranches, branch) {
 		return BranchTypeObservedBranch
-	case self.IsParkedBranch(branch):
+	}
+	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
-	case self.IsPrototypeBranch(branch):
+	}
+	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
 	return BranchTypeFeatureBranch
@@ -71,10 +76,6 @@ func (self *UnvalidatedConfig) ContainsLineage() bool {
 	return self.Lineage.Len() > 0
 }
 
-func (self *UnvalidatedConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
-	return slices.Contains(self.ContributionBranches, branch)
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
@@ -90,16 +91,8 @@ func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBra
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
-func (self *UnvalidatedConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
-	return slices.Contains(self.ObservedBranches, branch)
-}
-
 func (self *UnvalidatedConfig) IsOnline() bool {
 	return self.Online().IsTrue()
-}
-
-func (self *UnvalidatedConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
-	return slices.Contains(self.ParkedBranches, branch)
 }
 
 func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -110,10 +103,6 @@ func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchNam
 		return perennialRegex.MatchesBranch(branch)
 	}
 	return false
-}
-
-func (self *UnvalidatedConfig) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	return slices.Contains(self.PrototypeBranches, branch)
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
