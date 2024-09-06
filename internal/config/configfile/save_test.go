@@ -282,8 +282,8 @@ main = "main"
 # See also the "perennial-regex" setting.
 perennials = []
 
-# Branches matching this regular expression are treated as feature branches.
-# This setting is effective only when used together with the "default-branch-type" setting.
+# All branches whose name matches this regular expression
+# are also considered perennial branches.
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
