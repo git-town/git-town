@@ -5,20 +5,19 @@ This configuration setting stores the name of all
 
 ## set contribution branches
 
-The best way to change which branches are contribution branches in your local
-repo is with the [git town contribute](../commands/contribute.md) command.
+To change which branches are contribution branches in your local repo, use the
+[git town contribute](../commands/contribute.md) command.
 
-The [Git Town configuration file](../configuration-file.md) cannot and does not
-define team-wide contribution branches because one developer's feature branch is
+The [Git Town configuration file](../configuration-file.md) does not define
+team-wide contribution branches because one developer's feature branch is
 another developer's contribution or observed branch.
 
-## view the configured contribution branches
+## view configured contribution branches
 
-The recommended way to see which branches are configured as contribution
-branches in your local repo is with the [git town config](../commands/config.md)
-command.
+To see which branches are configured as contribution branches in your local
+repo, use the [git town config](../commands/config.md) command.
 
-To see how contribution branches are stored in Git metadata:
+To view how contribution branches are stored in Git metadata:
 
 ```bash
 $ git config list | grep 'git-town.contribution-branches'
