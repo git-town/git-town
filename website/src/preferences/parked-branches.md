@@ -17,7 +17,7 @@ they own.
 To see which branches are configured as parked in your local repo, use the
 [git town config](../commands/config.md) command.
 
-To check how parked branches are stored in Git metadata:
+To view how parked branches are stored in Git metadata:
 
 ```bash
 $ git config list | grep 'git-town.parked-branches'
