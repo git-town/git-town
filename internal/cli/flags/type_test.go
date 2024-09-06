@@ -14,8 +14,25 @@ func TestBranchTypeFlag(t *testing.T) {
 	t.Run("ParseBranchTypes", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string][]configdomain.BranchType{
-			"":  {},
-			"f": {configdomain.BranchTypeFeatureBranch},
+			"":                      {},
+			"contribution":          {configdomain.BranchTypeContributionBranch},
+			"feature":               {configdomain.BranchTypeFeatureBranch},
+			"observed":              {configdomain.BranchTypeObservedBranch},
+			"perennial":             {configdomain.BranchTypePerennialBranch},
+			"parked":                {configdomain.BranchTypeParkedBranch},
+			"prototype":             {configdomain.BranchTypePrototypeBranch},
+			"main":                  {configdomain.BranchTypeMainBranch},
+			"contribution,feature":  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"contribution+feature":  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"contribution&feature":  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"contribution|feature":  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"contribution&&feature": {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c":                     {configdomain.BranchTypeContributionBranch},
+			// "f":                     {configdomain.BranchTypeFeatureBranch},
+			// "o":                     {configdomain.BranchTypeObservedBranch},
+			// "p":                     {configdomain.BranchTypePerennialBranch},
+			// "pa":                    {configdomain.BranchTypeParkedBranch},
+			// "pr":                    {configdomain.BranchTypePrototypeBranch},
 		}
 		for give, want := range tests {
 			have, err := flags.ParseBranchTypes(give)
