@@ -149,10 +149,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       # When changing this, you should also set the "feature-regex" setting.
       default-type = "observed"
 
-      # All branches whose name matches this regular expression
-      # are considered feature branches.
-      #
-      # This only makes sense together with the "default-branch-type" setting.
+      # Branches matching this regular expression are treated as feature branches.
+      # This setting is effective only when used together with the "default-branch-type" setting.
       feature-regex = "user-.*"
 
       [hosting]
