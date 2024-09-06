@@ -25,8 +25,8 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	entries := SwitchBranchEntries(localBranches, lineage, allBranches)
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+	entries := SwitchBranchEntries(localBranches, branchTypes, lineage, allBranches)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos:   cursor,
@@ -162,12 +162,12 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) []SwitchBranchEntry {
+func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) []SwitchBranchEntry {
 	entries := make([]SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, allBranches)
+		layoutBranches(&entries, root, "", lineage, allBranches, branchTypes)
 	}
 	// add missing local branches
 	branchesInLineage := lineage.Branches()
@@ -191,7 +191,7 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos) {
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, allBranches gitdomain.BranchInfos, branchesAndTypes configdomain.BranchesAndTypes) {
 	if allBranches.HasLocalBranch(branch) || allBranches.HasMatchingTrackingBranchFor(branch) {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := allBranches.FindByLocalName(branch).Get(); hasBranchInfo {
@@ -202,7 +202,7 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 		*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, allBranches)
+		layoutBranches(result, child, indentation+"  ", lineage, allBranches, branchesAndTypes)
 	}
 }
 

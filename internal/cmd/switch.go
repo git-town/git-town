@@ -60,7 +60,7 @@ func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingM
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, branchTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
