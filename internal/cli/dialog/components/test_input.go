@@ -123,12 +123,22 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //exhaustruct:ignore
 	case "e":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //exhaustruct:ignore
+	case "k":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'k'}} //exhaustruct:ignore
 	case "n":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'n'}} //exhaustruct:ignore
 	case "o":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //exhaustruct:ignore
+	case "p":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'p'}} //exhaustruct:ignore
 	case "q":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //exhaustruct:ignore
+	case "r":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'r'}} //exhaustruct:ignore
+	case "s":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'s'}} //exhaustruct:ignore
+	case "u":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'u'}} //exhaustruct:ignore
 	}
 	panic("unknown test input: " + input)
 }

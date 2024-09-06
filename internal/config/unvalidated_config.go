@@ -98,6 +98,10 @@ func (self *UnvalidatedConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
 }
 
+func (self *UnvalidatedConfig) RemoveFeatureRegex() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
+}
+
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
 func (self *UnvalidatedConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
 	self.Config.Value.ContributionBranches = slice.Remove(self.Config.Value.ContributionBranches, branch)
@@ -194,6 +198,18 @@ func (self *UnvalidatedConfig) SetContributionBranches(branches gitdomain.LocalB
 func (self *UnvalidatedConfig) SetCreatePrototypeBranches(value configdomain.CreatePrototypeBranches) error {
 	self.Config.Value.CreatePrototypeBranches = value
 	return self.GitConfig.SetLocalConfigValue(configdomain.KeyCreatePrototypeBranches, value.String())
+}
+
+// SetDefaultBranchTypeLocally updates the locally configured default branch type.
+func (self *UnvalidatedConfig) SetDefaultBranchTypeLocally(value configdomain.DefaultBranchType) error {
+	self.Config.Value.DefaultBranchType = value
+	return self.GitConfig.SetLocalConfigValue(configdomain.KeyDefaultBranchType, value.String())
+}
+
+// SetFeatureRegexLocally updates the locally configured feature regex.
+func (self *UnvalidatedConfig) SetFeatureRegexLocally(value configdomain.FeatureRegex) error {
+	self.Config.Value.FeatureRegex = Some(value)
+	return self.GitConfig.SetLocalConfigValue(configdomain.KeyFeatureRegex, value.String())
 }
 
 // SetMainBranch marks the given branch as the main branch

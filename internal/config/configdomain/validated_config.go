@@ -19,22 +19,7 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	if self.IsPerennialBranch(branch) {
-		return BranchTypePerennialBranch
-	}
-	if slices.Contains(self.ContributionBranches, branch) {
-		return BranchTypeContributionBranch
-	}
-	if slices.Contains(self.ObservedBranches, branch) {
-		return BranchTypeObservedBranch
-	}
-	if slices.Contains(self.ParkedBranches, branch) {
-		return BranchTypeParkedBranch
-	}
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return BranchTypePrototypeBranch
-	}
-	return BranchTypeFeatureBranch
+	return self.UnvalidatedConfig.BranchType(branch)
 }
 
 func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {

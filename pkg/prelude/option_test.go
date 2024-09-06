@@ -169,7 +169,7 @@ func TestOption(t *testing.T) {
 		})
 		t.Run("None[string newtype]", func(t *testing.T) {
 			t.Parallel()
-			option := None[configdomain.PerennialRegex]()
+			option := None[configdomain.VerifiedRegex]()
 			have := option.String()
 			must.EqOp(t, "", have)
 		})

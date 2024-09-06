@@ -1012,6 +1012,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
+				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
+					err := repoToCreateBranchIn.Config.SetParent(branchSetup.Name, parent)
+					asserts.NoError(err)
+				}
 			}
 			if len(branchSetup.Locations) > 1 {
 				switch {

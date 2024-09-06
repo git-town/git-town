@@ -22,7 +22,7 @@ func (self VerifiedRegex) String() string {
 	return self.text
 }
 
-func parseRegex(text string) (Option[VerifiedRegex], error) {
+func ParseRegex(text string) (Option[VerifiedRegex], error) {
 	if len(text) == 0 {
 		return None[VerifiedRegex](), nil
 	}

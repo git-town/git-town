@@ -8,6 +8,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | qa   | perennial | local, origin |
     And the main branch is "main"
     And local Git Town setting "perennial-regex" is "release-.*"
+    And local Git Town setting "feature-regex" is "user-.*"
+    And local Git Town setting "default-branch-type" is "observed"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "create-prototype-branches" is "true"
@@ -24,6 +26,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | accept the already configured main branch | enter |
       | perennial branches                        | enter |
       | perennial regex                           | enter |
+      | default branch type                       | enter |
+      | feature regex                             | enter |
       | hosting service                           | enter |
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |
@@ -140,6 +144,15 @@ Feature: migrate existing configuration in Git metadata to a config file
       # If you are not sure, leave this empty.
       perennial-regex = "release-.*"
 
+      # Which type should Git Town assume for branches whose type isn't specified?
+      #
+      # When changing this, you should also set the "feature-regex" setting.
+      default-type = "observed"
+
+      # Branches matching this regular expression are treated as feature branches.
+      # This setting is effective only when used together with the "default-branch-type" setting.
+      feature-regex = "user-.*"
+
       [hosting]
 
       # Knowing the type of code hosting platform allows Git Town
@@ -174,6 +187,8 @@ Feature: migrate existing configuration in Git metadata to a config file
     Then the main branch is now "main"
     And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "perennial-regex" is now "release-.*"
+    And local Git Town setting "feature-regex" is now "user-.*"
+    And local Git Town setting "default-branch-type" is now "observed"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-strategy" is now "squash-merge"

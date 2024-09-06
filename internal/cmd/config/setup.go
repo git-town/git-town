@@ -135,6 +135,14 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.Config.Value.DefaultBranchType, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	data.userInput.config.FeatureRegex, aborted, err = dialog.FeatureRegex(config.Config.Value.FeatureRegex, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.Value.HostingPlatform, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -273,6 +281,8 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveMainBranch(oldConfig.Config.Value.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
 	fc.Check(savePerennialBranches(oldConfig.Config.Value.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
 	fc.Check(savePerennialRegex(oldConfig.Config.Value.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
+	fc.Check(saveDefaultBranchType(oldConfig.Config.Value.DefaultBranchType, userInput.config.DefaultBranchType, oldConfig))
+	fc.Check(saveFeatureRegex(oldConfig.Config.Value.FeatureRegex, userInput.config.FeatureRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.Config.Value.PushHook, userInput.config.PushHook, oldConfig))
 	fc.Check(savePushNewBranches(oldConfig.Config.Value.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
 	fc.Check(saveShipStrategy(oldConfig.Config.Value.ShipStrategy, userInput.config.ShipStrategy, oldConfig))
@@ -306,6 +316,24 @@ func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototype
 		return nil
 	}
 	return config.SetCreatePrototypeBranches(newValue)
+}
+
+func saveDefaultBranchType(oldValue, newValue configdomain.DefaultBranchType, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.SetDefaultBranchTypeLocally(newValue)
+}
+
+func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	if value, has := newValue.Get(); has {
+		return config.SetFeatureRegexLocally(value)
+	}
+	config.RemoveFeatureRegex()
+	return nil
 }
 
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {

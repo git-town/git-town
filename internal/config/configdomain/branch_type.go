@@ -34,7 +34,7 @@ func ParseBranchType(text string) (Option[BranchType], error) {
 		return Some(BranchTypePerennialBranch), nil
 	case "prototype":
 		return Some(BranchTypePrototypeBranch), nil
-	case "(none)":
+	case "(none)", "":
 		return None[BranchType](), nil
 	}
 	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
@@ -66,7 +66,7 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 func (self BranchType) String() string {
 	switch self {
 	case BranchTypeContributionBranch:
-		return "contribution branch"
+		return "contribution"
 	case BranchTypeFeatureBranch:
 		return "feature"
 	case BranchTypeMainBranch:

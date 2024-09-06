@@ -44,6 +44,7 @@ const (
 	KeyAliasSync                           = Key("alias.sync")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
+	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
@@ -54,6 +55,7 @@ const (
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
+	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
@@ -86,6 +88,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingPlatform,
 	KeyContributionBranches,
 	KeyCreatePrototypeBranches,
+	KeyDefaultBranchType,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
@@ -96,6 +99,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
+	KeyFeatureRegex,
 	KeyGiteaToken,
 	KeyGithubToken,
 	KeyGitlabToken,

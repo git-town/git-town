@@ -11,6 +11,8 @@ Feature: override an existing Git alias
       | main branch                 | enter   |
       | perennial branches          | enter   |
       | perennial regex             | enter   |
+      | default branch type         | enter   |
+      | feature regex               | enter   |
       | hosting platform            | enter   |
       | origin hostname             | enter   |
       | sync-feature-strategy       | enter   |

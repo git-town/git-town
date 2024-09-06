@@ -43,6 +43,8 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		give := configdomain.UnvalidatedConfig{
 			CreatePrototypeBranches:  true,
+			DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
+			FeatureRegex:             None[configdomain.FeatureRegex](),
 			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 			HostingPlatform:          None[configdomain.HostingPlatform](),
 			Lineage:                  configdomain.NewLineage(),
@@ -149,6 +151,15 @@ perennials = ["one", "two"]
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
+
+# Which type should Git Town assume for branches whose type isn't specified?
+#
+# When changing this, you should also set the "feature-regex" setting.
+default-type = "feature"
+
+# Branches matching this regular expression are treated as feature branches.
+# This setting is effective only when used together with the "default-branch-type" setting.
+feature-regex = ""
 
 [hosting]
 
@@ -276,6 +287,15 @@ perennials = []
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
+
+# Which type should Git Town assume for branches whose type isn't specified?
+#
+# When changing this, you should also set the "feature-regex" setting.
+default-type = "feature"
+
+# Branches matching this regular expression are treated as feature branches.
+# This setting is effective only when used together with the "default-branch-type" setting.
+feature-regex = ""
 
 [hosting]
 
