@@ -26,12 +26,12 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 		if err != nil {
 			panic(err)
 		}
-		return parseBranchTypes(value)
+		return ParseBranchTypes(value)
 	}
 	return addFlag, readFlag
 }
 
-func parseBranchTypes(text string) ([]configdomain.BranchType, error) {
+func ParseBranchTypes(text string) ([]configdomain.BranchType, error) {
 	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
@@ -48,8 +48,18 @@ func parseBranchTypes(text string) ([]configdomain.BranchType, error) {
 
 func SplitBranchTypeNames(text string) []string {
 	text = strings.TrimSpace(text)
-	splitter := regexp.MustCompile(`,\+&|`)
-	return splitter.Split(text, -1)
+	if len(text) == 0 {
+		return []string{}
+	}
+	splitter := regexp.MustCompile(`[,\+&\|]`)
+	splitted := splitter.Split(text, -1)
+	result := make([]string, 0, len(splitted))
+	for _, split := range splitted {
+		if len(split) > 0 {
+			result = append(result, split)
+		}
+	}
+	return result
 }
 
 // the type signature for the function that reads the "type" flag from the args to the given Cobra command
