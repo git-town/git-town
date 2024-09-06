@@ -27,4 +27,4 @@ git config [--global] git-town.ship-delete-tracking-branch <true|false>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your local machine. When not present, the setting applies to the current repo.
+your machine. Without it, the setting applies only to the current repository.
