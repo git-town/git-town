@@ -134,7 +134,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # See also the "perennial-regex" setting.
       perennials = ["qa"]
 
-      # All branches whose names match this regular expression
+      # All branches whose name matches this regular expression
       # are also considered perennial branches.
       #
       # If you are not sure, leave this empty.
