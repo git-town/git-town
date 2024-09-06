@@ -157,19 +157,18 @@ Feature: show the configuration
 
   Scenario: all configured, with stacked changes
     Given the branches
-      | NAME    | TYPE      | PARENT | LOCATIONS |
-      | alpha   | feature   | main   | local     |
-      | qa      | perennial |        | local     |
-      | staging | perennial |        | local     |
-      | beta    | feature   | main   | local     |
-      | child   | feature   | alpha  | local     |
-      | hotfix  | feature   | qa     | local     |
+      | NAME   | TYPE      | PARENT | LOCATIONS |
+      | alpha  | feature   | main   | local     |
+      | qa     | perennial |        | local     |
+      | beta   | feature   | main   | local     |
+      | child  | feature   | alpha  | local     |
+      | hotfix | feature   | qa     | local     |
     When I run "git-town config"
     Then it prints:
       """
       Branches:
         main branch: main
-        perennial branches: qa, staging
+        perennial branches: qa
         perennial regex: (not set)
         parked branches: (none)
         contribution branches: (none)
