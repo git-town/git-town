@@ -5,18 +5,12 @@ Feature: show the configuration
     Given a Git repo with origin
 
   Scenario: all configured in Git, no stacked changes
-    Given the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | feature        | feature      | main   | local     |
-      | qa             | perennial    |        | local     |
-      | staging        | perennial    |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-    And the main branch is "main"
+    Given Git Town setting "perennial-branches" is "qa staging"
+    And Git Town setting "observed-branches" is "observed-1 observed-2"
+    And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
+    And Git Town setting "parked-branches" is "parked-1 parked-2"
+    And Git Town setting "perennial-regex" is "release-.*"
+    And Git Town setting "ship-strategy" is "squash-merge"
     And local Git Town setting "perennial-regex" is "release-.*"
     And local Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town config"
@@ -100,16 +94,10 @@ Feature: show the configuration
       """
 
   Scenario: configured in both Git and config file
-    Given the branches
-      | NAME            | TYPE         | PARENT | LOCATIONS |
-      | git-perennial-1 | perennial    |        | local     |
-      | git-perennial-2 | perennial    |        | local     |
-      | observed-1      | observed     |        | local     |
-      | observed-2      | observed     |        | local     |
-      | contribution-1  | contribution |        | local     |
-      | contribution-2  | contribution |        | local     |
-      | parked-1        | parked       | main   | local     |
-      | parked-2        | parked       | main   | local     |
+    Given Git Town setting "perennial-branches" is "git-perennial-1 git-perennial-2"
+    And Git Town setting "observed-branches" is "observed-1 observed-2"
+    And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
+    And Git Town setting "parked-branches" is "parked-1 parked-2"
     And the main branch is "git-main"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
