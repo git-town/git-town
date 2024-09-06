@@ -16,6 +16,8 @@ Feature: Accepting all default values leads to a working setup
       | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
+      | default branch type         | enter |
+      | feature regex               | enter |
       | hosting platform            | enter |
       | origin hostname             | enter |
       | sync-feature-strategy       | enter |
@@ -131,6 +133,17 @@ Feature: Accepting all default values leads to a working setup
       #
       # If you are not sure, leave this empty.
       perennial-regex = ""
+
+      # Which type should Git Town assume for branches whose type isn't specified?
+      #
+      # When changing this, you should also set the "feature-regex" setting.
+      default-type = "feature"
+
+      # All branches whose name matches this regular expression
+      # are considered feature branches.
+      #
+      # This only makes sense together with the "default-branch-type" setting.
+      feature-regex = ""
 
       [hosting]
 

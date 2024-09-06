@@ -14,6 +14,8 @@ type Data struct {
 }
 
 type Branches struct {
+	DefaultType    *string  `toml:"default-type"`
+	FeatureRegex   *string  `toml:"feature-regex"`
 	Main           *string  `toml:"main"`
 	PerennialRegex *string  `toml:"perennial-regex"`
 	Perennials     []string `toml:"perennials"`

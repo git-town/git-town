@@ -10,6 +10,8 @@ Feature: show the configuration
     And Git Town setting "observed-branches" is "observed-1 observed-2"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
+    And Git Town setting "default-branch-type" is "observed"
+    And Git Town setting "feature-regex" is "user-.*"
     And Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town config"
     Then it prints:
@@ -18,6 +20,8 @@ Feature: show the configuration
         main branch: main
         perennial branches: qa, staging
         perennial regex: release-.*
+        default branch type: observed
+        feature regex: user-.*
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         observed branches: observed-1, observed-2
@@ -53,6 +57,8 @@ Feature: show the configuration
       main = "main"
       perennials = [ "public", "staging" ]
       perennial-regex = "release-.*"
+      default-type = "observed"
+      feature-regex = "user-.*"
 
       [hosting]
       platform = "github"
@@ -69,6 +75,8 @@ Feature: show the configuration
         main branch: main
         perennial branches: public, staging
         perennial regex: release-.*
+        default branch type: observed
+        feature regex: user-.*
         parked branches: (none)
         contribution branches: (none)
         observed branches: (none)
@@ -98,6 +106,8 @@ Feature: show the configuration
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
+    And Git Town setting "feature-regex" is "git-feature-.*"
+    And Git Town setting "default-branch-type" is "observed"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-strategy" is "squash-merge"
     And Git Town setting "ship-delete-tracking-branch" is "false"
@@ -117,6 +127,8 @@ Feature: show the configuration
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
       perennial-regex = "config-perennial-.*"
+      default-type = "contribution"
+      feature-regex = "config-file-.*"
 
       [hosting]
       platform = "github"
@@ -133,6 +145,8 @@ Feature: show the configuration
         main branch: git-main
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: git-perennial-.*
+        default branch type: observed
+        feature regex: git-feature-.*
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         observed branches: observed-1, observed-2
@@ -170,6 +184,8 @@ Feature: show the configuration
         main branch: main
         perennial branches: qa
         perennial regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
         observed branches: (none)
@@ -210,6 +226,8 @@ Feature: show the configuration
         main branch: (not set)
         perennial branches: (none)
         perennial regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
         observed branches: (none)

@@ -14,6 +14,8 @@ type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
 	CreatePrototypeBranches  CreatePrototypeBranches
+	DefaultBranchType        DefaultBranchType
+	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -60,7 +62,10 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
-	return BranchTypeFeatureBranch
+	if self.MatchesFeatureBranchRegex(branch) {
+		return BranchTypeFeatureBranch
+	}
+	return self.DefaultBranchType.BranchType
 }
 
 func (self *UnvalidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
@@ -112,6 +117,13 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.PerennialBranches
 }
 
+func (self *UnvalidatedConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
+	if featureRegex, has := self.FeatureRegex.Get(); has {
+		return featureRegex.MatchesBranch(branch)
+	}
+	return false
+}
+
 func (self *UnvalidatedConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
@@ -124,12 +136,25 @@ func (self *UnvalidatedConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
 
+// UnvalidatedBranchesAndTypes provides the types for the given branches.
+// This method's name startes with "Unvalidated" to indicate that the types might be incomplete,
+// and you should use ValidatedConfig.BranchesAndTypes if possible.
+func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
+	result := make(BranchesAndTypes, len(branches))
+	for _, branch := range branches {
+		result[branch] = self.BranchType(branch)
+	}
+	return result
+}
+
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		CreatePrototypeBranches:  false,
+		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
+		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GitUserEmail:             None[GitUserEmail](),

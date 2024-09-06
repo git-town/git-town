@@ -21,6 +21,8 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" is "town sync"
     And local Git Town setting "hosting-platform" is "github"
     And local Git Town setting "perennial-regex" is "qa.*"
+    And local Git Town setting "feature-regex" is "user.*"
+    And local Git Town setting "default-branch-type" is "observed"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "hosting-origin-hostname" is "code"
@@ -34,24 +36,26 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "ship-strategy" is "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                             | KEYS                                          |
-      | welcome                                 | enter                                         |
-      | add all aliases                         | n enter                                       |
-      | keep the already configured main branch | enter                                         |
-      | change the perennial branches           | space down space enter                        |
-      | remove the perennial regex              | backspace backspace backspace backspace enter |
-      | remove hosting service override         | up up up enter                                |
-      | remove origin hostname                  | backspace backspace backspace backspace enter |
-      | sync-feature-strategy                   | down enter                                    |
-      | sync-perennial-strategy                 | down enter                                    |
-      | sync-upstream                           | down enter                                    |
-      | sync-tags                               | down enter                                    |
-      | enable push-new-branches                | down enter                                    |
-      | disable the push hook                   | down enter                                    |
-      | create-prototype-branches               | down enter                                    |
-      | change ship-strategy                    | down enter                                    |
-      | disable ship-delete-tracking-branch     | down enter                                    |
-      | save config to Git metadata             | down enter                                    |
+      | DESCRIPTION                             | KEYS                                                              |
+      | welcome                                 | enter                                                             |
+      | add all aliases                         | n enter                                                           |
+      | keep the already configured main branch | enter                                                             |
+      | change the perennial branches           | space down space enter                                            |
+      | remove the perennial regex              | backspace backspace backspace backspace enter                     |
+      | default branch type                     | down enter                                                        |
+      | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
+      | remove hosting service override         | up up up enter                                                    |
+      | remove origin hostname                  | backspace backspace backspace backspace enter                     |
+      | sync-feature-strategy                   | down enter                                                        |
+      | sync-perennial-strategy                 | down enter                                                        |
+      | sync-upstream                           | down enter                                                        |
+      | sync-tags                               | down enter                                                        |
+      | enable push-new-branches                | down enter                                                        |
+      | disable the push hook                   | down enter                                                        |
+      | create-prototype-branches               | down enter                                                        |
+      | change ship-strategy                    | down enter                                                        |
+      | disable ship-delete-tracking-branch     | down enter                                                        |
+      | save config to Git metadata             | down enter                                                        |
 
   Scenario: result
     Then it runs the commands
@@ -91,6 +95,8 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-upstream" is now "false"
     And local Git Town setting "sync-tags" is now "false"
     And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git Town setting "feature-regex" now doesn't exist
+    And local Git Town setting "default-branch-type" is now "parked"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "false"
     And local Git Town setting "ship-strategy" is now "api"
@@ -114,6 +120,8 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "create-prototype-branches" is now "true"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "perennial-regex" is now "qa.*"
+    And local Git Town setting "feature-regex" is now "user.*"
+    And local Git Town setting "default-branch-type" is now "observed"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "hosting-origin-hostname" is now "code"

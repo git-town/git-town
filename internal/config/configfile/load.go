@@ -54,6 +54,21 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 				return result, err
 			}
 		}
+		if data.Branches.DefaultType != nil {
+			result.DefaultBranchType, err = configdomain.ParseDefaultBranchType(*data.Branches.DefaultType)
+			if err != nil {
+				return result, err
+			}
+		}
+		if data.Branches.FeatureRegex != nil {
+			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
+			if err != nil {
+				return result, err
+			}
+			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+				result.FeatureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
+			}
+		}
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {

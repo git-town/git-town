@@ -16,6 +16,8 @@ Feature: show the configuration from a subfolder
         main branch: main
         perennial branches: public
         perennial regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
         observed branches: (none)

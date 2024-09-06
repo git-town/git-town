@@ -11,6 +11,8 @@ Feature: remove an existing code hosting override
       | main branch                 | down enter     |                                             |
       | perennial branches          |                | no input here since the dialog doesn't show |
       | perennial regex             | enter          |                                             |
+      | default branch type         | enter          |                                             |
+      | feature regex               | enter          |                                             |
       | hosting platform            | up up up enter |                                             |
       | origin hostname             | enter          |                                             |
       | sync-feature-strategy       | enter          |                                             |

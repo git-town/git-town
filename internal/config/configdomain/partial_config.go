@@ -12,6 +12,8 @@ type PartialConfig struct {
 	Aliases                  Aliases
 	ContributionBranches     gitdomain.LocalBranchNames
 	CreatePrototypeBranches  Option[CreatePrototypeBranches]
+	DefaultBranchType        Option[DefaultBranchType]
+	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -75,10 +77,16 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
 	ec.Check(err)
+	defaultBranchType, err := ParseDefaultBranchType(snapshot[KeyDefaultBranchType])
+	ec.Check(err)
+	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		CreatePrototypeBranches:  createPrototypeBranches,
+		DefaultBranchType:        defaultBranchType,
+		FeatureRegex:             featureRegex,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
@@ -115,6 +123,8 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		CreatePrototypeBranches:  other.CreatePrototypeBranches.Or(self.CreatePrototypeBranches),
+		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
+		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
@@ -148,6 +158,8 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		Aliases:                  self.Aliases,
 		ContributionBranches:     self.ContributionBranches,
 		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
+		DefaultBranchType:        self.DefaultBranchType.GetOrElse(DefaultBranchType{BranchTypeFeatureBranch}),
+		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,
 		GitUserEmail:             self.GitUserEmail,
