@@ -92,11 +92,11 @@ Feature: show the configuration
       """
 
   Scenario: configured in both Git and config file
-    Given Git Town setting "perennial-branches" is "git-perennial-1 git-perennial-2"
+    Given the main branch is "git-main"
+    And Git Town setting "perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git Town setting "observed-branches" is "observed-1 observed-2"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
-    And the main branch is "git-main"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-strategy" is "squash-merge"
