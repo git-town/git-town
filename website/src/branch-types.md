@@ -101,6 +101,6 @@ You can compress and ship prototype branches as usual. Parking and unparking a
 prototype branch maintains its prototype status. When you change a prototype
 branch to an observed or contribution branch it loses its prototype status.
 
-You can make any feature branch a prototype branch by running
-[git prototype](commands/prototype.md) on it. Convert a prototype branch to a
-feature branch by running [git hack](commands/hack.md) on it.
+To designate any feature branch as a prototype branch, execute
+[git prototype](commands/prototype.md) on it. To convert a prototype branch to a
+feature branch, use [git hack](commands/hack.md).
