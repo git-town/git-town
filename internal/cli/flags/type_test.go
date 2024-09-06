@@ -28,11 +28,17 @@ func TestBranchTypeFlag(t *testing.T) {
 			"contribution|feature":  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
 			"contribution&&feature": {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
 			"c":                     {configdomain.BranchTypeContributionBranch},
-			// "f":                     {configdomain.BranchTypeFeatureBranch},
-			// "o":                     {configdomain.BranchTypeObservedBranch},
-			// "p":                     {configdomain.BranchTypePerennialBranch},
-			// "pa":                    {configdomain.BranchTypeParkedBranch},
-			// "pr":                    {configdomain.BranchTypePrototypeBranch},
+			"f":                     {configdomain.BranchTypeFeatureBranch},
+			"o":                     {configdomain.BranchTypeObservedBranch},
+			"p":                     {configdomain.BranchTypePerennialBranch},
+			"pa":                    {configdomain.BranchTypeParkedBranch},
+			"pr":                    {configdomain.BranchTypePrototypeBranch},
+			"c,f":                   {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c+f":                   {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c&f":                   {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c|f":                   {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c,,f":                  {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch},
+			"c,f,o":                 {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch},
 		}
 		for give, want := range tests {
 			have, err := flags.ParseBranchTypes(give)
