@@ -100,3 +100,7 @@ look at. In this situation you can keep syncing without pushes by using the
 You can compress and ship prototype branches as usual. Parking and unparking a
 prototype branch maintains its prototype status. When you change a prototype
 branch to an observed or contribution branch it loses its prototype status.
+
+You can make any feature branch a prototype branch by running
+[git prototype](commands/prototype.md) on it. Convert a prototype branch to a
+feature branch by running [git hack](commands/hack.md) on it.
