@@ -10,7 +10,7 @@ the `[branches]` section:
 
 ```toml
 [branches]
-perennial-regex = "release-*"
+perennial-regex = "^release-.*"
 ```
 
 ## configure in Git metadata
