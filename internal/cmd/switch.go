@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/validate"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,7 @@ const switchDesc = "Display the local branches visually and allows switching bet
 func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
+	addTypeFlag, readTypeFlag := flags.BranchType()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -30,15 +32,20 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd))
+			branchType, err := readTypeFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd), branchType)
 		},
 	}
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addTypeFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge) error {
+func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchType Option[configdomain.BranchType]) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
