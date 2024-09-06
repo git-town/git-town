@@ -18,6 +18,18 @@ const (
 	BranchTypePrototypeBranch
 )
 
+func AllBranchTypes() []BranchType {
+	return []BranchType{
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypeContributionBranch,
+		BranchTypeObservedBranch,
+		BranchTypePrototypeBranch,
+	}
+}
+
 func ParseBranchType(text string) (Option[BranchType], error) {
 	switch text {
 	case "contribution":

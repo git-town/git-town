@@ -1,7 +1,8 @@
 package flags
 
 import (
-	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -18,44 +19,41 @@ type branchTypeFlag Option[configdomain.BranchType]
 // type-safe access to the CLI arguments of type configdomain.BranchType
 func BranchType() (AddFunc, ReadTypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(typeLong, typeShort, "", "display all Git commands run under the hood")
+		cmd.PersistentFlags().StringP(typeLong, typeShort, "", "limit the list of branches to switch to the given branch type(s)")
 	}
-	readFlag := func(cmd *cobra.Command) (Option[configdomain.BranchType], error) {
+	readFlag := func(cmd *cobra.Command) ([]configdomain.BranchType, error) {
 		value, err := cmd.Flags().GetString(typeLong)
 		if err != nil {
 			panic(err)
 		}
-		branchType, err := parseBranchType(value)
-		if err != nil {
-			return None[configdomain.BranchType](), err
-		}
-		return branchType, nil
+		return parseBranchTypes(value)
 	}
 	return addFlag, readFlag
 }
 
-func parseBranchType(text string) (branchType Option[configdomain.BranchType], err error) {
-	switch text {
-	case "contribution":
-		return Some(configdomain.BranchTypeContributionBranch), nil
-	case "feature":
-		return Some(configdomain.BranchTypeFeatureBranch), nil
-	case "observed":
-		return Some(configdomain.BranchTypeObservedBranch), nil
-	case "parked":
-		return Some(configdomain.BranchTypeParkedBranch), nil
-	case "perennial":
-		return Some(configdomain.BranchTypePerennialBranch), nil
-	case "prototype":
-		return Some(configdomain.BranchTypePrototypeBranch), nil
-	case "":
-		return None[configdomain.BranchType](), nil
+func parseBranchTypes(text string) ([]configdomain.BranchType, error) {
+	branchTypeNames := SplitBranchTypeNames(text)
+	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
+	for _, branchTypeName := range branchTypeNames {
+		branchTypeOpt, err := configdomain.ParseBranchType(branchTypeName)
+		if err != nil {
+			return result, err
+		}
+		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
+			result = append(result, branchType)
+		}
 	}
-	return None[configdomain.BranchType](), fmt.Errorf("invalid branch type: %q, allowed: contribution, feature, observed, parked, perennial, prototype", text)
+	return result, nil
+}
+
+func SplitBranchTypeNames(text string) []string {
+	text = strings.TrimSpace(text)
+	splitter := regexp.MustCompile(`,\+&|`)
+	return splitter.Split(text, -1)
 }
 
 // the type signature for the function that reads the "type" flag from the args to the given Cobra command
-type ReadTypeFlagFunc func(*cobra.Command) (Option[configdomain.BranchType], error)
+type ReadTypeFlagFunc func(*cobra.Command) ([]configdomain.BranchType, error)
 
 // // newEnum give a list of allowed flag parameters, where the second argument is the default
 // func newBranchTypeFlag() branchTypeFlag {
