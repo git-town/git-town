@@ -5,19 +5,19 @@ This configuration setting stores the name of all
 
 ## set observed branches
 
-The best way to change which branches are observed branches in your local repo
-is with the [git town observe](../commands/observe.md) command.
+To change which branches are observed branches in your local repo, use the
+[git town contribute](../commands/contribute.md) command.
 
-The [Git Town configuration file](../configuration-file.md) cannot and does not
-define team-wide observed branches because one developer's feature branch is
-another developer's observed or contribution branch.
+The [Git Town configuration file](../configuration-file.md) does not define
+team-wide observed branches because one developer's feature branch is another
+developer's observed or observed branch.
 
-## view the configured observed branches
+## view configured observed branches
 
-The recommended way to see which branches are configured as observed branches in
-your local repo is with the [git town config](../commands/config.md) command.
+To see which branches are configured as observed branches in your local repo,
+use the [git town config](../commands/config.md) command.
 
-To see how observed branches are stored in Git metadata:
+To view how observed branches are stored in Git metadata:
 
 ```bash
 $ git config list | grep 'git-town.observed-branches'
