@@ -45,9 +45,6 @@ func ParseBranchTypes(text string) ([]configdomain.BranchType, error) {
 
 func SplitBranchTypeNames(text string) []string {
 	text = strings.TrimSpace(text)
-	if len(text) == 0 {
-		return []string{}
-	}
 	splitter := regexp.MustCompile(`[,\+&\|]`)
 	splitted := splitter.Split(text, -1)
 	result := make([]string, 0, len(splitted))
