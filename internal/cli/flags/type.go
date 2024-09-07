@@ -21,7 +21,7 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 	readFlag := func(cmd *cobra.Command) ([]configdomain.BranchType, error) {
 		value, err := cmd.Flags().GetString(typeLong)
 		if err != nil {
-			panic(err)
+			return []configdomain.BranchType{}, err
 		}
 		return ParseBranchTypes(value)
 	}
