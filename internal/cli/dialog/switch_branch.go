@@ -200,7 +200,7 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 			otherWorktree = false
 		}
 		branchType, hasBranchType := branchesAndTypes[branch]
-		if !hasBranchType {
+		if !hasBranchType && len(branchTypes) > 0 {
 			panic("cannot determine branch type for branch: " + branch)
 		}
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
