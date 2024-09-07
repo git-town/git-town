@@ -10,7 +10,7 @@ Big thanks to @FFdhorkin, @breml, @bryanlarsen, @buscape, @enigma, @heyitsaamir,
 
 - **Automatic branch detection:** Git Town can now automatically detect feature and contribution or observed branches if you configure the new `default-branch-type` and `feature-regex` options ([#3683](https://github.com/git-town/git-town/issues/3683)).
 - **Detached syncing:** Use `git sync --detached` to sync without pulling updates from the main branch. This helps keep development momentum if the main branch receives frequent updates and these updates trigger costly follow-up activities like `npm install` or long-running recompiles ([#2657](https://github.com/git-town/git-town/issues/2657)).
-- **Branch type filtering:** The `git town switch` command can now filter the list of branches based on type using the `--type` switch. If you want to clean up your observed branches, you run `git town switch --type=observed` (or abbreviated to `git town switch -to`) to see all the observed branches on your machine and switch to one of them.
+- **Easier branch switching:** Running `git town switch --type=<branch types>` displays only branches of the given type ([#3933](https://github.com/git-town/git-town/issues/3933)).
 
 #### Bug Fixes
 
