@@ -106,7 +106,7 @@ The lineage is now:
 ```
 main
  \
-  1-fix-typos
+  1-refactor
    \
     2-rename-foo
      \
