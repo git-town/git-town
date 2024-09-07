@@ -19,7 +19,7 @@ popular Git workflows like Git Flow, GitHub Flow, GitLab Flow, and trunk-based
 development. Supports mono-repos and stacked changes. Check out
 [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
-#### Typical development commands
+#### Basic development commands
 
 - [git hack](https://www.git-town.com/commands/hack.html) - create a new
   up-to-date feature branch off the main branch
