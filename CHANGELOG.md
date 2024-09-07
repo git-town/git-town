@@ -14,7 +14,7 @@ Big thanks to @FFdhorkin, @breml, @bryanlarsen, @buscape, @enigma, @heyitsaamir,
 
 #### Bug Fixes
 
-- Git Town can now handle the situation where the previously checked out Git branch is checked out in another worktree ([#3916](https://github.com/git-town/git-town/pull/3916)).
+- Git Town no longer errors if the previously checked out Git branch is active in another worktree ([#3916](https://github.com/git-town/git-town/pull/3916)).
 
 ## 16.0.0 (2024-08-30)
 
