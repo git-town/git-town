@@ -1,6 +1,6 @@
 # Git Town Changelog
 
-## 16.1.0 (2024-09-04)
+## 16.1.0 (2024-09-07)
 
 Git Town 16.1 provides multiple killer features for power users.
 
