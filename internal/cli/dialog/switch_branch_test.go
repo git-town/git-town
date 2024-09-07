@@ -45,7 +45,7 @@ func TestSwitchBranch(t *testing.T) {
 
 	t.Run("SwitchBranchEntries", func(t *testing.T) {
 		t.Parallel()
-		t.Run("feature branches only", func(t *testing.T) {
+		t.Run("all branches are in the current worktree", func(t *testing.T) {
 			t.Parallel()
 			alpha := gitdomain.NewLocalBranchName("alpha")
 			beta := gitdomain.NewLocalBranchName("beta")
@@ -59,7 +59,9 @@ func TestSwitchBranch(t *testing.T) {
 				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
-			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
+			branchTypes := []configdomain.BranchType{}
+			branchesAndTypes := configdomain.BranchesAndTypes{}
+			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -67,7 +69,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("feature branch in other worktree", func(t *testing.T) {
+		t.Run("one of the feature branches is in other worktree", func(t *testing.T) {
 			t.Parallel()
 			alpha := gitdomain.NewLocalBranchName("alpha")
 			beta := gitdomain.NewLocalBranchName("beta")
@@ -81,7 +83,9 @@ func TestSwitchBranch(t *testing.T) {
 				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
 				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
-			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
+			branchTypes := []configdomain.BranchType{}
+			branchesAndTypes := configdomain.BranchesAndTypes{}
+			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -105,7 +109,9 @@ func TestSwitchBranch(t *testing.T) {
 				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: Some(perennial1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
-			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
+			branchTypes := []configdomain.BranchType{}
+			branchesAndTypes := configdomain.BranchesAndTypes{}
+			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -128,7 +134,9 @@ func TestSwitchBranch(t *testing.T) {
 				gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
-			have := dialog.SwitchBranchEntries(localBranches, lineage, allBranches)
+			branchTypes := []configdomain.BranchType{}
+			branchesAndTypes := configdomain.BranchesAndTypes{}
+			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "child", Indentation: "  ", OtherWorktree: false},
