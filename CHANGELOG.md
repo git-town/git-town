@@ -1,6 +1,22 @@
 # Git Town Changelog
 
-## 16.0.0 (unreleased)
+## 16.1.0 (2024-09-07)
+
+Git Town 16.1 provides multiple killer features for power users.
+
+Big thanks to @FFdhorkin, @breml, @bryanlarsen, @buscape, @enigma, @heyitsaamir, @kevgo, @rbardini, @ruudk, @stephenwade, @tranhl, @zeronacer for contributing really good ideas, feedback, and code to 39 shipped PRs and 9 resolved issues!
+
+#### New Features
+
+- **Automatic branch detection:** Git Town can now automatically detect feature and contribution or observed branches if you configure the new `default-branch-type` and `feature-regex` options ([#3683](https://github.com/git-town/git-town/issues/3683)).
+- **Detached syncing:** Use `git sync --detached` to sync without pulling updates from the main branch. This helps keep development momentum if the main branch receives frequent updates and these updates trigger costly follow-up activities like `npm install` or long-running recompiles ([#2657](https://github.com/git-town/git-town/issues/2657)).
+- **More concise branch switching:** Running `git town switch --type=<branch types>` displays only branches of the given type ([#3933](https://github.com/git-town/git-town/issues/3933)).
+
+#### Bug Fixes
+
+- Git Town no longer errors if the previously checked out Git branch is active in another worktree ([#3916](https://github.com/git-town/git-town/pull/3916)).
+
+## 16.0.0 (2024-08-30)
 
 Git Town 16 brings the "git ship" command back in a big way: Git Town now supports shipping stacked changes without merge conflicts - even on platforms that don't support it natively, like GitHub!
 
