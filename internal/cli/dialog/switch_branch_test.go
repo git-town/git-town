@@ -175,6 +175,41 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+		t.Run("filter by a multiple branch types", func(t *testing.T) {
+			t.Parallel()
+			observed1 := gitdomain.NewLocalBranchName("observed-1")
+			observed2 := gitdomain.NewLocalBranchName("observed-2")
+			prototype := gitdomain.NewLocalBranchName("prototype")
+			perennial := gitdomain.NewLocalBranchName("perennial")
+			main := gitdomain.NewLocalBranchName("main")
+			lineage := configdomain.NewLineage()
+			localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
+			allBranches := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+			}
+			branchTypes := []configdomain.BranchType{
+				configdomain.BranchTypeObservedBranch,
+				configdomain.BranchTypePerennialBranch,
+			}
+			branchesAndTypes := configdomain.BranchesAndTypes{
+				observed1: configdomain.BranchTypeObservedBranch,
+				observed2: configdomain.BranchTypeObservedBranch,
+				prototype: configdomain.BranchTypePrototypeBranch,
+				perennial: configdomain.BranchTypePerennialBranch,
+				main:      configdomain.BranchTypeMainBranch,
+			}
+			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches)
+			want := []dialog.SwitchBranchEntry{
+				{Branch: "observed-1", Indentation: "", OtherWorktree: false},
+				{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+				{Branch: "perennial", Indentation: "", OtherWorktree: false},
+			}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("View", func(t *testing.T) {
