@@ -21,4 +21,4 @@ Feature: switch branches of a single type
     Then it runs the commands
       | BRANCH     | COMMAND                 |
       | observed-2 | git checkout observed-1 |
-    And the current branch is now "observed-2"
+    And the current branch is now "observed-1"
