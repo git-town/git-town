@@ -58,25 +58,3 @@ func SplitBranchTypeNames(text string) []string {
 
 // the type signature for the function that reads the "type" flag from the args to the given Cobra command
 type ReadTypeFlagFunc func(*cobra.Command) ([]configdomain.BranchType, error)
-
-// // newEnum give a list of allowed flag parameters, where the second argument is the default
-// func newBranchTypeFlag() branchTypeFlag {
-// 	return branchTypeFlag(None[configdomain.BranchType]())
-// }
-
-// func (self branchTypeFlag) String() string {
-// 	return self.String()
-// }
-
-// func (self *branchTypeFlag) Set(text string) error {
-// 	branchType, validBranchType := configdomain.ParseBranchType(text).Get()
-// 	if !validBranchType {
-// 		return fmt.Errorf("invalid branch type: %q, allowed: contribution, feature, observed, parked, perennial, prototype", text)
-// 	}
-// 	*self = branchTypeFlag(Some(branchType))
-// 	return nil
-// }
-
-// func (self *branchTypeFlag) Type() string {
-// 	return "string"
-// }
