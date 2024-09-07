@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -13,8 +12,6 @@ const (
 	typeLong  = "type"
 	typeShort = "t"
 )
-
-type branchTypeFlag Option[configdomain.BranchType]
 
 // type-safe access to the CLI arguments of type configdomain.BranchType
 func BranchType() (AddFunc, ReadTypeFlagFunc) {
