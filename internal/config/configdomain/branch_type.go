@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"fmt"
+	"strings"
 
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
@@ -18,24 +19,26 @@ const (
 	BranchTypePrototypeBranch
 )
 
+func AllBranchTypes() []BranchType {
+	return []BranchType{
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypeContributionBranch,
+		BranchTypeObservedBranch,
+		BranchTypePrototypeBranch,
+	}
+}
+
 func ParseBranchType(text string) (Option[BranchType], error) {
-	switch text {
-	case "contribution":
-		return Some(BranchTypeContributionBranch), nil
-	case "feature":
-		return Some(BranchTypeFeatureBranch), nil
-	case "main":
-		return Some(BranchTypeMainBranch), nil
-	case "observed":
-		return Some(BranchTypeObservedBranch), nil
-	case "parked":
-		return Some(BranchTypeParkedBranch), nil
-	case "perennial":
-		return Some(BranchTypePerennialBranch), nil
-	case "prototype":
-		return Some(BranchTypePrototypeBranch), nil
-	case "(none)", "":
+	if len(text) == 0 || text == "(none)" {
 		return None[BranchType](), nil
+	}
+	for _, branchType := range AllBranchTypes() {
+		if strings.HasPrefix(branchType.String(), text) {
+			return Some(branchType), nil
+		}
 	}
 	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
 }

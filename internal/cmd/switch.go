@@ -23,6 +23,7 @@ const switchDesc = "Display the local branches visually and allows switching bet
 func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
+	addTypeFlag, readTypeFlag := flags.BranchType()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -30,15 +31,20 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd))
+			branchTypes, err := readTypeFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
 		},
 	}
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addTypeFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge) error {
+func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -54,7 +60,8 @@ func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingM
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}

@@ -14,3 +14,35 @@ case you forgot to commit them to the current branch.
 The `--merge` or `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
+
+The `--type` or `-t` flag reduces the list of branches to those that have the
+given type(s). For example, to display only observed branches:
+
+```
+git town switch --type=observed
+```
+
+Branch types can be shortened:
+
+```
+git town switch -t o
+```
+
+This can be compacted to:
+
+```
+git town switch -to
+```
+
+You can provide multiple branch types separated by `,`, `+`, `&`, or `|`, like
+this:
+
+```
+git town switch --type=observed+contribution
+```
+
+This can be shortened to:
+
+```
+git town switch -to+c
+```
