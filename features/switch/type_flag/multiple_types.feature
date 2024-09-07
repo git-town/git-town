@@ -12,17 +12,29 @@ Feature: switch branches using multiple types
       | perennial    | perennial    |        | local     |
       | prototype    | prototype    | main   | local     |
     And the current branch is "observed-2"
+
+  Scenario: long form
     When I run "git-town switch --type=observed+prototype" and enter into the dialogs:
       | KEYS       |
       | down enter |
+    Then it runs the commands
+      | BRANCH     | COMMAND                |
+      | observed-2 | git checkout prototype |
+    And the current branch is now "prototype"
 
-  Scenario: switching to another branch
+  Scenario: short form
+    When I run "git-town switch -to+pr" and enter into the dialogs:
+      | KEYS       |
+      | down enter |
     Then it runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
     And the current branch is now "prototype"
 
   Scenario: undo
+    Given I ran "git-town switch -to+pr" and enter into the dialogs:
+      | KEYS       |
+      | down enter |
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "prototype"
