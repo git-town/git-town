@@ -178,13 +178,7 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		var otherWorktree bool
-		if branchInfo, hasBranchInfo := allBranches.FindByLocalName(localBranch).Get(); hasBranchInfo {
-			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		} else {
-			otherWorktree = false
-		}
-		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: "", OtherWorktree: otherWorktree})
+		layoutBranches(&entries, localBranch, "", lineage, allBranches)
 	}
 	return entries
 }
