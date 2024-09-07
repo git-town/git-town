@@ -4,6 +4,8 @@
 
 Git Town 16.1 provides multiple killer features for power users.
 
+Big thanks to @FFdhorkin, @breml, @bryanlarsen, @buscape, @enigma, @heyitsaamir, @kevgo, @rbardini, @ruudk, @stephenwade, @tranhl, @zeronacer for contributing really good ideas, feedback, and code to 39 shipped PRs and 9 resolved issues!
+
 #### New Features
 
 - Enable Git Town's new automatic detection of feature and contribution or observed branches by setting the new `default-branch-type` and `feature-regex` configuration options.
