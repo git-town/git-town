@@ -3,7 +3,7 @@
 The _switch_ command displays the branch hierarchy on your machine and allows
 switching the current Git workspace to another local Git branch. Unlike
 [git-switch](https://git-scm.com/docs/git-switch), Git Town's switch command
-uses a more ergonomic visual UI and supports VIM motion commands.
+uses an ergonomic visual UI and supports VIM motion commands.
 
 `git town switch` does not allow switching to branches that are checked out in
 other worktrees and notifies you about uncommitted changes in your workspace in
@@ -28,7 +28,7 @@ Branch types can be shortened:
 git town switch -t o
 ```
 
-This can be compacted to:
+This can be further compacted to:
 
 ```
 git town switch -to
