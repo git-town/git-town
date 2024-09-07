@@ -10,6 +10,7 @@ import (
 
 func TestBranchType(t *testing.T) {
 	t.Parallel()
+
 	t.Run("ParseBranchType", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.BranchType]{
