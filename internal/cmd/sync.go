@@ -50,7 +50,7 @@ func syncCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAllFlag, readAllFlag := flags.All()
+	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	cmd := cobra.Command{
@@ -72,7 +72,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -163,7 +163,7 @@ type syncData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
+func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

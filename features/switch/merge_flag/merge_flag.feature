@@ -1,4 +1,4 @@
-Feature: switch branches
+Feature: switch branches using the "merge" strategy
 
   Scenario: switching to another branch while merging open changes
     Given a Git repo with origin

@@ -21,6 +21,7 @@ import (
 const switchDesc = "Display the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
+	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
 	addTypeFlag, readTypeFlag := flags.BranchType()
@@ -35,16 +36,17 @@ func switchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
+			return executeSwitch(readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
 		},
 	}
+	addAllFlag(&cmd)
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addTypeFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(all configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
