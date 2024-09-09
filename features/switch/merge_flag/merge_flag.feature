@@ -1,6 +1,6 @@
-Feature: switch branches
+Feature: switch branches using the "merge" flag
 
-  Scenario: switching to another branch while merging open changes
+  Scenario Outline: switching to another branch while merging open changes
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,10 +11,15 @@ Feature: switch branches
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
     And an uncommitted file
-    When I run "git-town switch -m" and enter into the dialogs:
+    When I run "git-town switch <FLAG>" and enter into the dialogs:
       | KEYS       |
       | down enter |
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | current | git checkout other -m |
     And the current branch is now "other"
+
+    Examples:
+      | FLAG    |
+      | --merge |
+      | -m      |
