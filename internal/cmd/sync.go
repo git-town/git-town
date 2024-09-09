@@ -90,7 +90,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 	}
 
 	// remove outdated lineage
-	if err = data.config.RemoveOutdatedConfiguration(data.allBranches.LocalBranches().Names()); err != nil {
+	if err = data.config.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
 		return err
 	}
 	if err = cleanupPerennialParentEntries(data.config.Config.Lineage, data.config.Config.PerennialBranches, data.config.GitConfig, repo.FinalMessages); err != nil {
@@ -100,7 +100,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:        data.allBranches,
+			BranchInfos:        data.branchInfos,
 			Config:             data.config.Config,
 			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside sync.BranchesProgram
 			InitialBranch:      data.initialBranch,
@@ -149,7 +149,7 @@ func executeSync(syncAllBranches configdomain.SyncAllBranches, syncStack configd
 }
 
 type syncData struct {
-	allBranches      gitdomain.BranchInfos
+	branchInfos      gitdomain.BranchInfos
 	branchesSnapshot gitdomain.BranchesSnapshot
 	branchesToSync   []configdomain.BranchToSync
 	config           config.ValidatedConfig
@@ -273,7 +273,7 @@ func determineSyncData(syncAllBranches configdomain.SyncAllBranches, syncStack c
 		return data, false, err
 	}
 	return syncData{
-		allBranches:      branchesSnapshot.Branches,
+		branchInfos:      branchesSnapshot.Branches,
 		branchesSnapshot: branchesSnapshot,
 		branchesToSync:   branchesToSync,
 		config:           validatedConfig,

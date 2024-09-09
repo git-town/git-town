@@ -96,8 +96,8 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 }
 
 type contributeData struct {
-	allBranches           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchInfos           gitdomain.BranchInfos
 	branchToCheckout      Option[gitdomain.LocalBranchName]
 	branchesToMark        configdomain.BranchesAndTypes
 }
@@ -136,8 +136,8 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	}
 	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return contributeData{
-		allBranches:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
+		branchInfos:           branchesSnapshot.Branches,
 		branchToCheckout:      branchToCheckout,
 		branchesToMark:        branchesToMakeContribution,
 	}, err
@@ -154,8 +154,8 @@ func validateContributeData(data contributeData) error {
 			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
