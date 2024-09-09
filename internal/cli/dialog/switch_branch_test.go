@@ -55,7 +55,6 @@ func TestSwitchBranch(t *testing.T) {
 				lineage := configdomain.NewLineage()
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
-				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -63,7 +62,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -79,7 +78,6 @@ func TestSwitchBranch(t *testing.T) {
 				lineage := configdomain.NewLineage()
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
-				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
@@ -87,7 +85,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -105,7 +103,6 @@ func TestSwitchBranch(t *testing.T) {
 			lineage := configdomain.NewLineage()
 			lineage.Add(alpha, main)
 			lineage.Add(beta, main)
-			localBranches := gitdomain.LocalBranchNames{alpha, beta, main, perennial1}
 			branchInfos := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -114,7 +111,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			branchTypes := []configdomain.BranchType{}
 			branchesAndTypes := configdomain.BranchesAndTypes{}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+			have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -132,7 +129,6 @@ func TestSwitchBranch(t *testing.T) {
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				lineage.Add(local, main)
-				localBranches := gitdomain.LocalBranchNames{local, main}
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(remote.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -140,7 +136,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "local", Indentation: "  ", OtherWorktree: false},
@@ -180,7 +176,6 @@ func TestSwitchBranch(t *testing.T) {
 				perennial := gitdomain.NewLocalBranchName("perennial")
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
-				localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -196,7 +191,7 @@ func TestSwitchBranch(t *testing.T) {
 					perennial: configdomain.BranchTypePerennialBranch,
 					main:      configdomain.BranchTypeMainBranch,
 				}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}, false)
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
 					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
@@ -211,7 +206,6 @@ func TestSwitchBranch(t *testing.T) {
 				perennial := gitdomain.NewLocalBranchName("perennial")
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
-				localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -230,7 +224,7 @@ func TestSwitchBranch(t *testing.T) {
 					perennial: configdomain.BranchTypePerennialBranch,
 					main:      configdomain.BranchTypeMainBranch,
 				}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
 					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
