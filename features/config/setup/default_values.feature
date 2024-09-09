@@ -31,6 +31,7 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
 
+  @this
   Scenario: result
     Then it runs no commands
     And the main branch is still not set
@@ -38,6 +39,8 @@ Feature: Accepting all default values leads to a working setup
     And local Git Town setting "create-prototype-branches" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
+    And local Git Town setting "default-branch-type" still doesn't exist
+    And local Git Town setting "feature-regex" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "push-new-branches" still doesn't exist
     And local Git Town setting "push-hook" still doesn't exist
@@ -133,15 +136,6 @@ Feature: Accepting all default values leads to a working setup
       #
       # If you are not sure, leave this empty.
       perennial-regex = ""
-
-      # Which type should Git Town assume for branches whose type isn't specified?
-      #
-      # When changing this, you should also set the "feature-regex" setting.
-      default-type = "feature"
-
-      # Branches matching this regular expression are treated as feature branches.
-      # This setting is effective only when used together with the "default-branch-type" setting.
-      feature-regex = ""
 
       [hosting]
 

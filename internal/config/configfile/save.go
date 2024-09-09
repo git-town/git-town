@@ -44,11 +44,7 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)) + "\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialRegexHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("perennial-regex = %q\n\n", config.PerennialRegex))
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.DefaultBranchTypeHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("default-type = %q\n\n", config.DefaultBranchType))
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.FeatureRegexHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("feature-regex = %q\n", config.FeatureRegex))
+	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.PerennialRegex))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
 	if platform, has := config.HostingPlatform.Get(); has {
