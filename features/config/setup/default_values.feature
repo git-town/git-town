@@ -31,7 +31,6 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
 
-  @this
   Scenario: result
     Then it runs no commands
     And the main branch is still not set
