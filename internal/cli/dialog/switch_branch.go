@@ -25,7 +25,7 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, defaultBranchType configdomain.DefaultBranchType, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, defaultBranchType configdomain.DefaultBranchType, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
