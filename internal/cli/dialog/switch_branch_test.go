@@ -45,55 +45,58 @@ func TestSwitchBranch(t *testing.T) {
 
 	t.Run("SwitchBranchEntries", func(t *testing.T) {
 		t.Parallel()
-		t.Run("all branches are in the current worktree", func(t *testing.T) {
+		t.Run("worktree", func(t *testing.T) {
 			t.Parallel()
-			alpha := gitdomain.NewLocalBranchName("alpha")
-			beta := gitdomain.NewLocalBranchName("beta")
-			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			lineage.Add(alpha, main)
-			lineage.Add(beta, main)
-			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-			}
-			branchTypes := []configdomain.BranchType{}
-			branchesAndTypes := configdomain.BranchesAndTypes{}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
-			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: "", OtherWorktree: false},
-				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
-				{Branch: "beta", Indentation: "  ", OtherWorktree: false},
-			}
-			must.Eq(t, want, have)
+			t.Run("all branches are in the current worktree", func(t *testing.T) {
+				t.Parallel()
+				alpha := gitdomain.NewLocalBranchName("alpha")
+				beta := gitdomain.NewLocalBranchName("beta")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				lineage.Add(alpha, main)
+				lineage.Add(beta, main)
+				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+					{Branch: "beta", Indentation: "  ", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("one of the feature branches is in other worktree", func(t *testing.T) {
+				t.Parallel()
+				alpha := gitdomain.NewLocalBranchName("alpha")
+				beta := gitdomain.NewLocalBranchName("beta")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				lineage.Add(alpha, main)
+				lineage.Add(beta, main)
+				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
+					{Branch: "beta", Indentation: "  ", OtherWorktree: true},
+				}
+				must.Eq(t, want, have)
+			})
 		})
-		t.Run("one of the feature branches is in other worktree", func(t *testing.T) {
-			t.Parallel()
-			alpha := gitdomain.NewLocalBranchName("alpha")
-			beta := gitdomain.NewLocalBranchName("beta")
-			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			lineage.Add(alpha, main)
-			lineage.Add(beta, main)
-			localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-			}
-			branchTypes := []configdomain.BranchType{}
-			branchesAndTypes := configdomain.BranchesAndTypes{}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
-			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: "", OtherWorktree: false},
-				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
-				{Branch: "beta", Indentation: "  ", OtherWorktree: true},
-			}
-			must.Eq(t, want, have)
-		})
-		t.Run("feature and perennial branches", func(t *testing.T) {
+		t.Run("perennial branches", func(t *testing.T) {
 			t.Parallel()
 			alpha := gitdomain.NewLocalBranchName("alpha")
 			beta := gitdomain.NewLocalBranchName("beta")
@@ -120,95 +123,124 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("parent exists remotely but is not checked out locally", func(t *testing.T) {
-			t.Parallel()
-			child := gitdomain.NewLocalBranchName("child")
-			grandchild := gitdomain.NewLocalBranchName("grandchild")
-			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			lineage.Add(child, main)
-			lineage.Add(grandchild, child)
-			localBranches := gitdomain.LocalBranchNames{grandchild, main}
-			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.BranchName().RemoteName()), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-				gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-			}
-			branchTypes := []configdomain.BranchType{}
-			branchesAndTypes := configdomain.BranchesAndTypes{}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
-			want := []dialog.SwitchBranchEntry{
-				{Branch: "main", Indentation: "", OtherWorktree: false},
-				{Branch: "child", Indentation: "  ", OtherWorktree: false},
-				{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
-			}
-			must.Eq(t, want, have)
+		t.Run("--all flag", func(t *testing.T) {
+			t.Run("disabled", func(t *testing.T) {
+				t.Parallel()
+				child := gitdomain.NewLocalBranchName("child")
+				grandchild := gitdomain.NewLocalBranchName("grandchild")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				lineage.Add(child, main)
+				lineage.Add(grandchild, child)
+				localBranches := gitdomain.LocalBranchNames{grandchild, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.BranchName().RemoteName()), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "child", Indentation: "  ", OtherWorktree: false},
+					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("enabled", func(t *testing.T) {
+				t.Parallel()
+				child := gitdomain.NewLocalBranchName("child")
+				grandchild := gitdomain.NewLocalBranchName("grandchild")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				lineage.Add(child, main)
+				lineage.Add(grandchild, child)
+				localBranches := gitdomain.LocalBranchNames{grandchild, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(grandchild.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, true)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "child", Indentation: "  ", OtherWorktree: false},
+					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
 		})
-		t.Run("filter by a single branch type", func(t *testing.T) {
+		t.Run("filter by branch type", func(t *testing.T) {
 			t.Parallel()
-			observed1 := gitdomain.NewLocalBranchName("observed-1")
-			observed2 := gitdomain.NewLocalBranchName("observed-2")
-			prototype := gitdomain.NewLocalBranchName("prototype")
-			perennial := gitdomain.NewLocalBranchName("perennial")
-			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
-			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-			}
-			branchTypes := []configdomain.BranchType{configdomain.BranchTypeObservedBranch}
-			branchesAndTypes := configdomain.BranchesAndTypes{
-				observed1: configdomain.BranchTypeObservedBranch,
-				observed2: configdomain.BranchTypeObservedBranch,
-				prototype: configdomain.BranchTypePrototypeBranch,
-				perennial: configdomain.BranchTypePerennialBranch,
-				main:      configdomain.BranchTypeMainBranch,
-			}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
-			want := []dialog.SwitchBranchEntry{
-				{Branch: "observed-1", Indentation: "", OtherWorktree: false},
-				{Branch: "observed-2", Indentation: "", OtherWorktree: false},
-			}
-			must.Eq(t, want, have)
-		})
-		t.Run("filter by a multiple branch types", func(t *testing.T) {
-			t.Parallel()
-			observed1 := gitdomain.NewLocalBranchName("observed-1")
-			observed2 := gitdomain.NewLocalBranchName("observed-2")
-			prototype := gitdomain.NewLocalBranchName("prototype")
-			perennial := gitdomain.NewLocalBranchName("perennial")
-			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
-			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-			}
-			branchTypes := []configdomain.BranchType{
-				configdomain.BranchTypeObservedBranch,
-				configdomain.BranchTypePerennialBranch,
-			}
-			branchesAndTypes := configdomain.BranchesAndTypes{
-				observed1: configdomain.BranchTypeObservedBranch,
-				observed2: configdomain.BranchTypeObservedBranch,
-				prototype: configdomain.BranchTypePrototypeBranch,
-				perennial: configdomain.BranchTypePerennialBranch,
-				main:      configdomain.BranchTypeMainBranch,
-			}
-			have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
-			want := []dialog.SwitchBranchEntry{
-				{Branch: "observed-1", Indentation: "", OtherWorktree: false},
-				{Branch: "observed-2", Indentation: "", OtherWorktree: false},
-				{Branch: "perennial", Indentation: "", OtherWorktree: false},
-			}
-			must.Eq(t, want, have)
+			t.Run("filter by a single branch type", func(t *testing.T) {
+				t.Parallel()
+				observed1 := gitdomain.NewLocalBranchName("observed-1")
+				observed2 := gitdomain.NewLocalBranchName("observed-2")
+				prototype := gitdomain.NewLocalBranchName("prototype")
+				perennial := gitdomain.NewLocalBranchName("perennial")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{configdomain.BranchTypeObservedBranch}
+				branchesAndTypes := configdomain.BranchesAndTypes{
+					observed1: configdomain.BranchTypeObservedBranch,
+					observed2: configdomain.BranchTypeObservedBranch,
+					prototype: configdomain.BranchTypePrototypeBranch,
+					perennial: configdomain.BranchTypePerennialBranch,
+					main:      configdomain.BranchTypeMainBranch,
+				}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("filter by a multiple branch types", func(t *testing.T) {
+				t.Parallel()
+				observed1 := gitdomain.NewLocalBranchName("observed-1")
+				observed2 := gitdomain.NewLocalBranchName("observed-2")
+				prototype := gitdomain.NewLocalBranchName("prototype")
+				perennial := gitdomain.NewLocalBranchName("perennial")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{
+					configdomain.BranchTypeObservedBranch,
+					configdomain.BranchTypePerennialBranch,
+				}
+				branchesAndTypes := configdomain.BranchesAndTypes{
+					observed1: configdomain.BranchTypeObservedBranch,
+					observed2: configdomain.BranchTypeObservedBranch,
+					prototype: configdomain.BranchTypePrototypeBranch,
+					perennial: configdomain.BranchTypePerennialBranch,
+					main:      configdomain.BranchTypeMainBranch,
+				}
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+					{Branch: "perennial", Indentation: "", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
 		})
 	})
 

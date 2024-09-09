@@ -15,5 +15,5 @@ Feature: switch to a new remote branch
       | down enter |
     Then it runs the commands
       | BRANCH  | COMMAND               |
-      | current | git checkout remote-1 |
+      | local-2 | git checkout remote-1 |
     And the current branch is now "remote-1"
