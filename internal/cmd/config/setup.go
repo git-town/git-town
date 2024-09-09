@@ -489,5 +489,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.RemoveSyncPerennialStrategy()
 	config.RemoveSyncUpstream()
 	config.RemoveSyncTags()
+	err = saveDefaultBranchType(config.Config.Value.DefaultBranchType, userInput.config.DefaultBranchType, config)
+	saveFeatureRegex(config.Config.Value.FeatureRegex, userInput.config.FeatureRegex, config)
 	return nil
 }
