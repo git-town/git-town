@@ -52,6 +52,8 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "sync-upstream" now doesn't exist
     And local Git Town setting "sync-tags" now doesn't exist
     And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git Town setting "feature-regex" is still "user-.*"
+    And local Git Town setting "default-branch-type" is still "observed"
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
     And local Git Town setting "create-prototype-branches" now doesn't exist
@@ -143,15 +145,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # If you are not sure, leave this empty.
       perennial-regex = "release-.*"
-
-      # Which type should Git Town assume for branches whose type isn't specified?
-      #
-      # When changing this, you should also set the "feature-regex" setting.
-      default-type = "observed"
-
-      # Branches matching this regular expression are treated as feature branches.
-      # This setting is effective only when used together with the "default-branch-type" setting.
-      feature-regex = "user-.*"
 
       [hosting]
 

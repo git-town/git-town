@@ -152,15 +152,6 @@ perennials = ["one", "two"]
 # If you are not sure, leave this empty.
 perennial-regex = ""
 
-# Which type should Git Town assume for branches whose type isn't specified?
-#
-# When changing this, you should also set the "feature-regex" setting.
-default-type = "feature"
-
-# Branches matching this regular expression are treated as feature branches.
-# This setting is effective only when used together with the "default-branch-type" setting.
-feature-regex = ""
-
 [hosting]
 
 # Knowing the type of code hosting platform allows Git Town
@@ -287,15 +278,6 @@ perennials = []
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
-
-# Which type should Git Town assume for branches whose type isn't specified?
-#
-# When changing this, you should also set the "feature-regex" setting.
-default-type = "feature"
-
-# Branches matching this regular expression are treated as feature branches.
-# This setting is effective only when used together with the "default-branch-type" setting.
-feature-regex = ""
 
 [hosting]
 
