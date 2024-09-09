@@ -149,6 +149,7 @@ func TestSwitchBranch(t *testing.T) {
 				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "child", Indentation: "  ", OtherWorktree: false},
 					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
 					{Branch: "local", Indentation: "  ", OtherWorktree: false},
 				}
