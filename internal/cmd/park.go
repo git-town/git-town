@@ -89,7 +89,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 }
 
 type parkData struct {
-	allBranches           gitdomain.BranchInfos
+	branchInfos           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	branchToCheckout      Option[gitdomain.LocalBranchName]
 	branchesToPark        configdomain.BranchesAndTypes
@@ -125,7 +125,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	}
 	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return parkData{
-		allBranches:           branchesSnapshot.Branches,
+		branchInfos:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
 		branchToCheckout:      branchToCheckout,
 		branchesToPark:        branchesToPark,
@@ -143,8 +143,8 @@ func validateParkData(data parkData) error {
 			return fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

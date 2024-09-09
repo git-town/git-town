@@ -118,7 +118,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 }
 
 type proposeData struct {
-	allBranches         gitdomain.BranchInfos
+	branchInfos         gitdomain.BranchInfos
 	branchToPropose     gitdomain.LocalBranchName
 	branchTypeToPropose configdomain.BranchType
 	branchesSnapshot    gitdomain.BranchesSnapshot
@@ -247,7 +247,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	return proposeData{
-		allBranches:         branchesSnapshot.Branches,
+		branchInfos:         branchesSnapshot.Branches,
 		branchToPropose:     branchToPropose,
 		branchTypeToPropose: branchTypeToPropose,
 		branchesSnapshot:    branchesSnapshot,
@@ -271,7 +271,7 @@ func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToSync := range data.branchesToSync {
 		sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
-			BranchInfos:        data.allBranches,
+			BranchInfos:        data.branchInfos,
 			Config:             data.config.Config,
 			FirstCommitMessage: branchToSync.FirstCommitMessage,
 			InitialBranch:      data.initialBranch,

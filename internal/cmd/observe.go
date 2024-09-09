@@ -96,7 +96,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 }
 
 type observeData struct {
-	allBranches       gitdomain.BranchInfos
+	branchInfos       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
 	branchesToObserve configdomain.BranchesAndTypes
 	checkout          Option[gitdomain.LocalBranchName]
@@ -136,7 +136,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}
 	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return observeData{
-		allBranches:       branchesSnapshot.Branches,
+		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
 		checkout:          branchToCheckout,
@@ -154,8 +154,8 @@ func validateObserveData(data observeData) error {
 			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := data.allBranches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.allBranches.HasMatchingTrackingBranchFor(branchName)
+		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

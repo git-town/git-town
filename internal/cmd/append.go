@@ -102,7 +102,7 @@ func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomai
 }
 
 type appendFeatureData struct {
-	allBranches               gitdomain.BranchInfos
+	branchInfos               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            []configdomain.BranchToSync
 	config                    config.ValidatedConfig
@@ -182,7 +182,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
 	return appendFeatureData{
-		allBranches:               branchesSnapshot.Branches,
+		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		config:                    validatedConfig,
@@ -204,7 +204,7 @@ func appendProgram(data appendFeatureData) program.Program {
 	if !data.hasOpenChanges {
 		for _, branchToSync := range data.branchesToSync {
 			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
-				BranchInfos:        data.allBranches,
+				BranchInfos:        data.branchInfos,
 				Config:             data.config.Config,
 				FirstCommitMessage: branchToSync.FirstCommitMessage,
 				InitialBranch:      data.initialBranch,
