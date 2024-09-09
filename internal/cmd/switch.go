@@ -58,7 +58,7 @@ func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Ve
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(repo, allBranches, verbose)
+	data, exit, err := determineSwitchData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -92,7 +92,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo execute.OpenRepoResult, allBranches configdomain.AllBranches, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
+func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
