@@ -2,9 +2,14 @@
 
 ## 16.1.1 (2024-09-09)
 
+Git Town 16.1.1 ships important bug fixes for the new features introduced in v16.1.
+
+Thanks to @kevgo, @rbardini, @stephenwade!
+
 #### Bug Fixes
 
 - The setup assistant now always stores `default-branch-type` and `feature-regex` in the Git-based configuration and never in the configuration file because these settings are usually specific to each developer. You can still manually add them to the config file if you want ([#3961](https://github.com/git-town/git-town/pull/3961))
+- Fixes various documentation mistakes ([#3953](https://github.com/git-town/git-town/pull/3953)).
 
 ## 16.1.0 (2024-09-07)
 
