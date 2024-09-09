@@ -56,14 +56,14 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
 				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-				branchInfos := gitdomain.BranchInfos{
+				allBranches := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -80,14 +80,14 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
 				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-				branchInfos := gitdomain.BranchInfos{
+				allBranches := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -124,6 +124,7 @@ func TestSwitchBranch(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 		t.Run("--all flag", func(t *testing.T) {
+			t.Parallel()
 			t.Run("disabled", func(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
@@ -133,7 +134,7 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(child, main)
 				lineage.Add(grandchild, child)
 				localBranches := gitdomain.LocalBranchNames{grandchild, main}
-				branchInfos := gitdomain.BranchInfos{
+				allBranches := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.BranchName().RemoteName()), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -175,7 +176,7 @@ func TestSwitchBranch(t *testing.T) {
 		})
 		t.Run("filter by branch type", func(t *testing.T) {
 			t.Parallel()
-			t.Run("filter by a single branch type", func(t *testing.T) {
+			t.Run("single branch type", func(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
@@ -184,7 +185,7 @@ func TestSwitchBranch(t *testing.T) {
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				localBranches := gitdomain.LocalBranchNames{observed1, observed2, prototype, perennial, main}
-				branchInfos := gitdomain.BranchInfos{
+				allBranches := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -206,7 +207,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				must.Eq(t, want, have)
 			})
-			t.Run("filter by a multiple branch types", func(t *testing.T) {
+			t.Run("multiple branch types", func(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
