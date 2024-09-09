@@ -9,18 +9,25 @@ This guide is for maintainers who make releases of Git Town.
   - verify that all newly added Git Town commands are not hidden
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `16.1.0`
+    - triple-digits: `16.1.1`
     - double-digits: `16.1`
-    - don't change existing version numbers in CHANGELOG.md
+    - its best to do this manually so that you don't change unrelated version
+      numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
     - update `github.com/git-town/git-town/v16/` everywhere in this repo
     - update `github.com/git-town/git-town/v16` (without trailing slash)
 - ship the branch
 - `git checkout public && git merge main && git push && git checkout main && git branch -d public`
-- wait for the website to deploy: https://app.netlify.com/sites/git-town/deploys
-- update the changelog with links to the website and ship
-- `git tag v16.1.0 && git push --tags`
-- open the new release in the browser
+- wait for Netlify to publish the website:
+  https://app.netlify.com/sites/git-town/deploys
+- in a new branch:
+  - update the changelog with links to the website
+  - ship the branch
+- `git tag v16.1.1 && git push --tags`
+- wait for CI to finish the release:
+  https://github.com/git-town/git-town/actions
+- edit the new unpublished release:
+  https://github.com/git-town/git-town/releases
 - copy the changelog into the release notes
 - publish the release
 
