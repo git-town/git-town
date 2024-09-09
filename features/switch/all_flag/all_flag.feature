@@ -10,6 +10,7 @@ Feature: switch to a new remote branch
       | remote-1 | feature | main   | origin        |
     And the current branch is "local-1"
     And an uncommitted file
+    And inspect the repo
     When I run "git-town switch --all" and enter into the dialogs:
       | KEYS     |
       | up enter |

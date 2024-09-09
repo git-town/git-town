@@ -129,6 +129,7 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
+				other := gitdomain.NewLocalBranchName("other")
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				lineage.Add(child, main)
