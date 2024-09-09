@@ -13,7 +13,6 @@ Feature: switch branches using multiple types
       | prototype    | prototype    | main   | local     |
     And the current branch is "observed-2"
 
-  @debug @this
   Scenario: long form
     When I run "git-town switch --type=observed+prototype" and enter into the dialogs:
       | KEYS       |
