@@ -17,7 +17,8 @@ This guide is for maintainers who make releases of Git Town.
     - update `github.com/git-town/git-town/v16` (without trailing slash)
 - ship the branch
 - `git checkout public && git merge main && git push && git checkout main && git branch -d public`
-- wait for the website to deploy: https://app.netlify.com/sites/git-town/deploys
+- wait for CI to finish the release:
+  https://github.com/git-town/git-town/actions
 - update the changelog with links to the website and ship
 - `git tag v16.1.0 && git push --tags`
 - open the new release in the browser
