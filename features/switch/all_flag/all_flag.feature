@@ -1,7 +1,6 @@
 Feature: switch to a new remote branch
 
-  @this
-  Scenario: switching to another branch while merging open changes
+  Scenario Outline:
     Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
@@ -11,10 +10,15 @@ Feature: switch to a new remote branch
     And the current branch is "local-2"
     And an uncommitted file
     And I ran "git fetch"
-    When I run "git-town switch --all" and enter into the dialogs:
+    When I run "git-town switch <FLAG>" and enter into the dialogs:
       | KEYS            |
       | down down enter |
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | local-2 | git checkout remote-1 |
     And the current branch is now "remote-1"
+
+    Examples:
+      | FLAG  |
+      | --all |
+      | -a    |
