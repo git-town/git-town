@@ -1,4 +1,3 @@
-@this
 Feature: switch branches using the "merge" flag
 
   Scenario Outline: switching to another branch while merging open changes
