@@ -96,8 +96,8 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 }
 
 type contributeData struct {
-	branchInfos           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchInfos           gitdomain.BranchInfos
 	branchToCheckout      Option[gitdomain.LocalBranchName]
 	branchesToMark        configdomain.BranchesAndTypes
 }
@@ -136,8 +136,8 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	}
 	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return contributeData{
-		branchInfos:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
+		branchInfos:           branchesSnapshot.Branches,
 		branchToCheckout:      branchToCheckout,
 		branchesToMark:        branchesToMakeContribution,
 	}, err

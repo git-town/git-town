@@ -89,8 +89,8 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 }
 
 type parkData struct {
-	branchInfos           gitdomain.BranchInfos
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchInfos           gitdomain.BranchInfos
 	branchToCheckout      Option[gitdomain.LocalBranchName]
 	branchesToPark        configdomain.BranchesAndTypes
 }
@@ -125,8 +125,8 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	}
 	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return parkData{
-		branchInfos:           branchesSnapshot.Branches,
 		beginBranchesSnapshot: branchesSnapshot,
+		branchInfos:           branchesSnapshot.Branches,
 		branchToCheckout:      branchToCheckout,
 		branchesToPark:        branchesToPark,
 	}, err
