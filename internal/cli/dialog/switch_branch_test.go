@@ -122,7 +122,27 @@ func TestSwitchBranch(t *testing.T) {
 		})
 		t.Run("remote branches", func(t *testing.T) {
 			t.Parallel()
-			t.Run("parent exists remotely but is not checked out locally", func(t *testing.T) {
+			t.Run("does not display remote branches", func(t *testing.T) {
+				t.Parallel()
+				local := gitdomain.NewLocalBranchName("local")
+				remote := gitdomain.NewRemoteBranchName("origin/remote")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{RemoteName: Some(remote), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "local", Indentation: "", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("does display parent branches of local branches even if they are remote only", func(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
