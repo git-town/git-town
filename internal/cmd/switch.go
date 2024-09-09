@@ -63,7 +63,7 @@ func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Ve
 		return err
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
-	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(data.branchNames, branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, allBranches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
