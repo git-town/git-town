@@ -56,14 +56,14 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
 				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-				allBranches := gitdomain.BranchInfos{
+				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches, false)
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -80,14 +80,14 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(alpha, main)
 				lineage.Add(beta, main)
 				localBranches := gitdomain.LocalBranchNames{alpha, beta, main}
-				allBranches := gitdomain.BranchInfos{
+				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, allBranches, false)
+				have := dialog.SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
