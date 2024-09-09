@@ -46,7 +46,7 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(all configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -58,7 +58,7 @@ func executeSwitch(all configdomain.AllBranches, verbose configdomain.Verbose, m
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(repo, verbose)
+	data, exit, err := determineSwitchData(repo, allBranches, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -92,7 +92,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
+func determineSwitchData(repo execute.OpenRepoResult, allBranches configdomain.AllBranches, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -123,7 +123,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(localBranches)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
