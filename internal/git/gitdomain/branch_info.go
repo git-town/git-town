@@ -88,6 +88,17 @@ func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha 
 	return isOmni, branchName, localSHA
 }
 
+// provides the name of this branch as a local branch, independent of whether this branch is local or not
+func (self BranchInfo) LocalBranchName() LocalBranchName {
+	if localName, hasLocalName := self.LocalName.Get(); hasLocalName {
+		return localName
+	}
+	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
+		return remoteName.LocalBranchName()
+	}
+	panic("this BranchInfo has neither a local nor remote branch")
+}
+
 func (self BranchInfo) String() string {
 	return fmt.Sprintf("BranchInfo local: %s (%s) remote: %s (%s) %s", self.LocalName, self.LocalSHA, self.RemoteName, self.RemoteSHA, self.SyncStatus)
 }
