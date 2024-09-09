@@ -249,7 +249,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, false, err
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
-		allBranches:               branchesSnapshot.Branches,
+		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		config:                    validatedConfig,

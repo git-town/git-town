@@ -87,7 +87,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 }
 
 type prototypeData struct {
-	allBranches         gitdomain.BranchInfos
+	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPrototype configdomain.BranchesAndTypes
 	checkout            Option[gitdomain.LocalBranchName]
@@ -123,7 +123,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	}
 	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
 	return prototypeData{
-		allBranches:         branchesSnapshot.Branches,
+		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPrototype: branchesToPrototype,
 		checkout:            branchToCheckout,
@@ -132,7 +132,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 
 func validatePrototypeData(data prototypeData) error {
 	for branchName, branchType := range data.branchesToPrototype {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
+		if !data.branchInfos.HasLocalBranch(branchName) && !data.branchInfos.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

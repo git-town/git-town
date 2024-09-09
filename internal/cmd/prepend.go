@@ -103,7 +103,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 }
 
 type prependData struct {
-	allBranches         gitdomain.BranchInfos
+	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
@@ -190,7 +190,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return prependData{
-		allBranches:         branchesSnapshot.Branches,
+		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
@@ -213,7 +213,7 @@ func prependProgram(data prependData) program.Program {
 	if !data.hasOpenChanges {
 		for _, branchToSync := range data.branchesToSync {
 			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
-				BranchInfos:        data.allBranches,
+				BranchInfos:        data.branchInfos,
 				Config:             data.config.Config,
 				FirstCommitMessage: branchToSync.FirstCommitMessage,
 				InitialBranch:      data.initialBranch,
