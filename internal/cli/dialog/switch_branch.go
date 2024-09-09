@@ -26,7 +26,7 @@ func (sbe SwitchBranchEntry) String() string {
 }
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	entries := SwitchBranchEntries(localBranches, branchTypes, branchesAndTypes, lineage, branchInfos)
+	entries := SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos:   cursor,
@@ -162,16 +162,17 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos) []SwitchBranchEntry {
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage) []SwitchBranchEntry {
 	entries := make([]SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(&entries, root, "", lineage, branchInfos, branchTypes, branchesAndTypes)
 	}
-	// add missing local branches
+	// add branches not in the lineage
 	branchesInLineage := lineage.Branches()
-	for _, localBranch := range localBranches {
+	for _, branchInfo := range branchInfos {
+		localBranch := branchInfo.LocalBranchName()
 		if slices.Contains(roots, localBranch) {
 			continue
 		}
