@@ -8,11 +8,11 @@ Feature: switch to a new remote branch
       | local-1  | feature | main   | local, origin |
       | local-2  | feature | main   | local, origin |
       | remote-1 | feature | main   | origin        |
-    And the current branch is "local-2"
+    And the current branch is "local-1"
     And an uncommitted file
     When I run "git-town switch --all" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | KEYS     |
+      | up enter |
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | local-2 | git checkout remote-1 |
