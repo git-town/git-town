@@ -25,8 +25,8 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	entries := SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage)
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, defaultBranchType configdomain.DefaultBranchType, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+	entries := SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos:   cursor,
@@ -162,12 +162,12 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage) []SwitchBranchEntry {
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType) []SwitchBranchEntry {
 	entries := make([]SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, branchInfos, branchTypes, branchesAndTypes)
+		layoutBranches(&entries, root, "", lineage, branchInfos, branchTypes, branchesAndTypes, defaultBranchType)
 	}
 	// add branches not in the lineage
 	branchesInLineage := lineage.Branches()
@@ -179,14 +179,14 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		layoutBranches(&entries, localBranch, "", lineage, branchInfos, branchTypes, branchesAndTypes)
+		layoutBranches(&entries, localBranch, "", lineage, branchInfos, branchTypes, branchesAndTypes, defaultBranchType)
 	}
 	return entries
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes) {
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType) {
 	if branchInfos.HasLocalBranch(branch) || branchInfos.HasMatchingTrackingBranchFor(branch) {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
@@ -196,14 +196,14 @@ func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchNam
 		}
 		branchType, hasBranchType := branchesAndTypes[branch]
 		if !hasBranchType && len(branchTypes) > 0 {
-			panic("cannot determine branch type for branch: " + branch)
+			branchType = defaultBranchType.BranchType
 		}
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
 			*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 		}
 	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, branchTypes, branchesAndTypes)
+		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, branchTypes, branchesAndTypes, defaultBranchType)
 	}
 }
 
