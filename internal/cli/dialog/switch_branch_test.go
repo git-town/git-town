@@ -166,6 +166,7 @@ func TestSwitchBranch(t *testing.T) {
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "local", Indentation: "  ", OtherWorktree: false},
+					{Branch: "remote", Indentation: "", OtherWorktree: false},
 				}
 				must.Eq(t, want, have)
 			})
