@@ -11,7 +11,6 @@ Feature: switch to a new remote branch
     And the current branch is "local-2"
     And an uncommitted file
     And I ran "git fetch"
-    # And inspect the repo
     When I run "git-town switch --all" and enter into the dialogs:
       | KEYS            |
       | down down enter |
