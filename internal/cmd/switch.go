@@ -21,6 +21,7 @@ import (
 const switchDesc = "Display the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
+	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
 	addTypeFlag, readTypeFlag := flags.BranchType()
@@ -35,16 +36,17 @@ func switchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSwitch(readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
+			return executeSwitch(readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
 		},
 	}
+	addAllFlag(&cmd)
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addTypeFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -62,7 +64,7 @@ func executeSwitch(verbose configdomain.Verbose, merge configdomain.SwitchUsingM
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
-	branchToCheckout, exit, err := dialog.SwitchBranch(branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, defaultBranchType, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, defaultBranchType, allBranches, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
@@ -122,7 +124,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(localBranches)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

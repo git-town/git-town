@@ -8,19 +8,19 @@ import (
 const allLong = "all"
 
 // type-safe access to the CLI arguments of type configdomain.SyncAllBranches
-func All() (AddFunc, ReadAllFlagFunc) {
+func All(desc string) (AddFunc, ReadAllFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(allLong, "a", false, "sync all local branches")
+		cmd.Flags().BoolP(allLong, "a", false, desc)
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.SyncAllBranches {
+	readFlag := func(cmd *cobra.Command) configdomain.AllBranches {
 		value, err := cmd.Flags().GetBool(allLong)
 		if err != nil {
 			panic(err)
 		}
-		return configdomain.SyncAllBranches(value)
+		return configdomain.AllBranches(value)
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadAllFlagFunc func(*cobra.Command) configdomain.SyncAllBranches
+type ReadAllFlagFunc func(*cobra.Command) configdomain.AllBranches

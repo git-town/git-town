@@ -15,6 +15,8 @@ The `--merge` or `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 
+The `--all` or `-a` flag also displays both local and remote branches.
+
 The `--type` or `-t` flag reduces the list of branches to those that have the
 given type(s). For example, to display only observed branches:
 
