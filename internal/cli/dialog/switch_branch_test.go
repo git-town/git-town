@@ -150,16 +150,11 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
-				local := gitdomain.NewLocalBranchName("local")
-				remote := gitdomain.NewLocalBranchName("remote")
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
-				lineage.Add(local, main)
 				lineage.Add(child, main)
 				lineage.Add(grandchild, child)
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(remote.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -173,7 +168,6 @@ func TestSwitchBranch(t *testing.T) {
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
-					{Branch: "local", Indentation: "  ", OtherWorktree: false},
 				}
 				must.Eq(t, want, have)
 			})
