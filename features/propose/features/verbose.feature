@@ -24,7 +24,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
-      | <none>  | frontend | looking for proposal online ... ok                                 |
+      | <none>  | frontend | Looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%h                                  |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |

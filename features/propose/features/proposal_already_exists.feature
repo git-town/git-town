@@ -16,7 +16,7 @@ Feature: open the page of an already existing proposal
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
-      | <none>  | looking for proposal online ... ok                 |
+      | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
     And the current branch is still "feature"
     And the initial branches and lineage exist

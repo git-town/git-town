@@ -21,7 +21,7 @@ Feature: proposing using the "compress" sync strategy
     Then it runs the commands
       | BRANCH   | COMMAND                                                             |
       | existing | git fetch --prune --tags                                            |
-      | <none>   | looking for proposal online ... ok                                  |
+      | <none>   | Looking for proposal online ... ok                                  |
       | existing | git checkout main                                                   |
       | main     | git rebase origin/main                                              |
       |          | git checkout existing                                               |

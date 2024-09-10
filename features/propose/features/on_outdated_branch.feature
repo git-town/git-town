@@ -26,7 +26,7 @@ Feature: sync before proposing
     Then it runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      | <none> | looking for proposal online ... ok                                        |
+      | <none> | Looking for proposal online ... ok                                        |
       | child  | git add -A                                                                |
       |        | git stash                                                                 |
       |        | git checkout main                                                         |
