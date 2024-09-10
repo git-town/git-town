@@ -1,14 +1,12 @@
 package dialog
 
 import (
-	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -25,9 +23,7 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	entries := SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, allBranches)
-	cursor := SwitchBranchCursorPos(entries, initialBranch)
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos:   cursor,
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
@@ -149,62 +145,6 @@ func (self SwitchModel) View() string {
 	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
 	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
-}
-
-// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
-func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
-	for e, entry := range entries {
-		if entry.Branch == initialBranch {
-			return e
-		}
-	}
-	return 0
-}
-
-// SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches) []SwitchBranchEntry {
-	entries := make([]SwitchBranchEntry, 0, lineage.Len())
-	roots := lineage.Roots()
-	// add all entries from the lineage
-	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
-	}
-	// add branches not in the lineage
-	branchesInLineage := lineage.Branches()
-	for _, branchInfo := range branchInfos {
-		localBranch := branchInfo.LocalBranchName()
-		if slices.Contains(roots, localBranch) {
-			continue
-		}
-		if slices.Contains(branchesInLineage, localBranch) {
-			continue
-		}
-		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
-	}
-	return entries
-}
-
-// layoutBranches adds entries for the given branch and its children to the given entry list.
-// The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType) {
-	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
-		var otherWorktree bool
-		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
-			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		} else {
-			otherWorktree = false
-		}
-		branchType, hasBranchType := branchesAndTypes[branch]
-		if !hasBranchType && len(branchTypes) > 0 {
-			branchType = defaultBranchType.BranchType
-		}
-		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
-			*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
-		}
-	}
-	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
-	}
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
