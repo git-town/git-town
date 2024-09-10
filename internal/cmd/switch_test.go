@@ -13,6 +13,7 @@ import (
 
 func TestSwitchBranch(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SwitchBranchCursorPos", func(t *testing.T) {
 		t.Parallel()
 		t.Run("initialBranch is in the entry list", func(t *testing.T) {
