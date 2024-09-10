@@ -9,7 +9,7 @@ import (
 // Individual implementations exist to talk to specific hosting platforms.
 type Connector interface {
 	// CanMakeAPICalls indicates whether this connector instance is configured to make API calls.
-	// Typically connectors need API keys for this.
+	// Most connectors need to have an API key to do so.
 	CanMakeAPICalls() bool
 
 	// DefaultProposalMessage provides the text that the form for creating new proposals
