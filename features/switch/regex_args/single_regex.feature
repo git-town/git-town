@@ -1,6 +1,5 @@
 Feature: switch to branches described by a regex
 
-  @this
   Scenario:
     Given a Git repo with origin
     And the branches
@@ -16,4 +15,4 @@ Feature: switch to branches described by a regex
     Then it runs the commands
       | BRANCH | COMMAND            |
       | aloha  | git checkout alpha |
-    And the current branch is now "beta"
+    And the current branch is now "alpha"
