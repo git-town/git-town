@@ -24,7 +24,7 @@ type Connector struct {
 }
 
 func (self Connector) CanMakeAPICalls() bool {
-	return self.Data.APIToken.IsSome()
+	return self.Data.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
 }
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {

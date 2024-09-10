@@ -25,7 +25,7 @@ type Connector struct {
 }
 
 func (self Connector) CanMakeAPICalls() bool {
-	return self.APIToken.IsSome()
+	return self.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
 }
 
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
