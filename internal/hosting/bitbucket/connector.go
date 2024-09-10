@@ -35,6 +35,10 @@ type NewConnectorArgs struct {
 	RemoteURL       giturl.Parts
 }
 
+func (self Connector) CanMakeAPICalls() bool {
+	return false
+}
+
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
