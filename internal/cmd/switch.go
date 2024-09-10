@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/regexes"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -181,7 +182,7 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 	// add branches not in the lineage
 	branchesInLineage := lineage.Branches()
@@ -193,16 +194,14 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
-	}
-	if len(regexes) > 0 {
+		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 	return entries
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType) {
+func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType, regexes regexes.Regexes) {
 	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
@@ -214,11 +213,16 @@ func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBr
 		if !hasBranchType && len(branchTypes) > 0 {
 			branchType = defaultBranchType.BranchType
 		}
+		var hasCorrectBranchType bool
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
+			hasCorrectBranchType = true
+		}
+		matchesRegex := regexes.Matches(branch.String())
+		if hasCorrectBranchType && matchesRegex {
 			*result = append(*result, dialog.SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 		}
 	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 }

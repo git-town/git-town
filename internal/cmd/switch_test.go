@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cmd"
+	"github.com/git-town/git-town/v16/internal/cmd/regexes"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -274,6 +275,43 @@ func TestSwitchBranch(t *testing.T) {
 					{Branch: "perennial", Indentation: "", OtherWorktree: false},
 				}
 				must.Eq(t, want, have)
+			})
+		})
+
+		t.Run("filter by regexes", func(t *testing.T) {
+			t.Parallel()
+			t.Run("no regex", func(t *testing.T) {
+				t.Parallel()
+				observed1 := gitdomain.NewLocalBranchName("observed-1")
+				observed2 := gitdomain.NewLocalBranchName("observed-2")
+				prototype := gitdomain.NewLocalBranchName("prototype")
+				perennial := gitdomain.NewLocalBranchName("perennial")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				regexes, err := regexes.NewRegexes([]string{"observed-"})
+				must.NoError(t, err)
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("single regex", func(t *testing.T) {
+				t.Parallel()
+			})
+			t.Run("multiple regexes", func(t *testing.T) {
+				t.Parallel()
 			})
 		})
 	})
