@@ -20,7 +20,7 @@ Feature: don't sync tags while proposing
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --no-tags                                        |
-      | <none>  | looking for proposal online ... ok                                 |
+      | <none>  | Looking for proposal online ... ok                                 |
       | feature | git checkout main                                                  |
       | main    | git rebase origin/main                                             |
       |         | git checkout feature                                               |

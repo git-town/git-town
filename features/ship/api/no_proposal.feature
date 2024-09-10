@@ -18,7 +18,7 @@ Feature: cannot ship a branch without proposal via API
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | <none>  | looking for proposal online ... ok |
+      | <none>  | Looking for proposal online ... ok |
     And it prints the error:
       """
       cannot ship branch "feature" via API because it has no proposal

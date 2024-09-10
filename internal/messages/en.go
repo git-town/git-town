@@ -4,7 +4,7 @@ const (
 	UndoContinueGuidance              = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	AliasedCommands                   = "Aliased commands: %s\n"
 	ArgumentUnknown                   = "unknown argument: %q"
-	APIProposalLookupStart            = "looking for proposal online ... "
+	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal target online ..."
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"

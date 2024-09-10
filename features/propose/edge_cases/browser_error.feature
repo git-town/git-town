@@ -16,7 +16,7 @@ Feature: print the URL when the browser crashes
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
-      | <none>  | looking for proposal online ... ok                 |
+      | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
     And it prints:
       """

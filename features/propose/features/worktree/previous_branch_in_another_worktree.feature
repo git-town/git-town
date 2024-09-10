@@ -18,7 +18,7 @@ Feature: prepend with the previous branch checked out in another worktree
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       | current | frontend | git fetch --prune --tags                                           |
-      | <none>  | frontend | looking for proposal online ... ok                                 |
+      | <none>  | frontend | Looking for proposal online ... ok                                 |
       | current | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
       |         | frontend | git checkout current                                               |
