@@ -66,7 +66,7 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
-	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches)
+	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches, data.regexes)
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
@@ -176,7 +176,7 @@ func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch git
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches) []dialog.SwitchBranchEntry {
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) []dialog.SwitchBranchEntry {
 	entries := make([]dialog.SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
@@ -194,6 +194,8 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 			continue
 		}
 		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+	}
+	if len(regexes) > 0 {
 	}
 	return entries
 }

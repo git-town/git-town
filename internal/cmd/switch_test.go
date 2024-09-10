@@ -1,6 +1,7 @@
 package cmd_test
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
@@ -63,7 +64,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -87,7 +89,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -115,7 +118,8 @@ func TestSwitchBranch(t *testing.T) {
 			branchTypes := []configdomain.BranchType{}
 			branchesAndTypes := configdomain.BranchesAndTypes{}
 			defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-			have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+			regexes := []*regexp.Regexp{}
+			have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 			want := []dialog.SwitchBranchEntry{
 				{Branch: "main", Indentation: "", OtherWorktree: false},
 				{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
@@ -141,7 +145,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "local", Indentation: "", OtherWorktree: false},
@@ -166,7 +171,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
@@ -188,7 +194,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, true)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, true, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "local", Indentation: "  ", OtherWorktree: false},
@@ -224,7 +231,8 @@ func TestSwitchBranch(t *testing.T) {
 					main:      configdomain.BranchTypeMainBranch,
 				}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
 					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
@@ -258,7 +266,8 @@ func TestSwitchBranch(t *testing.T) {
 					main:      configdomain.BranchTypeMainBranch,
 				}
 				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
-				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
+				regexes := []*regexp.Regexp{}
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
 					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
