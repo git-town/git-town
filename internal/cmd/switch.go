@@ -162,6 +162,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
 		lineage:            validatedConfig.Config.Lineage,
+		regexes:            regexes,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, false, err
 }

@@ -4,15 +4,15 @@ Feature: switch to branches described by several regexes
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
-      | alpha   | feature | main   | local     |
       | aloha   | feature | main   | local     |
+      | alpha   | feature | main   | local     |
       | another | feature | main   | local     |
       | beta    | feature | main   | local     |
-    And the current branch is "aloha"
+    And the current branch is "alpha"
     When I run "git-town switch ^al main" and enter into the dialogs:
-      | KEYS     |
-      | up enter |
+      | KEYS       |
+      | down enter |
     Then it runs the commands
       | BRANCH | COMMAND           |
-      | aloha  | git checkout main |
+      | alpha  | git checkout main |
     And the current branch is now "main"
