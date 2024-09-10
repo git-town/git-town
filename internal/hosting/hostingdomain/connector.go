@@ -8,7 +8,7 @@ import (
 // Connector describes the activities that Git Town can perform on code hosting platforms.
 // Individual implementations exist to talk to specific hosting platforms.
 type Connector interface {
-	// CanMakeAPICalls indicates whether this connector instance can make API calls.
+	// CanMakeAPICalls indicates whether this connector instance is configured to make API calls.
 	// Typically connectors need API keys for this.
 	CanMakeAPICalls() bool
 
