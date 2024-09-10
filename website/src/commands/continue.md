@@ -1,4 +1,4 @@
-# git continue
+# git town continue
 
 When a Git Town command encounters a problem that it cannot resolve, for example
 a merge conflict, it stops to give the user an opportunity to resolve the issue.

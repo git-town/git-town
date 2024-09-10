@@ -1,4 +1,4 @@
-# git propose
+# git town propose
 
 The _propose_ command helps create a new pull request (also known as merge
 request) for the current feature branch. It opens your code hosting platform's

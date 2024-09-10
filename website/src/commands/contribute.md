@@ -1,4 +1,4 @@
-# git contribute
+# git town contribute
 
 The _contribute_ command makes some of your branches
 [contribution](../branch-types.md#contribution-branches) branches.

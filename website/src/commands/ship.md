@@ -1,4 +1,4 @@
-# git ship
+# git town ship
 
 _Notice: Most people don't need to use the _ship_ command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code

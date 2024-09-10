@@ -1,4 +1,4 @@
-# git sync
+# git town sync
 
 The _sync_ command ("synchronize this branch") updates the local Git workspace
 with what happened in the rest of the repository.

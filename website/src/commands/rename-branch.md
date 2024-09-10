@@ -1,4 +1,4 @@
-# git rename-branch
+# git town rename-branch
 
 The _rename-branch_ command changes the name of the current branch in the local
 and origin repository. It aborts if the new branch name already exists or the
