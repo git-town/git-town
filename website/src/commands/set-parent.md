@@ -11,24 +11,21 @@ Let's say we have this branch hierarchy:
 
 ```
 main
- |
- + feature-1
-   |
-   + feature-2
+ \
+  feature-1
+   \
+*   feature-2
 ```
 
-"feature-2" is a child branch of "feature-1". Let's make "feature-2" a child of
-"main":
-
-- run `git town set-parent`
-- select `main` in the dialog
-
-Now we have this branch hierarchy:
+`feature-1` is a child branch of `main`, and `feature-2` is a child branch of
+`feature-1`. Assuming we are on `feature-2`, we can make `feature-2` a child of
+`main` by running `git town set-parent` and selecting `main` in the dialog. We
+end up with this branch hierarchy:
 
 ```
 main
- |
- + feature-1
- |
- + feature-2
+ \
+  feature-1
+ \
+* feature-2
 ```
