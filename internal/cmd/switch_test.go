@@ -6,9 +6,9 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cmd"
-	"github.com/git-town/git-town/v16/internal/cmd/regexes"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/regexes"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )

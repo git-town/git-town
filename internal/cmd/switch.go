@@ -11,12 +11,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/cmd/regexes"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
+	"github.com/git-town/git-town/v16/internal/regexes"
 	"github.com/git-town/git-town/v16/internal/validate"
 	"github.com/spf13/cobra"
 )
