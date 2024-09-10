@@ -289,6 +289,36 @@ func TestSwitchBranch(t *testing.T) {
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
+					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				}
+				branchTypes := []configdomain.BranchType{}
+				branchesAndTypes := configdomain.BranchesAndTypes{}
+				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				regexes, err := regexes.NewRegexes([]string{})
+				must.NoError(t, err)
+				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
+				want := []dialog.SwitchBranchEntry{
+					{Branch: "main", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+					{Branch: "perennial", Indentation: "", OtherWorktree: false},
+					{Branch: "prototype", Indentation: "", OtherWorktree: false},
+				}
+				must.Eq(t, want, have)
+			})
+			t.Run("single regex", func(t *testing.T) {
+				t.Parallel()
+				observed1 := gitdomain.NewLocalBranchName("observed-1")
+				observed2 := gitdomain.NewLocalBranchName("observed-2")
+				prototype := gitdomain.NewLocalBranchName("prototype")
+				perennial := gitdomain.NewLocalBranchName("perennial")
+				main := gitdomain.NewLocalBranchName("main")
+				lineage := configdomain.NewLineage()
+				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -306,9 +336,6 @@ func TestSwitchBranch(t *testing.T) {
 					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
 				}
 				must.Eq(t, want, have)
-			})
-			t.Run("single regex", func(t *testing.T) {
-				t.Parallel()
 			})
 			t.Run("multiple regexes", func(t *testing.T) {
 				t.Parallel()
