@@ -36,7 +36,7 @@ main
 
 ### --prototype / -p
 
-Adding the `--prototype` or `-p` switch creates a
+Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches)).
 
 ### Configuration

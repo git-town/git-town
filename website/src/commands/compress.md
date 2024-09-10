@@ -9,24 +9,8 @@ they are currently checked out. It doesn't compress
 [contribution](https://www.git-town.com/advanced-syncing#contribution-branches)
 branches.
 
-Branches must be in sync to compress them, so run `git sync` and resolve
-possible merge conflicts before running this command.
-
-### Configuration
-
-By default the compressed commit uses the commit message of the first commit in
-the branch. You can provide a custom commit message for the squashed commit with
-the `-m <message>` flag, which works similar to the
-[-m flag for `git commit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--mltmsggt).
-
-To compress all branches in a [branch stack](../stacked-changes.md) provide the
-`--stack` switch.
-
-If you want to compress your commits every time you sync, choose the
-[compress sync strategy](../preferences/sync-feature-strategy.md#compress) for
-the respective branch type.
-
-### Example: compressing commits on a branch
+Branches must be in sync to compress them, so run `git sync` and resolve merge
+conflicts before running this command.
 
 Assuming you have a feature branch with these commits:
 
@@ -43,17 +27,20 @@ Let's compress these three commits into a single commit:
 git compress
 ```
 
-Now your branch has these commits:
+Now your branch has a single commit with the name of the first commit but
+containing the changes of all three commits that existed on the branch before:
 
 ```bash
 $ git log --pretty=format:'%s'
 commit 1
 ```
 
-The new `commit 1` now contains the changes from the old `commit 1`, `commit 2`,
-and `commit 3`.
+### --message / -m
 
-### Example: compressing using a custom commit message
+By default the now compressed commit uses the commit message of the first commit
+in the branch. You can provide a custom commit message for the squashed commit
+with the `--message <message>` aka `-m` flag, which works similar to the
+[-m flag for `git commit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--mltmsggt).
 
 Assuming you have a feature branch with these commits:
 
@@ -80,7 +67,14 @@ compressed commit
 The new `compressed commit` now contains the changes from the old `commit 1`,
 `commit 2`, and `commit 3`.
 
-### Example: Compressing all branches in a stacked change
+### --stack / -s
+
+To compress all branches in a [branch stack](../stacked-changes.md) provide the
+`--stack` aka `-s` switch.
+
+If you want to compress your commits every time you sync, choose the
+[compress sync strategy](../preferences/sync-feature-strategy.md#compress) for
+the respective branch type.
 
 Assuming you have a [stacked change](../stacked-changes.md) consisting of two
 feature branches. Each branch contains three commits.

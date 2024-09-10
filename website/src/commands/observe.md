@@ -3,7 +3,10 @@
 The _observe_ command makes some of your branches
 [observed](../branch-types.md#observed-branches) branches.
 
-## Examples
+To convert an observed branch back into a feature branch, use the
+[hack](hack.md) command.
+
+### Positional arguments
 
 Observe the current branch:
 
@@ -22,16 +25,4 @@ and make it observed:
 
 ```fish
 git observe somebody-elses-branch
-```
-
-Convert the current observed branch back to a feature branch:
-
-```fish
-git hack
-```
-
-Convert the observed branches "alpha" and "beta" back to feature branches:
-
-```fish
-git hack alpha beta
 ```

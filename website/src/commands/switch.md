@@ -31,17 +31,17 @@ git town switch me- main
 
 ### --merge / -m
 
-The `--merge` or `-m` flag has the same effect as the
+The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 
 ### --all / -a
 
-The `--all` or `-a` flag also displays both local and remote branches.
+The `--all` aka `-a` flag also displays both local and remote branches.
 
 ### --type / -t
 
-The `--type` or `-t` flag reduces the list of branches to those that have the
+The `--type` aka `-t` flag reduces the list of branches to those that have the
 given type(s). For example, to display only observed branches:
 
 Switch to one of your observed branches:

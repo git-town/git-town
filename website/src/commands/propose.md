@@ -13,14 +13,21 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-### Arguments
+### --title / -t
 
-GitHub supports these additional command-line switches:
+When called with the `--title <title>` aka `-t` flag, the _propose_ command
+pre-populate the title of the pull request to the given text.
 
-- `--title` pre-populate the title of the pull request
-- `--body` pre-populates the body of the pull request
-- `--body-file` pre-populates the body of the pull request with the content of
-  the given file. The filename `-` makes Git Town read the body text from STDIN.
+### --body / -b
+
+When called with the `--body` aka `-b` flag, it pre-populates the body of the
+pull request with the given text.
+
+### --body-file / -f
+
+When called with the `--body-file` aka `-f` flag, it pre-populates the body of
+the pull request with the content of the given file. The filename `-` reads the
+body text from STDIN.
 
 ### Configuration
 
