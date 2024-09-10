@@ -27,6 +27,10 @@ type Connector struct {
 	log      print.Logger
 }
 
+func (self Connector) CanMakeAPICalls() bool {
+	return self.APIToken.IsSome()
+}
+
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }

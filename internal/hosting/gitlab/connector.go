@@ -23,6 +23,10 @@ type Connector struct {
 	log print.Logger
 }
 
+func (self Connector) CanMakeAPICalls() bool {
+	return self.Data.APIToken.IsSome()
+}
+
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
