@@ -6,5 +6,3 @@ These commands help set up Git Town on your machine.
   machine
 - [git town completions](commands/completions.md) generates tab completion in
   Bash, zsh, fish, or PowerShell
-- [git town --version](commands/version.md) displays the installed version of
-  Git Town

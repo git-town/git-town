@@ -78,7 +78,7 @@ main
  \
   1-refactor
    \
-    2-rename-foo
+*   2-rename-foo
 ```
 
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
@@ -110,7 +110,7 @@ main
    \
     2-rename-foo
      \
-      3-rename-bar
+*     3-rename-bar
 ```
 
 ## Extend the refactoring
@@ -155,7 +155,7 @@ main
  \
   2-rename-foo
    \
-    3-rename-bar
+*   3-rename-bar
 ```
 
 If you ship feature branches via the code hosting API or web UI, run

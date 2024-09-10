@@ -1,18 +1,20 @@
 # git town switch
 
-The _switch_ command displays the branch hierarchy on your machine and allows
-switching the current Git workspace to another local Git branch. Unlike
-[git-switch](https://git-scm.com/docs/git-switch), Git Town's switch command
-uses an ergonomic visual UI and supports VIM motion commands.
+_git town switch [--merge] [--all] [--type] [branch name regex...]_
 
-`git town switch` does not allow switching to branches that are checked out in
-other worktrees and notifies you about uncommitted changes in your workspace in
+The _switch_ command displays the branch hierarchy on your machine and allows
+switching the current Git workspace to another local Git branch using VIM motion
+commands. It can filter the list of branches to particular branch types and
+regular expression matches.
+
+`git town switch` reminds you about uncommitted changes in your workspace in
 case you forgot to commit them to the current branch.
 
-### Arguments
+### positional arguments
 
-`git town switch` interprets all positional arguments as regular expressions. It
-displays only the branches that match at least one of the regular expressions.
+`git town switch` interprets all positional arguments as regular expressions.
+When receiving regular expressions from the user, it displays only the branches
+that match at least one of the regular expressions.
 
 As an example, assuming all your branches start with `me-`, you can use this
 command to switch to one of them:
@@ -27,14 +29,22 @@ To display all branches starting with `me-` and the main branch:
 git town switch me- main
 ```
 
-The `--merge` or `-m` flag has the same effect as the
+### --merge / -m
+
+The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 
-The `--all` or `-a` flag also displays both local and remote branches.
+### --all / -a
 
-The `--type` or `-t` flag reduces the list of branches to those that have the
+The `--all` aka `-a` flag also displays both local and remote branches.
+
+### --type / -t
+
+The `--type` aka `-t` flag reduces the list of branches to those that have the
 given type(s). For example, to display only observed branches:
+
+Switch to one of your observed branches:
 
 ```
 git town switch --type=observed

@@ -1,17 +1,26 @@
-# git contribute [branches]
+# git town contribute
 
 The _contribute_ command makes some of your branches
 [contribution](../branch-types.md#contribution-branches) branches.
 
-## Examples
+When called without arguments, it makes the current branch a contribution
+branch.
 
-Make the current branch a contribution branch:
+To convert a contribution branch back into a feature branch, use the
+[hack](hack.md) command.
+
+To make the current branch a contribution branch:
 
 ```fish
 git contribute
 ```
 
-Make branches "alpha" and "beta" contribution branches:
+### Positional arguments
+
+When called with positional arguments, this commands makes the branches with the
+given names contribution branches.
+
+To make branches "alpha" and "beta" contribution branches:
 
 ```fish
 git contribute alpha beta
@@ -22,16 +31,4 @@ and make it a contribution branch:
 
 ```fish
 git contribute somebody-elses-branch
-```
-
-Convert the current contribution branch back to a feature branch:
-
-```fish
-git hack
-```
-
-Convert the contribution branches "alpha" and "beta" back to a feature branch:
-
-```fish
-git hack alpha beta
 ```

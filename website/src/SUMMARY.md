@@ -33,7 +33,6 @@
     - [ship](commands/ship.md)
   - [Installation commands](installation-commands.md)
     - [completions](commands/completions.md)
-    - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)
     - [config](commands/config.md)
     - [setup](commands/config-setup.md)

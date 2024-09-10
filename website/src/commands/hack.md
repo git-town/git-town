@@ -1,4 +1,4 @@
-# git hack &lt;branch&gt;
+# git town hack
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all
@@ -10,11 +10,29 @@ state of the repository. If the workspace contains uncommitted changes,
 `git hack` does not perform this sync to let you commit your open changes first
 and then sync later.
 
-### Configuration
+### Positional arguments
+
+When given a non-existing branch name, `git hack` creates a new feature branch
+with the main branch as its parent.
+
+When given an existing contribution, observed, parked, or prototype branch,
+`git hack` converts that branch to a feature branch.
+
+When given no arguments, `git hack` converts the current contribution, observed,
+parked, or prototype branch into a feature branch.
+
+### --prototype / -p
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches)).
+
+### upstream remote
 
 If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
 [sync-upstream](../preferences/sync-upstream.md) flag.
+
+### configuration
 
 If [push-new-branches](../preferences/push-new-branches.md) is set, `git hack`
 creates a remote tracking branch for the new feature branch. This behavior is
@@ -25,15 +43,3 @@ If the configuration setting
 [create-prototype-branches](../preferences/create-prototype-branches.md) is set,
 `git hack` always creates a
 [prototype branch](../branch-types.md#prototype-branches).
-
-### Arguments
-
-When given a non-existing branch name, `git hack` creates a new feature branch
-with the main branch as its parent. Adding the `--prototype` or `-p` switch
-makes it create a [prototype branch](../branch-types.md#prototype-branches)).
-
-When given an existing contribution, observed, parked, or prototype branch,
-`git hack` converts that branch to a feature branch.
-
-When given no arguments, `git hack` converts the current contribution, observed,
-parked, or prototype branch into a feature branch.
