@@ -174,12 +174,12 @@ func TestSwitchBranch(t *testing.T) {
 			t.Run("enabled", func(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
-				remote := gitdomain.NewLocalBranchName("remote")
+				remote := gitdomain.NewRemoteBranchName("origin/remote")
 				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				lineage.Add(local, main)
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(remote.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{RemoteName: Some(remote), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
