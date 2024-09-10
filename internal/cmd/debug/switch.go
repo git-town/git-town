@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +23,7 @@ func switchBranch() *cobra.Command {
 			entries := make([]dialog.SwitchBranchEntry, amount)
 			for a := range amount {
 				entries[a] = dialog.SwitchBranchEntry{
-					Branch:        gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)),
+					Branch:        gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", a)),
 					Indentation:   "",
 					OtherWorktree: false,
 				}
