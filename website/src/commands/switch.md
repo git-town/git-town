@@ -11,6 +11,9 @@ case you forgot to commit them to the current branch.
 
 ### Arguments
 
+`git town switch` treats all positional arguments received from the user as
+regular expressions and
+
 The `--merge` or `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
