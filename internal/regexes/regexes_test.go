@@ -9,6 +9,7 @@ import (
 
 func TestRegexes(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Matches", func(t *testing.T) {
 		t.Parallel()
 		t.Run("no regexes defined", func(t *testing.T) {
