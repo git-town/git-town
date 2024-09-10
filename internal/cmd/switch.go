@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"slices"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
@@ -64,7 +65,9 @@ func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Ve
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
-	branchToCheckout, exit, err := dialog.SwitchBranch(branchTypes, branchesAndTypes, data.initialBranch, data.config.Config.Lineage, data.branchesSnapshot.Branches, defaultBranchType, allBranches, data.uncommittedChanges, data.dialogInputs.Next())
+	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches)
+	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
+	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
@@ -150,4 +153,60 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		lineage:            validatedConfig.Config.Lineage,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, false, err
+}
+
+// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
+func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
+	for e, entry := range entries {
+		if entry.Branch == initialBranch {
+			return e
+		}
+	}
+	return 0
+}
+
+// SwitchBranchEntries provides the entries for the "switch branch" components.
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches) []dialog.SwitchBranchEntry {
+	entries := make([]dialog.SwitchBranchEntry, 0, lineage.Len())
+	roots := lineage.Roots()
+	// add all entries from the lineage
+	for _, root := range roots {
+		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+	}
+	// add branches not in the lineage
+	branchesInLineage := lineage.Branches()
+	for _, branchInfo := range branchInfos {
+		localBranch := branchInfo.LocalBranchName()
+		if slices.Contains(roots, localBranch) {
+			continue
+		}
+		if slices.Contains(branchesInLineage, localBranch) {
+			continue
+		}
+		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+	}
+	return entries
+}
+
+// layoutBranches adds entries for the given branch and its children to the given entry list.
+// The entries are indented according to their position in the given lineage.
+func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType) {
+	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
+		var otherWorktree bool
+		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		} else {
+			otherWorktree = false
+		}
+		branchType, hasBranchType := branchesAndTypes[branch]
+		if !hasBranchType && len(branchTypes) > 0 {
+			branchType = defaultBranchType.BranchType
+		}
+		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
+			*result = append(*result, dialog.SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
+		}
+	}
+	for _, child := range lineage.Children(branch) {
+		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+	}
 }
