@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"regexp"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
@@ -32,12 +33,12 @@ func switchCmd() *cobra.Command {
 		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			branchTypes, err := readTypeFlag(cmd)
 			if err != nil {
 				return err
 			}
-			return executeSwitch(readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
+			return executeSwitch(args, readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
 		},
 	}
 	addAllFlag(&cmd)
@@ -47,7 +48,7 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -59,7 +60,7 @@ func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Ve
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(repo, verbose)
+	data, exit, err := determineSwitchData(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -93,10 +94,11 @@ type switchData struct {
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	lineage            configdomain.Lineage
+	regexes            []*regexp.Regexp
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
