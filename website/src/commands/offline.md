@@ -1,4 +1,4 @@
-# git town offline <yes|no>
+# git town offline
 
 The _offline_ configuration command displays or changes Git Town's offline mode.
 Git Town skips all network operations in offline mode.

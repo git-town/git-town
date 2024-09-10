@@ -1,4 +1,4 @@
-# git town hack &lt;branch&gt;
+# git town hack
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all
