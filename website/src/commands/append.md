@@ -1,4 +1,4 @@
-# git append &lt;branch&gt;
+# git town append
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
@@ -10,14 +10,17 @@ happens on top of the current state of the repository. If the workspace contains
 uncommitted changes, `git append` does not perform this sync to let you commit
 your open changes first and then sync manually.
 
-### Example
+### Positional argument
+
+When given a non-existing branch name, `git append` creates a new feature branch
+with the main branch as its parent.
 
 Consider this branch setup:
 
 ```
 main
  \
-  feature-1
+* feature-1
 ```
 
 We are on the `feature-1` branch. After running `git append feature-2`, our
@@ -28,23 +31,22 @@ main
  \
   feature-1
    \
-    feature-2
+*   feature-2
 ```
+
+### --prototype / -p
+
+Adding the `--prototype` or `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches)).
 
 ### Configuration
 
 If [push-new-branches](../preferences/push-new-branches.md) is set, `git append`
 also creates the tracking branch for the new feature branch. This behavior is
-disabled by default to make `git append` run fast. The first run of `git sync`
-will create the remote tracking branch.
+disabled by default to make `git append` run fast and save CI runs. The first
+run of `git sync` will create the remote tracking branch.
 
 If the configuration setting
 [create-prototype-branches](../preferences/create-prototype-branches.md) is set,
 `git append` always creates a
 [prototype branch](../branch-types.md#prototype-branches).
-
-### Arguments
-
-When given a non-existing branch name, `git append` creates a new feature branch
-with the main branch as its parent. Adding the `--prototype` or `-p` switch
-makes it create a [prototype branch](../branch-types.md#prototype-branches)).

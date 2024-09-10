@@ -1,4 +1,4 @@
-# git compress [branches]
+# git compress
 
 The _compress_ command squashes all commits on a branch into a single commit.
 Git Town compresses feature branches and
