@@ -216,12 +216,14 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if !hasConnector {
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
-	existingProposalOpt, err := connector.FindProposal(initialBranch, parentOfBranchToPropose)
-	if err != nil {
-		existingProposalOpt = None[hostingdomain.Proposal]()
-	}
-	if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-		existingProposalURL = Some(existingProposal.URL)
+	if connector.CanMakeAPICalls() {
+		existingProposalOpt, err := connector.FindProposal(initialBranch, parentOfBranchToPropose)
+		if err != nil {
+			existingProposalOpt = None[hostingdomain.Proposal]()
+		}
+		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
+			existingProposalURL = Some(existingProposal.URL)
+		}
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
