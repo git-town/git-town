@@ -125,7 +125,7 @@ func TestSwitchBranch(t *testing.T) {
 		})
 		t.Run("--all flag", func(t *testing.T) {
 			t.Parallel()
-			t.Run("does not display remote branches", func(t *testing.T) {
+			t.Run("disabled", func(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
 				remote := gitdomain.NewRemoteBranchName("origin/remote")
@@ -146,7 +146,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				must.Eq(t, want, have)
 			})
-			t.Run("does display parent branches of local branches even if they are remote only", func(t *testing.T) {
+			t.Run("when disabled, does not display parent branches of local branches if they are remote only", func(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
