@@ -29,7 +29,7 @@ func switchCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
