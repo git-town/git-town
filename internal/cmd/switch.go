@@ -210,6 +210,7 @@ func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBr
 		if !hasBranchType && len(branchTypes) > 0 {
 			branchType = defaultBranchType.BranchType
 		}
+		// TODO: extract this into a BranchTypes struct
 		var hasCorrectBranchType bool
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
 			hasCorrectBranchType = true
