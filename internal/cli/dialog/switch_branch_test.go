@@ -151,7 +151,7 @@ func TestSwitchBranch(t *testing.T) {
 				lineage.Add(child, main)
 				lineage.Add(grandchild, child)
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.BranchName().RemoteName()), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
@@ -160,7 +160,6 @@ func TestSwitchBranch(t *testing.T) {
 				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch})
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
-					{Branch: "child", Indentation: "  ", OtherWorktree: false},
 					{Branch: "grandchild", Indentation: "    ", OtherWorktree: false},
 				}
 				must.Eq(t, want, have)
