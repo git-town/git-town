@@ -147,13 +147,9 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 	if err != nil || exit {
 		return data, exit, err
 	}
-	regexes := make([]*regexp.Regexp, len(args))
-	for a, arg := range args {
-		regex, err := regexp.Compile(arg)
-		if err != nil {
-			return data, false, err
-		}
-		regexes[a] = regex
+	regexes, err := regexes.NewRegexes(args)
+	if err != nil {
+		return data, false, err
 	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
