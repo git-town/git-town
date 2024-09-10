@@ -18,6 +18,22 @@ that match at least one of the regular expressions.
 
 ### --merge
 
+`git town switch` interprets all positional arguments as regular expressions. It
+displays only the branches that match at least one of the regular expressions.
+
+As an example, assuming all your branches start with `me-`, you can use this
+command to switch to one of them:
+
+```
+git town switch me-
+```
+
+To display all branches starting with `me-` and the main branch:
+
+```
+git town switch me- main
+```
+
 The `--merge` or `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.

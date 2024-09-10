@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"regexp"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
@@ -15,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
+	"github.com/git-town/git-town/v16/internal/regexes"
 	"github.com/git-town/git-town/v16/internal/validate"
 	"github.com/spf13/cobra"
 )
@@ -29,15 +31,15 @@ func switchCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			branchTypes, err := readTypeFlag(cmd)
 			if err != nil {
 				return err
 			}
-			return executeSwitch(readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
+			return executeSwitch(args, readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
 		},
 	}
 	addAllFlag(&cmd)
@@ -47,7 +49,7 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -59,13 +61,13 @@ func executeSwitch(allBranches configdomain.AllBranches, verbose configdomain.Ve
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(repo, verbose)
+	data, exit, err := determineSwitchData(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
-	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches)
+	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches, data.regexes)
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
@@ -93,10 +95,11 @@ type switchData struct {
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	lineage            configdomain.Lineage
+	regexes            []*regexp.Regexp
 	uncommittedChanges bool
 }
 
-func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -144,6 +147,10 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 	if err != nil || exit {
 		return data, exit, err
 	}
+	regexes, err := regexes.NewRegexes(args)
+	if err != nil {
+		return data, false, err
+	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		branchesSnapshot:   branchesSnapshot,
@@ -151,6 +158,7 @@ func determineSwitchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
 		lineage:            validatedConfig.Config.Lineage,
+		regexes:            regexes,
 		uncommittedChanges: repoStatus.UntrackedChanges,
 	}, false, err
 }
@@ -166,12 +174,12 @@ func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch git
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches) []dialog.SwitchBranchEntry {
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) []dialog.SwitchBranchEntry {
 	entries := make([]dialog.SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
-		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 	// add branches not in the lineage
 	branchesInLineage := lineage.Branches()
@@ -183,14 +191,14 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 	return entries
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType) {
+func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType, regexes regexes.Regexes) {
 	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
@@ -202,11 +210,17 @@ func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBr
 		if !hasBranchType && len(branchTypes) > 0 {
 			branchType = defaultBranchType.BranchType
 		}
+		// TODO: extract this into a BranchTypes struct
+		var hasCorrectBranchType bool
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
+			hasCorrectBranchType = true
+		}
+		matchesRegex := regexes.Matches(branch.String())
+		if hasCorrectBranchType && matchesRegex {
 			*result = append(*result, dialog.SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
 		}
 	}
 	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType)
+		layoutBranches(result, child, indentation+"  ", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 }
