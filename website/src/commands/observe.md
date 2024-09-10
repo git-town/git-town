@@ -1,6 +1,6 @@
 # git town observe
 
-> _git town observe [branch name...]_
+> _git town observe [branch-name...]_
 
 The _observe_ command makes some of your branches
 [observed](../branch-types.md#observed-branches) branches.

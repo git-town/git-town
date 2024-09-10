@@ -1,6 +1,6 @@
 # git town kill
 
-> _git town kill [branch name]_
+> _git town kill [branch-name]_
 
 The _kill_ command deletes non-perennial branches from the local and remote
 repository. It does not delete perennial branches.
