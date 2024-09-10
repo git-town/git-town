@@ -138,7 +138,8 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}, false)
+				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				have := dialog.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false)
 				want := []dialog.SwitchBranchEntry{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
 					{Branch: "local", Indentation: "", OtherWorktree: false},
