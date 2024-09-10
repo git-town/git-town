@@ -1,35 +1,44 @@
-# git sync [--all|--stack]
-
-Merge conflicts are never fun, hence minimizing or eliminating them should
-always be a priority. To reduce the likelihood of conflicts, it's essential to
-keep your branches in sync with each other.
+# git sync
 
 The _sync_ command ("synchronize this branch") updates the local Git workspace
 with what happened in the rest of the repository.
 
 - pulls updates from the tracking and all parent branches
-- does not modify local branches checked out in other Git worktrees
-- deletes branches whose tracking branch was deleted at the remote if they
+- prunes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
 
-If you experience too many merge conflicts, sync more often. You can run "git
-sync" without thinking (and should do so dozens of times per day) because it
-guarantees that it never loses any of your changes, even in edge cases. If a
-sync goes wrong, you can safely go back to the state you repo was in before the
-sync by running [git town undo](undo.md).
+Merge conflicts are never fun, hence minimizing or eliminating them should
+always be a priority. To reduce the likelihood of conflicts, it's essential to
+keep your branches in sync with each other.
 
-### Arguments
+If you experience too many merge conflicts, sync more often. If your Git Town
+installation is properly configured, "git sync --all" guarantees that it never
+loses any of your changes, even in edge cases, and you can run it many times per
+day without thinking. If a sync goes wrong, you can safely go back to the state
+you repo was in before the sync by running [git town undo](undo.md).
 
-By default this command syncs only the current branch. The `--all` parameter
-makes Git Town sync all local branches. The `--stack` parameter makes Git Town
-sync all branches in the stack that the current branch belongs to.
+### --all / -a
 
-The `--detached` flag stops pulling updates from the main or perennial branches.
-This allows you to keep your branches in sync with each other and decide when to
-pull in changes from other developers.
+By default this command syncs only the current branch. The `--all` aka `-a`
+parameter makes Git Town sync all local branches.
+
+### --stack / -s
+
+The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+that the current branch belongs to.
+
+### --detached / -d
+
+The `--detached` aka `-d` flag does not pull updates from the main or perennial
+branch. This allows you to keep your branches in sync with each other and decide
+when to pull in changes from other developers.
+
+### --dry-run
 
 The `--dry-run` parameter allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
+
+### --no-push
 
 The `--no-push` argument disables all pushes of local commits to their tracking
 branch.
