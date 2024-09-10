@@ -1,5 +1,7 @@
 # git town ship
 
+> _git town ship [--to-parent] [--message &lt;text&gt;] [branch-name]_
+
 _Notice: Most people don't need to use the _ship_ command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git ship` is for edge cases like
@@ -12,6 +14,13 @@ into the main branch and removes the feature branch.
 The branch to ship must be in sync. If it isn't in sync, `git ship` will exit
 with an error. When that happens, run [git sync](sync.md) to get the branch in
 sync, re-test and re-review the updated branch, and then run `git ship` again.
+
+### Positional argument
+
+When called without a positional argument, the _ship_ command ships the current
+branch.
+
+When called with a positional argument, it ships the branch with the given name.
 
 ### --to-parent / -p
 

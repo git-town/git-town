@@ -1,5 +1,8 @@
 # git town propose
 
+> _git town propose [--title &lt;text&gt;] [--body &lt;text&gt;] [--body-file
+> &lt;-|filename&gt;]_
+
 The _propose_ command helps create a new pull request (also known as merge
 request) for the current feature branch. It opens your code hosting platform's
 website to create a new proposal in your browser and pre-populates information

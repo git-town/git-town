@@ -1,5 +1,7 @@
 # git town set-parent
 
+> _git town set-parent_
+
 The _set-parent_ command changes the parent branch for the current branch. It
 prompts the user for the new parent branch. Ideally you run [git sync](sync.md)
 when done updating parent branches to pull the changes of the new parent

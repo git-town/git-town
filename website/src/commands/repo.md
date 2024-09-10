@@ -1,5 +1,7 @@
 # git town repo
 
+> _git town repo [remote-name]_
+
 The _repo_ command ("show me the repository") opens the homepage of the current
 repository in your browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
