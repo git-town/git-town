@@ -25,6 +25,7 @@
     - [contribute](commands/contribute.md)
     - [observe](commands/observe.md)
     - [park](commands/park.md)
+    - [prototype](commands/prototype.md)
   - [Additional commands](additional-commands.md)
     - [compress](commands/compress.md)
     - [kill](commands/kill.md)

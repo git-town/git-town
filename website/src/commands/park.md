@@ -1,5 +1,7 @@
 # git town park
 
+> _git town park [branch name...]_
+
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
 
