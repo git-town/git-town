@@ -30,6 +30,7 @@ func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bo
 		InitialBranchPos:   cursor,
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
 		UncommittedChanges: uncommittedChanges,
+		DisplayBranchTypes: true,
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
