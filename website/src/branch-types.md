@@ -116,7 +116,7 @@ You can set the types of indivdiual branches with these commands:
 - [park](commands/park.md)
 - [prototype](commands/prototype.md)
 
-These preferences allow you to configure the types of groups of branches:
+These preferences allow you to configure the types of larger groups of branches:
 
 - [create-prototype-branches](preferences/create-prototype-branches.md),
 - [default-branch-type](preferences/default-branch-type.md),
