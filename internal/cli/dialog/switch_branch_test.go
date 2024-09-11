@@ -17,8 +17,10 @@ func TestSwitchBranch(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
-					Cursor:       0,
-					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					Cursor: 0,
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+						{Branch: "main", Indentation: "", OtherWorktree: false},
+					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -106,8 +108,10 @@ func TestSwitchBranch(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
-					Cursor:       0,
-					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					Cursor: 0,
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+						{Branch: "main", Indentation: "", OtherWorktree: false},
+					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
