@@ -215,6 +215,7 @@ nd will be removed in future versions of Git Town.`
 	SquashCommitAuthorSelection    = "Selected squash commit author: %s\n"
 	SquashMessageProblem           = "cannot comment out the squash commit message: %w"
 	StatusFileNotFound             = "No status file found for this repository."
+	SwitchNoBranches               = "no branches to switch to"
 	SwitchUncommittedChanges       = "uncommitted changes\n"
 	SyncFeatureBranches            = "Sync feature branches: %s\n"
 	SyncPerennialBranches          = "Sync perennial branches: %s\n"

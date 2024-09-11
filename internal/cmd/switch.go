@@ -68,6 +68,9 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(data.branchNames)
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
 	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches, data.regexes)
+	if len(entries) < 2 {
+		return errors.New(messages.SwitchNoBranches)
+	}
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, data.dialogInputs.Next())
 	if err != nil || exit {
