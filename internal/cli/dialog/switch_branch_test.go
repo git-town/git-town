@@ -133,10 +133,10 @@ func TestSwitchBranch(t *testing.T) {
 			dim := "\x1b[2m"
 			reset := "\x1b[0m"
 			want := `
-> main  ` + dim + `(main)` + reset + `
-    alpha  ` + dim + `(feature)` + reset + `
-      alpha1  ` + dim + `(feature)` + reset + `
-` + dim + `+     alpha2` + reset + `  ` + dim + `(feature)` + reset + `
+> main
+    alpha
+      alpha1
+` + dim + `+     alpha2` + reset + `
     beta  ` + dim + `(observed)` + reset + `
       beta1  ` + dim + `(observed)` + reset + `
   other  ` + dim + `(parked)` + reset + `
