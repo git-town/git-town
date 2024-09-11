@@ -108,12 +108,16 @@ feature branch, use [git hack](commands/hack.md).
 
 ## Configuring branch types
 
-You can change the types of indivdiual branches with the
-[contribute](commands/contribute.md), [observe](commands/observe.md),
-[park](commands/park.md), [prototype](commands/prototype.md), and
-[hack](commands/hack.md) commands. You can also configure the types of multiple
-branches with the
-[create-prototype-branches](preferences/create-prototype-branches.md),
-[default-branch-type](preferences/default-branch-type.md),
-[feature-regex](preferences/feature-regex.md), and
-[perennial-regex](preferences/perennial-regex.md) preferences.
+You can change the types of indivdiual branches with these commands:
+
+- [contribute](commands/contribute.md)
+- [observe](commands/observe.md)
+- [park](commands/park.md)
+- [prototype](commands/prototype.md)
+- [hack](commands/hack.md)
+
+You can also use configure the types of multiple branches at once using these preferences:
+- [create-prototype-branches](preferences/create-prototype-branches.md),
+- [default-branch-type](preferences/default-branch-type.md),
+- [feature-regex](preferences/feature-regex.md), and
+- [perennial-regex](preferences/perennial-regex.md) preferences.
