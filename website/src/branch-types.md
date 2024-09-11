@@ -108,7 +108,7 @@ feature branch, use [git hack](commands/hack.md).
 
 ## Configuring branch types
 
-You can change the types of indivdiual branches with these commands:
+You can set the types of indivdiual branches with these commands:
 
 - [contribute](commands/contribute.md)
 - [hack](commands/hack.md)
@@ -116,8 +116,7 @@ You can change the types of indivdiual branches with these commands:
 - [park](commands/park.md)
 - [prototype](commands/prototype.md)
 
-You can also use configure the types of multiple branches at once using these
-preferences:
+These preferences allow you to configure the types of groups of branches:
 
 - [create-prototype-branches](preferences/create-prototype-branches.md),
 - [default-branch-type](preferences/default-branch-type.md),
