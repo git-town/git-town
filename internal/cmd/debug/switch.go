@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -26,10 +27,11 @@ func switchBranch() *cobra.Command {
 					Branch:        gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", a)),
 					Indentation:   "",
 					OtherWorktree: false,
+					Type:          configdomain.BranchTypeFeatureBranch,
 				}
 			}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err = dialog.SwitchBranch(entries, 0, false, dialogTestInputs.Next())
+			_, _, err = dialog.SwitchBranch(entries, 0, false, false, dialogTestInputs.Next())
 			return err
 		},
 	}
