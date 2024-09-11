@@ -123,13 +123,10 @@ func TestSwitchBranch(t *testing.T) {
 				UncommittedChanges: true,
 			}
 			have := model.View()
+			cyanBold := "\x1b[36;1m"
+			reset := "\x1b[0m"
 			want := `
-` +
-				"\x1b[36;1m" +
-				`uncommitted changes
-` +
-				"\x1b[0m" +
-				`
+` + cyanBold + `uncommitted changes` + reset + `
 
 > main
 
