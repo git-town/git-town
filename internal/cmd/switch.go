@@ -220,7 +220,12 @@ func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBr
 		}
 		matchesRegex := regexes.Matches(branch.String())
 		if hasCorrectBranchType && matchesRegex {
-			*result = append(*result, dialog.SwitchBranchEntry{Branch: branch, Indentation: indentation, OtherWorktree: otherWorktree})
+			*result = append(*result, dialog.SwitchBranchEntry{
+				Branch:        branch,
+				Indentation:   indentation,
+				OtherWorktree: otherWorktree,
+				Type:          branchType,
+			})
 		}
 	}
 	for _, child := range lineage.Children(branch) {

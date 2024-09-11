@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -17,6 +18,7 @@ type SwitchBranchEntry struct {
 	Branch        gitdomain.LocalBranchName
 	Indentation   string
 	OtherWorktree bool
+	Type          configdomain.BranchType
 }
 
 func (sbe SwitchBranchEntry) String() string {
@@ -106,6 +108,8 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
+		s.WriteString("  ")
+		s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n  ")
