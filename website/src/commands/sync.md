@@ -24,11 +24,6 @@ you repo was in before the sync by running [git town undo](undo.md).
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-### --stack / -s
-
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
-that the current branch belongs to.
-
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -37,13 +32,23 @@ when to pull in changes from other developers.
 
 ### --dry-run
 
-The `--dry-run` parameter allows to test-drive this command. It prints the Git
+The `--dry-run` flag allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
 
 ### --no-push
 
 The `--no-push` argument disables all pushes of local commits to their tracking
 branch.
+
+### --stack / -s
+
+The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+that the current branch belongs to.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
 
 ### Configuration
 

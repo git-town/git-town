@@ -16,10 +16,10 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-### --title / -t
+### --dry-run
 
-When called with the `--title <title>` aka `-t` flag, the _propose_ command
-pre-populate the title of the pull request to the given text.
+The `--dry-run` flag allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
 
 ### --body / -b
 
@@ -31,6 +31,16 @@ pull request with the given text.
 When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
 body text from STDIN.
+
+### --title / -t
+
+When called with the `--title <title>` aka `-t` flag, the _propose_ command
+pre-populate the title of the pull request to the given text.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
 
 ### Configuration
 

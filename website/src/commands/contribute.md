@@ -34,3 +34,8 @@ and make it a contribution branch:
 ```fish
 git contribute somebody-elses-branch
 ```
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.

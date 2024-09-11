@@ -21,3 +21,8 @@ Make branches "alpha" and "beta" prototype branches:
 ```fish
 git town prototype alpha beta
 ```
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
