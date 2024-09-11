@@ -1,9 +1,9 @@
 # Branch Types
 
-Git Town supports many different types and configurations of Git branches. When
-properly configured, you can run `git sync` or `git sync --all` at any time and
-each of your local branches will get synced in the specific ways it's supposed
-to get synced or not synced.
+Git Town supports many different types of Git branches. When properly
+configured, you can run `git sync` or `git sync --all` at any time and each of
+your local branches will get synced in the specific ways it's supposed to get
+synced or not synced.
 
 ## Feature branches
 
@@ -15,14 +15,15 @@ with their parent and tracking branch.
 ## Main branch
 
 The main branch is a _perennial branch_ from which feature branches get cut by
-default.
+default. The main branch contains the latest development version of your
+codebase.
 
 ## Perennial branches
 
 Perennial branches are long-lived branches. They have no parent and are never
 shipped. Typical perennial branches are `main`, `master`, `development`,
 `production`, `staging`, etc. Perennial branches often correspond with a cloud
-environment with the same name.
+environment of the same name.
 
 ## Contribution branches
 
@@ -104,3 +105,20 @@ branch to an observed or contribution branch it loses its prototype status.
 To designate any feature branch as a prototype branch, execute
 [git prototype](commands/prototype.md) on it. To convert a prototype branch to a
 feature branch, use [git hack](commands/hack.md).
+
+## Configuring branch types
+
+You can set the types of indivdiual branches with these commands:
+
+- [contribute](commands/contribute.md)
+- [hack](commands/hack.md)
+- [observe](commands/observe.md)
+- [park](commands/park.md)
+- [prototype](commands/prototype.md)
+
+These preferences allow you to configure the types of larger groups of branches:
+
+- [create-prototype-branches](preferences/create-prototype-branches.md),
+- [default-branch-type](preferences/default-branch-type.md),
+- [feature-regex](preferences/feature-regex.md), and
+- [perennial-regex](preferences/perennial-regex.md) preferences.
