@@ -22,6 +22,11 @@ branch.
 
 When called with a positional argument, it ships the branch with the given name.
 
+### --dry-run
+
+The `--dry-run` flag allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
+
 ### --to-parent / -p
 
 The _ship_ command ships only direct children of the main branch. To ship a
@@ -33,6 +38,11 @@ override the protection against that with the `--to-parent` aka `-p` option.
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
 
 ### Configuration
 

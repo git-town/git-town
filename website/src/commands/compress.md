@@ -37,6 +37,11 @@ $ git log --pretty=format:'%s'
 commit 1
 ```
 
+### --dry-run
+
+The `--dry-run` flag allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
+
 ### --message / -m
 
 By default the now compressed commit uses the commit message of the first commit
@@ -115,3 +120,8 @@ As usual, the new `commit 1a` contains the changes made in `branch 1`, i.e. the
 changes from the old `commit 1a`, `commit 1b`, and `commit 1c`. The new
 `commit 2a` contains the changes made in `branch 2`, i.e. the changes from the
 old `commit 2a`, `commit 2b`, and `commit 2c`.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.

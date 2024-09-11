@@ -6,6 +6,11 @@ The _completions_ command outputs shell scripts that enable auto-completion for
 Git Town in Bash, Zsh, Fish, or PowerShell. When set up, typing
 `git-town <tab key>` in your terminal will auto-complete subcommands.
 
+## --no-descriptions
+
+The `--no-descriptions` flag outputs shorter completions without descriptions of
+arguments.
+
 ## bash
 
 To load autocompletion for Bash, run this command:

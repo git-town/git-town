@@ -28,3 +28,8 @@ and make it observed:
 ```fish
 git observe somebody-elses-branch
 ```
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.

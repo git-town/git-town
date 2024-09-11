@@ -21,3 +21,8 @@ Park branches "alpha" and "beta":
 ```fish
 git park alpha beta
 ```
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.

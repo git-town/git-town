@@ -31,10 +31,20 @@ main
     feature-2
 ```
 
+### --dry-run
+
+The `--dry-run` flag allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
+
 ### --prototype / -p
 
 Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches)).
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
 
 ### Configuration
 

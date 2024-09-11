@@ -14,7 +14,17 @@ current branch to the given name.
 When called with two arguments, it renames the branch with the given name to the
 given name.
 
+### --dry-run
+
+The `--dry-run` flag allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.
+
 ### --force / -f
 
 Renaming perennial branches requires confirmation with the `--force` aka `-f`
 flag.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
