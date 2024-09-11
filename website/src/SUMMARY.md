@@ -59,7 +59,7 @@
   - [parent](preferences/parent.md)
   - [parked-branches](preferences/parked-branches.md)
   - [perennial-branches](preferences/perennial-branches.md)
-  - [pererennial-regex](preferences/perennial-regex.md)
+  - [perennial-regex](preferences/perennial-regex.md)
   - [prototype-branches](preferences/prototype-branches.md)
   - [push-hook](preferences/push-hook.md)
   - [push-new-branches](preferences/push-new-branches.md)

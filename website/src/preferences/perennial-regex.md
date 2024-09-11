@@ -1,4 +1,4 @@
-# pererennial-regex
+# perennial-regex
 
 All branches matching this regular expression are considered
 [perennial branches](perennial-branches.md).
