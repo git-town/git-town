@@ -111,10 +111,10 @@ feature branch, use [git hack](commands/hack.md).
 You can change the types of indivdiual branches with these commands:
 
 - [contribute](commands/contribute.md)
+- [hack](commands/hack.md)
 - [observe](commands/observe.md)
 - [park](commands/park.md)
 - [prototype](commands/prototype.md)
-- [hack](commands/hack.md)
 
 You can also use configure the types of multiple branches at once using these
 preferences:
