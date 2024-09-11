@@ -3,6 +3,7 @@ package dialog_test
 import (
 	"testing"
 
+	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
 	"github.com/shoenig/test/must"
@@ -26,11 +27,15 @@ func TestSwitchBranch(t *testing.T) {
 				UncommittedChanges: false,
 			}
 			have := model.View()
+			dim := "\x1b[2m"
+			reset := "\x1b[0m"
 			want := `
-> main
+> main  ` + dim + `(main)` + reset + `
+
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
+			want = want[1:]
 			must.EqOp(t, want, have)
 		})
 
@@ -50,7 +55,7 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   0,
 				UncommittedChanges: false,
 			}
-			have := model.View()
+			have := stripansi.Strip(model.View())
 			dim := "\x1b[2m"
 			reset := "\x1b[0m"
 			want := `
