@@ -6,6 +6,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,8 +19,10 @@ func TestSwitchBranch(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
-					Cursor:       0,
-					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					Cursor: 0,
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -45,9 +48,9 @@ func TestSwitchBranch(t *testing.T) {
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
 					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "one", Indentation: "", OtherWorktree: false},
-						{Branch: "two", Indentation: "", OtherWorktree: true},
+						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+						{Branch: "one", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "two", Indentation: "", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
 					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -59,7 +62,7 @@ func TestSwitchBranch(t *testing.T) {
 			dim := "\x1b[2m"
 			reset := "\x1b[0m"
 			want := `
-> main
+> main  ` + dim + `(main)` + reset + `
   one
 ` + dim + `+ two` + reset + `
 
@@ -75,13 +78,13 @@ func TestSwitchBranch(t *testing.T) {
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
 					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false},
-						{Branch: "alpha", Indentation: "  ", OtherWorktree: false},
-						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true},
-						{Branch: "beta", Indentation: "  ", OtherWorktree: false},
-						{Branch: "beta1", Indentation: "    ", OtherWorktree: false},
-						{Branch: "other", Indentation: "", OtherWorktree: false},
+						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+						{Branch: "alpha", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "beta", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "beta1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "other", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
 					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -111,8 +114,10 @@ func TestSwitchBranch(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
-					Cursor:       0,
-					Entries:      newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{{Branch: "main", Indentation: "", OtherWorktree: false}}),
+					Cursor: 0,
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
