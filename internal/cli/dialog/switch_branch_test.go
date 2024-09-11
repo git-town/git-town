@@ -89,6 +89,7 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   0,
 				UncommittedChanges: false,
+				DisplayBranchTypes: false,
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -101,6 +102,45 @@ func TestSwitchBranch(t *testing.T) {
     beta
       beta1
   other
+
+
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
+			want = want[1:]
+			must.EqOp(t, want, have)
+		})
+
+		t.Run("stacked changes with types", func(t *testing.T) {
+			t.Parallel()
+			model := dialog.SwitchModel{
+				List: list.List[dialog.SwitchBranchEntry]{
+					Cursor: 0,
+					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+						{Branch: "alpha", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "alpha2", Indentation: "    ", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
+						{Branch: "beta", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
+						{Branch: "beta1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
+						{Branch: "other", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeParkedBranch},
+					}),
+					MaxDigits:    1,
+					NumberFormat: "%d",
+				},
+				InitialBranchPos:   0,
+				UncommittedChanges: false,
+				DisplayBranchTypes: true,
+			}
+			have := model.View()
+			dim := "\x1b[2m"
+			reset := "\x1b[0m"
+			want := `
+> main  ` + dim + `(main)` + reset + `
+    alpha  ` + dim + `(feature)` + reset + `
+      alpha1  ` + dim + `(feature)` + reset + `
+` + dim + `+     alpha2` + reset + `  ` + dim + `(feature)` + reset + `
+    beta  ` + dim + `(observed)` + reset + `
+      beta1  ` + dim + `(observed)` + reset + `
+  other  ` + dim + `(parked)` + reset + `
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
@@ -121,6 +161,7 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   0,
 				UncommittedChanges: true,
+				DisplayBranchTypes: false,
 			}
 			have := model.View()
 			cyanBold := "\x1b[36;1m"
