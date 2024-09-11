@@ -59,12 +59,12 @@ func TestSwitchBranch(t *testing.T) {
 				UncommittedChanges: false,
 			}
 			have := stripansi.Strip(model.View())
-			dim := "\x1b[2m"
-			reset := "\x1b[0m"
+			// dim := "\x1b[2m"
+			// reset := "\x1b[0m"
 			want := `
-> main  ` + dim + `(main)` + reset + `
-  one
-` + dim + `+ two` + reset + `
+> main  (main)
+  one  (feature)
++ two  (feature)
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
