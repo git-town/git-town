@@ -45,6 +45,7 @@ type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	InitialBranchPos   int  // position of the currently checked out branch in the list
 	UncommittedChanges bool // whether the workspace has uncommitted changes
+	DisplayBranchTypes bool
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -108,8 +109,10 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
-		s.WriteString("  ")
-		s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
+		if self.DisplayBranchTypes {
+			s.WriteString("  ")
+			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
+		}
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n  ")

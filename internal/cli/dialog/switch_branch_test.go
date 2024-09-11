@@ -21,24 +21,21 @@ func TestSwitchBranch(t *testing.T) {
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
 					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
-						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+						{Branch: "main", Indentation: "", OtherWorktree: false},
 					}),
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
 				InitialBranchPos:   0,
 				UncommittedChanges: false,
+				DisplayBranchTypes: false,
 			}
 			have := model.View()
-			dim := "\x1b[2m"
-			reset := "\x1b[0m"
 			want := `
-> main  ` + dim + `(main)` + reset + `
-
+> main
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
-			want = want[1:]
 			must.EqOp(t, want, have)
 		})
 
@@ -57,14 +54,15 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   0,
 				UncommittedChanges: false,
+				DisplayBranchTypes: false,
 			}
 			have := stripansi.Strip(model.View())
 			// dim := "\x1b[2m"
 			// reset := "\x1b[0m"
 			want := `
-> main  (main)
-  one  (feature)
-+ two  (feature)
+> main
+  one
++ two
 
 
   ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
