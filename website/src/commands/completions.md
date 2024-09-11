@@ -21,22 +21,6 @@ source <(git-town completions bash)
 
 To load completions for each session, add the above line to your `.bashrc`.
 
-## zsh
-
-To load autocompletions for Zsh, run this command:
-
-```
-source <(git-town completions zsh)
-```
-
-To load completions for each session, add the above line to your `.zshrc`.
-
-To fix the error message `command not found: compdef`, run
-
-```zsh
-autoload -Uz compinit
-```
-
 ## fish
 
 To load autocompletions for Fish, run this command:
@@ -58,3 +42,19 @@ git-town completions powershell | Out-String | Invoke-Expression
 
 To load completions for each session, add the above line to your PowerShell
 profile.
+
+## zsh
+
+To load autocompletions for Zsh, run this command:
+
+```
+source <(git-town completions zsh)
+```
+
+To load completions for each session, add the above line to your `.zshrc`.
+
+To fix the error message `command not found: compdef`, run
+
+```zsh
+autoload -Uz compinit
+```

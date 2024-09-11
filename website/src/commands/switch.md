@@ -29,6 +29,10 @@ To display all branches starting with `me-` and the main branch:
 git town switch me- main
 ```
 
+### --all / -a
+
+The `--all` aka `-a` flag also displays both local and remote branches.
+
 ### --display-types / -d
 
 When enabled, this command displays the types for all branches except the main
@@ -39,10 +43,6 @@ branch and feature branches.
 The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
-
-### --all / -a
-
-The `--all` aka `-a` flag also displays both local and remote branches.
 
 ### --type / -t
 
@@ -79,3 +79,8 @@ This can be shortened to:
 ```
 git town switch -to+c
 ```
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
