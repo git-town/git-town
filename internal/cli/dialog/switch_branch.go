@@ -25,12 +25,12 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
 		InitialBranchPos:   cursor,
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
 		UncommittedChanges: uncommittedChanges,
-		DisplayBranchTypes: true,
+		DisplayBranchTypes: displayTypes,
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -46,7 +46,7 @@ type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	InitialBranchPos   int  // position of the currently checked out branch in the list
 	UncommittedChanges bool // whether the workspace has uncommitted changes
-	DisplayBranchTypes bool
+	DisplayBranchTypes configdomain.DisplayTypes
 }
 
 func (self SwitchModel) Init() tea.Cmd {

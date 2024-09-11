@@ -5,22 +5,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const displayTypesLong = "details"
+const displayTypesLong = "display-types"
 
-// type-safe access to the CLI arguments of type configdomain.DryRun
-func DryRun() (AddFunc, ReadDryRunFlagFunc) {
+// type-safe access to the CLI arguments of type configdomain.Displaytypes
+func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(dryRunLong, "", false, "print but do not run the Git commands")
+		cmd.Flags().BoolP(displayTypesLong, "d", false, "display the branch types")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.DryRun {
-		value, err := cmd.Flags().GetBool(dryRunLong)
+	readFlag := func(cmd *cobra.Command) configdomain.DisplayTypes {
+		value, err := cmd.Flags().GetBool(displayTypesLong)
 		if err != nil {
 			panic(err)
 		}
-		return configdomain.DryRun(value)
+		return configdomain.DisplayTypes(value)
 	}
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadDryRunFlagFunc func(*cobra.Command) configdomain.DryRun
+// the type signature for the function that reads the display-types flag from the args to the given Cobra command
+type ReadDisplayTypesFlagFunc func(*cobra.Command) configdomain.DisplayTypes

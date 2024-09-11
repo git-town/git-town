@@ -28,6 +28,7 @@ func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
 	addTypeFlag, readTypeFlag := flags.BranchType()
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -39,17 +40,18 @@ func switchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSwitch(args, readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), branchTypes)
+			return executeSwitch(args, readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), readDisplayTypesFlag(cmd), branchTypes)
 		},
 	}
 	addAllFlag(&cmd)
+	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addTypeFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, branchTypes []configdomain.BranchType) error {
+func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose configdomain.Verbose, merge configdomain.SwitchUsingMerge, displayTypes configdomain.DisplayTypes, branchTypes []configdomain.BranchType) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -72,7 +74,7 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 		return errors.New(messages.SwitchNoBranches)
 	}
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
-	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, data.dialogInputs.Next())
+	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, displayTypes, data.dialogInputs.Next())
 	if err != nil || exit {
 		return err
 	}
