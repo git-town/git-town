@@ -116,7 +116,9 @@ You can change the types of indivdiual branches with these commands:
 - [prototype](commands/prototype.md)
 - [hack](commands/hack.md)
 
-You can also use configure the types of multiple branches at once using these preferences:
+You can also use configure the types of multiple branches at once using these
+preferences:
+
 - [create-prototype-branches](preferences/create-prototype-branches.md),
 - [default-branch-type](preferences/default-branch-type.md),
 - [feature-regex](preferences/feature-regex.md), and
