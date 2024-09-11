@@ -130,7 +130,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 	if repoStatus.Conflicts {
 		return data, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
-	if repoStatus.UntrackedChanges {
+	if repoStatus.OpenChanges {
 		return data, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	var connector Option[hostingdomain.Connector]
