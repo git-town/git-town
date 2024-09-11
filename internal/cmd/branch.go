@@ -18,7 +18,7 @@ const branchDesc = "Displays all branches, their hierarchy and type"
 const branchHelp = `
 Git Town's version of Git's "branch" command.`
 
-func branchCommand() *cobra.Command {
+func branchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "branch",
