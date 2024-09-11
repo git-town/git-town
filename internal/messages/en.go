@@ -216,7 +216,7 @@ nd will be removed in future versions of Git Town.`
 	SquashMessageProblem           = "cannot comment out the squash commit message: %w"
 	StatusFileNotFound             = "No status file found for this repository."
 	SwitchNoBranches               = "no branches to switch to"
-	SwitchUncommittedChanges       = "uncommitted changes\n"
+	SwitchUncommittedChanges       = "uncommitted changes"
 	SyncFeatureBranches            = "Sync feature branches: %s\n"
 	SyncPerennialBranches          = "Sync perennial branches: %s\n"
 	SyncStatusNotRecognized        = "cannot determine the sync status for Git remote %q and branch name %q"
