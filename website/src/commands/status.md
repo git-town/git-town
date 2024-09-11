@@ -20,6 +20,5 @@ determine the repository state.
 
 ### subcommands
 
-Running without a subcommand shows the current Git Town configuration.
-
-- The `get-parent` subcommand prints the parent branch of the current or given
+The [reset](status-reset.md) subcommand prints the parent branch of the current
+or given
