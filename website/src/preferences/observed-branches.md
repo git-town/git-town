@@ -10,7 +10,7 @@ To change which branches are observed branches in your local repo, use the
 
 The [Git Town configuration file](../configuration-file.md) does not define
 team-wide observed branches because one developer's feature branch is another
-developer's observed or observed branch.
+developer's contribution or observed branch.
 
 ## view configured observed branches
 
