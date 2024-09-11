@@ -33,6 +33,11 @@ git town switch me- main
 
 The `--all` aka `-a` flag also displays both local and remote branches.
 
+### --display-types / -d
+
+When enabled, this command displays the types for all branches except the main
+branch and feature branches.
+
 ### --merge / -m
 
 The `--merge` aka `-m` flag has the same effect as the

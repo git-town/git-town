@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -17,14 +18,16 @@ type SwitchBranchEntry struct {
 	Branch        gitdomain.LocalBranchName
 	Indentation   string
 	OtherWorktree bool
+	Type          configdomain.BranchType
 }
 
 func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
+		DisplayBranchTypes: displayTypes,
 		InitialBranchPos:   cursor,
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
 		UncommittedChanges: uncommittedChanges,
@@ -41,6 +44,7 @@ func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bo
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
+	DisplayBranchTypes configdomain.DisplayTypes
 	InitialBranchPos   int  // position of the currently checked out branch in the list
 	UncommittedChanges bool // whether the workspace has uncommitted changes
 }
@@ -106,6 +110,10 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
+		if self.shouldDisplayBranchType(entry.Data.Type) {
+			s.WriteString("  ")
+			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
+		}
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n  ")
@@ -142,6 +150,19 @@ func (self SwitchModel) View() string {
 	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
 	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
+}
+
+func (self SwitchModel) shouldDisplayBranchType(branchType configdomain.BranchType) bool {
+	if !self.DisplayBranchTypes {
+		return false
+	}
+	switch branchType {
+	case configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch:
+		return false
+	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypePrototypeBranch:
+		return true
+	}
+	panic("unhandled branch type:" + branchType.String())
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
