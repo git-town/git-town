@@ -235,8 +235,8 @@ func TestSwitchBranch(t *testing.T) {
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
-					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
-					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
 				}
 				must.Eq(t, want, have)
 			})
@@ -270,9 +270,9 @@ func TestSwitchBranch(t *testing.T) {
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
-					{Branch: "observed-1", Indentation: "", OtherWorktree: false},
-					{Branch: "observed-2", Indentation: "", OtherWorktree: false},
-					{Branch: "perennial", Indentation: "", OtherWorktree: false},
+					{Branch: "observed-1", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
+					{Branch: "observed-2", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeObservedBranch},
+					{Branch: "perennial", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypePerennialBranch},
 				}
 				must.Eq(t, want, have)
 			})
