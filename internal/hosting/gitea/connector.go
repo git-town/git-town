@@ -108,6 +108,17 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
+func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) error {
+	// if self.log != nil {
+	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
+	// }
+	// _, err := self.client.EditPullRequest(self.owner, self.repository, int64(number), gitea.EditPullRequestOption{
+	// 	Base: newBaseName,
+	// })
+	// return err
+	return errors.New(messages.HostingGiteaNotImplemented)
+}
+
 func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
