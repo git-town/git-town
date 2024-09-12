@@ -25,6 +25,7 @@ Feature: display all executed Git commands
       |        | backend | git status --long --ignore-submodules        |
       |        | backend | git stash list                               |
       |        | backend | git branch -vva --sort=refname               |
+      |        | backend | git remote get-url origin                    |
       |        | backend | git config git-town-branch.child.parent main |
       |        | backend | git branch -vva --sort=refname               |
       |        | backend | git config -lz --includes --global           |
@@ -32,7 +33,7 @@ Feature: display all executed Git commands
       |        | backend | git stash list                               |
     And it prints:
       """
-      Ran 12 shell commands.
+      Ran 13 shell commands.
       """
     And this lineage exists now
       | BRANCH | PARENT |
