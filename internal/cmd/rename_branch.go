@@ -301,14 +301,6 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 				result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
-			proposal, hasProposal := data.proposal.Get()
-			if data.connector.IsSome() && hasProposal {
-				result.Value.Add(&opcodes.UpdateProposalTarget{
-					NewTarget:      data.newBranch,
-					ProposalNumber: proposal.Number,
-				})
-			}
-			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 		}
 	}
@@ -318,6 +310,13 @@ func renameBranchProgram(data renameBranchData) program.Program {
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+			proposal, hasProposal := data.proposal.Get()
+			if data.connector.IsSome() && hasProposal {
+				result.Value.Add(&opcodes.UpdateProposalTarget{
+					NewTarget:      data.newBranch,
+					ProposalNumber: proposal.Number,
+				})
+			}
 			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
 		}
