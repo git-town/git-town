@@ -119,15 +119,15 @@ func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("* " + entry.Branch.String()))
+			s.WriteString(color.Styled("* " + entry.String()))
 		case entry.OtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + entry.Branch.String()))
+			s.WriteString(colors.Faint().Styled("+ " + entry.String()))
 		default:
 			color := termenv.String()
 			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("  " + entry.Branch.String()))
+			s.WriteString(color.Styled("  " + entry.String()))
 		}
 		s.WriteString("  ")
 		s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
