@@ -134,7 +134,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	})
 }
 
-func updateChildBranchProposals(prog *program.Program, proposals []hostingdomain.Proposal, targetBranch gitdomain.LocalBranchName) {
+func UpdateChildBranchProposals(prog *program.Program, proposals []hostingdomain.Proposal, targetBranch gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.UpdateProposalTarget{
 			ProposalNumber: childProposal.Number,

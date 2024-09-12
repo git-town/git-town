@@ -16,7 +16,7 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 		prog.Value.Add(&opcodes.Checkout{Branch: sharedData.targetBranchName})
 	}
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
-		updateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
+		UpdateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
 	}
 	prog.Value.Add(&opcodes.MergeFastForward{Branch: sharedData.branchNameToShip})
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
