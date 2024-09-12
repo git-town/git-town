@@ -81,13 +81,15 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 	if err != nil || exit {
 		return data, exit, err
 	}
+	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
 	colors := colors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
-		branchInfos:      branchesSnapshot.Branches,
-		branchesAndTypes: branchesAndTypes,
-		colors:           colors,
-		initialBranchOpt: branchesSnapshot.Active,
+		branchInfos:       branchesSnapshot.Branches,
+		branchesAndTypes:  branchesAndTypes,
+		colors:            colors,
+		defaultBranchType: defaultBranchType,
+		initialBranchOpt:  branchesSnapshot.Active,
 	}, false, err
 }
 
@@ -95,8 +97,8 @@ type branchData struct {
 	branchInfos       gitdomain.BranchInfos
 	branchesAndTypes  configdomain.BranchesAndTypes
 	colors            colors.DialogColors
-	initialBranchOpt  Option[gitdomain.LocalBranchName]
 	defaultBranchType configdomain.DefaultBranchType
+	initialBranchOpt  Option[gitdomain.LocalBranchName]
 }
 
 func printBranches(data branchData) {
