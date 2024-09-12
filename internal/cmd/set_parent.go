@@ -155,7 +155,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: localBranches,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
