@@ -18,7 +18,7 @@ Feature: display the local branch hierarchy in the middle of a merge conflict
       | conflicting | local    | conflicting local commit  | conflicting_file | local content  |
       |             | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "conflicting"
-    And I ran "git pull --merge"
+    And I ran "git merge origin/conflicting"
     When I run "git-town branch"
 
   Scenario: result
