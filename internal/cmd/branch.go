@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const branchDesc = "Displays the local branch hierarchy and types"
+const branchDesc = "Display the local branch hierarchy and types"
 
 const branchHelp = `
 Git Town's equivalent of the "git branch" command.`
