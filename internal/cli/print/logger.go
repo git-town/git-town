@@ -13,11 +13,15 @@ func (l Logger) Failed(failure error) {
 	fmt.Println(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
 }
 
+func (l Logger) Ok() {
+	fmt.Println(colors.BoldGreen().Styled("ok"))
+}
+
 func (l Logger) Start(template string, data ...interface{}) {
 	fmt.Println()
 	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
 }
 
-func (l Logger) Success() {
-	fmt.Println(colors.BoldGreen().Styled("ok"))
+func (l Logger) Success(message string) {
+	fmt.Println(colors.BoldGreen().Styled(message))
 }

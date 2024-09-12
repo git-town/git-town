@@ -39,10 +39,11 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
-		self.log.Success()
 		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+			self.log.Ok()
 			return None[hostingdomain.Proposal](), nil
 		}
+		self.log.Success("#123")
 		return Some(hostingdomain.Proposal{
 			MergeWithAPI: true,
 			Number:       123,
@@ -60,14 +61,15 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Success()
 	if len(pullRequests) == 0 {
+		self.log.Ok()
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
+	self.log.Success(fmt.Sprintf("#%d", &proposal.Number))
 	return Some(proposal), nil
 }
 
@@ -100,7 +102,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Subject,
 	})
-	self.log.Success()
+	self.log.Ok()
 	return err
 }
 
@@ -116,7 +118,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 		self.log.Failed(err)
 		return err
 	}
-	self.log.Success()
+	self.log.Success(fmt.Sprintf("#%d", number))
 	return nil
 }
 
