@@ -2,7 +2,7 @@
 
 The _branch_ command is Git Town's equivalent of the
 [git branch](https://git-scm.com/docs/git-branch) command. It displays the local
-branch hierachy and the types of all branches except the main and feature
+branch hierarchy, and the types of all branches except for main and feature
 branches.
 
 ### --verbose / -v
