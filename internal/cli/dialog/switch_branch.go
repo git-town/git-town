@@ -74,6 +74,9 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 
 func (self SwitchModel) View() string {
 	s := strings.Builder{}
+	if self.Status != list.StatusActive {
+		return ""
+	}
 	if self.UncommittedChanges {
 		s.WriteString("\n")
 		s.WriteString(colors.BoldCyan().Styled(messages.SwitchUncommittedChanges))

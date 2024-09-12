@@ -770,7 +770,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
 			fmt.Println("ERROR: text not found:")
-			fmt.Println("\nEXPECTED:", expected.Content)
+			fmt.Println("==================================================================")
+			fmt.Println("EXPECTED OUTPUT START ==============================================")
+			fmt.Println("==================================================================")
+			fmt.Println()
+			fmt.Println(expected.Content)
+			fmt.Println()
+			fmt.Println("==================================================================")
+			fmt.Println("EXPECTED OUTPUT END ================================================")
+			fmt.Println("==================================================================")
 			fmt.Println()
 			fmt.Println("==================================================================")
 			fmt.Println("ACTUAL OUTPUT START ==============================================")
