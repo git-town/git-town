@@ -8,10 +8,10 @@ Big thanks to @kevgo, @ruudk, @stephenwade, @zodman for coming up with the ideas
 
 #### New Features
 
-- The new `git town branch` command displays the local branch hierarchy, and the types of all branches except for main and feature branches ([documentation](), [#3807](https://github.com/git-town/git-town/issues/3807)).
-- `git town switch` can now displays the types of branches (except for the main and feature branches) when called with the `--display-types` flag ([documentation](), [#3937](https://github.com/git-town/git-town/issues/3937)).
-- `git town switch` can now filter the branches to switch to via regular expressions ([documentation](), (#3980)[https://github.com/git-town/git-town/pull/3980/files])
-- You can now use `git town switch` to check out a remote branch using the `--all` flag ([documentation](), [#3941](https://github.com/git-town/git-town/issues/3941))
+- The new `git town branch` command displays the local branch hierarchy, and the types of all branches except for main and feature branches ([#3807](https://github.com/git-town/git-town/issues/3807)).
+- `git town switch` can now displays the types of branches (except for the main and feature branches) when called with the `--display-types` flag ([#3937](https://github.com/git-town/git-town/issues/3937)).
+- `git town switch` can now filter the branches to switch to via regular expressions ((#3980)[https://github.com/git-town/git-town/pull/3980/files])
+- You can now use `git town switch` to check out a remote branch using the `--all` flag ([#3941](https://github.com/git-town/git-town/issues/3941))
 
 #### Bug Fixes
 
