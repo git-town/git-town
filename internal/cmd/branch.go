@@ -118,9 +118,9 @@ func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 	s := strings.Builder{}
 	initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
 	for _, entry := range entries {
-		isInitial := entry.Branch == initialBranch
+		isInitialBranch := entry.Branch == initialBranch
 		switch {
-		case hasInitialBranch && isInitial:
+		case hasInitialBranch && isInitialBranch:
 			color := data.colors.Initial
 			if entry.OtherWorktree {
 				color = color.Faint()
