@@ -8,11 +8,14 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/ship"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
@@ -96,7 +99,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -113,16 +116,19 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 }
 
 type renameBranchData struct {
-	branchesSnapshot gitdomain.BranchesSnapshot
-	config           config.ValidatedConfig
-	dialogTestInputs components.TestInputs
-	dryRun           configdomain.DryRun
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	newBranch        gitdomain.LocalBranchName
-	oldBranch        gitdomain.BranchInfo
-	previousBranch   Option[gitdomain.LocalBranchName]
-	stashSize        gitdomain.StashSize
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	config                   config.ValidatedConfig
+	connector                Option[hostingdomain.Connector]
+	dialogTestInputs         components.TestInputs
+	dryRun                   configdomain.DryRun
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	newBranch                gitdomain.LocalBranchName
+	oldBranch                gitdomain.BranchInfo
+	previousBranch           Option[gitdomain.LocalBranchName]
+	proposal                 Option[hostingdomain.Proposal]
+	proposalsOfChildBranches []hostingdomain.Proposal
+	stashSize                gitdomain.StashSize
 }
 
 func determineRenameBranchData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameBranchData, exit bool, err error) {
@@ -207,17 +213,57 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
+	var connectorOpt Option[hostingdomain.Connector]
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			Config:          *validatedConfig.Config.UnvalidatedConfig,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Log:             print.Logger{},
+			RemoteURL:       originURL,
+		})
+		if err != nil {
+			return data, false, err
+		}
+	}
+	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
+	proposalOpt := None[hostingdomain.Proposal]()
+	connector, hasConnector := connectorOpt.Get()
+	if hasConnector && connector.CanMakeAPICalls() && hasParent {
+		proposalOpt, err = connector.FindProposal(initialBranch, existingParent)
+		if err != nil {
+			proposalOpt = None[hostingdomain.Proposal]()
+		}
+	}
+	var proposalsOfChildBranches []hostingdomain.Proposal
+	childBranches := validatedConfig.Config.Lineage.Children(oldBranchName)
+	if hasConnector && connector.CanMakeAPICalls() {
+		if !repo.IsOffline.IsTrue() && oldBranch.HasTrackingBranch() {
+			for _, childBranch := range childBranches {
+				childProposalOpt, err := connector.FindProposal(childBranch, oldBranchName)
+				if err != nil {
+					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, oldBranchName, err)
+				}
+				childProposal, hasChildProposal := childProposalOpt.Get()
+				if hasChildProposal {
+					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
+				}
+			}
+		}
+	}
 	return renameBranchData{
-		branchesSnapshot: branchesSnapshot,
-		config:           validatedConfig,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		newBranch:        newBranchName,
-		oldBranch:        *oldBranch,
-		previousBranch:   previousBranch,
-		stashSize:        stashSize,
+		branchesSnapshot:         branchesSnapshot,
+		config:                   validatedConfig,
+		connector:                connectorOpt,
+		dialogTestInputs:         dialogTestInputs,
+		dryRun:                   dryRun,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		newBranch:                newBranchName,
+		oldBranch:                *oldBranch,
+		previousBranch:           previousBranch,
+		proposal:                 proposalOpt,
+		proposalsOfChildBranches: proposalsOfChildBranches,
+		stashSize:                stashSize,
 	}, false, err
 }
 
@@ -252,6 +298,14 @@ func renameBranchProgram(data renameBranchData) program.Program {
 				if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 					result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 				}
+				proposal, hasProposal := data.proposal.Get()
+				if data.connector.IsSome() && hasProposal {
+					result.Value.Add(&opcodes.UpdateProposalTarget{
+						NewTarget:      data.newBranch,
+						ProposalNumber: proposal.Number,
+					})
+				}
+				ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 			}
 		}
