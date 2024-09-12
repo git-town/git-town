@@ -2,12 +2,14 @@
 
 ## 16.2.0 (2024-09-12)
 
-Git Town 16.2 improves
+Git Town 16.2 makes it easier for you to manage the branches in your local repository.
+
+Big thanks to @kevgo, @ruudk, @stephenwade, @zodman for providing great ideas for new features and helping polish them in 38 shipped PRs and 6 resolved issues!
 
 #### New Features
 
-- The new `git town branch` command is Git Town's equivalent of the "git branch" command. It displays the local branch hierarchy, and the types of all branches except for main and feature branches ([documentation](), [#3807](https://github.com/git-town/git-town/issues/3807)).
-- `git town switch` can now displays the types of branches (except for the main and feature branches) when called with the `--display-types` flag ([more info](), [#3937](https://github.com/git-town/git-town/issues/3937)).
+- The new `git town branch` command displays the local branch hierarchy, and the types of all branches except for main and feature branches ([documentation](), [#3807](https://github.com/git-town/git-town/issues/3807)).
+- `git town switch` can now displays the types of branches (except for the main and feature branches) when called with the `--display-types` flag ([documentation](), [#3937](https://github.com/git-town/git-town/issues/3937)).
 - `git town switch` can now filter the branches to switch to via regular expressions ([documentation](), (#3980)[https://github.com/git-town/git-town/pull/3980/files])
 - You can now use `git town switch` to check out a remote branch using the `--all` command ([documentation](), [#3941](https://github.com/git-town/git-town/issues/3941))
 
