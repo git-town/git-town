@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/git-town/git-town/v16/internal/cli/colors"
+	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
@@ -53,7 +56,9 @@ func executeBranch(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	printBranches(data)
+	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, data.lineage, data.defaultBranchType, false, []*regexp.Regexp{})
+	output := branchLayout(entries, data)
+	fmt.Println(output)
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
@@ -90,6 +95,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		colors:            colors,
 		defaultBranchType: defaultBranchType,
 		initialBranchOpt:  branchesSnapshot.Active,
+		lineage:           repo.UnvalidatedConfig.Config.Value.Lineage,
 	}, false, err
 }
 
@@ -99,42 +105,33 @@ type branchData struct {
 	colors            colors.DialogColors
 	defaultBranchType configdomain.DefaultBranchType
 	initialBranchOpt  Option[gitdomain.LocalBranchName]
+	lineage           configdomain.Lineage
 }
 
-func printBranches(data branchData) {
+func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 	s := strings.Builder{}
-	for _, branchInfo := range data.branchInfos {
-		branchName, hasLocalBranch := branchInfo.LocalName.Get()
-		if !hasLocalBranch {
-			continue
-		}
-		initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
-		var isInitial bool
-		if hasInitialBranch {
-			isInitial = branchName == initialBranch
-		}
+	initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
+	for _, entry := range entries {
+		isInitial := entry.Branch == initialBranch
 		switch {
-		case isInitial:
+		case hasInitialBranch && isInitial:
 			color := data.colors.Initial
-			if branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("* " + branchName.String()))
-		case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + branchName.String()))
+			s.WriteString(color.Styled("* " + entry.Branch.String()))
+		case entry.OtherWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + entry.Branch.String()))
 		default:
 			color := termenv.String()
-			if branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("  " + branchName.String()))
-		}
-		branchType, hasBranchType := data.branchesAndTypes[branchName]
-		if !hasBranchType {
-			branchType = data.defaultBranchType.BranchType
+			s.WriteString(color.Styled("  " + entry.Branch.String()))
 		}
 		s.WriteString("  ")
-		s.WriteString(colors.Faint().Styled("(" + branchType.String() + ")"))
+		s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
 		s.WriteRune('\n')
 	}
+	return s.String()
 }
