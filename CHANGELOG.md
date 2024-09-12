@@ -2,6 +2,8 @@
 
 ## 16.2.1 (2024-09-12)
 
+Thanks to @kevgo, @ruudk, @stephenwade, @zodman for reporting and fixing unintuitive behavior that can and should be improved, leading to 13 shipped PRs and 2 resolved issues!
+
 #### Bug Fixes
 
 - `git town switch` no longer asks for the ancestry of unrelated branches ([#4004](https://github.com/git-town/git-town/issues/4004)).
