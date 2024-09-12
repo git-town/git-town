@@ -116,7 +116,7 @@ type killData struct {
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
-	parentBranch             Option[gitdomain.LocalBranchName]
+	parentBranch             gitdomain.LocalBranchName
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []hostingdomain.Proposal
 	stashSize                gitdomain.StashSize
@@ -223,6 +223,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 			}
 		}
 	}
+	mainBranch := validatedConfig.Config.MainBranch
 	return killData{
 		branchToKillInfo:         *branchToKill,
 		branchToKillType:         branchTypeToKill,
@@ -234,7 +235,7 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
-		parentBranch:             parentBranch,
+		parentBranch:             parentBranch.GetOrElse(mainBranch),
 		previousBranch:           previousBranchOpt,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
@@ -288,11 +289,11 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 			prog.Value.Add(&opcodes.Checkout{Branch: data.branchWhenDone})
 		}
 		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
-		if parentBranch, hasParentBranch := data.parentBranch.Get(); hasParentBranch && data.dryRun.IsFalse() {
+		if data.dryRun.IsFalse() {
 			sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 				Branch:  localBranchToKill,
 				Lineage: data.config.Config.Lineage,
-				Parent:  parentBranch,
+				Parent:  data.parentBranch,
 				Program: prog,
 			})
 		}
