@@ -1,4 +1,4 @@
-Feature: display all branches with hierarchy and type
+Feature: display all local branches with hierarchy and type
 
   Background:
     Given a Git repo with origin
