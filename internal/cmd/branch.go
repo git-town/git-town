@@ -57,8 +57,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 		return err
 	}
 	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, data.lineage, data.defaultBranchType, false, []*regexp.Regexp{})
-	output := branchLayout(entries, data)
-	fmt.Println(output)
+	fmt.Println(branchLayout(entries, data))
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
