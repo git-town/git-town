@@ -768,7 +768,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
 			return fmt.Errorf("unexpected exit code %d", exitCode)
 		}
-		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
+		output := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !strings.Contains(output, strings.TrimSpace(expected.Content)) {
 			fmt.Println("ERROR: text not found:")
 			fmt.Println("==================================================================")
 			fmt.Println("EXPECTED OUTPUT START ==============================================")
@@ -784,7 +785,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("ACTUAL OUTPUT START ==============================================")
 			fmt.Println("==================================================================")
 			fmt.Println()
-			fmt.Println(state.runOutput.GetOrPanic())
+			fmt.Println(output)
 			fmt.Println()
 			fmt.Println("==================================================================")
 			fmt.Println("ACTUAL OUTPUT END ================================================")
