@@ -20,10 +20,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const branchDesc = "Displays all branches, their hierarchy and type"
+const branchDesc = "Displays the local branch hierarchy and types"
 
 const branchHelp = `
-Git Town's version of Git's "branch" command.`
+Git Town's equivalent of the "git branch" command.`
 
 func branchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
