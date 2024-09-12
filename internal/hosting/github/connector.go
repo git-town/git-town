@@ -104,23 +104,6 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(number int, newBase gitdomain.LocalBranchName) error {
-	// TODO
-	newBaseText := newBase.String()
-	self.log.Start(messages.APIProposalUpdateStart)
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
-		Base: &github.PullRequestBranch{
-			Ref: &(newBaseText),
-		},
-	})
-	if err != nil {
-		self.log.Failed(err)
-		return err
-	}
-	self.log.Success()
-	return nil
-}
-
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	targetName := target.String()
 	self.log.Start(messages.APIProposalUpdateStart)

@@ -84,20 +84,6 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
-	// TODO
-	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.Ptr(target.String()),
-	})
-	if err != nil {
-		self.log.Failed(err)
-		return err
-	}
-	self.log.Success()
-	return nil
-}
-
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
