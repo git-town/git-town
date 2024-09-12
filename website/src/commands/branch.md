@@ -1,8 +1,9 @@
 # git town branch
 
-The _branch_ command displays the local branch hierachy and the types of not
-typically used branches, i.e. all branches that are not the main or feature
-branches.
+The _branch_ command is the equivalent of the
+[git branch](https://git-scm.com/docs/git-branch) command. It displays the local
+branch hierachy and the types of not typically used branches, i.e. all branches
+that are not the main or feature branches.
 
 ### --verbose / -v
 
