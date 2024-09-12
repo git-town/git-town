@@ -268,7 +268,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if opts.IgnoreOutput {
 		return "", exitCode, err
 	}
-	return strings.TrimSpace(outputBuf.String()), exitCode, err
+	return strings.TrimRight(outputBuf.String(), "\n"), exitCode, err
 }
 
 // Run runs the given command with the given arguments.
