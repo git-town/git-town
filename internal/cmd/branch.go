@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/muesli/termenv"
 	"github.com/spf13/cobra"
 )
 
@@ -127,13 +126,11 @@ func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 			}
 			s.WriteString(color.Styled("* " + entry.String()))
 		case entry.OtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + entry.String()))
+			s.WriteString("+ ")
+			s.WriteString(colors.Cyan().Styled(entry.String()))
 		default:
-			color := termenv.String()
-			if entry.OtherWorktree {
-				color = color.Faint()
-			}
-			s.WriteString(color.Styled("  " + entry.String()))
+			s.WriteString("  ")
+			s.WriteString(entry.String())
 		}
 		if dialog.ShouldDisplayBranchType(entry.Type) {
 			s.WriteString("  ")

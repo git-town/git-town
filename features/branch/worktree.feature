@@ -14,7 +14,6 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
     And branch "gamma" is active in another worktree
-    And I ran "git pull --rebase"
     When I run "git-town branch"
 
   Scenario: result
