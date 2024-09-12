@@ -28,6 +28,7 @@
     - [park](commands/park.md)
     - [prototype](commands/prototype.md)
   - [Additional commands](additional-commands.md)
+    - [branch](commands/branch.md)
     - [compress](commands/compress.md)
     - [kill](commands/kill.md)
     - [rename-branch](commands/rename-branch.md)
