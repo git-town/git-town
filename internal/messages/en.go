@@ -5,7 +5,7 @@ const (
 	AliasedCommands                   = "Aliased commands: %s\n"
 	ArgumentUnknown                   = "unknown argument: %q"
 	APIProposalLookupStart            = "Looking for proposal online ... "
-	APIProposalUpdateStart            = "updating proposal target online ..."
+	APIProposalUpdateStart            = "updating proposal online ..."
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
