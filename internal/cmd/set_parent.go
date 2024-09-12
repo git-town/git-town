@@ -78,7 +78,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	runProgram, aborted := setParentProgram(outcome, selectedBranch, data.initialBranch, data)
+	runProgram, aborted := setParentProgram(outcome, selectedBranch, data)
 	if aborted {
 		return nil
 	}
@@ -223,16 +223,16 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
 	switch outcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		prog.Add(&opcodes.AddToPerennialBranches{Branch: currentBranch})
-		prog.Add(&opcodes.DeleteParentBranch{Branch: currentBranch})
+		prog.Add(&opcodes.AddToPerennialBranches{Branch: data.initialBranch})
+		prog.Add(&opcodes.DeleteParentBranch{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		prog.Add(&opcodes.SetParent{Branch: currentBranch, Parent: selectedBranch})
+		prog.Add(&opcodes.SetParent{Branch: data.initialBranch, Parent: selectedBranch})
 		if data.connector.IsSome() && hasProposal {
 			prog.Add(&opcodes.UpdateProposalTarget{
 				NewTarget:      selectedBranch,
