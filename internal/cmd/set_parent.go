@@ -8,11 +8,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
@@ -76,7 +78,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	runProgram, aborted := setParentProgram(outcome, selectedBranch, data.initialBranch)
+	runProgram, aborted := setParentProgram(outcome, selectedBranch, data)
 	if aborted {
 		return nil
 	}
@@ -96,7 +98,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -115,11 +117,13 @@ func executeSetParent(verbose configdomain.Verbose) error {
 type setParentData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
+	connector        Option[hostingdomain.Connector]
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName
+	proposal         Option[hostingdomain.Proposal]
 	stashSize        gitdomain.StashSize
 }
 
@@ -179,14 +183,36 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
+	var connectorOpt Option[hostingdomain.Connector]
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			Config:          *validatedConfig.Config.UnvalidatedConfig,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Log:             print.Logger{},
+			RemoteURL:       originURL,
+		})
+		if err != nil {
+			return data, false, err
+		}
+	}
+	proposalOpt := None[hostingdomain.Proposal]()
+	connector, hasConnector := connectorOpt.Get()
+	if hasConnector && connector.CanMakeAPICalls() && hasParent {
+		proposalOpt, err = connector.FindProposal(initialBranch, existingParent)
+		if err != nil {
+			proposalOpt = None[hostingdomain.Proposal]()
+		}
+	}
 	return setParentData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
+		connector:        connectorOpt,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		mainBranch:       mainBranch,
+		proposal:         proposalOpt,
 		stashSize:        stashSize,
 	}, false, nil
 }
@@ -198,15 +224,22 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (prog program.Program, aborted bool) {
+func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+	proposal, hasProposal := data.proposal.Get()
 	switch outcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		prog.Add(&opcodes.AddToPerennialBranches{Branch: currentBranch})
-		prog.Add(&opcodes.DeleteParentBranch{Branch: currentBranch})
+		prog.Add(&opcodes.AddToPerennialBranches{Branch: data.initialBranch})
+		prog.Add(&opcodes.DeleteParentBranch{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		prog.Add(&opcodes.SetParent{Branch: currentBranch, Parent: selectedBranch})
+		prog.Add(&opcodes.SetParent{Branch: data.initialBranch, Parent: selectedBranch})
+		if data.connector.IsSome() && hasProposal {
+			prog.Add(&opcodes.UpdateProposalTarget{
+				NewTarget:      selectedBranch,
+				ProposalNumber: proposal.Number,
+			})
+		}
 	}
 	return prog, false
 }
