@@ -21,7 +21,6 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
     And I ran "git pull --rebase"
     When I run "git-town branch"
 
-  @debug @this
   Scenario: result
     Then it runs no commands
     And it prints:
@@ -30,7 +29,7 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
           alpha
             beta
               gamma
-          conflicting
+      *   conflicting
           parked  (parked)
           prototype  (prototype)
         contribution  (contribution)

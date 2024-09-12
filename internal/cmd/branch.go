@@ -86,6 +86,13 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 	if err != nil || exit {
 		return data, exit, err
 	}
+	initialBranchOpt := branchesSnapshot.Active
+	if initialBranchOpt.IsNone() {
+		initialBranch, err := repo.Git.CurrentBranchUncached(repo.Backend)
+		if err == nil {
+			initialBranchOpt = Some(initialBranch)
+		}
+	}
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
 	colors := colors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.Names())
@@ -94,7 +101,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		branchesAndTypes:  branchesAndTypes,
 		colors:            colors,
 		defaultBranchType: defaultBranchType,
-		initialBranchOpt:  branchesSnapshot.Active,
+		initialBranchOpt:  initialBranchOpt,
 		lineage:           repo.UnvalidatedConfig.Config.Value.Lineage,
 	}, false, err
 }
