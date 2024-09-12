@@ -25,23 +25,6 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: displayTypes,
-		InitialBranchPos:   cursor,
-		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
-		UncommittedChanges: uncommittedChanges,
-	})
-	components.SendInputs(inputs, dialogProgram)
-	dialogResult, err := dialogProgram.Run()
-	if err != nil {
-		return "", false, err
-	}
-	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedData := result.List.SelectedData()
-	return selectedData.Branch, result.Aborted(), nil
-}
-
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
@@ -163,6 +146,23 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 		return true
 	}
 	panic("unhandled branch type:" + branchType.String())
+}
+
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+	dialogProgram := tea.NewProgram(SwitchModel{
+		DisplayBranchTypes: displayTypes,
+		InitialBranchPos:   cursor,
+		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
+		UncommittedChanges: uncommittedChanges,
+	})
+	components.SendInputs(inputs, dialogProgram)
+	dialogResult, err := dialogProgram.Run()
+	if err != nil {
+		return "", false, err
+	}
+	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	selectedData := result.List.SelectedData()
+	return selectedData.Branch, result.Aborted(), nil
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
