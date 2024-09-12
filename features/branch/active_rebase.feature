@@ -7,22 +7,30 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
       | alpha        | feature      | main   | local, origin |
       | beta         | feature      | alpha  | local, origin |
       | gamma        | feature      | beta   | local, origin |
+      | conflicting  | feature      | main   | local, origin |
       | observed     | observed     |        | local, origin |
       | contribution | contribution |        | local, origin |
       | prototype    | prototype    | main   | local         |
       | parked       | parked       | main   | local         |
       | perennial    | perennial    |        | local, origin |
-    And the current branch is "beta"
+    And the commits
+      | BRANCH      | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | conflicting | local    | conflicting local commit  | conflicting_file | local content  |
+      |             | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "conflicting"
+    And I ran "git pull --rebase"
     When I run "git-town branch"
 
+  @debug @this
   Scenario: result
     Then it runs no commands
     And it prints:
       """
         main
           alpha
-      *     beta
+            beta
               gamma
+          conflicting
           parked  (parked)
           prototype  (prototype)
         contribution  (contribution)
