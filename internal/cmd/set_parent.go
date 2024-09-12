@@ -223,15 +223,15 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (data program.Program, aborted bool) {
+func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranch gitdomain.LocalBranchName) (prog program.Program, aborted bool) {
 	switch outcome {
 	case dialog.ParentOutcomeAborted:
-		return data, true
+		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		data.Add(&opcodes.AddToPerennialBranches{Branch: currentBranch})
-		data.Add(&opcodes.DeleteParentBranch{Branch: currentBranch})
+		prog.Add(&opcodes.AddToPerennialBranches{Branch: currentBranch})
+		prog.Add(&opcodes.DeleteParentBranch{Branch: currentBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		data.Add(&opcodes.SetParent{Branch: currentBranch, Parent: selectedBranch})
+		prog.Add(&opcodes.SetParent{Branch: currentBranch, Parent: selectedBranch})
 	}
-	return data, false
+	return prog, false
 }
