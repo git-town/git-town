@@ -4,7 +4,7 @@
 
 Git Town 16.2 makes it easier for you to manage the branches in your local repository.
 
-Big thanks to @kevgo, @ruudk, @stephenwade, @zodman for providing great ideas for new features and helping polish them in 38 shipped PRs and 6 resolved issues!
+Big thanks to @kevgo, @ruudk, @stephenwade, @zodman for coming up with the ideas for these new features and helping polish them in 38 shipped PRs and 6 resolved issues!
 
 #### New Features
 
