@@ -8,11 +8,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
@@ -115,11 +117,13 @@ func executeSetParent(verbose configdomain.Verbose) error {
 type setParentData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
+	connector        Option[hostingdomain.Connector]
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName
+	proposal         Option[hostingdomain.Proposal]
 	stashSize        gitdomain.StashSize
 }
 
@@ -179,6 +183,26 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
+	var connectorOpt Option[hostingdomain.Connector]
+	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
+		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
+			Config:          *validatedConfig.Config.UnvalidatedConfig,
+			HostingPlatform: validatedConfig.Config.HostingPlatform,
+			Log:             print.Logger{},
+			RemoteURL:       originURL,
+		})
+		if err != nil {
+			return data, false, err
+		}
+	}
+	proposalOpt := None[hostingdomain.Proposal]()
+	connector, hasConnector := connectorOpt.Get()
+	if hasConnector && connector.CanMakeAPICalls() && hasParent {
+		proposalOpt, err = connector.FindProposal(initialBranch, existingParent)
+		if err != nil {
+			proposalOpt = None[hostingdomain.Proposal]()
+		}
+	}
 	return setParentData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
@@ -187,6 +211,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		mainBranch:       mainBranch,
+		proposal:         proposalOpt,
 		stashSize:        stashSize,
 	}, false, nil
 }
