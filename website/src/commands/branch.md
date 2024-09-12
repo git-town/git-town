@@ -1,0 +1,10 @@
+# git town branch
+
+The _branch_ command displays the local branch hierachy and the types of not
+typically used branches, i.e. all branches that are not the main or feature
+branches.
+
+### --verbose / -v
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
