@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -56,8 +55,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 		return err
 	}
 	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, data.lineage, data.defaultBranchType, false, []*regexp.Regexp{})
-	fmt.Println(branchLayout(entries, data))
-	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
+	fmt.Print(branchLayout(entries, data))
 	return nil
 }
 
