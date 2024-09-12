@@ -315,9 +315,14 @@ func renameBranchProgram(data renameBranchData) program.Program {
 	for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
 		result.Value.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
 	}
-	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
+	if data.oldBranch.RemoteName.IsSome() {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+		}
+	}
+	ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
+	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
+		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 			result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
 		}
 	}
