@@ -89,7 +89,7 @@ func executeKill(args []string, dryRun configdomain.DryRun, verbose configdomain
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -267,8 +267,8 @@ func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
 func killFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data killData) {
 	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if data.branchToKillInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToKill && data.config.Config.IsOnline() {
-		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 		ship.UpdateChildBranchProposals(prog.Value, data.proposalsOfChildBranches, data.parentBranch)
+		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
 }
