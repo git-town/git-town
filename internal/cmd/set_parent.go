@@ -206,6 +206,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	return setParentData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
+		connector:        connectorOpt,
 		defaultChoice:    defaultChoice,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
