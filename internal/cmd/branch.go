@@ -129,8 +129,10 @@ func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 			}
 			s.WriteString(color.Styled("  " + entry.String()))
 		}
-		s.WriteString("  ")
-		s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
+		if dialog.ShouldDisplayBranchType(entry.Type) {
+			s.WriteString("  ")
+			s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
+		}
 		s.WriteRune('\n')
 	}
 	return s.String()

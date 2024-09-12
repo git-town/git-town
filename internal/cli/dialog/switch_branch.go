@@ -110,7 +110,7 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
-		if self.shouldDisplayBranchType(entry.Data.Type) {
+		if self.DisplayBranchTypes.IsTrue() && ShouldDisplayBranchType(entry.Data.Type) {
 			s.WriteString("  ")
 			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
 		}
@@ -152,10 +152,7 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-func (self SwitchModel) shouldDisplayBranchType(branchType configdomain.BranchType) bool {
-	if !self.DisplayBranchTypes {
-		return false
-	}
+func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	switch branchType {
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch:
 		return false

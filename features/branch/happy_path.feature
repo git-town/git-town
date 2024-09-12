@@ -24,9 +24,9 @@ Feature: display all branches with hierarchy and type
           alpha
       *     beta
               gamma
-          contribution
-          observed
-          parked
-          perennial
-          prototype
+          parked  (parked)
+          prototype  (prototype)
+        contribution  (contribution)
+        observed  (observed)
+        perennial  (perennial)
       """
