@@ -269,63 +269,9 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 
 func renameBranchProgram(data renameBranchData) program.Program {
 	result := NewMutable(&program.Program{})
-	if oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get(); hasOldLocalBranch {
-		result.Value.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: oldLocalBranch.Location()})
-		if data.initialBranch == oldLocalBranch {
-			result.Value.Add(&opcodes.Checkout{Branch: data.newBranch})
-		}
-		if !data.dryRun {
-			if data.config.Config.IsPerennialBranch(data.initialBranch) {
-				result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
-			} else {
-				if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
-					result.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: oldLocalBranch})
-					result.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.newBranch})
-				}
-				if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
-					result.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: oldLocalBranch})
-					result.Value.Add(&opcodes.AddToObservedBranches{Branch: data.newBranch})
-				}
-				if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {
-					result.Value.Add(&opcodes.RemoveFromContributionBranches{Branch: oldLocalBranch})
-					result.Value.Add(&opcodes.AddToContributionBranches{Branch: data.newBranch})
-				}
-				if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
-					result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
-					result.Value.Add(&opcodes.AddToParkedBranches{Branch: data.newBranch})
-				}
-				if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
-					result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
-				}
-				proposal, hasProposal := data.proposal.Get()
-				if data.connector.IsSome() && hasProposal {
-					result.Value.Add(&opcodes.UpdateProposalTarget{
-						NewTarget:      data.newBranch,
-						ProposalNumber: proposal.Number,
-					})
-				}
-				ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
-				result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
-			}
-		}
-		for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
-			result.Value.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
-		}
-		if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
-			if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
-				result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
-				result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
-			}
-		}
-		result.Value.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
-		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
-		cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
-			DryRun:                   data.dryRun,
-			RunInGitRoot:             false,
-			StashOpenChanges:         false,
-			PreviousBranchCandidates: previousBranchCandidates,
-		})
+	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
+	if !hasOldLocalBranch {
+		return result.Get()
 	}
 	result.Value.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: oldLocalBranch.Location()})
 	if data.initialBranch == oldLocalBranch {
@@ -355,6 +301,14 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 				result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
+			proposal, hasProposal := data.proposal.Get()
+			if data.connector.IsSome() && hasProposal {
+				result.Value.Add(&opcodes.UpdateProposalTarget{
+					NewTarget:      data.newBranch,
+					ProposalNumber: proposal.Number,
+				})
+			}
+			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
 		}
 	}
