@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"os"
+	"strings"
 
+	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
@@ -10,6 +12,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/muesli/termenv"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +53,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	printBranches(data.branches)
+	printBranches(data)
 	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
 	return nil
 }
@@ -77,15 +81,58 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 	if err != nil || exit {
 		return data, exit, err
 	}
+	colors := colors.NewDialogColors()
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
-		branches: branchesSnapshot.Branches,
+		branchInfos:      branchesSnapshot.Branches,
+		branchesAndTypes: branchesAndTypes,
+		colors:           colors,
+		initialBranchOpt: branchesSnapshot.Active,
 	}, false, err
 }
 
 type branchData struct {
-	branches gitdomain.BranchInfos
+	branchInfos       gitdomain.BranchInfos
+	branchesAndTypes  configdomain.BranchesAndTypes
+	colors            colors.DialogColors
+	initialBranchOpt  Option[gitdomain.LocalBranchName]
+	defaultBranchType configdomain.DefaultBranchType
 }
 
-func printBranches(branches gitdomain.BranchInfos) {
-	//
+func printBranches(data branchData) {
+	s := strings.Builder{}
+	for _, branchInfo := range data.branchInfos {
+		branchName, hasLocalBranch := branchInfo.LocalName.Get()
+		if !hasLocalBranch {
+			continue
+		}
+		initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
+		var isInitial bool
+		if hasInitialBranch {
+			isInitial = branchName == initialBranch
+		}
+		switch {
+		case isInitial:
+			color := data.colors.Initial
+			if branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("* " + branchName.String()))
+		case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + branchName.String()))
+		default:
+			color := termenv.String()
+			if branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+				color = color.Faint()
+			}
+			s.WriteString(color.Styled("  " + branchName.String()))
+		}
+		branchType, hasBranchType := data.branchesAndTypes[branchName]
+		if !hasBranchType {
+			branchType = data.defaultBranchType.BranchType
+		}
+		s.WriteString("  ")
+		s.WriteString(colors.Faint().Styled("(" + branchType.String() + ")"))
+		s.WriteRune('\n')
+	}
 }
