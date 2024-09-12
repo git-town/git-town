@@ -25,23 +25,6 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
-	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: displayTypes,
-		InitialBranchPos:   cursor,
-		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
-		UncommittedChanges: uncommittedChanges,
-	})
-	components.SendInputs(inputs, dialogProgram)
-	dialogResult, err := dialogProgram.Run()
-	if err != nil {
-		return "", false, err
-	}
-	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedData := result.List.SelectedData()
-	return selectedData.Branch, result.Aborted(), nil
-}
-
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
@@ -113,7 +96,7 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
-		if self.shouldDisplayBranchType(entry.Data.Type) {
+		if self.DisplayBranchTypes.IsTrue() && ShouldDisplayBranchType(entry.Data.Type) {
 			s.WriteString("  ")
 			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
 		}
@@ -155,10 +138,7 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-func (self SwitchModel) shouldDisplayBranchType(branchType configdomain.BranchType) bool {
-	if !self.DisplayBranchTypes {
-		return false
-	}
+func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	switch branchType {
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch:
 		return false
@@ -166,6 +146,23 @@ func (self SwitchModel) shouldDisplayBranchType(branchType configdomain.BranchTy
 		return true
 	}
 	panic("unhandled branch type:" + branchType.String())
+}
+
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+	dialogProgram := tea.NewProgram(SwitchModel{
+		DisplayBranchTypes: displayTypes,
+		InitialBranchPos:   cursor,
+		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
+		UncommittedChanges: uncommittedChanges,
+	})
+	components.SendInputs(inputs, dialogProgram)
+	dialogResult, err := dialogProgram.Run()
+	if err != nil {
+		return "", false, err
+	}
+	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	selectedData := result.List.SelectedData()
+	return selectedData.Branch, result.Aborted(), nil
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {

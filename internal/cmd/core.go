@@ -12,6 +12,7 @@ import (
 func Execute() error {
 	rootCmd := rootCmd()
 	rootCmd.AddCommand(appendCmd())
+	rootCmd.AddCommand(branchCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(compressCmd())
 	rootCmd.AddCommand(config.RootCmd())
