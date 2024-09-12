@@ -1,5 +1,12 @@
 # Git Town Changelog
 
+## 16.2.1 (2024-09-12)
+
+#### Bug Fixes
+
+- `git town switch` no longer asks for the ancestry of unrelated branches ([#4004](https://github.com/git-town/git-town/issues/4004)).
+- `git town branch` no longer prints a redundant newline ([#4011](https://github.com/git-town/git-town/pull/4011)).
+
 ## 16.2.0 (2024-09-12)
 
 Git Town 16.2 makes it easier for you to manage the branches in your local repository.
