@@ -120,11 +120,7 @@ func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
 		isInitialBranch := entry.Branch == initialBranch
 		switch {
 		case hasInitialBranch && isInitialBranch:
-			color := data.colors.Initial
-			if entry.OtherWorktree {
-				color = color.Faint()
-			}
-			s.WriteString(color.Styled("* " + entry.String()))
+			s.WriteString(data.colors.Initial.Styled("* " + entry.String()))
 		case entry.OtherWorktree:
 			s.WriteString("+ ")
 			s.WriteString(colors.Cyan().Styled(entry.String()))
