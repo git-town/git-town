@@ -228,17 +228,10 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch, currentBranc
 	case dialog.ParentOutcomeAborted:
 		return data, true
 	case dialog.ParentOutcomePerennialBranch:
-		data.Add(&opcodes.AddToPerennialBranches{
-			Branch: currentBranch,
-		})
-		data.Add(&opcodes.DeleteParentBranch{
-			Branch: currentBranch,
-		})
+		data.Add(&opcodes.AddToPerennialBranches{Branch: currentBranch})
+		data.Add(&opcodes.DeleteParentBranch{Branch: currentBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		data.Add(&opcodes.SetParent{
-			Branch: currentBranch,
-			Parent: selectedBranch,
-		})
+		data.Add(&opcodes.SetParent{Branch: currentBranch, Parent: selectedBranch})
 	}
 	return data, false
 }
