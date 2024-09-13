@@ -118,17 +118,14 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	}
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
 	var proposalsOfChildBranches []hostingdomain.Proposal
-	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *validatedConfig.Config.UnvalidatedConfig,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-		if err != nil {
-			return data, false, err
-		}
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return data, false, err
 	}
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
 		if !repo.IsOffline.IsTrue() && branchToShip.HasTrackingBranch() {

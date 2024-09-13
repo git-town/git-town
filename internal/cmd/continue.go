@@ -133,7 +133,6 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 	if repoStatus.UntrackedChanges {
 		return data, false, errors.New(messages.ContinueUntrackedChanges)
 	}
-	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
@@ -141,14 +140,12 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 	}
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          repo.UnvalidatedConfig.Config.Get(),
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          repo.UnvalidatedConfig.Config.Get(),
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
 	return continueData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,

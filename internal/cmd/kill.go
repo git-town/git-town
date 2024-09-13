@@ -194,17 +194,14 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 	} else {
 		parentBranch = None[gitdomain.LocalBranchName]()
 	}
-	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *validatedConfig.Config.UnvalidatedConfig,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-		if err != nil {
-			return data, false, err
-		}
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return data, false, err
 	}
 	var proposalsOfChildBranches []hostingdomain.Proposal
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToKill)
