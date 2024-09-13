@@ -15,11 +15,8 @@ import (
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
 	remoteURL, hasRemoteURL := args.RemoteURL.Get()
-	if !hasRemoteURL {
-		return None[hostingdomain.Connector](), nil
-	}
 	platform, hasPlatform := Detect(remoteURL, args.HostingPlatform).Get()
-	if !hasPlatform {
+	if !hasRemoteURL || !hasPlatform {
 		return None[hostingdomain.Connector](), nil
 	}
 	var connector hostingdomain.Connector
