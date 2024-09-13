@@ -25,13 +25,12 @@ Feature: rename a perennial branch
   Scenario: forced rename works
     When I run "git-town rename-branch --force production new"
     Then it runs the commands
-      | BRANCH     | COMMAND                     |
-      | production | git fetch --prune --tags    |
-      |            | git branch new production   |
-      |            | git checkout new            |
-      | new        | git push -u origin new      |
-      |            | git push origin :production |
-      |            | git branch -D production    |
+      | BRANCH     | COMMAND                          |
+      | production | git fetch --prune --tags         |
+      |            | git branch --move production new |
+      |            | git checkout new                 |
+      | new        | git push -u origin new           |
+      |            | git push origin :production      |
     And the current branch is now "new"
     And the perennial branches are now "new"
     And these commits exist now
