@@ -89,7 +89,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
