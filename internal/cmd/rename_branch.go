@@ -310,6 +310,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
 			if data.connector.IsSome() && hasProposal {
 				result.Value.Add(&opcodes.UpdateProposalHead{
@@ -317,7 +318,6 @@ func renameBranchProgram(data renameBranchData) program.Program {
 					ProposalNumber: proposal.Number,
 				})
 			}
-			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
 		}
 	}
