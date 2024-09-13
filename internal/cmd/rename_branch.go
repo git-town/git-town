@@ -311,8 +311,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
 			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
 			ship.UpdateChildBranchProposals(result.Value, data.proposalsOfChildBranches, data.newBranch)
-			proposal, hasProposal := data.proposal.Get()
-			if data.connector.IsSome() && hasProposal {
+			if proposal, hasProposal := data.proposal.Get(); hasProposal {
 				result.Value.Add(&opcodes.UpdateProposalHead{
 					NewTarget:      data.newBranch,
 					ProposalNumber: proposal.Number,
