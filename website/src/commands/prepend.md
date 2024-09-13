@@ -12,6 +12,9 @@ branch are on top of the current state of the repository. If the workspace
 contains uncommitted changes, `git prepend` does not perform this sync to let
 you commit your open changes first and then sync manually.
 
+If the current branch already has a proposal, this command pushes the new branch
+in order to update the base branch of the existing proposal to the new branch.
+
 Consider this branch setup:
 
 ```

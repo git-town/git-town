@@ -8,11 +8,14 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/ship"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/sync"
@@ -86,7 +89,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -107,6 +110,7 @@ type prependData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
+	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
@@ -114,6 +118,7 @@ type prependData struct {
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
 	previousBranch      Option[gitdomain.LocalBranchName]
+	proposal            Option[hostingdomain.Proposal]
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
 	stashSize           gitdomain.StashSize
@@ -183,17 +188,29 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 	if err != nil {
 		return data, false, err
 	}
-	parent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
+	parentOpt := validatedConfig.Config.Lineage.Parent(initialBranch)
+	parent, hasParent := parentOpt.Get()
 	if !hasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return data, false, err
+	}
+	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	return prependData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
+		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		existingParent:      parent,
@@ -201,6 +218,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
 		previousBranch:      previousBranch,
+		proposal:            proposalOpt,
 		prototype:           prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
@@ -240,8 +258,15 @@ func prependProgram(data prependData) program.Program {
 	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
-	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+	proposal, hasProposal := data.proposal.Get()
+	if data.remotes.HasOrigin() && data.config.Config.IsOnline() && (data.config.Config.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+	}
+	if hasProposal {
+		prog.Value.Add(&opcodes.UpdateProposalBase{
+			NewTarget:      data.targetBranch,
+			ProposalNumber: proposal.Number,
+		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
