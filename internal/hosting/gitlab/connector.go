@@ -31,7 +31,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
-		self.log.Success()
+		self.log.Ok()
 		if proposalURLOverride == hostingdomain.OverrideNoProposal {
 			return None[hostingdomain.Proposal](), nil
 		}
@@ -53,7 +53,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Success()
+	self.log.Ok()
 	switch len(mergeRequests) {
 	case 0:
 		return None[hostingdomain.Proposal](), nil
@@ -80,7 +80,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		self.log.Failed(err)
 		return err
 	}
-	self.log.Success()
+	self.log.Ok()
 	return nil
 }
 
@@ -93,7 +93,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 		self.log.Failed(err)
 		return err
 	}
-	self.log.Success()
+	self.log.Ok()
 	return nil
 }
 

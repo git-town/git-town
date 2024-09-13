@@ -6,6 +6,7 @@ const (
 	ArgumentUnknown                   = "unknown argument: %q"
 	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal online ... "
+	APIUpdateProposalTarget           = "updating target of proposal %s to %s ... "
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
@@ -109,11 +110,11 @@ END OUTPUT FROM 'git branch -vva'
 	HackCannotFeatureMainBranch           = "cannot make the main branch a feature branch"
 	HackCannotFeaturePerennialBranch      = "branch %q is a perennial branch and therefore be a feature branch"
 	HostingBitBucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
-	HostingGitlabMergingViaAPI            = "GitLab API: Merging MR !%d ... "
-	HostingGitlabUpdateMRViaAPI           = "GitLab API: Updating target branch for MR !%d to %q ... "
+	HostingGitlabMergingViaAPI            = "Merging MR !%d ... "
+	HostingGitlabUpdateMRViaAPI           = "Updating target branch for MR !%d to %q ... "
 	HostingGiteaNotImplemented            = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI            = "Gitea API: Updating base branch for PR #%d to #%s"
-	HostingGithubMergingViaAPI            = "GitHub API: merging PR #%d ... "
+	HostingGithubMergingViaAPI            = "GitHub API: merging PR %s ... "
 	HostingPlatformUnknown                = "unknown hosting platform: %q"
 	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`

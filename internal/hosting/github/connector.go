@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 
+	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -39,7 +41,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
-		self.log.Success()
+		self.log.Ok()
 		if proposalURLOverride == hostingdomain.OverrideNoProposal {
 			return None[hostingdomain.Proposal](), nil
 		}
@@ -60,14 +62,15 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Success()
 	if len(pullRequests) == 0 {
+		self.log.Ok()
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
 	return Some(proposal), nil
 }
 
@@ -94,19 +97,19 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingGithubMergingViaAPI, number)
+	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
 	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Subject,
 	})
-	self.log.Success()
+	self.log.Ok()
 	return err
 }
 
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	targetName := target.String()
-	self.log.Start(messages.APIProposalUpdateStart)
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
@@ -116,7 +119,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 		self.log.Failed(err)
 		return err
 	}
-	self.log.Success()
+	self.log.Ok()
 	return nil
 }
 
