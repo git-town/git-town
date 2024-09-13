@@ -124,18 +124,10 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 }
 
 func (self Connector) UpdateProposalHead(number int, head gitdomain.LocalBranchName) error {
-	headName := head.String()
-	self.log.Start(messages.APIUpdateProposalHead, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(headName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
-		Head: &github.PullRequestBranch{
-			Ref: &(headName),
-		},
-	})
-	if err != nil {
-		self.log.Failed(err)
-		return err
-	}
-	self.log.Ok()
+	self.log.Log("GitHub cannot update the head branch of pull requests.")
+	self.log.Log(fmt.Sprintf("GitHub will therefore close your existing pull request (#%d)", number))
+	self.log.Log("once Git Town pushes the new branch name and you have to create a new one.\n")
+	self.log.Log("https://docs.github.com/en/rest/pulls/pulls?apiVersion=latest#update-a-pull-request")
 	return nil
 }
 
