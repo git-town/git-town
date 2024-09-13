@@ -9,7 +9,7 @@ const (
 	APIUpdateProposalBase             = "updating base branch of proposal %s to %s ... "
 	APIUpdateProposalHead             = "updating head branch of proposal %s to %s ... "
 	APIGitHubCannotUpdateHeadBranch   = "GitHub cannot update the head branch of pull requests.\nOnce Git Town deleted the old tracking branch,\nGitHub has therefore closed the existing pull request for this branch (#%d).\nYou have to create a new one.\n"
-	APIGitLabCannotUpdateHeadBranch   = "GitLab cannot update the source branch of merge requests:\nhttps://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\nGitLab has therefore closed the existing pull request for this branch (#%d).\nYou have to create a new one."
+	APIGitLabCannotUpdateHeadBranch   = "GitLab cannot update the source branch of merge requests:\nhttps://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\nGitLab has therefore closed the existing merge request for this branch (!%d).\nYou have to create a new one."
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
