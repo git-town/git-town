@@ -10,7 +10,6 @@ Feature: display all executed Git commands
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
 
-  @this
   Scenario: result
     When I run "git-town prepend parent --verbose"
     Then it runs the commands
