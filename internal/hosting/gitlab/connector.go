@@ -97,7 +97,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName) error {
 	self.log.Log("The GitLab API cannot update the source branch of merge requests:")
 	self.log.Log("https://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\n")
 	self.log.Log("Renaming the tracking branch will therefore close your existing pull request")

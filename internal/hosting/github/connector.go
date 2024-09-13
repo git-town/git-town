@@ -123,7 +123,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(number int, head gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName) error {
 	self.log.Log("GitHub cannot update the head branch of pull requests.")
 	self.log.Log(fmt.Sprintf("GitHub will therefore close your existing pull request (#%d)", number))
 	self.log.Log("once Git Town pushes the new branch name and you have to create a new one.\n")
