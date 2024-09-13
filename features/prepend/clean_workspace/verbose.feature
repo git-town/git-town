@@ -10,6 +10,7 @@ Feature: display all executed Git commands
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
 
+  @this
   Scenario: result
     When I run "git-town prepend parent --verbose"
     Then it runs the commands
@@ -27,6 +28,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
       |        | backend  | git log main..old --format=%h                   |
       |        | backend  | git log --format=%B -n 1 {{ sha 'old commit' }} |
+      |        | backend  | git remote get-url origin                       |
       | old    | frontend | git checkout main                               |
       | main   | frontend | git rebase origin/main                          |
       |        | backend  | git rev-list --left-right main...origin/main    |
@@ -47,7 +49,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                  |
     And it prints:
       """
-      Ran 31 shell commands.
+      Ran 32 shell commands.
       """
     And the current branch is now "parent"
 
