@@ -26,7 +26,9 @@ GitHub does not provide a fast-forward merge option out of the box but you can
 achieve it with the
 [fast-forward ship strategy](preferences/ship-strategy.md#fast-forward) together
 with the [compress](preferences/sync-feature-strategy.md#compress) or
-[rebase](preferences/sync-feature-strategy.md#rebase) sync strategy.
+[rebase](preferences/sync-feature-strategy.md#rebase) sync strategy. The
+[Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action)
+adds a visual description of which branch of the stack the pull request is for.
 
 ## Example
 
