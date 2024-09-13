@@ -13,13 +13,12 @@ Feature: rename a prototype branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                    |
-      | prototype | git fetch --prune --tags   |
-      |           | git branch new prototype   |
-      |           | git checkout new           |
-      | new       | git push -u origin new     |
-      |           | git push origin :prototype |
-      |           | git branch -D prototype    |
+      | BRANCH    | COMMAND                         |
+      | prototype | git fetch --prune --tags        |
+      |           | git branch --move prototype new |
+      |           | git checkout new                |
+      | new       | git push -u origin new          |
+      |           | git push origin :prototype      |
     And the current branch is now "new"
     And the prototype branches are now "new"
     And these commits exist now
