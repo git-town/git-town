@@ -109,10 +109,26 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
+	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
+		},
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func (self Connector) UpdateProposalHead(number int, head gitdomain.LocalBranchName) error {
+	headName := head.String()
+	self.log.Start(messages.APIUpdateProposalHead, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(headName))
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
+		Head: &github.PullRequestBranch{
+			Ref: &(headName),
 		},
 	})
 	if err != nil {

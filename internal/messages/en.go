@@ -7,6 +7,7 @@ const (
 	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal online ... "
 	APIUpdateProposalBase             = "updating base of proposal %s to %s ... "
+	APIUpdateProposalHead             = "updating head of proposal %s to %s ... "
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
