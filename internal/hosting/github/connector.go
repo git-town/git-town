@@ -125,7 +125,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 }
 
 func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateHeadBranch, colors.BoldCyan().Styled(strconv.Itoa(number))))
+	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateHeadBranch, number))
 	return nil
 }
 
