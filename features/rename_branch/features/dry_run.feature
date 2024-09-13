@@ -14,13 +14,12 @@ Feature: rename the current branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git branch new old       |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-      |        | git push origin :old     |
-      |        | git branch -D old        |
+      | BRANCH | COMMAND                   |
+      | old    | git fetch --prune --tags  |
+      |        | git branch --move old new |
+      |        | git checkout new          |
+      | new    | git push -u origin new    |
+      |        | git push origin :old      |
     And the current branch is still "old"
     And the initial commits exist
     And the initial branches and lineage exist

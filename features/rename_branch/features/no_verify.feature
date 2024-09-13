@@ -17,11 +17,10 @@ Feature: rename the current branch without pre-push hook
     Then it runs the commands
       | BRANCH | COMMAND                            |
       | old    | git fetch --prune --tags           |
-      |        | git branch new old                 |
+      |        | git branch --move old new          |
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
       |        | git push origin :old               |
-      |        | git branch -D old                  |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
@@ -32,13 +31,12 @@ Feature: rename the current branch without pre-push hook
     Given Git Town setting "push-hook" is "true"
     When I run "git-town rename-branch new"
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git branch new old       |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-      |        | git push origin :old     |
-      |        | git branch -D old        |
+      | BRANCH | COMMAND                   |
+      | old    | git fetch --prune --tags  |
+      |        | git branch --move old new |
+      |        | git checkout new          |
+      | new    | git push -u origin new    |
+      |        | git push origin :old      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

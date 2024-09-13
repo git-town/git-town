@@ -15,10 +15,9 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND            |
-      | old    | git branch new old |
-      |        | git checkout new   |
-      | new    | git branch -D old  |
+      | BRANCH | COMMAND                   |
+      | old    | git branch --move old new |
+      |        | git checkout new          |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

@@ -94,6 +94,7 @@ func Types() []shared.Opcode {
 		&RemoveFromPrototypeBranches{},
 		&RemoveGlobalConfig{},
 		&RemoveLocalConfig{},
+		&RenameBranch{},
 		&ResetCurrentBranch{},
 		&ResetCurrentBranchToParent{},
 		&ResetCurrentBranchToSHA{},

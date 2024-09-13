@@ -254,7 +254,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 	if !hasOldLocalBranch {
 		return result.Get()
 	}
-	result.Value.Add(&opcodes.CreateBranch{Branch: data.newBranch, StartingPoint: oldLocalBranch.Location()})
+	result.Value.Add(&opcodes.RenameBranch{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
 		result.Value.Add(&opcodes.Checkout{Branch: data.newBranch})
 	}
@@ -301,7 +301,6 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
 		}
 	}
-	result.Value.Add(&opcodes.DeleteLocalBranch{Branch: oldLocalBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

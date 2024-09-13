@@ -15,14 +15,12 @@ Feature: rename a parent branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | parent | git fetch --prune --tags |
-      |        | git branch new parent    |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-      |        | git push origin :parent  |
-      |        | git branch -D parent     |
-    And the current branch is now "new"
+      | BRANCH | COMMAND                      |
+      | parent | git fetch --prune --tags     |
+      |        | git branch --move parent new |
+      |        | git checkout new             |
+      | new    | git push -u origin new       |
+      |        | git push origin :parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |

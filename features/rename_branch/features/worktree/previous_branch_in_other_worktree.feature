@@ -12,11 +12,10 @@ Feature: rename the current branch to a branch that is active in another worktre
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git branch new current   |
-      |         | git checkout new         |
-      | new     | git branch -D current    |
+      | BRANCH  | COMMAND                       |
+      | current | git fetch --prune --tags      |
+      |         | git branch --move current new |
+      |         | git checkout new              |
     And the current branch is now "new"
     And the previous Git branch is now "new"
 
