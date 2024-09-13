@@ -181,3 +181,15 @@ type LoadProposalsOfChildBranchesArgs struct {
 	OldBranch                  gitdomain.LocalBranchName
 	OldBranchHasTrackingBranch bool
 }
+
+func FindProposal(connectorOpt Option[hostingdomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[hostingdomain.Proposal] {
+	connector, hasConnector := connectorOpt.Get()
+	target, hasTarget := targetBranch.Get()
+	if hasConnector && connector.CanMakeAPICalls() && hasTarget {
+		proposalOpt, err := connector.FindProposal(sourceBranch, target)
+		if err == nil {
+			return proposalOpt
+		}
+	}
+	return None[hostingdomain.Proposal]()
+}

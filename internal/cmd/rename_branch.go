@@ -222,15 +222,8 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 	if err != nil {
 		return data, false, err
 	}
-	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
-	proposalOpt := None[hostingdomain.Proposal]()
-	connector, hasConnector := connectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() && hasParent {
-		proposalOpt, err = connector.FindProposal(initialBranch, existingParent)
-		if err != nil {
-			proposalOpt = None[hostingdomain.Proposal]()
-		}
-	}
+	parentOpt := validatedConfig.Config.Lineage.Parent(initialBranch)
+	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
 		Lineage:                    validatedConfig.Config.Lineage,

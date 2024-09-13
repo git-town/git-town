@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/ship"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -176,7 +177,8 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
+	parentOpt := validatedConfig.Config.Lineage.Parent(initialBranch)
+	existingParent, hasParent := parentOpt.Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
 		defaultChoice = existingParent
@@ -192,14 +194,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if err != nil {
 		return data, false, err
 	}
-	proposalOpt := None[hostingdomain.Proposal]()
-	connector, hasConnector := connectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() && hasParent {
-		proposalOpt, err = connector.FindProposal(initialBranch, existingParent)
-		if err != nil {
-			proposalOpt = None[hostingdomain.Proposal]()
-		}
-	}
+	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	return setParentData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
