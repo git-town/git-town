@@ -9,24 +9,24 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// UpdateProposalTarget updates the target of the proposal with the given number at the code hosting platform.
-type UpdateProposalTarget struct {
+// UpdateProposalBase updates the target of the proposal with the given number at the code hosting platform.
+type UpdateProposalBase struct {
 	NewTarget               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *UpdateProposalTarget) CreateAutomaticUndoError() error {
+func (self *UpdateProposalBase) CreateAutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 
-func (self *UpdateProposalTarget) Run(args shared.RunArgs) error {
+func (self *UpdateProposalBase) Run(args shared.RunArgs) error {
 	if connector, hasConnector := args.Connector.Get(); hasConnector {
 		return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget)
 	}
 	return hostingdomain.UnsupportedServiceError()
 }
 
-func (self *UpdateProposalTarget) ShouldAutomaticallyUndoOnError() bool {
+func (self *UpdateProposalBase) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }
