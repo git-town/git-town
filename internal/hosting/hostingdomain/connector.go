@@ -33,4 +33,7 @@ type Connector interface {
 
 	// UpdateProposalBase updates the target branch of the given proposal.
 	UpdateProposalBase(number int, target gitdomain.LocalBranchName) error
+
+	// UpdateProposalHead updates the target branch of the given proposal.
+	UpdateProposalHead(number int, target gitdomain.LocalBranchName) error
 }

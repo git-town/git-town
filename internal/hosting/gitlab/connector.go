@@ -97,6 +97,14 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	return nil
 }
 
+func (self Connector) UpdateProposalHead(number int, target gitdomain.LocalBranchName) error {
+	self.log.Log("The GitLab API cannot update the source branch of a merge request:")
+	self.log.Log("https://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\n")
+	self.log.Log("Deleting the old tracking branch will close your existing merge request")
+	self.log.Log("And you have to create a new one.")
+	return nil
+}
+
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {

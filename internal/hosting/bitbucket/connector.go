@@ -68,3 +68,7 @@ func (self Connector) SquashMergeProposal(_ int, _ gitdomain.CommitMessage) erro
 func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) error {
 	return errors.New(messages.HostingBitBucketNotImplemented)
 }
+
+func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName) error {
+	return errors.New(messages.HostingBitBucketNotImplemented)
+}

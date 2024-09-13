@@ -312,7 +312,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
 			proposal, hasProposal := data.proposal.Get()
 			if data.connector.IsSome() && hasProposal {
-				result.Value.Add(&opcodes.UpdateProposalTarget{
+				result.Value.Add(&opcodes.UpdateProposalHead{
 					NewTarget:      data.newBranch,
 					ProposalNumber: proposal.Number,
 				})

@@ -121,6 +121,10 @@ func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) err
 	return errors.New(messages.HostingGiteaNotImplemented)
 }
 
+func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName) error {
+	return errors.New(messages.HostingGiteaNotImplemented)
+}
+
 func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest(nil)
 	headName := organization + "/" + branch.String()
