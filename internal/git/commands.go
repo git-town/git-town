@@ -530,6 +530,11 @@ func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
+// RenameBranch renames the branch with the given old name to the branch with the given new name.
+func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
+	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
+}
+
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
 func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
 	output, err := querier.QueryTrim("git", "status", "--long", "--ignore-submodules")
