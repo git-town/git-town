@@ -13,13 +13,12 @@ Feature: rename an observed branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                   |
-      | observed | git fetch --prune --tags  |
-      |          | git branch new observed   |
-      |          | git checkout new          |
-      | new      | git push -u origin new    |
-      |          | git push origin :observed |
-      |          | git branch -D observed    |
+      | BRANCH   | COMMAND                        |
+      | observed | git fetch --prune --tags       |
+      |          | git branch --move observed new |
+      |          | git checkout new               |
+      | new      | git push -u origin new         |
+      |          | git push origin :observed      |
     And the current branch is now "new"
     And the observed branches are now "new"
     And these commits exist now
