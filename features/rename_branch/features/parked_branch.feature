@@ -13,13 +13,12 @@ Feature: rename a parked branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | parked | git fetch --prune --tags |
-      |        | git branch new parked    |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-      |        | git push origin :parked  |
-      |        | git branch -D parked     |
+      | BRANCH | COMMAND                      |
+      | parked | git fetch --prune --tags     |
+      |        | git branch --move parked new |
+      |        | git checkout new             |
+      | new    | git push -u origin new       |
+      |        | git push origin :parked      |
     And the current branch is now "new"
     And the parked branches are now "new"
     And these commits exist now
