@@ -8,7 +8,6 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/cmd/ship"
 	"github.com/git-town/git-town/v16/internal/config"
@@ -198,7 +197,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		Config:          *validatedConfig.Config.UnvalidatedConfig,
 		HostingPlatform: validatedConfig.Config.HostingPlatform,
-		Log:             print.Logger{},
+		Log:             repo.L,
 		RemoteURL:       validatedConfig.OriginURL(),
 	})
 	if err != nil {
