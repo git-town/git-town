@@ -71,7 +71,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	self.log.Success(proposal.Title)
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
 	return Some(proposal), nil
 }
 
@@ -98,7 +98,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingGithubMergingViaAPI, number)
+	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
 	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
@@ -110,7 +110,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled(strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),

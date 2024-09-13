@@ -114,7 +114,7 @@ END OUTPUT FROM 'git branch -vva'
 	HostingGitlabUpdateMRViaAPI           = "GitLab API: Updating target branch for MR !%d to %q ... "
 	HostingGiteaNotImplemented            = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI            = "Gitea API: Updating base branch for PR #%d to #%s"
-	HostingGithubMergingViaAPI            = "GitHub API: merging PR #%d ... "
+	HostingGithubMergingViaAPI            = "GitHub API: merging PR %s ... "
 	HostingPlatformUnknown                = "unknown hosting platform: %q"
 	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`

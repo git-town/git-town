@@ -13,6 +13,10 @@ func (l Logger) Failed(failure error) {
 	fmt.Println(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
 }
 
+func (l Logger) Log(text string) {
+	fmt.Println(text)
+}
+
 func (l Logger) Ok() {
 	fmt.Println(colors.BoldGreen().Styled("ok"))
 }
