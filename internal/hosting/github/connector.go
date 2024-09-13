@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 
+	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -69,7 +71,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	self.log.Success(fmt.Sprintf("#%d", &proposal.Number))
+	self.log.Success(proposal.Title)
 	return Some(proposal), nil
 }
 
@@ -108,7 +110,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
 	targetName := target.String()
-	self.log.Start(messages.APIProposalUpdateStart)
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled(strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
@@ -118,7 +120,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 		self.log.Failed(err)
 		return err
 	}
-	self.log.Success(fmt.Sprintf("#%d", number))
+	self.log.Ok()
 	return nil
 }
 

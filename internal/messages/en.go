@@ -6,6 +6,7 @@ const (
 	ArgumentUnknown                   = "unknown argument: %q"
 	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal online ... "
+	APIUpdateProposalTarget           = "updating target of proposal %s to %s ... "
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
