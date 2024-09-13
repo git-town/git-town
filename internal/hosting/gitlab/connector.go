@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -53,12 +54,14 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Ok()
 	switch len(mergeRequests) {
 	case 0:
+		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	case 1:
-		return Some(parseMergeRequest(mergeRequests[0])), nil
+		result := parseMergeRequest(mergeRequests[0])
+		self.log.Success(strconv.Itoa(result.Number))
+		return Some(result), nil
 	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
 	}
