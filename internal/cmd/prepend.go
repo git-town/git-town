@@ -258,10 +258,11 @@ func prependProgram(data prependData) program.Program {
 	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
 	}
-	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+	proposal, hasProposal := data.proposal.Get()
+	if data.remotes.HasOrigin() && data.config.Config.IsOnline() && (data.config.Config.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
 	}
-	if proposal, hasProposal := data.proposal.Get(); hasProposal {
+	if hasProposal {
 		prog.Value.Add(&opcodes.UpdateProposalBase{
 			NewTarget:      data.targetBranch,
 			ProposalNumber: proposal.Number,
