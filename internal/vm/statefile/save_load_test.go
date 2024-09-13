@@ -175,7 +175,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.StageOpenChanges{},
 				&opcodes.StashOpenChanges{},
-				&opcodes.UpdateProposalTarget{
+				&opcodes.UpdateProposalBase{
 					ProposalNumber: 123,
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
@@ -528,7 +528,7 @@ func TestLoadSave(t *testing.T) {
         "NewTarget": "new-target",
         "ProposalNumber": 123
       },
-      "type": "UpdateProposalTarget"
+      "type": "UpdateProposalBase"
     }
   ],
   "TouchedBranches": [

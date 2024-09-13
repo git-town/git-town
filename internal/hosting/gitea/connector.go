@@ -110,7 +110,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) error {
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
