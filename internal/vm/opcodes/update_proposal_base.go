@@ -22,7 +22,7 @@ func (self *UpdateProposalBase) CreateAutomaticUndoError() error {
 
 func (self *UpdateProposalBase) Run(args shared.RunArgs) error {
 	if connector, hasConnector := args.Connector.Get(); hasConnector {
-		return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget)
+		return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 	}
 	return hostingdomain.UnsupportedServiceError()
 }

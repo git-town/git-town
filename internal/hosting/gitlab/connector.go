@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -87,7 +88,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
@@ -100,11 +101,11 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName) error {
-	self.log.Log("The GitLab API cannot update the source branch of merge requests:")
-	self.log.Log("https://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\n")
-	self.log.Log("Renaming the tracking branch will therefore close your existing pull request")
-	self.log.Log("and you have to create a new one.")
+func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add("The GitLab API cannot update the source branch of merge requests:")
+	finalMessages.Add("https://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\n")
+	finalMessages.Add("Renaming the tracking branch will therefore close your existing pull request")
+	finalMessages.Add("and you have to create a new one.")
 	return nil
 }
 

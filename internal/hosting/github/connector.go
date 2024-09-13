@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -107,7 +108,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
@@ -123,11 +124,11 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName) error {
-	self.log.Log("GitHub cannot update the head branch of pull requests.")
-	self.log.Log(fmt.Sprintf("GitHub will therefore close your existing pull request (#%d)", number))
-	self.log.Log("once Git Town pushes the new branch name and you have to create a new one.\n")
-	self.log.Log("https://docs.github.com/en/rest/pulls/pulls?apiVersion=latest#update-a-pull-request")
+func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add("GitHub cannot update the head branch of pull requests.")
+	finalMessages.Add(fmt.Sprintf("GitHub will therefore close your existing pull request (#%d)", number))
+	finalMessages.Add("once Git Town pushes the new branch name and you have to create a new one.\n")
+	finalMessages.Add("https://docs.github.com/en/rest/pulls/pulls?apiVersion=latest#update-a-pull-request")
 	return nil
 }
 
