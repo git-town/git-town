@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 
 	"code.gitea.io/sdk/gitea"
+	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -91,7 +93,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.HostingGithubMergingViaAPI, number)
+	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
 	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Subject,
