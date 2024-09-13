@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -87,7 +88,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
@@ -97,6 +98,11 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		return err
 	}
 	self.log.Ok()
+	return nil
+}
+
+func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add(fmt.Sprintf(messages.APIGitLabCannotUpdateHeadBranch, number))
 	return nil
 }
 

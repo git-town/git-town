@@ -2,6 +2,7 @@ package hostingdomain
 
 import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
@@ -32,5 +33,8 @@ type Connector interface {
 	RepositoryURL() string
 
 	// UpdateProposalBase updates the target branch of the given proposal.
-	UpdateProposalBase(number int, target gitdomain.LocalBranchName) error
+	UpdateProposalBase(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
+
+	// UpdateProposalBase updates the target branch of the given proposal.
+	UpdateProposalHead(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
 }

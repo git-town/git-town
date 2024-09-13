@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -110,7 +111,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
@@ -118,7 +119,13 @@ func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName) err
 	// 	Base: newBaseName,
 	// })
 	// return err
-	return errors.New(messages.HostingGiteaNotImplemented)
+	finalMessages.Add("The gitea driver does not support updating proposals yet.")
+	return nil
+}
+
+func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add("The gitea driver does not support updating proposals yet.")
+	return nil
 }
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {

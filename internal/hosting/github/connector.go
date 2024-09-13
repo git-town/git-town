@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -107,9 +108,9 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(target.String()))
+	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
@@ -120,6 +121,11 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		return err
 	}
 	self.log.Ok()
+	return nil
+}
+
+func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateHeadBranch, number))
 	return nil
 }
 
