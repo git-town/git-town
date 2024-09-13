@@ -17,11 +17,10 @@ Feature: don't sync tags while renaming branches
     Then it runs the commands
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --no-tags |
-      |        | git branch new old          |
+      |        | git branch --move old new   |
       |        | git checkout new            |
       | new    | git push -u origin new      |
       |        | git push origin :old        |
-      |        | git branch -D old           |
     And the initial tags exist now
 
   Scenario: undo
