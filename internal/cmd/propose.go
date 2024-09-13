@@ -199,17 +199,14 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
 	}
-	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *validatedConfig.Config.UnvalidatedConfig,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-		if err != nil {
-			return data, false, err
-		}
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return data, false, err
 	}
 	existingProposalURL := None[string]()
 	connector, hasConnector := connectorOpt.Get()

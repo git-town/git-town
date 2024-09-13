@@ -12,12 +12,10 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/skip"
 	"github.com/git-town/git-town/v16/internal/validate"
 	"github.com/git-town/git-town/v16/internal/vm/statefile"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -114,17 +112,14 @@ func executeSkip(verbose configdomain.Verbose) error {
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
-	var connector Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *validatedConfig.Config.UnvalidatedConfig,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-		if err != nil {
-			return err
-		}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return err
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,

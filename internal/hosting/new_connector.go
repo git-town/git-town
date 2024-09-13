@@ -14,8 +14,9 @@ import (
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
-	platform, hasPlatform := Detect(args.RemoteURL, args.HostingPlatform).Get()
-	if !hasPlatform {
+	remoteURL, hasRemoteURL := args.RemoteURL.Get()
+	platform, hasPlatform := Detect(remoteURL, args.HostingPlatform).Get()
+	if !hasRemoteURL || !hasPlatform {
 		return None[hostingdomain.Connector](), nil
 	}
 	var connector hostingdomain.Connector
@@ -23,14 +24,14 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
-			RemoteURL:       args.RemoteURL,
+			RemoteURL:       remoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.Config.GiteaToken,
 			Log:       args.Log,
-			RemoteURL: args.RemoteURL,
+			RemoteURL: remoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitHub:
@@ -38,7 +39,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
 			Log:       args.Log,
-			RemoteURL: args.RemoteURL,
+			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
@@ -46,7 +47,7 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  args.Config.GitLabToken,
 			Log:       args.Log,
-			RemoteURL: args.RemoteURL,
+			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
 	}
@@ -57,5 +58,5 @@ type NewConnectorArgs struct {
 	Config          configdomain.UnvalidatedConfig
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
-	RemoteURL       giturl.Parts
+	RemoteURL       Option[giturl.Parts]
 }

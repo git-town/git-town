@@ -213,17 +213,14 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	var connectorOpt Option[hostingdomain.Connector]
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connectorOpt, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          *validatedConfig.Config.UnvalidatedConfig,
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
-		if err != nil {
-			return data, false, err
-		}
+	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		Config:          *validatedConfig.Config.UnvalidatedConfig,
+		HostingPlatform: validatedConfig.Config.HostingPlatform,
+		Log:             print.Logger{},
+		RemoteURL:       validatedConfig.OriginURL(),
+	})
+	if err != nil {
+		return data, false, err
 	}
 	existingParent, hasParent := validatedConfig.Config.Lineage.Parent(initialBranch).Get()
 	proposalOpt := None[hostingdomain.Proposal]()
