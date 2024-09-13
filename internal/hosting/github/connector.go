@@ -63,7 +63,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
-		self.log.Ok()
+		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
