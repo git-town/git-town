@@ -128,10 +128,10 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	}
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		OldBranch:                  branchNameToShip,
-		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),
 		Lineage:                    validatedConfig.Config.Lineage,
 		Offline:                    repo.IsOffline,
+		OldBranch:                  branchNameToShip,
+		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),
 	})
 	return sharedShipData{
 		branchNameToShip:         branchNameToShip,
@@ -176,8 +176,8 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hosti
 
 type LoadProposalsOfChildBranchesArgs struct {
 	ConnectorOpt               Option[hostingdomain.Connector]
-	OldBranch                  gitdomain.LocalBranchName
-	OldBranchHasTrackingBranch bool
 	Lineage                    configdomain.Lineage
 	Offline                    configdomain.Offline
+	OldBranch                  gitdomain.LocalBranchName
+	OldBranchHasTrackingBranch bool
 }

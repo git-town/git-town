@@ -205,10 +205,10 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		OldBranch:                  branchNameToKill,
-		OldBranchHasTrackingBranch: branchToKill.HasTrackingBranch(),
 		Lineage:                    validatedConfig.Config.Lineage,
 		Offline:                    repo.IsOffline,
+		OldBranch:                  branchNameToKill,
+		OldBranchHasTrackingBranch: branchToKill.HasTrackingBranch(),
 	})
 	mainBranch := validatedConfig.Config.MainBranch
 	return killData{

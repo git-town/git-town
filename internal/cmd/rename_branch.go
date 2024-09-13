@@ -233,10 +233,10 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		OldBranch:                  oldBranchName,
-		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
 		Lineage:                    validatedConfig.Config.Lineage,
 		Offline:                    false,
+		OldBranch:                  oldBranchName,
+		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
 	})
 	return renameBranchData{
 		branchesSnapshot:         branchesSnapshot,
