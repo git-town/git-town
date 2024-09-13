@@ -26,6 +26,7 @@ Feature: display all executed Git commands
       |        | backend  | git remote                                      |
       |        | backend  | git log main..old --format=%h                   |
       |        | backend  | git log --format=%B -n 1 {{ sha 'old commit' }} |
+      |        | backend  | git remote get-url origin                       |
       | old    | frontend | git add -A                                      |
       |        | frontend | git stash                                       |
       |        | backend  | git show-ref --verify --quiet refs/heads/main   |
@@ -43,7 +44,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                  |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "parent"
 
