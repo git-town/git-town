@@ -22,8 +22,8 @@ func (l Logger) Ok() {
 }
 
 func (l Logger) Start(template string, data ...interface{}) {
-	l.Log("")
-	l.Log(colors.Bold().Styled(fmt.Sprintf(template, data...)))
+	fmt.Println()
+	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
 }
 
 func (l Logger) Success(message string) {
