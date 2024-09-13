@@ -8,7 +8,7 @@ const (
 	APIProposalUpdateStart            = "updating proposal online ... "
 	APIUpdateProposalBase             = "updating base of proposal %s to %s ... "
 	APIUpdateProposalHead             = "updating head of proposal %s to %s ... "
-	APIGitHubCannotUpdateHeadBranch   = "GitHub cannot update the head branch of pull requests.\nGitHub has therefore closed the existing pull request for this branch (#%d)\nonce Git Town deleted the old tracking branch.\nYou have to create a new one.\n"
+	APIGitHubCannotUpdateHeadBranch   = "GitHub cannot update the head branch of pull requests.\nOnce Git Town deleted the old tracking branch,\nGitHub has therefore closed the existing pull request for this branch (#%d).\nYou have to create a new one.\n"
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
