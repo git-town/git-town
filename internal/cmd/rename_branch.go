@@ -231,12 +231,12 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 			proposalOpt = None[hostingdomain.Proposal]()
 		}
 	}
-	proposalsOfChildBranches := loadProposalsOfChildBranches(loadProposalsOfChildBranchesArgs{
-		connectorOpt:               connectorOpt,
-		oldBranch:                  oldBranchName,
-		oldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
-		lineage:                    validatedConfig.Config.Lineage,
-		offline:                    false,
+	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
+		ConnectorOpt:               connectorOpt,
+		OldBranch:                  oldBranchName,
+		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
+		Lineage:                    validatedConfig.Config.Lineage,
+		Offline:                    false,
 	})
 	return renameBranchData{
 		branchesSnapshot:         branchesSnapshot,
@@ -317,33 +317,4 @@ func renameBranchProgram(data renameBranchData) program.Program {
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return result.Get()
-}
-
-func loadProposalsOfChildBranches(args loadProposalsOfChildBranchesArgs) []hostingdomain.Proposal {
-	var proposalsOfChildBranches []hostingdomain.Proposal
-	childBranches := args.lineage.Children(args.oldBranch)
-	connector, hasConnector := args.connectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() {
-		if !args.offline.IsTrue() && args.oldBranchHasTrackingBranch {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, args.oldBranch)
-				if err != nil {
-					continue
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
-	}
-	return proposalsOfChildBranches
-}
-
-type loadProposalsOfChildBranchesArgs struct {
-	connectorOpt               Option[hostingdomain.Connector]
-	oldBranch                  gitdomain.LocalBranchName
-	oldBranchHasTrackingBranch bool
-	lineage                    configdomain.Lineage
-	offline                    configdomain.Offline
 }

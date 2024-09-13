@@ -117,7 +117,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
-	var proposalsOfChildBranches []hostingdomain.Proposal
 	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		Config:          *validatedConfig.Config.UnvalidatedConfig,
 		HostingPlatform: validatedConfig.Config.HostingPlatform,
@@ -127,20 +126,13 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil {
 		return data, false, err
 	}
-	if connector, hasConnector := connectorOpt.Get(); hasConnector {
-		if !repo.IsOffline.IsTrue() && branchToShip.HasTrackingBranch() {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToShip)
-				if err != nil {
-					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
-	}
+	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
+		ConnectorOpt:               connectorOpt,
+		OldBranch:                  branchNameToShip,
+		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),
+		Lineage:                    validatedConfig.Config.Lineage,
+		Offline:                    repo.IsOffline,
+	})
 	return sharedShipData{
 		branchNameToShip:         branchNameToShip,
 		branchToShip:             *branchToShip,
@@ -159,4 +151,33 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		targetBranch:             *targetBranch,
 		targetBranchName:         targetBranchName,
 	}, false, nil
+}
+
+func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hostingdomain.Proposal {
+	var proposalsOfChildBranches []hostingdomain.Proposal
+	childBranches := args.Lineage.Children(args.OldBranch)
+	connector, hasConnector := args.ConnectorOpt.Get()
+	if hasConnector && connector.CanMakeAPICalls() {
+		if !args.Offline.IsTrue() && args.OldBranchHasTrackingBranch {
+			for _, childBranch := range childBranches {
+				childProposalOpt, err := connector.FindProposal(childBranch, args.OldBranch)
+				if err != nil {
+					continue
+				}
+				childProposal, hasChildProposal := childProposalOpt.Get()
+				if hasChildProposal {
+					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
+				}
+			}
+		}
+	}
+	return proposalsOfChildBranches
+}
+
+type LoadProposalsOfChildBranchesArgs struct {
+	ConnectorOpt               Option[hostingdomain.Connector]
+	OldBranch                  gitdomain.LocalBranchName
+	OldBranchHasTrackingBranch bool
+	Lineage                    configdomain.Lineage
+	Offline                    configdomain.Offline
 }
