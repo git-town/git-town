@@ -231,22 +231,13 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 			proposalOpt = None[hostingdomain.Proposal]()
 		}
 	}
-	var proposalsOfChildBranches []hostingdomain.Proposal
-	childBranches := validatedConfig.Config.Lineage.Children(oldBranchName)
-	if hasConnector && connector.CanMakeAPICalls() {
-		if !repo.IsOffline.IsTrue() && oldBranch.HasTrackingBranch() {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, oldBranchName)
-				if err != nil {
-					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, oldBranchName, err)
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
-	}
+	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
+		ConnectorOpt:               connectorOpt,
+		Lineage:                    validatedConfig.Config.Lineage,
+		Offline:                    false,
+		OldBranch:                  oldBranchName,
+		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
+	})
 	return renameBranchData{
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,

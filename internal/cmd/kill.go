@@ -203,23 +203,13 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 	if err != nil {
 		return data, false, err
 	}
-	var proposalsOfChildBranches []hostingdomain.Proposal
-	childBranches := validatedConfig.Config.Lineage.Children(branchNameToKill)
-	connector, hasConnector := connectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() {
-		if !repo.IsOffline.IsTrue() && branchToKill.HasTrackingBranch() {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, branchNameToKill)
-				if err != nil {
-					return data, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToKill, err)
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
-	}
+	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
+		ConnectorOpt:               connectorOpt,
+		Lineage:                    validatedConfig.Config.Lineage,
+		Offline:                    repo.IsOffline,
+		OldBranch:                  branchNameToKill,
+		OldBranchHasTrackingBranch: branchToKill.HasTrackingBranch(),
+	})
 	mainBranch := validatedConfig.Config.MainBranch
 	return killData{
 		branchToKillInfo:         *branchToKill,
