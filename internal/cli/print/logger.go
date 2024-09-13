@@ -10,7 +10,7 @@ import (
 type Logger struct{}
 
 func (l Logger) Failed(failure error) {
-	fmt.Println(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
+	l.Log(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
 }
 
 func (l Logger) Log(text string) {
@@ -18,14 +18,14 @@ func (l Logger) Log(text string) {
 }
 
 func (l Logger) Ok() {
-	fmt.Println(colors.BoldGreen().Styled("ok"))
+	l.Success("ok")
 }
 
 func (l Logger) Start(template string, data ...interface{}) {
-	fmt.Println()
-	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
+	l.Log("")
+	l.Log(colors.Bold().Styled(fmt.Sprintf(template, data...)))
 }
 
 func (l Logger) Success(message string) {
-	fmt.Println(colors.BoldGreen().Styled(message))
+	l.Log(colors.BoldGreen().Styled(message))
 }
