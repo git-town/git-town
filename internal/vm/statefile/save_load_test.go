@@ -142,6 +142,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RemoveLocalConfig{
 					Key: configdomain.KeyOffline,
 				},
+				&opcodes.RenameBranch{
+					NewName: "new",
+					OldName: "old",
+				},
 				&opcodes.ResetCurrentBranchToSHA{
 					Hard:        true,
 					MustHaveSHA: gitdomain.NewSHA("222222"),
@@ -456,6 +460,13 @@ func TestLoadSave(t *testing.T) {
         "Key": "git-town.offline"
       },
       "type": "RemoveLocalConfig"
+    },
+    {
+      "data": {
+        "NewName": "new",
+        "OldName": "old"
+      },
+      "type": "RenameBranch"
     },
     {
       "data": {
