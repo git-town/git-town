@@ -12,7 +12,7 @@ Please be aware that most code hosting platforms are unable to update the head
 branch (aka source branch) of proposals. If you rename a branch that already has
 a proposal, the existing proposal will most likely end up closed and you have to
 create a new proposal that supersedes the old one. If that happens, Git Town
-will notify you. Updating proposals of child branches should work.
+will notify you. Updating proposals of child branches usually works.
 
 ### Positional arguments
 
