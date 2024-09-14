@@ -3,14 +3,14 @@
 > _git town set-parent_
 
 The _set-parent_ command changes the parent branch for the current branch and
-updates associated proposals online. It prompts the user for the new parent
-branch.
+updates associated proposals. It prompts the user for the new parent branch.
 
-This command does not update the commits on the branches. To update the commits,
-run [git sync](sync.md) afterwards to pull the changes of the new parent
-branches into their new child branches.
+This command does not update commits, i.e. the new child branches don't see the
+changes made by their new parent branches. To update the commits, run
+[git town sync](sync.md).
 
-Let's say we have this branch hierarchy:
+To demonstrate how `git town set-parent works`, let's say we have this branch
+hierarchy:
 
 ```
 main
