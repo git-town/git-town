@@ -13,8 +13,7 @@ uncommitted changes), `git prepend` does not perform this sync to let you commit
 your open changes.
 
 If the branch you call this command from has a proposal, this command updates
-it. To do so, it needs to push the new branch so that it can update the base
-branch of the existing proposal to it.
+it. To do so, it pushes the new branch.
 
 Consider this branch setup:
 
