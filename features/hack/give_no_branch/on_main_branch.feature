@@ -8,7 +8,7 @@ Feature: cannot make the current main branch a feature branch
     Then it runs no commands
     And it prints the error:
       """
-      You're trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?
+      you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?
       """
     And the main branch is still "main"
 
