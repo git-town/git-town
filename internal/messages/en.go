@@ -110,7 +110,7 @@ END OUTPUT FROM 'git branch -vva'
 	HackTooManyArguments                  = "please provide only one branch to create"
 	HackBranchIsAlreadyFeature            = "branch %q is already a feature branch"
 	HackBranchIsNowFeature                = "branch %q is now a feature branch\n"
-	HackCannotFeatureMainBranch           = "cannot make the main branch a feature branch"
+	HackCannotFeatureMainBranch           = "You're trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?"
 	HackCannotFeaturePerennialBranch      = "branch %q is a perennial branch and therefore be a feature branch"
 	HostingBitBucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGitlabMergingViaAPI            = "Merging MR !%d ... "
