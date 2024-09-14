@@ -7,10 +7,10 @@ branch. It does that by inserting the new feature branch between the current
 feature branch and it's existing parent.
 
 If your Git workspace is clean (no uncommitted changes), it also
-[syncs](sync.md) the current feature branch to ensure commits into the new
-branch are on top of the current state of the repository. If the workspace is
-not clean (contains uncommitted changes), `git prepend` does not perform this
-sync to let you commit your open changes.
+[syncs](sync.md) the current feature branch to ensure you work on top of the
+current state of the repository. If the workspace is not clean (contains
+uncommitted changes), `git prepend` does not perform this sync to let you commit
+your open changes.
 
 If the branch you call this command from has a proposal, this command updates
 it. To do so, it needs to push the new branch so that it can update the base
