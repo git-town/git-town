@@ -2,9 +2,9 @@
 
 > _git town kill [branch-name]_
 
-The _kill_ command deletes non-perennial branches from the local and remote
-repository and updates proposals of child branches of the killed branch. It does
-not remove perennial branches.
+The _kill_ command deletes the given branch from the local and remote repository
+and updates proposals of its child branches to the parent of the killed branch.
+It does not remove perennial branches.
 
 ### Positional arguments
 
