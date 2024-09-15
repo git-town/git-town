@@ -1,2 +1,2 @@
-// Package persistence stores Git Town runstate on disk.
+// Package statefile stores Git Town runstate on disk.
 package statefile
