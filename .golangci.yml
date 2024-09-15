@@ -29,6 +29,7 @@ linters:
     - nilnil # in our code returning nil, nil makes sense
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
+    - staticcheck # we run this separately
     - typecheck # seems buggy
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
