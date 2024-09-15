@@ -13,3 +13,4 @@ mdbook 0.4.40
 scc 3.3.5
 shellcheck system 0.10.0
 shfmt 3.9.0
+staticcheck 2024.1.1
