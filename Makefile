@@ -57,6 +57,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	(cd tools/lint_steps && go build && ./lint_steps)
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
+	tools/rta govulncheck ./...
 	tools/rta staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
