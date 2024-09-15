@@ -1,3 +1,4 @@
+// Package config implements Git Town's "config" command.
 package config
 
 import (
