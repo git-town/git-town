@@ -69,6 +69,13 @@ func ErrorIs(t T, err error, target error, settings ...Setting) {
 	invoke(t, assertions.ErrorIs(err, target), settings...)
 }
 
+// ErrorAs asserts err's tree contains an error that matches target.
+// If so, it sets target to the error value.
+func ErrorAs[E error, Target *E](t T, err error, target Target, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.ErrorAs(err, target), settings...)
+}
+
 // NoError asserts err is a nil error.
 func NoError(t T, err error, settings ...Setting) {
 	t.Helper()
@@ -163,6 +170,12 @@ func SliceEqFunc[A, B any](t T, exp []B, val []A, eq func(expectation A, value B
 func SliceEqual[E interfaces.EqualFunc[E]](t T, exp, val []E, settings ...Setting) {
 	t.Helper()
 	invoke(t, assertions.SliceEqual(exp, val), settings...)
+}
+
+// SliceEqOp asserts exp[n] == val[n] for each element n.
+func SliceEqOp[A comparable, S ~[]A](t T, exp, val S, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.SliceEqOp(exp, val), settings...)
 }
 
 // SliceEmpty asserts slice is empty.
@@ -418,6 +431,13 @@ func MapEqFunc[M1, M2 interfaces.Map[K, V], K comparable, V any](t T, exp M1, va
 func MapEqual[M interfaces.MapEqualFunc[K, V], K comparable, V interfaces.EqualFunc[V]](t T, exp, val M, settings ...Setting) {
 	t.Helper()
 	invoke(t, assertions.MapEqual(exp, val), settings...)
+}
+
+// MapEqOp asserts maps exp and val contain the same key/val pairs, using == to
+// compare vals.
+func MapEqOp[M interfaces.Map[K, V], K, V comparable](t T, exp M, val M, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.MapEqOp(exp, val), settings...)
 }
 
 // MapLen asserts map is of size n.
