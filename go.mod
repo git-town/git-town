@@ -1,8 +1,6 @@
 module github.com/git-town/git-town/v16
 
-go 1.22.0
-
-toolchain go1.22.6
+go 1.22
 
 require (
 	code.gitea.io/sdk/gitea v0.19.0
