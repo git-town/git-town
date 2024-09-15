@@ -1,3 +1,4 @@
+// Package debug implements Git Town's hidden "debug" command.
 package debug
 
 import (
