@@ -130,14 +130,14 @@ func Unreachable() (s string) {
 
 func Error(err error) (s string) {
 	if err == nil {
-		s = "expected non-nil error; is nil\n"
+		s = "expected non-nil error; got nil\n"
 	}
 	return
 }
 
 func EqError(err error, msg string) (s string) {
 	if err == nil {
-		s = "expected error; got nil\n"
+		s = "expected non-nil error; got nil\n"
 		return
 	}
 	e := err.Error()
@@ -151,13 +151,30 @@ func EqError(err error, msg string) (s string) {
 
 func ErrorIs(err error, target error) (s string) {
 	if err == nil {
-		s = "expected error; got nil\n"
+		s = "expected non-nil error; got nil\n"
 		return
 	}
 	if !errors.Is(err, target) {
 		s = "expected errors.Is match\n"
-		s += bullet(" error: %v\n", err)
 		s += bullet("target: %v\n", target)
+		s += bullet("   got: %v\n", err)
+	}
+	return
+}
+
+func ErrorAs[E error, Target *E](err error, target Target) (s string) {
+	if err == nil {
+		s = "expected non-nil error; got nil\n"
+		return
+	}
+	if target == nil {
+		s = "expected non-nil target; got nil\n"
+		return
+	}
+	if !errors.As(err, target) {
+		s = "expected errors.As match\n"
+		s += bullet("target: %v\n", target)
+		s += bullet("   got: %v\n", err)
 	}
 	return
 }
@@ -172,7 +189,7 @@ func NoError(err error) (s string) {
 
 func ErrorContains(err error, sub string) (s string) {
 	if err == nil {
-		s = "expected non-nil error\n"
+		s = "expected non-nil error; got nil\n"
 		return
 	}
 	actual := err.Error()
@@ -325,6 +342,27 @@ func SliceEqual[E interfaces.EqualFunc[E]](exp, val []E) (s string) {
 	for i := 0; i < lenA; i++ {
 		if !exp[i].Equal(val[i]) {
 			s += "expected slice equality via .Equal method\n"
+			s += diff(exp[i], val[i], nil)
+			return
+		}
+	}
+	return
+}
+
+func SliceEqOp[A comparable, S ~[]A](exp, val S) (s string) {
+	lenA, lenB := len(exp), len(val)
+
+	if lenA != lenB {
+		s = "expected slices of same length\n"
+		s += bullet("len(exp): %d\n", lenA)
+		s += bullet("len(val): %d\n", lenB)
+		s += diff(exp, val, nil)
+		return
+	}
+
+	for i := 0; i < lenA; i++ {
+		if exp[i] != val[i] {
+			s += "expected slice equality via ==\n"
 			s += diff(exp[i], val[i], nil)
 			return
 		}
@@ -784,6 +822,34 @@ func MapEqual[M interfaces.MapEqualFunc[K, V], K comparable, V interfaces.EqualF
 
 		if !(valB).Equal(valA) {
 			s = "expected maps of same values via .Equal method\n"
+			s += diff(exp, val, nil)
+			return
+		}
+	}
+
+	return
+}
+
+func MapEqOp[M interfaces.Map[K, V], K, V comparable](exp, val M) (s string) {
+	lenA, lenB := len(exp), len(val)
+
+	if lenA != lenB {
+		s = "expected maps of same length\n"
+		s += bullet("len(exp): %d\n", lenA)
+		s += bullet("len(val): %d\n", lenB)
+		return
+	}
+
+	for key, valA := range exp {
+		valB, exists := val[key]
+		if !exists {
+			s = "expected maps of same keys\n"
+			s += diff(exp, val, nil)
+			return
+		}
+
+		if valA != valB {
+			s = "expected maps of same values via ==\n"
 			s += diff(exp, val, nil)
 			return
 		}

@@ -1102,12 +1102,22 @@ type JiraService struct {
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/integrations.html#jira
 type JiraServiceProperties struct {
-	URL                   string   `json:"url"`
-	APIURL                string   `json:"api_url"`
-	ProjectKeys           []string `json:"project_keys" `
-	Username              string   `json:"username" `
-	Password              string   `json:"password" `
-	JiraIssueTransitionID string   `json:"jira_issue_transition_id"`
+	URL                          string   `json:"url"`
+	APIURL                       string   `json:"api_url"`
+	Username                     string   `json:"username" `
+	Password                     string   `json:"password" `
+	Active                       bool     `json:"active"`
+	JiraAuthType                 int      `json:"jira_auth_type"`
+	JiraIssuePrefix              string   `json:"jira_issue_prefix"`
+	JiraIssueRegex               string   `json:"jira_issue_regex"`
+	JiraIssueTransitionAutomatic bool     `json:"jira_issue_transition_automatic"`
+	JiraIssueTransitionID        string   `json:"jira_issue_transition_id"`
+	CommitEvents                 bool     `json:"commit_events"`
+	MergeRequestsEvents          bool     `json:"merge_requests_events"`
+	CommentOnEventEnabled        bool     `json:"comment_on_event_enabled"`
+	IssuesEnabled                bool     `json:"issues_enabled"`
+	ProjectKeys                  []string `json:"project_keys" `
+	UseInheritedSettings         bool     `json:"use_inherited_settings"`
 
 	// Deprecated: This parameter was removed in GitLab 17.0
 	ProjectKey string `json:"project_key" `
@@ -1152,7 +1162,7 @@ func (s *ServicesService) GetJiraService(pid interface{}, options ...RequestOpti
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/jira", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/jira", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
@@ -1204,7 +1214,7 @@ func (s *ServicesService) SetJiraService(pid interface{}, opt *SetJiraServiceOpt
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/jira", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/jira", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
 	if err != nil {
@@ -1223,7 +1233,7 @@ func (s *ServicesService) DeleteJiraService(pid interface{}, options ...RequestO
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/jira", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/jira", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
 	if err != nil {

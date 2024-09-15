@@ -309,6 +309,7 @@ type ProjectApprovalRule struct {
 	ID                            int                `json:"id"`
 	Name                          string             `json:"name"`
 	RuleType                      string             `json:"rule_type"`
+	ReportType                    string             `json:"report_type"`
 	EligibleApprovers             []*BasicUser       `json:"eligible_approvers"`
 	ApprovalsRequired             int                `json:"approvals_required"`
 	Users                         []*BasicUser       `json:"users"`
@@ -1041,6 +1042,44 @@ func (s *ProjectsService) StarProject(pid interface{}, options ...RequestOptionF
 	}
 
 	return p, resp, nil
+}
+
+// ListProjectInvidedGroupOptions represents the available
+// ListProjectsInvitedGroups() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/projects.html#list-a-projects-invited-groups
+type ListProjectInvidedGroupOptions struct {
+	ListOptions
+	Search               *string           `url:"search,omitempty" json:"search,omitempty"`
+	MinAccessLevel       *AccessLevelValue `url:"min_access_level,omitempty" json:"min_access_level,omitempty"`
+	Relation             *[]string         `url:"relation,omitempty" json:"relation,omitempty"`
+	WithCustomAttributes *bool             `url:"with_custom_attributes,omitempty" json:"with_custom_attributes,omitempty"`
+}
+
+// ListProjectsInvitedGroups lists invited groups of a project
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/projects.html#list-a-projects-invited-groups
+func (s *ProjectsService) ListProjectsInvitedGroups(pid interface{}, opt *ListProjectInvidedGroupOptions, options ...RequestOptionFunc) ([]*ProjectGroup, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/invited_groups", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var pg []*ProjectGroup
+	resp, err := s.client.Do(req, &pg)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return pg, resp, nil
 }
 
 // UnstarProject unstars a given project.
