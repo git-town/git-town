@@ -1,4 +1,4 @@
-// Package dialog contains shared components to build full dialog screens out of.
+// Package components contains shared components to build full dialog screens out of.
 package components
 
 import tea "github.com/charmbracelet/bubbletea"
