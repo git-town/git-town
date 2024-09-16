@@ -70,12 +70,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          repo.UnvalidatedConfig.Config.Get(),
-		HostingPlatform: repo.UnvalidatedConfig.Config.Value.HostingPlatform,
-		Log:             print.Logger{},
-		RemoteURL:       repo.UnvalidatedConfig.RemoteURL(remote),
-	})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, remote, print.Logger{})
 	if err != nil {
 		return data, err
 	}

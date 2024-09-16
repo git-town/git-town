@@ -2,8 +2,9 @@ package hosting
 
 import (
 	"github.com/git-town/git-town/v16/internal/cli/print"
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/giturl"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/hosting/bitbucket"
 	"github.com/git-town/git-town/v16/internal/hosting/gitea"
 	"github.com/git-town/git-town/v16/internal/hosting/github"
@@ -13,9 +14,10 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error) {
-	remoteURL, hasRemoteURL := args.RemoteURL.Get()
-	platform, hasPlatform := Detect(remoteURL, args.HostingPlatform).Get()
+func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[hostingdomain.Connector], error) {
+	remoteURL, hasRemoteURL := config.OriginURL().Get()
+	hostingPlatform := config.Config.Get().HostingPlatform
+	platform, hasPlatform := Detect(remoteURL, hostingPlatform).Get()
 	if !hasRemoteURL || !hasPlatform {
 		return None[hostingdomain.Connector](), nil
 	}
@@ -23,30 +25,30 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-			HostingPlatform: args.HostingPlatform,
+			HostingPlatform: hostingPlatform,
 			RemoteURL:       remoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  args.Config.GiteaToken,
-			Log:       args.Log,
+			APIToken:  config.Config.Get().GiteaToken,
+			Log:       log,
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitHub:
 		var err error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  github.GetAPIToken(args.Config.GitHubToken),
-			Log:       args.Log,
+			APIToken:  github.GetAPIToken(config.Config.Get().GitHubToken),
+			Log:       log,
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
 	case configdomain.HostingPlatformGitLab:
 		var err error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  args.Config.GitLabToken,
-			Log:       args.Log,
+			APIToken:  config.Config.Get().GitLabToken,
+			Log:       log,
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
@@ -55,8 +57,4 @@ func NewConnector(args NewConnectorArgs) (Option[hostingdomain.Connector], error
 }
 
 type NewConnectorArgs struct {
-	Config          configdomain.UnvalidatedConfig
-	HostingPlatform Option[configdomain.HostingPlatform]
-	Log             print.Logger
-	RemoteURL       Option[giturl.Parts]
 }
