@@ -138,6 +138,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	}
 	return diffParentData{
 		branch:       branch,
+		config:       validatedConfig.Config,
 		parentBranch: parentBranch,
 	}, false, nil
 }
