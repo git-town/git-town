@@ -25,6 +25,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                                  |
       |          | backend  | git branch -vva --sort=refname                                  |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}                       |
+      |          | backend  | git remote get-url origin                                       |
       |          | backend  | git log main..existing --format=%h                              |
       |          | backend  | git log --format=%B -n 1 {{ sha-before-run 'existing commit' }} |
       | existing | frontend | git checkout main                                               |
@@ -45,7 +46,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                                  |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 30 shell commands.
       """
     And the current branch is now "new"
 
@@ -61,8 +62,8 @@ Feature: display all executed Git commands
       |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git stash list                                |
       |          | backend  | git branch -vva --sort=refname                |
-      |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |          | backend  | git remote get-url origin                     |
+      |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
       |          | backend  | git config --unset git-town-branch.new.parent |
