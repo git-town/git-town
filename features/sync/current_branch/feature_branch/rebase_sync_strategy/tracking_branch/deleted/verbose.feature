@@ -28,6 +28,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                     |
       |          | backend  | git branch -vva --sort=refname                     |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
+      |          | backend  | git remote get-url origin                          |
       |          | backend  | git log main..branch-2 --format=%h                 |
       | branch-2 | frontend | git checkout main                                  |
       | main     | frontend | git rebase origin/main                             |
@@ -46,7 +47,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                     |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -68,8 +69,8 @@ Feature: display all executed Git commands
       |        | backend  | git status --long --ignore-submodules           |
       |        | backend  | git stash list                                  |
       |        | backend  | git branch -vva --sort=refname                  |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
       |        | backend  | git remote get-url origin                       |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
       | main   | frontend | git branch branch-2 {{ sha 'initial commit' }}  |
       |        | backend  | git show-ref --quiet refs/heads/branch-2        |
       | main   | frontend | git checkout branch-2                           |
