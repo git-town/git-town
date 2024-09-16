@@ -113,7 +113,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
 		Config:          validatedConfig,
-		Connector:       connectorOpt,
+		Connector:       connector,
 		FinalMessages:   repo.FinalMessages,
 		Frontend:        repo.Frontend,
 		Git:             repo.Git,
