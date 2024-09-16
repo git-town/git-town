@@ -160,13 +160,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	unvalidatedConfig := repo.UnvalidatedConfig.Config.Get()
-	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          unvalidatedConfig,
-		HostingPlatform: unvalidatedConfig.HostingPlatform,
-		Log:             print.Logger{},
-		RemoteURL:       repo.UnvalidatedConfig.OriginURL(),
-	})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
