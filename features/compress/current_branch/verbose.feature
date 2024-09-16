@@ -28,6 +28,7 @@ Feature: compress the commits on a feature branch verbosely
       | feature | git fetch --prune --tags                           |
       | <none>  | git stash list                                     |
       |         | git branch -vva --sort=refname                     |
+      |         | git remote get-url origin                          |
       |         | git cherry -v main feature                         |
       | feature | git add -A                                         |
       |         | git stash                                          |
@@ -43,7 +44,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git stash list                                     |
     And it prints:
       """
-      Ran 24 shell commands
+      Ran 25 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
@@ -66,8 +67,8 @@ Feature: compress the commits on a feature branch verbosely
       |         | git status --long --ignore-submodules              |
       |         | git stash list                                     |
       |         | git branch -vva --sort=refname                     |
-      |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |
+      |         | git rev-parse --verify --abbrev-ref @{-1}          |
       | feature | git add -A                                         |
       |         | git stash                                          |
       | <none>  | git rev-parse --short HEAD                         |
