@@ -135,13 +135,13 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
 	return undoData{
 		config:                  validatedConfig,
-		connector:               connectorOpt,
+		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: branchesSnapshot,
