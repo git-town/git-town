@@ -7,6 +7,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
@@ -49,6 +51,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           args.Unvalidated.Config.Get(),
+		Connector:        args.Connector,
 		DefaultChoice:    mainBranch,
 		DialogTestInputs: args.TestInputs,
 		LocalBranches:    args.LocalBranches,
@@ -88,6 +91,7 @@ type ConfigArgs struct {
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
+	Connector          Option[hostingdomain.Connector]
 	DialogTestInputs   components.TestInputs
 	Frontend           gitdomain.Runner
 	Git                git.Commands

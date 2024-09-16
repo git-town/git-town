@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // Lineage validates that the given lineage contains the ancestry for all given branches.
@@ -24,11 +25,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			continue
 		}
 		// look for parent in proposals
-		proposalOpt, _ := args.Connector.SearchProposals(branchToVerify)
-		if proposal, hasProposal := proposalOpt.Get(); hasProposal {
-			parent := proposal.Target
-			branchesToVerify = append(branchesToVerify, parent)
-			continue
+		if connector, hasConnector := args.Connector.Get(); hasConnector {
+			proposalOpt, _ := connector.SearchProposals(branchToVerify)
+			if proposal, hasProposal := proposalOpt.Get(); hasProposal {
+				parent := proposal.Target
+				branchesToVerify = append(branchesToVerify, parent)
+				continue
+			}
 		}
 		// ask for parent
 		outcome, selectedBranch, err := Parent(ParentArgs{
@@ -59,7 +62,7 @@ type LineageArgs struct {
 	BranchesAndTypes configdomain.BranchesAndTypes
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           configdomain.UnvalidatedConfig
-	Connector        hostingdomain.Connector
+	Connector        Option[hostingdomain.Connector]
 	DefaultChoice    gitdomain.LocalBranchName
 	DialogTestInputs components.TestInputs
 	LocalBranches    gitdomain.LocalBranchNames
