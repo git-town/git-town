@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/skip"
@@ -112,12 +113,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
-	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          *validatedConfig.Config.UnvalidatedConfig,
-		HostingPlatform: validatedConfig.Config.HostingPlatform,
-		Log:             print.Logger{},
-		RemoteURL:       validatedConfig.OriginURL(),
-	})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return err
 	}

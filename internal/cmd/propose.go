@@ -199,12 +199,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
 	}
-	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          *validatedConfig.Config.UnvalidatedConfig,
-		HostingPlatform: validatedConfig.Config.HostingPlatform,
-		Log:             print.Logger{},
-		RemoteURL:       validatedConfig.OriginURL(),
-	})
+	connectorOpt, err := hosting.NewConnector(*validatedConfig.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
