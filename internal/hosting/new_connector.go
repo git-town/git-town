@@ -55,6 +55,3 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	}
 	return None[hostingdomain.Connector](), nil
 }
-
-type NewConnectorArgs struct {
-}
