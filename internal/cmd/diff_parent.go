@@ -67,6 +67,7 @@ func executeDiffParent(args []string, verbose configdomain.Verbose) error {
 
 type diffParentData struct {
 	branch       gitdomain.LocalBranchName
+	config       configdomain.ValidatedConfig
 	parentBranch gitdomain.LocalBranchName
 }
 
@@ -114,6 +115,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
+		Connector:          connectorOpt,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,

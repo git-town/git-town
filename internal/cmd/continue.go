@@ -116,6 +116,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		Connector:          data.connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
