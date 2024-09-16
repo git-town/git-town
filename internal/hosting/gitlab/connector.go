@@ -68,6 +68,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 }
 
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	return None[hostingdomain.Proposal](), nil
+}
+
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)

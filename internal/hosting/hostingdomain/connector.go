@@ -21,6 +21,9 @@ type Connector interface {
 	// Returns nil if no proposal exists.
 	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
 
+	// SearchProposals searches for a proposal that has the given branch as its head (source) branch.
+	SearchProposals(branch gitdomain.LocalBranchName) (Option[Proposal], error)
+
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
 	SquashMergeProposal(number int, message gitdomain.CommitMessage) error

@@ -94,6 +94,10 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	return None[hostingdomain.Proposal](), nil
+}
+
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
