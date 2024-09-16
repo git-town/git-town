@@ -127,6 +127,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,

@@ -68,7 +68,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 }
 
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) SearchProposals(_ gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	return None[hostingdomain.Proposal](), nil
 }
 

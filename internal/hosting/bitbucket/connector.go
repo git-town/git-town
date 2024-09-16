@@ -62,7 +62,7 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) SearchProposals(_ gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	return None[hostingdomain.Proposal](), nil
 }
 
