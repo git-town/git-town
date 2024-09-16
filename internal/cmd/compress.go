@@ -167,12 +167,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		Config:          *data.config.Config.UnvalidatedConfig,
-		HostingPlatform: data.config.Config.HostingPlatform,
-		Log:             print.Logger{},
-		RemoteURL:       data.config.OriginURL(),
-	})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
