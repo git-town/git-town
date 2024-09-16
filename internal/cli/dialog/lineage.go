@@ -1,8 +1,6 @@
 package dialog
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -27,12 +25,11 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			continue
 		}
 		// look for parent in proposals
-		fmt.Println("1111111111111111111111111")
 		if connector, hasConnector := args.Connector.Get(); hasConnector {
-			fmt.Println("22222222222222222222222222")
 			proposalOpt, _ := connector.SearchProposals(branchToVerify)
 			if proposal, hasProposal := proposalOpt.Get(); hasProposal {
 				parent := proposal.Target
+				additionalLineage.Add(branchToVerify, parent)
 				branchesToVerify = append(branchesToVerify, parent)
 				continue
 			}
