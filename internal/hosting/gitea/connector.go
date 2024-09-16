@@ -76,7 +76,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			URL:          pullRequest.HTMLURL,
 		}), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 }
 

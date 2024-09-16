@@ -68,7 +68,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
@@ -95,7 +95,25 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	return None[hostingdomain.Proposal](), nil
+	self.log.Start(messages.APIProposalLookupStart)
+	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+		Head:  self.Organization + ":" + branch.String(),
+		State: "open",
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return None[hostingdomain.Proposal](), err
+	}
+	if len(pullRequests) == 0 {
+		self.log.Success("none")
+		return None[hostingdomain.Proposal](), nil
+	}
+	if len(pullRequests) > 1 {
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+	}
+	proposal := parsePullRequest(pullRequests[0])
+	self.log.Log(colors.BoldGreen().Styled(proposal.Target.String()))
+	return Some(proposal), nil
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {

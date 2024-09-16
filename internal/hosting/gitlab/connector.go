@@ -64,7 +64,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Success(strconv.Itoa(proposal.Number))
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
 }
 
