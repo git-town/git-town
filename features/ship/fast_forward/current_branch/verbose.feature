@@ -57,8 +57,8 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git stash list                                 |
       |        | backend  | git branch -vva --sort=refname                 |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git remote get-url origin                      |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       | main   | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
       |        | backend  | git show-ref --quiet refs/heads/feature        |
