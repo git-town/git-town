@@ -4,7 +4,7 @@ const (
 	UndoContinueGuidance              = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	AliasedCommands                   = "Aliased commands: %s\n"
 	ArgumentUnknown                   = "unknown argument: %q"
-	APIParentBranchLookupStart        = "Looking for parent of %s online ... "
+	APIParentBranchLookupStart        = "Looking for parent of %s ... "
 	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal online ... "
 	APIUpdateProposalBase             = "updating base branch of proposal %s to %s ... "

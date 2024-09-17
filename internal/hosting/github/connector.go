@@ -95,7 +95,7 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIParentBranchLookupStart, colors.BoldCyan().Styled(branch.String()))
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		State: "open",
