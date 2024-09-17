@@ -52,8 +52,8 @@ Feature: display all executed Git commands
       |        | backend | git status --long --ignore-submodules          |
       |        | backend | git stash list                                 |
       |        | backend | git branch -vva --sort=refname                 |
-      |        | backend | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend | git remote get-url origin                      |
+      |        | backend | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend | git config git-town-branch.child.parent parent |
     And it prints:
       """

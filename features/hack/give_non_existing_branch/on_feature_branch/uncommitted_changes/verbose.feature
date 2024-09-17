@@ -20,6 +20,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
+      |        | backend  | git remote get-url origin                     |
       |        | backend  | git remote                                    |
       | main   | frontend | git add -A                                    |
       |        | frontend | git stash                                     |
@@ -36,7 +37,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "new"
     And the uncommitted file still exists
@@ -53,8 +54,8 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | new    | frontend | git add -A                                    |
       |        | frontend | git stash                                     |
       |        | frontend | git checkout main                             |

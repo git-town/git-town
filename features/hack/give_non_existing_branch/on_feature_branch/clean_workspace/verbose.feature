@@ -22,6 +22,7 @@ Feature: display all executed Git commands
       | main   | frontend | git fetch --prune --tags                      |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
+      |        | backend  | git remote get-url origin                     |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
@@ -35,7 +36,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "new"
 
@@ -51,8 +52,8 @@ Feature: display all executed Git commands
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |

@@ -16,8 +16,9 @@ Feature: display all executed Git commands
       |         | backend  | git status --long --ignore-submodules |
       |         | backend  | git stash list                        |
       |         | backend  | git branch -vva --sort=refname        |
+      |         | backend  | git remote get-url origin             |
       | feature | frontend | git diff main..feature                |
     And it prints:
       """
-      Ran 8 shell commands.
+      Ran 9 shell commands.
       """

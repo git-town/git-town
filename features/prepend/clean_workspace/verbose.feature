@@ -25,9 +25,9 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                  |
       |        | backend  | git branch -vva --sort=refname                  |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
+      |        | backend  | git remote get-url origin                       |
       |        | backend  | git log main..old --format=%h                   |
       |        | backend  | git log --format=%B -n 1 {{ sha 'old commit' }} |
-      |        | backend  | git remote get-url origin                       |
       | old    | frontend | git checkout main                               |
       | main   | frontend | git rebase origin/main                          |
       |        | backend  | git rev-list --left-right main...origin/main    |
@@ -64,8 +64,8 @@ Feature: display all executed Git commands
       |        | backend  | git status --long --ignore-submodules            |
       |        | backend  | git stash list                                   |
       |        | backend  | git branch -vva --sort=refname                   |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | backend  | git remote get-url origin                        |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       | parent | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
       |        | backend  | git config --unset git-town-branch.parent.parent |

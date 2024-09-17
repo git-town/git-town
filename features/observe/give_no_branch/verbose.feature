@@ -44,8 +44,8 @@ Feature: observe the current branch verbosely
       |         | git status --long --ignore-submodules         |
       |         | git stash list                                |
       |         | git branch -vva --sort=refname                |
-      |         | git rev-parse --verify --abbrev-ref @{-1}     |
       |         | git remote get-url origin                     |
+      |         | git rev-parse --verify --abbrev-ref @{-1}     |
       | feature | git add -A                                    |
       |         | git stash                                     |
       | <none>  | git config --unset git-town.observed-branches |
