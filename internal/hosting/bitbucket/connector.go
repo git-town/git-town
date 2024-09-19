@@ -49,11 +49,9 @@ func (self Connector) FindProposal(_, _ gitdomain.LocalBranchName) (Option[hosti
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
-	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
+	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s",
 			self.RepositoryURL(),
 			url.QueryEscape(branch.String()),
-			url.QueryEscape(self.Organization),
-			url.QueryEscape(self.Repository),
 			url.QueryEscape(parentBranch.String())),
 		nil
 }
