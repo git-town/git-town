@@ -60,7 +60,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 			},
 		},
 	}
-	have := gitea.FilterPullRequests(give, "organization", gitdomain.NewLocalBranchName("branch"), gitdomain.NewLocalBranchName("target"))
+	have := gitea.FilterPullRequests(give, gitdomain.NewLocalBranchName("branch"), gitdomain.NewLocalBranchName("target"))
 	must.Eq(t, want, have)
 }
 
