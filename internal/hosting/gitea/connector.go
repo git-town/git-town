@@ -61,7 +61,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
+	pullRequests := FilterPullRequests(openPullRequests, branch, target)
 	switch len(pullRequests) {
 	case 0:
 		self.log.Success("none")
@@ -106,7 +106,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
@@ -125,7 +125,7 @@ func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName
 	return nil
 }
 
-func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest(nil)
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() && pullRequest.Base.Name == target.String() {
