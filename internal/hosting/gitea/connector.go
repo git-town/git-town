@@ -61,20 +61,15 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Ok()
 	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
 	switch len(pullRequests) {
 	case 0:
+		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	case 1:
-		pullRequest := pullRequests[0]
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: pullRequest.Mergeable,
-			Number:       int(pullRequest.Index),
-			Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
-			Title:        pullRequest.Title,
-			URL:          pullRequest.HTMLURL,
-		}), nil
+		proposal := parsePullRequest(pullRequests[0])
+		self.log.Success(strconv.Itoa(proposal.Number))
+		return Some(proposal), nil
 	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
@@ -131,8 +126,7 @@ func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName, fin
 func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest(nil)
 	headName := organization + "/" + branch.String()
-	for p := range pullRequests {
-		pullRequest := pullRequests[p]
+	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
 			result = append(result, pullRequest)
 		}
@@ -162,4 +156,14 @@ type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GiteaToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
+}
+
+func parsePullRequest(pullRequest *gitea.PullRequest) hostingdomain.Proposal {
+	return hostingdomain.Proposal{
+		MergeWithAPI: pullRequest.Mergeable,
+		Number:       int(pullRequest.Index),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
+		Title:        pullRequest.Title,
+		URL:          pullRequest.HTMLURL,
+	}
 }
