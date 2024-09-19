@@ -67,8 +67,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	case 1:
-		pullRequest := pullRequests[0]
-		proposal := parsePullRequest(pullRequest)
+		proposal := parsePullRequest(pullRequests[0])
 		self.log.Success(proposal.Target.String())
 		return Some(proposal), nil
 	default:
