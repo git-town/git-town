@@ -101,20 +101,16 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	self.log.Ok()
 	pullRequests := FilterPullRequests2(openPullRequests, self.Organization, branch)
 	switch len(pullRequests) {
 	case 0:
+		self.log.Ok()
 		return None[hostingdomain.Proposal](), nil
 	case 1:
 		pullRequest := pullRequests[0]
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: pullRequest.Mergeable,
-			Number:       int(pullRequest.Index),
-			Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
-			Title:        pullRequest.Title,
-			URL:          pullRequest.HTMLURL,
-		}), nil
+		proposal := parsePullRequest(pullRequest)
+		self.log.Success(proposal.Target.String())
+		return Some(proposal), nil
 	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
@@ -205,4 +201,14 @@ type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GiteaToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
+}
+
+func parsePullRequest(pullRequest *gitea.PullRequest) hostingdomain.Proposal {
+	return hostingdomain.Proposal{
+		MergeWithAPI: pullRequest.Mergeable,
+		Number:       int(pullRequest.Index),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
+		Title:        pullRequest.Title,
+		URL:          pullRequest.HTMLURL,
+	}
 }
