@@ -96,7 +96,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	pullRequests := FilterPullRequests2(openPullRequests, self.Organization, branch)
+	pullRequests := FilterPullRequests2(openPullRequests, branch)
 	switch len(pullRequests) {
 	case 0:
 		self.log.Success("none")
@@ -162,7 +162,7 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdom
 	return result
 }
 
-func FilterPullRequests2(pullRequests []*gitea.PullRequest, organization string, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest(nil)
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() {

@@ -68,7 +68,6 @@ func executeDiffParent(args []string, verbose configdomain.Verbose) error {
 
 type diffParentData struct {
 	branch       gitdomain.LocalBranchName
-	config       configdomain.ValidatedConfig
 	parentBranch gitdomain.LocalBranchName
 }
 
@@ -138,7 +137,6 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	}
 	return diffParentData{
 		branch:       branch,
-		config:       validatedConfig.Config,
 		parentBranch: parentBranch,
 	}, false, nil
 }
