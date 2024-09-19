@@ -69,7 +69,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIParentBranchLookupStart)
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -85,10 +85,10 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
-		self.log.Success(strconv.Itoa(proposal.Number))
+		self.log.Success(proposal.Target.String())
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
 }
 
