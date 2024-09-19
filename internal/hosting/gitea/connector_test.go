@@ -16,7 +16,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 		// matching branch
 		{
 			Head: &giteasdk.PRBranchInfo{
-				Name: "organization/branch",
+				Name: "branch",
 			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
@@ -25,7 +25,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 		// branch with different name
 		{
 			Head: &giteasdk.PRBranchInfo{
-				Name: "organization/other",
+				Name: "other",
 			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
@@ -34,33 +34,24 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 		// branch with different target
 		{
 			Head: &giteasdk.PRBranchInfo{
-				Name: "organization/branch",
+				Name: "branch",
 			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "other",
-			},
-		},
-		// branch with different organization
-		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "other/branch",
-			},
-			Base: &giteasdk.PRBranchInfo{
-				Name: "target",
 			},
 		},
 	}
 	want := []*giteasdk.PullRequest{
 		{
 			Head: &giteasdk.PRBranchInfo{
-				Name: "organization/branch",
+				Name: "branch",
 			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
 			},
 		},
 	}
-	have := gitea.FilterPullRequests(give, "organization", gitdomain.NewLocalBranchName("branch"), gitdomain.NewLocalBranchName("target"))
+	have := gitea.FilterPullRequests(give, gitdomain.NewLocalBranchName("branch"), gitdomain.NewLocalBranchName("target"))
 	must.Eq(t, want, have)
 }
 

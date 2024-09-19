@@ -61,7 +61,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
+	pullRequests := FilterPullRequests(openPullRequests, branch, target)
 	switch len(pullRequests) {
 	case 0:
 		self.log.Success("none")
@@ -106,28 +106,29 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	// if self.log != nil {
-	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
-	// }
-	// _, err := self.client.EditPullRequest(self.owner, self.repository, int64(number), gitea.EditPullRequestOption{
-	// 	Base: newBaseName,
-	// })
-	// return err
-	finalMessages.Add("The gitea driver does not support updating proposals yet.")
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
+		Base: targetName,
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return err
+	}
+	self.log.Ok()
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add("The gitea driver does not support updating proposals yet.")
+func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
 	return nil
 }
 
-func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest(nil)
-	headName := organization + "/" + branch.String()
 	for _, pullRequest := range pullRequests {
-		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
+		if pullRequest.Head.Name == branch.String() && pullRequest.Base.Name == target.String() {
 			result = append(result, pullRequest)
 		}
 	}
