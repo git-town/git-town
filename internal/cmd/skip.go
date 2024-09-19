@@ -82,6 +82,10 @@ func executeSkip(verbose configdomain.Verbose) error {
 			return err
 		}
 	}
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	if err != nil {
+		return err
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -89,6 +93,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
+		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -112,10 +117,6 @@ func executeSkip(verbose configdomain.Verbose) error {
 		if !unfinishedDetails.CanSkip {
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
-	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
-	if err != nil {
-		return err
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,

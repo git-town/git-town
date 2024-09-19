@@ -86,6 +86,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
+		Connector:          data.connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,

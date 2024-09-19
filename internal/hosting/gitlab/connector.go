@@ -64,7 +64,31 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Success(strconv.Itoa(proposal.Number))
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
+	}
+}
+
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	opts := &gitlab.ListProjectMergeRequestsOptions{
+		State:        gitlab.Ptr("opened"),
+		SourceBranch: gitlab.Ptr(branch.String()),
+	}
+	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
+	if err != nil {
+		self.log.Failed(err)
+		return None[hostingdomain.Proposal](), err
+	}
+	switch len(mergeRequests) {
+	case 0:
+		self.log.Success("none")
+		return None[hostingdomain.Proposal](), nil
+	case 1:
+		proposal := parseMergeRequest(mergeRequests[0])
+		self.log.Success(proposal.Target.String())
+		return Some(proposal), nil
+	default:
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
 }
 

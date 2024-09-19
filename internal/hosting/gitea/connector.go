@@ -68,10 +68,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), nil
 	case 1:
 		proposal := parsePullRequest(pullRequests[0])
-		self.log.Success(strconv.Itoa(proposal.Number))
+		self.log.Success(proposal.Target.String())
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 }
 
@@ -82,6 +82,33 @@ func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBran
 
 func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+		ListOptions: gitea.ListOptions{
+			PageSize: 50,
+		},
+		State: gitea.StateOpen,
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return None[hostingdomain.Proposal](), err
+	}
+	pullRequests := FilterPullRequests2(openPullRequests, branch)
+	switch len(pullRequests) {
+	case 0:
+		self.log.Success("none")
+		return None[hostingdomain.Proposal](), nil
+	case 1:
+		pullRequest := pullRequests[0]
+		proposal := parsePullRequest(pullRequest)
+		self.log.Success(proposal.Target.String())
+		return Some(proposal), nil
+	default:
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+	}
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
@@ -129,6 +156,16 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdom
 	result := []*gitea.PullRequest(nil)
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() && pullRequest.Base.Name == target.String() {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
+}
+
+func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
+	result := []*gitea.PullRequest(nil)
+	for _, pullRequest := range pullRequests {
+		if pullRequest.Head.Name == branch.String() {
 			result = append(result, pullRequest)
 		}
 	}

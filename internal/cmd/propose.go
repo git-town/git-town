@@ -173,6 +173,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	if err != nil {
+		return data, false, err
+	}
 	branchToPropose := initialBranch
 	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -180,6 +184,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		Connector:          connectorOpt,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -198,10 +203,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	parentOfBranchToPropose, hasParentBranch := validatedConfig.Config.Lineage.Parent(branchToPropose).Get()
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
-	}
-	connectorOpt, err := hosting.NewConnector(*validatedConfig.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
-	if err != nil {
-		return data, false, err
 	}
 	existingProposalURL := None[string]()
 	connector, hasConnector := connectorOpt.Get()
