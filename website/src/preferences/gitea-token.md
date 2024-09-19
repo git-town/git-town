@@ -8,7 +8,6 @@ To create an API token, click on your profile image, choose `Settings`, and then
 in the menu on the left `Applications`. You need an API token with these
 permissions:
 
-- read issues
 - read and write the repository
 
 The best way to enter your token is via the
