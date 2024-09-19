@@ -89,8 +89,35 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(_ gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	return None[hostingdomain.Proposal](), nil
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+		ListOptions: gitea.ListOptions{
+			PageSize: 50,
+		},
+		State: gitea.StateOpen,
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return None[hostingdomain.Proposal](), err
+	}
+	self.log.Ok()
+	pullRequests := FilterPullRequests2(openPullRequests, self.Organization, branch)
+	switch len(pullRequests) {
+	case 0:
+		return None[hostingdomain.Proposal](), nil
+	case 1:
+		pullRequest := pullRequests[0]
+		return Some(hostingdomain.Proposal{
+			MergeWithAPI: pullRequest.Mergeable,
+			Number:       int(pullRequest.Index),
+			Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
+			Title:        pullRequest.Title,
+			URL:          pullRequest.HTMLURL,
+		}), nil
+	default:
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+	}
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
@@ -138,6 +165,18 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 	for p := range pullRequests {
 		pullRequest := pullRequests[p]
 		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
+}
+
+func FilterPullRequests2(pullRequests []*gitea.PullRequest, organization string, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
+	result := []*gitea.PullRequest(nil)
+	headName := organization + "/" + branch.String()
+	for p := range pullRequests {
+		pullRequest := pullRequests[p]
+		if pullRequest.Head.Name == headName {
 			result = append(result, pullRequest)
 		}
 	}
