@@ -106,15 +106,17 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	// if self.log != nil {
-	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
-	// }
-	// _, err := self.client.EditPullRequest(self.owner, self.repository, int64(number), gitea.EditPullRequestOption{
-	// 	Base: newBaseName,
-	// })
-	// return err
-	finalMessages.Add("The gitea driver does not support updating proposals yet.")
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
+		Base: targetName,
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return err
+	}
+	self.log.Ok()
 	return nil
 }
 
