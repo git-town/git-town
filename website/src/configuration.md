@@ -10,3 +10,11 @@ git town config setup
 
 More information about the configuration file including how to create one
 manually is [here](configuration-file.md).
+
+### Access Tokens
+
+Setting up an API access token is super easy.
+
+- [steps for GitHub](preferences/github-token.md)
+- [steps for GitLab](preferences/gitlab-token.md)
+- [steps for gitea](preferences/gitea-token.md)
