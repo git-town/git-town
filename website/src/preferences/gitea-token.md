@@ -4,6 +4,12 @@ Git Town can interact with Gitea in your name, for example to update pull
 requests as branches get created, shipped, or deleted. To do so, Git Town needs
 a personal access token for Gitea.
 
+To create an API token, click on your profile image, choose `Settings`, and then
+in the menu on the left `Applications`. You need an API token with these
+permissions:
+
+- read and write the repository
+
 The best way to enter your token is via the
 [setup assistant](../configuration.md).
 
