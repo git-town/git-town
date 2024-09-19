@@ -13,7 +13,8 @@ manually is [here](configuration-file.md).
 
 ### Access Tokens
 
-Setting up an API access token is super easy.
+Setting up an API access token is super easy and multiplies Git Town's utility.
+Don't skip this step.
 
 - [steps for GitHub](preferences/github-token.md)
 - [steps for GitLab](preferences/gitlab-token.md)
