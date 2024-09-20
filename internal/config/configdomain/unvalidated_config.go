@@ -12,6 +12,7 @@ import (
 // If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
+	BitbucketAppPassword     Option[BitbucketAppPassword]
 	ContributionBranches     gitdomain.LocalBranchNames
 	CreatePrototypeBranches  CreatePrototypeBranches
 	DefaultBranchType        DefaultBranchType
@@ -151,6 +152,7 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
+		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		CreatePrototypeBranches:  false,
 		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
