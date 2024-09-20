@@ -135,7 +135,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
+	self.log.Log(colors.BoldGreen().Styled("#" + strconv.Itoa(proposal.Number)))
 	return Some(proposal), nil
 }
 
@@ -272,11 +272,11 @@ func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.
 		return result, errors.New("unknown data type for pull request title")
 	}
 	number := int(id2)
-	titleRaw, has := pullRequest["title"]
+	title1, has := pullRequest["title"]
 	if !has {
 		return result, errors.New("missing title attribute in proposal")
 	}
-	title, ok := titleRaw.(string)
+	title2, ok := title1.(string)
 	if !ok {
 		return result, errors.New("unknown data type for pull request title")
 	}
@@ -332,7 +332,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.
 		MergeWithAPI: false,
 		Number:       number,
 		Target:       gitdomain.NewLocalBranchName(destination),
-		Title:        title,
+		Title:        title2,
 		URL:          url,
 	}, nil
 }
