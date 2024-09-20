@@ -126,7 +126,9 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Subject,
 	})
-	self.log.Ok()
+	if err != nil {
+		self.log.Ok()
+	}
 	return err
 }
 

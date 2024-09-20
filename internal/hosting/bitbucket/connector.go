@@ -207,8 +207,21 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	return Some(proposal), nil
 }
 
-func (self Connector) SquashMergeProposal(_ int, _ gitdomain.CommitMessage) error {
-	return errors.New(messages.HostingBitBucketNotImplemented)
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
+		ID:       strconv.Itoa(number),
+		Owner:    "git-town-qa",
+		RepoSlug: "test-repo",
+		Message:  message.String(),
+	})
+	if err != nil {
+		self.log.Ok()
+	}
+	return err
 }
 
 func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
