@@ -58,7 +58,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, branch, target)
@@ -93,7 +93,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests2(openPullRequests, branch)
@@ -123,7 +123,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		Message: commitMessageParts.Text,
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return err
 	}
 	self.log.Ok()
@@ -140,7 +140,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		Base: targetName,
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return err
 	}
 	self.log.Ok()
