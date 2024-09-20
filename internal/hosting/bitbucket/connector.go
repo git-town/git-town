@@ -244,7 +244,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	}
 	source7 := gitdomain.NewLocalBranchName(source6)
-	link1, has := values["links"]
+	link1, has := values3["links"]
 	if !has {
 		self.log.Failed("no links attribute")
 		return None[hostingdomain.Proposal](), nil
