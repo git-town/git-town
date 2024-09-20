@@ -218,8 +218,10 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		RepoSlug: "test-repo",
 		Message:  message.String(),
 	})
-	if err != nil {
+	if err == nil {
 		self.log.Ok()
+	} else {
+		self.log.Failed(err.Error())
 	}
 	return err
 }
