@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
-	"golang.org/x/exp/maps"
 )
 
 // Connector provides access to the API of Bitbucket installations.
@@ -72,7 +71,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			URL:          proposalURLOverride,
 		}), nil
 	}
-	result1, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
+	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:             "git-town-qa", // TODO
 		RepoSlug:          "test-repo",   // TODO
 		SourceBranch:      branch.String(),
@@ -155,11 +154,11 @@ func (self Connector) RepositoryURL() string {
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	response1, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
-		Owner:        "git-town-qa",
-		RepoSlug:     "test-repo",
-		SourceBranch: branch.String(),
-		// States:       []string{"open"},
+	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+		Owner:    "git-town-qa",
+		RepoSlug: "test-repo",
+		Query:    fmt.Sprintf(`source.branch.name = "%s"`, branch),
+		States:   []string{"open"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -213,7 +212,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	number2 := number1.(float64)
 	number3 := int(number2)
-	fmt.Println(maps.Keys(values3))
 	dest1, has := values3["destination"]
 	if !has {
 		self.log.Failed("no source field")
@@ -275,7 +273,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed("href is not string")
 		return None[hostingdomain.Proposal](), nil
 	}
-	fmt.Println("2222222222222222222", dest7)
 	proposal := hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number3,
@@ -283,6 +280,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		Title:        title2,
 		URL:          url,
 	}
+	self.log.Success(proposal.Target.String())
 	return Some(proposal), nil
 }
 
