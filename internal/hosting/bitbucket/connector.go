@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -165,7 +164,11 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), err
 	}
-	spew.Dump(response1)
+	response2, ok := response1.(map[string]interface{})
+	if !ok {
+		self.log.Failed()
+		return None[hostingdomain.Proposal](), nil
+	}
 	return None[hostingdomain.Proposal](), nil
 	// if len(response1) == 0 {
 	// 	self.log.Success("none")
