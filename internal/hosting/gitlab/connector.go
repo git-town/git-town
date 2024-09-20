@@ -52,7 +52,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
@@ -76,7 +76,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
@@ -105,7 +105,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		ShouldRemoveSourceBranch: gitlab.Ptr(false),
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return err
 	}
 	self.log.Ok()
@@ -118,7 +118,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return err
 	}
 	self.log.Ok()

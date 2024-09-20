@@ -60,7 +60,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		State: "open",
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
@@ -101,7 +101,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		State: "open",
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
@@ -139,7 +139,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		},
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return err
 	}
 	self.log.Ok()
