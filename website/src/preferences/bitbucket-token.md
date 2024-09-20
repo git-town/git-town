@@ -20,10 +20,10 @@ Since your API token is confidential, you cannot add it to the config file.
 
 ## Git metadata
 
-You can configure the API token manually by running:
+You can configure the app password manually by running:
 
 ```bash
-git config [--global] git-town.gitea-token <token>
+git config [--global] git-town.bitbucket-app-password <token>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
