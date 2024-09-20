@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
+	"golang.org/x/exp/maps"
 )
 
 // Connector provides access to the API of Bitbucket installations.
@@ -166,8 +167,28 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	response2, ok := response1.(map[string]interface{})
 	if !ok {
-		self.log.Failed()
+		self.log.Failed("bitbucket API response has unknown structure")
 		return None[hostingdomain.Proposal](), nil
+	}
+	keys := maps.Keys(response2)
+	fmt.Println("1111111111111111111", keys)
+	size1, has := response2["size"]
+	if !has {
+		self.log.Failed("bitbucket API response has no size")
+		return None[hostingdomain.Proposal](), nil
+	}
+	size2, ok := size1.(float64)
+	if !ok {
+		self.log.Failed("unknown size data type")
+		return None[hostingdomain.Proposal](), nil
+	}
+	size := int(size2)
+	if size == 0 {
+		self.log.Success("none")
+		return None[hostingdomain.Proposal](), nil
+	}
+	if size > 1 {
+		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, size, branch)
 	}
 	return None[hostingdomain.Proposal](), nil
 	// if len(response1) == 0 {
