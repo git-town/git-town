@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -16,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
-	"golang.org/x/exp/maps"
 )
 
 // Connector provides access to the API of Bitbucket installations.
@@ -170,8 +170,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed("bitbucket API response has unknown structure")
 		return None[hostingdomain.Proposal](), nil
 	}
-	keys := maps.Keys(response2)
-	fmt.Println("1111111111111111111", keys)
 	size1, has := response2["size"]
 	if !has {
 		self.log.Failed("bitbucket API response has no size")
@@ -190,17 +188,70 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	if size > 1 {
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, size, branch)
 	}
-	return None[hostingdomain.Proposal](), nil
-	// if len(response1) == 0 {
-	// 	self.log.Success("none")
-	// 	return None[hostingdomain.Proposal](), nil
-	// }
-	// if len(response1) > 1 {
-	// 	return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(response1), branch)
-	// }
-	// proposal := parsePullRequest(response1[0])
-	// self.log.Log(colors.BoldGreen().Styled(proposal.Target.String()))
-	// return Some(proposal), nil
+	values1, has := response2["values"]
+	if !has {
+		self.log.Failed("bitbucket API has no values")
+		return None[hostingdomain.Proposal](), nil
+	}
+	values2, ok := values1.([]interface{})
+	if !ok {
+		self.log.Failed("unknown data structure for values")
+		return None[hostingdomain.Proposal](), nil
+	}
+	values3 := values2[0].(map[string]interface{})
+	spew.Dump(values3)
+	title1, has := values3["title"]
+	if !has {
+		self.log.Failed("no title field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	title2 := title1.(string)
+	number1, has := values3["id"]
+	if !has {
+		self.log.Failed("no id field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	number2 := number1.(float64)
+	number3 := int(number2)
+	target1, has := values3["destination"]
+	if !has {
+		self.log.Failed("no destination field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target2, ok := target1.(map[string]interface{})
+	if !ok {
+		self.log.Failed("unknown data type for destination")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target3, has := target2["branch"]
+	if !has {
+		self.log.Failed("has no branch field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target4, ok := target3.(map[string]interface{})
+	if !ok {
+		self.log.Failed("unknown data structure for branch field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target5, has := target4["name"]
+	if !has {
+		self.log.Failed("has no name field")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target6, ok := target5.(string)
+	if !ok {
+		self.log.Failed("name is not a string")
+		return None[hostingdomain.Proposal](), nil
+	}
+	target7 := gitdomain.NewLocalBranchName(target6)
+	proposal := hostingdomain.Proposal{
+		MergeWithAPI: false,
+		Number:       number3,
+		Target:       target7,
+		Title:        title2,
+		URL:          "",
+	}
+	return Some(proposal), nil
 }
 
 func (self Connector) SquashMergeProposal(_ int, _ gitdomain.CommitMessage) error {
