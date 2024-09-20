@@ -198,86 +198,10 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	}
 	values3 := values2[0].(map[string]interface{})
-	title1, has := values3["title"]
-	if !has {
-		self.log.Failed("no title field")
+	proposal, err := parsePullRequest(values3)
+	if err != nil {
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
-	}
-	title2 := title1.(string)
-	number1, has := values3["id"]
-	if !has {
-		self.log.Failed("no id field")
-		return None[hostingdomain.Proposal](), nil
-	}
-	number2 := number1.(float64)
-	number3 := int(number2)
-	dest1, has := values3["destination"]
-	if !has {
-		self.log.Failed("no source field")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest2, ok := dest1.(map[string]interface{})
-	if !ok {
-		self.log.Failed("unknown data type for source")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest3, has := dest2["branch"]
-	if !has {
-		self.log.Failed("has no branch field")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest4, ok := dest3.(map[string]interface{})
-	if !ok {
-		self.log.Failed("unknown data structure for branch field")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest5, has := dest4["name"]
-	if !has {
-		self.log.Failed("has no name field")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest6, ok := dest5.(string)
-	if !ok {
-		self.log.Failed("name is not a string")
-		return None[hostingdomain.Proposal](), nil
-	}
-	dest7 := gitdomain.NewLocalBranchName(dest6)
-	link1, has := values3["links"]
-	if !has {
-		self.log.Failed("no links attribute")
-		return None[hostingdomain.Proposal](), nil
-	}
-	link2, ok := link1.(map[string]interface{})
-	if !ok {
-		self.log.Failed("unknown links structure")
-		return None[hostingdomain.Proposal](), nil
-	}
-	link3, has := link2["html"]
-	if !has {
-		self.log.Failed("unknown html links")
-		return None[hostingdomain.Proposal](), nil
-	}
-	link4, ok := link3.(map[string]interface{})
-	if !ok {
-		self.log.Failed("unknown html links structure")
-		return None[hostingdomain.Proposal](), nil
-	}
-	link5, has := link4["href"]
-	if !has {
-		self.log.Failed("no href attribute")
-		return None[hostingdomain.Proposal](), nil
-	}
-	url, ok := link5.(string)
-	if !ok {
-		self.log.Failed("href is not string")
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal := hostingdomain.Proposal{
-		MergeWithAPI: false,
-		Number:       number3,
-		Target:       dest7,
-		Title:        title2,
-		URL:          url,
 	}
 	self.log.Success(proposal.Target.String())
 	return Some(proposal), nil
