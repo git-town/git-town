@@ -71,7 +71,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			URL:          proposalURLOverride,
 		}), nil
 	}
-	result, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
+	result1, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
 		Owner:             "git-town-qa",
 		RepoSlug:          "test-repo",
 		SourceBranch:      branch.String(),
@@ -82,54 +82,54 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), nil
 	}
-	if result == nil {
+	if result1 == nil {
 		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	}
-	keyValues, ok := result.(map[string]interface{})
+	result2, ok := result1.(map[string]interface{})
 	if !ok {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	sizeRaw, has := keyValues["size"]
+	size1, has := result2["size"]
 	if !has {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	sizeFloat, ok := sizeRaw.(float64)
+	size2, ok := size1.(float64)
 	if !ok {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	sizeInt := int(sizeFloat)
-	if sizeInt == 0 {
+	size := int(size2)
+	if size == 0 {
 		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	}
-	if sizeInt > 1 {
-		self.log.Failed(fmt.Errorf(messages.ProposalMultipleFromToFound, sizeInt, branch, target))
+	if size > 1 {
+		self.log.Failed(fmt.Errorf(messages.ProposalMultipleFromToFound, size, branch, target))
 		return None[hostingdomain.Proposal](), nil
 	}
-	valuesRaw1, has := keyValues["values"]
+	proposal1, has := result2["values"]
 	if !has {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	valuesRaw2, ok := valuesRaw1.([]interface{})
+	proposal2, ok := proposal1.([]interface{})
 	if !ok {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	if len(valuesRaw2) == 0 {
+	if len(proposal2) == 0 {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	valuesRaw3, ok := valuesRaw2[0].(map[string]interface{})
+	proposal3, ok := proposal2[0].(map[string]interface{})
 	if !ok {
 		self.log.Failed(errors.New("unexpected result data structure"))
 		return None[hostingdomain.Proposal](), nil
 	}
-	proposal, err := parsePullRequest(valuesRaw3)
+	proposal, err := parsePullRequest(proposal3)
 	if err != nil {
 		self.log.Failed(err)
 		return None[hostingdomain.Proposal](), nil
