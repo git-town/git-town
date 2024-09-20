@@ -79,7 +79,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		States:            []string{"open"},
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
 	if result1 == nil {
@@ -88,17 +88,17 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	result2, ok := result1.(map[string]interface{})
 	if !ok {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	size1, has := result2["size"]
 	if !has {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	size := int(size2)
@@ -107,31 +107,31 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[hostingdomain.Proposal](), nil
 	}
 	if size > 1 {
-		self.log.Failed(fmt.Errorf(messages.ProposalMultipleFromToFound, size, branch, target))
+		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal1, has := result2["values"]
 	if !has {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal2, ok := proposal1.([]interface{})
 	if !ok {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(proposal2) == 0 {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal3, ok := proposal2[0].(map[string]interface{})
 	if !ok {
-		self.log.Failed(errors.New("unexpected result data structure"))
+		self.log.Failed("unexpected result data structure")
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal, err := parsePullRequest(proposal3)
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
@@ -161,7 +161,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		States:       []string{"open"},
 	})
 	if err != nil {
-		self.log.Failed(err)
+		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 	response2, ok := response1.(map[string]interface{})
