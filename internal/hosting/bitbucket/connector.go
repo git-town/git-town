@@ -159,7 +159,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		Owner:        "git-town-qa",
 		RepoSlug:     "test-repo",
 		SourceBranch: branch.String(),
-		States:       []string{"open"},
+		// States:       []string{"open"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -186,7 +186,8 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	}
 	if size > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, size, branch)
+		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size, branch))
+		return None[hostingdomain.Proposal](), nil
 	}
 	values1, has := response2["values"]
 	if !has {
@@ -213,37 +214,37 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	number2 := number1.(float64)
 	number3 := int(number2)
 	fmt.Println(maps.Keys(values3))
-	source1, has := values3["source"]
+	dest1, has := values3["destination"]
 	if !has {
 		self.log.Failed("no source field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source2, ok := source1.(map[string]interface{})
+	dest2, ok := dest1.(map[string]interface{})
 	if !ok {
 		self.log.Failed("unknown data type for source")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source3, has := source2["branch"]
+	dest3, has := dest2["branch"]
 	if !has {
 		self.log.Failed("has no branch field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source4, ok := source3.(map[string]interface{})
+	dest4, ok := dest3.(map[string]interface{})
 	if !ok {
 		self.log.Failed("unknown data structure for branch field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source5, has := source4["name"]
+	dest5, has := dest4["name"]
 	if !has {
 		self.log.Failed("has no name field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source6, ok := source5.(string)
+	dest6, ok := dest5.(string)
 	if !ok {
 		self.log.Failed("name is not a string")
 		return None[hostingdomain.Proposal](), nil
 	}
-	source7 := gitdomain.NewLocalBranchName(source6)
+	dest7 := gitdomain.NewLocalBranchName(dest6)
 	link1, has := values3["links"]
 	if !has {
 		self.log.Failed("no links attribute")
@@ -274,11 +275,11 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed("href is not string")
 		return None[hostingdomain.Proposal](), nil
 	}
-	fmt.Println("2222222222222222222", source7)
+	fmt.Println("2222222222222222222", dest7)
 	proposal := hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number3,
-		Target:       source7,
+		Target:       dest7,
 		Title:        title2,
 		URL:          url,
 	}
