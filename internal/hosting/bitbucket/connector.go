@@ -227,13 +227,37 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add("The BitBucket driver does not support updating proposals yet.")
+func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+		ID:                strconv.Itoa(number),
+		Owner:             "git-town-qa",
+		RepoSlug:          "test-repo",
+		DestinationBranch: target.String(),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(_ int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add("The BitBucket driver does not support updating proposals yet.")
+func (self Connector) UpdateProposalHead(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	sourceName := source.String()
+	self.log.Start(messages.APIUpdateProposalHead, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
+	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+		ID:           strconv.Itoa(number),
+		Owner:        "git-town-qa",
+		RepoSlug:     "test-repo",
+		SourceBranch: source.String(),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
 	return nil
 }
 
