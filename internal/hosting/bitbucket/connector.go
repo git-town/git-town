@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -17,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
+	"golang.org/x/exp/maps"
 )
 
 // Connector provides access to the API of Bitbucket installations.
@@ -199,7 +199,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	}
 	values3 := values2[0].(map[string]interface{})
-	spew.Dump(values3)
 	title1, has := values3["title"]
 	if !has {
 		self.log.Failed("no title field")
@@ -213,44 +212,75 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	number2 := number1.(float64)
 	number3 := int(number2)
-	target1, has := values3["destination"]
+	fmt.Println(maps.Keys(values3))
+	source1, has := values3["source"]
 	if !has {
-		self.log.Failed("no destination field")
+		self.log.Failed("no source field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target2, ok := target1.(map[string]interface{})
+	source2, ok := source1.(map[string]interface{})
 	if !ok {
-		self.log.Failed("unknown data type for destination")
+		self.log.Failed("unknown data type for source")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target3, has := target2["branch"]
+	source3, has := source2["branch"]
 	if !has {
 		self.log.Failed("has no branch field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target4, ok := target3.(map[string]interface{})
+	source4, ok := source3.(map[string]interface{})
 	if !ok {
 		self.log.Failed("unknown data structure for branch field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target5, has := target4["name"]
+	source5, has := source4["name"]
 	if !has {
 		self.log.Failed("has no name field")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target6, ok := target5.(string)
+	source6, ok := source5.(string)
 	if !ok {
 		self.log.Failed("name is not a string")
 		return None[hostingdomain.Proposal](), nil
 	}
-	target7 := gitdomain.NewLocalBranchName(target6)
-	fmt.Println(target7)
+	source7 := gitdomain.NewLocalBranchName(source6)
+	link1, has := values["links"]
+	if !has {
+		self.log.Failed("no links attribute")
+		return None[hostingdomain.Proposal](), nil
+	}
+	link2, ok := link1.(map[string]interface{})
+	if !ok {
+		self.log.Failed("unknown links structure")
+		return None[hostingdomain.Proposal](), nil
+	}
+	link3, has := link2["html"]
+	if !has {
+		self.log.Failed("unknown html links")
+		return None[hostingdomain.Proposal](), nil
+	}
+	link4, ok := link3.(map[string]interface{})
+	if !ok {
+		self.log.Failed("unknown html links structure")
+		return None[hostingdomain.Proposal](), nil
+	}
+	link5, has := link4["href"]
+	if !has {
+		self.log.Failed("no href attribute")
+		return None[hostingdomain.Proposal](), nil
+	}
+	url, ok := link5.(string)
+	if !ok {
+		self.log.Failed("href is not string")
+		return None[hostingdomain.Proposal](), nil
+	}
+	fmt.Println("2222222222222222222", source7)
 	proposal := hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number3,
-		Target:       target7,
+		Target:       source7,
 		Title:        title2,
-		URL:          "",
+		URL:          url,
 	}
 	return Some(proposal), nil
 }
