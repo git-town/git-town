@@ -44,6 +44,8 @@
     - [setup](commands/config-setup.md)
     - [offline](commands/offline.md)
 - [Preferences](preferences.md)
+  - [bitbucket-app-password](preferences/bitbucket-app-password.md)
+  - [bitbucket-username](preferences/bitbucket-username.md)
   - [configuration file](configuration-file.md)
   - [contribution-branches](preferences/contribution-branches.md)
   - [create-prototype-branches](preferences/create-prototype-branches.md)

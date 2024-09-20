@@ -1,8 +1,9 @@
-# bitbucket-token
+# bitbucket-app-password
 
 Git Town can interact with Bitbucket Cloud in your name, for example to update
 pull requests as branches get created, shipped, or deleted. To do so, Git Town
-needs an app password for BitBucket.
+needs your [Bitbucket username]() and an
+[Bitbucket App Password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords).
 
 To create an app password, click on the `Settings` cogwheel, choose
 `Personal Bitbucket settings`, and then in the menu on the left `App passwords`.
