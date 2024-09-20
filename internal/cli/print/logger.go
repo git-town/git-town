@@ -9,7 +9,7 @@ import (
 // The Logger logger logs activities of a particular component on the CLI.
 type Logger struct{}
 
-func (l Logger) Failed(failure error) {
+func (l Logger) Failed(failure string) {
 	l.Log(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
 }
 
