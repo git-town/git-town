@@ -41,11 +41,11 @@ func NewConnector(args NewConnectorArgs) Connector {
 }
 
 type NewConnectorArgs struct {
-	UserName        Option[configdomain.BitbucketAppPassword]
 	AppPassword     Option[configdomain.BitbucketAppPassword]
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger
 	RemoteURL       giturl.Parts
+	UserName        Option[configdomain.BitbucketUsername]
 }
 
 func (self Connector) CanMakeAPICalls() bool {

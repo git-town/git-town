@@ -29,6 +29,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			HostingPlatform: hostingPlatform,
 			Log:             log,
 			RemoteURL:       remoteURL,
+			UserName:        config.Config.Get().BitbucketUsername,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
