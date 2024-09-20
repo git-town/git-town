@@ -72,11 +72,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		}), nil
 	}
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:             "git-town-qa", // TODO
-		RepoSlug:          "test-repo",   // TODO
-		SourceBranch:      branch.String(),
-		DestinationBranch: target.String(),
-		States:            []string{"open"},
+		Owner:    "git-town-qa", // TODO
+		RepoSlug: "test-repo",   // TODO
+		Query:    fmt.Sprintf(`source.branch.name = "%s"`, branch),
+		States:   []string{"open"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
