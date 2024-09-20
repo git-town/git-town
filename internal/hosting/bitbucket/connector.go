@@ -244,6 +244,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), nil
 	}
 	target7 := gitdomain.NewLocalBranchName(target6)
+	fmt.Println(target7)
 	proposal := hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number3,
