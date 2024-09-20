@@ -13,6 +13,7 @@ import (
 type UnvalidatedConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
+	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
 	CreatePrototypeBranches  CreatePrototypeBranches
 	DefaultBranchType        DefaultBranchType
@@ -153,6 +154,7 @@ func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
+		BitbucketUsername:        None[BitbucketUsername](),
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		CreatePrototypeBranches:  false,
 		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},

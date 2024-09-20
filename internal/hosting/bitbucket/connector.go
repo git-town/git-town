@@ -28,7 +28,7 @@ type Connector struct {
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
-	client := bitbucket.NewBasicAuth("kevgo", args.AppPassword.String())
+	client := bitbucket.NewBasicAuth(args.UserName.String(), args.AppPassword.String())
 	return Connector{
 		Data: hostingdomain.Data{
 			Hostname:     args.RemoteURL.Host,
@@ -41,6 +41,7 @@ func NewConnector(args NewConnectorArgs) Connector {
 }
 
 type NewConnectorArgs struct {
+	UserName        Option[configdomain.BitbucketAppPassword]
 	AppPassword     Option[configdomain.BitbucketAppPassword]
 	HostingPlatform Option[configdomain.HostingPlatform]
 	Log             print.Logger

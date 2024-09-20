@@ -6,7 +6,6 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// BitbucketAppPassword is a bearer token to use with the GitHub API.
 type BitbucketAppPassword string
 
 func (self BitbucketAppPassword) String() string {
