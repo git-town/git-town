@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v16/internal/cli/colors"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -72,11 +73,11 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		}), nil
 	}
 	result1, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
-		Owner:             "git-town-qa",
-		RepoSlug:          "test-repo",
+		Owner:             "git-town-qa", // TODO
+		RepoSlug:          "test-repo",   // TODO
 		SourceBranch:      branch.String(),
 		DestinationBranch: target.String(),
-		// States: []string{},
+		States:            []string{"open"},
 	})
 	if err != nil {
 		self.log.Failed(err)
@@ -152,8 +153,30 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(_ gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	response1, err := self.client.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
+		Owner:        "git-town-qa",
+		RepoSlug:     "test-repo",
+		SourceBranch: branch.String(),
+		States:       []string{"open"},
+	})
+	if err != nil {
+		self.log.Failed(err)
+		return None[hostingdomain.Proposal](), err
+	}
+	spew.Dump(response1)
 	return None[hostingdomain.Proposal](), nil
+	// if len(response1) == 0 {
+	// 	self.log.Success("none")
+	// 	return None[hostingdomain.Proposal](), nil
+	// }
+	// if len(response1) > 1 {
+	// 	return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(response1), branch)
+	// }
+	// proposal := parsePullRequest(response1[0])
+	// self.log.Log(colors.BoldGreen().Styled(proposal.Target.String()))
+	// return Some(proposal), nil
 }
 
 func (self Connector) SquashMergeProposal(_ int, _ gitdomain.CommitMessage) error {
