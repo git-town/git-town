@@ -84,7 +84,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
-		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyGithubToken]),
+		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,

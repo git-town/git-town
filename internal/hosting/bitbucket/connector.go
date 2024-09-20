@@ -28,7 +28,7 @@ type Connector struct {
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
-	client := bitbucket.NewBasicAuth("", args.AppPassword.String())
+	client := bitbucket.NewBasicAuth("kevgo", args.AppPassword.String())
 	return Connector{
 		Data: hostingdomain.Data{
 			Hostname:     args.RemoteURL.Host,
@@ -71,15 +71,16 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			URL:          proposalURLOverride,
 		}), nil
 	}
+	query := fmt.Sprintf(`source.branch.name = "%s" AND destination.branch.name ="%s"`, branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    "git-town-qa", // TODO
 		RepoSlug: "test-repo",   // TODO
-		Query:    fmt.Sprintf(`source.branch.name = "%s"`, branch),
+		Query:    query,
 		States:   []string{"open"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), nil
+		return None[hostingdomain.Proposal](), err
 	}
 	if result1 == nil {
 		self.log.Success("none")

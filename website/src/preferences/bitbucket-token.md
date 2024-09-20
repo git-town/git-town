@@ -8,6 +8,7 @@ To create an app password, click on the `Settings` cogwheel, choose
 `Personal Bitbucket settings`, and then in the menu on the left `App passwords`.
 You need an app password with these permissions:
 
+- repository: read and write
 - pull requests: read and write
 
 The best way to enter your token is via the

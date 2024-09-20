@@ -10,7 +10,7 @@ import (
 type Logger struct{}
 
 func (l Logger) Failed(failure string) {
-	l.Log(colors.BoldRed().Styled(fmt.Sprintf("FAILED: %v\n", failure)))
+	l.Log(colors.BoldRed().Styled(fmt.Sprintf("%v\n", failure)))
 }
 
 func (l Logger) Log(text string) {
