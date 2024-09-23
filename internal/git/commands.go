@@ -515,6 +515,14 @@ func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand c
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
+func (self *Commands) RemoveBitbucketAppPassword(runner gitdomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketAppPassword.String())
+}
+
+func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
+}
+
 // RemoveHubToken removes the stored token for the GitHub API.
 func (self *Commands) RemoveGitHubToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGithubToken.String())
@@ -595,6 +603,14 @@ func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.Bra
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
 	return gitdomain.NewSHA(output), nil
+}
+
+func (self *Commands) SetBitbucketAppPassword(runner gitdomain.Runner, value configdomain.BitbucketAppPassword) error {
+	return runner.Run("git", "config", configdomain.KeyBitbucketAppPassword.String(), value.String())
+}
+
+func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value configdomain.BitbucketUsername) error {
+	return runner.Run("git", "config", configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
 // SetGitAlias sets the given Git alias.
