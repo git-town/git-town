@@ -9,6 +9,7 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
+//nolint:gosec
 const (
 	bitbucketAppPasswordTitle = `Bitbucket App Password`
 	bitbucketAppPasswordHelp  = `

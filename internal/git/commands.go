@@ -510,17 +510,17 @@ func (self *Commands) RemotesUncached(querier gitdomain.Querier) (gitdomain.Remo
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
-// RemoveGitAlias removes the given Git alias.
-func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
-	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
-}
-
 func (self *Commands) RemoveBitbucketAppPassword(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketAppPassword.String())
 }
 
 func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
+}
+
+// RemoveGitAlias removes the given Git alias.
+func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
+	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
 // RemoveHubToken removes the stored token for the GitHub API.
