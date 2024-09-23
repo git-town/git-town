@@ -2,7 +2,7 @@
 
 Git Town can interact with Bitbucket Cloud in your name, for example to update
 pull requests as branches get created, shipped, or deleted. To do so, Git Town
-needs your [Bitbucket username]() and an
+needs your [Bitbucket username](bitbucket-username.md) and an
 [Bitbucket App Password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords).
 
 To create an app password, click on the `Settings` cogwheel, choose
