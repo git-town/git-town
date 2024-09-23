@@ -12,9 +12,9 @@ import (
 const (
 	githubTokenTitle = `GitHub API token`
 	gitHubTokenHelp  = `
-If you have an API token for GitHub,
-and want to ship branches from the CLI,
-please enter it now.
+Git Town can update pull requests and ship branches on GitHub for you.
+To enable this, please enter a GitHub API token.
+More info at https://www.git-town.com/preferences/github-token.
 
 It's okay to leave this empty.
 
