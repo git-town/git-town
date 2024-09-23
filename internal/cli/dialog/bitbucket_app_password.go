@@ -28,7 +28,7 @@ func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], in
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketAppPasswordHelp,
-		Prompt:        "Your Bitbucket App Password: ",
+		Prompt:        "Bitbucket App Password: ",
 		TestInput:     inputs,
 		Title:         bitbucketAppPasswordTitle,
 	})
