@@ -44,5 +44,5 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

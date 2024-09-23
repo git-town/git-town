@@ -35,5 +35,5 @@ Feature: append to a perennial branch
       | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
     And the current branch is now "production"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

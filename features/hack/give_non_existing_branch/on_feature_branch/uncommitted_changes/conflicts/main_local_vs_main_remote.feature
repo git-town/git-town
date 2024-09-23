@@ -42,5 +42,5 @@ Feature: conflicts between the main branch and its tracking branch
       | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

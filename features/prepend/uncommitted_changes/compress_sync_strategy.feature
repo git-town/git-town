@@ -41,5 +41,5 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
       |        | git stash pop        |
     And the current branch is now "old"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

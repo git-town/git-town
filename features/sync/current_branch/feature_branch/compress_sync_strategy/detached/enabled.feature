@@ -57,5 +57,5 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin beta commit' }}:beta   |
     And the current branch is still "beta"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

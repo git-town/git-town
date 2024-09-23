@@ -19,7 +19,7 @@ Feature: auto-push the new branch
       | new    | git push -u origin new |
       |        | git stash pop          |
     And the current branch is now "new"
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
@@ -36,6 +36,6 @@ Feature: auto-push the new branch
       | main   | git branch -D new    |
       |        | git stash pop        |
     And the current branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And the uncommitted file still exists

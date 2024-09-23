@@ -47,8 +47,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And the current branch is still "prototype"
     And the uncommitted file still exists
     And no rebase is in progress
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

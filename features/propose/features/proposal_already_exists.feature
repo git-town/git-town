@@ -19,10 +19,10 @@ Feature: open the page of an already existing proposal
       | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
     And the current branch is still "feature"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "feature"
-    And the initial commits exist
+    And the initial commits exist now

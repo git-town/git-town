@@ -43,4 +43,4 @@ Feature: hack a new branch while the main branch is active in another worktree
       | main     | origin   | origin main commit |
       |          | worktree | local main commit  |
       | existing | local    | existing commit    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

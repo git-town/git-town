@@ -48,4 +48,4 @@ Feature: sync the current prototype branch with tracking branch
       |           |               | main origin commit |
       | prototype | local         | local commit       |
       |           | origin        | origin commit      |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

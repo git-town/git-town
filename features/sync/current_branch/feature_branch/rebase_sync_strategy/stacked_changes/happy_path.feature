@@ -71,4 +71,4 @@ Feature: stacked changes
       |        | origin        | origin child commit  |
       | parent | local         | local parent commit  |
       |        | origin        | origin parent commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

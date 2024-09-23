@@ -27,5 +27,5 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     Then it runs no commands
     And the current branch is still "feature"
     And no merge is in progress
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

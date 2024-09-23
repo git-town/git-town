@@ -38,4 +38,4 @@ Feature: ship a coworker's feature branch
       | BRANCH  | LOCATION      | MESSAGE         |
       | main    | local, origin | coworker commit |
       | feature | local, origin | coworker commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

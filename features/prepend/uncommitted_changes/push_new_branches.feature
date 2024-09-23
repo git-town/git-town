@@ -42,6 +42,6 @@ Feature: auto-push new branches
       | old    | git branch -D new    |
       |        | git stash pop        |
     And the current branch is now "old"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the uncommitted file still exists

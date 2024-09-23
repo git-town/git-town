@@ -22,12 +22,12 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git merge --no-edit --ff main            |
       |          | git checkout -b new                      |
     And the current branch is still "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

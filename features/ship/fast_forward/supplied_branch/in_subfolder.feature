@@ -52,4 +52,4 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | feature commit |
       | feature | local         | feature commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

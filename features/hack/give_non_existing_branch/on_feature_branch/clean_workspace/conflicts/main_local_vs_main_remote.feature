@@ -37,7 +37,7 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git checkout existing |
     And the current branch is now "existing"
     And no rebase is in progress
-    And the initial commits exist
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

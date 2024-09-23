@@ -58,5 +58,5 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git checkout alpha                                    |
       | alpha  | git stash pop                                         |
     And the current branch is still "alpha"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

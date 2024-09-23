@@ -43,4 +43,4 @@ Feature: ship hotfixes
       | BRANCH     | LOCATION      | MESSAGE       |
       | hotfix     | local, origin | hotfix commit |
       | production | local, origin | hotfix commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

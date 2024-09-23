@@ -44,5 +44,5 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
     And the current branch is now "other"
     And the uncommitted file still exists
     And no merge is in progress
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

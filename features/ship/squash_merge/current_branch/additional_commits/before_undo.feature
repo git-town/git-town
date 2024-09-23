@@ -29,4 +29,4 @@ Feature: can undo a ship even after additional commits to the main branch
       |         |               | additional commit |
       |         |               | Revert "done"     |
       | feature | local, origin | feature commit    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

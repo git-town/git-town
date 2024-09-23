@@ -47,5 +47,5 @@ Feature: shipping a prototype branch
       | main      | local, origin | prototype done          |
       |           |               | Revert "prototype done" |
       | prototype | local, origin | prototype commit        |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
     And branch "prototype" is now prototype

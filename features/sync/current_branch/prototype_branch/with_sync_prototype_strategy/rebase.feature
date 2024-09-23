@@ -25,7 +25,7 @@ Feature: sync the current prototype branch in a local repo
       |           |          | local commit |
     And all branches are now synchronized
     And the current branch is still "prototype"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,5 +33,5 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

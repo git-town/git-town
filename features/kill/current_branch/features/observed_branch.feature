@@ -24,7 +24,7 @@ Feature: delete the current observed branch
       |          | git checkout feature                             |
       | feature  | git branch -D observed                           |
     And the current branch is now "feature"
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES                |
       | local      | main, feature           |
@@ -46,6 +46,6 @@ Feature: delete the current observed branch
       | observed | git reset --soft HEAD~1                                          |
     And the current branch is now "observed"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And branch "observed" is now observed

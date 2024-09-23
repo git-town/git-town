@@ -37,5 +37,5 @@ Feature: previous branch is checked out in another worktree
       | current | git branch -D new        |
     And the current branch is now "current"
     And the previous Git branch is now ""
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

@@ -22,4 +22,4 @@ Feature: prototype another prototype branch
     Then it runs no commands
     And the prototype branches are now "prototype"
     And the current branch is still "prototype"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

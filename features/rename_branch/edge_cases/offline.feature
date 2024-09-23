@@ -36,5 +36,5 @@ Feature: offline mode
       |        | git checkout old                      |
       | old    | git branch -D new                     |
     And the current branch is now "old"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

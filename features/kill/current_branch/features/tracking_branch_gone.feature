@@ -25,7 +25,7 @@ Feature: killing a branch whose tracking branch is gone
       |         | git checkout other                               |
       | other   | git branch -D current                            |
     And the current branch is now "other"
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -49,4 +49,4 @@ Feature: killing a branch whose tracking branch is gone
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local         | current commit |
       | other   | local, origin | other commit   |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

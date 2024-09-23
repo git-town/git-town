@@ -44,6 +44,6 @@ Feature: compress the commits on a feature branch
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And the uncommitted file still exists

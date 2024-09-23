@@ -42,4 +42,4 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | feature commit |
       | feature | local, origin | feature commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

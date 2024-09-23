@@ -42,5 +42,5 @@ Feature: sync perennial branch that was deleted at the remote
       | main   | git branch feature-1 {{ sha 'initial commit' }} |
       |        | git checkout feature-1                          |
     And the current branch is now "feature-1"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
     And the perennial branches are now "feature-1" and "feature-2"

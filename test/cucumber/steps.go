@@ -946,7 +946,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockNoCommandsInstalled()
 	})
 
-	sc.Step(`^no uncommitted files exist$`, func(ctx context.Context) error {
+	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		files := devRepo.UncommittedFiles()
@@ -1261,7 +1261,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return os.WriteFile(filePath, []byte(docString.Content), 0o700)
 	})
 
-	sc.Step(`^the initial branches and lineage exist$`, func(ctx context.Context) {
+	sc.Step(`^the initial branches and lineage exist now$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		// verify initial branches
@@ -1284,7 +1284,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^the initial branches exist$`, func(ctx context.Context) {
+	sc.Step(`^the initial branches exist now$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := state.fixture.Branches()
 		want := state.initialBranches.GetOrPanic()
@@ -1298,7 +1298,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^the initial commits exist$`, func(ctx context.Context) {
+	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
@@ -1309,7 +1309,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		panic("current commits are not the same as the initial commits")
 	})
 
-	sc.Step(`^the initial lineage exists$`, func(ctx context.Context) {
+	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.LineageTable()

@@ -34,4 +34,4 @@ Feature: undoing an offline ship with additional commits to main
       | main    | local         | feature done      |
       |         |               | additional commit |
       | feature | local, origin | feature commit    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

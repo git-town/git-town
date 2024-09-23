@@ -97,5 +97,5 @@ Feature: sync the entire stack
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout alpha                              |
     And the current branch is still "alpha"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

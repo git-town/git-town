@@ -37,5 +37,5 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | main   | git branch prototype {{ sha-before-run 'local commit' }} |
       |        | git checkout prototype                                   |
     And the current branch is now "prototype"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

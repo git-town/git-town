@@ -40,5 +40,5 @@ Feature: on a feature branch with a clean workspace
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

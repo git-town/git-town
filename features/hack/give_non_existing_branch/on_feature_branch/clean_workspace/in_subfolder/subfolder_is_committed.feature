@@ -19,7 +19,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | main     | git rebase origin/main   |
       |          | git checkout -b new      |
     And the current branch is now "new"
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
@@ -32,5 +32,5 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

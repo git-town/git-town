@@ -18,7 +18,7 @@ Feature: on the main branch with uncommitted changes
       | new    | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
@@ -33,6 +33,6 @@ Feature: on the main branch with uncommitted changes
       | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And the uncommitted file still exists

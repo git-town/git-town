@@ -46,4 +46,4 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |
-    And the initial lineage exists
+    And the initial lineage exists now

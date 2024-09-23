@@ -31,5 +31,5 @@ Feature: sync the current feature branch (in a local repo)
       | BRANCH  | COMMAND                                     |
       | feature | git reset --hard {{ sha 'feature commit' }} |
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

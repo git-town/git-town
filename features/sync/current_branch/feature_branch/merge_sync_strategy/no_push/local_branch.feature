@@ -30,7 +30,7 @@ Feature: syncing a local feature branch using --no-push
       |         |               | origin main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,5 +41,5 @@ Feature: syncing a local feature branch using --no-push
       | main    | git reset --hard {{ sha 'local main commit' }}    |
       |         | git checkout feature                              |
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

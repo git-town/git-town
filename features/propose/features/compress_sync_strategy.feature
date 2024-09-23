@@ -32,7 +32,7 @@ Feature: proposing using the "compress" sync strategy
       |          | git push --force-with-lease                                         |
       | <none>   | open https://github.com/git-town/git-town/compare/existing?expand=1 |
     And the current branch is still "existing"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                 |
       | existing | local, origin | local existing commit 1 |

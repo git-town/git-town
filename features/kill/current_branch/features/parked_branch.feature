@@ -25,7 +25,7 @@ Feature: delete the current parked branch
       |         | git checkout feature                             |
       | feature | git branch -D parked                             |
     And the current branch is now "feature"
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
@@ -46,6 +46,6 @@ Feature: delete the current parked branch
       | parked  | git reset --soft HEAD~1                                        |
     And the current branch is now "parked"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And branch "parked" is now parked

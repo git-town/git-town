@@ -21,12 +21,12 @@ Feature: does not compress observed branches
       you are merely observing branch "observed" and should leave compressing it to the branch owner
       """
     And the current branch is still "observed"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "observed"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

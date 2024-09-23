@@ -35,5 +35,5 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | main   | git branch contribution {{ sha-before-run 'local commit' }} |
       |        | git checkout contribution                                   |
     And the current branch is now "contribution"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

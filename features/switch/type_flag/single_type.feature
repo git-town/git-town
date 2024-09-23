@@ -38,4 +38,4 @@ Feature: switch branches of a single type
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "observed-1"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

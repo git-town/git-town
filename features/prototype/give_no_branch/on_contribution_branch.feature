@@ -22,6 +22,6 @@ Feature: prototype the current contribution branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "contribution"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
     And branch "contribution" is now a contribution branch
     And there are now no prototype branches

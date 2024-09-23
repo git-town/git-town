@@ -27,8 +27,8 @@ Feature: abort the ship by empty commit message
       aborted because merge exited with error
       """
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -37,5 +37,5 @@ Feature: abort the ship by empty commit message
       nothing to undo
       """
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

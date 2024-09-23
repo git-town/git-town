@@ -46,5 +46,5 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |          | git push --force-with-lease --force-if-includes           |
       |          | git branch -D new                                         |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

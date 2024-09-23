@@ -22,11 +22,11 @@ Feature: cannot ship a local branch via API
       """
       cannot ship branch "feature" via API because it has no remote branch
       """
-    And the initial branches and lineage exist
-    And the initial commits exist
+    And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

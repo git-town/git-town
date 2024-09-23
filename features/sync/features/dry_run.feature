@@ -26,8 +26,8 @@ Feature: dry run
       |         | git merge --no-edit --ff main           |
       |         | git push                                |
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,4 +39,4 @@ Feature: dry run
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

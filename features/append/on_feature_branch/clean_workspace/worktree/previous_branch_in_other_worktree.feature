@@ -32,4 +32,4 @@ Feature: append a branch when the previous branch is active in another worktree
       | current | git branch -D new    |
     And the current branch is now "current"
     And the previous Git branch is now ""
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

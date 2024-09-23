@@ -43,4 +43,4 @@ Feature: prototype multiple other branches
     And branch "observed" is now observed
     And branch "parked" is still parked
     And the current branch is still "main"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

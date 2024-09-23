@@ -38,5 +38,5 @@ Feature: rename a contribution branch
       | contribution | git branch -D new                                         |
     And the current branch is now "contribution"
     And the contribution branches are now "contribution"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

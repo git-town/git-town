@@ -20,7 +20,7 @@ Feature: auto-push the new branch without running Git push hooks
       | new    | git push --no-verify -u origin new |
       |        | git stash pop                      |
     And the current branch is now "new"
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
@@ -38,5 +38,5 @@ Feature: auto-push the new branch without running Git push hooks
       |        | git stash pop        |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
     And no lineage exists now

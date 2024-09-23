@@ -36,4 +36,4 @@ Feature: on the main branch with an upstream repo
       | main   | local, origin | origin commit   |
       |        |               | local commit    |
       |        | upstream      | upstream commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

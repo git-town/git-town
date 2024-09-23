@@ -51,4 +51,4 @@ Feature: active parked branches get synced like normal feature branches
       |        |               | local main commit    |
       | parked | local         | local parked commit  |
       |        | origin        | origin parked commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

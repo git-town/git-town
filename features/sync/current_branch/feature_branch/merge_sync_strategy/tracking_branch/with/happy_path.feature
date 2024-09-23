@@ -52,4 +52,4 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         |               | local main commit     |
       | feature | local         | local feature commit  |
       |         | origin        | origin feature commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

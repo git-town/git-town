@@ -54,4 +54,4 @@ Feature: with sync-perennial-strategy set to "merge"
       |         |               | Merge remote-tracking branch 'origin/main' |
       | feature | local         | local feature commit                       |
       |         | origin        | origin feature commit                      |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

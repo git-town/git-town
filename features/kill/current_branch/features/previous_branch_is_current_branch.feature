@@ -24,7 +24,7 @@ Feature: killing a branch without a useful previous branch setting
       |         | git checkout main                                |
       | main    | git branch -D current                            |
     And the current branch is now "main"
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -45,5 +45,5 @@ Feature: killing a branch without a useful previous branch setting
       | current | git reset --soft HEAD~1                                         |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

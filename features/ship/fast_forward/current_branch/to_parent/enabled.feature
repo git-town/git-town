@@ -53,5 +53,5 @@ Feature: allowing shipping into a feature branch
       |        | git push -u origin beta                         |
       |        | git checkout beta                               |
     And the current branch is now "beta"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

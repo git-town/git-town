@@ -37,5 +37,5 @@ Feature: offline mode
       |        | git stash pop     |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
     And no lineage exists now

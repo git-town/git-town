@@ -16,7 +16,7 @@ Feature: already existing unfetched remote branch
       |          | git checkout -b existing |
       | existing | git stash pop            |
     And the current branch is now "existing"
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
@@ -32,6 +32,6 @@ Feature: already existing unfetched remote branch
       | main     | git branch -D existing |
       |          | git stash pop          |
     And the current branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And the uncommitted file still exists

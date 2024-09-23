@@ -46,4 +46,4 @@ Feature: append a branch to a branch whose tracking branch was deleted
       |         | git checkout shipped                          |
       | shipped | git branch -D new                             |
     And the current branch is now "shipped"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

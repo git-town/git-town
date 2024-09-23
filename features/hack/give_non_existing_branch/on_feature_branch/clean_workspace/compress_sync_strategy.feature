@@ -40,5 +40,5 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

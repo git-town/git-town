@@ -22,5 +22,5 @@ Feature: already existing local branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is now "old"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

@@ -19,7 +19,7 @@ Feature: on a forked repo
       | new    | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -31,6 +31,6 @@ Feature: on a forked repo
       | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
-    And the initial commits exist
+    And the initial commits exist now
     And no lineage exists now
     And the uncommitted file still exists

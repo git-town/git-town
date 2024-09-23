@@ -21,7 +21,7 @@ Feature: append to a perennial branch
       |            | git checkout -b new |
       | new        | git stash pop       |
     And the current branch is now "new"
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH | PARENT     |
       | new    | production |
@@ -37,6 +37,6 @@ Feature: append to a perennial branch
       | production | git branch -D new       |
       |            | git stash pop           |
     And the current branch is now "production"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the uncommitted file still exists

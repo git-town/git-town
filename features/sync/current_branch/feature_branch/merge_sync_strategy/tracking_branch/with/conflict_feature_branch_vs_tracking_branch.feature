@@ -46,8 +46,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   @messyoutput
   Scenario: undo through another sync invocation

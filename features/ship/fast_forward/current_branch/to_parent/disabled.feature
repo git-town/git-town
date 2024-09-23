@@ -26,8 +26,8 @@ Feature: does not ship a child branch
       please ship "alpha" first
       """
     And the current branch is still "gamma"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -37,5 +37,5 @@ Feature: does not ship a child branch
       nothing to undo
       """
     And the current branch is still "gamma"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

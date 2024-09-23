@@ -60,5 +60,5 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       |           | git push --force-with-lease --force-if-includes         |
       |           | git branch -D branch-1a                                 |
     And the current branch is now "branch-2"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

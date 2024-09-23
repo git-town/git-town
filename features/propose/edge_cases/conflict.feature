@@ -44,7 +44,7 @@ Feature: merge conflict
       | feature | git merge --abort |
     And the current branch is still "feature"
     And no merge is in progress
-    And the initial commits exist
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

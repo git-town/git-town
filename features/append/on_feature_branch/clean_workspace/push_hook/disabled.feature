@@ -35,5 +35,5 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
     And the current branch is now "main"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
