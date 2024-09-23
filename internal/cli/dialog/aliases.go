@@ -18,7 +18,7 @@ const (
 	aliasesHelp  = `
 Aliases allow you to call frequently used Git Town commands
 with less typing. For example, if the "git town sync" command
-is aliased, you can call it as "git sync".
+is aliased, you can call it as "git town sync".
 
 Please select which Git Town commands should be shortened.
 If you are not sure, select all :)

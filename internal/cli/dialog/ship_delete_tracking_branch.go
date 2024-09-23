@@ -13,7 +13,7 @@ import (
 const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
 	ShipDeleteTrackingBranchHelp  = `
-Should "git ship" delete the tracking branch?
+Should "git town ship" delete the tracking branch?
 You want to disable this if your code hosting platform
 (GitHub, GitLab, etc) deletes head branches when
 merging pull requests through its UI.
@@ -22,7 +22,7 @@ merging pull requests through its UI.
 )
 
 const (
-	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
+	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git town ship" should delete tracking branches`
 	ShipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
 )
 

@@ -7,7 +7,7 @@ merges finished feature branches into the main branch.
 
 ### api
 
-When using the "api" ship-strategy, [git ship](../commands/ship.md) presses the
+When using the "api" ship-strategy, [git town ship](../commands/ship.md) presses the
 "merge" button for the proposal in the web UI of your code hosting platform via
 an API call.
 
@@ -42,7 +42,7 @@ commits since you last synced your feature branch.
 
 ### squash-merge
 
-When set to `squash-merge`, [git ship](../commands/ship.md) merges the feature
+When set to `squash-merge`, [git town ship](../commands/ship.md) merges the feature
 branch to ship in your local Git repository. While doing so it squashes all
 commits on the feature branch into a single commit and lets you edit the commit
 message.

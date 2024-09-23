@@ -5,8 +5,8 @@ remote.
 
 ## options
 
-When set to `true` (the default value), `git sync` also pulls and pushes Git
-tags in addition to branches and commits. When set to `false`, `git sync` does
+When set to `true` (the default value), `git town sync` also pulls and pushes Git
+tags in addition to branches and commits. When set to `false`, `git town sync` does
 not change Git tags at the local or remote Git repository.
 
 The best way to change this setting is via the

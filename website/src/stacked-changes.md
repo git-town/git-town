@@ -55,10 +55,10 @@ The first feature branch contains the refactor. We create a feature branch named
 `1-refactor` off the main branch to contain it.
 
 ```
-git hack 1-refactor
+git town hack 1-refactor
 ```
 
-[git hack](commands/hack.md) creates a new feature branch off the main branch.
+[git town hack](commands/hack.md) creates a new feature branch off the main branch.
 We perform the refactor and commit it.
 
 ## Branch 2: rename foo
@@ -69,10 +69,10 @@ evolved. Since these changes require the refactor, we perform them on top of
 branch `1-refactor`:
 
 ```
-git append 2-rename-foo
+git town append 2-rename-foo
 ```
 
-[git append](commands/append.md) creates a new feature branch on top of the
+[git town append](commands/append.md) creates a new feature branch on top of the
 currently checked out branch (which is `1-refactor`). We now have this lineage:
 
 ```
@@ -85,7 +85,7 @@ main
 
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
-Because we used `git append` to create the new branch, Git Town knows about the
+Because we used `git town append` to create the new branch, Git Town knows about the
 lineage and creates the proposal (aka pull request) for branch `2-rename-foo`
 against branch `1-refactor`. This way, the proposal for branch `2-rename-foo`
 shows only the changes made in that branch (renaming the variable) and not the
@@ -100,7 +100,7 @@ with merge conflicts coming from that. So let's make this change on top of the
 change we made in step 2:
 
 ```
-git append 3-rename-bar
+git town append 3-rename-bar
 ```
 
 The lineage is now:
@@ -132,11 +132,11 @@ Let's propagate these changes through the entire branch chain so that they
 become visible in branches 2 and 3 as well:
 
 ```
-git sync
+git town sync
 ```
 
-Because we created the branches with `git append`, Git Town knows about the
-branch lineage and [git sync](commands/sync.md) can update all branches in the
+Because we created the branches with `git town append`, Git Town knows about the
+branch lineage and [git town sync](commands/sync.md) can update all branches in the
 right order. It updates the `main` branch, merges `main` into branch 1. Then it
 merges branch 1 into branch 2 and branch 2 into branch 3.
 
@@ -145,10 +145,10 @@ merges branch 1 into branch 2 and branch 2 into branch 3.
 We got the approval for the refactor from step 1. Let’s ship it!
 
 ```
-git ship 1-refactor
+git town ship 1-refactor
 ```
 
-You have to use the [git ship](commands/ship.md) command here because it updates
+You have to use the [git town ship](commands/ship.md) command here because it updates
 the lineage that Git Town keeps track of. With branch `1-refactor` shipped, our
 lineage now looks like this:
 
@@ -161,7 +161,7 @@ main
 ```
 
 If you ship feature branches via the code hosting API or web UI, run
-`git sync --all`, or `git sync` on the youngest child branch, to update the
+`git town sync --all`, or `git town sync` on the youngest child branch, to update the
 lineage.
 
 ## Synchronizing our work with the rest of the world
@@ -172,7 +172,7 @@ to the codebase as well. We don't want our branches to deviate too much from the
 all our branches in sync with the rest of the world!
 
 ```
-git sync --all
+git town sync --all
 ```
 
 This pulls updates for the `main` branch, then merges it into `2-rename-foo`,
@@ -183,7 +183,7 @@ then `2-rename-foo` into `3-rename-bar`.
 We can now add the new feature on top of the code base we prepared:
 
 ```
-git append 4-add-feature
+git town append 4-add-feature
 ```
 
 Let’s stop here and review what we have done.
@@ -192,11 +192,11 @@ Let’s stop here and review what we have done.
 - Our feature branches build on top of each other and see changes in their
   parent branches.
 - We review and ship each feature branch in the chain in isolation.
-- `git hack` creates a feature branch as a child of the main branch.
-- `git append` creates a feature branch as a child of the current feature
+- `git town hack` creates a feature branch as a child of the main branch.
+- `git town append` creates a feature branch as a child of the current feature
   branch.
-- `git sync` keeps a feature branch chain up to date with the rest of the world
-- `git ship` ships the oldest feature branch in a branch chain.
+- `git town sync` keeps a feature branch chain up to date with the rest of the world
+- `git town ship` ships the oldest feature branch in a branch chain.
 
 Single-responsibility branches are easier to reason about and faster to
 implement, debug, review, and ship than branches performing multiple changes.
@@ -212,8 +212,8 @@ _Branch discipline:_ when you have an idea that is different from what you
 currently work on, resist the urge to code it in the current feature branch.
 Implement it in its own feature, parent, or child branch.
 
-_Keep the entire branch chain in sync:_ Make sure you run `git sync --all` or
-`git sync` on the youngest child branch to keep the entire chain of feature
+_Keep the entire branch chain in sync:_ Make sure you run `git town sync --all` or
+`git town sync` on the youngest child branch to keep the entire chain of feature
 branches synced.
 
 _Avoid unnecessary chaining:_ If your feature branches don't depend on each
@@ -221,6 +221,6 @@ other, put them in (independent) top-level feature branches. This way you can
 ship them in any order.
 
 _Organize branch chains in the order you want to ship:_ You always have to ship
-the oldest branch first. You can use [git prepend](commands/prepend.md) to
+the oldest branch first. You can use [git town prepend](commands/prepend.md) to
 insert a feature branch as a parent of the current feature branch or
 [set parent](commands/set-parent.md) to change the order of branches.

@@ -11,7 +11,7 @@ they are currently checked out. It doesn't compress
 [contribution](https://www.git-town.com/advanced-syncing#contribution-branches)
 branches.
 
-Branches must be in sync to compress them, so run `git sync` and resolve merge
+Branches must be in sync to compress them, so run `git town sync` and resolve merge
 conflicts before running this command.
 
 Assuming you have a feature branch with these commits:
@@ -26,7 +26,7 @@ commit 3
 Let's compress these three commits into a single commit:
 
 ```bash
-git compress
+git town compress
 ```
 
 Now your branch has a single commit with the name of the first commit but
@@ -61,7 +61,7 @@ commit 3
 Let's compress these three commits into a single commit:
 
 ```bash
-git compress -m "compressed commit"
+git town compress -m "compressed commit"
 ```
 
 Now your branch has these commits:
@@ -102,7 +102,7 @@ main
 Let's compress the commits in all branches of this stack:
 
 ```
-git compress --stack
+git town compress --stack
 ```
 
 Now your stack contains these branches and commits:
