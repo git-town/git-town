@@ -12,11 +12,11 @@ import (
 const (
 	bitbucketAppPasswordTitle = `Bitbucket App Password`
 	bitbucketAppPasswordHelp  = `
-If you want Git Town to use the Bitbucket API,
-please enter your Bitbucket App Password.
-More info at https://support.atlassian.com/bitbucket-cloud/docs/app-passwords.
+Git Town can update pull requests and ship branches on Bitbucket for you.
+To enable this, please enter a Bitbucket App Password.
+More info at https://www.git-town.com/preferences/bitbucket-app-password.
 
-It's okay to leave this empty.
+If you leave this empty, Git Town will not use the Bitbucket API.
 
 `
 )

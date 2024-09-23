@@ -15,7 +15,7 @@ const (
 If you want Git Town to use the Bitbucket API,
 please enter your Bitbucket username.
 
-It's okay to leave this empty.
+If you leave this empty, Git Town will not use the Bitbucket API.
 
 `
 )
