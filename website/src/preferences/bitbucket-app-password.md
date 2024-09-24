@@ -8,9 +8,9 @@ requests. To do so, Git Town needs your
 
 An app password is not the password of your Bitbucket account. It's a special
 password that you create so that external applications can interact with
-Bitbucket in your name. To create an app password, click on the `Settings`
-cogwheel, choose `Personal Bitbucket settings`, and then in the menu on the left
-`App passwords`. You need to enable these permissions:
+Bitbucket in your name. To create an app password in the Bitbucket web UI, click
+on the `Settings` cogwheel, choose `Personal Bitbucket settings`, and then in
+the menu on the left `App passwords`. You need to enable these permissions:
 
 - repository: read and write
 - pull requests: read and write
