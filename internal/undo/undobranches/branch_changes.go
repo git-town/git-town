@@ -164,6 +164,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		})
 	}
 
+	// undo the proposal changes now when the old and new remote branches exist
 	result.AddProgram(args.UndoAPIProgram)
 
 	// remove remotely added branches
