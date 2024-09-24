@@ -84,6 +84,7 @@ func executeKill(args []string, dryRun configdomain.DryRun, verbose configdomain
 		FinalUndoProgram:      finalUndoProgram,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

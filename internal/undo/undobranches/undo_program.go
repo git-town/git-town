@@ -14,7 +14,7 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 		BeginBranch:              beginBranchesSnapshot.Active.GetOrDefault(),
 		Config:                   fullConfig,
 		EndBranch:                endBranchesSnapshot.Active.GetOrDefault(),
-		UndoablePerennialCommits: undoablePerennialCommits,
 		UndoAPIProgram:           undoAPIProgram,
+		UndoablePerennialCommits: undoablePerennialCommits,
 	})
 }

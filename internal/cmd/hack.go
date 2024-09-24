@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/validate"
 	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
 	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -125,6 +126,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.backend,

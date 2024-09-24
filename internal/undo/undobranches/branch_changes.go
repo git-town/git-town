@@ -194,6 +194,6 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   configdomain.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
-	UndoablePerennialCommits []gitdomain.SHA
 	UndoAPIProgram           program.Program
+	UndoablePerennialCommits []gitdomain.SHA
 }

@@ -79,7 +79,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil || exit {
 		return err
 	}
-	program := compressProgram(data)
+	runProgram := compressProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -89,8 +89,9 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            program,
-		TouchedBranches:       program.TouchedBranches(),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

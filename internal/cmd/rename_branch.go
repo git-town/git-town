@@ -94,6 +94,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

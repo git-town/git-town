@@ -96,6 +96,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

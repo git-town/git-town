@@ -84,6 +84,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,

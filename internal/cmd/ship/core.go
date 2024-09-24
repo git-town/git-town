@@ -114,6 +114,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            shipProgram,
 		TouchedBranches:       shipProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
