@@ -199,14 +199,14 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
-	values3 := values2[0].(map[string]interface{})
-	proposal, err := parsePullRequest(values3)
+	proposal1 := values2[0].(map[string]interface{})
+	proposal2, err := parsePullRequest(proposal1)
 	if err != nil {
 		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
-	self.log.Success(proposal.Target.String())
-	return Some(proposal), nil
+	self.log.Success(proposal2.Target.String())
+	return Some(proposal2), nil
 }
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
