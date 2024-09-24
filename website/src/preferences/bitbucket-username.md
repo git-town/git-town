@@ -14,7 +14,7 @@ Since usernames are user specific, you cannot add them to the config file.
 
 ## Git metadata
 
-You can configure the app password manually by running:
+You can configure the Bitbucket username manually by running:
 
 ```bash
 git config [--global] git-town.bitbucket-username <token>
