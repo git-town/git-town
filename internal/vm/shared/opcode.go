@@ -24,4 +24,10 @@ type Opcode interface {
 	// When true, automatically runs the abort and undo logic and leaves the user where they started.
 	// When false, stops execution to let the user fix the issue and continue or manually undo.
 	ShouldUndoOnError() bool
+
+	// UndoProgram provides the opcodes to undo this operation.
+	// All Git changes are automatically undone by the snapshot-based undo engine.
+	// The undo program returned here is only used for external changes
+	// like updating proposals at the code hosting platform.
+	UndoExternalChangesProgram() []Opcode
 }
