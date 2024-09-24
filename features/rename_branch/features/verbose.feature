@@ -60,6 +60,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git remote get-url origin                     |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
       |        | frontend | git push -u origin old                        |
       |        | frontend | git checkout old                              |
@@ -69,6 +70,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main    |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "old"

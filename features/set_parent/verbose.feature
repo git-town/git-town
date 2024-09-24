@@ -54,10 +54,11 @@ Feature: display all executed Git commands
       |        | backend | git branch -vva --sort=refname                 |
       |        | backend | git remote get-url origin                      |
       |        | backend | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend | git remote get-url origin                      |
       |        | backend | git config git-town-branch.child.parent parent |
     And it prints:
       """
-      Ran 10 shell commands.
+      Ran 11 shell commands.
       """
     And the current branch is still "child"
     And the initial commits exist now
