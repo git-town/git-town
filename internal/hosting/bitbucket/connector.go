@@ -213,11 +213,11 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.HostingBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
 		ID:       strconv.Itoa(number),
-		Owner:    "git-town-qa",
-		RepoSlug: "test-repo",
+		Owner:    self.Organization,
+		RepoSlug: self.Repository,
 		Message:  message.String(),
 	})
 	if err == nil {
@@ -233,8 +233,8 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(number),
-		Owner:             "git-town-qa",
-		RepoSlug:          "test-repo",
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
 		DestinationBranch: target.String(),
 	})
 	if err != nil {
@@ -250,8 +250,8 @@ func (self Connector) UpdateProposalHead(number int, source gitdomain.LocalBranc
 	self.log.Start(messages.APIUpdateProposalHead, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(number),
-		Owner:        "git-town-qa",
-		RepoSlug:     "test-repo",
+		Owner:        self.Organization,
+		RepoSlug:     self.Repository,
 		SourceBranch: source.String(),
 	})
 	if err != nil {
