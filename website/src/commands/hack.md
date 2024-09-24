@@ -14,14 +14,14 @@ changes.
 
 ### Positional arguments
 
-When given a non-existing branch name, `git hack` creates a new feature branch
-with the main branch as its parent.
+When given a non-existing branch name, `git town hack` creates a new feature
+branch with the main branch as its parent.
 
 When given an existing contribution, observed, parked, or prototype branch,
-`git hack` converts that branch to a feature branch.
+`git town hack` converts that branch to a feature branch.
 
-When given no arguments, `git hack` converts the current contribution, observed,
-parked, or prototype branch into a feature branch.
+When given no arguments, `git town hack` converts the current contribution,
+observed, parked, or prototype branch into a feature branch.
 
 ### --dry-run
 
@@ -46,12 +46,12 @@ branch with its upstream counterpart. You can control this behavior with the
 
 ### configuration
 
-If [push-new-branches](../preferences/push-new-branches.md) is set, `git hack`
-creates a remote tracking branch for the new feature branch. This behavior is
-disabled by default to make `git hack` run fast. The first run of `git sync`
-will create the remote tracking branch.
+If [push-new-branches](../preferences/push-new-branches.md) is set,
+`git town hack` creates a remote tracking branch for the new feature branch.
+This behavior is disabled by default to make `git town hack` run fast. The first
+run of `git town sync` will create the remote tracking branch.
 
 If the configuration setting
 [create-prototype-branches](../preferences/create-prototype-branches.md) is set,
-`git hack` always creates a
+`git town hack` always creates a
 [prototype branch](../branch-types.md#prototype-branches).

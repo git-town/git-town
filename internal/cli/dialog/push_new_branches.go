@@ -22,7 +22,7 @@ it triggers an unnecessary CI run on the empty branch.
 
 When disabled, many Git Town commands execute faster
 and Git Town will create the missing tracking branch
-on the first run of "git sync".
+on the first run of "git town sync".
 
 `
 )

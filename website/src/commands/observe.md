@@ -13,20 +13,20 @@ To convert an observed branch back into a feature branch, use the
 Observe the current branch:
 
 ```fish
-git observe
+git town observe
 ```
 
 Observe branches "alpha" and "beta":
 
 ```fish
-git observe alpha beta
+git town observe alpha beta
 ```
 
 Check out a remote branch (that exists at origin but not on your local machine)
 and make it observed:
 
 ```fish
-git observe somebody-elses-branch
+git town observe somebody-elses-branch
 ```
 
 ### --verbose / -v

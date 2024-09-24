@@ -106,7 +106,7 @@ func executeHack(args []string, dryRun configdomain.DryRun, prototype configdoma
 // If set to convertToFeatureData, the user wants to convert an already existing branch into a feature branch.
 type hackData = Either[appendFeatureData, convertToFeatureData]
 
-// this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
+// this configuration is for when "git town hack" is used to make contribution, observed, or parked branches feature branches
 type convertToFeatureData struct {
 	config         config.ValidatedConfig
 	targetBranches configdomain.BranchesAndTypes

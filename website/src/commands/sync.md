@@ -14,10 +14,10 @@ always be a priority. To reduce the likelihood of conflicts, it's essential to
 keep your branches in sync with each other.
 
 If you experience too many merge conflicts, sync more often. If your Git Town
-installation is properly configured, "git sync --all" guarantees that it never
-loses any of your changes, even in edge cases, and you can run it many times per
-day without thinking. If a sync goes wrong, you can safely go back to the state
-you repo was in before the sync by running [git town undo](undo.md).
+installation is properly configured, "git town sync --all" guarantees that it
+never loses any of your changes, even in edge cases, and you can run it many
+times per day without thinking. If a sync goes wrong, you can safely go back to
+the state you repo was in before the sync by running [git town undo](undo.md).
 
 ### --all / -a
 
@@ -68,10 +68,10 @@ tags with the `origin` remote.
 
 ### Why does git-sync update a branch before deleting it?
 
-"git sync" can delete branches if their tracking branch was deleted at the
+"git town sync" can delete branches if their tracking branch was deleted at the
 remote. To do so while guaranteeing that it never loses any of your changes,
-"git sync" needs to prove that the branch to be deleted contains no unshipped
-changes. Git Town verifies this by diffing the branch to delete against its
-parent branch. Only branches with an empty diff can be deleted safely. For this
-diff to potentially be empty, Git Town needs to sync the branch first, even if
-it's going to be deleted right afterwards.
+"git town sync" needs to prove that the branch to be deleted contains no
+unshipped changes. Git Town verifies this by diffing the branch to delete
+against its parent branch. Only branches with an empty diff can be deleted
+safely. For this diff to potentially be empty, Git Town needs to sync the branch
+first, even if it's going to be deleted right afterwards.

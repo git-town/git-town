@@ -2,7 +2,7 @@
 
 This setting stores the name of the main branch. The main branch is the default
 parent branch for new feature branches created with
-[git hack](../commands/hack.md) and the default branch into which Git Town
+[git town hack](../commands/hack.md) and the default branch into which Git Town
 [ships](../commands/ship.md) finished feature branches.
 
 The best way to change this setting is via the

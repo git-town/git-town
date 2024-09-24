@@ -4,7 +4,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
   If two people make conflicting changes to the same branch,
   they'll have to re-resolve merge conflicts
   even if they coordinate to avoid concurrent updates
-  and run "git sync" before and after they make changes.
+  and run "git town sync" before and after they make changes.
 
   Scenario:
     Given a Git repo with origin
