@@ -7,6 +7,7 @@ const (
 	APIParentBranchLookupStart        = "Looking for parent of %s ... "
 	APIProposalLookupStart            = "Looking for proposal online ... "
 	APIProposalUpdateStart            = "updating proposal online ... "
+	APIUnexpectedResultDataStructure  = "unexpected result data structure"
 	APIUpdateProposalBase             = "updating base branch of proposal %s to %s ... "
 	APIUpdateProposalHead             = "updating head branch of proposal %s to %s ... "
 	APIGitHubCannotUpdateHeadBranch   = "GitHub cannot update the head branch of pull requests.\nOnce Git Town deleted the old tracking branch,\nGitHub has therefore closed the existing pull request for this branch (#%d).\nYou have to create a new one.\n"

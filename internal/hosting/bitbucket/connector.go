@@ -89,17 +89,17 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	result2, ok := result1.(map[string]interface{})
 	if !ok {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size1, has := result2["size"]
 	if !has {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size := int(size2)
@@ -113,21 +113,21 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	proposal1, has := result2["values"]
 	if !has {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal2, ok := proposal1.([]interface{})
 	if !ok {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	if len(proposal2) == 0 {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal3, ok := proposal2[0].(map[string]interface{})
 	if !ok {
-		self.log.Failed("unexpected result data structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	proposal, err := parsePullRequest(proposal3)
@@ -167,17 +167,17 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	response2, ok := response1.(map[string]interface{})
 	if !ok {
-		self.log.Failed("bitbucket API response has unknown structure")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size1, has := response2["size"]
 	if !has {
-		self.log.Failed("bitbucket API response has no size")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
-		self.log.Failed("unknown size data type")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	size := int(size2)
@@ -191,12 +191,12 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 	values1, has := response2["values"]
 	if !has {
-		self.log.Failed("bitbucket API has no values")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	values2, ok := values1.([]interface{})
 	if !ok {
-		self.log.Failed("unknown data structure for values")
+		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
 	values3 := values2[0].(map[string]interface{})
