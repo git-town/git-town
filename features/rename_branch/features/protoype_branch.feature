@@ -34,9 +34,9 @@ Feature: rename a prototype branch
       | BRANCH    | COMMAND                                              |
       | new       | git branch prototype {{ sha 'experimental commit' }} |
       |           | git push -u origin prototype                         |
-      |           | git push origin :new                                 |
       |           | git checkout prototype                               |
       | prototype | git branch -D new                                    |
+      |           | git push origin :new                                 |
     And the current branch is now "prototype"
     And the prototype branches are now "prototype"
     And the initial commits exist now

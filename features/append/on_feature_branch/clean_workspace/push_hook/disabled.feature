@@ -26,14 +26,15 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | PARENT |
       | new    | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | new    | git push origin :new                        |
-      |        | git checkout main                           |
+      | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
+      |        | git push origin :new                        |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial lineage exists now

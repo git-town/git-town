@@ -32,9 +32,9 @@ Feature: auto-push the new branch without running Git push hooks
       | BRANCH | COMMAND              |
       | new    | git add -A           |
       |        | git stash            |
-      |        | git push origin :new |
       |        | git checkout main    |
       | main   | git branch -D new    |
+      |        | git push origin :new |
       |        | git stash pop        |
     And the current branch is now "main"
     And the uncommitted file still exists

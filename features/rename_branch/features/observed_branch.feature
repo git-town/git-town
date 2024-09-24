@@ -33,9 +33,9 @@ Feature: rename an observed branch
       | BRANCH   | COMMAND                                               |
       | new      | git branch observed {{ sha 'somebody elses commit' }} |
       |          | git push -u origin observed                           |
-      |          | git push origin :new                                  |
       |          | git checkout observed                                 |
       | observed | git branch -D new                                     |
+      |          | git push origin :new                                  |
     And the current branch is now "observed"
     And the observed branches are now "observed"
     And the initial commits exist now
