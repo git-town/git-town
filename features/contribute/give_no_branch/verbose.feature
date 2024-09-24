@@ -46,6 +46,7 @@ Feature: make the current branch a contribution branch verbosely
       |         | git branch -vva --sort=refname                    |
       |         | git remote get-url origin                         |
       |         | git rev-parse --verify --abbrev-ref @{-1}         |
+      |         | git remote get-url origin                         |
       | feature | git add -A                                        |
       |         | git stash                                         |
       | <none>  | git config --unset git-town.contribution-branches |
@@ -53,7 +54,7 @@ Feature: make the current branch a contribution branch verbosely
       | feature | git stash pop                                     |
     And it prints:
       """
-      Ran 14 shell commands
+      Ran 15 shell commands
       """
     And the current branch is still "feature"
     And branch "feature" is now a feature branch
