@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 )
 
-func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig, touchedBranches []gitdomain.BranchName) program.Program {
+func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig configdomain.ValidatedConfig, touchedBranches []gitdomain.BranchName, undoAPIProgram program.Program) program.Program {
 	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
 	branchSpans = branchSpans.KeepOnly(touchedBranches)
 	branchChanges := branchSpans.Changes()
@@ -15,5 +15,6 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 		Config:                   fullConfig,
 		EndBranch:                endBranchesSnapshot.Active.GetOrDefault(),
 		UndoablePerennialCommits: undoablePerennialCommits,
+		UndoAPIProgram:           undoAPIProgram,
 	})
 }
