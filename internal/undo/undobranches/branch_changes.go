@@ -116,15 +116,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		}
 	}
 
-	// remove remotely added branches
-	for _, addedRemoteBranch := range self.RemoteAdded {
-		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			result.Add(&opcodes.DeleteTrackingBranch{
-				Branch: addedRemoteBranch,
-			})
-		}
-	}
-
 	// re-create remotely removed feature branches
 	_, removedFeatureTrackingBranches := CategorizeRemoteBranchesSHAs(self.RemoteRemoved, args.Config)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
@@ -171,6 +162,15 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
 		})
+	}
+
+	// remove remotely added branches
+	for _, addedRemoteBranch := range self.RemoteAdded {
+		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
+			result.Add(&opcodes.DeleteTrackingBranch{
+				Branch: addedRemoteBranch,
+			})
+		}
 	}
 
 	// This must be a CheckoutIfExists opcode because this branch might not exist
