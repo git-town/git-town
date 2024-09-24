@@ -220,12 +220,12 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		RepoSlug: self.Repository,
 		Message:  message.String(),
 	})
-	if err == nil {
-		self.log.Ok()
-	} else {
+	if err != nil {
 		self.log.Failed(err.Error())
+		return err
 	}
-	return err
+	self.log.Ok()
+	return nil
 }
 
 func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
