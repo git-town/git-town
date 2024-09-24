@@ -184,6 +184,15 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		}
 	}
 
+	// remove remotely added branches
+	for _, addedRemoteBranch := range self.RemoteAdded {
+		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
+			result.Add(&opcodes.DeleteTrackingBranch{
+				Branch: addedRemoteBranch,
+			})
+		}
+	}
+
 	// This must be a CheckoutIfExists opcode because this branch might not exist
 	// when a Git Town command fails, stores this undo opcode, then gets continued and deletes this branch.
 	result.Add(&opcodes.CheckoutIfExists{Branch: args.BeginBranch})
