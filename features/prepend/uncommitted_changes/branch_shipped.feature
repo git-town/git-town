@@ -48,5 +48,5 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |
       | origin     | main, parent        |
-    And the initial lineage exists
+    And the initial lineage exists now
     And the uncommitted file still exists

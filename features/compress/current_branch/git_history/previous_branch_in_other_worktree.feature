@@ -23,7 +23,7 @@ Feature: compress a branch when the previous branch is active in another worktre
       |         | git push --force-with-lease --force-if-includes |
     And the current branch is still "current"
     And the previous Git branch is now "current"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,4 +33,4 @@ Feature: compress a branch when the previous branch is active in another worktre
       |         | git push --force-with-lease --force-if-includes |
     And the current branch is still "current"
     And the previous Git branch is now "current"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

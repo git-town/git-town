@@ -52,4 +52,4 @@ Feature: skip deleting the remote branch when shipping another branch using the 
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |
       | origin     | main, other          |
-    And the initial lineage exists
+    And the initial lineage exists now

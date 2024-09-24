@@ -22,4 +22,4 @@ Feature: park another prototype branch
     Then it runs no commands
     And the prototype branches are now "prototype"
     And there are now no parked branches
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

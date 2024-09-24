@@ -32,5 +32,5 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
     And the current branch is still "other"
     And the uncommitted file still exists
     And no merge is in progress
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

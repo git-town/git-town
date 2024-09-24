@@ -17,7 +17,7 @@ Feature: does not kill perennial branches
       you cannot kill the main branch
       """
     And the current branch is still "feature"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: perennial branch
     And the branches

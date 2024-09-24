@@ -36,5 +36,5 @@ Feature: a default branch type is set, the feature-regex does not match
       | BRANCH    | COMMAND                                             |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }} |
     And the current branch is still "my-branch"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

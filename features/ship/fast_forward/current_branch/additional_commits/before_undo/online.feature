@@ -26,4 +26,4 @@ Feature: partially undo an online ship using the fast-forward strategy after add
       | main    | local, origin | feature commit    |
       |         | local         | additional commit |
       | feature | local, origin | feature commit    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

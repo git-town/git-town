@@ -49,7 +49,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash pop                                    |
     And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
-    And the initial commits exist
+    And the initial commits exist now
     And file "conflicting_file" still has content "conflicting content"
 
   Scenario: continue with unresolved conflict
@@ -84,6 +84,6 @@ Feature: conflicts between uncommitted changes and the main branch
       | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
     And file "conflicting_file" now has content "resolved content"

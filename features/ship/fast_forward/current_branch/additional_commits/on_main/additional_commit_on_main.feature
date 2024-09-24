@@ -26,12 +26,12 @@ Feature: cannot ship not-up-to-date feature branches using the fast-forward stra
       aborted because merge exited with error
       """
     And the current branch is still "feature"
-    And the initial branches and lineage exist
-    And the initial commits exist
+    And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

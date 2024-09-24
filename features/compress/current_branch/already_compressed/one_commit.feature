@@ -20,12 +20,12 @@ Feature: does not compress already compressed branches
       branch "feature" has already just one commit
       """
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

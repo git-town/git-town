@@ -47,5 +47,5 @@ Feature: shipping a parked branch
       | main   | local, origin | parked done          |
       |        |               | Revert "parked done" |
       | parked | local, origin | parked commit        |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
     And branch "parked" is now parked

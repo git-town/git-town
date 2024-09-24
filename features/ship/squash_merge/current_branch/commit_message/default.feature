@@ -26,8 +26,8 @@ Feature: must provide a commit message
       aborted because merge exited with error
       """
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,5 +36,5 @@ Feature: must provide a commit message
       nothing to undo
       """
     And the current branch is still "feature"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

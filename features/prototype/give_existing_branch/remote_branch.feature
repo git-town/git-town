@@ -27,4 +27,4 @@ Feature: prototype another remote branch
       | main           | git branch -D remote-feature |
     And the current branch is now "main"
     And there are now no observed branches
-    And the initial branches exist
+    And the initial branches exist now

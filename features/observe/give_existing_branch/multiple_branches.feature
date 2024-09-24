@@ -41,5 +41,5 @@ Feature: observing multiple other branches
     When I run "git-town undo"
     Then it runs no commands
     And there are now no observed branches
-    And the initial branches exist
+    And the initial branches exist now
     And the current branch is still "main"

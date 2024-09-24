@@ -58,4 +58,4 @@ Feature: ship the supplied feature branch from a subfolder
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

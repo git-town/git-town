@@ -51,7 +51,7 @@ Feature: syncing a stacked feature branch using --no-push
       |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -64,5 +64,5 @@ Feature: syncing a stacked feature branch using --no-push
       | parent | git reset --hard {{ sha 'local parent commit' }} |
       |        | git checkout child                               |
     And the current branch is still "child"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

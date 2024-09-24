@@ -20,12 +20,12 @@ Feature: dry-run hacking a new feature branch
       | main     | git rebase origin/main   |
       |          | git checkout -b new      |
     And the current branch is still "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "existing"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

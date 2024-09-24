@@ -47,4 +47,4 @@ Feature: ship the current feature branch with a tracking branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

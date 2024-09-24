@@ -31,6 +31,6 @@ Feature: don't sync tags while prepending
       | BRANCH | COMMAND           |
       | new    | git checkout old  |
       | old    | git branch -D new |
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the initial tags exist now

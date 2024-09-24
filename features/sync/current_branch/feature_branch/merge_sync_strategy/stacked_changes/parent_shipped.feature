@@ -51,4 +51,4 @@ Feature: syncing a branch whose parent was shipped
       |        | git branch parent {{ sha-before-run 'parent commit' }} |
       |        | git checkout child                                     |
     And the current branch is still "child"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

@@ -45,4 +45,4 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         | origin   | origin main commit    |
       | feature | origin   | origin feature commit |
       |         | worktree | local feature commit  |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

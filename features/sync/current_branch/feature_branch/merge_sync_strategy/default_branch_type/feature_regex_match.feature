@@ -54,4 +54,4 @@ Feature: a default branch type is set, the feature-regex matches
       |           |               | local main commit       |
       | my-branch | local         | local my-branch commit  |
       |           | origin        | origin my-branch commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

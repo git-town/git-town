@@ -79,4 +79,4 @@ Feature: display all executed Git commands for the "compress" sync strategy
       Ran 13 shell commands.
       """
     And the current branch is now "branch-2"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

@@ -29,5 +29,5 @@ Feature: offline mode
       | new    | git checkout main |
       | main   | git branch -D new |
     And the current branch is now "main"
-    And the initial commits exist
+    And the initial commits exist now
     And no lineage exists now

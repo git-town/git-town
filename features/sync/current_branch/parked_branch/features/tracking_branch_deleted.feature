@@ -36,5 +36,5 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | main   | git branch parked {{ sha-before-run 'local commit' }} |
       |        | git checkout parked                                   |
     And the current branch is now "parked"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

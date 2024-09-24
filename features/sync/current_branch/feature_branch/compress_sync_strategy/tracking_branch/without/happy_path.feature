@@ -53,4 +53,4 @@ Feature: sync the current feature branch without a tracking branch using the "co
       |         |               | local main commit      |
       | feature | local         | local feature commit 1 |
       |         |               | local feature commit 2 |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

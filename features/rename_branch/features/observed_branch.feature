@@ -38,5 +38,5 @@ Feature: rename an observed branch
       | observed | git branch -D new                                     |
     And the current branch is now "observed"
     And the observed branches are now "observed"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

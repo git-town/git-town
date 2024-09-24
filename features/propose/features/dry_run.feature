@@ -19,7 +19,7 @@ Feature: dry-run proposing changes
       | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
     And the current branch is still "feature"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: there is no PR for this branch yet
     Given a proposal for this branch does not exist
@@ -35,4 +35,4 @@ Feature: dry-run proposing changes
       |         | git merge --no-edit --ff main                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And the current branch is still "feature"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

@@ -18,12 +18,12 @@ Feature: abort the dialog
       """
     And it runs no commands
     And the current branch is still "child"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "child"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

@@ -61,5 +61,5 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       | beta   | git reset --hard {{ sha 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin beta commit' }}:beta   |
     And the current branch is still "beta"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

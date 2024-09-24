@@ -21,12 +21,12 @@ Feature: cannot ship contribution branches
       cannot ship contribution branches
       """
     And the current branch is still "contribution"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "contribution"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

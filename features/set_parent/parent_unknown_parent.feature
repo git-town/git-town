@@ -27,5 +27,5 @@ Feature: setting the parent to a branch whose parent is unknown
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "branch-2"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

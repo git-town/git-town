@@ -39,5 +39,5 @@ Feature: rename a parked branch
       | parked | git branch -D new                                 |
     And the current branch is now "parked"
     And the parked branches are now "parked"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

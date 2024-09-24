@@ -40,5 +40,5 @@ Feature: auto-creating a prototype branch when appending
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

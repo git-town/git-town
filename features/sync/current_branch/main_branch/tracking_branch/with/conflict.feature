@@ -37,7 +37,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And the current branch is still "main"
     And the uncommitted file still exists
     And no rebase is in progress
-    And the initial commits exist
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

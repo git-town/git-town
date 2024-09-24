@@ -41,5 +41,5 @@ Feature: auto-push new branches
       |        | git checkout old     |
       | old    | git branch -D new    |
     And the current branch is now "old"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

@@ -32,7 +32,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       """
     And the current branch is still "shipped"
     And the uncommitted file still exists
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,4 +52,4 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | main    | origin   | shipped commit   |
       | shipped | local    | shipped commit   |
       |         |          | unshipped commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

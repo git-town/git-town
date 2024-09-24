@@ -26,8 +26,8 @@ Feature: does not ship a child branch using the fast-forward strategy
       please ship "alpha" first
       """
     And the current branch is now "alpha"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -37,5 +37,5 @@ Feature: does not ship a child branch using the fast-forward strategy
       nothing to undo
       """
     And the current branch is still "alpha"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

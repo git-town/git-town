@@ -37,7 +37,7 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local         | branch-2 commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -48,4 +48,4 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       |          | git stash pop |
     And the current branch is now "branch-2"
     And the uncommitted file still exists
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

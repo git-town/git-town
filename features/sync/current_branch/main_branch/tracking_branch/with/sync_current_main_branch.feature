@@ -39,4 +39,4 @@ Feature: sync the main branch
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       |        |               | local commit  |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

@@ -36,5 +36,5 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the current branch is now "existing"
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

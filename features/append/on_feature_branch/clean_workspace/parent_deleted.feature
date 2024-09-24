@@ -65,4 +65,4 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       |        | git checkout child                                     |
       | child  | git branch -D new                                      |
     And the current branch is still "child"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

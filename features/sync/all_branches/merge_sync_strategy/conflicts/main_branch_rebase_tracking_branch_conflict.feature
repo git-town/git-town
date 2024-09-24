@@ -41,7 +41,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |        | git stash pop      |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

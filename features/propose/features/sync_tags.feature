@@ -32,6 +32,6 @@ Feature: don't sync tags while proposing
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the initial tags exist now

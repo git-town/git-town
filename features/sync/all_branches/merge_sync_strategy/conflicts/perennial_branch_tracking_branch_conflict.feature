@@ -51,8 +51,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git stash pop      |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: skip
     When I run "git-town skip"

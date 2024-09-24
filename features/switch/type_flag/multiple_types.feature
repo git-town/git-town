@@ -38,4 +38,4 @@ Feature: switch branches using multiple types
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "prototype"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

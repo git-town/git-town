@@ -32,6 +32,6 @@ Feature: don't sync tags while renaming branches
       |        | git push origin :new                      |
       |        | git checkout old                          |
       | old    | git branch -D new                         |
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the initial tags exist now

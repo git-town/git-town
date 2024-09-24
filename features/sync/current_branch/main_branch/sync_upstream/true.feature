@@ -32,4 +32,4 @@ Feature: on the main branch with an upstream repo
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

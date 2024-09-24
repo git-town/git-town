@@ -26,7 +26,7 @@ Feature: commit message with double-quotes
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
@@ -47,4 +47,4 @@ Feature: commit message with double-quotes
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

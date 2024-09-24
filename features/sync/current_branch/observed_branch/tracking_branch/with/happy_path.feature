@@ -31,5 +31,5 @@ Feature: sync the current observed branch
       | BRANCH   | COMMAND                                              |
       | observed | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "observed"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

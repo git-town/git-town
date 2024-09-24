@@ -19,7 +19,7 @@ Feature: already existing remote branch
       | existing | git stash pop                 |
     And the current branch is now "existing"
     And the uncommitted file still exists
-    And the initial commits exist
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
@@ -36,5 +36,5 @@ Feature: already existing remote branch
       |          | git stash pop          |
     And the current branch is now "old"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

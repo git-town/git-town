@@ -22,7 +22,7 @@ Feature: destination branch exists
       there is already a branch "beta"
       """
     And the current branch is still "alpha"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: destination branch exists in origin
     Given the branches
@@ -43,4 +43,4 @@ Feature: destination branch exists
       there is already a branch "beta" at the "origin" remote
       """
     And the current branch is still "alpha"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

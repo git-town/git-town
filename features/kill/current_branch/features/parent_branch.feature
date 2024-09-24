@@ -30,7 +30,7 @@ Feature: delete a branch within a branch chain
       branch "gamma" is now a child of "alpha"
       """
     And the current branch is now "alpha"
-    And no uncommitted files exist
+    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
@@ -53,5 +53,5 @@ Feature: delete a branch within a branch chain
       | beta   | git reset --soft HEAD~1                                      |
     And the current branch is now "beta"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

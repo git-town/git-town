@@ -20,8 +20,8 @@ Feature: cannot compress branches that are out of sync
       """
       please sync branch "feature" before compressing it
       """
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: local branch is ahead
     Given the commits
@@ -33,8 +33,8 @@ Feature: cannot compress branches that are out of sync
       """
       please sync branch "feature" before compressing it
       """
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: branch is ahead and behind
     Given the commits
@@ -47,8 +47,8 @@ Feature: cannot compress branches that are out of sync
       """
       please sync branch "feature" before compressing it
       """
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: branch is deleted at remote
     Given the commits
@@ -65,4 +65,4 @@ Feature: cannot compress branches that are out of sync
       | BRANCH  | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local    | commit 1 | file_1    | content 1    |
       |         |          | commit 2 | file_2    | content 2    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

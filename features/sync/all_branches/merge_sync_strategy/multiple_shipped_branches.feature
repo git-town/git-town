@@ -64,4 +64,4 @@ Feature: multiple shipped branches
       |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
       |           | git checkout feature-3                                       |
     And the current branch is still "feature-3"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

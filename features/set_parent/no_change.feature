@@ -17,12 +17,12 @@ Feature: update the parent of a feature branch
       Selected parent branch for "child": parent
       """
     And it runs no commands
-    And the initial lineage exists
+    And the initial lineage exists now
     And the current branch is still "child"
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "child"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

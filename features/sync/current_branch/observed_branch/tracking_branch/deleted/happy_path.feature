@@ -36,5 +36,5 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | main   | git branch observed {{ sha-before-run 'local commit' }} |
       |        | git checkout observed                                   |
     And the current branch is now "observed"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

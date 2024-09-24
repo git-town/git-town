@@ -27,5 +27,5 @@ Feature: previous Git branch is in another worktree
       |        | git checkout current                          |
     And the current branch is now "current"
     And the previous Git branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

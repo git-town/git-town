@@ -40,5 +40,5 @@ Feature: prepend a prototype branch to a feature branch
       | old    | git branch -D parent |
     And the current branch is now "old"
     And there are now no prototype branches
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now

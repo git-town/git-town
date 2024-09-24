@@ -31,4 +31,4 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | BRANCH  | LOCATION      | MESSAGE         |
       | main    | local, origin | added submodule |
       | feature | local, origin | added submodule |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

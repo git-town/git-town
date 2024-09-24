@@ -19,8 +19,8 @@ Feature: does not compress perennial branches
       better not compress perennial branches
       """
     And the current branch is still "perennial"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: on main branch
     Given a Git repo with origin
@@ -37,5 +37,5 @@ Feature: does not compress perennial branches
       better not compress perennial branches
       """
     And the current branch is still "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

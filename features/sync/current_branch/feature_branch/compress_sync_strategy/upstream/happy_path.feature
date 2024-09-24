@@ -49,4 +49,4 @@ Feature: "compress" sync with upstream repo
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local                   | local commit    |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

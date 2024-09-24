@@ -28,8 +28,8 @@ Feature: does not ship empty feature branches using the fast-forward strategy
       """
     And the current branch is still "other"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,5 +39,5 @@ Feature: does not ship empty feature branches using the fast-forward strategy
       nothing to undo
       """
     And the current branch is still "other"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

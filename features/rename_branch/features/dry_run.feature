@@ -21,12 +21,12 @@ Feature: rename the current branch
       | new    | git push -u origin new    |
       |        | git push origin :old      |
     And the current branch is still "old"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "old"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

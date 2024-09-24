@@ -39,5 +39,5 @@ Feature: rename a prototype branch
       | prototype | git branch -D new                                    |
     And the current branch is now "prototype"
     And the prototype branches are now "prototype"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

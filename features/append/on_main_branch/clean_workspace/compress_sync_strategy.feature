@@ -32,5 +32,5 @@ Feature: append a new feature branch to the main branch using the "compress" syn
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
     And the current branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

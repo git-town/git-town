@@ -47,7 +47,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        |               | local main commit                                      |
       |        |               | Merge branch 'main' into alpha                         |
       |        |               | Merge branch 'alpha' into beta                         |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -58,5 +58,5 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout beta                               |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
     And the current branch is still "beta"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

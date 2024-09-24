@@ -88,4 +88,4 @@ Feature: sync all feature branches
       |              | origin        | origin production commit   |
       | qa           | local         | qa local commit            |
       |              | origin        | qa origin commit           |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

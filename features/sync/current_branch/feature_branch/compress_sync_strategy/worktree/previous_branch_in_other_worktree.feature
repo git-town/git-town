@@ -37,5 +37,5 @@ Feature: sync while the previous branch is checked out in another worktree
       |         | git reset --hard {{ sha 'current 2' }} |
     And the current branch is now "current"
     And the previous Git branch is now "main"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial commits exist now
+    And the initial branches and lineage exist now

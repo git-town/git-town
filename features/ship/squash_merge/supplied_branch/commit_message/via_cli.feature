@@ -59,4 +59,4 @@ Feature: provide the commit message via a CLI argument
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

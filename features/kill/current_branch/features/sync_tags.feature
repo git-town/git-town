@@ -29,6 +29,6 @@ Feature: don't sync tags while deleting branches
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
-    And the initial commits exist
-    And the initial lineage exists
+    And the initial commits exist now
+    And the initial lineage exists now
     And the initial tags exist now
