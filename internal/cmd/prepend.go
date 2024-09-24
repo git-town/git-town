@@ -261,6 +261,7 @@ func prependProgram(data prependData) program.Program {
 	if hasProposal {
 		prog.Value.Add(&opcodes.UpdateProposalBase{
 			NewTarget:      data.targetBranch,
+			OldTarget:      data.existingParent,
 			ProposalNumber: proposal.Number,
 		})
 	}

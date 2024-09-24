@@ -225,6 +225,7 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 		if data.connector.IsSome() && hasProposal {
 			prog.Add(&opcodes.UpdateProposalBase{
 				NewTarget:      selectedBranch,
+				OldTarget:      proposal.Target,
 				ProposalNumber: proposal.Number,
 			})
 		}

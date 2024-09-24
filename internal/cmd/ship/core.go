@@ -140,6 +140,7 @@ func UpdateChildBranchProposals(prog *program.Program, proposals []hostingdomain
 		prog.Add(&opcodes.UpdateProposalBase{
 			ProposalNumber: childProposal.Number,
 			NewTarget:      targetBranch,
+			OldTarget:      childProposal.Target,
 		})
 	}
 }
