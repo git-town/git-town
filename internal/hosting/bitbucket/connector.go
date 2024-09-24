@@ -135,7 +135,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
-	self.log.Log(colors.BoldGreen().Styled("#" + strconv.Itoa(proposal4.Number)))
+	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
 	return Some(proposal4), nil
 }
 
