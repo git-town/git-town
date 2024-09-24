@@ -72,7 +72,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 			URL:          proposalURLOverride,
 		}), nil
 	}
-	query := fmt.Sprintf(`source.branch.name = %q AND destination.branch.name = %q`, branch, target)
+	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
@@ -156,9 +156,9 @@ func (self Connector) RepositoryURL() string {
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:    "git-town-qa",
-		RepoSlug: "test-repo",
-		Query:    fmt.Sprintf(`source.branch.name = "%s"`, branch),
+		Owner:    self.Organization,
+		RepoSlug: self.Repository,
+		Query:    fmt.Sprintf("source.branch.name = %q", branch),
 		States:   []string{"open"},
 	})
 	if err != nil {
