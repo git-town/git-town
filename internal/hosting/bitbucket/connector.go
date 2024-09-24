@@ -300,39 +300,39 @@ func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	destination, ok := destination5.(string)
+	destination6, ok := destination5.(string)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	link1, has := pullRequest["links"]
+	url1, has := pullRequest["links"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	link2, ok := link1.(map[string]interface{})
+	url2, ok := url1.(map[string]interface{})
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	link3, has := link2["html"]
+	url3, has := url2["html"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	link4, ok := link3.(map[string]interface{})
+	url4, ok := url3.(map[string]interface{})
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	link5, has := link4["href"]
+	url5, has := url4["href"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	url, ok := link5.(string)
+	url6, ok := url5.(string)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	return hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number,
-		Target:       gitdomain.NewLocalBranchName(destination),
+		Target:       gitdomain.NewLocalBranchName(destination6),
 		Title:        title2,
-		URL:          url,
+		URL:          url6,
 	}, nil
 }
