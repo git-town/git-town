@@ -20,7 +20,7 @@ func Execute(args ExecuteArgs) {
 		err := opcode.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			Config:                          args.Config,
-			Connector:                       None[hostingdomain.Connector](),
+			Connector:                       args.Connector,
 			DialogTestInputs:                components.NewTestInputs(),
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
@@ -38,6 +38,7 @@ func Execute(args ExecuteArgs) {
 type ExecuteArgs struct {
 	Backend       gitdomain.RunnerQuerier
 	Config        config.ValidatedConfig
+	Connector     Option[hostingdomain.Connector]
 	FinalMessages stringslice.Collector
 	Frontend      gitdomain.Runner
 	Git           git.Commands

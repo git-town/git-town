@@ -65,10 +65,15 @@ func executeUndo(verbose configdomain.Verbose) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	if err != nil {
+		return err
+	}
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
+		Connector:        connector,
 		FinalMessages:    repo.FinalMessages,
 		Frontend:         repo.Frontend,
 		Git:              repo.Git,

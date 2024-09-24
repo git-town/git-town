@@ -198,6 +198,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 		Backend:          args.Backend,
 		CommandsCounter:  args.CommandsCounter,
 		Config:           validatedConfig,
+		Connector:        args.Connector,
 		FinalMessages:    args.FinalMessages,
 		Frontend:         args.Frontend,
 		Git:              args.Git,

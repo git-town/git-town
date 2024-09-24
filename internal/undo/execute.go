@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks"
 	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	lightInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/light"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
@@ -34,6 +35,7 @@ func Execute(args ExecuteArgs) error {
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
@@ -51,6 +53,7 @@ type ExecuteArgs struct {
 	Backend          gitdomain.RunnerQuerier
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
+	Connector        Option[hostingdomain.Connector]
 	FinalMessages    stringslice.Collector
 	Frontend         gitdomain.Runner
 	Git              git.Commands
