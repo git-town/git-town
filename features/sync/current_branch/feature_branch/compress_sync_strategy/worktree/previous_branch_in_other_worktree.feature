@@ -33,8 +33,8 @@ Feature: sync while the previous branch is checked out in another worktree
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                |
-      | current | git push origin :current               |
-      |         | git reset --hard {{ sha 'current 2' }} |
+      | current | git reset --hard {{ sha 'current 2' }} |
+      |         | git push origin :current               |
     And the current branch is now "current"
     And the previous Git branch is now "main"
     And the initial commits exist now

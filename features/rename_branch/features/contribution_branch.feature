@@ -33,9 +33,9 @@ Feature: rename a contribution branch
       | BRANCH       | COMMAND                                                   |
       | new          | git branch contribution {{ sha 'somebody elses commit' }} |
       |              | git push -u origin contribution                           |
-      |              | git push origin :new                                      |
       |              | git checkout contribution                                 |
       | contribution | git branch -D new                                         |
+      |              | git push origin :new                                      |
     And the current branch is now "contribution"
     And the contribution branches are now "contribution"
     And the initial commits exist now

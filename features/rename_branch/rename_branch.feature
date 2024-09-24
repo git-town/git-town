@@ -33,8 +33,8 @@ Feature: rename the current branch
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git push -u origin old                |
-      |        | git push origin :new                  |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
+      |        | git push origin :new                  |
     And the current branch is now "old"
     And the initial branches and lineage exist now

@@ -32,9 +32,9 @@ Feature: previous branch is checked out in another worktree
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                  |
-      | new     | git push origin :current |
-      |         | git checkout current     |
+      | new     | git checkout current     |
       | current | git branch -D new        |
+      |         | git push origin :current |
     And the current branch is now "current"
     And the previous Git branch is now ""
     And the initial commits exist now

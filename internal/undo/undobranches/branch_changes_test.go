@@ -469,15 +469,15 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
+			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
+			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.DeleteTrackingBranch{
 				Branch: gitdomain.NewRemoteBranchName("origin/perennial-branch"),
 			},
 			&opcodes.DeleteTrackingBranch{
 				Branch: gitdomain.NewRemoteBranchName("origin/feature-branch"),
 			},
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("main")},
 		}
 		must.Eq(t, wantProgram, haveProgram)

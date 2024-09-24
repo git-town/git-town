@@ -29,9 +29,9 @@ Feature: don't sync tags while renaming branches
       | BRANCH | COMMAND                                   |
       | new    | git branch old {{ sha 'initial commit' }} |
       |        | git push -u origin old                    |
-      |        | git push origin :new                      |
       |        | git checkout old                          |
       | old    | git branch -D new                         |
+      |        | git push origin :new                      |
     And the initial commits exist now
     And the initial lineage exists now
     And the initial tags exist now

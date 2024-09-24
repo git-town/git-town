@@ -48,9 +48,9 @@ Feature: rename a perennial branch
       | BRANCH     | COMMAND                                             |
       | new        | git branch production {{ sha 'production commit' }} |
       |            | git push -u origin production                       |
-      |            | git push origin :new                                |
       |            | git checkout production                             |
       | production | git branch -D new                                   |
+      |            | git push origin :new                                |
     And the current branch is now "production"
     And the perennial branches are now "production"
     And the initial commits exist now
