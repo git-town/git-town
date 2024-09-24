@@ -25,8 +25,11 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+			AppPassword:     config.Config.Get().BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
+			Log:             log,
 			RemoteURL:       remoteURL,
+			UserName:        config.Config.Get().BitbucketUsername,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
