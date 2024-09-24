@@ -59,6 +59,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |        | backend  | git branch -vva --sort=refname                 |
       |        | backend  | git remote get-url origin                      |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend  | git remote get-url origin                      |
       | main   | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
       |        | backend  | git show-ref --quiet refs/heads/feature        |
@@ -66,6 +67,6 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |        | backend  | git config git-town-branch.feature.parent main |
     And it prints:
       """
-      Ran 14 shell commands.
+      Ran 15 shell commands.
       """
     And the current branch is now "feature"

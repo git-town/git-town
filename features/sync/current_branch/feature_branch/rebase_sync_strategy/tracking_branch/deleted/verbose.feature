@@ -71,13 +71,14 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                  |
       |        | backend  | git remote get-url origin                       |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
+      |        | backend  | git remote get-url origin                       |
       | main   | frontend | git branch branch-2 {{ sha 'initial commit' }}  |
       |        | backend  | git show-ref --quiet refs/heads/branch-2        |
       | main   | frontend | git checkout branch-2                           |
       |        | backend  | git config git-town-branch.branch-2.parent main |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "branch-2"
     And the initial branches and lineage exist now
