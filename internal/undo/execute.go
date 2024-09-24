@@ -30,7 +30,6 @@ func Execute(args ExecuteArgs) error {
 		HasOpenChanges: args.HasOpenChanges,
 		NoPushHook:     args.Config.Config.NoPushHook(),
 		RunState:       args.RunState,
-		UndoAPIProgram: args.RunState.UndoAPIProgram,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
