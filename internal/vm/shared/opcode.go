@@ -26,8 +26,9 @@ type Opcode interface {
 	ShouldUndoOnError() bool
 
 	// UndoProgram provides the opcodes to undo this operation.
-	// All Git changes are automatically undone by the snapshot-based undo engine.
-	// The undo program returned here is only used for external changes
+	// All Git changes are automatically undone by the snapshot-based undo engine
+	// and don't need to be undone here.
+	// The undo program returned here is only for external changes
 	// like updating proposals at the code hosting platform.
 	UndoExternalChangesProgram() []Opcode
 }
