@@ -150,7 +150,14 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if platform, has := determineHostingPlatform(config, data.userInput.config.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
-			// BitBucket API isn't supported yet
+			data.userInput.config.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.Config.Value.BitbucketUsername, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
+			data.userInput.config.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.Config.Value.BitbucketAppPassword, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
 		case configdomain.HostingPlatformGitea:
 			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.Value.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
@@ -252,6 +259,14 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 	if err != nil {
 		return err
 	}
+	err = saveBitbucketUsername(oldConfig.Config.Value.BitbucketUsername, userInput.config.BitbucketUsername, gitCommands, frontend)
+	if err != nil {
+		return err
+	}
+	err = saveBitbucketAppPassword(oldConfig.Config.Value.BitbucketAppPassword, userInput.config.BitbucketAppPassword, gitCommands, frontend)
+	if err != nil {
+		return err
+	}
 	err = saveGiteaToken(oldConfig.Config.Value.GiteaToken, userInput.config.GiteaToken, gitCommands, frontend)
 	if err != nil {
 		return err
@@ -309,6 +324,26 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 		}
 	}
 	return nil
+}
+
+func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], gitCommands git.Commands, frontend gitdomain.Runner) error {
+	if newPassword == oldPassword {
+		return nil
+	}
+	if value, has := newPassword.Get(); has {
+		return gitCommands.SetBitbucketAppPassword(frontend, value)
+	}
+	return gitCommands.RemoveBitbucketAppPassword(frontend)
+}
+
+func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], gitCommands git.Commands, frontend gitdomain.Runner) error {
+	if newValue == oldValue {
+		return nil
+	}
+	if value, has := newValue.Get(); has {
+		return gitCommands.SetBitbucketUsername(frontend, value)
+	}
+	return gitCommands.RemoveBitbucketUsername(frontend)
 }
 
 func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {

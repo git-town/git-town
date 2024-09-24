@@ -114,6 +114,9 @@ github.com/kr/pretty
 # github.com/kr/text v0.2.0
 ## explicit
 github.com/kr/text
+# github.com/ktrysmt/go-bitbucket v0.9.80
+## explicit; go 1.14
+github.com/ktrysmt/go-bitbucket
 # github.com/lucasb-eyer/go-colorful v1.2.0
 ## explicit; go 1.12
 github.com/lucasb-eyer/go-colorful
@@ -126,6 +129,9 @@ github.com/mattn/go-localereader
 # github.com/mattn/go-runewidth v0.0.16
 ## explicit; go 1.9
 github.com/mattn/go-runewidth
+# github.com/mitchellh/mapstructure v1.5.0
+## explicit; go 1.14
+github.com/mitchellh/mapstructure
 # github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
 ## explicit; go 1.17
 github.com/muesli/ansi
@@ -180,9 +186,14 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
 ## explicit; go 1.22.0
 golang.org/x/exp/maps
+# golang.org/x/net v0.24.0
+## explicit; go 1.18
+golang.org/x/net/context
 # golang.org/x/oauth2 v0.23.0
 ## explicit; go 1.18
 golang.org/x/oauth2
+golang.org/x/oauth2/bitbucket
+golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
 # golang.org/x/sync v0.8.0
 ## explicit; go 1.18

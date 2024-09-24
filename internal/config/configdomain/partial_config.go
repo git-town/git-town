@@ -10,6 +10,8 @@ import (
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
+	BitbucketAppPassword     Option[BitbucketAppPassword]
+	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
 	CreatePrototypeBranches  Option[CreatePrototypeBranches]
 	DefaultBranchType        Option[DefaultBranchType]
@@ -83,6 +85,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
+		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
+		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,
@@ -121,6 +125,8 @@ type removeLocalConfigValueFunc func(Key) error
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	return PartialConfig{
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
+		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
+		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		CreatePrototypeBranches:  other.CreatePrototypeBranches.Or(self.CreatePrototypeBranches),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
@@ -156,6 +162,8 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
 	return UnvalidatedConfig{
 		Aliases:                  self.Aliases,
+		BitbucketAppPassword:     self.BitbucketAppPassword,
+		BitbucketUsername:        self.BitbucketUsername,
 		ContributionBranches:     self.ContributionBranches,
 		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(DefaultBranchType{BranchTypeFeatureBranch}),
