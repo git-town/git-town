@@ -265,68 +265,68 @@ func (self Connector) UpdateProposalHead(number int, source gitdomain.LocalBranc
 func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.Proposal, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
-		return result, errors.New("missing id attribute in proposal")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	id2, ok := id1.(float64)
 	if !ok {
-		return result, errors.New("unknown data type for pull request title")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	number := int(id2)
 	title1, has := pullRequest["title"]
 	if !has {
-		return result, errors.New("missing title attribute in proposal")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	title2, ok := title1.(string)
 	if !ok {
-		return result, errors.New("unknown data type for pull request title")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination1, has := pullRequest["destination"]
 	if !has {
-		return result, errors.New("missing destination attribute in proposal")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination2, ok := destination1.(map[string]interface{})
 	if !ok {
-		return result, errors.New("unknown data structure for destination")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination3, has := destination2["branch"]
 	if !has {
-		return result, errors.New("no branch attribute")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination4, ok := destination3.(map[string]interface{})
 	if !ok {
-		return result, errors.New("unknown data structure for destination")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination5, has := destination4["name"]
 	if !has {
-		return result, errors.New("no branch attribute")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	destination, ok := destination5.(string)
 	if !ok {
-		return result, errors.New("unknown data structure for destination")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	link1, has := pullRequest["links"]
 	if !has {
-		return result, errors.New("no links attribute")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	link2, ok := link1.(map[string]interface{})
 	if !ok {
-		return result, errors.New("unknown links structure")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	link3, has := link2["html"]
 	if !has {
-		return result, errors.New("unknown html links")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	link4, ok := link3.(map[string]interface{})
 	if !ok {
-		return result, errors.New("unknown html links structure")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	link5, has := link4["href"]
 	if !has {
-		return result, errors.New("no href attribute")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	url, ok := link5.(string)
 	if !ok {
-		return result, errors.New("href is not string")
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	return hostingdomain.Proposal{
 		MergeWithAPI: false,
