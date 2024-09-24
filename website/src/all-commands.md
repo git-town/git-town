@@ -23,17 +23,17 @@ _Commands to deal with edge cases._
 
 - [git town kill](commands/kill.md) - delete a feature branch
 - [git town rename-branch](commands/rename-branch.md) - rename a branch
-- [git repo](commands/repo.md) - view the Git repository in the browser
+- [git town repo](commands/repo.md) - view the Git repository in the browser
 
 ### Stacked changes
 
 _Commands to develop, review, and ship parts of a larger feature as multiple
 connected branches._
 
-- [git town append](commands/append.md) - create a new feature branch as a child of
-  the current branch
-- [git town prepend](commands/prepend.md) - create a new feature branch between the
-  current branch and its parent
+- [git town append](commands/append.md) - create a new feature branch as a child
+  of the current branch
+- [git town prepend](commands/prepend.md) - create a new feature branch between
+  the current branch and its parent
 - [git town set-parent](commands/set-parent.md) - change the parent of a feature
   branch
 - [git town diff-parent](commands/diff-parent.md) - display the changes made in
@@ -43,10 +43,10 @@ connected branches._
 
 _Commands to deal with merge conflicts._
 
-- [git town continue](commands/continue.md) - continue after you resolved the merge
-  conflict
-- [git town skip](commands/skip.md) - when syncing all branches, ignore the current
-  branch and continue with the next one
+- [git town continue](commands/continue.md) - continue after you resolved the
+  merge conflict
+- [git town skip](commands/skip.md) - when syncing all branches, ignore the
+  current branch and continue with the next one
 - [git town status](commands/status.md) - display available commands
 - [git town undo](commands/undo.md) - undo the last completed Git Town command
 

@@ -5,4 +5,4 @@ development workflow outlined earlier.
 
 - [git town kill](commands/kill.md) - delete a feature branch
 - [git town rename-branch](commands/rename-branch.md) - rename a branch
-- [git repo](commands/repo.md) - view the Git repository in the browser
+- [git town repo](commands/repo.md) - view the Git repository in the browser
