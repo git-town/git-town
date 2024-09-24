@@ -13,13 +13,13 @@ command.
 Park the current branch:
 
 ```fish
-git park
+git town park
 ```
 
 Park branches "alpha" and "beta":
 
 ```fish
-git park alpha beta
+git town park alpha beta
 ```
 
 ### --verbose / -v

@@ -14,7 +14,7 @@ To convert a contribution branch back into a feature branch, use the
 To make the current branch a contribution branch:
 
 ```fish
-git contribute
+git town contribute
 ```
 
 ### Positional arguments
@@ -25,14 +25,14 @@ given names contribution branches.
 To make branches "alpha" and "beta" contribution branches:
 
 ```fish
-git contribute alpha beta
+git town contribute alpha beta
 ```
 
 Check out a remote branch (that exists at origin but not on your local machine)
 and make it a contribution branch:
 
 ```fish
-git contribute somebody-elses-branch
+git town contribute somebody-elses-branch
 ```
 
 ### --verbose / -v

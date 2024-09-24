@@ -27,7 +27,7 @@ and make commits to their branch,
 but want the other developers to manage the branch
 including syncing it with its parent and shipping it.
 
-On a contribution branch, "git sync"
+On a contribution branch, "git town sync"
 - pulls down updates from the tracking branch (always via rebase)
 - pushes your local commits to the tracking branch
 - does not pull updates from the parent branch

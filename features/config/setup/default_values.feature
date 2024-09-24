@@ -74,7 +74,7 @@ Feature: Accepting all default values leads to a working setup
       #
       # When disabled, many Git Town commands execute faster
       # and Git Town will create the missing tracking branch
-      # on the first run of "git sync".
+      # on the first run of "git town sync".
       push-new-branches = false
 
       # The "create-prototype-branches" setting determines whether Git Town
@@ -96,19 +96,19 @@ Feature: Accepting all default values leads to a working setup
       # All options update proposals of child branches and remove the shipped branch locally and remotely.
       ship-strategy = "api"
 
-      # Should "git ship" delete the tracking branch?
+      # Should "git town ship" delete the tracking branch?
       # You want to disable this if your code hosting platform
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = true
 
-      # Should "git sync" sync tags with origin?
+      # Should "git town sync" sync tags with origin?
       sync-tags = true
 
-      # Should "git sync" also fetch updates from the upstream remote?
+      # Should "git town sync" also fetch updates from the upstream remote?
       #
       # If an "upstream" remote exists, and this setting is enabled,
-      # "git sync" will also update the local main branch
+      # "git town sync" will also update the local main branch
       # with commits from the main branch at the upstream remote.
       #
       # This is useful if the repository you work on is a fork,

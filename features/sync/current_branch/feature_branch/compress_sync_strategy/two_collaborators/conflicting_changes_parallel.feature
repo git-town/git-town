@@ -2,8 +2,8 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
 
   This feature spec demonstrates what happens
   when two people make concurrent changes to the same branch
-  and run "git sync" before and after they make changes.
-  Running "git sync" so often surfaces merge conflicts early when they are still small and easy to resolve.
+  and run "git town sync" before and after they make changes.
+  Running "git town sync" so often surfaces merge conflicts early when they are still small and easy to resolve.
   A downside of the "compress" strategy is that both committers keep renaming the commit on the branch
   to the first commit that exists on their local branch, which is different in this example.
 
