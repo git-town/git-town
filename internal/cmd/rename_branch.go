@@ -291,6 +291,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {
 				result.Value.Add(&opcodes.UpdateProposalHead{
 					NewTarget:      data.newBranch,
+					OldTarget:      data.oldBranch.LocalBranchName(),
 					ProposalNumber: proposal.Number,
 				})
 			}

@@ -36,6 +36,7 @@ func (self *UpdateProposalBase) UndoExternalChangesProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&UpdateProposalBase{
 			NewTarget:      self.OldTarget,
+			OldTarget:      self.NewTarget,
 			ProposalNumber: self.ProposalNumber,
 		},
 	}

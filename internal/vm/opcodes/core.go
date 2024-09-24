@@ -116,5 +116,6 @@ func Types() []shared.Opcode {
 		&SquashMerge{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
+		&UpdateProposalHead{},
 	} //exhaustruct:ignore
 }
