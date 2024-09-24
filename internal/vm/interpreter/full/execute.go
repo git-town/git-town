@@ -50,6 +50,7 @@ func Execute(args ExecuteArgs) error {
 		if err != nil {
 			return errored(nextStep, err, args)
 		}
+		args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, nextStep.UndoExternalChangesProgram()...)
 	}
 }
 

@@ -30,6 +30,7 @@ type RunState struct {
 	FinalUndoProgram         program.Program                    `exhaustruct:"optional"` // additional opcodes to run after this RunState was undone
 	RunProgram               program.Program                    // remaining opcodes of the Git Town command that this RunState is for
 	TouchedBranches          []gitdomain.BranchName             // the branches that are touched by the Git Town command that this RunState is for
+	UndoAPIProgram           program.Program                    // opcodes to undo changes at external systems
 	UndoablePerennialCommits []gitdomain.SHA                    `exhaustruct:"optional"` // contains the SHAs of commits on perennial branches that can safely be undone
 	UnfinishedDetails        OptionP[UnfinishedRunStateDetails] `exhaustruct:"optional"`
 }

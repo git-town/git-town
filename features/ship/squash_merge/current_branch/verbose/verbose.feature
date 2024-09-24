@@ -63,6 +63,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                 |
       |        | backend  | git remote get-url origin                      |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend  | git remote get-url origin                      |
       |        | backend  | git log --pretty=format:%h %s -10              |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
@@ -74,6 +75,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.feature.parent main |
     And it prints:
       """
-      Ran 18 shell commands.
+      Ran 19 shell commands.
       """
     And the current branch is now "feature"

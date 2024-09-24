@@ -66,12 +66,13 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                   |
       |        | backend  | git remote get-url origin                        |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git remote get-url origin                        |
       | parent | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "old"

@@ -123,6 +123,7 @@ func TestRunState(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
+  "UndoAPIProgram": [],
   "UndoablePerennialCommits": null,
   "UnfinishedDetails": null
 }`[1:]

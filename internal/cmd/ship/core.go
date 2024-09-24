@@ -114,6 +114,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            shipProgram,
 		TouchedBranches:       shipProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
@@ -140,6 +141,7 @@ func UpdateChildBranchProposals(prog *program.Program, proposals []hostingdomain
 		prog.Add(&opcodes.UpdateProposalBase{
 			ProposalNumber: childProposal.Number,
 			NewTarget:      targetBranch,
+			OldTarget:      childProposal.Target,
 		})
 	}
 }

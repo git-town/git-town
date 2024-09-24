@@ -32,6 +32,10 @@ func (self *undeclaredOpcodeMethods) ShouldUndoOnError() bool {
 	return false
 }
 
+func (self *undeclaredOpcodeMethods) UndoExternalChangesProgram() []shared.Opcode {
+	return []shared.Opcode(nil)
+}
+
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	for _, opcode := range Types() {
 		if gohacks.TypeName(opcode) == opcodeType {
@@ -112,5 +116,6 @@ func Types() []shared.Opcode {
 		&SquashMerge{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
+		&UpdateProposalHead{},
 	} //exhaustruct:ignore
 }

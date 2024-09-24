@@ -31,6 +31,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

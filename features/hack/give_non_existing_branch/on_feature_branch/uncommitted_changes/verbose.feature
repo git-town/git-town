@@ -56,6 +56,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git remote get-url origin                     |
       | new    | frontend | git add -A                                    |
       |        | frontend | git stash                                     |
       |        | frontend | git checkout main                             |
@@ -65,7 +66,7 @@ Feature: display all executed Git commands with uncommitted changes
       | main   | frontend | git stash pop                                 |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "main"
     And the uncommitted file still exists

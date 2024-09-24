@@ -164,6 +164,9 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		})
 	}
 
+	// undo the proposal changes now when the old and new remote branches exist
+	result.AddProgram(args.UndoAPIProgram)
+
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
@@ -183,5 +186,6 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   configdomain.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
+	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA
 }

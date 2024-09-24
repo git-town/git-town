@@ -27,6 +27,7 @@ func Execute(args ExecuteArgs) error {
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
@@ -108,11 +109,13 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		BeginBranch:              args.InitialBranch,
 		Config:                   args.Config.Config,
 		EndBranch:                args.InitialBranch,
+		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

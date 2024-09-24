@@ -182,6 +182,12 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.UpdateProposalBase{
 					ProposalNumber: 123,
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
+					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
+				},
+				&opcodes.UpdateProposalHead{
+					ProposalNumber: 123,
+					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
+					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
 				},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
@@ -537,15 +543,25 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "NewTarget": "new-target",
+        "OldTarget": "old-target",
         "ProposalNumber": 123
       },
       "type": "UpdateProposalBase"
+    },
+    {
+      "data": {
+        "NewTarget": "new-target",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "UpdateProposalHead"
     }
   ],
   "TouchedBranches": [
     "branch-1",
     "branch-2"
   ],
+  "UndoAPIProgram": [],
   "UndoablePerennialCommits": null,
   "UnfinishedDetails": {
     "CanSkip": true,

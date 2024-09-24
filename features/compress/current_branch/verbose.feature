@@ -69,6 +69,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git branch -vva --sort=refname                     |
       |         | git remote get-url origin                          |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
+      |         | git remote get-url origin                          |
       | feature | git add -A                                         |
       |         | git stash                                          |
       | <none>  | git rev-parse --short HEAD                         |

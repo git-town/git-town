@@ -52,6 +52,7 @@ func Finished(args FinishedArgs) error {
 		RunProgram:               program.Program{},
 		TouchedBranches:          args.TouchedBranches,
 		UndoablePerennialCommits: gitdomain.SHAs{},
+		UndoAPIProgram:           program.Program{},
 		UnfinishedDetails:        NoneP[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())

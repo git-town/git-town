@@ -94,6 +94,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
@@ -225,6 +226,7 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 		if data.connector.IsSome() && hasProposal {
 			prog.Add(&opcodes.UpdateProposalBase{
 				NewTarget:      selectedBranch,
+				OldTarget:      proposal.Target,
 				ProposalNumber: proposal.Number,
 			})
 		}

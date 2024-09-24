@@ -94,6 +94,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
@@ -291,6 +292,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {
 				result.Value.Add(&opcodes.UpdateProposalHead{
 					NewTarget:      data.newBranch,
+					OldTarget:      data.oldBranch.LocalBranchName(),
 					ProposalNumber: proposal.Number,
 				})
 			}

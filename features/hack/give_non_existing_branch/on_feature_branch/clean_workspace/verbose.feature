@@ -54,6 +54,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git remote get-url origin                     |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
@@ -61,6 +62,6 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
-      Ran 14 shell commands.
+      Ran 15 shell commands.
       """
     And the current branch is now "main"
