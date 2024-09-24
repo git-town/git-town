@@ -34,9 +34,9 @@ Feature: rename a parked branch
       | BRANCH | COMMAND                                           |
       | new    | git branch parked {{ sha 'low-priority commit' }} |
       |        | git push -u origin parked                         |
-      |        | git push origin :new                              |
       |        | git checkout parked                               |
       | parked | git branch -D new                                 |
+      |        | git push origin :new                              |
     And the current branch is now "parked"
     And the parked branches are now "parked"
     And the initial commits exist now

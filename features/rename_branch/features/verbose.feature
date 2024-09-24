@@ -62,9 +62,9 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
       |        | frontend | git push -u origin old                        |
-      |        | frontend | git push origin :new                          |
       |        | frontend | git checkout old                              |
       | old    | frontend | git branch -D new                             |
+      |        | frontend | git push origin :new                          |
       |        | backend  | git config --unset git-town-branch.new.parent |
       |        | backend  | git config git-town-branch.old.parent main    |
     And it prints:

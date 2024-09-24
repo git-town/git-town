@@ -36,9 +36,9 @@ Feature: rename a parent branch
       | BRANCH | COMMAND                                     |
       | new    | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
-      |        | git push origin :new                        |
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
+      |        | git push origin :new                        |
     And the current branch is now "parent"
     And the initial commits exist now
     And the initial branches and lineage exist now
