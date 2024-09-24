@@ -163,16 +163,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			SetToSHA:    change.Before,
 		})
 
-		// remove remotely added branches
-		for _, addedRemoteBranch := range self.RemoteAdded {
-			if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-				result.Add(&opcodes.DeleteTrackingBranch{
-					Branch: addedRemoteBranch,
-				})
-			}
-		}
-	}
-
 	result.AddProgram(args.UndoAPIProgram)
 
 	// remove remotely added branches
