@@ -22,14 +22,14 @@ type ConnectorMergeProposal struct {
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`
 }
 
-func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
+func (self *ConnectorMergeProposal) AbortProgram() []shared.Opcode {
 	if self.enteredEmptyCommitMessage {
 		return []shared.Opcode{&DiscardOpenChanges{}}
 	}
 	return []shared.Opcode(nil)
 }
 
-func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
+func (self *ConnectorMergeProposal) AutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
 		return errors.New(messages.ShipAbortedMergeError)
 	}
@@ -73,8 +73,8 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 	return self.mergeError
 }
 
-// ShouldAutomaticallyUndoOnError returns whether this opcode should cause the command to
+// ShouldUndoOnError returns whether this opcode should cause the command to
 // automatically undo if it errors.
-func (self *ConnectorMergeProposal) ShouldAutomaticallyUndoOnError() bool {
+func (self *ConnectorMergeProposal) ShouldUndoOnError() bool {
 	return true
 }

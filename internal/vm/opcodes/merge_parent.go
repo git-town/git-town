@@ -12,13 +12,13 @@ type MergeParent struct {
 	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
 
-func (self *MergeParent) CreateAbortProgram() []shared.Opcode {
+func (self *MergeParent) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortMerge{},
 	}
 }
 
-func (self *MergeParent) CreateContinueProgram() []shared.Opcode {
+func (self *MergeParent) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ContinueMerge{},
 	}

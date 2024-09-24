@@ -36,5 +36,5 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          undoProgram,
 	})
-	return opcode.CreateAutomaticUndoError()
+	return opcode.AutomaticUndoError()
 }

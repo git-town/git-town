@@ -12,15 +12,15 @@ import (
 // undeclaredOpcodeMethods can be added to structs in this package to satisfy the shared.Opcode interface even if they don't declare all required methods.
 type undeclaredOpcodeMethods struct{}
 
-func (self *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
+func (self *undeclaredOpcodeMethods) AbortProgram() []shared.Opcode {
 	return []shared.Opcode(nil)
 }
 
-func (self *undeclaredOpcodeMethods) CreateAutomaticUndoError() error {
+func (self *undeclaredOpcodeMethods) AutomaticUndoError() error {
 	return errors.New("")
 }
 
-func (self *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
+func (self *undeclaredOpcodeMethods) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode(nil)
 }
 
@@ -28,7 +28,7 @@ func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
 	return nil
 }
 
-func (self *undeclaredOpcodeMethods) ShouldAutomaticallyUndoOnError() bool {
+func (self *undeclaredOpcodeMethods) ShouldUndoOnError() bool {
 	return false
 }
 

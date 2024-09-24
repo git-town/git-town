@@ -12,7 +12,7 @@ type RestoreOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RestoreOpenChanges) CreateContinueProgram() []shared.Opcode {
+func (self *RestoreOpenChanges) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{&DropStash{}}
 }
 
