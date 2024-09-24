@@ -10,7 +10,7 @@ The best way to enter your Bitbucket username is via the
 
 ## config file
 
-Since your API token is confidential, you cannot add it to the config file.
+Since usernames are user specific, you cannot add them to the config file.
 
 ## Git metadata
 
