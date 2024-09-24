@@ -41,8 +41,8 @@ Feature: sync the current feature branch without a tracking branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                           |
-      | feature | git push origin :feature                          |
-      |         | git reset --hard {{ sha 'local feature commit' }} |
+      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      |         | git push origin :feature                          |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
