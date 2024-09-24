@@ -42,6 +42,8 @@ const (
 	KeyAliasSetParent                      = Key("alias.set-parent")
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
+	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
+	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
@@ -86,6 +88,8 @@ const (
 var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingOriginHostname,
 	KeyHostingPlatform,
+	KeyBitbucketAppPassword,
+	KeyBitbucketUsername,
 	KeyContributionBranches,
 	KeyCreatePrototypeBranches,
 	KeyDefaultBranchType,

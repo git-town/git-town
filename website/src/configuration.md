@@ -16,6 +16,8 @@ manually is [here](configuration-file.md).
 Setting up an API access token takes only one minute and multiplies Git Town's
 utility. Make sure to set them up if possible.
 
-- [steps for GitHub](preferences/github-token.md)
-- [steps for GitLab](preferences/gitlab-token.md)
-- [steps for gitea](preferences/gitea-token.md)
+- GitHub: [access token](preferences/github-token.md)
+- GitLab: [access token](preferences/gitlab-token.md)
+- Bitbucket: [username](preferences/bitbucket-username.md) and
+  [app password](preferences/bitbucket-app-password.md)
+- gitea: [access token](preferences/gitea-token.md)

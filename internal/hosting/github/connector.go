@@ -112,7 +112,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	self.log.Log(colors.BoldGreen().Styled(proposal.Target.String()))
+	self.log.Success(proposal.Target.String())
 	return Some(proposal), nil
 }
 
@@ -126,7 +126,9 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Subject,
 	})
-	self.log.Ok()
+	if err != nil {
+		self.log.Ok()
+	}
 	return err
 }
 
