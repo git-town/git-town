@@ -12,6 +12,7 @@ import (
 // UpdateProposalBase updates the target of the proposal with the given number at the code hosting platform.
 type UpdateProposalBase struct {
 	NewTarget               gitdomain.LocalBranchName
+	OldTarget               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -29,4 +30,13 @@ func (self *UpdateProposalBase) Run(args shared.RunArgs) error {
 
 func (self *UpdateProposalBase) ShouldUndoOnError() bool {
 	return true
+}
+
+func (self *UpdateProposalBase) UndoExternalChangesProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&UpdateProposalBase{
+			NewTarget:      self.OldTarget,
+			ProposalNumber: self.ProposalNumber,
+		},
+	}
 }
