@@ -74,8 +74,8 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	query := fmt.Sprintf(`source.branch.name = %q AND destination.branch.name = %q`, branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:    "git-town-qa", // TODO
-		RepoSlug: "test-repo",   // TODO
+		Owner:    self.Organization,
+		RepoSlug: self.Repository,
 		Query:    query,
 		States:   []string{"open"},
 	})
