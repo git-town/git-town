@@ -16,7 +16,7 @@ type UpdateProposalHead struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *UpdateProposalHead) CreateAutomaticUndoError() error {
+func (self *UpdateProposalHead) AutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 
@@ -27,6 +27,6 @@ func (self *UpdateProposalHead) Run(args shared.RunArgs) error {
 	return hostingdomain.UnsupportedServiceError()
 }
 
-func (self *UpdateProposalHead) ShouldAutomaticallyUndoOnError() bool {
+func (self *UpdateProposalHead) ShouldUndoOnError() bool {
 	return true
 }

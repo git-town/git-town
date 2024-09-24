@@ -8,7 +8,7 @@ type ContinueRebase struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ContinueRebase) CreateAbortProgram() []shared.Opcode {
+func (self *ContinueRebase) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortRebase{},
 	}

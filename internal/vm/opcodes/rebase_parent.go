@@ -12,13 +12,13 @@ type RebaseParent struct {
 	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
 
-func (self *RebaseParent) CreateAbortProgram() []shared.Opcode {
+func (self *RebaseParent) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortRebase{},
 	}
 }
 
-func (self *RebaseParent) CreateContinueProgram() []shared.Opcode {
+func (self *RebaseParent) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ContinueRebase{},
 	}

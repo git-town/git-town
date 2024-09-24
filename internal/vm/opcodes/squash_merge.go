@@ -19,13 +19,13 @@ type SquashMerge struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *SquashMerge) CreateAbortProgram() []shared.Opcode {
+func (self *SquashMerge) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&DiscardOpenChanges{},
 	}
 }
 
-func (self *SquashMerge) CreateAutomaticUndoError() error {
+func (self *SquashMerge) AutomaticUndoError() error {
 	return errors.New(messages.ShipAbortedMergeError)
 }
 
@@ -68,6 +68,6 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SquashMerge) ShouldAutomaticallyUndoOnError() bool {
+func (self *SquashMerge) ShouldUndoOnError() bool {
 	return true
 }
