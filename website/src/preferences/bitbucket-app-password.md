@@ -20,11 +20,11 @@ The best way to enter the Bitbucket app password is via the
 
 ## config file
 
-Since your API token is confidential, you cannot add it to the config file.
+Since your App Password is confidential, you cannot add it to the config file.
 
 ## Git metadata
 
-You can configure the app password manually by running:
+You can configure the App Password manually by running:
 
 ```bash
 git config [--global] git-town.bitbucket-app-password <token>
