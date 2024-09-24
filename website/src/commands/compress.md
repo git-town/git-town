@@ -11,8 +11,8 @@ they are currently checked out. It doesn't compress
 [contribution](https://www.git-town.com/advanced-syncing#contribution-branches)
 branches.
 
-Branches must be in sync to compress them, so run `git town sync` and resolve merge
-conflicts before running this command.
+Branches must be in sync to compress them, so run `git town sync` and resolve
+merge conflicts before running this command.
 
 Assuming you have a feature branch with these commits:
 

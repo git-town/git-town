@@ -58,8 +58,8 @@ The first feature branch contains the refactor. We create a feature branch named
 git town hack 1-refactor
 ```
 
-[git town hack](commands/hack.md) creates a new feature branch off the main branch.
-We perform the refactor and commit it.
+[git town hack](commands/hack.md) creates a new feature branch off the main
+branch. We perform the refactor and commit it.
 
 ## Branch 2: rename foo
 
@@ -85,11 +85,11 @@ main
 
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
-Because we used `git town append` to create the new branch, Git Town knows about the
-lineage and creates the proposal (aka pull request) for branch `2-rename-foo`
-against branch `1-refactor`. This way, the proposal for branch `2-rename-foo`
-shows only the changes made in that branch (renaming the variable) and not the
-refactor made in branch 1.
+Because we used `git town append` to create the new branch, Git Town knows about
+the lineage and creates the proposal (aka pull request) for branch
+`2-rename-foo` against branch `1-refactor`. This way, the proposal for branch
+`2-rename-foo` shows only the changes made in that branch (renaming the
+variable) and not the refactor made in branch 1.
 
 ## Branch 3: rename bar
 
@@ -136,9 +136,9 @@ git town sync
 ```
 
 Because we created the branches with `git town append`, Git Town knows about the
-branch lineage and [git town sync](commands/sync.md) can update all branches in the
-right order. It updates the `main` branch, merges `main` into branch 1. Then it
-merges branch 1 into branch 2 and branch 2 into branch 3.
+branch lineage and [git town sync](commands/sync.md) can update all branches in
+the right order. It updates the `main` branch, merges `main` into branch 1. Then
+it merges branch 1 into branch 2 and branch 2 into branch 3.
 
 ## Shipping the refactor
 
@@ -148,9 +148,9 @@ We got the approval for the refactor from step 1. Let’s ship it!
 git town ship 1-refactor
 ```
 
-You have to use the [git town ship](commands/ship.md) command here because it updates
-the lineage that Git Town keeps track of. With branch `1-refactor` shipped, our
-lineage now looks like this:
+You have to use the [git town ship](commands/ship.md) command here because it
+updates the lineage that Git Town keeps track of. With branch `1-refactor`
+shipped, our lineage now looks like this:
 
 ```
 main
@@ -161,8 +161,8 @@ main
 ```
 
 If you ship feature branches via the code hosting API or web UI, run
-`git town sync --all`, or `git town sync` on the youngest child branch, to update the
-lineage.
+`git town sync --all`, or `git town sync` on the youngest child branch, to
+update the lineage.
 
 ## Synchronizing our work with the rest of the world
 
@@ -195,7 +195,8 @@ Let’s stop here and review what we have done.
 - `git town hack` creates a feature branch as a child of the main branch.
 - `git town append` creates a feature branch as a child of the current feature
   branch.
-- `git town sync` keeps a feature branch chain up to date with the rest of the world
+- `git town sync` keeps a feature branch chain up to date with the rest of the
+  world
 - `git town ship` ships the oldest feature branch in a branch chain.
 
 Single-responsibility branches are easier to reason about and faster to
@@ -212,9 +213,9 @@ _Branch discipline:_ when you have an idea that is different from what you
 currently work on, resist the urge to code it in the current feature branch.
 Implement it in its own feature, parent, or child branch.
 
-_Keep the entire branch chain in sync:_ Make sure you run `git town sync --all` or
-`git town sync` on the youngest child branch to keep the entire chain of feature
-branches synced.
+_Keep the entire branch chain in sync:_ Make sure you run `git town sync --all`
+or `git town sync` on the youngest child branch to keep the entire chain of
+feature branches synced.
 
 _Avoid unnecessary chaining:_ If your feature branches don't depend on each
 other, put them in (independent) top-level feature branches. This way you can

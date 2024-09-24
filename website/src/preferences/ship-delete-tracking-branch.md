@@ -5,9 +5,10 @@ Some code hosting platforms like
 and
 [GitLab](http://ncugw.phy.ncu.edu.tw/gitlab/help/user/project/merge_requests/getting_started.md#deleting-the-source-branch)
 can delete the tracking branch when shipping via their API. In this case the
-tracking branch is already gone when `git town ship` tries to delete it, resulting in
-an error. To prevent this error, set the _ship-delete-tracking-branch_ setting
-to `false` so that Git Town does not try to delete the tracking branch.
+tracking branch is already gone when `git town ship` tries to delete it,
+resulting in an error. To prevent this error, set the
+_ship-delete-tracking-branch_ setting to `false` so that Git Town does not try
+to delete the tracking branch.
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).

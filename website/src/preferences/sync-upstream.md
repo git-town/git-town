@@ -8,8 +8,8 @@ codebases and want to stay in sync with the codebase they are forked from.
 
 When set to `true` (the default value), `git town sync` also updates the local
 [main-branch](main-branch.md) with changes from its counterpart in the
-`upstream` remote. When set to `false`, `git town sync` does not pull in updates from
-upstream even if that remote exists.
+`upstream` remote. When set to `false`, `git town sync` does not pull in updates
+from upstream even if that remote exists.
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).

@@ -7,8 +7,9 @@ branches with changes from their parent and tracking branches.
 
 ### merge
 
-When using the "merge" sync-feature-strategy, [git town sync](../commands/sync.md)
-merges the parent and tracking branches into local feature branches.
+When using the "merge" sync-feature-strategy,
+[git town sync](../commands/sync.md) merges the parent and tracking branches
+into local feature branches.
 
 `merge` is the default value because it is the safest and easiest option.
 
@@ -40,14 +41,14 @@ separate interactive rebase after the sync. At this point another sync will
 succeed because the commits you have just cleaned up are now a part of your
 local Git history.
 
-The rule of thumb is that pulling in new commits via `git town sync` and cleaning up
-old commits must happen separately from each other. Only then can Git guarantee
-that the necessary force-push happens without losing commits.
+The rule of thumb is that pulling in new commits via `git town sync` and
+cleaning up old commits must happen separately from each other. Only then can
+Git guarantee that the necessary force-push happens without losing commits.
 
 ### compress
 
-When using the `compress` sync strategy, [git town sync](../commands/sync.md) first
-merges the tracking and parent branches and then
+When using the `compress` sync strategy, [git town sync](../commands/sync.md)
+first merges the tracking and parent branches and then
 [compresses](../commands/compress.md) the synced branch.
 
 This sync strategy is useful when you want all your pull requests to always
