@@ -9,8 +9,8 @@ feature branch and it's existing parent.
 If your Git workspace is clean (no uncommitted changes), it also
 [syncs](sync.md) the current feature branch to ensure you work on top of the
 current state of the repository. If the workspace is not clean (contains
-uncommitted changes), `git town prepend` does not perform this sync to let you commit
-your open changes.
+uncommitted changes), `git town prepend` does not perform this sync to let you
+commit your open changes.
 
 If the branch you call this command from has a proposal, this command updates
 it. To do so, it pushes the new branch.
@@ -23,8 +23,8 @@ main
 * feature-2
 ```
 
-We are on the `feature-2` branch. After running `git town prepend feature-1`, our
-repository has this branch setup:
+We are on the `feature-2` branch. After running `git town prepend feature-1`,
+our repository has this branch setup:
 
 ```
 main
@@ -51,12 +51,12 @@ determine the repository state.
 
 ### Configuration
 
-If [push-new-branches](../preferences/push-new-branches.md) is set, `git town hack`
-creates a remote tracking branch for the new feature branch. This behavior is
-disabled by default to make `git town hack` run fast. The first run of `git town sync`
-will create the remote tracking branch.
+If [push-new-branches](../preferences/push-new-branches.md) is set,
+`git town hack` creates a remote tracking branch for the new feature branch.
+This behavior is disabled by default to make `git town hack` run fast. The first
+run of `git town sync` will create the remote tracking branch.
 
 If the configuration setting
 [create-prototype-branches](../preferences/create-prototype-branches.md) is set,
-
+`git prepend` always creates a
 [prototype branch](../branch-types.md#prototype-branches).
