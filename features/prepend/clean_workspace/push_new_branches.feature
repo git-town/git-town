@@ -36,9 +36,9 @@ Feature: auto-push new branches
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND              |
-      | new    | git push origin :new |
-      |        | git checkout old     |
+      | new    | git checkout old     |
       | old    | git branch -D new    |
+      |        | git push origin :new |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

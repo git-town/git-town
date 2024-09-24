@@ -38,9 +38,9 @@ Feature: auto-push new branches
       | BRANCH | COMMAND              |
       | new    | git add -A           |
       |        | git stash            |
-      |        | git push origin :new |
       |        | git checkout old     |
       | old    | git branch -D new    |
+      |        | git push origin :new |
       |        | git stash pop        |
     And the current branch is now "old"
     And the initial commits exist now
