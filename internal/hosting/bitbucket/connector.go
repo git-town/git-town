@@ -130,13 +130,13 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
-	proposal, err := parsePullRequest(proposal3)
+	proposal4, err := parsePullRequest(proposal3)
 	if err != nil {
 		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), nil
 	}
-	self.log.Log(colors.BoldGreen().Styled("#" + strconv.Itoa(proposal.Number)))
-	return Some(proposal), nil
+	self.log.Log(colors.BoldGreen().Styled("#" + strconv.Itoa(proposal4.Number)))
+	return Some(proposal4), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
