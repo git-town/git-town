@@ -64,12 +64,13 @@ Feature: display all executed Git commands
       |          | backend  | git branch -vva --sort=refname                |
       |          | backend  | git remote get-url origin                     |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |          | backend  | git remote get-url origin                     |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
       |          | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
-      Ran 12 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is still "existing"
     And the initial commits exist now
