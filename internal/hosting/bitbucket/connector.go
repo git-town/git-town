@@ -180,13 +180,13 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[hostingdomain.Proposal](), nil
 	}
-	size := int(size2)
-	if size == 0 {
+	size3 := int(size2)
+	if size3 == 0 {
 		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
 	}
-	if size > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size, branch))
+	if size3 > 1 {
+		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
 		return None[hostingdomain.Proposal](), nil
 	}
 	values1, has := response2["values"]
