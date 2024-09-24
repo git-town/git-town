@@ -14,13 +14,13 @@ type MergeFastForward struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *MergeFastForward) CreateAbortProgram() []shared.Opcode {
+func (self *MergeFastForward) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortMerge{},
 	}
 }
 
-func (self *MergeFastForward) CreateAutomaticUndoError() error {
+func (self *MergeFastForward) AutomaticUndoError() error {
 	return errors.New(messages.ShipAbortedMergeError)
 }
 
@@ -28,6 +28,6 @@ func (self *MergeFastForward) Run(args shared.RunArgs) error {
 	return args.Git.MergeFastForward(args.Frontend, self.Branch)
 }
 
-func (self *MergeFastForward) ShouldAutomaticallyUndoOnError() bool {
+func (self *MergeFastForward) ShouldUndoOnError() bool {
 	return true
 }
