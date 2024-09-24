@@ -162,6 +162,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
 		})
+	}
 
 	result.AddProgram(args.UndoAPIProgram)
 
