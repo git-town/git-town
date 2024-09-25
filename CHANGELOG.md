@@ -6,9 +6,15 @@ Git Town 16.3 provides major new features that have been requested for years.
 
 #### New Features
 
-- Git Town can now use the proposals on your code hosting platform to share lineage information! If the parent for a branch is not known, but a proposal for this branch exists, Git Town will use the parent from the proposal instead of querying the parent branch from the user ([more info](https://github.com/git-town/git-town/issues/2745)).
-- Git Town now fully supports the Bitbucket Cloud API ([more info](https://github.com/git-town/git-town/issues/973)).
-- `git town undo` now also undoes changes made to proposals ([more info](https://github.com/git-town/git-town/issues/4049)).
+- Full integration of proposals ([#2745](https://github.com/git-town/git-town/issues/2745)):
+  - Git Town now updates associated proposals when you rename, prepend, remove, or change the parent of a branch.
+  - If the parent of a branch is unknown, but that branch has an open pull request, Git Town now uses the base branch of the pull request as the parent, instead of querying the parent branch from the user.
+  - `git town undo` now also undoes changes made to proposals ([#4049](https://github.com/git-town/git-town/issues/4049)).
+- Full integration with the API of all supported hosting platforms.
+  - Bitbucket Cloud API ([#973](https://github.com/git-town/git-town/issues/973))
+  - gitea API ([#4044](https://github.com/git-town/git-town/pull/4044))
+- `git town rename-branch` now maintains the Git configuration and reflog of the branch ([#4023](https://github.com/git-town/git-town/issues/4023)).
+- Git Town now logs all API requests in the CLI output and prints useful information like pull request numbers and branch names that it learns from the API ([#4020](https://github.com/git-town/git-town/pull/4020), [#4026](https://github.com/git-town/git-town/pull/4026)).
 
 ## 16.2.1 (2024-09-12)
 
