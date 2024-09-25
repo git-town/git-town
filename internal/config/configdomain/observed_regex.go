@@ -2,6 +2,7 @@ package configdomain
 
 import . "github.com/git-town/git-town/v16/pkg/prelude"
 
+// configuration setting that allows definining branches matching this regular expression as observed branches
 type ObservedRegex struct {
 	VerifiedRegex
 }
