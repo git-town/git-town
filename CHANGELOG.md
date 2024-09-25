@@ -1,5 +1,21 @@
 # Git Town Changelog
 
+## 16.3.0 (2024-09-24)
+
+Git Town 16.3 is here, and it's packed with some long-requested features we've been working towards for years!
+
+Big shoutout to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @kevgo, @mw00120, @ruudk, @stephenwade, @tranhl, @waldyrious, @zodman for your insightful contributions, feedback, and ideas. Git Town is a much better product thanks to you and the 52 shipped PRs and 6 resolved issues in this release!
+
+#### New Features
+
+- Full integration of proposals ([#2745](https://github.com/git-town/git-town/issues/2745)):
+  - Git Town now updates all affected pull requests when you rename, prepend, or remove a branch or change its parent.
+  - If the parent of a branch is unknown but there's an open PR, Git Town will now grab the PR’s base branch as the parent.
+  - `git town undo` now also reverts any changes made to pull requests ([#4049](https://github.com/git-town/git-town/issues/4049)).
+- Full integration with the Bitbucket Cloud API ([#973](https://github.com/git-town/git-town/issues/973)) and the gitea API ([#4044](https://github.com/git-town/git-town/pull/4044)).
+- `git town rename-branch` now maintains the Git configuration and reflog for renamed branches ([#4023](https://github.com/git-town/git-town/issues/4023)).
+- Git Town now logs all API interactions in the CLI, showing details like PR numbers and branch names it retrieves from the APIs. This makes it easier to see where information and possible slowness come from ([#4020](https://github.com/git-town/git-town/pull/4020), [#4026](https://github.com/git-town/git-town/pull/4026)).
+
 ## 16.2.1 (2024-09-12)
 
 Thanks to @kevgo, @ruudk, @stephenwade, @zodman for reporting and fixing unintuitive behavior that can and should be improved, leading to 13 shipped PRs and 2 resolved issues!
