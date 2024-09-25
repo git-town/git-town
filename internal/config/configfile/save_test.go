@@ -152,6 +152,18 @@ perennials = ["one", "two"]
 # If you are not sure, leave this empty.
 perennial-regex = ""
 
+# All branches whose name matches this regular expression
+# are also considered contribution branches.
+#
+# If you are not sure, leave this empty.
+contribution-regex = ""
+
+# All branches whose name matches this regular expression
+# are also considered observed branches.
+#
+# If you are not sure, leave this empty.
+observed-regex = ""
+
 [hosting]
 
 # Knowing the type of code hosting platform allows Git Town
@@ -278,6 +290,18 @@ perennials = []
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
+
+# All branches whose name matches this regular expression
+# are also considered contribution branches.
+#
+# If you are not sure, leave this empty.
+contribution-regex = ""
+
+# All branches whose name matches this regular expression
+# are also considered observed branches.
+#
+# If you are not sure, leave this empty.
+observed-regex = ""
 
 [hosting]
 

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 )
 
 func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
@@ -44,7 +45,11 @@ func RenderTOML(config *configdomain.UnvalidatedConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)) + "\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialRegexHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.PerennialRegex))
+	result.WriteString(fmt.Sprintf("perennial-regex = %q\n\n", config.PerennialRegex))
+	result.WriteString(TOMLComment(messages.ContributionRegexHelp) + "\n")
+	result.WriteString(fmt.Sprintf("contribution-regex = %q\n\n", config.ContributionRegex))
+	result.WriteString(TOMLComment(strings.TrimSpace(messages.ObservedRegexHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("observed-regex = %q\n", config.ObservedRegex))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
 	if platform, has := config.HostingPlatform.Get(); has {
