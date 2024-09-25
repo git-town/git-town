@@ -23,6 +23,12 @@ When given an existing contribution, observed, parked, or prototype branch,
 When given no arguments, `git town hack` converts the current contribution,
 observed, parked, or prototype branch into a feature branch.
 
+### --detached / -d
+
+The `--detached` aka `-d` flag does not pull updates from the main or perennial
+branch. This allows you to build out your branch stack and decide when to pull
+in changes from other developers.
+
 ### --dry-run
 
 The `--dry-run` flag allows to test-drive this command. It prints the Git
