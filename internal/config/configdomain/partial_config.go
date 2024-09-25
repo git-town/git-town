@@ -13,6 +13,7 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
+	ContributionRegex        Option[ContributionRegex]
 	CreatePrototypeBranches  Option[CreatePrototypeBranches]
 	DefaultBranchType        Option[DefaultBranchType]
 	FeatureRegex             Option[FeatureRegex]
@@ -83,11 +84,14 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
+	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
+		ContributionRegex:        contributionRegex,
 		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,
 		FeatureRegex:             featureRegex,

@@ -15,6 +15,7 @@ type UnvalidatedConfig struct {
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
+	ContributionRegex        Option[ContributionRegex]
 	CreatePrototypeBranches  CreatePrototypeBranches
 	DefaultBranchType        DefaultBranchType
 	FeatureRegex             Option[FeatureRegex]
@@ -66,6 +67,9 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	}
 	if self.MatchesFeatureBranchRegex(branch) {
 		return BranchTypeFeatureBranch
+	}
+	if self.MatchesContributionRegex(branch) {
+		return BranchTypeContributionBranch
 	}
 	return self.DefaultBranchType.BranchType
 }
@@ -119,6 +123,13 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.PerennialBranches
 }
 
+func (self *UnvalidatedConfig) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
+	if contributionRegex, has := self.ContributionRegex.Get(); has {
+		return contributionRegex.MatchesBranch(branch)
+	}
+	return false
+}
+
 func (self *UnvalidatedConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
 	if featureRegex, has := self.FeatureRegex.Get(); has {
 		return featureRegex.MatchesBranch(branch)
@@ -156,6 +167,7 @@ func DefaultConfig() UnvalidatedConfig {
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
 		ContributionBranches:     gitdomain.NewLocalBranchNames(),
+		ContributionRegex:        None[ContributionRegex](),
 		CreatePrototypeBranches:  false,
 		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
 		FeatureRegex:             None[FeatureRegex](),

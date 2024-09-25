@@ -45,6 +45,7 @@ const (
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
+	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
@@ -91,6 +92,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyContributionBranches,
+	KeyContributionRegex,
 	KeyCreatePrototypeBranches,
 	KeyDefaultBranchType,
 	KeyDeprecatedCodeHostingDriver,
