@@ -44,7 +44,7 @@ You can make any feature branch a contribution branch by running
 branch back to a feature branch by running [git town hack](commands/hack.md) on
 it. You can also define a
 [contribution-regex](preferences/contribution-regex.md) in your Git
-configuration or the config file in specific situations.
+configuration or the config file.
 
 ## Observed branches
 
@@ -62,7 +62,9 @@ commits made to an observed branch to its tracking branch.
 
 You can make any feature branch an observed branch by running
 [git town observe](commands/observe.md) on it. Convert an observed branch back
-to a feature branch by running [git town hack](commands/hack.md) on it.
+to a feature branch by running [git town hack](commands/hack.md) on it. You can
+also define an [observed-regex](preferences/observed-regex.md) in your Git
+configuration or the config file.
 
 ## Parked Branches
 
