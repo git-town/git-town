@@ -38,6 +38,7 @@ Syncs the main branch, forks a new feature branch with the given name off the ma
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -48,16 +49,17 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			return executeHack(args, readDetachedFlag(cmd), readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeHack(args []string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeHack(args []string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -69,7 +71,7 @@ func executeHack(args []string, dryRun configdomain.DryRun, prototype configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, dryRun, prototype, verbose)
+	data, exit, err := determineHackData(args, repo, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -163,7 +165,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -253,6 +255,9 @@ func determineHackData(args []string, repo execute.OpenRepoResult, dryRun config
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
+	if detached {
+		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+	}
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
