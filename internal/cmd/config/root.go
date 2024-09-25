@@ -60,6 +60,7 @@ func printConfig(config configdomain.UnvalidatedConfig) {
 	print.Entry("feature regex", format.StringSetting(config.FeatureRegex.String()))
 	print.Entry("parked branches", format.StringsSetting((config.ParkedBranches.Join(", "))))
 	print.Entry("contribution branches", format.StringsSetting((config.ContributionBranches.Join(", "))))
+	print.Entry("contribution regex", format.StringsSetting((config.ContributionRegex.String())))
 	print.Entry("observed branches", format.StringsSetting((config.ObservedBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
