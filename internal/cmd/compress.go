@@ -43,10 +43,10 @@ You can provide a custom commit message with the -m switch.
 `
 
 func compressCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   compressCommand,
 		Args:  cobra.NoArgs,
@@ -57,9 +57,9 @@ func compressCmd() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	addStackFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 

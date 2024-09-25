@@ -35,8 +35,8 @@ const killHelp = `
 Deletes the current or provided branch from the local and origin repositories. Does not delete perennial branches nor the main branch.`
 
 func killCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),

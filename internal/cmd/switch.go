@@ -27,10 +27,10 @@ const switchDesc = "Display the local branches visually and allows switching bet
 
 func switchCmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.SwitchMerge()
 	addTypeFlag, readTypeFlag := flags.BranchType()
-	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -48,8 +48,8 @@ func switchCmd() *cobra.Command {
 	addAllFlag(&cmd)
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addTypeFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
