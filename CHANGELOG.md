@@ -10,7 +10,7 @@ Big shoutout to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @ke
 
 - Full integration of proposals ([#2745](https://github.com/git-town/git-town/issues/2745)):
   - Git Town now updates all affected pull requests when you rename, prepend, or remove a branch or change its parent.
-  - If the parent branch is unknown but there's an open PR, Git Town will now grab the PR’s base branch as the parent.
+  - If the parent of a branch is unknown but there's an open PR, Git Town will now grab the PR’s base branch as the parent.
   - `git town undo` now also reverts any changes made to pull requests ([#4049](https://github.com/git-town/git-town/issues/4049)).
 - Full integration with the Bitbucket Cloud API ([#973](https://github.com/git-town/git-town/issues/973)) and the gitea API ([#4044](https://github.com/git-town/git-town/pull/4044)).
 - `git town rename-branch` now maintains the Git configuration and reflog for renamed branches ([#4023](https://github.com/git-town/git-town/issues/4023)).
