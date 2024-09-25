@@ -37,6 +37,7 @@ Syncs the parent branch, cuts a new feature branch with the given name off the p
 See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -47,16 +48,17 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePrepend(args, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			return executePrepend(args, readDetachedFlag(cmd), readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePrepend(args []string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executePrepend(args []string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -68,7 +70,7 @@ func executePrepend(args []string, dryRun configdomain.DryRun, prototype configd
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, dryRun, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -126,7 +128,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -190,6 +192,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, dryRun con
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	if detached {
+		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+	}
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
