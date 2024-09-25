@@ -12,7 +12,6 @@ Feature: append a new feature branch to an existing feature branch in detached m
     And the current branch is "existing"
     When I run "git-town append new --detached"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
