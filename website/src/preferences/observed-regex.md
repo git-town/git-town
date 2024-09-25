@@ -17,7 +17,7 @@ observed-regex = "^renovate/"
 
 ## configure in Git metadata
 
-To manually set the feature regex, use the following command:
+To manually set the feature regex, run this command:
 
 ```bash
 git config [--global] git-town.observed-regex '^renovate/'
