@@ -36,6 +36,7 @@ See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	cmd := cobra.Command{
@@ -45,16 +46,17 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAppend(args[0], readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			return executeAppend(args[0], readDetachedFlag(cmd), readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -70,7 +72,7 @@ func executeAppend(arg string, dryRun configdomain.DryRun, prototype configdomai
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data)
+	runProgram := appendProgram(data, detached)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -121,7 +123,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -183,6 +185,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	if detached {
+		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+	}
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
