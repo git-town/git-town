@@ -47,7 +47,10 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 	if hasTrackingBranch {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	args.program.Value.Add(&opcodes.MergeParent{
+		CurrentBranch:               args.localName,
+		ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	})
 	if firstCommitMessage, branchHasCommits := args.firstCommitMessage.Get(); branchHasCommits {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
 		args.program.Value.Add(&opcodes.CommitOpenChanges{Message: firstCommitMessage})
@@ -62,7 +65,10 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.localName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+	args.program.Value.Add(&opcodes.MergeParent{
+		CurrentBranch:               args.localName,
+		ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	})
 }
 
 // syncs the given feature branch using the "rebase" sync strategy
