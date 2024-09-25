@@ -48,9 +48,9 @@ When run on a perennial branch:
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
@@ -61,8 +61,8 @@ func renameBranchCommand() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addForceFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 

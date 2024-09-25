@@ -38,9 +38,9 @@ Syncs the main branch, forks a new feature branch with the given name off the ma
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",

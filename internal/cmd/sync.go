@@ -49,12 +49,12 @@ When run on the main branch or a perennial branch:
 If the repository contains an "upstream" remote, syncs the main branch with its upstream counterpart. You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: "basic",
@@ -67,10 +67,10 @@ func syncCmd() *cobra.Command {
 	}
 	addAllFlag(&cmd)
 	addDetachedFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addNoPushFlag(&cmd)
 	addStackFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 

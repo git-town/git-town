@@ -12,11 +12,11 @@ import (
 )
 
 func newPullRequestCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -31,11 +31,11 @@ func newPullRequestCommand() *cobra.Command {
 			return result
 		},
 	}
-	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
-	addTitleFlag(&cmd)
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addTitleFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
