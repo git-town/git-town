@@ -4,6 +4,8 @@
 
 Git Town 16.3 provides major new features that have been requested for years.
 
+Massive thanks to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @kevgo, @mw00120, @ruudk, @stephenwade, @tranhl, @waldyrious, @zodman for really helpful feedback, ideas, and contributions that make Git Town a much better product and resulted in 52 shipped PRs and 6 resolved issues!
+
 #### New Features
 
 - Full integration of proposals ([#2745](https://github.com/git-town/git-town/issues/2745)):
