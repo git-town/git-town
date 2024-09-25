@@ -7,13 +7,13 @@ Feature: show the configuration
   @this
   Scenario: all configured in Git, no stacked changes
     Given Git Town setting "perennial-branches" is "qa staging"
-    And Git Town setting "perennial-regex" is "^release-.*"
+    And Git Town setting "perennial-regex" is "^release-"
     And Git Town setting "contribution-regex" is "^renovate/"
     And Git Town setting "observed-branches" is "observed-1 observed-2"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
     And Git Town setting "default-branch-type" is "observed"
-    And Git Town setting "feature-regex" is "user-.*"
+    And Git Town setting "feature-regex" is "^user-.*$"
     And Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town config"
     Then it prints:
@@ -21,9 +21,9 @@ Feature: show the configuration
       Branches:
         main branch: main
         perennial branches: qa, staging
-        perennial regex: release-.*
+        perennial regex: ^release-
         default branch type: observed
-        feature regex: user-.*
+        feature regex: ^user-.*$
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
@@ -59,9 +59,9 @@ Feature: show the configuration
       [branches]
       main = "main"
       perennials = [ "public", "staging" ]
-      perennial-regex = "release-.*"
+      perennial-regex = "^release-"
       default-type = "observed"
-      feature-regex = "user-.*"
+      feature-regex = "^user-.*$"
 
       [hosting]
       platform = "github"
@@ -77,9 +77,9 @@ Feature: show the configuration
       Branches:
         main branch: main
         perennial branches: public, staging
-        perennial regex: release-.*
+        perennial regex: ^release-
         default branch type: observed
-        feature regex: user-.*
+        feature regex: ^user-.*$
         parked branches: (none)
         contribution branches: (none)
         observed branches: (none)
@@ -108,7 +108,7 @@ Feature: show the configuration
     And Git Town setting "observed-branches" is "observed-1 observed-2"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
-    And Git Town setting "perennial-regex" is "git-perennial-.*"
+    And Git Town setting "perennial-regex" is "^git-perennial-"
     And Git Town setting "feature-regex" is "git-feature-.*"
     And Git Town setting "default-branch-type" is "observed"
     And Git Town setting "push-new-branches" is "false"
@@ -129,9 +129,9 @@ Feature: show the configuration
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
-      perennial-regex = "config-perennial-.*"
+      perennial-regex = "^config-perennial-"
       default-type = "contribution"
-      feature-regex = "config-file-.*"
+      feature-regex = "^config-feature-.*$"
 
       [hosting]
       platform = "github"
@@ -147,7 +147,7 @@ Feature: show the configuration
       Branches:
         main branch: git-main
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
-        perennial regex: git-perennial-.*
+        perennial regex: ^git-perennial-
         default branch type: observed
         feature regex: git-feature-.*
         parked branches: parked-1, parked-2
