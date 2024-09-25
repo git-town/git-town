@@ -68,11 +68,11 @@ func executeAppend(arg string, detached configdomain.Detached, dryRun configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, dryRun, prototype, verbose)
+	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data, detached)
+	runProgram := appendProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
