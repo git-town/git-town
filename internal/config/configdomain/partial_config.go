@@ -27,6 +27,7 @@ type PartialConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
+	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -86,6 +87,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
 	ec.Check(err)
+	observedRegex, err := ParseObservedRegex(snapshot[KeyObservedRegex])
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
@@ -105,6 +108,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
 		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyObservedBranches]),
+		ObservedRegex:            observedRegex,
 		Offline:                  offline,
 		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyParkedBranches]),
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
@@ -146,6 +150,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
+		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
 		ParkedBranches:           append(other.ParkedBranches, self.ParkedBranches...),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
@@ -184,6 +189,7 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		Lineage:                  self.Lineage,
 		MainBranch:               self.MainBranch,
 		ObservedBranches:         self.ObservedBranches,
+		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
 		ParkedBranches:           self.ParkedBranches,
 		PerennialBranches:        self.PerennialBranches,

@@ -29,6 +29,7 @@ type UnvalidatedConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	ObservedBranches         gitdomain.LocalBranchNames
+	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -70,6 +71,9 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	}
 	if self.MatchesContributionRegex(branch) {
 		return BranchTypeContributionBranch
+	}
+	if self.MatchesObservedRegex(branch) {
+		return BranchTypeObservedBranch
 	}
 	return self.DefaultBranchType.BranchType
 }
@@ -137,6 +141,13 @@ func (self *UnvalidatedConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalB
 	return false
 }
 
+func (self *UnvalidatedConfig) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
+	if observedRegex, has := self.ObservedRegex.Get(); has {
+		return observedRegex.MatchesBranch(branch)
+	}
+	return false
+}
+
 func (self *UnvalidatedConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
@@ -181,6 +192,7 @@ func DefaultConfig() UnvalidatedConfig {
 		Lineage:                  NewLineage(),
 		MainBranch:               None[gitdomain.LocalBranchName](),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
+		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
 		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),

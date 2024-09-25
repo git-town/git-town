@@ -62,6 +62,7 @@ func printConfig(config configdomain.UnvalidatedConfig) {
 	print.Entry("contribution branches", format.StringsSetting((config.ContributionBranches.Join(", "))))
 	print.Entry("contribution regex", format.StringsSetting((config.ContributionRegex.String())))
 	print.Entry("observed branches", format.StringsSetting((config.ObservedBranches.Join(", "))))
+	print.Entry("observed regex", format.StringsSetting((config.ObservedRegex.String())))
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.Offline.IsTrue()))

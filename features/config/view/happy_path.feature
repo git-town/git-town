@@ -10,6 +10,7 @@ Feature: show the configuration
     And Git Town setting "perennial-regex" is "^release-"
     And Git Town setting "contribution-regex" is "^renovate/"
     And Git Town setting "observed-branches" is "observed-1 observed-2"
+    And Git Town setting "observed-regex" is "^dependabot/"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
     And Git Town setting "default-branch-type" is "observed"
@@ -28,6 +29,7 @@ Feature: show the configuration
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
         observed branches: observed-1, observed-2
+        observed regex: ^dependabot/
 
       Configuration:
         offline: no
@@ -62,6 +64,7 @@ Feature: show the configuration
       perennial-regex = "^release-"
       default-type = "observed"
       feature-regex = "^user-.*$"
+      contribution-regex = "^renovate/"
 
       [hosting]
       platform = "github"
@@ -82,7 +85,9 @@ Feature: show the configuration
         feature regex: ^user-.*$
         parked branches: (none)
         contribution branches: (none)
+        contribution regex: ^renovate/
         observed branches: (none)
+        observed regex: ^dependabot/
 
       Configuration:
         offline: no

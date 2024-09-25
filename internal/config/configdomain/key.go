@@ -66,6 +66,7 @@ const (
 	KeyHostingPlatform                     = Key("git-town.hosting-platform")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyObservedBranches                    = Key("git-town.observed-branches")
+	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyOffline                             = Key("git-town.offline")
 	KeyParkedBranches                      = Key("git-town.parked-branches")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
@@ -113,6 +114,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGitUserName,
 	KeyMainBranch,
 	KeyObservedBranches,
+	KeyObservedRegex,
 	KeyOffline,
 	KeyParkedBranches,
 	KeyPerennialBranches,
