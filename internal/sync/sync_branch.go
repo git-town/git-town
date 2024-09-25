@@ -111,11 +111,20 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Value.Add(&opcodes.MergeParent{
+			CurrentBranch:               args.branch,
+			ParentActiveInOtherWorktree: args.parentOtherWorktree,
+		})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Value.Add(&opcodes.RebaseParent{
+			CurrentBranch:               args.branch,
+			ParentActiveInOtherWorktree: args.parentOtherWorktree,
+		})
 	case configdomain.SyncFeatureStrategyCompress:
-		args.program.Value.Add(&opcodes.MergeParent{CurrentBranch: args.branch, ParentActiveInOtherWorktree: args.parentOtherWorktree})
+		args.program.Value.Add(&opcodes.MergeParent{
+			CurrentBranch:               args.branch,
+			ParentActiveInOtherWorktree: args.parentOtherWorktree,
+		})
 	}
 }
 
