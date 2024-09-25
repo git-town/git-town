@@ -20,7 +20,9 @@ Feature: show the configuration from a subfolder
         feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
+        contribution regex: (none)
         observed branches: (none)
+        observed regex: (none)
 
       Configuration:
         offline: no

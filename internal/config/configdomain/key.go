@@ -45,6 +45,7 @@ const (
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
+	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
@@ -65,6 +66,7 @@ const (
 	KeyHostingPlatform                     = Key("git-town.hosting-platform")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyObservedBranches                    = Key("git-town.observed-branches")
+	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyOffline                             = Key("git-town.offline")
 	KeyParkedBranches                      = Key("git-town.parked-branches")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
@@ -91,6 +93,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyContributionBranches,
+	KeyContributionRegex,
 	KeyCreatePrototypeBranches,
 	KeyDefaultBranchType,
 	KeyDeprecatedCodeHostingDriver,
@@ -111,6 +114,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGitUserName,
 	KeyMainBranch,
 	KeyObservedBranches,
+	KeyObservedRegex,
 	KeyOffline,
 	KeyParkedBranches,
 	KeyPerennialBranches,

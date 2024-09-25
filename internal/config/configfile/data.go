@@ -14,11 +14,13 @@ type Data struct {
 }
 
 type Branches struct {
-	DefaultType    *string  `toml:"default-type"`
-	FeatureRegex   *string  `toml:"feature-regex"`
-	Main           *string  `toml:"main"`
-	PerennialRegex *string  `toml:"perennial-regex"`
-	Perennials     []string `toml:"perennials"`
+	ContributionRegex *string  `toml:"contribution-regex"`
+	DefaultType       *string  `toml:"default-type"`
+	FeatureRegex      *string  `toml:"feature-regex"`
+	Main              *string  `toml:"main"`
+	ObservedRegex     *string  `toml:"observed-regex"`
+	PerennialRegex    *string  `toml:"perennial-regex"`
+	Perennials        []string `toml:"perennials"`
 }
 
 func (self Branches) IsEmpty() bool {

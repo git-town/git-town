@@ -7,7 +7,9 @@ Feature: show the configuration
   Scenario: all configured in Git, no stacked changes
     Given Git Town setting "perennial-branches" is "qa staging"
     And Git Town setting "perennial-regex" is "^release-"
+    And Git Town setting "contribution-regex" is "^renovate/"
     And Git Town setting "observed-branches" is "observed-1 observed-2"
+    And Git Town setting "observed-regex" is "^dependabot/"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
     And Git Town setting "default-branch-type" is "observed"
@@ -24,7 +26,9 @@ Feature: show the configuration
         feature regex: ^user-.*$
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
+        contribution regex: ^renovate/
         observed branches: observed-1, observed-2
+        observed regex: ^dependabot/
 
       Configuration:
         offline: no
@@ -59,6 +63,8 @@ Feature: show the configuration
       perennial-regex = "^release-"
       default-type = "observed"
       feature-regex = "^user-.*$"
+      contribution-regex = "^renovate/"
+      observed-regex = "^dependabot/"
 
       [hosting]
       platform = "github"
@@ -79,7 +85,9 @@ Feature: show the configuration
         feature regex: ^user-.*$
         parked branches: (none)
         contribution branches: (none)
+        contribution regex: ^renovate/
         observed branches: (none)
+        observed regex: ^dependabot/
 
       Configuration:
         offline: no
@@ -104,6 +112,8 @@ Feature: show the configuration
     And Git Town setting "perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git Town setting "observed-branches" is "observed-1 observed-2"
     And Git Town setting "contribution-branches" is "contribution-1 contribution-2"
+    And Git Town setting "contribution-regex" is "^git-contribution-regex"
+    And Git Town setting "observed-regex" is "^git-observed-regex"
     And Git Town setting "parked-branches" is "parked-1 parked-2"
     And Git Town setting "perennial-regex" is "^git-perennial-"
     And Git Town setting "feature-regex" is "git-feature-.*"
@@ -129,6 +139,8 @@ Feature: show the configuration
       perennial-regex = "^config-perennial-"
       default-type = "contribution"
       feature-regex = "^config-feature-.*$"
+      contribution-regex = "^config-contribution-regex"
+      observed-regex = "^config-observed-regex"
 
       [hosting]
       platform = "github"
@@ -149,7 +161,9 @@ Feature: show the configuration
         feature regex: git-feature-.*
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
+        contribution regex: ^git-contribution-regex
         observed branches: observed-1, observed-2
+        observed regex: ^git-observed-regex
 
       Configuration:
         offline: no
@@ -188,7 +202,9 @@ Feature: show the configuration
         feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
+        contribution regex: (none)
         observed branches: (none)
+        observed regex: (none)
 
       Configuration:
         offline: no
@@ -230,7 +246,9 @@ Feature: show the configuration
         feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
+        contribution regex: (none)
         observed branches: (none)
+        observed regex: (none)
 
       Configuration:
         offline: no
