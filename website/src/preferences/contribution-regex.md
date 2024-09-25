@@ -5,11 +5,10 @@ Branches matching this regular expression are treated as
 
 ## configure in config file
 
-In the [config file](../configuration-file.md), you can define the contribution
-regex in the `[branches]` section. Defining the contribution regex in the config
-file is only a good idea if there the matching branches are considered
-contribution for all team members. An example of that are branches created by an
-external service like Renovate or Dependabot.
+Defining the contribution regex in the [config file](../configuration-file.md)
+is only a good idea if there the matching branches are considered contribution
+for all team members. An example of that are branches created by an external
+service like Renovate or Dependabot.
 
 ```toml
 [branches]

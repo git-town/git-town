@@ -43,7 +43,8 @@ You can make any feature branch a contribution branch by running
 [git town contribute](commands/contribute.md) on it. Convert a contribution
 branch back to a feature branch by running [git town hack](commands/hack.md) on
 it. You can also define a
-[contribution-regex](preferences/contribution-regex.md)
+[contribution-regex](preferences/contribution-regex.md) in your Git
+configuration or the config file in specific situations.
 
 ## Observed branches
 
