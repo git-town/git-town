@@ -41,11 +41,11 @@ The form is pre-populated for the current branch so that the proposal only shows
 Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket. When using self-hosted versions this command needs to be configured with "git config %s <driver>" where driver is "github", "gitlab", "gitea", or "bitbucket". When using SSH identities, this command needs to be configured with "git config %s <hostname>" where hostname matches what is in your ssh config file.`
 
 func proposeCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     proposeCmd,
 		GroupID: "basic",
@@ -56,11 +56,11 @@ func proposeCommand() *cobra.Command {
 			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 		},
 	}
-	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
-	addTitleFlag(&cmd)
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addTitleFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 

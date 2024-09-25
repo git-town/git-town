@@ -37,9 +37,9 @@ Syncs the parent branch, cuts a new feature branch with the given name off the p
 See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",

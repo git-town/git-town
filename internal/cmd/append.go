@@ -35,10 +35,10 @@ Syncs the current branch, forks a new feature branch with the given name off the
 See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
