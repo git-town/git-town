@@ -9,8 +9,11 @@ type ObservedRegex struct {
 
 func ParseObservedRegex(value string) (Option[ObservedRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
-	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
-		return Some(ObservedRegex{VerifiedRegex: verifiedRegex}), err
+	if err != nil {
+		return None[ObservedRegex](), err
 	}
-	return None[ObservedRegex](), err
+	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+		return Some(ObservedRegex{VerifiedRegex: verifiedRegex}), nil
+	}
+	return None[ObservedRegex](), nil
 }

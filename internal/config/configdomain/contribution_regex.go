@@ -9,8 +9,11 @@ type ContributionRegex struct {
 
 func ParseContributionRegex(value string) (Option[ContributionRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
-	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
-		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), err
+	if err != nil {
+		return None[ContributionRegex](), err
 	}
-	return None[ContributionRegex](), err
+	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), nil
+	}
+	return None[ContributionRegex](), nil
 }
