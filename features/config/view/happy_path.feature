@@ -4,7 +4,6 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given Git Town setting "perennial-branches" is "qa staging"
     And Git Town setting "perennial-regex" is "^release-"
@@ -49,6 +48,7 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  @this
   Scenario: all configured in config file
     And the configuration file:
       """
@@ -65,6 +65,7 @@ Feature: show the configuration
       default-type = "observed"
       feature-regex = "^user-.*$"
       contribution-regex = "^renovate/"
+      observed-regex = "^dependabot/"
 
       [hosting]
       platform = "github"

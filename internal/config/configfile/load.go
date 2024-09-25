@@ -69,6 +69,24 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 				result.FeatureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
+		if data.Branches.ContributionRegex != nil {
+			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ContributionRegex)
+			if err != nil {
+				return result, err
+			}
+			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+				result.ContributionRegex = Some(configdomain.ContributionRegex{VerifiedRegex: verifiedRegex})
+			}
+		}
+		if data.Branches.ObservedRegex != nil {
+			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ObservedRegex)
+			if err != nil {
+				return result, err
+			}
+			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+				result.ObservedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
+			}
+		}
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
