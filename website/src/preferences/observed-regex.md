@@ -5,10 +5,11 @@ Branches matching this regular expression are treated as
 
 ## configure in config file
 
-In the [config file](../configuration-file.md), define the observed regex within
-the `[branches]` section. This is useful if external services create proposals
-in your code base, which should be treated as observed branches by all team
-members.
+In the [config file](../configuration-file.md), you can define the observed
+regex in the `[branches]` section. Defining the observed regex in the config
+file is only a good idea if there the matching branches are considered observed
+for all team members. An example of that are branches created by an external
+service like Renovate or Dependabot.
 
 ```toml
 [branches]
