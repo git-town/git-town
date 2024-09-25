@@ -4,6 +4,7 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given Git Town setting "perennial-branches" is "qa staging"
     And Git Town setting "perennial-regex" is "^release-.*"
@@ -25,6 +26,7 @@ Feature: show the configuration
         feature regex: user-.*
         parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
+        contribution regex: ^renovate/
         observed branches: observed-1, observed-2
 
       Configuration:
