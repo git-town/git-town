@@ -43,6 +43,7 @@ Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket. W
 func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -53,18 +54,19 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
+			return executePropose(readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 		},
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) error {
+func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -76,7 +78,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, dryRun, verbose, title, body, bodyFile)
+	data, exit, err := determineProposeData(repo, detached, dryRun, verbose, title, body, bodyFile)
 	if err != nil || exit {
 		return err
 	}
@@ -138,7 +140,7 @@ type proposeData struct {
 	stashSize           gitdomain.StashSize
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -220,6 +222,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
+	if detached {
+		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+	}
 	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err

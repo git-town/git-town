@@ -14,6 +14,7 @@ import (
 func newPullRequestCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody()
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -26,13 +27,14 @@ func newPullRequestCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			printDeprecationNotice()
-			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
+			result := executePropose(readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 			printDeprecationNotice()
 			return result
 		},
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
