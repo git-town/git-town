@@ -16,8 +16,6 @@ changes, even in edge cases. You can run it many times per day without thinking
 about it. If a sync goes wrong, you can safely go back to the state you repo was
 in before the sync by running [git town undo](undo.md).
 
-If
-
 ### --all / -a
 
 By default this command syncs only the current branch. The `--all` aka `-a`
