@@ -1,5 +1,15 @@
 # Git Town Changelog
 
+## 16.3.0 (2024-09-24)
+
+Git Town 16.3 provides major new features that have been requested for years.
+
+#### New Features
+
+- Git Town can now use the proposals on your code hosting platform to share lineage information! If the parent for a branch is not known, but a proposal for this branch exists, Git Town will use the parent from the proposal instead of querying the parent branch from the user ([more info](https://github.com/git-town/git-town/issues/2745)).
+- Git Town now fully supports the Bitbucket Cloud API ([more info](https://github.com/git-town/git-town/issues/973)).
+- `git town undo` now also undoes changes made to proposals ([more info](https://github.com/git-town/git-town/issues/4049)).
+
 ## 16.2.1 (2024-09-12)
 
 Thanks to @kevgo, @ruudk, @stephenwade, @zodman for reporting and fixing unintuitive behavior that can and should be improved, leading to 13 shipped PRs and 2 resolved issues!
@@ -17,7 +27,7 @@ Big thanks to @kevgo, @ruudk, @stephenwade, @zodman for coming up with the ideas
 
 #### New Features
 
-- The new [git town branch](https://www.git-town.com/commands/branch) command displays the local branch hierarchy, and the types of all branches except for main and feature branches ([#3807](https://github.com/git-town/git-town/issues/3807)).
+- The new [git town branch](https://www.git-ytown.com/commands/branch) command displays the local branch hierarchy, and the types of all branches except for main and feature branches ([#3807](https://github.com/git-town/git-town/issues/3807)).
 - `git town switch` can now displays the types of branches (except for the main and feature branches) when called with the [--display-types](https://www.git-town.com/commands/switch#--display-types---d) flag ([#3937](https://github.com/git-town/git-town/issues/3937)).
 - `git town switch` can now filter the branches to switch to via [regular expressions](https://www.git-town.com/commands/switch#positional-arguments) ((#3980)[https://github.com/git-town/git-town/pull/3980/files])
 - You can now use `git town switch` to check out a remote branch using the [--all](https://www.git-town.com/commands/switch#--all---a) flag ([#3941](https://github.com/git-town/git-town/issues/3941))

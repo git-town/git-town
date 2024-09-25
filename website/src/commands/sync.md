@@ -9,15 +9,14 @@ with what happened in the rest of the repository.
 - prunes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
 
-Merge conflicts are never fun, hence minimizing or eliminating them should
-always be a priority. To reduce the likelihood of conflicts, it's essential to
-keep your branches in sync with each other.
+Merge conflicts are never fun. If you experience too many merge conflicts, sync
+your branches more often. If your Git Town installation is properly configured,
+"git town sync --all" syncs all local branches with guarantee to never lose
+changes, even in edge cases. You can run it many times per day without thinking
+about it. If a sync goes wrong, you can safely go back to the state you repo was
+in before the sync by running [git town undo](undo.md).
 
-If you experience too many merge conflicts, sync more often. If your Git Town
-installation is properly configured, "git town sync --all" guarantees that it
-never loses any of your changes, even in edge cases, and you can run it many
-times per day without thinking. If a sync goes wrong, you can safely go back to
-the state you repo was in before the sync by running [git town undo](undo.md).
+If
 
 ### --all / -a
 
