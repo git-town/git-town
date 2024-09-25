@@ -19,6 +19,7 @@ API access multiplies Git Town's utility:
   of this branch and uses their parent branch
 - updates affected pull requests when you prepend, rename, remove branches or
   change their parent
+- click the "merge" button on a pull request from your CLI
 
 Configuring API access takes only one minute. Here is how you do it:
 
