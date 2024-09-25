@@ -4,7 +4,7 @@
 
 Git Town 16.3 is here, and it's packed with some long-requested features we've been working towards for years!
 
-Big shoutout to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @kevgo, @mw00120, @ruudk, @stephenwade, @tranhl, @waldyrious, @zodman for really helpful contributions, feedback, and ideas! Git Town is a much better product thanks to you and the 52 shipped PRs and 6 resolved issues in this release!
+Big shoutout to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @kevgo, @mw00120, @ruudk, @stephenwade, @tranhl, @waldyrious, @zodman for your super insightful contributions, feedback, and ideas! Git Town is a much better product thanks to you and the 52 shipped PRs and 6 resolved issues in this release!
 
 #### New Features
 
