@@ -14,14 +14,13 @@ Feature: on a feature branch with a clean workspace
     And I ran "git checkout HEAD^"
     When I run "git-town hack new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout -b new      |
+      | BRANCH                     | COMMAND                  |
+      | {{ sha 'initial commit' }} | git fetch --prune --tags |
+      |                            | git checkout main        |
+      | main                       | git rebase origin/main   |
+      |                            | git checkout -b new      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
@@ -33,14 +32,15 @@ Feature: on a feature branch with a clean workspace
       | existing | main   |
       | new      | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                                     |
-      | new      | git checkout main                           |
-      | main     | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout existing                       |
-      | existing | git branch -D new                           |
+      | BRANCH                     | COMMAND                                     |
+      | new                        | git checkout main                           |
+      | main                       | git reset --hard {{ sha 'initial commit' }} |
+      |                            | git checkout {{ sha 'initial commit' }}     |
+      | {{ sha 'initial commit' }} | git branch -D new                           |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
