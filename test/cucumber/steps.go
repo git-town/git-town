@@ -1276,9 +1276,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
-		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches)
+		initialBranches := state.initialBranches.GetOrPanic()
+		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches.String())
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualDataTable(state.initialBranches.GetOrPanic())
+		diff, errorCount := currentBranches.EqualDataTable(initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)

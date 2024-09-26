@@ -1,0 +1,46 @@
+Feature: on a feature branch with a clean workspace but without main branch
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | existing | feature | main   | local, origin |
+    And the commits
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | existing | local    | existing commit |
+    And the current branch is "existing"
+    And I run "git branch -d main"
+    When I run "git-town hack new"
+
+  Scenario: result
+    Then it runs the commands
+      | BRANCH   | COMMAND                  |
+      | existing | git fetch --prune --tags |
+      |          | git checkout main        |
+      | main     | git checkout -b new      |
+    And the current branch is now "new"
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
+      | new      | local         | main commit     |
+    And this lineage exists now
+      | BRANCH   | PARENT |
+      | existing | main   |
+      | new      | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH   | COMMAND               |
+      | new      | git branch -D main    |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
+    And the current branch is now "existing"
+    And the initial commits exist now
+    And these branches exist now
+      | REPOSITORY | BRANCHES       |
+      | local      | existing       |
+      | origin     | main, existing |
+    And the initial lineage exists now

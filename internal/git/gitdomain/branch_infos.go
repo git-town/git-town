@@ -130,9 +130,14 @@ func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	for n, name := range names {
 		if branchInfo, has := self.FindByLocalName(name).Get(); has {
 			result[n] = *branchInfo
-		} else {
-			return result, fmt.Errorf(messages.BranchDoesntExist, name)
+			continue
 		}
+		remoteName := name.AtRemote(RemoteOrigin)
+		if branchInfo, has := self.FindByRemoteName(remoteName).Get(); has {
+			result[n] = *branchInfo
+			continue
+		}
+		return result, fmt.Errorf(messages.BranchDoesntExist, name)
 	}
 	return result, nil
 }
