@@ -13,7 +13,6 @@ Feature: on a feature branch with a clean workspace but without main branch
     And I run "git branch -d main"
     When I run "git-town hack new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
@@ -31,14 +30,14 @@ Feature: on a feature branch with a clean workspace but without main branch
       | existing | main   |
       | new      | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                                     |
-      | new      | git checkout main                           |
-      | main     | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout existing                       |
-      | existing | git branch -D new                           |
+      | BRANCH   | COMMAND               |
+      | new      | git branch -D main    |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
