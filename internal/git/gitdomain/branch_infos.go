@@ -133,7 +133,7 @@ func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 			continue
 		}
 		remoteName := name.AtRemote(RemoteOrigin)
-		if branchInfo, hasBranch := self.FindByRemoteName(remoteName).Get(); hasBranch {
+		if branchInfo, has := self.FindByRemoteName(remoteName).Get(); has {
 			result[n] = *branchInfo
 			continue
 		}
