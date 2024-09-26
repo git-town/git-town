@@ -1,4 +1,3 @@
-@smoke
 Feature: on a feature branch with a clean workspace
 
   Background:
