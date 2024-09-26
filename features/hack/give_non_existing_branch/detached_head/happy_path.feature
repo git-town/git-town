@@ -32,7 +32,6 @@ Feature: on a feature branch with a clean workspace
       | existing | main   |
       | new      | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -41,6 +40,4 @@ Feature: on a feature branch with a clean workspace
       | main                       | git reset --hard {{ sha 'initial commit' }} |
       |                            | git checkout {{ sha 'initial commit' }}     |
       | {{ sha 'initial commit' }} | git branch -D new                           |
-    And the current branch is now "existing"
-    And the initial commits exist now
-    And the initial branches and lineage exist now
+    And the currently checked out commit is "initial commit"

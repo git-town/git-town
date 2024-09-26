@@ -1253,6 +1253,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the currently checked out commit is "([^"]+)"$`, func(ctx context.Context, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		have := devRepo.TestCommands.CurrentCommitMessage()
+		if have != want {
+			return fmt.Errorf("expected commit %q but got %q", want, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^the home directory contains file "([^"]+)" with content$`, func(ctx context.Context, filename string, docString *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
