@@ -813,6 +813,9 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 			continue
 		}
 		branchName := parts[0]
+		if parts[1] == "detached" {
+			continue
+		}
 		sha := gitdomain.NewSHA(parts[1])
 		remoteText := parts[2]
 		if line[0] == '*' { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
