@@ -314,7 +314,7 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 			panic("branchinfo has neither local nor remote name")
 		}
 		var firstCommitMessage Option[gitdomain.CommitMessage]
-		if branchNameToSync != mainBranch.BranchName() {
+		if branchNameToSync.LocalName() != mainBranch {
 			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranch.BranchName())
 			if err != nil {
 				return result, err

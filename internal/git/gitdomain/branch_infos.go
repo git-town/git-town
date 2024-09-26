@@ -128,11 +128,16 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for n, name := range names {
-		if branch, hasBranch := self.FindByLocalName(name).Get(); hasBranch {
-			result[n] = *branch
-		} else {
-			return result, fmt.Errorf(messages.BranchDoesntExist, name)
+		if branchInfo, has := self.FindByLocalName(name).Get(); has {
+			result[n] = *branchInfo
+			continue
 		}
+		remoteName := name.AtRemote(RemoteOrigin)
+		if branchInfo, hasBranch := self.FindByRemoteName(remoteName).Get(); hasBranch {
+			result[n] = *branchInfo
+			continue
+		}
+		return result, fmt.Errorf(messages.BranchDoesntExist, name)
 	}
 	return result, nil
 }

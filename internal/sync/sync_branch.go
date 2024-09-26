@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -12,8 +14,18 @@ import (
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentOtherWorktree := false
 	localName, hasLocalName := branch.LocalName.Get()
+	if !hasLocalName {
+		remoteName, hasRemoteName := branch.RemoteName.Get()
+		if !hasRemoteName {
+			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branch))
+		}
+		localName = remoteName.LocalBranchName()
+		args.Program.Value.Add(&opcodes.Checkout{
+			Branch: localName,
+		})
+	}
 	parent, hasParent := args.Config.Lineage.Parent(localName).Get()
-	if hasLocalName && hasParent {
+	if hasParent {
 		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
 		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	}

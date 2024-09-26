@@ -254,10 +254,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{}
-	if localBranchNames.Contains(validatedConfig.Config.MainBranch) {
-		branchNamesToSync = append(branchNamesToSync, validatedConfig.Config.MainBranch)
-	}
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
 	if detached {
 		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
 	}
