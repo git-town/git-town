@@ -809,13 +809,13 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 			fmt.Printf(messages.GitOutputIrregular, line, output)
 			os.Exit(1)
 		}
-		if parts[0] == "(no" || parts[1] == "(no" || parts[1] == "branch," {
+		if parts[0] == "(no" || parts[1] == "(no" || parts[1] == "branch," { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
 			continue
 		}
 		branchName := parts[0]
 		sha := gitdomain.NewSHA(parts[1])
 		remoteText := parts[2]
-		if line[0] == '*' { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
+		if line[0] == '*' {
 			checkedoutBranch = Some(gitdomain.LocalBranchName(branchName))
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
