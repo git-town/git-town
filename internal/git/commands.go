@@ -812,7 +812,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		if parts[0] == "(no" || parts[1] == "(no" || parts[1] == "branch," { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
 			continue
 		}
-		var branchName string // TODO: change type to gitdomain.LocalBranchName
+		var branchName string
 		var sha gitdomain.SHA
 		if parts[1] == "detached" {
 			parts := spaceRE.Split(line[2:], 6)
