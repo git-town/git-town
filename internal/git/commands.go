@@ -812,11 +812,19 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		if parts[0] == "(no" || parts[1] == "(no" || parts[1] == "branch," { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
 			continue
 		}
-		branchName := parts[0]
-		sha := gitdomain.NewSHA(parts[1])
+		var branchName string // TODO: change type to gitdomain.LocalBranchName
+		var sha gitdomain.SHA
+		if parts[1] == "detached" {
+			parts := spaceRE.Split(line[2:], 6)
+			branchName = parts[4]
+			sha = gitdomain.NewSHA(parts[4])
+		} else {
+			branchName = parts[0]
+			sha = gitdomain.NewSHA(parts[1])
+		}
 		remoteText := parts[2]
 		if line[0] == '*' {
-			checkedoutBranch = Some(gitdomain.LocalBranchName(branchName))
+			checkedoutBranch = Some(gitdomain.NewLocalBranchName(branchName))
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {

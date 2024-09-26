@@ -205,6 +205,10 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
+func (self *TestCommands) CurrentCommitMessage() string {
+	return self.MustQuery("git", "log", "-1", "--pretty=%B")
+}
+
 // Fetch retrieves the updates from the origin repo.
 func (self *TestCommands) Fetch() {
 	self.MustRun("git", "fetch")
