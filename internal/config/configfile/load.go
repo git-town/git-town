@@ -103,6 +103,9 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
 			hostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 		if data.Hosting.OriginHostname != nil {
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
@@ -114,12 +117,21 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
 			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
 			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 	}
 	var pushNewBranches Option[configdomain.PushNewBranches]
