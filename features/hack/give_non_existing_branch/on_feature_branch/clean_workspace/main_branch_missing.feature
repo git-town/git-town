@@ -13,14 +13,12 @@ Feature: on a feature branch with a clean workspace but without main branch
     And I run "git branch -d main"
     When I run "git-town hack new"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout -b new      |
+      |          | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
