@@ -21,8 +21,8 @@ func RemoveDuplicateCheckout(prog program.Program) program.Program {
 		}
 		if lastOpcode != nil {
 			result = append(result, lastOpcode)
+			lastOpcode = nil
 		}
-		lastOpcode = nil
 		result = append(result, opcode)
 	}
 	if lastOpcode != nil {
