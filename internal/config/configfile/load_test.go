@@ -21,6 +21,7 @@ ship-delete-tracking-branch = false
 ship-strategy = "api"
 sync-tags = false
 sync-upstream = true
+create-prototype-branches = true
 
 [branches]
 main = "main"
@@ -34,9 +35,11 @@ origin-hostname = "github.com"
 [sync-strategy]
 feature-branches = "merge"
 perennial-branches = "rebase"
+prototype-branches = "compress"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
+			createPrototypeBranches := true
 			github := "github"
 			githubCom := "github.com"
 			main := "main"
@@ -44,6 +47,7 @@ perennial-branches = "rebase"
 			pushNewBranches := true
 			pushHook := true
 			rebase := "rebase"
+			compress := "compress"
 			releaseRegex := "release-.*"
 			shipDeleteTrackingBranch := false
 			shipStrategy := "api"
@@ -62,7 +66,9 @@ perennial-branches = "rebase"
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,
 					PerennialBranches: &rebase,
+					PrototypeBranches: &compress,
 				},
+				CreatePrototypeBranches:  &createPrototypeBranches,
 				PushHook:                 &pushHook,
 				PushNewbranches:          &pushNewBranches,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
