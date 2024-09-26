@@ -1,4 +1,4 @@
-Feature: on a feature branch with a clean workspace
+Feature: on a detached head with a clean workspace
 
   Background:
     Given a Git repo with origin
