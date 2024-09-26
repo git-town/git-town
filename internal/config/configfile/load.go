@@ -94,6 +94,10 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 			}
 		}
 	}
+	var createPrototypeBranches Option[configdomain.CreatePrototypeBranches]
+	if data.CreatePrototypeBranches != nil {
+		createPrototypeBranches, err = configdomain.ParseCreatePrototypeBranches(*data.CreatePrototypeBranches, "configuration file")
+	}
 	var hostingPlatform Option[configdomain.HostingPlatform]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	if data.Hosting != nil {
@@ -138,7 +142,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		Aliases:                  map[configdomain.AliasableCommand]string{},
 		BitbucketAppPassword:     None[configdomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[configdomain.BitbucketUsername](),
-		ContributionBranches:     contributionBranches,
+		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        contributionRegex,
 		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,
