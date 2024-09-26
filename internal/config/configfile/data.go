@@ -40,6 +40,7 @@ func (self Hosting) IsEmpty() bool {
 type SyncStrategy struct {
 	FeatureBranches   *string `toml:"feature-branches"`
 	PerennialBranches *string `toml:"perennial-branches"`
+	PrototypeBranches *string `toml:"prototype-branches"`
 }
 
 func (self SyncStrategy) IsEmpty() bool {

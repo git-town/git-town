@@ -110,12 +110,16 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
 	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
+	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
 			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
+		}
+		if data.SyncStrategy.PrototypeBranches != nil {
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches)
 		}
 	}
 	var pushNewBranches Option[configdomain.PushNewBranches]
