@@ -96,7 +96,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	var createPrototypeBranches Option[configdomain.CreatePrototypeBranches]
 	if data.CreatePrototypeBranches != nil {
-		createPrototypeBranches, err = configdomain.ParseCreatePrototypeBranches(*data.CreatePrototypeBranches, "configuration file")
+		createPrototypeBranches = Some(configdomain.CreatePrototypeBranches(*data.CreatePrototypeBranches))
 	}
 	var hostingPlatform Option[configdomain.HostingPlatform]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
@@ -121,6 +121,10 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	var pushNewBranches Option[configdomain.PushNewBranches]
 	if data.PushNewbranches != nil {
 		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+	}
+	var pushHook Option[configdomain.PushHook]
+	if data.PushHook != nil {
+		pushHook = Some(configdomain.PushHook(*data.PushHook))
 	}
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
 	if data.ShipDeleteTrackingBranch != nil {
@@ -156,13 +160,13 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		HostingPlatform:          hostingPlatform,
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,
-		ObservedBranches:         observedBranches,
+		ObservedBranches:         gitdomain.LocalBranchNames{},
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
-		ParkedBranches:           parkedBranches,
+		ParkedBranches:           gitdomain.LocalBranchNames{},
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		PrototypeBranches:        prototypeBranches,
+		PrototypeBranches:        gitdomain.LocalBranchNames{},
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
