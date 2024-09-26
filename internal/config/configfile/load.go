@@ -41,83 +41,132 @@ func Load(rootDir gitdomain.RepoRootDir) (Option[configdomain.PartialConfig], er
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data) (configdomain.PartialConfig, error) {
-	result := configdomain.PartialConfig{} //exhaustruct:ignore
 	var err error
+	var mainBranch Option[gitdomain.LocalBranchName]
+	var perennialBranches gitdomain.LocalBranchNames
+	var perennialRegex Option[configdomain.PerennialRegex]
+	var defaultBranchType Option[configdomain.DefaultBranchType]
+	var featureRegex Option[configdomain.FeatureRegex]
+	var contributionRegex Option[configdomain.ContributionRegex]
+	var observedRegex Option[configdomain.ObservedRegex]
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
-			result.MainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
+			mainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
 		}
-		result.PerennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
+		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			result.PerennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
+			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
 			if err != nil {
-				return result, err
+				return configdomain.EmptyPartialConfig(), err
 			}
 		}
 		if data.Branches.DefaultType != nil {
-			result.DefaultBranchType, err = configdomain.ParseDefaultBranchType(*data.Branches.DefaultType)
+			defaultBranchType, err = configdomain.ParseDefaultBranchType(*data.Branches.DefaultType)
 			if err != nil {
-				return result, err
+				return configdomain.EmptyPartialConfig(), err
 			}
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
 			if err != nil {
-				return result, err
+				return configdomain.EmptyPartialConfig(), err
 			}
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
-				result.FeatureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
+				featureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ContributionRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ContributionRegex)
 			if err != nil {
-				return result, err
+				return configdomain.EmptyPartialConfig(), err
 			}
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
-				result.ContributionRegex = Some(configdomain.ContributionRegex{VerifiedRegex: verifiedRegex})
+				contributionRegex = Some(configdomain.ContributionRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ObservedRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ObservedRegex)
 			if err != nil {
-				return result, err
+				return configdomain.EmptyPartialConfig(), err
 			}
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
-				result.ObservedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
+				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 	}
+	var hostingPlatform Option[configdomain.HostingPlatform]
+	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			result.HostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
+			hostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
 		}
 		if data.Hosting.OriginHostname != nil {
-			result.HostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
+			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
+	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
+	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			result.SyncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			result.SyncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
 		}
 	}
+	var pushNewBranches Option[configdomain.PushNewBranches]
 	if data.PushNewbranches != nil {
-		result.PushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
 	}
+	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
 	if data.ShipDeleteTrackingBranch != nil {
-		result.ShipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
+		shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
 	}
+	var shipStrategy Option[configdomain.ShipStrategy]
 	if data.ShipStrategy != nil {
-		result.ShipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
+		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
 	}
+	var syncTags Option[configdomain.SyncTags]
 	if data.SyncTags != nil {
-		result.SyncTags = Some(configdomain.SyncTags(*data.SyncTags))
+		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
 	}
+	var syncUpstream Option[configdomain.SyncUpstream]
 	if data.SyncUpstream != nil {
-		result.SyncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
+		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
-	return result, err
+	return configdomain.PartialConfig{
+		Aliases:                  map[configdomain.AliasableCommand]string{},
+		BitbucketAppPassword:     None[configdomain.BitbucketAppPassword](),
+		BitbucketUsername:        None[configdomain.BitbucketUsername](),
+		ContributionBranches:     contributionBranches,
+		ContributionRegex:        contributionRegex,
+		CreatePrototypeBranches:  createPrototypeBranches,
+		DefaultBranchType:        defaultBranchType,
+		FeatureRegex:             featureRegex,
+		GitHubToken:              None[configdomain.GitHubToken](),
+		GitLabToken:              None[configdomain.GitLabToken](),
+		GitUserEmail:             None[configdomain.GitUserEmail](),
+		GitUserName:              None[configdomain.GitUserName](),
+		GiteaToken:               None[configdomain.GiteaToken](),
+		HostingOriginHostname:    hostingOriginHostname,
+		HostingPlatform:          hostingPlatform,
+		Lineage:                  configdomain.Lineage{},
+		MainBranch:               mainBranch,
+		ObservedBranches:         observedBranches,
+		ObservedRegex:            observedRegex,
+		Offline:                  None[configdomain.Offline](),
+		ParkedBranches:           parkedBranches,
+		PerennialBranches:        perennialBranches,
+		PerennialRegex:           perennialRegex,
+		PrototypeBranches:        prototypeBranches,
+		PushHook:                 pushHook,
+		PushNewBranches:          pushNewBranches,
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		ShipStrategy:             shipStrategy,
+		SyncFeatureStrategy:      syncFeatureStrategy,
+		SyncPerennialStrategy:    syncPerennialStrategy,
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncTags:                 syncTags,
+		SyncUpstream:             syncUpstream,
+	}, nil
 }
