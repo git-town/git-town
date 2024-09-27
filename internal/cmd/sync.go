@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v16/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/optimizer"
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
@@ -100,22 +101,35 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 
 	runProgram := program.Program{}
-	sync.BranchesProgram(sync.BranchesProgramArgs{
-		BranchProgramArgs: sync.BranchProgramArgs{
+	for _, branchToSync := range data.branchesToSync {
+		sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
 			BranchInfos:        data.branchInfos,
 			Config:             data.config.Config,
-			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside sync.BranchesProgram
+			FirstCommitMessage: branchToSync.FirstCommitMessage,
 			InitialBranch:      data.initialBranch,
 			Remotes:            data.remotes,
 			Program:            NewMutable(&runProgram),
 			PushBranches:       pushBranches,
-		},
-		BranchesToSync: data.branchesToSync,
-		DryRun:         dryRun,
-		HasOpenChanges: data.hasOpenChanges,
-		InitialBranch:  data.initialBranch,
-		PreviousBranch: data.previousBranch,
-		ShouldPushTags: data.shouldPushTags,
+		})
+	}
+	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	// TODO: make this a list of options
+	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
+	}
+	runProgram.Add(&opcodes.CheckoutFirstExisting{
+		Branches:   finalBranchCandidates,
+		MainBranch: data.config.Config.MainBranch,
+	})
+	if data.remotes.HasOrigin() && data.shouldPushTags && data.config.Config.IsOnline() {
+		runProgram.Add(&opcodes.PushTags{})
+	}
+	cmdhelpers.Wrap(NewMutable(&runProgram), cmdhelpers.WrapOptions{
+		DryRun:                   dryRun,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: previousbranchCandidates,
 	})
 	runProgram = optimizer.Optimize(runProgram)
 	runState := runstate.RunState{
