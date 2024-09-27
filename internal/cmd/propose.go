@@ -270,17 +270,18 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 
 func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	for _, branchToSync := range data.branchesToSync {
-		sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+	sync.BranchesProgram(sync.BranchesProgramArgs{
+		BranchesToSync: data.branchesToSync,
+		BranchProgramArgs: sync.BranchProgramArgs{
 			BranchInfos:        data.branchInfos,
 			Config:             data.config.Config,
-			FirstCommitMessage: branchToSync.FirstCommitMessage,
+			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside the function
 			InitialBranch:      data.initialBranch,
 			Remotes:            data.remotes,
 			Program:            prog,
 			PushBranches:       true,
-		})
-	}
+		},
+	})
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
 		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
 	}

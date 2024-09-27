@@ -231,17 +231,18 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 func prependProgram(data prependData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
-		for _, branchToSync := range data.branchesToSync {
-			sync.BranchProgram(branchToSync.BranchInfo, sync.BranchProgramArgs{
+		sync.BranchesProgram(sync.BranchesProgramArgs{
+			BranchesToSync: data.branchesToSync,
+			BranchProgramArgs: sync.BranchProgramArgs{
 				BranchInfos:        data.branchInfos,
 				Config:             data.config.Config,
-				FirstCommitMessage: branchToSync.FirstCommitMessage,
+				FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside the function
 				InitialBranch:      data.initialBranch,
 				Program:            prog,
 				PushBranches:       true,
 				Remotes:            data.remotes,
-			})
-		}
+			},
+		})
 	}
 	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
 		Ancestors: data.newParentCandidates,

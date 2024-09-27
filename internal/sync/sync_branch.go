@@ -43,7 +43,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 type BranchProgramArgs struct {
 	BranchInfos        gitdomain.BranchInfos
 	Config             configdomain.ValidatedConfig
-	FirstCommitMessage Option[gitdomain.CommitMessage]
+	FirstCommitMessage Option[gitdomain.CommitMessage] // TODO: remove from this struct and inject as a normal parameter to sync.BranchProgram.
 	InitialBranch      gitdomain.LocalBranchName
 	Program            Mutable[program.Program]
 	PushBranches       configdomain.PushBranches
