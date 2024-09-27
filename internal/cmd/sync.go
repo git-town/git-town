@@ -104,13 +104,12 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchesToSync: data.branchesToSync,
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:        data.branchInfos,
-			Config:             data.config.Config,
-			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside the function
-			InitialBranch:      data.initialBranch,
-			Remotes:            data.remotes,
-			Program:            NewMutable(&runProgram),
-			PushBranches:       pushBranches,
+			BranchInfos:   data.branchInfos,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
+			Program:       NewMutable(&runProgram),
+			PushBranches:  pushBranches,
 		},
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

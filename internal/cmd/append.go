@@ -217,13 +217,12 @@ func appendProgram(data appendFeatureData) program.Program {
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(sync.BranchesProgramArgs{
 			BranchProgramArgs: sync.BranchProgramArgs{
-				BranchInfos:        data.branchInfos,
-				Config:             data.config.Config,
-				FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside the function
-				InitialBranch:      data.initialBranch,
-				Program:            prog,
-				Remotes:            data.remotes,
-				PushBranches:       true,
+				BranchInfos:   data.branchInfos,
+				Config:        data.config.Config,
+				InitialBranch: data.initialBranch,
+				Program:       prog,
+				Remotes:       data.remotes,
+				PushBranches:  true,
 			},
 			BranchesToSync: data.branchesToSync,
 		})

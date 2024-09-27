@@ -11,7 +11,7 @@ import (
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
+func BranchProgram(branch gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	parentOtherWorktree := false
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
@@ -35,23 +35,22 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		ExistingBranchProgram(args.Program, branch, parent.BranchName(), parentOtherWorktree, args)
+		ExistingBranchProgram(args.Program, branch, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
 
 type BranchProgramArgs struct {
-	BranchInfos        gitdomain.BranchInfos
-	Config             configdomain.ValidatedConfig
-	FirstCommitMessage Option[gitdomain.CommitMessage] // TODO: remove from this struct and inject as a normal parameter to sync.BranchProgram.
-	InitialBranch      gitdomain.LocalBranchName
-	Program            Mutable[program.Program]
-	PushBranches       configdomain.PushBranches
-	Remotes            gitdomain.Remotes
+	BranchInfos   gitdomain.BranchInfos
+	Config        configdomain.ValidatedConfig
+	InitialBranch gitdomain.LocalBranchName
+	Program       Mutable[program.Program]
+	PushBranches  configdomain.PushBranches
+	Remotes       gitdomain.Remotes
 }
 
 // ExistingBranchProgram provides the program to sync a particular branch.
-func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, args BranchProgramArgs) {
+func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
@@ -66,7 +65,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			firstCommitMessage:  args.FirstCommitMessage,
+			firstCommitMessage:  firstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
 			parent:              parent,
@@ -80,7 +79,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
-			firstCommitMessage:  args.FirstCommitMessage,
+			firstCommitMessage:  firstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
 			parent:              parent,
@@ -96,7 +95,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			firstCommitMessage:  args.FirstCommitMessage,
+			firstCommitMessage:  firstCommitMessage,
 			localName:           localName,
 			offline:             args.Config.Offline,
 			parent:              parent,

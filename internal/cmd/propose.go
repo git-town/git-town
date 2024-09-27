@@ -273,13 +273,12 @@ func proposeProgram(data proposeData) program.Program {
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchesToSync: data.branchesToSync,
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:        data.branchInfos,
-			Config:             data.config.Config,
-			FirstCommitMessage: None[gitdomain.CommitMessage](), // will be populated inside the function
-			InitialBranch:      data.initialBranch,
-			Remotes:            data.remotes,
-			Program:            prog,
-			PushBranches:       true,
+			BranchInfos:   data.branchInfos,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Remotes:       data.remotes,
+			Program:       prog,
+			PushBranches:  true,
 		},
 	})
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
