@@ -11,7 +11,7 @@ func BranchesProgram(branchesToSync []configdomain.BranchToSync, args BranchProg
 	lastAncestorSynced := None[gitdomain.LocalBranchName]()
 	for _, branchToSync := range branchesToSync {
 		if localName, hasLocalName := branchToSync.BranchInfo.LocalName.Get(); hasLocalName {
-			LocalBranchProgram(localName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, lastAncestorSynced, BranchProgramArgs{
+			BranchProgram(localName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, lastAncestorSynced, BranchProgramArgs{
 				BranchInfos:   args.BranchInfos,
 				Config:        args.Config,
 				InitialBranch: args.InitialBranch,

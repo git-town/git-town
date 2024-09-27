@@ -8,13 +8,15 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// LocalBranchProgram syncs the given branch.
-func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], lastAncestorSynced Option[gitdomain.LocalBranchName], args BranchProgramArgs) {
+// BranchProgram syncs the given branch.
+func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], lastAncestorSynced Option[gitdomain.LocalBranchName], args BranchProgramArgs) {
 	parentOtherWorktree := false
+	parentIsLocal := false
 	parent, hasParent := args.Config.Lineage.Parent(localName).Get()
 	if hasParent {
-		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parent).Get()
+		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalOrRemoteName(parent).Get()
 		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+		parentIsLocal = parentBranchInfo.LocalName.IsSome()
 	}
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
@@ -22,7 +24,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		ExistingLocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
+		SyncLocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, parentIsLocal, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -36,8 +38,8 @@ type BranchProgramArgs struct {
 	Remotes       gitdomain.Remotes
 }
 
-// ExistingLocalBranchProgram provides the program to sync a particular branch.
-func ExistingLocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+// SyncLocalBranchProgram provides the program to sync a local branch.
+func SyncLocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, parentIsLocal bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
