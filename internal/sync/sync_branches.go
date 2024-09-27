@@ -9,9 +9,9 @@ func BranchesProgram(branchesToSync []configdomain.BranchToSync, args BranchProg
 			BranchInfos:   args.BranchInfos,
 			Config:        args.Config,
 			InitialBranch: args.InitialBranch,
-			Remotes:       args.Remotes,
 			Program:       args.Program,
 			PushBranches:  args.PushBranches,
+			Remotes:       args.Remotes,
 		})
 	}
 }
