@@ -3,8 +3,8 @@ package sync
 import "github.com/git-town/git-town/v16/internal/config/configdomain"
 
 // BranchesProgram syncs all given branches.
-func BranchesProgram(args BranchesProgramArgs) {
-	for _, branchToSync := range args.BranchesToSync {
+func BranchesProgram(branchesToSync []configdomain.BranchToSync, args BranchProgramArgs) {
+	for _, branchToSync := range branchesToSync {
 		BranchProgram(branchToSync.BranchInfo, branchToSync.FirstCommitMessage, BranchProgramArgs{
 			BranchInfos:   args.BranchInfos,
 			Config:        args.Config,
@@ -14,9 +14,4 @@ func BranchesProgram(args BranchesProgramArgs) {
 			PushBranches:  args.PushBranches,
 		})
 	}
-}
-
-type BranchesProgramArgs struct {
-	BranchProgramArgs
-	BranchesToSync []configdomain.BranchToSync
 }

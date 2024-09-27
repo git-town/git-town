@@ -215,16 +215,13 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 func appendProgram(data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
-		sync.BranchesProgram(sync.BranchesProgramArgs{
-			BranchProgramArgs: sync.BranchProgramArgs{
-				BranchInfos:   data.branchInfos,
-				Config:        data.config.Config,
-				InitialBranch: data.initialBranch,
-				Program:       prog,
-				Remotes:       data.remotes,
-				PushBranches:  true,
-			},
-			BranchesToSync: data.branchesToSync,
+		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+			BranchInfos:   data.branchInfos,
+			Config:        data.config.Config,
+			InitialBranch: data.initialBranch,
+			Program:       prog,
+			Remotes:       data.remotes,
+			PushBranches:  true,
 		})
 	}
 	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
