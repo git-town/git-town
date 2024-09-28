@@ -86,6 +86,7 @@ func Types() []shared.Opcode {
 		&ForcePushCurrentBranch{},
 		&DeleteBranchIfEmptyAtRuntime{},
 		&Merge{},
+		&MergeBranchNoEdit{},
 		&MergeParent{},
 		&PreserveCheckoutHistory{},
 		&PullCurrentBranch{},
