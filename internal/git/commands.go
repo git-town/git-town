@@ -141,11 +141,12 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	return runner.Run("git", gitArgs...)
 }
 
+// MissingCommitMessage defines possible ways to deal with a missing commit message.
 type MissingCommitMessage bool
 
 const (
-	MissingCommitMessageAskUser    = true
-	MissingCommitMessageUseDefault = false
+	MissingCommitMessageAskUser    = true  // if the commit message is missing, let the user enter it
+	MissingCommitMessageUseDefault = false // if the commit message is missing, use the default commit message
 )
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
