@@ -7,13 +7,14 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// CommitOpenChanges commits all open changes as a new commit.
+// Commit commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
-type CommitOpenChanges struct {
+type Commit struct {
 	Message                 Option[gitdomain.CommitMessage]
+	AskUser                 git.MissingCommitMessage
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
+func (self *Commit) Run(args shared.RunArgs) error {
 	return args.Git.Commit(args.Frontend, self.Message, git.MissingCommitMessageUseDefault, None[gitdomain.Author]())
 }

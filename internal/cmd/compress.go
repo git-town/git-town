@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
@@ -279,7 +280,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	}
 	prog.Value.Add(&opcodes.Checkout{Branch: data.name})
 	prog.Value.Add(&opcodes.ResetCurrentBranch{Base: data.parentBranch.BranchName()})
-	prog.Value.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
+	prog.Value.Add(&opcodes.Commit{Message: Some(data.newCommitMessage), AskUser: git.MissingCommitMessageUseDefault})
 	if data.hasTracking && online.IsTrue() {
 		prog.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
 	}

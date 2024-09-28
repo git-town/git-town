@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -58,7 +59,7 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.CommitOpenChanges{Message: gitdomain.NewCommitMessageOpt("my message")},
+				&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("my message"), AskUser: git.MissingCommitMessageAskUser},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
@@ -271,9 +272,10 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Message": "my message"
+        "Message": "my message",
+        "AskUser": true
       },
-      "type": "CommitOpenChanges"
+      "type": "Commit"
     },
     {
       "data": {
