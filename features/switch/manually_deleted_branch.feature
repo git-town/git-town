@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch branches while a manually deleted branch is still listed in the lineage
 
   Scenario: repo contains a manually deleted branch

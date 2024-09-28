@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch branches
 
   Scenario: switching to another branch
