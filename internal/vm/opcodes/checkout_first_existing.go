@@ -15,7 +15,9 @@ type CheckoutFirstExisting struct {
 
 func (self *CheckoutFirstExisting) Run(args shared.RunArgs) error {
 	if existingBranch, hasExistingBranch := args.Git.FirstExistingBranch(args.Backend, self.Branches...).Get(); hasExistingBranch {
-		return (&Checkout{Branch: existingBranch}).Run(args)
+		args.PrependOpcodes(&Checkout{Branch: existingBranch})
+	} else {
+		args.PrependOpcodes(&Checkout{Branch: self.MainBranch})
 	}
-	return (&Checkout{Branch: self.MainBranch}).Run(args)
+	return nil
 }
