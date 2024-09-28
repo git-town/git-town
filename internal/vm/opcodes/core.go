@@ -58,6 +58,7 @@ func Types() []shared.Opcode {
 		&AddToPrototypeBranches{},
 		&ChangeParent{},
 		&Checkout{},
+		&CheckoutUncached{},
 		&CheckoutIfNeeded{},
 		&CheckoutFirstExisting{},
 		&CheckoutIfExists{},
