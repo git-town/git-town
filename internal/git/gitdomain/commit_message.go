@@ -1,6 +1,10 @@
 package gitdomain
 
-import "strings"
+import (
+	"strings"
+
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+)
 
 // CommitMessage is the entire textual messages of a Git commit.
 type CommitMessage string
@@ -31,4 +35,11 @@ func (self CommitMessage) Parts() CommitMessageParts {
 // String implements the fmt.Stringer interface.
 func (self CommitMessage) String() string {
 	return string(self)
+}
+
+func NewCommitMessageOpt(text string) Option[CommitMessage] {
+	if len(text) == 0 {
+		return None[CommitMessage]()
+	}
+	return Some(CommitMessage(text))
 }

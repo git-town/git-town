@@ -138,14 +138,9 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	return runner.Run("git", gitArgs...)
 }
 
-// CommitNoEdit commits all staged files with the default commit message.
-func (self *Commands) CommitNoEdit(runner gitdomain.Runner) error {
-	return runner.Run("git", "commit", "--no-edit")
-}
-
-// CommitStagedChanges commits the currently staged changes.
-func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message gitdomain.CommitMessage) error {
-	if message != "" {
+// CommitNoUserInput commits the currently staged changes.
+func (self *Commands) CommitNoUserInput(runner gitdomain.Runner, messageOpt Option[gitdomain.CommitMessage]) error {
+	if message, hasMessage := messageOpt.Get(); hasMessage {
 		return runner.Run("git", "commit", "-m", message.String())
 	}
 	return runner.Run("git", "commit", "--no-edit")
