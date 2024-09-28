@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
@@ -53,10 +54,13 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 	}
+	var authorOpt Option[gitdomain.Author]
 	if repoAuthor == author {
-		author = ""
+		authorOpt = None[gitdomain.Author]()
+	} else {
+		authorOpt = Some(author)
 	}
-	err = args.Git.CommitAskUserIfNeeded(args.Frontend, self.CommitMessage, author)
+	err = args.Git.Commit(args.Frontend, self.CommitMessage, git.MissingCommitMessageAskUser, authorOpt)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -14,5 +15,5 @@ type CommitOpenChanges struct {
 }
 
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
-	return args.Git.CommitNeverAskUser(args.Frontend, self.Message)
+	return args.Git.Commit(args.Frontend, self.Message, git.MissingCommitMessageUseDefault, None[gitdomain.Author]())
 }
