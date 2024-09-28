@@ -5,11 +5,11 @@
 The complexity in the Git Town codebase stems from balancing several challenging
 design objectives:
 
-1. **Extreme configurability:** Execute a highly variable set of Git operations
-   depending on the current status of the repository. Git Town's business logic
-   covers so many edge cases that most Git Town commands aren't just a simple
-   hard-coded scripts, they are executable programs custom-built for your
-   specific use case.
+1. **Extreme configurability:** Execute a highly variable and configurable set
+   of Git operations depending on the current status of the repository. Git
+   Town's business logic covers so many edge cases that most Git Town commands
+   aren't just a simple hard-coded scripts, they are executable programs
+   custom-built for your specific use case.
 2. **Terminate and resume:** When any operation in these programs fails,
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
@@ -32,8 +32,15 @@ dependencies.
 
 Git Town addresses requirements 1 and 2 via an
 [interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing)) that
-executes programs consisting of Git-related _opcodes_. Most of these opcodes
-execute Git commands. Some open browser windows or talk to codehosting APIs.
+executes self-modifying code consisting of Git-related _opcodes_. Most of these
+opcodes execute Git commands. Some open browser windows or talk to codehosting
+APIs. Others inspect the state at runtime and inject new opcodes into the
+running program. Making Git Town VM programs self-modifying has the advantage
+that the entire runstate of the program is encoded in the opcodes, and there are
+no variables or other state to persist when a program is interrupted, persisted,
+loaded from disk, and continued. This keeps the execution framework simple and
+deterministic.
+
 Each Git Town command:
 
 - Inspects the state of the Git repo.
