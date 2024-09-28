@@ -23,5 +23,6 @@ func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
 	if !args.Git.HasLocalBranch(args.Backend, self.Branch) {
 		return nil
 	}
-	return (&Checkout{Branch: self.Branch}).Run(args)
+	args.PrependOpcodes(&Checkout{Branch: self.Branch})
+	return nil
 }
