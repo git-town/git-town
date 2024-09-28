@@ -66,29 +66,25 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
 	// Even a parent that is local now could be deleted at runtime.
-	// So really all we can do here is detect the state at runtime, and then insert a new program that does the right thing.
+	// So all we can do here is detect the state at runtime, and then insert a new program that does the right thing.
 	// At runtime:
-	// - find the oldest existing parent
-	// - find the oldest existing local parent
-	// - if the oldest existing local parent == oldest existing parent: merge the local parent
+	// - determine the current parent branch (might be different than the parent branch when the program was initially created)
+	// - if the current parent branch is local: merge the local parent branch
 	// - otherwise:
-	//    - pull the tracking branc of the oldest existing parent
-	//    - pull the local branch of the oldest existing local parent
-	if parentIsLocal {
-		args.program.Value.Add(&opcodes.MergeParent{
-			CurrentBranch:               args.localName,
-			ParentActiveInOtherWorktree: args.parentOtherWorktree,
-		})
-	} else {
-		// pull updates from the parent's tracking branch
-		args.program.Value.Add(&opcodes.MergeParentsTrackingBranch{
-			CurrentBranch: args.localName,
-		})
-		// pull updates from the last local ancestor
-		args.program.Value.Add(&opcodes.MergeOldestNonDirectLocalParent{
-			CurrentBranch: args.localName,
-		})
-	}
+	//    - pull the tracking branch of the current parent
+	//    - pull the local branch of the oldest local ancestor
+	args.program.Value.Add(&opcodes.InsertMergeParentProgram{
+		CurrentBranch:               args.localName,
+		ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	})
+	// pull updates from the parent's tracking branch
+	args.program.Value.Add(&opcodes.MergeParentsTrackingBranch{
+		CurrentBranch: args.localName,
+	})
+	// pull updates from the last local ancestor
+	args.program.Value.Add(&opcodes.MergeOldestNonDirectLocalParent{
+		CurrentBranch: args.localName,
+	})
 }
 
 // syncs the given feature branch using the "rebase" sync strategy
