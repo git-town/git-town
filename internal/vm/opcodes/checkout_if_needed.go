@@ -19,5 +19,6 @@ func (self *CheckoutIfNeeded) Run(args shared.RunArgs) error {
 	if existingBranch == self.Branch {
 		return nil
 	}
-	return args.Git.CheckoutBranch(args.Frontend, self.Branch, false)
+	args.PrependOpcodes(&Checkout{Branch: self.Branch})
+	return nil
 }
