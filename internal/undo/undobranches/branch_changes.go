@@ -63,7 +63,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedPerennials[branch]
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
-			result.Add(&opcodes.RevertCommit{SHA: change.After})
+			result.Add(&opcodes.RevertCommitIfNeeded{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 		}
 	}
@@ -90,7 +90,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
-				result.Add(&opcodes.RevertCommit{SHA: afterSHA})
+				result.Add(&opcodes.RevertCommitIfNeeded{SHA: afterSHA})
 				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
 		}

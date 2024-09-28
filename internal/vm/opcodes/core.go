@@ -115,7 +115,7 @@ func Types() []shared.Opcode {
 		&ResetRemoteBranchToSHA{},
 		&ResetRemoteBranchToSHAIfNeeded{},
 		&RestoreOpenChanges{},
-		&RevertCommit{},
+		&RevertCommitIfNeeded{},
 		&SetExistingParent{},
 		&SetGlobalConfig{},
 		&SetLocalConfig{},

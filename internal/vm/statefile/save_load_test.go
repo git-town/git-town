@@ -152,7 +152,7 @@ func TestLoadSave(t *testing.T) {
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
 				&opcodes.RestoreOpenChanges{},
-				&opcodes.RevertCommit{
+				&opcodes.RevertCommitIfNeeded{
 					SHA: gitdomain.NewSHA("123456"),
 				},
 				&opcodes.SetGlobalConfig{

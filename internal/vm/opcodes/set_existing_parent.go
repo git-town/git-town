@@ -17,5 +17,9 @@ func (self *SetExistingParent) Run(args shared.RunArgs) error {
 	if !hasNearestAncestor {
 		nearestAncestor = args.Config.Config.MainBranch
 	}
-	return args.Config.SetParent(self.Branch, nearestAncestor)
+	args.PrependOpcodes(&SetParent{
+		Branch: self.Branch,
+		Parent: nearestAncestor,
+	})
+	return nil
 }
