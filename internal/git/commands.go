@@ -144,6 +144,7 @@ func (self *Commands) CommitNoEdit(runner gitdomain.Runner) error {
 }
 
 // CommitStagedChanges commits the currently staged changes.
+// TODO: merge with Commit
 func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message gitdomain.CommitMessage) error {
 	if message != "" {
 		return runner.Run("git", "commit", "-m", message.String())
