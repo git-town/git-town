@@ -111,7 +111,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		case !branch.HasTrackingBranch():
 			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
-			list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
+			list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
 			pushFeatureBranchProgram(list, localName, args.Config.SyncFeatureStrategy)
 		}
@@ -149,7 +149,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 func pushFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
+		list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
 		list.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
 	case configdomain.SyncFeatureStrategyCompress:

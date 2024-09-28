@@ -51,7 +51,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Com
 			if err != nil {
 				return err
 			}
-			self.RunProgram.Prepend(&opcodes.PushCurrentBranch{CurrentBranch: currentBranch})
+			self.RunProgram.Prepend(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: currentBranch})
 			self.RunProgram.PrependProgram(popped)
 			break
 		}

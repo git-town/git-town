@@ -35,7 +35,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 	}
 	prog.Value.Add(&opcodes.SquashMerge{Branch: sharedData.branchNameToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: sharedData.targetBranchName})
+		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
 		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: sharedData.branchNameToShip})

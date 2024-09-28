@@ -6,11 +6,19 @@ import (
 )
 
 // PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch.
-type PushCurrentBranch struct {
+type PushCurrentBranchIfNeeded struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
-	return args.Git.PushCurrentBranch(args.Frontend, args.Config.Config.NoPushHook())
+func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
+	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch)
+	if err != nil {
+		return err
+	}
+	if !shouldPush {
+		return nil
+	}
+	args.PrependOpcodes(&PushCurrentBranch{})
+	return nil
 }

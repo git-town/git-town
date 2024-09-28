@@ -109,7 +109,7 @@ func TestLoadSave(t *testing.T) {
 					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
 				},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{
+				&opcodes.PushCurrentBranchIfNeeded{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.PushTags{},

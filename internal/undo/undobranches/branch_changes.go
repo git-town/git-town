@@ -64,7 +64,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.RevertCommit{SHA: change.After})
-			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
+			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 		}
 	}
 
@@ -91,7 +91,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
 				result.Add(&opcodes.RevertCommit{SHA: afterSHA})
-				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branchName})
+				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
 		}
 	}
