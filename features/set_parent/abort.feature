@@ -1,3 +1,4 @@
+@messyoutput
 Feature: abort the dialog
 
   Background:

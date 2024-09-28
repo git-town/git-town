@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch to a new remote branch
 
   Scenario Outline:

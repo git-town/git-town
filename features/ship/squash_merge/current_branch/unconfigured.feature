@@ -1,3 +1,4 @@
+@messyoutput
 Feature: ask for missing configuration information
 
   Scenario: unconfigured
