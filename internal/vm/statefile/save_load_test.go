@@ -57,7 +57,7 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CommitOpenChanges{Message: "my message"},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),

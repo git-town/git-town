@@ -28,7 +28,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 	prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
 	if sharedData.initialBranch != sharedData.targetBranchName {
-		prog.Value.Add(&opcodes.Checkout{Branch: sharedData.targetBranchName})
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
 		UpdateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
@@ -51,7 +51,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
 	}
 	if !sharedData.isShippingInitialBranch {
-		prog.Value.Add(&opcodes.Checkout{Branch: sharedData.initialBranch})
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
 	}
 	prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}

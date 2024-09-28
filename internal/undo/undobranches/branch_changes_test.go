@@ -78,7 +78,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("branch-1")},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("main")},
 		}
@@ -224,13 +224,13 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("444444"),
 				SetToSHA:    gitdomain.NewSHA("222222"),
 				Hard:        true,
 			},
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("333333"),
 				SetToSHA:    gitdomain.NewSHA("111111"),
@@ -470,7 +470,7 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.DeleteTrackingBranch{
 				Branch: gitdomain.NewRemoteBranchName("origin/perennial-branch"),
@@ -563,13 +563,13 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("444444"),
 				SetToSHA:    gitdomain.NewSHA("222222"),
 				Hard:        true,
 			},
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("333333"),
 				SetToSHA:    gitdomain.NewSHA("111111"),
@@ -808,11 +808,11 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			// revert the commit on the perennial branch
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcodes.RevertCommit{SHA: gitdomain.NewSHA("444444")},
 			&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// reset the feature branch to the previous SHA
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: gitdomain.NewSHA("666666"), SetToSHA: gitdomain.NewSHA("333333"), Hard: true},
 			&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true},
 			// check out the initial branch
@@ -909,7 +909,7 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			// revert the undoable commit on the main branch
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcodes.RevertCommit{SHA: gitdomain.NewSHA("444444")},
 			&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// re-create the feature branch
@@ -1026,7 +1026,7 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("555555"),
 				SetToSHA:    gitdomain.NewSHA("222222"),
@@ -1122,13 +1122,13 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("444444"),
 				SetToSHA:    gitdomain.NewSHA("333333"),
 				Hard:        true,
 			},
-			&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
 			&opcodes.ResetCurrentBranchToSHA{
 				MustHaveSHA: gitdomain.NewSHA("222222"),
 				SetToSHA:    gitdomain.NewSHA("111111"),

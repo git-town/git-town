@@ -20,7 +20,7 @@ func BranchProgram(branch gitdomain.BranchInfo, firstCommitMessage Option[gitdom
 			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branch))
 		}
 		localName = remoteName.LocalBranchName()
-		args.Program.Value.Add(&opcodes.Checkout{
+		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{
 			Branch: localName,
 		})
 	}
@@ -60,7 +60,7 @@ func ExistingBranchProgram(list Mutable[program.Program], branch gitdomain.Branc
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Value.Add(&opcodes.Checkout{Branch: localName})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:

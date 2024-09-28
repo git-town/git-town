@@ -5,14 +5,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// CheckoutIfExists does the same as Checkout
-// but only if that branch actually exists.
-type CheckoutIfExists struct {
+// CheckoutIfNeeded checks out a new branch.
+type CheckoutIfNeeded struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
+func (self *CheckoutIfNeeded) Run(args shared.RunArgs) error {
 	existingBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
@@ -20,9 +19,6 @@ func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
 	if existingBranch == self.Branch {
 		return nil
 	}
-	if !args.Git.HasLocalBranch(args.Backend, self.Branch) {
-		return nil
-	}
-	args.PrependOpcodes(&CheckoutIfNeeded{Branch: self.Branch})
+	args.PrependOpcodes(&Checkout{Branch: self.Branch})
 	return nil
 }

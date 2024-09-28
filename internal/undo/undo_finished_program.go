@@ -34,7 +34,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	initialBranchOpt := args.RunState.BeginBranchesSnapshot.Active
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{initialBranchOpt}
 	if initialBranch, hasInitialBranch := initialBranchOpt.Get(); hasInitialBranch {
-		result.Value.Add(&opcodes.Checkout{Branch: initialBranch})
+		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: initialBranch})
 	}
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,

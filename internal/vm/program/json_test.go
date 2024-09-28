@@ -16,7 +16,7 @@ func TestJSON(t *testing.T) {
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		jsonstep := program.JSON{
-			Opcode: &opcodes.Checkout{
+			Opcode: &opcodes.CheckoutIfNeeded{
 				Branch: gitdomain.NewLocalBranchName("branch-1"),
 			},
 		}
@@ -43,14 +43,14 @@ func TestJSON(t *testing.T) {
 	"type": "Checkout"
 }`[1:]
 		have := program.JSON{
-			Opcode: &opcodes.Checkout{
+			Opcode: &opcodes.CheckoutIfNeeded{
 				Branch: "",
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := program.JSON{
-			Opcode: &opcodes.Checkout{
+			Opcode: &opcodes.CheckoutIfNeeded{
 				Branch: gitdomain.NewLocalBranchName("branch-1"),
 			},
 		}
