@@ -1,3 +1,4 @@
+@messyoutput
 Feature: missing configuration
 
   Background: running unconfigured

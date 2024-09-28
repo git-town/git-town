@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch branches of a single type
 
   Background:

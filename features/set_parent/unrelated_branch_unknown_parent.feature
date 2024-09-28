@@ -1,3 +1,4 @@
+@messyoutput
 Feature: an unrelated branch has an unknown parent
 
   Background:

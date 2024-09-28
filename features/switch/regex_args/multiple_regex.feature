@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch to branches described by several regexes
 
   Scenario:

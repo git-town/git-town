@@ -1,3 +1,4 @@
+@messyoutput
 Feature: update the parent of a feature branch
 
   Background:

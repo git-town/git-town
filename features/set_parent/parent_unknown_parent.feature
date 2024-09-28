@@ -1,3 +1,4 @@
+@messyoutput
 Feature: setting the parent to a branch whose parent is unknown
 
   Background:

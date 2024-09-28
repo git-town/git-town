@@ -1,3 +1,4 @@
+@messyoutput
 Feature: display all executed Git commands
 
   Background:

@@ -1,3 +1,4 @@
+@messyoutput
 Feature: make a feature branch perennial
 
   Background:

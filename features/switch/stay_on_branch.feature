@@ -1,3 +1,4 @@
+@messyoutput
 Feature: stay on the same branch
 
   Scenario: switching to another branch
