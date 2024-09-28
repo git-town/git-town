@@ -1,19 +1,12 @@
 package opcodes
 
 import (
-	"errors"
-
-	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
 // RestoreOpenChanges restores stashed away changes into the workspace.
 type RestoreOpenChanges struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
-}
-
-func (self *RestoreOpenChanges) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode{&DropStash{}}
 }
 
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
@@ -24,9 +17,6 @@ func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
 	if stashSize == 0 && !args.Config.DryRun {
 		return nil
 	}
-	err = args.Git.PopStash(args.Frontend)
-	if err != nil {
-		return errors.New(messages.DiffConflictWithMain)
-	}
+	args.PrependOpcodes(&PopStash{})
 	return nil
 }
