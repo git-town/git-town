@@ -13,5 +13,5 @@ type CommitSquashedChanges struct {
 }
 
 func (self *CommitSquashedChanges) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, "")
+	return args.Git.CommitAskUserIfNeeded(args.Frontend, self.Message, "")
 }

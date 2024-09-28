@@ -14,5 +14,5 @@ type CommitOpenChanges struct {
 }
 
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
-	return args.Git.CommitNoUserInput(args.Frontend, self.Message)
+	return args.Git.CommitNeverAskUser(args.Frontend, self.Message)
 }

@@ -56,7 +56,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	if repoAuthor == author {
 		author = ""
 	}
-	err = args.Git.Commit(args.Frontend, self.CommitMessage, author)
+	err = args.Git.CommitAskUserIfNeeded(args.Frontend, self.CommitMessage, author)
 	if err != nil {
 		return err
 	}

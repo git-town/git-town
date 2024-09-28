@@ -126,8 +126,8 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-// Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
+// CommitAskUserIfNeeded performs a commit of the staged changes with an optional custom message and author.
+func (self *Commands) CommitAskUserIfNeeded(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
@@ -138,8 +138,8 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	return runner.Run("git", gitArgs...)
 }
 
-// CommitNoUserInput commits the currently staged changes.
-func (self *Commands) CommitNoUserInput(runner gitdomain.Runner, messageOpt Option[gitdomain.CommitMessage]) error {
+// CommitNeverAskUser commits the currently staged changes.
+func (self *Commands) CommitNeverAskUser(runner gitdomain.Runner, messageOpt Option[gitdomain.CommitMessage]) error {
 	if message, hasMessage := messageOpt.Get(); hasMessage {
 		return runner.Run("git", "commit", "-m", message.String())
 	}
