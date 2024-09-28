@@ -59,7 +59,7 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("my message"), AskUser: git.MissingCommitMessageAskUser},
+				&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("my message"), UseDefault: git.MissingCommitMessageUseDefault},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
@@ -273,7 +273,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Message": "my message",
-        "AskUser": true
+        "UseDefault": true
       },
       "type": "Commit"
     },

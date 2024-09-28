@@ -10,8 +10,8 @@ import (
 // Commit commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type Commit struct {
-	AskUser                 git.MissingCommitMessage
 	Message                 Option[gitdomain.CommitMessage]
+	UseDefault              git.MissingCommitMessage
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

@@ -145,8 +145,8 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 type MissingCommitMessage bool
 
 const (
-	MissingCommitMessageAskUser    MissingCommitMessage = true  // if the commit message is missing, let the user enter it
-	MissingCommitMessageUseDefault MissingCommitMessage = false // if the commit message is missing, use the default commit message
+	MissingCommitMessageAskUser    MissingCommitMessage = false // if the commit message is missing, let the user enter it
+	MissingCommitMessageUseDefault MissingCommitMessage = true  // if the commit message is missing, use the default commit message
 )
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
