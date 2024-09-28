@@ -10,7 +10,7 @@ type ContinueMerge struct {
 
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {
-		return args.Git.CommitNoEdit(args.Frontend)
+		args.PrependOpcodes(&CommitNoEdit{})
 	}
 	return nil
 }
