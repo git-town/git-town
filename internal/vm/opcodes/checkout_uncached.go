@@ -12,5 +12,5 @@ type CheckoutUncached struct {
 }
 
 func (self *CheckoutUncached) Run(args shared.RunArgs) error {
-	return args.Git.CheckoutBranchUncached(args.Frontend, self.Branch, false)
+	return args.Git.CheckoutBranchUncached(args.Backend, self.Branch, false)
 }
