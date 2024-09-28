@@ -20,7 +20,7 @@ func (self *RebaseParent) AbortProgram() []shared.Opcode {
 
 func (self *RebaseParent) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&ContinueRebase{},
+		&ContinueRebaseIfNeeded{},
 	}
 }
 

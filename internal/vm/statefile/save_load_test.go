@@ -66,7 +66,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalNumber:  123,
 				},
 				&opcodes.ContinueMerge{},
-				&opcodes.ContinueRebase{},
+				&opcodes.ContinueRebaseIfNeeded{},
 				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					StartingPoint: gitdomain.NewSHA("123456").Location(),
