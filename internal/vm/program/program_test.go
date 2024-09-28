@@ -304,7 +304,7 @@ Program:
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := program.Program{
-			&opcodes.ResetCurrentBranchToSHA{
+			&opcodes.ResetCurrentBranchToSHAIfNeeded{
 				Hard:        false,
 				MustHaveSHA: gitdomain.NewSHA("abcdef"),
 				SetToSHA:    gitdomain.NewSHA("123456"),
