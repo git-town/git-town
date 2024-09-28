@@ -108,7 +108,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				SetToSHA:    beforeLocalSHA,
 				Hard:        true,
 			})
-			result.Add(&opcodes.ResetRemoteBranchToSHA{
+			result.Add(&opcodes.ResetRemoteBranchToSHAIfNeeded{
 				Branch:      beforeRemoteName,
 				MustHaveSHA: afterRemoteSHA,
 				SetToSHA:    beforeRemoteSHA,
@@ -157,7 +157,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, remoteFeatureChanges := CategorizeRemoteBranchChange(self.RemoteChanged, args.Config)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
-		result.Add(&opcodes.ResetRemoteBranchToSHA{
+		result.Add(&opcodes.ResetRemoteBranchToSHAIfNeeded{
 			Branch:      remoteChangedFeatureBranch,
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
