@@ -132,7 +132,7 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
-	} else if !missingCommitMessage {
+	} else if missingCommitMessage == MissingCommitMessageUseDefault {
 		gitArgs = append(gitArgs, "--no-edit")
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
