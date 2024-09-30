@@ -60,7 +60,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	} else {
 		authorOpt = Some(author)
 	}
-	err = args.Git.Commit(args.Frontend, self.CommitMessage, git.MissingCommitMessageNo, authorOpt)
+	err = args.Git.Commit(args.Frontend, self.CommitMessage, git.UseDefaultMessageNo, authorOpt)
 	if err != nil {
 		return err
 	}

@@ -134,9 +134,9 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 		gitArgs = append(gitArgs, "-m", messageContent.String())
 	} else {
 		switch missingCommitMessage {
-		case MissingCommitMessageYes:
+		case UseDefaultMessageYes:
 			gitArgs = append(gitArgs, "--no-edit")
-		case MissingCommitMessageNo:
+		case UseDefaultMessageNo:
 			// nothing to do here, Git will ask the user
 		}
 	}
@@ -150,8 +150,8 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 type CommitUseDefaultMessage bool
 
 const (
-	MissingCommitMessageNo  CommitUseDefaultMessage = false // if the commit message is missing, let the user enter it
-	MissingCommitMessageYes CommitUseDefaultMessage = true  // if the commit message is missing, use the default commit message
+	UseDefaultMessageNo  CommitUseDefaultMessage = false // if the commit message is missing, let the user enter it
+	UseDefaultMessageYes CommitUseDefaultMessage = true  // if the commit message is missing, use the default commit message
 )
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
