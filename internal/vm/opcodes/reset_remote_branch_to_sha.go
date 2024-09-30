@@ -5,8 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ResetRemoteBranchToSHA sets the given remote branch to the given SHA,
-// but only if it currently has a particular SHA.
+// ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
 type ResetRemoteBranchToSHA struct {
 	Branch                  gitdomain.RemoteBranchName
 	SetToSHA                gitdomain.SHA
