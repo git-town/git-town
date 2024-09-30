@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
 	"github.com/git-town/git-town/v16/internal/hosting"
@@ -268,7 +267,7 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 		if data.initialBranch == localBranchToKill {
 			if data.hasOpenChanges {
 				prog.Value.Add(&opcodes.StageOpenChanges{})
-				prog.Value.Add(&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"), UseDefaultMessage: git.UseDefaultMessageYes})
+				prog.Value.Add(&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"), UseDefaultCommitMessage: gitdomain.UseDefaultCommitMessageYes})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
 				prog.Value.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
 				// when undoing, manually undo the just committed changes so that they are uncommitted again

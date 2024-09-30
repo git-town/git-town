@@ -2,7 +2,6 @@ package sync
 
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/program"
@@ -54,7 +53,7 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 	})
 	if args.firstCommitMessage.IsSome() {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
-		args.program.Value.Add(&opcodes.Commit{Message: args.firstCommitMessage, UseDefaultMessage: git.UseDefaultMessageYes})
+		args.program.Value.Add(&opcodes.Commit{Message: args.firstCommitMessage, UseDefaultCommitMessage: gitdomain.UseDefaultCommitMessageYes})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {
 		args.program.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})

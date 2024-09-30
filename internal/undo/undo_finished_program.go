@@ -2,7 +2,6 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/undo/undobranches"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
@@ -20,7 +19,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// Open changes in the middle of an unfinished command will be undone as well.
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.StageOpenChanges{})
-		result.Value.Add(&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"), UseDefaultMessage: git.UseDefaultMessageYes})
+		result.Value.Add(&opcodes.Commit{Message: gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"), UseDefaultCommitMessage: gitdomain.UseDefaultCommitMessageYes})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram))

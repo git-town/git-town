@@ -128,15 +128,15 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 
 // Commit performs a commit of the staged changes.
 // If no commit message is provided, asks the user to enter one.
-func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage CommitUseDefaultMessage, author Option[gitdomain.Author]) error {
+func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage gitdomain.UseDefaultCommitMessage, author Option[gitdomain.Author]) error {
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
 	} else {
 		switch useDefaultMessage {
-		case UseDefaultMessageYes:
+		case gitdomain.UseDefaultCommitMessageYes:
 			gitArgs = append(gitArgs, "--no-edit")
-		case UseDefaultMessageNo:
+		case gitdomain.UseDefaultCommitMessageNo:
 			// nothing to do here, Git will ask the user
 		}
 	}
@@ -145,14 +145,6 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	}
 	return runner.Run("git", gitArgs...)
 }
-
-// CommitUseDefaultMessage defines possible ways to deal with a missing commit message.
-type CommitUseDefaultMessage bool
-
-const (
-	UseDefaultMessageNo  CommitUseDefaultMessage = false // if the commit message is missing, let the user enter it
-	UseDefaultMessageYes CommitUseDefaultMessage = true  // if the commit message is missing, use the default commit message
-)
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {

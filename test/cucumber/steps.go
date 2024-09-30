@@ -19,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/configfile"
-	prodgit "github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -981,7 +980,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
 		asserts.NoError(err)
 		originRepo.StageFiles("-A")
-		err = originRepo.Commit(originRepo.TestRunner, commitMessage, prodgit.UseDefaultMessageYes, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
+		err = originRepo.Commit(originRepo.TestRunner, commitMessage, gitdomain.UseDefaultCommitMessageYes, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(branchToShip)
 	})

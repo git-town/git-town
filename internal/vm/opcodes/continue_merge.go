@@ -1,7 +1,6 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -15,7 +14,7 @@ type ContinueMerge struct {
 
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {
-		return args.Git.Commit(args.Frontend, None[gitdomain.CommitMessage](), git.UseDefaultMessageYes, None[gitdomain.Author]())
+		return args.Git.Commit(args.Frontend, None[gitdomain.CommitMessage](), gitdomain.UseDefaultCommitMessageYes, None[gitdomain.Author]())
 	}
 	return nil
 }
