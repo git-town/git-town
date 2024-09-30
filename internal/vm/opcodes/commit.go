@@ -11,7 +11,7 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type Commit struct {
 	Message                 Option[gitdomain.CommitMessage]
-	UseDefault              git.MissingCommitMessage
+	UseDefaultMessage       git.MissingCommitMessage
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
