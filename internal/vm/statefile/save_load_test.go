@@ -59,13 +59,13 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{
-					Message:                        Some(gitdomain.CommitMessage("my message")),
-					FallbackToDefaultCommitMessage: true,
 					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
+					FallbackToDefaultCommitMessage: true,
+					Message:                        Some(gitdomain.CommitMessage("my message")),
 				},
 				&opcodes.CommitWithMessage{
-					Message:        gitdomain.CommitMessage("my message"),
 					AuthorOverride: Some(gitdomain.Author("user@acme.com")),
+					Message:        gitdomain.CommitMessage("my message"),
 				},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
