@@ -52,10 +52,9 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
-	commitMessage := args.firstCommitMessage
-	if commitMessage.IsSome() {
+	if args.firstCommitMessage.IsSome() {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
-		args.program.Value.Add(&opcodes.Commit{Message: commitMessage, UseDefaultMessage: git.UseDefaultMessageYes})
+		args.program.Value.Add(&opcodes.Commit{Message: args.firstCommitMessage, UseDefaultMessage: git.UseDefaultMessageYes})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {
 		args.program.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})
