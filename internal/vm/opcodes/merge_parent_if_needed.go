@@ -23,7 +23,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		if args.Git.BranchExists(args.Backend, parent) {
-			// parent is local
+			// parent is local --> sync with the local branch, then we are done
 			var parentActiveInAnotherWorktree bool
 			branchInfos, has := args.InitialBranchesSnapshot.Get()
 			if !has {
@@ -39,23 +39,22 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 				ParentActiveInOtherWorktree: parentActiveInAnotherWorktree,
 			})
 			break
-		} else {
-			// parent isn't local
-			parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
-			// merge the parent's tracking branch
-			toAppend = append(toAppend, &MergeBranchNoEdit{
-				Branch: parentTrackingName.BranchName(),
-			})
-			// pull updates from the youngest local ancestor
-			ancestors := args.Config.Config.Lineage.Ancestors(branch)
-			slices.Reverse(ancestors) // sort youngest first
-			if youngestLocalAncestor, has := args.Git.FirstExistingBranch(args.Backend, ancestors...).Get(); has {
-				toAppend = append(toAppend, &MergeBranchNoEdit{
-					Branch: youngestLocalAncestor.BranchName(),
-				})
-			}
-			branch = parent
 		}
+		// here the parent isn't local --> sync with its tracking branch, then also sync the grandparent until we find a local ancestor
+		parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
+		// merge the parent's tracking branch
+		toAppend = append(toAppend, &MergeBranchNoEdit{
+			Branch: parentTrackingName.BranchName(),
+		})
+		// pull updates from the youngest local ancestor
+		ancestors := args.Config.Config.Lineage.Ancestors(branch)
+		slices.Reverse(ancestors) // sort youngest first
+		if youngestLocalAncestor, has := args.Git.FirstExistingBranch(args.Backend, ancestors...).Get(); has {
+			toAppend = append(toAppend, &MergeBranchNoEdit{
+				Branch: youngestLocalAncestor.BranchName(),
+			})
+		}
+		branch = parent
 	}
 	args.PrependOpcodes(toAppend...)
 	return nil
