@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// RevertCommitIfNeeded adds a commit to the current branch
+// RevertCommit adds a commit to the current branch
 // that reverts the commit with the given SHA.
 type RevertCommit struct {
 	SHA                     gitdomain.SHA
