@@ -11,7 +11,7 @@ import (
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], lastAncestorSynced Option[gitdomain.LocalBranchName], args BranchProgramArgs) {
+func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	parentOtherWorktree := false
 	parentIsLocal := false
 	localName, hasLocalName := branchInfo.LocalName.Get()
@@ -33,11 +33,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
+		DeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		SyncLocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, parentIsLocal, firstCommitMessage, args)
+		LocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, parentIsLocal, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -51,8 +51,8 @@ type BranchProgramArgs struct {
 	Remotes       gitdomain.Remotes
 }
 
-// SyncLocalBranchProgram provides the program to sync a local branch.
-func SyncLocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, parentIsLocal bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+// LocalBranchProgram provides the program to sync a local branch.
+func LocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, parentIsLocal bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
