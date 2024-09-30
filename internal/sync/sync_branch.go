@@ -13,7 +13,6 @@ import (
 // BranchProgram syncs the given branch.
 func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	parentOtherWorktree := false
-	parentIsLocal := false
 	localName, hasLocalName := branchInfo.LocalName.Get()
 	if !hasLocalName {
 		remoteName, hasRemoteName := branchInfo.RemoteName.Get()
@@ -29,7 +28,6 @@ func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gi
 	if hasParent {
 		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalOrRemoteName(parent).Get()
 		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		parentIsLocal = parentBranchInfo.LocalName.IsSome()
 	}
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
@@ -37,7 +35,7 @@ func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gi
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, parentIsLocal, firstCommitMessage, args)
+		LocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -52,7 +50,7 @@ type BranchProgramArgs struct {
 }
 
 // LocalBranchProgram provides the program to sync a local branch.
-func LocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, parentIsLocal bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func LocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return

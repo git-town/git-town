@@ -1,4 +1,3 @@
-@this
 Feature: stacked changes where an ancestor branch isn't local
 
   Background:
