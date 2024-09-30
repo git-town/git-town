@@ -31,7 +31,9 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	// is not an error condition.
 	// This operation can fail for a number of reasons like the previous branch being
 	// checked out in another worktree, or concurrent Git access
-	_ = args.Git.CheckoutBranchUncached(args.Backend, expectedPreviousBranch, false)
-	_ = args.Git.CheckoutBranchUncached(args.Backend, currentBranch, false)
+	args.PrependOpcodes(
+		&CheckoutUncached{Branch: expectedPreviousBranch},
+		&CheckoutUncached{Branch: currentBranch},
+	)
 	return nil
 }

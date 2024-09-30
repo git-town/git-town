@@ -12,12 +12,5 @@ type PushCurrentBranch struct {
 }
 
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch)
-	if err != nil {
-		return err
-	}
-	if !shouldPush {
-		return nil
-	}
 	return args.Git.PushCurrentBranch(args.Frontend, args.Config.Config.NoPushHook())
 }

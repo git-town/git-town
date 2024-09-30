@@ -16,8 +16,12 @@ import (
 )
 
 func Execute(args ExecuteArgs) {
-	for _, opcode := range args.Prog {
-		err := opcode.Run(shared.RunArgs{
+	for {
+		nextStep := args.Prog.Pop()
+		if nextStep == nil {
+			return
+		}
+		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			Config:                          args.Config,
 			Connector:                       args.Connector,
@@ -25,7 +29,7 @@ func Execute(args ExecuteArgs) {
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
-			PrependOpcodes:                  nil,
+			PrependOpcodes:                  args.Prog.Prepend,
 			RegisterUndoablePerennialCommit: nil,
 			UpdateInitialBranchLocalSHA:     nil,
 		})

@@ -22,14 +22,14 @@ func TestRunState(t *testing.T) {
 			Command: "sync",
 			DryRun:  true,
 			AbortProgram: program.Program{
-				&opcodes.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHAIfNeeded{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
 			RunProgram: program.Program{
-				&opcodes.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHAIfNeeded{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
@@ -73,7 +73,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHA"
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     }
   ],
   "BeginBranchesSnapshot": {
@@ -116,7 +116,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHA"
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     }
   ],
   "TouchedBranches": [

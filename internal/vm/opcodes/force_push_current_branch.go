@@ -22,5 +22,6 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Config.NoPushHook(), self.ForceIfIncludes)
+	args.PrependOpcodes(&ForcePush{ForceIfIncludes: self.ForceIfIncludes})
+	return nil
 }

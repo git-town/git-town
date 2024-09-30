@@ -16,5 +16,6 @@ func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
 	if !hasParent {
 		return nil
 	}
-	return args.Git.ResetBranch(args.Frontend, parent.BranchName())
+	args.PrependOpcodes(&ResetBranch{Target: parent.BranchName()})
+	return nil
 }

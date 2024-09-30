@@ -15,12 +15,5 @@ func (self *ContinueRebase) AbortProgram() []shared.Opcode {
 }
 
 func (self *ContinueRebase) Run(args shared.RunArgs) error {
-	repoStatus, err := args.Git.RepoStatus(args.Backend)
-	if err != nil {
-		return err
-	}
-	if repoStatus.RebaseInProgress {
-		return args.Git.ContinueRebase(args.Frontend)
-	}
-	return nil
+	return args.Git.ContinueRebase(args.Frontend)
 }

@@ -12,18 +12,6 @@ type MergeParent struct {
 	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
 
-func (self *MergeParent) AbortProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&AbortMerge{},
-	}
-}
-
-func (self *MergeParent) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&ContinueMerge{},
-	}
-}
-
 func (self *MergeParent) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
@@ -35,5 +23,6 @@ func (self *MergeParent) Run(args shared.RunArgs) error {
 	} else {
 		branchToMerge = parent.BranchName()
 	}
-	return args.Git.MergeBranchNoEdit(args.Frontend, branchToMerge)
+	args.PrependOpcodes(&MergeBranchNoEdit{Branch: branchToMerge})
+	return nil
 }

@@ -58,6 +58,8 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{
 					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
 					FallbackToDefaultCommitMessage: true,
@@ -75,6 +77,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.ContinueMerge{},
 				&opcodes.ContinueRebase{},
+				&opcodes.ContinueRebaseIfNeeded{},
 				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					StartingPoint: gitdomain.NewSHA("123456").Location(),
@@ -120,6 +123,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PushCurrentBranch{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
+				&opcodes.PushCurrentBranchIfNeeded{
+					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.PushTags{},
 				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.RebaseParent{
@@ -155,12 +161,19 @@ func TestLoadSave(t *testing.T) {
 					OldName: "old",
 				},
 				&opcodes.ResetCurrentBranchToSHA{
+					Hard:     true,
+					SetToSHA: gitdomain.NewSHA("111111"),
+				},
+				&opcodes.ResetCurrentBranchToSHAIfNeeded{
 					Hard:        true,
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
 				&opcodes.RestoreOpenChanges{},
 				&opcodes.RevertCommit{
+					SHA: gitdomain.NewSHA("123456"),
+				},
+				&opcodes.RevertCommitIfNeeded{
 					SHA: gitdomain.NewSHA("123456"),
 				},
 				&opcodes.SetGlobalConfig{
@@ -279,6 +292,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch"
+      },
+      "type": "CheckoutIfNeeded"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "CheckoutUncached"
+    },
+    {
+      "data": {
         "AuthorOverride": "user@acme.com",
         "FallbackToDefaultCommitMessage": true,
         "Message": "my message"
@@ -308,6 +333,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ContinueRebase"
+    },
+    {
+      "data": {},
+      "type": "ContinueRebaseIfNeeded"
     },
     {
       "data": {
@@ -419,6 +448,12 @@ func TestLoadSave(t *testing.T) {
       "type": "PushCurrentBranch"
     },
     {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "PushCurrentBranchIfNeeded"
+    },
+    {
       "data": {},
       "type": "PushTags"
     },
@@ -494,10 +529,17 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Hard": true,
-        "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHA"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
+      },
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     },
     {
       "data": {},
@@ -508,6 +550,12 @@ func TestLoadSave(t *testing.T) {
         "SHA": "123456"
       },
       "type": "RevertCommit"
+    },
+    {
+      "data": {
+        "SHA": "123456"
+      },
+      "type": "RevertCommitIfNeeded"
     },
     {
       "data": {
