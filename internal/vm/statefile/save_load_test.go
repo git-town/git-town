@@ -119,7 +119,9 @@ func TestLoadSave(t *testing.T) {
 					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
 				},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{},
+				&opcodes.PushCurrentBranch{
+					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.PushCurrentBranchIfNeeded{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -156,6 +158,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RenameBranch{
 					NewName: "new",
 					OldName: "old",
+				},
+				&opcodes.ResetCurrentBranchToSHA{
+					Hard:     true,
+					SetToSHA: gitdomain.NewSHA("111111"),
 				},
 				&opcodes.ResetCurrentBranchToSHAIfNeeded{
 					Hard:        true,
@@ -513,10 +519,17 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Hard": true,
-        "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHA"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
+      },
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     },
     {
       "data": {},
