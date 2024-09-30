@@ -77,15 +77,6 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 	//    - pull the tracking branch of the current parent
 	//    - pull the local branch of the oldest local ancestor
 	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		CurrentBranch:               args.localName,
-		ParentActiveInOtherWorktree: args.parentOtherWorktree,
-	})
-	// pull updates from the parent's tracking branch
-	args.program.Value.Add(&opcodes.MergeParentsTrackingBranch{
-		CurrentBranch: args.localName,
-	})
-	// pull updates from the last local ancestor
-	args.program.Value.Add(&opcodes.MergeOldestNonDirectLocalParent{
 		CurrentBranch: args.localName,
 	})
 }
@@ -108,7 +99,7 @@ type syncFeatureBranchProgramArgs struct {
 	localName           gitdomain.LocalBranchName
 	offline             configdomain.Offline // whether offline mode is enabled
 	parent              gitdomain.BranchName
-	parentOtherWorktree bool
+	parentOtherWorktree bool // TODO: delete
 	program             Mutable[program.Program]
 	pushBranches        configdomain.PushBranches
 	remoteName          Option[gitdomain.RemoteBranchName]
