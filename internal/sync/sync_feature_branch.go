@@ -56,7 +56,7 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.Commit{
 			AuthorOverride:                 None[gitdomain.Author](),
 			Message:                        args.firstCommitMessage,
-			FallbackToDefaultCommitMessage: gitdomain.FallbackToDefaultCommitMessageYes,
+			FallbackToDefaultCommitMessage: true,
 		})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {

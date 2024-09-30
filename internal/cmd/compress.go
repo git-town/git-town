@@ -281,7 +281,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	prog.Value.Add(&opcodes.ResetCurrentBranch{Base: data.parentBranch.BranchName()})
 	prog.Value.Add(&opcodes.Commit{
 		AuthorOverride:                 None[gitdomain.Author](),
-		FallbackToDefaultCommitMessage: gitdomain.FallbackToDefaultCommitMessageYes,
+		FallbackToDefaultCommitMessage: true,
 		Message:                        Some(data.newCommitMessage),
 	})
 	if data.hasTracking && online.IsTrue() {

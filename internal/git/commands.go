@@ -128,16 +128,13 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 
 // Commit performs a commit of the staged changes.
 // If no commit message is provided, asks the user to enter one.
-func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage gitdomain.FallbackToDefaultCommitMessage, author Option[gitdomain.Author]) error {
+func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage bool, author Option[gitdomain.Author]) error {
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
 	} else {
-		switch useDefaultMessage {
-		case gitdomain.FallbackToDefaultCommitMessageYes:
+		if useDefaultMessage {
 			gitArgs = append(gitArgs, "--no-edit")
-		case gitdomain.FallbackToDefaultCommitMessageNo:
-			// nothing to do here, Git will ask the user
 		}
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {

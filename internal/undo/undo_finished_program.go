@@ -22,7 +22,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Value.Add(&opcodes.Commit{
 			AuthorOverride:                 None[gitdomain.Author](),
 			Message:                        gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"),
-			FallbackToDefaultCommitMessage: gitdomain.FallbackToDefaultCommitMessageYes,
+			FallbackToDefaultCommitMessage: true,
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {

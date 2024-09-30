@@ -9,7 +9,7 @@ import (
 // Commit commits all open changes as a new commit.
 type Commit struct {
 	AuthorOverride                 Option[gitdomain.Author]
-	FallbackToDefaultCommitMessage gitdomain.FallbackToDefaultCommitMessage
+	FallbackToDefaultCommitMessage bool
 	Message                        Option[gitdomain.CommitMessage]
 	undeclaredOpcodeMethods        `exhaustruct:"optional"`
 }
