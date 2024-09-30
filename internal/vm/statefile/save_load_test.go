@@ -169,6 +169,9 @@ func TestLoadSave(t *testing.T) {
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
 				&opcodes.RestoreOpenChanges{},
+				&opcodes.RevertCommit{
+					SHA: gitdomain.NewSHA("123456"),
+				},
 				&opcodes.RevertCommitIfNeeded{
 					SHA: gitdomain.NewSHA("123456"),
 				},
@@ -189,6 +192,9 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.SkipCurrentBranch{},
+				&opcodes.SquashMerge{
+					Branch: gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.SquashMergeWorkflow{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
@@ -543,6 +549,12 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "SHA": "123456"
+      },
+      "type": "RevertCommitIfNeeded"
+    },
+    {
+      "data": {
         "Key": "git-town.offline",
         "Value": "1"
       },
@@ -575,11 +587,17 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch"
+      },
+      "type": "SquashMerge"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "SquashMerge"
+      "type": "SquashMergeWorkflow"
     },
     {
       "data": {},
