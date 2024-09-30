@@ -59,6 +59,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{
 					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
 					FallbackToDefaultCommitMessage: true,
@@ -297,6 +298,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "CheckoutIfNeeded"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "CheckoutUncached"
     },
     {
       "data": {
