@@ -12,7 +12,6 @@ Feature: must provide a commit message
     And Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town ship" and close the editor
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                         |

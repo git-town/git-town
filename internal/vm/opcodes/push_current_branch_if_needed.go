@@ -19,6 +19,6 @@ func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	args.PrependOpcodes(&PushCurrentBranch{})
+	args.PrependOpcodes(&PushCurrentBranch{CurrentBranch: self.CurrentBranch})
 	return nil
 }
