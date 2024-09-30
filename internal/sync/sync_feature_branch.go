@@ -53,7 +53,7 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 	})
 	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
-		args.program.Value.Add(&opcodes.Commit{
+		args.program.Value.Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
 			Message:        firstCommitMessage,
 		})
