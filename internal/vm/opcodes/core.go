@@ -127,7 +127,6 @@ func Types() []shared.Opcode {
 		&StageOpenChanges{},
 		&StashOpenChanges{},
 		&SquashMerge{},
-		&SquashMergeWorkflow{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
 		&UpdateProposalHead{},

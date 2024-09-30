@@ -194,9 +194,6 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.SkipCurrentBranch{},
 				&opcodes.SquashMerge{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.SquashMergeWorkflow{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
@@ -594,17 +591,11 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
-      },
-      "type": "SquashMerge"
-    },
-    {
-      "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "SquashMergeWorkflow"
+      "type": "SquashMerge"
     },
     {
       "data": {},
