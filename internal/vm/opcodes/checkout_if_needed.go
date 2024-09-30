@@ -16,9 +16,8 @@ func (self *CheckoutIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if existingBranch == self.Branch {
-		return nil
+	if existingBranch != self.Branch {
+		args.PrependOpcodes(&Checkout{Branch: self.Branch})
 	}
-	args.PrependOpcodes(&Checkout{Branch: self.Branch})
 	return nil
 }
