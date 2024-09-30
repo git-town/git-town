@@ -272,8 +272,8 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "AuthorOverride": null,
-        "Message": "my message",
-        "FallbackToDefaultCommitMessage": true
+        "FallbackToDefaultCommitMessage": true,
+        "Message": "my message"
       },
       "type": "Commit"
     },
