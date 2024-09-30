@@ -14,5 +14,5 @@ type Commit struct {
 }
 
 func (self *Commit) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, gitdomain.UseDefaultCommitMessageYes, None[gitdomain.Author]())
+	return args.Git.Commit(args.Frontend, self.Message, self.UseDefaultCommitMessage, None[gitdomain.Author]())
 }
