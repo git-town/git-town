@@ -279,7 +279,7 @@ Program:
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 		}
 		have := prog.OpcodeTypes()
-		want := []string{"*opcodes.AbortMerge", "*opcodes.Checkout"}
+		want := []string{"*opcodes.AbortMerge", "*opcodes.CheckoutIfNeeded"}
 		must.Eq(t, want, have)
 	})
 
@@ -293,7 +293,7 @@ Program:
 			"MustHaveSHA": "abcdef",
 			"SetToSHA": "123456"
 		},
-		"type": "ResetCurrentBranchToSHA"
+		"type": "ResetCurrentBranchToSHAIfNeeded"
 	},
 	{
 		"data": {},

@@ -57,8 +57,8 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{
 					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
 					FallbackToDefaultCommitMessage: true,
@@ -75,6 +75,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalNumber:  123,
 				},
 				&opcodes.ContinueMerge{},
+				&opcodes.ContinueRebase{},
 				&opcodes.ContinueRebaseIfNeeded{},
 				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
@@ -118,6 +119,7 @@ func TestLoadSave(t *testing.T) {
 					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
 				},
 				&opcodes.PullCurrentBranch{},
+				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchIfNeeded{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -280,6 +282,12 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch"
+      },
+      "type": "CheckoutIfNeeded"
+    },
+    {
+      "data": {
         "AuthorOverride": "user@acme.com",
         "FallbackToDefaultCommitMessage": true,
         "Message": "my message"
@@ -309,6 +317,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ContinueRebase"
+    },
+    {
+      "data": {},
+      "type": "ContinueRebaseIfNeeded"
     },
     {
       "data": {
@@ -418,6 +430,12 @@ func TestLoadSave(t *testing.T) {
         "CurrentBranch": "branch"
       },
       "type": "PushCurrentBranch"
+    },
+    {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "PushCurrentBranchIfNeeded"
     },
     {
       "data": {},

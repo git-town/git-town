@@ -40,7 +40,7 @@ func TestJSON(t *testing.T) {
 	"data": {
     "Branch": "branch-1"
   },
-	"type": "Checkout"
+	"type": "CheckoutIfNeeded"
 }`[1:]
 		have := program.JSON{
 			Opcode: &opcodes.CheckoutIfNeeded{

@@ -73,7 +73,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHA"
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     }
   ],
   "BeginBranchesSnapshot": {
@@ -116,7 +116,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHA"
+      "type": "ResetCurrentBranchToSHAIfNeeded"
     }
   ],
   "TouchedBranches": [
