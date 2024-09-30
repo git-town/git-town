@@ -20,7 +20,6 @@ Feature: stacked changes where an ancestor branch isn't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
-  @this
   Scenario:
     Then it runs the commands
       | BRANCH | COMMAND                               |
@@ -57,13 +56,14 @@ Feature: stacked changes where an ancestor branch isn't local
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
       |        |               | Merge branch 'alpha' into gamma                        |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                                                         |
-      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                      |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                             |
-      | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                              |
+      | BRANCH | COMMAND                                                                                       |
+      | gamma  | git checkout alpha                                                                            |
+      | alpha  | git reset --hard {{ sha-before-run 'local alpha commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin alpha commit' }}:alpha |
+      |        | git checkout gamma                                                                            |
+      | gamma  | git reset --hard {{ sha-before-run 'local gamma commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin gamma commit' }}:gamma |
