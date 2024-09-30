@@ -67,3 +67,5 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git checkout gamma                                                                            |
       | gamma  | git reset --hard {{ sha-before-run 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin gamma commit' }}:gamma |
+    And the initial lineage exists now
+    And the initial commits exist now
