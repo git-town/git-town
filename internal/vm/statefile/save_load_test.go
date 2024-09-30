@@ -58,8 +58,15 @@ func TestLoadSave(t *testing.T) {
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.Commit{Message: Some(gitdomain.CommitMessage("my message")), FallbackToDefaultCommitMessage: true, AuthorOverride: Some(gitdomain.Author("user@acme.com"))},
-				&opcodes.CommitWithMessage{Message: gitdomain.CommitMessage("my message"), AuthorOverride: Some(gitdomain.Author("user@acme.com"))},
+				&opcodes.Commit{
+					Message:                        Some(gitdomain.CommitMessage("my message")),
+					FallbackToDefaultCommitMessage: true,
+					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
+				},
+				&opcodes.CommitWithMessage{
+					Message:        gitdomain.CommitMessage("my message"),
+					AuthorOverride: Some(gitdomain.Author("user@acme.com")),
+				},
 				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
