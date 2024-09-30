@@ -15,7 +15,7 @@ type ContinueMerge struct {
 
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {
-		return args.Git.Commit(args.Frontend, None[gitdomain.CommitMessage](), git.MissingCommitMessageUseDefault, None[gitdomain.Author]())
+		return args.Git.Commit(args.Frontend, None[gitdomain.CommitMessage](), git.MissingCommitMessageYes, None[gitdomain.Author]())
 	}
 	return nil
 }

@@ -11,10 +11,10 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type Commit struct {
 	Message                 Option[gitdomain.CommitMessage]
-	UseDefaultMessage       git.MissingCommitMessage
+	UseDefaultMessage       git.CommitUseDefaultMessage
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *Commit) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, git.MissingCommitMessageUseDefault, None[gitdomain.Author]())
+	return args.Git.Commit(args.Frontend, self.Message, git.MissingCommitMessageYes, None[gitdomain.Author]())
 }
