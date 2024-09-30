@@ -15,7 +15,13 @@ type MergeParentIfNeeded struct {
 }
 
 func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
-	if parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+	branch := self.CurrentBranch
+	toAppend := []shared.Opcode{}
+	for {
+		parent, hasParent := args.Config.Config.Lineage.Parent(branch).Get()
+		if !hasParent {
+			break
+		}
 		if args.Git.BranchExists(args.Backend, parent) {
 			// parent is local
 			var parentActiveInAnotherWorktree bool
@@ -28,26 +34,29 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			} else {
 				parentActiveInAnotherWorktree = false
 			}
-			args.PrependOpcodes(&MergeParent{
-				CurrentBranch:               self.CurrentBranch,
+			toAppend = append(toAppend, &MergeParent{
+				CurrentBranch:               branch,
 				ParentActiveInOtherWorktree: parentActiveInAnotherWorktree,
 			})
+			break
 		} else {
 			// parent isn't local
 			parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
+			// merge the parent's tracking branch
+			toAppend = append(toAppend, &MergeBranchNoEdit{
+				Branch: parentTrackingName.BranchName(),
+			})
 			// pull updates from the youngest local ancestor
-			ancestors := args.Config.Config.Lineage.Ancestors(self.CurrentBranch)
+			ancestors := args.Config.Config.Lineage.Ancestors(branch)
 			slices.Reverse(ancestors) // sort youngest first
 			if youngestLocalAncestor, has := args.Git.FirstExistingBranch(args.Backend, ancestors...).Get(); has {
-				args.PrependOpcodes(&MergeBranchNoEdit{
+				toAppend = append(toAppend, &MergeBranchNoEdit{
 					Branch: youngestLocalAncestor.BranchName(),
 				})
 			}
-			// merge the parent's tracking branch
-			args.PrependOpcodes(&MergeBranchNoEdit{
-				Branch: parentTrackingName.BranchName(),
-			})
+			branch = parent
 		}
 	}
+	args.PrependOpcodes(toAppend...)
 	return nil
 }

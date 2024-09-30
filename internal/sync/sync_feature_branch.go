@@ -68,14 +68,6 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	// Even a parent that is local now could be deleted at runtime.
-	// So all we can do here is detect the state at runtime, and then insert a new program that does the right thing.
-	// At runtime:
-	// - determine the current parent branch (might be different than the parent branch when the program was initially created)
-	// - if the current parent branch is local: merge the local parent branch
-	// - otherwise:
-	//    - pull the tracking branch of the current parent
-	//    - pull the local branch of the oldest local ancestor
 	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
 		CurrentBranch: args.localName,
 	})
