@@ -56,7 +56,6 @@ Feature: stacked changes where an ancestor branch isn't local
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
       |        |               | Merge branch 'alpha' into gamma                        |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -69,3 +68,7 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin gamma commit' }}:gamma |
     And the initial lineage exists now
     And the initial commits exist now
+    And these branches exist now
+      | REPOSITORY | BRANCHES                 |
+      | local      | alpha, gamma             |
+      | origin     | main, alpha, beta, gamma |
