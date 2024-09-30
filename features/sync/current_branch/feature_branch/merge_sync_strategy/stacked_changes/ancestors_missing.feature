@@ -20,11 +20,11 @@ Feature: stacked changes where an ancestor branch isn't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
-  @debug @this
+  @this
   Scenario:
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | child  | git fetch --prune --tags              |
+      | gamma  | git fetch --prune --tags              |
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git merge --no-edit --ff origin/main  |
@@ -35,27 +35,27 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git merge --no-edit --ff alpha        |
       |        | git push                              |
     And all branches are now synchronized
-    And the current branch is still "child"
+    And the current branch is still "gamma"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local, origin | origin main commit                                       |
-      |        |               | local main commit                                        |
-      | child  | local, origin | local child commit                                       |
-      |        |               | origin child commit                                      |
-      |        |               | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
-      |        |               | Merge branch 'parent' into child                         |
-      | parent | local, origin | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
+      | BRANCH | LOCATION      | MESSAGE                                                |
+      | main   | origin        | origin main commit                                     |
+      | alpha  | local, origin | local alpha commit                                     |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
+      |        |               | origin main commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
+      | beta   | origin        | origin beta commit                                     |
+      | gamma  | local, origin | local gamma commit                                     |
+      |        |               | origin gamma commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
+      |        |               | origin beta commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
+      |        |               | local alpha commit                                     |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
+      |        |               | origin main commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
+      |        |               | Merge branch 'alpha' into gamma                        |
 
   Scenario: undo
     When I run "git-town undo"

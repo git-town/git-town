@@ -315,6 +315,10 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 		return result, err
 	}
 	result = make([]configdomain.BranchToSync, len(branchInfosToSync))
+	var mainIsLocal bool
+	if mainInfo, has := branchesSnapshot.Branches.FindByLocalOrRemoteName(mainBranch).Get(); has {
+		mainIsLocal = mainInfo.LocalName.IsSome()
+	}
 	for b, branchInfoToSync := range branchInfosToSync {
 		var branchNameToSync gitdomain.BranchName
 		if localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get(); hasLocalBranchToSync {
@@ -326,7 +330,13 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 		}
 		var firstCommitMessage Option[gitdomain.CommitMessage]
 		if branchNameToSync.LocalName() != mainBranch {
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranch.BranchName())
+			var mainBranchTarget gitdomain.BranchName
+			if mainIsLocal {
+				mainBranchTarget = mainBranch.BranchName()
+			} else {
+				mainBranchTarget = mainBranch.AtRemote(gitdomain.RemoteOrigin).BranchName()
+			}
+			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranchTarget)
 			if err != nil {
 				return result, err
 			}
