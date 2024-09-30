@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// Checkout checks out a new branch.
+// Checkout checks out the given existing branch.
 type Checkout struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
