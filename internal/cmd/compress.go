@@ -280,7 +280,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	prog.Value.Add(&opcodes.Checkout{Branch: data.name})
 	prog.Value.Add(&opcodes.ResetCurrentBranch{Base: data.parentBranch.BranchName()})
 	prog.Value.Add(&opcodes.Commit{
-		Author:                  None[gitdomain.Author](),
+		AuthorOverride:          None[gitdomain.Author](),
 		Message:                 Some(data.newCommitMessage),
 		UseDefaultCommitMessage: gitdomain.UseDefaultCommitMessageYes,
 	})
