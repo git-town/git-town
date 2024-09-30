@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -12,6 +14,17 @@ import (
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], lastAncestorSynced Option[gitdomain.LocalBranchName], args BranchProgramArgs) {
 	parentOtherWorktree := false
 	parentIsLocal := false
+	localName, hasLocalName := branchInfo.LocalName.Get()
+	if !hasLocalName {
+		remoteName, hasRemoteName := branchInfo.RemoteName.Get()
+		if !hasRemoteName {
+			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branchInfo))
+		}
+		localName = remoteName.LocalBranchName()
+		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{
+			Branch: localName,
+		})
+	}
 	parent, hasParent := args.Config.Lineage.Parent(localName).Get()
 	if hasParent {
 		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalOrRemoteName(parent).Get()
@@ -49,7 +62,7 @@ func SyncLocalBranchProgram(list Mutable[program.Program], branch gitdomain.Bran
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Value.Add(&opcodes.Checkout{Branch: localName})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
@@ -100,7 +113,7 @@ func SyncLocalBranchProgram(list Mutable[program.Program], branch gitdomain.Bran
 		case !branch.HasTrackingBranch():
 			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
-			list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: localName})
+			list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
 			pushFeatureBranchProgram(list, localName, args.Config.SyncFeatureStrategy)
 		}
@@ -138,7 +151,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 func pushFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Value.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
+		list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
 		list.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
 	case configdomain.SyncFeatureStrategyCompress:

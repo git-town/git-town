@@ -19,7 +19,10 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// Open changes in the middle of an unfinished command will be undone as well.
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.StageOpenChanges{})
-		result.Value.Add(&opcodes.CommitOpenChanges{Message: "Committing WIP for git town undo"})
+		result.Value.Add(&opcodes.CommitWithMessage{
+			AuthorOverride: None[gitdomain.Author](),
+			Message:        gitdomain.CommitMessage("Committing WIP for git town undo"),
+		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram))
@@ -34,7 +37,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	initialBranchOpt := args.RunState.BeginBranchesSnapshot.Active
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{initialBranchOpt}
 	if initialBranch, hasInitialBranch := initialBranchOpt.Get(); hasInitialBranch {
-		result.Value.Add(&opcodes.Checkout{Branch: initialBranch})
+		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: initialBranch})
 	}
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,

@@ -6,5 +6,5 @@ import (
 
 func IsCheckoutOpcode(opcode Opcode) bool {
 	typeName := gohacks.TypeName(opcode)
-	return typeName == "Checkout" || typeName == "CheckoutIfExists"
+	return typeName == "Checkout" || typeName == "CheckoutIfExists" || typeName == "CheckoutIfNeeded"
 }

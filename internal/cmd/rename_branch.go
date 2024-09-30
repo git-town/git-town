@@ -253,7 +253,7 @@ func renameBranchProgram(data renameBranchData) program.Program {
 	}
 	result.Value.Add(&opcodes.RenameBranch{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
-		result.Value.Add(&opcodes.Checkout{Branch: data.newBranch})
+		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
 		if data.config.Config.IsPerennialBranch(data.initialBranch) {

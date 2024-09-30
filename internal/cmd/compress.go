@@ -262,7 +262,7 @@ func compressProgram(data compressBranchesData) program.Program {
 	for _, branchToCompress := range data.branchesToCompress {
 		compressBranchProgram(prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
 	}
-	prog.Value.Add(&opcodes.Checkout{Branch: data.initialBranch.BranchName().LocalName()})
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch.BranchName().LocalName()})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -277,9 +277,12 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	if !shouldCompressBranch(data.name, data.branchType, initialBranch) {
 		return
 	}
-	prog.Value.Add(&opcodes.Checkout{Branch: data.name})
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.name})
 	prog.Value.Add(&opcodes.ResetCurrentBranch{Base: data.parentBranch.BranchName()})
-	prog.Value.Add(&opcodes.CommitSquashedChanges{Message: Some(data.newCommitMessage)})
+	prog.Value.Add(&opcodes.CommitWithMessage{
+		AuthorOverride: None[gitdomain.Author](),
+		Message:        data.newCommitMessage,
+	})
 	if data.hasTracking && online.IsTrue() {
 		prog.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
 	}

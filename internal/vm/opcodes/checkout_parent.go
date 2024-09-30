@@ -16,5 +16,6 @@ func (self *CheckoutParent) Run(args shared.RunArgs) error {
 	if !hasParent || parent == self.CurrentBranch {
 		return nil
 	}
-	return args.Git.CheckoutBranch(args.Frontend, parent, false)
+	args.PrependOpcodes(&CheckoutIfNeeded{Branch: parent})
+	return nil
 }

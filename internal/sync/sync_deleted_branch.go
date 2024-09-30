@@ -28,7 +28,7 @@ func syncDeletedBranchProgram(list Mutable[program.Program], branch gitdomain.Lo
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
-	list.Value.Add(&opcodes.Checkout{Branch: branch})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 	pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
 		branch:              branch,
 		parentOtherWorktree: parentOtherWorktree,
@@ -47,7 +47,7 @@ func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitd
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: parent})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
@@ -61,7 +61,7 @@ func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch git
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: parent})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
@@ -75,7 +75,7 @@ func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch git
 		Program: list,
 	})
 	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
-	list.Value.Add(&opcodes.Checkout{Branch: parent})
+	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
