@@ -63,6 +63,7 @@ func Types() []shared.Opcode {
 		&CheckoutParent{},
 		&ChangeParent{},
 		&Commit{},
+		&CommitOptionalMessage{},
 		&ConnectorMergeProposal{},
 		&ContinueMerge{},
 		&ContinueRebase{},

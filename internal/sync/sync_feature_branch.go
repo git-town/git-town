@@ -51,12 +51,11 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})
-	if args.firstCommitMessage.IsSome() {
+	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
 		args.program.Value.Add(&opcodes.Commit{
-			AuthorOverride:                 None[gitdomain.Author](),
-			Message:                        args.firstCommitMessage,
-			FallbackToDefaultCommitMessage: true,
+			AuthorOverride: None[gitdomain.Author](),
+			Message:        firstCommitMessage,
 		})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {
