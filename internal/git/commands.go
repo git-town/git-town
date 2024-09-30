@@ -126,30 +126,19 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-// Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], author gitdomain.Author) error {
+// Commit performs a commit of the staged changes.
+// If no commit message is provided, asks the user to enter one.
+func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage bool, author Option[gitdomain.Author]) error {
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
+	} else if useDefaultMessage {
+		gitArgs = append(gitArgs, "--no-edit")
 	}
-	if author != "" {
+	if author, hasAuthor := author.Get(); hasAuthor {
 		gitArgs = append(gitArgs, "--author", author.String())
 	}
 	return runner.Run("git", gitArgs...)
-}
-
-// CommitNoEdit commits all staged files with the default commit message.
-func (self *Commands) CommitNoEdit(runner gitdomain.Runner) error {
-	return runner.Run("git", "commit", "--no-edit")
-}
-
-// CommitStagedChanges commits the currently staged changes.
-// TODO: merge with Commit
-func (self *Commands) CommitStagedChanges(runner gitdomain.Runner, message gitdomain.CommitMessage) error {
-	if message != "" {
-		return runner.Run("git", "commit", "-m", message.String())
-	}
-	return runner.Run("git", "commit", "--no-edit")
 }
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
