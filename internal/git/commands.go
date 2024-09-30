@@ -132,10 +132,8 @@ func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.C
 	gitArgs := []string{"commit"}
 	if messageContent, has := message.Get(); has {
 		gitArgs = append(gitArgs, "-m", messageContent.String())
-	} else {
-		if useDefaultMessage {
-			gitArgs = append(gitArgs, "--no-edit")
-		}
+	} else if useDefaultMessage {
+		gitArgs = append(gitArgs, "--no-edit")
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
 		gitArgs = append(gitArgs, "--author", author.String())
