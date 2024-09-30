@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ResetCurrentBranch resets all commits in the current branch.
 type ResetBranch struct {
 	Target                  gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
