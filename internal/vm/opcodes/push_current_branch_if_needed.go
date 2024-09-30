@@ -5,7 +5,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch.
+// PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch
+// if it has unpushed commits.
 type PushCurrentBranchIfNeeded struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
