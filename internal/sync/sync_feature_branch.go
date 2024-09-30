@@ -76,7 +76,7 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 	// - otherwise:
 	//    - pull the tracking branch of the current parent
 	//    - pull the local branch of the oldest local ancestor
-	args.program.Value.Add(&opcodes.InsertMergeParentProgram{
+	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
 		CurrentBranch:               args.localName,
 		ParentActiveInOtherWorktree: args.parentOtherWorktree,
 	})

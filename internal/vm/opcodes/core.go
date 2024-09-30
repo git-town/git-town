@@ -89,6 +89,7 @@ func Types() []shared.Opcode {
 		&Merge{},
 		&MergeBranchNoEdit{},
 		&MergeParent{},
+		&MergeParentIfNeeded{},
 		&PopStash{},
 		&PreserveCheckoutHistory{},
 		&PullCurrentBranch{},
