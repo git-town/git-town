@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// CommitWithMessage commits all open changes as a new commit.
+// CommitWithMessage commits all open changes using the given commit message.
 type CommitWithMessage struct {
 	AuthorOverride          Option[gitdomain.Author]
 	Message                 gitdomain.CommitMessage
