@@ -3,9 +3,10 @@ Feature: stacked changes where an ancestor branch isn't local
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME   | TYPE    | PARENT | LOCATIONS     |
-      | parent | feature | main   | local, origin |
-      | child  | feature | parent | local, origin |
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
+      | gamma | feature | beta   | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE             |
       | main   | origin   | origin main commit  |

@@ -18,7 +18,7 @@ type RunArgs struct {
 	FinalMessages                   stringslice.Collector
 	Frontend                        gitdomain.Runner
 	Git                             git.Commands
-	InitialBranchesSnapshot         gitdomain.BranchesSnapshot
+	InitialBranchesSnapshot         Option[gitdomain.BranchesSnapshot]
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error

@@ -29,6 +29,7 @@ func Execute(args ExecuteArgs) {
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
+			InitialBranchesSnapshot:         None[gitdomain.BranchesSnapshot](),
 			PrependOpcodes:                  args.Prog.Prepend,
 			RegisterUndoablePerennialCommit: nil,
 			UpdateInitialBranchLocalSHA:     nil,

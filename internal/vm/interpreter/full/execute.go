@@ -43,7 +43,7 @@ func Execute(args ExecuteArgs) error {
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
-			InitialBranchesSnapshot:         args.InitialBranchesSnapshot,
+			InitialBranchesSnapshot:         Some(args.InitialBranchesSnapshot),
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,

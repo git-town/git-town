@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -18,7 +19,11 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		if args.Git.BranchExists(args.Backend, parent) {
 			// parent is local
 			var parentActiveInAnotherWorktree bool
-			if parentBranchInfo, has := args.InitialBranchesSnapshot.Branches.FindByLocalName(parent).Get(); has {
+			branchInfos, has := args.InitialBranchesSnapshot.Get()
+			if !has {
+				return fmt.Errorf("initial branches snapshot not provided")
+			}
+			if parentBranchInfo, has := branchInfos.Branches.FindByLocalName(parent).Get(); has {
 				parentActiveInAnotherWorktree = parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 			} else {
 				parentActiveInAnotherWorktree = false
