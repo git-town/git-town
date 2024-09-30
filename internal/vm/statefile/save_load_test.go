@@ -273,7 +273,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Message": "my message",
-        "UseDefaultMessage": 1
+        "UseDefaultMessage": true
       },
       "type": "Commit"
     },
