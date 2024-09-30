@@ -212,7 +212,7 @@ func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitd
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
-	err := runner.Run("git", "checkout", "-b", name.String(), parent.String())
+	err := runner.Run("git", "checkout", "-b", name.String(), parent.String(), "--no-track")
 	self.CurrentBranchCache.Set(name)
 	return err
 }
