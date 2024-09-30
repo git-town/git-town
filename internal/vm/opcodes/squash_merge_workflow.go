@@ -51,9 +51,10 @@ func (self *SquashMergeWorkflow) Run(args shared.RunArgs) error {
 	if !args.Config.DryRun {
 		args.PrependOpcodes(&CommentOutSquashCommitMessage{})
 	}
-	args.PrependOpcodes(&CommitOpenChanges{
-		Message:                 self.CommitMessage,
-		undeclaredOpcodeMethods: undeclaredOpcodeMethods{},
+	args.PrependOpcodes(&Commit{
+		Message:                        self.CommitMessage,
+		FallbackToDefaultCommitMessage: false,
+		undeclaredOpcodeMethods:        undeclaredOpcodeMethods{},
 	})
 	squashedCommitSHA, err := args.Git.SHAForBranch(args.Backend, self.Parent.BranchName())
 	if err != nil {
