@@ -8,12 +8,12 @@ import (
 
 // Commit commits all open changes as a new commit.
 type Commit struct {
-	AuthorOverride          Option[gitdomain.Author]
-	Message                 Option[gitdomain.CommitMessage]
-	UseDefaultCommitMessage gitdomain.UseDefaultCommitMessage
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	AuthorOverride                 Option[gitdomain.Author]
+	Message                        Option[gitdomain.CommitMessage]
+	FallbackToDefaultCommitMessage gitdomain.FallbackToDefaultCommitMessage
+	undeclaredOpcodeMethods        `exhaustruct:"optional"`
 }
 
 func (self *Commit) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, self.UseDefaultCommitMessage, self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, self.Message, self.FallbackToDefaultCommitMessage, self.AuthorOverride)
 }
