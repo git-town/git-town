@@ -268,9 +268,9 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 			if data.hasOpenChanges {
 				prog.Value.Add(&opcodes.StageOpenChanges{})
 				prog.Value.Add(&opcodes.Commit{
+					Author:                  None[gitdomain.Author](),
 					Message:                 gitdomain.NewCommitMessageOpt("Committing WIP for git town undo"),
 					UseDefaultCommitMessage: gitdomain.UseDefaultCommitMessageYes,
-					Author:                  None[gitdomain.Author](),
 				})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
 				prog.Value.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: data.initialBranch})
