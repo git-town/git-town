@@ -35,7 +35,7 @@ func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gi
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
+		localBranchProgram(args.Program, branchInfo, parent.BranchName(), firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -50,7 +50,7 @@ type BranchProgramArgs struct {
 }
 
 // localBranchProgram provides the program to sync a local branch.
-func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
@@ -65,29 +65,27 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			firstCommitMessage:  firstCommitMessage,
-			localName:           localName,
-			offline:             args.Config.Offline,
-			parent:              parent,
-			parentOtherWorktree: parentOtherWorktree,
-			program:             list,
-			pushBranches:        args.PushBranches,
-			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncFeatureStrategy.SyncStrategy(),
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.Offline,
+			parent:             parent,
+			program:            list,
+			pushBranches:       args.PushBranches,
+			remoteName:         branch.RemoteName,
+			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
-			firstCommitMessage:  firstCommitMessage,
-			localName:           localName,
-			offline:             args.Config.Offline,
-			parent:              parent,
-			parentOtherWorktree: parentOtherWorktree,
-			program:             list,
-			pushBranches:        args.PushBranches,
-			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncFeatureStrategy.SyncStrategy(),
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.Offline,
+			parent:             parent,
+			program:            list,
+			pushBranches:       args.PushBranches,
+			remoteName:         branch.RemoteName,
+			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branch)
@@ -95,15 +93,14 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 		ObservedBranchProgram(branch.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(featureBranchArgs{
-			firstCommitMessage:  firstCommitMessage,
-			localName:           localName,
-			offline:             args.Config.Offline,
-			parent:              parent,
-			parentOtherWorktree: parentOtherWorktree,
-			program:             list,
-			pushBranches:        false,
-			remoteName:          branch.RemoteName,
-			syncStrategy:        args.Config.SyncPrototypeStrategy.SyncStrategy(),
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.Offline,
+			parent:             parent,
+			program:            list,
+			pushBranches:       false,
+			remoteName:         branch.RemoteName,
+			syncStrategy:       args.Config.SyncPrototypeStrategy.SyncStrategy(),
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
