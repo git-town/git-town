@@ -30,15 +30,14 @@ func FeatureBranchProgram(args featureBranchArgs) {
 }
 
 type featureBranchArgs struct {
-	firstCommitMessage  Option[gitdomain.CommitMessage]
-	localName           gitdomain.LocalBranchName
-	offline             configdomain.Offline // whether offline mode is enabled
-	parent              gitdomain.BranchName
-	parentOtherWorktree bool                     // whether the parent of this branch exists on another worktre
-	program             Mutable[program.Program] // the program to update
-	pushBranches        configdomain.PushBranches
-	remoteName          Option[gitdomain.RemoteBranchName]
-	syncStrategy        configdomain.SyncStrategy // the sync-feature-strategy
+	firstCommitMessage Option[gitdomain.CommitMessage]
+	localName          gitdomain.LocalBranchName
+	offline            configdomain.Offline // whether offline mode is enabled
+	parent             gitdomain.BranchName
+	program            Mutable[program.Program] // the program to update
+	pushBranches       configdomain.PushBranches
+	remoteName         Option[gitdomain.RemoteBranchName]
+	syncStrategy       configdomain.SyncStrategy // the sync-feature-strategy
 }
 
 func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
