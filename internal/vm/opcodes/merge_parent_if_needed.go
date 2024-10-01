@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"errors"
-	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
@@ -47,14 +46,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		program = append(program, &MergeBranchNoEdit{
 			Branch: parentTrackingName.BranchName(),
 		})
-		// pull updates from the youngest local ancestor
-		ancestors := args.Config.Config.Lineage.Ancestors(branch)
-		slices.Reverse(ancestors) // youngest first now
-		if youngestLocalAncestor, has := branchInfos.FirstLocal(ancestors).Get(); has {
-			program = append(program, &MergeBranchNoEdit{
-				Branch: youngestLocalAncestor.BranchName(),
-			})
-		}
+		// continue climbing the ancestry chain until we find a local parent
 		branch = parent
 	}
 	args.PrependOpcodes(program...)
