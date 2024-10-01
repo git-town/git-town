@@ -23,13 +23,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		if hasBranchType && !branchType.MustKnowParent() {
 			continue
 		}
-		// manually excluding the main branch here
-		// because if isn't local, it won't be in args.BranchesAndTypes
+		// If the main branch isn't local, it isn't in args.BranchesAndTypes.
+		// We therefore exclude it manually here.
 		if hasMainBranchName && branchToVerify == mainBranchName {
 			continue
 		}
-		// manually excluding the perennial branches here
-		// because if they aren't local, they won't be in args.BranchesAndTypes
+		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
+		// We therefore exclude them manually here.
 		if slices.Contains(args.Config.PerennialBranches, branchToVerify) {
 			continue
 		}
