@@ -31,11 +31,11 @@ func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gi
 	}
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		DeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
+		deletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
+		localBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -49,8 +49,8 @@ type BranchProgramArgs struct {
 	Remotes       gitdomain.Remotes
 }
 
-// LocalBranchProgram provides the program to sync a local branch.
-func LocalBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+// localBranchProgram provides the program to sync a local branch.
+func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, parent gitdomain.BranchName, parentOtherWorktree bool, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	localName, hasLocalName := branch.LocalName.Get()
 	if !hasLocalName {
 		return
