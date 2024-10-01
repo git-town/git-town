@@ -213,7 +213,7 @@ func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitd
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	args := []string{"checkout", "-b", name.String(), parent.String()}
-	if strings.HasPrefix(parent.String(), "origin/") {
+	if parent.IsRemoteBranchName() {
 		args = append(args, "--no-track")
 	}
 	err := runner.Run("git", args...)
