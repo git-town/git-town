@@ -78,10 +78,6 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 	args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
 		Branch: args.localName,
 	})
-	// args.program.Value.Add(&opcodes.RebaseParent{
-	// 	CurrentBranch:               args.localName,
-	// 	ParentActiveInOtherWorktree: args.parentOtherWorktree,
-	// })
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		if args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})

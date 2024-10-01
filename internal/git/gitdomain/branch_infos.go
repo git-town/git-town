@@ -66,6 +66,17 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionP[BranchInfo]
 	return NoneP[BranchInfo]()
 }
 
+func (self BranchInfos) FirstLocal(candidates []LocalBranchName) Option[LocalBranchName] {
+	for _, candidate := range candidates {
+		if branchInfo, has := self.FindByLocalOrRemoteName(candidate).Get(); has {
+			if branchInfo.LocalName.IsSome() {
+				return Some(candidate)
+			}
+		}
+	}
+	return None[LocalBranchName]()
+}
+
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
 func (self BranchInfos) HasLocalBranch(branch LocalBranchName) bool {
 	for _, bi := range self {
