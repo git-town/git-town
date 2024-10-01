@@ -11,14 +11,13 @@ import (
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(args featureBranchArgs) {
 	syncArgs := syncFeatureBranchProgramArgs{
-		firstCommitMessage:  args.firstCommitMessage,
-		localName:           args.localName,
-		offline:             args.offline,
-		parent:              args.parent,
-		parentOtherWorktree: args.parentOtherWorktree,
-		program:             args.program,
-		pushBranches:        args.pushBranches,
-		remoteName:          args.remoteName,
+		firstCommitMessage: args.firstCommitMessage,
+		localName:          args.localName,
+		offline:            args.offline,
+		parent:             args.parent,
+		program:            args.program,
+		pushBranches:       args.pushBranches,
+		remoteName:         args.remoteName,
 	}
 	switch args.syncStrategy {
 	case configdomain.SyncStrategyMerge:
@@ -85,12 +84,11 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 }
 
 type syncFeatureBranchProgramArgs struct {
-	firstCommitMessage  Option[gitdomain.CommitMessage]
-	localName           gitdomain.LocalBranchName
-	offline             configdomain.Offline // whether offline mode is enabled
-	parent              gitdomain.BranchName
-	parentOtherWorktree bool // TODO: delete
-	program             Mutable[program.Program]
-	pushBranches        configdomain.PushBranches
-	remoteName          Option[gitdomain.RemoteBranchName]
+	firstCommitMessage Option[gitdomain.CommitMessage]
+	localName          gitdomain.LocalBranchName
+	offline            configdomain.Offline // whether offline mode is enabled
+	parent             gitdomain.BranchName
+	program            Mutable[program.Program]
+	pushBranches       configdomain.PushBranches
+	remoteName         Option[gitdomain.RemoteBranchName]
 }
