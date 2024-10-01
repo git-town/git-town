@@ -21,32 +21,28 @@ Feature: stacked changes where all ancestor branches aren't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
-  @this
   Scenario:
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | gamma  | git fetch --prune --tags              |
-      |        | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff origin/main  |
-      |        | git push                              |
+      | BRANCH | COMMAND                                         |
+      | gamma  | git fetch --prune --tags                        |
+      |        | git rebase origin/beta                          |
+      |        | git rebase origin/alpha                         |
+      |        | git rebase origin/main                          |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase origin/gamma                         |
+      |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "gamma"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                                                |
-      | main   | origin        | origin main commit                                     |
-      | alpha  | origin        | origin alpha commit                                    |
-      | beta   | origin        | origin beta commit                                     |
-      | gamma  | local, origin | local gamma commit                                     |
-      |        |               | origin gamma commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
-      |        |               | origin beta commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
-      |        |               | origin alpha commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into gamma |
-      |        |               | origin main commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/main' into gamma  |
+      | BRANCH | LOCATION      | MESSAGE             |
+      | main   | origin        | origin main commit  |
+      | alpha  | origin        | origin alpha commit |
+      | beta   | origin        | origin beta commit  |
+      | gamma  | local, origin | origin gamma commit |
+      |        |               | origin main commit  |
+      |        |               | origin alpha commit |
+      |        |               | origin beta commit  |
+      |        |               | local gamma commit  |
 
   Scenario: undo
     When I run "git-town undo"

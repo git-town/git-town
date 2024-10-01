@@ -49,7 +49,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		})
 		// pull updates from the youngest local ancestor
 		ancestors := args.Config.Config.Lineage.Ancestors(branch)
-		slices.Reverse(ancestors) // sort youngest first
+		slices.Reverse(ancestors) // youngest first now
 		if youngestLocalAncestor, has := branchInfos.FirstLocal(ancestors).Get(); has {
 			program = append(program, &MergeBranchNoEdit{
 				Branch: youngestLocalAncestor.BranchName(),

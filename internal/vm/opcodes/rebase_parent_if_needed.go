@@ -49,8 +49,8 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		// pull updates from the youngest local ancestor
 		ancestors := args.Config.Config.Lineage.Ancestors(branch)
 		slices.Reverse(ancestors) // youngest first now
-		if youngestLocalAncestor, has := args.Git.FirstExistingBranch(args.Backend, ancestors...).Get(); has {
-			program = append(program, &MergeBranchNoEdit{
+		if youngestLocalAncestor, has := branchInfos.FirstLocal(ancestors).Get(); has {
+			program = append(program, &RebaseBranch{
 				Branch: youngestLocalAncestor.BranchName(),
 			})
 		}
