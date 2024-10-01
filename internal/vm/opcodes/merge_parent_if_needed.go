@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"fmt"
+	"errors"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -19,7 +19,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
-		return fmt.Errorf("BranchInfos not provided")
+		return errors.New("BranchInfos not provided")
 	}
 	for {
 		parent, hasParent := args.Config.Config.Lineage.Parent(branch).Get()
