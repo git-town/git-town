@@ -11,6 +11,56 @@ import (
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
 
+	t.Run("FindByLocalOrRemoteName", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has local name", func(t *testing.T) {
+			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  Some(branch1),
+				LocalSHA:   Some(gitdomain.NewSHA("111111")),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindByLocalOrRemoteName(branch1)
+			must.Eq(t, SomeP(&branch1info), have)
+		})
+		t.Run("has remote name", func(t *testing.T) {
+			t.Parallel()
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				LocalSHA:   None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindByLocalOrRemoteName(gitdomain.NewLocalBranchName("branch-1"))
+			must.Eq(t, SomeP(&branch1info), have)
+		})
+		t.Run("no match", func(t *testing.T) {
+			t.Parallel()
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				LocalSHA:   None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindByLocalOrRemoteName(gitdomain.NewLocalBranchName("zonk"))
+			must.Eq(t, NoneP[gitdomain.BranchInfo](), have)
+		})
+	})
+
 	t.Run("FindMatchingRecord", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has matching local name", func(t *testing.T) {
