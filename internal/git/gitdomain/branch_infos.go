@@ -24,19 +24,6 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionP[Bran
 	return NoneP[BranchInfo]()
 }
 
-func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionP[BranchInfo] {
-	branchInfoOpt := self.FindByLocalName(branchName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
-	}
-	remoteName := branchName.AtRemote(RemoteOrigin)
-	branchInfoOpt = self.FindByRemoteName(remoteName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
-	}
-	return NoneP[BranchInfo]()
-}
-
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
 func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) OptionP[BranchInfo] {
@@ -46,6 +33,19 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) OptionP[
 				return SomeP(&self[b])
 			}
 		}
+	}
+	return NoneP[BranchInfo]()
+}
+
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionP[BranchInfo] {
+	branchInfoOpt := self.FindByLocalName(branchName)
+	if branchInfoOpt.IsSome() {
+		return branchInfoOpt
+	}
+	remoteName := branchName.AtRemote(RemoteOrigin)
+	branchInfoOpt = self.FindByRemoteName(remoteName)
+	if branchInfoOpt.IsSome() {
+		return branchInfoOpt
 	}
 	return NoneP[BranchInfo]()
 }
