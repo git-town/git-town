@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -24,6 +26,9 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			if branchToVerify == mainBranchName {
 				continue
 			}
+		}
+		if slices.Contains(args.Config.PerennialBranches, branchToVerify) {
+			continue
 		}
 		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
