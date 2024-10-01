@@ -1,4 +1,3 @@
-@this
 Feature: display all executed Git commands
 
   Background:
