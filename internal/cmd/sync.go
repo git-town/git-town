@@ -318,6 +318,8 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 	var mainIsLocal bool
 	if mainInfo, has := branchesSnapshot.Branches.FindByLocalOrRemoteName(mainBranch).Get(); has {
 		mainIsLocal = mainInfo.LocalName.IsSome()
+	} else {
+		return result, errors.New("main branch not found in this repo")
 	}
 	for b, branchInfoToSync := range branchInfosToSync {
 		var branchNameToSync gitdomain.BranchName
