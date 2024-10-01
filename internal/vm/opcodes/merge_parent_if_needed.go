@@ -50,7 +50,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		// pull updates from the youngest local ancestor
 		ancestors := args.Config.Config.Lineage.Ancestors(branch)
 		slices.Reverse(ancestors) // sort youngest first
-		if youngestLocalAncestor, has := args.BranchInfos.FirstLocal(args.Backend, ancestors...).Get(); has {
+		if youngestLocalAncestor, has := branchInfos.FirstLocal(ancestors).Get(); has {
 			program = append(program, &MergeBranchNoEdit{
 				Branch: youngestLocalAncestor.BranchName(),
 			})
