@@ -47,9 +47,8 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 	if hasTrackingBranch {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
-	args.program.Value.Add(&opcodes.MergeParent{
-		CurrentBranch:               args.localName,
-		ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
+		Branch: args.localName,
 	})
 	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
 		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
