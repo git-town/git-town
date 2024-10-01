@@ -11,7 +11,7 @@ import (
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
 
-	t.Run("FindByLocalOrRemoteName", func(t *testing.T) {
+	t.Run("FindLocalOrRemote", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has local name", func(t *testing.T) {
 			t.Parallel()
@@ -26,7 +26,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindByLocalOrRemoteName(branch1)
+			have := bis.FindLocalOrRemote(branch1)
 			must.Eq(t, SomeP(&branch1info), have)
 		})
 		t.Run("has remote name", func(t *testing.T) {
@@ -41,7 +41,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindByLocalOrRemoteName(gitdomain.NewLocalBranchName("branch-1"))
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"))
 			must.Eq(t, SomeP(&branch1info), have)
 		})
 		t.Run("no match", func(t *testing.T) {
@@ -56,7 +56,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindByLocalOrRemoteName(gitdomain.NewLocalBranchName("zonk"))
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
 			must.Eq(t, NoneP[gitdomain.BranchInfo](), have)
 		})
 	})

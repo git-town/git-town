@@ -26,7 +26,7 @@ func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gi
 	}
 	parent, hasParent := args.Config.Lineage.Parent(localName).Get()
 	if hasParent {
-		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalOrRemoteName(parent).Get()
+		parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parent).Get()
 		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	}
 	switch {

@@ -24,7 +24,7 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionP[Bran
 	return NoneP[BranchInfo]()
 }
 
-func (self BranchInfos) FindByLocalOrRemoteName(branchName LocalBranchName) OptionP[BranchInfo] {
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionP[BranchInfo] {
 	branchInfoOpt := self.FindByLocalName(branchName)
 	if branchInfoOpt.IsSome() {
 		return branchInfoOpt

@@ -316,7 +316,7 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 	}
 	result = make([]configdomain.BranchToSync, len(branchInfosToSync))
 	var mainIsLocal bool
-	if mainInfo, has := branchesSnapshot.Branches.FindByLocalOrRemoteName(mainBranch).Get(); has {
+	if mainInfo, has := branchesSnapshot.Branches.FindLocalOrRemote(mainBranch).Get(); has {
 		mainIsLocal = mainInfo.LocalName.IsSome()
 	} else {
 		return result, errors.New("main branch not found in this repo")
