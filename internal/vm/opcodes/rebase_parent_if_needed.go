@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"errors"
-	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
@@ -46,14 +45,6 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		program = append(program, &RebaseBranch{
 			Branch: parentTrackingName.BranchName(),
 		})
-		// pull updates from the youngest local ancestor
-		ancestors := args.Config.Config.Lineage.Ancestors(branch)
-		slices.Reverse(ancestors) // youngest first now
-		if youngestLocalAncestor, has := branchInfos.FirstLocal(ancestors).Get(); has {
-			program = append(program, &RebaseBranch{
-				Branch: youngestLocalAncestor.BranchName(),
-			})
-		}
 		branch = parent
 	}
 	args.PrependOpcodes(program...)
