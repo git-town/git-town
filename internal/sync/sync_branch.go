@@ -11,13 +11,13 @@ import (
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(branch gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	parentOtherWorktree := false
-	localName, hasLocalName := branch.LocalName.Get()
+	localName, hasLocalName := branchInfo.LocalName.Get()
 	if !hasLocalName {
-		remoteName, hasRemoteName := branch.RemoteName.Get()
+		remoteName, hasRemoteName := branchInfo.RemoteName.Get()
 		if !hasRemoteName {
-			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branch))
+			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branchInfo))
 		}
 		localName = remoteName.LocalBranchName()
 		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{
@@ -30,12 +30,12 @@ func BranchProgram(branch gitdomain.BranchInfo, firstCommitMessage Option[gitdom
 		parentOtherWorktree = hasParentBranchInfo && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	}
 	switch {
-	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
+	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		syncDeletedBranchProgram(args.Program, localName, parentOtherWorktree, args)
-	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
+	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		ExistingBranchProgram(args.Program, branch, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
+		ExistingBranchProgram(args.Program, branchInfo, parent.BranchName(), parentOtherWorktree, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
