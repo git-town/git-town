@@ -24,7 +24,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			continue
 		}
 		// manually excluding the main branch here
-		// because if the main branch isn't local, it won't be in args.BranchesAndTypes
+		// because if isn't local, it won't be in args.BranchesAndTypes
 		if hasMainBranchName && branchToVerify == mainBranchName {
 			continue
 		}
