@@ -16,16 +16,15 @@ import (
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
 	additionalLineage = configdomain.NewLineage()
 	branchesToVerify := args.BranchesToVerify
+	mainBranchName, hasMainBranchName := args.Config.MainBranch.Get()
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
 		branchType, hasBranchType := args.BranchesAndTypes[branchToVerify]
 		if hasBranchType && !branchType.MustKnowParent() {
 			continue
 		}
-		if mainBranchName, has := args.Config.MainBranch.Get(); has {
-			if branchToVerify == mainBranchName {
-				continue
-			}
+		if hasMainBranchName && branchToVerify == mainBranchName {
+			continue
 		}
 		if slices.Contains(args.Config.PerennialBranches, branchToVerify) {
 			continue
