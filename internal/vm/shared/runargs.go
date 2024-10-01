@@ -12,13 +12,13 @@ import (
 
 type RunArgs struct {
 	Backend                         gitdomain.RunnerQuerier
+	BranchInfos                     Option[gitdomain.BranchInfos]
 	Config                          config.ValidatedConfig
 	Connector                       Option[hostingdomain.Connector]
 	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        gitdomain.Runner
 	Git                             git.Commands
-	InitialBranchesSnapshot         Option[gitdomain.BranchesSnapshot]
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error

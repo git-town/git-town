@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"errors"
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -17,19 +17,20 @@ type MergeParentIfNeeded struct {
 func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 	branch := self.CurrentBranch
 	toAppend := []shared.Opcode{}
+	branchInfos, hasBranchInfos := args.BranchInfos.Get()
+	if !hasBranchInfos {
+		return fmt.Errorf("BranchInfos not provided")
+	}
 	for {
 		parent, hasParent := args.Config.Config.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
 		}
-		if args.Git.BranchExists(args.Backend, parent) {
-			// parent is local --> sync with the local branch, then we are done
+		parentIsLocal := branchInfos.HasLocalBranch(parent)
+		if parentIsLocal {
+			// parent is local --> sync the current branch with its local parent branch, then we are done
 			var parentActiveInAnotherWorktree bool
-			branchInfos, has := args.InitialBranchesSnapshot.Get()
-			if !has {
-				return errors.New("initial branches snapshot not provided")
-			}
-			if parentBranchInfo, has := branchInfos.Branches.FindByLocalName(parent).Get(); has {
+			if parentBranchInfo, has := branchInfos.FindByLocalName(parent).Get(); has {
 				parentActiveInAnotherWorktree = parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 			} else {
 				parentActiveInAnotherWorktree = false
