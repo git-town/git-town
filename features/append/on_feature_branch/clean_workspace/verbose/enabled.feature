@@ -1,3 +1,4 @@
+@this
 Feature: display all executed Git commands
 
   Background:
@@ -33,8 +34,7 @@ Feature: display all executed Git commands
       |          | backend  | git rev-list --left-right main...origin/main                    |
       | main     | frontend | git checkout existing                                           |
       | existing | frontend | git merge --no-edit --ff origin/existing                        |
-      |          | backend  | git show-ref --verify --quiet refs/heads/main                   |
-      | existing | frontend | git merge --no-edit --ff main                                   |
+      |          | frontend | git merge --no-edit --ff main                                   |
       |          | backend  | git rev-list --left-right existing...origin/existing            |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing               |
       | existing | frontend | git checkout -b new                                             |
@@ -47,7 +47,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                                  |
     And it prints:
       """
-      Ran 31 shell commands.
+      Ran 30 shell commands.
       """
     And the current branch is now "new"
 

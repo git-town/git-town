@@ -69,16 +69,19 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
 	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		CurrentBranch: args.localName,
+		Branch: args.localName,
 	})
 }
 
 // syncs the given feature branch using the "rebase" sync strategy
 func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
-	args.program.Value.Add(&opcodes.RebaseParent{
-		CurrentBranch:               args.localName,
-		ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
+		Branch: args.localName,
 	})
+	// args.program.Value.Add(&opcodes.RebaseParent{
+	// 	CurrentBranch:               args.localName,
+	// 	ParentActiveInOtherWorktree: args.parentOtherWorktree,
+	// })
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		if args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
