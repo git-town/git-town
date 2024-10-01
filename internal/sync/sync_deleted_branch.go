@@ -11,8 +11,8 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func syncDeletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
+// deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
+func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
