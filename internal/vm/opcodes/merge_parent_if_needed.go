@@ -13,12 +13,12 @@ type MergeParentIfNeeded struct {
 }
 
 func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
-	branch := self.Branch
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
 		panic(messages.BranchInfosNotProvided)
 	}
+	branch := self.Branch
 	for {
 		parent, hasParent := args.Config.Config.Lineage.Parent(branch).Get()
 		if !hasParent {
