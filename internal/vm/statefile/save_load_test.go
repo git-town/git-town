@@ -129,10 +129,8 @@ func TestLoadSave(t *testing.T) {
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.PushTags{},
-				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
-				&opcodes.RebaseParent{
-					Parent:                      gitdomain.NewBranchName("branch"),
-					ParentActiveInOtherWorktree: true,
+				&opcodes.RebaseBranch{
+					Branch: gitdomain.NewBranchName("branch"),
 				},
 				&opcodes.RebaseParentIfNeeded{
 					Branch: gitdomain.NewLocalBranchName("branch"),
@@ -472,13 +470,6 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "RebaseBranch"
-    },
-    {
-      "data": {
-        "Parent": "branch",
-        "ParentActiveInOtherWorktree": true
-      },
-      "type": "RebaseParent"
     },
     {
       "data": {

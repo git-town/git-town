@@ -32,9 +32,8 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			} else {
 				branchToRebase = parent.BranchName()
 			}
-			program = append(program, &RebaseParent{
-				Parent:                      branchToRebase,
-				ParentActiveInOtherWorktree: parentActiveInAnotherWorktree,
+			program = append(program, &RebaseBranch{
+				Branch: branchToRebase,
 			})
 			break
 		}

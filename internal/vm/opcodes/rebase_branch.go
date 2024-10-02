@@ -13,7 +13,9 @@ type RebaseBranch struct {
 }
 
 func (self *RebaseBranch) AbortProgram() []shared.Opcode {
-	return []shared.Opcode{&AbortRebase{}}
+	return []shared.Opcode{
+		&AbortRebase{},
+	}
 }
 
 func (self *RebaseBranch) ContinueProgram() []shared.Opcode {
