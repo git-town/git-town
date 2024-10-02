@@ -40,12 +40,10 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-		parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
-		// merge the parent's tracking branch
+		parentTrackingBranch := parent.AtRemote(gitdomain.RemoteOrigin)
 		program = append(program, &MergeParent{
-			Parent: parentTrackingName.BranchName(),
+			Parent: parentTrackingBranch.BranchName(),
 		})
-		// continue climbing the ancestry chain until we find a local parent
 		branch = parent
 	}
 	args.PrependOpcodes(program...)
