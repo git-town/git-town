@@ -8,6 +8,9 @@ with what happened in the rest of the repository.
 - pulls updates from the tracking and all parent branches
 - prunes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
+- if the branch is checked out in another worktree, syncs with the remote branch
+- if the parent branch isn't checked out locally at all, also syncs with its
+  remote branch and the parent's parent until it finds a local ancestor branch
 
 Merge conflicts are never fun. If you experience too many merge conflicts, sync
 your branches more often. If your Git Town installation is properly configured,
