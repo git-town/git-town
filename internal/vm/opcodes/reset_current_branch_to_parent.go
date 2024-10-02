@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -20,7 +21,7 @@ func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
 	}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
-		return errors.New("no branchinfos")
+		return errors.New(messages.BranchInfosNotProvided)
 	}
 	parentIsLocal := branchInfos.HasLocalBranch(parent)
 	var target gitdomain.BranchName
