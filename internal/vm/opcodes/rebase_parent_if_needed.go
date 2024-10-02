@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
@@ -18,7 +16,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
-		return errors.New(messages.BranchInfosNotProvided)
+		panic(messages.BranchInfosNotProvided)
 	}
 	for {
 		parent, hasParent := args.Config.Config.Lineage.Parent(branch).Get()
