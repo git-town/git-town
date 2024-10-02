@@ -11,6 +11,40 @@ import (
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
 
+	t.Run("BranchIsActiveInAnotherWorktree", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch is active in another worktree", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
+				},
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
+				},
+			}
+			have := branchInfos.BranchIsActiveInAnotherWorktree("branch-1")
+			must.True(t, have)
+		})
+		t.Run("branch is local but not active in another worktree", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("branch is remote", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("branch doesn't exist", func(t *testing.T) {
+			t.Parallel()
+		})
+	})
+
 	t.Run("FindLocalOrRemote", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has local name", func(t *testing.T) {

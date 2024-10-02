@@ -28,13 +28,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
 			// parent is local --> sync the current branch with its local parent branch, then we are done
-			var parentActiveInAnotherWorktree bool
-			// TODO: extract into a BranchInfos.BranchIsActiveInAnotherWorktree method
-			if parentBranchInfo, has := branchInfos.FindByLocalName(parent).Get(); has {
-				parentActiveInAnotherWorktree = parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-			} else {
-				parentActiveInAnotherWorktree = false
-			}
+			parentActiveInAnotherWorktree := branchInfos.BranchIsActiveInAnotherWorktree(parent)
 			var parentToMerge gitdomain.BranchName
 			if parentActiveInAnotherWorktree {
 				parentToMerge = parent.TrackingBranch().BranchName()
