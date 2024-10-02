@@ -37,7 +37,6 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		}
 		// here the parent isn't local --> sync with its tracking branch, then also sync the grandparent until we find a local ancestor
 		parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
-		// merge the parent's tracking branch
 		program = append(program, &RebaseBranch{
 			Branch: parentTrackingName.BranchName(),
 		})
