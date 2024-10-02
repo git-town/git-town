@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// MergeParent merges the given parent branch into the curren branch.
+// MergeParent merges the given parent branch into the current branch.
 type MergeParent struct {
 	Parent                  gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
