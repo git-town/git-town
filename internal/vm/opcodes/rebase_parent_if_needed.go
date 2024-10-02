@@ -24,9 +24,8 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
-			parentActiveInAnotherWorktree := branchInfos.BranchIsActiveInAnotherWorktree(parent)
 			var branchToRebase gitdomain.BranchName
-			if parentActiveInAnotherWorktree {
+			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
 				branchToRebase = parent.TrackingBranch().BranchName()
 			} else {
 				branchToRebase = parent.BranchName()
