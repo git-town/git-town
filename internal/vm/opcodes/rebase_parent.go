@@ -7,7 +7,7 @@ import (
 
 // RebaseParent rebases the given branch against the branch that is its parent at runtime.
 type RebaseParent struct {
-	CurrentBranch               gitdomain.LocalBranchName
+	Parent                      gitdomain.BranchName
 	ParentActiveInOtherWorktree bool
 	undeclaredOpcodeMethods     `exhaustruct:"optional"`
 }
@@ -25,15 +25,5 @@ func (self *RebaseParent) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
-	if !hasParent {
-		return nil
-	}
-	var branchToRebase gitdomain.BranchName
-	if self.ParentActiveInOtherWorktree {
-		branchToRebase = parent.TrackingBranch().BranchName()
-	} else {
-		branchToRebase = parent.BranchName()
-	}
-	return args.Git.Rebase(args.Frontend, branchToRebase)
+	return args.Git.Rebase(args.Frontend, self.Parent)
 }

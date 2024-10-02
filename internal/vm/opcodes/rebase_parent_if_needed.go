@@ -25,14 +25,15 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
 			// parent is local --> sync the current branch with its local parent branch, then we are done
-			var parentActiveInAnotherWorktree bool
-			if parentBranchInfo, has := branchInfos.FindByLocalName(parent).Get(); has {
-				parentActiveInAnotherWorktree = parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
+			parentActiveInAnotherWorktree := branchInfos.BranchIsActiveInAnotherWorktree(parent)
+			var branchToRebase gitdomain.BranchName
+			if parentActiveInAnotherWorktree {
+				branchToRebase = parent.TrackingBranch().BranchName()
 			} else {
-				parentActiveInAnotherWorktree = false
+				branchToRebase = parent.BranchName()
 			}
 			program = append(program, &RebaseParent{
-				CurrentBranch:               branch,
+				Parent:                      branchToRebase,
 				ParentActiveInOtherWorktree: parentActiveInAnotherWorktree,
 			})
 			break
