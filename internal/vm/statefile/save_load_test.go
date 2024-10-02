@@ -113,8 +113,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true},
 				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.MergeParent{
-					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
-					ParentActiveInOtherWorktree: true,
+					Parent: gitdomain.NewBranchName("parent"),
+				},
+				&opcodes.MergeParentIfNeeded{
+					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.PreserveCheckoutHistory{
 					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
@@ -424,10 +426,15 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "ParentActiveInOtherWorktree": true
+        "Parent": "parent"
       },
       "type": "MergeParent"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "MergeParentIfNeeded"
     },
     {
       "data": {

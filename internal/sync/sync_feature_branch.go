@@ -14,7 +14,6 @@ func FeatureBranchProgram(args featureBranchArgs) {
 		firstCommitMessage: args.firstCommitMessage,
 		localName:          args.localName,
 		offline:            args.offline,
-		parent:             args.parent,
 		program:            args.program,
 		pushBranches:       args.pushBranches,
 		remoteName:         args.remoteName,
@@ -32,8 +31,7 @@ func FeatureBranchProgram(args featureBranchArgs) {
 type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline // whether offline mode is enabled
-	parent             gitdomain.BranchName
+	offline            configdomain.Offline     // whether offline mode is enabled
 	program            Mutable[program.Program] // the program to update
 	pushBranches       configdomain.PushBranches
 	remoteName         Option[gitdomain.RemoteBranchName]
@@ -86,7 +84,6 @@ type syncFeatureBranchProgramArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
 	offline            configdomain.Offline // whether offline mode is enabled
-	parent             gitdomain.BranchName
 	program            Mutable[program.Program]
 	pushBranches       configdomain.PushBranches
 	remoteName         Option[gitdomain.RemoteBranchName]

@@ -12,10 +12,10 @@ import (
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
+func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
-		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
+		syncDeletedFeatureBranchProgram(list, branch, args)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		syncDeletedPerennialBranchProgram(list, branch, args)
 	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
@@ -27,13 +27,12 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, parentOtherWorktree bool, args BranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 	pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-		branch:              branch,
-		parentOtherWorktree: parentOtherWorktree,
-		program:             list,
-		syncStrategy:        args.Config.SyncFeatureStrategy,
+		branch:       branch,
+		program:      list,
+		syncStrategy: args.Config.SyncFeatureStrategy,
 	})
 	list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
 }

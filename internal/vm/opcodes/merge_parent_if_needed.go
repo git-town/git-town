@@ -29,22 +29,28 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		if parentIsLocal {
 			// parent is local --> sync the current branch with its local parent branch, then we are done
 			var parentActiveInAnotherWorktree bool
+			// TODO: extract into a BranchInfos.BranchIsActiveInAnotherWorktree method
 			if parentBranchInfo, has := branchInfos.FindByLocalName(parent).Get(); has {
 				parentActiveInAnotherWorktree = parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 			} else {
 				parentActiveInAnotherWorktree = false
 			}
+			var parentToMerge gitdomain.BranchName
+			if parentActiveInAnotherWorktree {
+				parentToMerge = parent.TrackingBranch().BranchName()
+			} else {
+				parentToMerge = parent.BranchName()
+			}
 			program = append(program, &MergeParent{
-				CurrentBranch:               branch,
-				ParentActiveInOtherWorktree: parentActiveInAnotherWorktree,
+				Parent: parentToMerge,
 			})
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then also sync the grandparent until we find a local ancestor
 		parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
 		// merge the parent's tracking branch
-		program = append(program, &MergeBranchNoEdit{
-			Branch: parentTrackingName.BranchName(),
+		program = append(program, &MergeParent{
+			Parent: parentTrackingName.BranchName(),
 		})
 		// continue climbing the ancestry chain until we find a local parent
 		branch = parent

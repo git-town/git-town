@@ -5,24 +5,24 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// MergeParent merges the branch that at runtime is the parent branch of the given branch into the given branch.
+// MergeParent merges the given parent branch into the curren branch.
 type MergeParent struct {
-	CurrentBranch               gitdomain.LocalBranchName
-	ParentActiveInOtherWorktree bool
-	undeclaredOpcodeMethods     `exhaustruct:"optional"`
+	Parent                  gitdomain.BranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
+}
+
+func (self *MergeParent) AbortProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&AbortMerge{},
+	}
+}
+
+func (self *MergeParent) ContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&ContinueMerge{},
+	}
 }
 
 func (self *MergeParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
-	if !hasParent {
-		return nil
-	}
-	var branchToMerge gitdomain.BranchName
-	if self.ParentActiveInOtherWorktree {
-		branchToMerge = parent.TrackingBranch().BranchName()
-	} else {
-		branchToMerge = parent.BranchName()
-	}
-	args.PrependOpcodes(&MergeBranchNoEdit{Branch: branchToMerge})
-	return nil
+	return args.Git.MergeBranchNoEdit(args.Frontend, self.Parent)
 }
