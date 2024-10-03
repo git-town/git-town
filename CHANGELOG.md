@@ -1,5 +1,22 @@
 # Git Town Changelog
 
+## 16.4.0 (2024-10-03)
+
+Git Town 16.4 improves the stability and resilience of Git Town in more environments.
+
+#### New Features
+
+- Git Town's `append`, `hack`, `prepend`, and `propose` commands now have a `--detached` flag that prevents them from pulling in additional changes from the main branch. This together with the existing `--detached` flag for `git town sync` allows controlling exactly when changes from the main branch get synced into your branch hierarchy ([#4095](https://github.com/git-town/git-town/issues/4059)).
+- New config settings [contribution-regex]() and [observed-regex]() allow marking branches created by external services like Renovate or DependaBot appropriately ([#3985](https://github.com/git-town/git-town/issues/3985)).
+- Git Town is now much more resilient against unexpected Git failures, for example when another Git process is running concurrently, because most Git Town operations are now fully reentrant ([#4082](https://github.com/git-town/git-town/pull/4082)).
+- `git town sync` now syncs branches whose ancestors aren't available locally better: It pulls the tracking branches of all non-local ancestors until it finds a local ancestor ([#3769](https://github.com/git-town/git-town/issues/3769)).
+
+#### Bug Fixes
+
+- `git town hack` no longer panics if the main branch isn't available locally ([#3703](https://github.com/git-town/git-town/issues/3703)).
+- `git town hack` no longer panics when the Git repo has a detached HEAD ([#3694](https://github.com/git-town/git-town/issues/3694)).
+- Git Town now loads all applicable settings from the config file ([#4072](https://github.com/git-town/git-town/issues/4072)).
+
 ## 16.3.0 (2024-09-24)
 
 Git Town 16.3 is here, and it's packed with some long-requested features we've been working towards for years!
