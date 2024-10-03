@@ -35,7 +35,7 @@ Feature: shipped parent of a stacked change with dependent changes
       """
       CONFLICT (add/add): Merge conflict in file
       """
-    And a merge is in progress
+    And a merge is now in progress
 
   Scenario: resolve manually
     When I resolve the conflict in "file"
