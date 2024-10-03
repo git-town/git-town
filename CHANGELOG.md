@@ -2,7 +2,7 @@
 
 ## 16.4.0 (2024-10-03)
 
-Git Town 16.4 improves the stability and resilience of Git Town in more environments.
+Git Town 16.4 improves the usability in busy monorepos as well as the stability and resilience of Git Town in more environments.
 
 Many thanks to @FirelightFlagboy, @JamieMcKernanKaizen, @alexw10, @blaggacao, @charlierudolph, @ericcao52, @ianjsikes, @kevgo, @renovate[bot], @ruudk, @sheldonhull, @shiv19, @stephenwade, @tranhl, @waldyrious for improving Git Town through 39 shipped PRs and 13 resolved issues!
 
