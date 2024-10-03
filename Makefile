@@ -5,9 +5,6 @@ RTA_VERSION = 0.7.1  # run-that-app version to use
 RELEASE_VERSION := "16.3.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
-build:  # builds for the current platform
-	@go install -ldflags="-s -w"
-
 cuke: build  # runs all end-to-end tests except the ones that mess up the output, best for development
 	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
 
@@ -47,6 +44,9 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+install:  # builds for the current platform
+	@go install -ldflags="-s -w"
 
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-dir lint-smoke
