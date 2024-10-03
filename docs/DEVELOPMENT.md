@@ -16,7 +16,7 @@ comprehensive understanding of the architecture, refer to
 3. run all CI tests locally: <code type="make/command" dir="..">make test</code>
 4. faster smoke test during development: `make test-go`
 5. install Git Town locally into `~/go/bin`:
-   <code type="make/command" dir="..">make build</code>
+   <code type="make/command" dir="..">make install</code>
 
 ## dependencies
 
