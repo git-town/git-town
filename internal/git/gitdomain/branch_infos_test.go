@@ -11,6 +11,108 @@ import (
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
 
+	t.Run("BranchIsActiveInAnotherWorktree", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch is active in another worktree", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+			}
+			have := branchInfos.BranchIsActiveInAnotherWorktree("branch-2")
+			must.True(t, have)
+		})
+		t.Run("branch is local but not active in another worktree", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+			}
+			have := branchInfos.BranchIsActiveInAnotherWorktree("branch-1")
+			must.False(t, have)
+		})
+		t.Run("branch is remote", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				},
+			}
+			have := branchInfos.BranchIsActiveInAnotherWorktree("branch-1")
+			must.False(t, have)
+		})
+		t.Run("branch doesn't exist", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				},
+			}
+			have := branchInfos.BranchIsActiveInAnotherWorktree("zonk")
+			must.False(t, have)
+		})
+	})
+
+	t.Run("FindLocalOrRemote", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has local name", func(t *testing.T) {
+			t.Parallel()
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  Some(branch1),
+				LocalSHA:   Some(gitdomain.NewSHA("111111")),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindLocalOrRemote(branch1)
+			must.Eq(t, SomeP(&branch1info), have)
+		})
+		t.Run("has remote name", func(t *testing.T) {
+			t.Parallel()
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				LocalSHA:   None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"))
+			must.Eq(t, SomeP(&branch1info), have)
+		})
+		t.Run("no match", func(t *testing.T) {
+			t.Parallel()
+			branch1info := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				LocalSHA:   None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+			}
+			bis := gitdomain.BranchInfos{
+				branch1info,
+			}
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
+			must.Eq(t, NoneP[gitdomain.BranchInfo](), have)
+		})
+	})
+
 	t.Run("FindMatchingRecord", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has matching local name", func(t *testing.T) {

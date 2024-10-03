@@ -12,6 +12,14 @@ import (
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchInfos []BranchInfo
 
+func (self BranchInfos) BranchIsActiveInAnotherWorktree(branch LocalBranchName) bool {
+	branchInfo, has := self.FindByLocalName(branch).Get()
+	if !has {
+		return false
+	}
+	return branchInfo.SyncStatus == SyncStatusOtherWorktree
+}
+
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionP[BranchInfo] {
 	for bi, branch := range self {
@@ -33,6 +41,19 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) OptionP[
 				return SomeP(&self[b])
 			}
 		}
+	}
+	return NoneP[BranchInfo]()
+}
+
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionP[BranchInfo] {
+	branchInfoOpt := self.FindByLocalName(branchName)
+	if branchInfoOpt.IsSome() {
+		return branchInfoOpt
+	}
+	remoteName := branchName.AtRemote(RemoteOrigin)
+	branchInfoOpt = self.FindByRemoteName(remoteName)
+	if branchInfoOpt.IsSome() {
+		return branchInfoOpt
 	}
 	return NoneP[BranchInfo]()
 }

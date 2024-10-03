@@ -11,6 +11,19 @@ import (
 func TestLocation(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsRemoteBranchName", func(t *testing.T) {
+		t.Parallel()
+		tests := map[gitdomain.Location]bool{
+			"origin/foo": true,
+			"foo":        false,
+			"123456":     false,
+		}
+		for give, want := range tests {
+			have := give.IsRemoteBranchName()
+			must.EqOp(t, want, have)
+		}
+	})
+
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		location := gitdomain.NewLocation("branch-1")

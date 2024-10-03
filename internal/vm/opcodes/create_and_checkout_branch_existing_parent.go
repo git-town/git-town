@@ -17,12 +17,15 @@ func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) erro
 	if err != nil {
 		return err
 	}
+	var ancestorToUse gitdomain.BranchName
 	nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get()
-	if !hasNearestAncestor {
-		nearestAncestor = args.Config.Config.MainBranch
+	if hasNearestAncestor {
+		ancestorToUse = nearestAncestor.BranchName()
+	} else {
+		ancestorToUse = args.Config.Config.MainBranch.AtRemote(gitdomain.RemoteOrigin).BranchName()
 	}
-	if nearestAncestor == currentBranch {
+	if ancestorToUse == currentBranch.BranchName() {
 		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)
 	}
-	return args.Git.CreateAndCheckoutBranchWithParent(args.Frontend, self.Branch, nearestAncestor.Location())
+	return args.Git.CreateAndCheckoutBranchWithParent(args.Frontend, self.Branch, ancestorToUse.Location())
 }

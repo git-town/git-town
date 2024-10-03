@@ -212,7 +212,11 @@ func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitd
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
-	err := runner.Run("git", "checkout", "-b", name.String(), parent.String())
+	args := []string{"checkout", "-b", name.String(), parent.String()}
+	if parent.IsRemoteBranchName() {
+		args = append(args, "--no-track")
+	}
+	err := runner.Run("git", args...)
 	self.CurrentBranchCache.Set(name)
 	return err
 }
@@ -357,6 +361,7 @@ func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branc
 	return Some(gitdomain.CommitMessage(message)), nil
 }
 
+// TODO: remove this method and replace usages with BranchInfos.FirstLocalBranch
 func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(runner, branch) {

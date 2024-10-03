@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -14,10 +16,21 @@ import (
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
 	additionalLineage = configdomain.NewLineage()
 	branchesToVerify := args.BranchesToVerify
+	mainBranchName, hasMainBranchName := args.Config.MainBranch.Get()
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
 		branchType, hasBranchType := args.BranchesAndTypes[branchToVerify]
 		if hasBranchType && !branchType.MustKnowParent() {
+			continue
+		}
+		// If the main branch isn't local, it isn't in args.BranchesAndTypes.
+		// We therefore exclude it manually here.
+		if hasMainBranchName && branchToVerify == mainBranchName {
+			continue
+		}
+		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
+		// We therefore exclude them manually here.
+		if slices.Contains(args.Config.PerennialBranches, branchToVerify) {
 			continue
 		}
 		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {

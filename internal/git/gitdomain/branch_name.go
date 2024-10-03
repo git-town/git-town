@@ -25,6 +25,10 @@ func (self BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
 }
 
+func (self BranchName) Location() Location {
+	return NewLocation(self.String())
+}
+
 // RemoteName provides the remote version of this branch name.
 func (self BranchName) RemoteName() RemoteBranchName {
 	if strings.HasPrefix(string(self), "origin/") {

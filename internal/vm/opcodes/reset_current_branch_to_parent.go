@@ -2,6 +2,7 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -16,6 +17,17 @@ func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
 	if !hasParent {
 		return nil
 	}
-	args.PrependOpcodes(&ResetBranch{Target: parent.BranchName()})
+	branchInfos, hasBranchInfos := args.BranchInfos.Get()
+	if !hasBranchInfos {
+		panic(messages.BranchInfosNotProvided)
+	}
+	parentIsLocal := branchInfos.HasLocalBranch(parent)
+	var target gitdomain.BranchName
+	if parentIsLocal {
+		target = parent.BranchName()
+	} else {
+		target = parent.TrackingBranch().BranchName()
+	}
+	args.PrependOpcodes(&ResetBranch{Target: target})
 	return nil
 }

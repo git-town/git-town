@@ -23,6 +23,7 @@ func Execute(args ExecuteArgs) {
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
+			BranchInfos:                     None[gitdomain.BranchInfos](),
 			Config:                          args.Config,
 			Connector:                       args.Connector,
 			DialogTestInputs:                components.NewTestInputs(),

@@ -37,6 +37,7 @@ func Execute(args ExecuteArgs) error {
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
+			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
 			Config:                          args.Config,
 			Connector:                       args.Connector,
 			DialogTestInputs:                args.DialogTestInputs,

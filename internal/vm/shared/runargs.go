@@ -12,6 +12,7 @@ import (
 
 type RunArgs struct {
 	Backend                         gitdomain.RunnerQuerier
+	BranchInfos                     Option[gitdomain.BranchInfos]
 	Config                          config.ValidatedConfig
 	Connector                       Option[hostingdomain.Connector]
 	DialogTestInputs                components.TestInputs

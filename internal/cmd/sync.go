@@ -309,12 +309,17 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 }
 
 // determines the complete info needed to sync the given branches
-func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (result []configdomain.BranchToSync, err error) {
+func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
 	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	result := make([]configdomain.BranchToSync, len(branchInfosToSync))
 	if err != nil {
 		return result, err
 	}
-	result = make([]configdomain.BranchToSync, len(branchInfosToSync))
+	mainInfo, hasMainInfo := branchesSnapshot.Branches.FindLocalOrRemote(mainBranch).Get()
+	if !hasMainInfo {
+		return result, errors.New("main branch not found in this repo")
+	}
+	mainIsLocal := mainInfo.LocalName.IsSome()
 	for b, branchInfoToSync := range branchInfosToSync {
 		var branchNameToSync gitdomain.BranchName
 		if localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get(); hasLocalBranchToSync {
@@ -326,7 +331,13 @@ func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 		}
 		var firstCommitMessage Option[gitdomain.CommitMessage]
 		if branchNameToSync.LocalName() != mainBranch {
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranch.BranchName())
+			var mainBranchTarget gitdomain.BranchName
+			if mainIsLocal {
+				mainBranchTarget = mainBranch.BranchName()
+			} else {
+				mainBranchTarget = mainBranch.AtRemote(gitdomain.RemoteOrigin).BranchName()
+			}
+			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranchTarget)
 			if err != nil {
 				return result, err
 			}
