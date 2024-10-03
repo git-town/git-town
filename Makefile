@@ -5,31 +5,31 @@ RTA_VERSION = 0.7.1  # run-that-app version to use
 RELEASE_VERSION := "16.3.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
-cuke: build  # runs all end-to-end tests except the ones that mess up the output, best for development
+cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
 	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
 
-cukeall: build  # runs all end-to-end tests
+cukeall: install  # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test -v
 
-cukethis: build  # runs the end-to-end tests that have a @this tag
+cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v16/internal/cmd.version=-dev -X github.com/git-town/git-town/v16/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
-cuke-prof: build  # creates a flamegraph for the end-to-end tests
+cuke-prof: install  # creates a flamegraph for the end-to-end tests
 	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-cukewin: build  # runs all end-to-end tests on Windows
+cukewin: install  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
 	@tools/rta depth . | grep git-town
 
-docs: build tools/node_modules  # tests the documentation
+docs: install tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
@@ -83,10 +83,10 @@ lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get q
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
 
-smoke: build  # run the smoke tests
+smoke: install  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
 
-smokewin: build  # runs the Windows smoke tests
+smokewin: install  # runs the Windows smoke tests
 	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
@@ -99,7 +99,7 @@ test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
 test-go:  # smoke tests while working on the Go code
-	@make --no-print-directory build &
+	@make --no-print-directory install &
 	@make --no-print-directory unit &
 	@make --no-print-directory deadcode &
 	@make --no-print-directory lint
@@ -107,13 +107,13 @@ test-go:  # smoke tests while working on the Go code
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile
 
-unit: build  # runs only the unit tests for changed code
+unit: install  # runs only the unit tests for changed code
 	@env GOGC=off go test -timeout=30s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
 
-unit-all: build  # runs all the unit tests
+unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
 
-unit-race: build  # runs all the unit tests with race detector
+unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./internal/... ./pkg/... ./test/...
 
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
