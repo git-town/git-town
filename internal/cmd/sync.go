@@ -110,7 +110,6 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		PushBranches:  pushBranches,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	// TODO: make this a list of options
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
