@@ -4,6 +4,8 @@
 
 Git Town 16.4 improves the stability and resilience of Git Town in more environments.
 
+Many thanks to @FirelightFlagboy, @JamieMcKernanKaizen, @alexw10, @blaggacao, @charlierudolph, @ericcao52, @ianjsikes, @kevgo, @renovate[bot], @ruudk, @sheldonhull, @shiv19, @stephenwade, @tranhl, @waldyrious for improving Git Town through 39 shipped PRs and 13 resolved issues!
+
 #### New Features
 
 - Git Town's `append`, `hack`, `prepend`, and `propose` commands now have a `--detached` flag that prevents them from pulling in additional changes from the main branch. This together with the existing `--detached` flag for `git town sync` allows controlling exactly when changes from the main branch get synced into your branch hierarchy ([#4095](https://github.com/git-town/git-town/issues/4059)).
