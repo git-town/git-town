@@ -1,4 +1,4 @@
-Feature: shipped parent branches in a stacked change
+Feature: shipped parent of a stacked change with independent changes
 
   Background:
     Given a Git repo with origin
