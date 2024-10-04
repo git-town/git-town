@@ -226,10 +226,20 @@ the oldest branch first. You can use [git town prepend](commands/prepend.md) to
 insert a feature branch as a parent of the current feature branch or
 [set parent](commands/set-parent.md) to change the order of branches.
 
-_Ship using fast-forward:_ To avoid phantom merge conflicts after shipping, ship
-using a
-[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-GitLab provides this option
+_Ship using fast-forward:_ Merge conflicts happen when you merge two branches
+that change the same location in the same file. Git cannot (and should not)
+decided which version to use and it lets the user sort it out.
+
+to resolve with two different commits (commits with different SHAs) making the
+same change. This
+
+To minimize the risk of phantom merge conflicts after shipping the oldest branch
+in a stacked change, ship using a
+[fast-forward merging](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+This approach guarantees that the new commits on the main branch are the exact
+same commits that were on the shipped feature branch. This helps Git resolve
+
+GitLab provides this
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
 utilize by using [git town ship](commands/ship.md) with the
