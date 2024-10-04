@@ -225,3 +225,14 @@ _Organize branch chains in the order you want to ship:_ You always have to ship
 the oldest branch first. You can use [git town prepend](commands/prepend.md) to
 insert a feature branch as a parent of the current feature branch or
 [set parent](commands/set-parent.md) to change the order of branches.
+
+_Ship using fast-forward:_ To avoid phantom merge conflicts after shipping, ship
+using a
+[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+GitLab provides this option
+[out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
+utilize by using [git town ship](commands/ship.md) with the
+[fast-forward shipping strategy](preferences/ship-strategy#fast-forward). This
+problem is documented by
+[GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
