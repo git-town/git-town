@@ -209,19 +209,29 @@ the correct branch.
 
 ## Best Practices
 
-_Branch discipline:_ when you have an idea that is different from what you
-currently work on, resist the urge to code it in the current feature branch.
-Implement it in its own feature, parent, or child branch.
+#### One change per branch
 
-_Keep the entire branch chain in sync:_ Make sure you run `git town sync --all`
-or `git town sync` on the youngest child branch to keep the entire chain of
-feature branches synced.
+When you have an idea that is different from what you currently work on, resist
+the urge to code it in the current feature branch. Implement it in its own
+feature, parent, or child branch.
 
-_Avoid unnecessary chaining:_ If your feature branches don't depend on each
-other, put them in (independent) top-level feature branches. This way you can
-ship them in any order.
+If you can't create a new branch right now, write the idea down and implement it
+later.
 
-_Organize branch chains in the order you want to ship:_ You always have to ship
-the oldest branch first. You can use [git town prepend](commands/prepend.md) to
-insert a feature branch as a parent of the current feature branch or
-[set parent](commands/set-parent.md) to change the order of branches.
+#### Keep the stack in sync
+
+Branch stacks are more susceptible to phantom merge conflicts than regular
+branches. Don't forget to populate changes across all branches in your stack by
+running `git town sync --stack` or `git town sync --all`.
+
+#### Avoid unnecessary chaining
+
+If your feature branches don't depend on each other, put them in (independent)
+top-level feature branches. This way you can ship them in any order.
+
+#### Organize branch chains in the order you want to ship
+
+You always have to ship the oldest branch first. You can use
+[git town prepend](commands/prepend.md) to insert a feature branch as a parent
+of the current feature branch or [set parent](commands/set-parent.md) to change
+the order of branches.
