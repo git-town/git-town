@@ -19,9 +19,9 @@ func TestMain(_ *testing.M) {
 	godog.BindCommandLineFlags("godog.", &options)
 	pflag.Parse()
 	options.Paths = pflag.Args()
-	flagThis := os.Getenv("cukethis") != ""
-	flagSmoke := os.Getenv("smoke") != ""
-	flagSkipMessyOutput := os.Getenv("skipmessyoutput") != ""
+	flagThis := len(os.Getenv("cukethis")) > 0
+	flagSmoke := len(os.Getenv("smoke")) > 0
+	flagSkipMessyOutput := len(os.Getenv("skipmessyoutput")) > 0
 	switch {
 	case flagThis:
 		options.Format = "pretty"

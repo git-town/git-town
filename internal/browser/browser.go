@@ -45,7 +45,7 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 	}
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Query("which", browserCommand)
-		if err == nil && output != "" {
+		if err == nil && len(output) > 0 {
 			return Some(browserCommand)
 		}
 	}

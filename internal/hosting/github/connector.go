@@ -81,10 +81,10 @@ func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.
 		toCompare = parentBranch.String() + "..." + branch.String()
 	}
 	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
-	if proposalTitle != "" {
+	if len(proposalTitle) > 0 {
 		result += "&title=" + url.QueryEscape(proposalTitle.String())
 	}
-	if proposalBody != "" {
+	if len(proposalBody) > 0 {
 		result += "&body=" + url.QueryEscape(proposalBody.String())
 	}
 	return result, nil
@@ -159,11 +159,11 @@ func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName
 // If that is not set, it checks the git config.
 func GetAPIToken(gitConfigToken Option[configdomain.GitHubToken]) Option[configdomain.GitHubToken] {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
-	if apiToken != "" {
+	if len(apiToken) > 0 {
 		return Some(configdomain.GitHubToken(apiToken))
 	}
 	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
-	if apiToken != "" {
+	if len(apiToken) > 0 {
 		return Some(configdomain.GitHubToken(apiToken))
 	}
 	return gitConfigToken
