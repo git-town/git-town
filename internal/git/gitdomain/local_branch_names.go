@@ -22,7 +22,7 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 // containing the branches listed in the given space-separated string.
 func ParseLocalBranchNames(names string) LocalBranchNames {
 	var branchNames []string
-	if names != "" {
+	if len(names) > 0 {
 		branchNames = strings.Split(names, " ")
 	}
 	return NewLocalBranchNames(branchNames...)

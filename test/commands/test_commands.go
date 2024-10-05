@@ -132,7 +132,7 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.CreateFile(commit.FileName, commit.FileContent)
 	self.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message.String()}
-	if commit.Author != "" {
+	if len(commit.Author) > 0 {
 		commands = append(commands, "--author="+commit.Author.String())
 	}
 	self.MustRun("git", commands...)
@@ -243,7 +243,7 @@ func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []stri
 	var result []string
 	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
-		if file != "" {
+		if len(file) > 0 {
 			result = append(result, file)
 		}
 	}
@@ -474,11 +474,11 @@ func (self *TestCommands) UnstashOpenFiles() error {
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	output, _ := self.Query("git", "config", "--get-regex", "git-town")
-	if output != "" {
+	if len(output) > 0 {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	output, _ = self.Query("git", "config", "--get-regex", "git-town-branch")
-	if output != "" {
+	if len(output) > 0 {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	self.Config.Reload()

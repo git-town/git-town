@@ -63,7 +63,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
-	return out != "", nil
+	return len(out) > 0, nil
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
@@ -119,7 +119,7 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 		return fmt.Errorf(messages.SquashCannotReadFile, squashMessageFile, err)
 	}
 	content := string(contentBytes)
-	if prefix != "" {
+	if len(prefix) > 0 {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
@@ -400,7 +400,7 @@ func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mai
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
-	return out != "", nil
+	return len(out) > 0, nil
 }
 
 // LastCommitMessage provides the commit message for the last commit.
@@ -644,7 +644,7 @@ func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdoma
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
-	return out != "", nil
+	return len(out) > 0, nil
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

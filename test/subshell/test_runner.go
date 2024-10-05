@@ -217,7 +217,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
-	if opts.Dir != "" {
+	if len(opts.Dir) > 0 {
 		subProcess.Dir = opts.Dir
 	}
 	if opts.Env != nil {

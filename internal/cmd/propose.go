@@ -230,9 +230,9 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		return data, false, err
 	}
 	var bodyText gitdomain.ProposalBody
-	if body != "" {
+	if len(body) > 0 {
 		bodyText = body
-	} else if bodyFile != "" {
+	} else if len(bodyFile) > 0 {
 		if bodyFile.ShouldReadStdin() {
 			content, err := io.ReadAll(os.Stdin)
 			if err != nil {
