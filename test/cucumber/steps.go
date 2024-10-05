@@ -799,7 +799,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^it prints no output$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output := state.runOutput.GetOrPanic()
-		if output != "" {
+		if len(output) > 0 {
 			return fmt.Errorf("expected no output but found %q", output)
 		}
 		return nil
@@ -1577,7 +1577,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.uncommittedFileName.GetOrPanic(),
 			state.uncommittedContent.GetOrPanic(),
 		)
-		if hasFile != "" {
+		if len(hasFile) > 0 {
 			panic(hasFile)
 		}
 	})
