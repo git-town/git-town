@@ -1,4 +1,4 @@
-actionlint 1.7.1
+actionlint 1.7.3
 alphavet 0.1.0
 exhaustruct 3.3.0
 deadcode 0.16.1
@@ -11,7 +11,7 @@ gofumpt 0.7.0
 golangci-lint 1.61.0
 goreleaser 1.26.2
 mdbook 0.4.40
-scc 3.3.5
+scc 3.4.0
 shellcheck system 0.10.0
 shfmt 3.9.0
 staticcheck 2024.1.1
