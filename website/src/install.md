@@ -33,8 +33,8 @@ You can install Git Town on Windows using:
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
-[git town repo](https://git-town.com/commands/repo.md) and
-[git town propose](https://git-town.com/commands/propose.md) to open a browser
+[git town repo](https://www.git-town.com/commands/repo) and
+[git town propose](https://www.git-town.com/commands/propose) to open a browser
 window for you.
 
 ## Linux
@@ -82,7 +82,7 @@ matching binaries from the GitHub release.
 ## manual installation
 
 ```
-curl https://git-town.com/install.sh | sh
+curl https://www.git-town.com/install.sh | sh
 ```
 
 For a fully custom installation,
