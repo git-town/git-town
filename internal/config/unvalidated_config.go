@@ -24,11 +24,11 @@ type Runner interface {
 type UnvalidatedConfig struct {
 	Config          Mutable[configdomain.UnvalidatedConfig] // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig]      // content of git-town.toml, nil = no config file exists
-	DryRun          configdomain.DryRun
-	GitConfig       gitconfig.Access // access to the Git configuration settings
-	GitVersion      git.Version
-	GlobalGitConfig configdomain.PartialConfig // content of the global Git configuration
-	LocalGitConfig  configdomain.PartialConfig // content of the local Git configuration
+	DryRun          configdomain.DryRun                     // whether to only print the Git commands but not execute them
+	GitConfig       gitconfig.Access                        // access to the Git configuration settings
+	GitVersion      git.Version                             // the version of the installed Git executable
+	GlobalGitConfig configdomain.PartialConfig              // content of the global Git configuration
+	LocalGitConfig  configdomain.PartialConfig              // content of the local Git configuration
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
