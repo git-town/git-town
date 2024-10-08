@@ -476,8 +476,12 @@ func (self *Commands) PushTags(runner gitdomain.Runner) error {
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
-	return runner.Run("git", "rebase", target.String(), "--no-update-refs")
+func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName, version Version) error {
+	args := []string{"rebase", target.String()}
+	if version.HasRebaseUpdateRefs() {
+		args = append(args, "--no-update-refs")
+	}
+	return runner.Run("git", args...)
 }
 
 // Remotes provides the names of all Git remotes in this repository.

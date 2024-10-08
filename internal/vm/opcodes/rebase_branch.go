@@ -25,5 +25,5 @@ func (self *RebaseBranch) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseBranch) Run(args shared.RunArgs) error {
-	return args.Git.Rebase(args.Frontend, self.Branch)
+	return args.Git.Rebase(args.Frontend, self.Branch, args.Config.GitVersion)
 }
