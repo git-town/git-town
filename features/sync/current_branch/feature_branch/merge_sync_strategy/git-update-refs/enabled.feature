@@ -19,7 +19,6 @@ Feature: stacked changes
     And inspect the repo
     When I run "git-town sync"
 
-  @this
   Scenario:
     Then it runs the commands
       | BRANCH | COMMAND                                |
