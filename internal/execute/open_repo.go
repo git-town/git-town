@@ -17,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/subshell"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
@@ -35,13 +34,12 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	gitVersionMajor, gitVersionMinor, err := gitCommands.Version(backendRunner)
+	gitVersion, err := gitCommands.Version(backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	err = validate.HasAcceptableGitVersion(gitVersionMajor, gitVersionMinor)
-	if err != nil {
-		return emptyOpenRepoResult(), err
+	if !gitVersion.IsAcceptableGitVersion() {
+		return emptyOpenRepoResult(), errors.New(messages.GitVersionTooLow)
 	}
 	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
 	if args.ValidateGitRepo {
