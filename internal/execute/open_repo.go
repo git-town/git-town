@@ -69,6 +69,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Access:       configGitAccess,
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
+		GitVersion:   gitVersion,
 		GlobalConfig: globalConfig,
 		LocalConfig:  localConfig,
 	})
