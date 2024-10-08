@@ -17,14 +17,14 @@ Feature: shipped changes conflict with multiple existing feature branches
     And an uncommitted file
     When I run "git-town sync --all"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git fetch --prune --tags              |
-      |        | git add -A                            |
-      |        | git stash                             |
-      |        | git rebase origin/main                |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff main         |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git add -A                              |
+      |        | git stash                               |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git checkout alpha                      |
+      | alpha  | git merge --no-edit --ff origin/alpha   |
+      |        | git merge --no-edit --ff main           |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

@@ -15,9 +15,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git rebase origin/main   |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git rebase origin/main --no-update-refs |
     And it prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

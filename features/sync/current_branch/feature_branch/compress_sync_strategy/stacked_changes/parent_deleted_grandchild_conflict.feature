@@ -21,7 +21,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
       | BRANCH     | COMMAND                                    |
       | child      | git fetch --prune --tags                   |
       |            | git checkout main                          |
-      | main       | git rebase origin/main                     |
+      | main       | git rebase origin/main --no-update-refs    |
       |            | git push                                   |
       |            | git checkout child                         |
       | child      | git merge --no-edit --ff main              |

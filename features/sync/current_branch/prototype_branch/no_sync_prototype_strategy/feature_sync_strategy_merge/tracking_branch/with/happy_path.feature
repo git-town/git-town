@@ -19,7 +19,7 @@ Feature: sync the current prototype branch with tracking branch
       | BRANCH    | COMMAND                                   |
       | prototype | git fetch --prune --tags                  |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git push                                  |
       |           | git checkout prototype                    |
       | prototype | git merge --no-edit --ff origin/prototype |

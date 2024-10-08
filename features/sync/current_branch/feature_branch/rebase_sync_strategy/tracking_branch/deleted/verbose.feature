@@ -31,10 +31,10 @@ Feature: display all executed Git commands
       |          | backend  | git remote get-url origin                          |
       |          | backend  | git log main..branch-2 --format=%h                 |
       | branch-2 | frontend | git checkout main                                  |
-      | main     | frontend | git rebase origin/main                             |
+      | main     | frontend | git rebase origin/main --no-update-refs            |
       |          | backend  | git rev-list --left-right main...origin/main       |
       | main     | frontend | git checkout branch-2                              |
-      | branch-2 | frontend | git rebase main                                    |
+      | branch-2 | frontend | git rebase main --no-update-refs                   |
       |          | backend  | git diff main..branch-2                            |
       | branch-2 | frontend | git checkout main                                  |
       | main     | frontend | git branch -D branch-2                             |

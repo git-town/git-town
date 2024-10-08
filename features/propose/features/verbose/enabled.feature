@@ -27,7 +27,7 @@ Feature: display all executed Git commands
       | <none>  | frontend | Looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%h                                  |
       | feature | frontend | git checkout main                                                  |
-      | main    | frontend | git rebase origin/main                                             |
+      | main    | frontend | git rebase origin/main --no-update-refs                            |
       |         | backend  | git rev-list --left-right main...origin/main                       |
       | main    | frontend | git checkout feature                                               |
       | feature | frontend | git merge --no-edit --ff origin/feature                            |

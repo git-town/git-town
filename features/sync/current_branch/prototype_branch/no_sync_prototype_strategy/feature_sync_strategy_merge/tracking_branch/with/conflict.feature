@@ -20,7 +20,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | git add -A                                |
       |           | git stash                                 |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout prototype                    |
       | prototype | git merge --no-edit --ff origin/prototype |
     And it prints the error:

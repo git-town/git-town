@@ -6,7 +6,6 @@ Feature: stacked changes
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -16,6 +15,8 @@ Feature: stacked changes
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
+    And Git Town setting "sync-feature-strategy" is "rebase"
+    And global Git setting "rebase.updateRefs" is "true"
     When I run "git-town sync"
 
   Scenario: result

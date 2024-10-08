@@ -27,9 +27,9 @@ Feature: two people with rebase strategy sync changes made by them
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
@@ -43,11 +43,11 @@ Feature: two people with rebase strategy sync changes made by them
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -61,11 +61,11 @@ Feature: two people with rebase strategy sync changes made by them
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

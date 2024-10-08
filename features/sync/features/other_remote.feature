@@ -18,7 +18,7 @@ Feature: ignores other Git remotes
       | BRANCH  | TYPE     | COMMAND                                 |
       | feature | frontend | git fetch --prune --tags                |
       |         | frontend | git checkout main                       |
-      | main    | frontend | git rebase origin/main                  |
+      | main    | frontend | git rebase origin/main --no-update-refs |
       |         | frontend | git checkout feature                    |
       | feature | frontend | git merge --no-edit --ff origin/feature |
       |         | frontend | git merge --no-edit --ff main           |

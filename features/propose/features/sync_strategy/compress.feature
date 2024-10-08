@@ -23,7 +23,7 @@ Feature: proposing using the "compress" sync strategy
       | existing | git fetch --prune --tags                                            |
       | <none>   | Looking for proposal online ... ok                                  |
       | existing | git checkout main                                                   |
-      | main     | git rebase origin/main                                              |
+      | main     | git rebase origin/main --no-update-refs                             |
       |          | git checkout existing                                               |
       | existing | git merge --no-edit --ff origin/existing                            |
       |          | git merge --no-edit --ff main                                       |

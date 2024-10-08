@@ -11,14 +11,14 @@ Feature: sync the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git rebase origin/main   |
-      |        | git push                 |
-      |        | git push --tags          |
-      |        | git stash pop            |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git add -A                              |
+      |        | git stash                               |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git push                                |
+      |        | git push --tags                         |
+      |        | git stash pop                           |
     And the current branch is still "main"
     And the uncommitted file still exists
     And all branches are now synchronized

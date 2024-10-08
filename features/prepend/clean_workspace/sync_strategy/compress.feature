@@ -21,7 +21,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       | BRANCH   | COMMAND                                  |
       | branch-2 | git fetch --prune --tags                 |
       |          | git checkout main                        |
-      | main     | git rebase origin/main                   |
+      | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout branch-1                    |
       | branch-1 | git merge --no-edit --ff origin/branch-1 |
       |          | git merge --no-edit --ff main            |

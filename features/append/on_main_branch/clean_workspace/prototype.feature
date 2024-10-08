@@ -10,10 +10,10 @@ Feature: on the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git checkout -b new      |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git checkout -b new                     |
     And the current branch is now "new"
     And branch "new" is now prototype
     And these commits exist now

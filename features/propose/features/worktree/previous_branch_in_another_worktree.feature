@@ -20,7 +20,7 @@ Feature: prepend with the previous branch checked out in another worktree
       | current | frontend | git fetch --prune --tags                                           |
       | <none>  | frontend | Looking for proposal online ... ok                                 |
       | current | frontend | git checkout main                                                  |
-      | main    | frontend | git rebase origin/main                                             |
+      | main    | frontend | git rebase origin/main --no-update-refs                            |
       |         | frontend | git checkout current                                               |
       | current | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git push -u origin current                                         |

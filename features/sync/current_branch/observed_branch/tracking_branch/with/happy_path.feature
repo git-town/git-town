@@ -15,9 +15,9 @@ Feature: sync the current observed branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                    |
-      | observed | git fetch --prune --tags   |
-      |          | git rebase origin/observed |
+      | BRANCH   | COMMAND                                     |
+      | observed | git fetch --prune --tags                    |
+      |          | git rebase origin/observed --no-update-refs |
     And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE       |

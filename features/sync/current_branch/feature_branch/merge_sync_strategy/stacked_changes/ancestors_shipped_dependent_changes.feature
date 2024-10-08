@@ -20,17 +20,17 @@ Feature: shipped parent of a stacked change with dependent changes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                              |
-      | beta   | git fetch --prune --tags             |
-      |        | git checkout main                    |
-      | main   | git rebase origin/main               |
-      |        | git checkout alpha                   |
-      | alpha  | git merge --no-edit --ff main        |
-      |        | git checkout main                    |
-      | main   | git branch -D alpha                  |
-      |        | git checkout beta                    |
-      | beta   | git merge --no-edit --ff origin/beta |
-      |        | git merge --no-edit --ff main        |
+      | BRANCH | COMMAND                                 |
+      | beta   | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout alpha                      |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git checkout main                       |
+      | main   | git branch -D alpha                     |
+      |        | git checkout beta                       |
+      | beta   | git merge --no-edit --ff origin/beta    |
+      |        | git merge --no-edit --ff main           |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file

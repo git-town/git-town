@@ -30,7 +30,7 @@ Feature: sync before proposing
       | child  | git add -A                                                                |
       |        | git stash                                                                 |
       |        | git checkout main                                                         |
-      | main   | git rebase origin/main                                                    |
+      | main   | git rebase origin/main --no-update-refs                                   |
       |        | git push                                                                  |
       |        | git checkout parent                                                       |
       | parent | git merge --no-edit --ff origin/parent                                    |

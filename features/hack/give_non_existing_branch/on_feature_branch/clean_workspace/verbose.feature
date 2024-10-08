@@ -23,7 +23,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote get-url origin                     |
-      | main   | frontend | git rebase origin/main                        |
+      | main   | frontend | git rebase origin/main --no-update-refs       |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | main   | frontend | git checkout -b new                           |

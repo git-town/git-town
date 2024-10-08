@@ -14,11 +14,11 @@ Feature: on the main branch with an upstream repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git push                 |
-      |        | git push --tags          |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git push                                |
+      |        | git push --tags                         |
     And all branches are now synchronized
     And the current branch is still "main"
     And these commits exist now

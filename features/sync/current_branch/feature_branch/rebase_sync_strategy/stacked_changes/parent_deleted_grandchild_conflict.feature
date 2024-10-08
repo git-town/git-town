@@ -17,17 +17,17 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                  |
-      | child      | git fetch --prune --tags |
-      |            | git checkout main        |
-      | main       | git rebase origin/main   |
-      |            | git push                 |
-      |            | git checkout child       |
-      | child      | git rebase main          |
-      |            | git checkout main        |
-      | main       | git branch -D child      |
-      |            | git checkout grandchild  |
-      | grandchild | git rebase main          |
+      | BRANCH     | COMMAND                                 |
+      | child      | git fetch --prune --tags                |
+      |            | git checkout main                       |
+      | main       | git rebase origin/main --no-update-refs |
+      |            | git push                                |
+      |            | git checkout child                      |
+      | child      | git rebase main --no-update-refs        |
+      |            | git checkout main                       |
+      | main       | git branch -D child                     |
+      |            | git checkout grandchild                 |
+      | grandchild | git rebase main --no-update-refs        |
     And it prints the error:
       """
       exit status 1

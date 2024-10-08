@@ -22,7 +22,7 @@ Feature: a default branch type is set, the feature-regex matches
       | BRANCH    | COMMAND                                   |
       | my-branch | git fetch --prune --tags                  |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git push                                  |
       |           | git checkout my-branch                    |
       | my-branch | git merge --no-edit --ff origin/my-branch |

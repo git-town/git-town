@@ -19,9 +19,9 @@ Feature: detached sync the current feature branch using the "rebase" sync-featur
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git rebase main                                 |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And the current branch is still "feature"
     And these commits exist now

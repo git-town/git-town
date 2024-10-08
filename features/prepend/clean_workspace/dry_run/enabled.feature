@@ -13,14 +13,14 @@ Feature: dry-run prepending a branch to a feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                             |
-      | old    | git fetch --prune --tags            |
-      |        | git checkout main                   |
-      | main   | git rebase origin/main              |
-      |        | git checkout old                    |
-      | old    | git merge --no-edit --ff origin/old |
-      |        | git merge --no-edit --ff main       |
-      |        | git checkout -b parent main         |
+      | BRANCH | COMMAND                                 |
+      | old    | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout old                        |
+      | old    | git merge --no-edit --ff origin/old     |
+      |        | git merge --no-edit --ff main           |
+      |        | git checkout -b parent main             |
     And the current branch is still "old"
     And the initial commits exist now
     And the initial branches and lineage exist now

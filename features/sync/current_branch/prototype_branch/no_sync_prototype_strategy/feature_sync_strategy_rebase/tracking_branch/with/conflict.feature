@@ -16,15 +16,15 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                     |
-      | prototype | git fetch --prune --tags    |
-      |           | git add -A                  |
-      |           | git stash                   |
-      |           | git checkout main           |
-      | main      | git rebase origin/main      |
-      |           | git checkout prototype      |
-      | prototype | git rebase main             |
-      |           | git rebase origin/prototype |
+      | BRANCH    | COMMAND                                      |
+      | prototype | git fetch --prune --tags                     |
+      |           | git add -A                                   |
+      |           | git stash                                    |
+      |           | git checkout main                            |
+      | main      | git rebase origin/main --no-update-refs      |
+      |           | git checkout prototype                       |
+      | prototype | git rebase main --no-update-refs             |
+      |           | git rebase origin/prototype --no-update-refs |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

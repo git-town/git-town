@@ -11,13 +11,13 @@ Feature: on a forked repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git fetch upstream main  |
-      |        | git rebase upstream/main |
-      |        | git push                 |
-      |        | git checkout -b new      |
+      | BRANCH | COMMAND                                   |
+      | main   | git fetch --prune --tags                  |
+      |        | git rebase origin/main --no-update-refs   |
+      |        | git fetch upstream main                   |
+      |        | git rebase upstream/main --no-update-refs |
+      |        | git push                                  |
+      |        | git checkout -b new                       |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |

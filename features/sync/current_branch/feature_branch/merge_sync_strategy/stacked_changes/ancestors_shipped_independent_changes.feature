@@ -22,7 +22,7 @@ Feature: shipped parent of a stacked change with independent changes
       | BRANCH    | COMMAND                                   |
       | feature-3 | git fetch --prune --tags                  |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout feature-1                    |
       | feature-1 | git merge --no-edit --ff main             |
       |           | git checkout main                         |

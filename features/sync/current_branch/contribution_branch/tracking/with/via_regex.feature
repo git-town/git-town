@@ -16,10 +16,10 @@ Feature: sync the current branch that is contribution via regex
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                      |
-      | renovate/1 | git fetch --prune --tags     |
-      |            | git rebase origin/renovate/1 |
-      |            | git push                     |
+      | BRANCH     | COMMAND                                       |
+      | renovate/1 | git fetch --prune --tags                      |
+      |            | git rebase origin/renovate/1 --no-update-refs |
+      |            | git push                                      |
     And the current branch is still "renovate/1"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE       |

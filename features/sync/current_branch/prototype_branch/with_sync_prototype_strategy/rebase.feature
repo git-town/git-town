@@ -16,8 +16,8 @@ Feature: sync the current prototype branch in a local repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND         |
-      | prototype | git rebase main |
+      | BRANCH    | COMMAND                          |
+      | prototype | git rebase main --no-update-refs |
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |
