@@ -22,7 +22,7 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
     Then it runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |

@@ -38,7 +38,7 @@ Feature: sync the entire stack
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
+      | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout alpha                              |
       | alpha  | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |

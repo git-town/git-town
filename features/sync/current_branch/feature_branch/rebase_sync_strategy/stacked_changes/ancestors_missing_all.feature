@@ -25,11 +25,11 @@ Feature: stacked changes where all ancestor branches aren't local
     Then it runs the commands
       | BRANCH | COMMAND                                         |
       | gamma  | git fetch --prune --tags                        |
-      |        | git rebase origin/beta                          |
-      |        | git rebase origin/alpha                         |
-      |        | git rebase origin/main                          |
+      |        | git rebase origin/beta --no-update-refs         |
+      |        | git rebase origin/alpha --no-update-refs        |
+      |        | git rebase origin/main --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/gamma                         |
+      |        | git rebase origin/gamma --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "gamma"

@@ -15,11 +15,11 @@ Feature: handle conflicts between the current contribution branch and its tracki
 
   Scenario: result
     Then it runs the commands
-      | BRANCH       | COMMAND                        |
-      | contribution | git fetch --prune --tags       |
-      |              | git add -A                     |
-      |              | git stash                      |
-      |              | git rebase origin/contribution |
+      | BRANCH       | COMMAND                                         |
+      | contribution | git fetch --prune --tags                        |
+      |              | git add -A                                      |
+      |              | git stash                                       |
+      |              | git rebase origin/contribution --no-update-refs |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

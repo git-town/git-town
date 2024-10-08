@@ -34,23 +34,23 @@ Feature: sync the entire stack
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | alpha  | git fetch --prune --tags              |
-      |        | git checkout main                     |
-      | main   | git rebase origin/main                |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff main         |
-      |        | git push                              |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff alpha        |
-      |        | git push                              |
-      |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff beta         |
-      |        | git push                              |
-      |        | git checkout alpha                    |
+      | BRANCH | COMMAND                                 |
+      | alpha  | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout alpha                      |
+      | alpha  | git merge --no-edit --ff origin/alpha   |
+      |        | git merge --no-edit --ff main           |
+      |        | git push                                |
+      |        | git checkout beta                       |
+      | beta   | git merge --no-edit --ff origin/beta    |
+      |        | git merge --no-edit --ff alpha          |
+      |        | git push                                |
+      |        | git checkout gamma                      |
+      | gamma  | git merge --no-edit --ff origin/gamma   |
+      |        | git merge --no-edit --ff beta           |
+      |        | git push                                |
+      |        | git checkout alpha                      |
     And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                        |

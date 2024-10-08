@@ -29,7 +29,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
@@ -47,11 +47,11 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
     And it prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -77,11 +77,11 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
     And it prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

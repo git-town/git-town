@@ -23,7 +23,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git add -A                                      |
       |        | git stash                                       |
       |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
+      | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout alpha                              |
       | alpha  | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |

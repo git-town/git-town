@@ -15,14 +15,14 @@ Feature: don't sync tags while prepending
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                             |
-      | old    | git fetch --prune --no-tags         |
-      |        | git checkout main                   |
-      | main   | git rebase origin/main              |
-      |        | git checkout old                    |
-      | old    | git merge --no-edit --ff origin/old |
-      |        | git merge --no-edit --ff main       |
-      |        | git checkout -b new main            |
+      | BRANCH | COMMAND                                 |
+      | old    | git fetch --prune --no-tags             |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout old                        |
+      | old    | git merge --no-edit --ff origin/old     |
+      |        | git merge --no-edit --ff main           |
+      |        | git checkout -b new main                |
     And the initial tags exist now
 
   Scenario: undo

@@ -12,14 +12,14 @@ Feature: previous branch is checked out in another worktree
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | current | git fetch --prune --tags      |
-      |         | git checkout main             |
-      | main    | git rebase origin/main        |
-      |         | git checkout current          |
-      | current | git merge --no-edit --ff main |
-      |         | git push -u origin current    |
-      |         | git checkout -b new main      |
+      | BRANCH  | COMMAND                                 |
+      | current | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main --no-update-refs |
+      |         | git checkout current                    |
+      | current | git merge --no-edit --ff main           |
+      |         | git push -u origin current              |
+      |         | git checkout -b new main                |
     And the current branch is now "new"
     And the previous Git branch is now "new"
     And this lineage exists now

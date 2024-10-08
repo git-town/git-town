@@ -19,9 +19,9 @@ Feature: with upstream repo
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git fetch upstream main                         |
-      |         | git rebase upstream/main                        |
+      |         | git rebase upstream/main --no-update-refs       |
       |         | git push                                        |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |

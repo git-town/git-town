@@ -15,12 +15,12 @@ Feature: syncing a local feature branch using --no-push
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | feature | git fetch --prune --tags      |
-      |         | git checkout main             |
-      | main    | git rebase origin/main        |
-      |         | git checkout feature          |
-      | feature | git merge --no-edit --ff main |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main --no-update-refs |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff main           |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |

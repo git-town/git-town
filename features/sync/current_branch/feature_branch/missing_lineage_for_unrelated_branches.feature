@@ -18,7 +18,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
       | BRANCH    | COMMAND                                   |
       | feature-1 | git fetch --prune --tags                  |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout feature-1                    |
       | feature-1 | git merge --no-edit --ff origin/feature-1 |
     And it prints the error:

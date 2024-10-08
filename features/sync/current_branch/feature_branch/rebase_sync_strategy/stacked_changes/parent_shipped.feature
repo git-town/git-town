@@ -20,7 +20,7 @@ Feature: syncing a branch whose parent was shipped
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
+      | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout parent                             |
       | parent | git rebase main --no-update-refs                |
       |        | git checkout main                               |

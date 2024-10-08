@@ -14,14 +14,14 @@ Feature: prepend a prototype branch to a feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                             |
-      | old    | git fetch --prune --tags            |
-      |        | git checkout main                   |
-      | main   | git rebase origin/main              |
-      |        | git checkout old                    |
-      | old    | git merge --no-edit --ff origin/old |
-      |        | git merge --no-edit --ff main       |
-      |        | git checkout -b parent main         |
+      | BRANCH | COMMAND                                 |
+      | old    | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout old                        |
+      | old    | git merge --no-edit --ff origin/old     |
+      |        | git merge --no-edit --ff main           |
+      |        | git checkout -b parent main             |
     And the current branch is now "parent"
     And branch "parent" is now prototype
     And these commits exist now

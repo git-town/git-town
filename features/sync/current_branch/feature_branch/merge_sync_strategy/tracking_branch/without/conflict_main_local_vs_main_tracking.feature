@@ -15,12 +15,12 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
-      |         | git checkout main        |
-      | main    | git rebase origin/main   |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git add -A                              |
+      |         | git stash                               |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main --no-update-refs |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

@@ -15,11 +15,11 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                  |
-      | prototype | git fetch --prune --tags |
-      |           | git checkout main        |
-      | main      | git rebase origin/main   |
-      |           | git branch -D prototype  |
+      | BRANCH    | COMMAND                                 |
+      | prototype | git fetch --prune --tags                |
+      |           | git checkout main                       |
+      | main      | git rebase origin/main --no-update-refs |
+      |           | git branch -D prototype                 |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

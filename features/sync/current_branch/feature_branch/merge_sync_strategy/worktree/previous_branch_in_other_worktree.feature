@@ -15,7 +15,7 @@ Feature: sync a branch when the previous branch is active in another worktree
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout current                    |
       | current | git merge --no-edit --ff origin/current |
       |         | git merge --no-edit --ff main           |

@@ -23,17 +23,17 @@ Feature: stacked changes
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
+      | main   | git rebase origin/main --no-update-refs         |
       |        | git push                                        |
       |        | git checkout parent                             |
       | parent | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/parent                        |
+      |        | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git rebase parent --no-update-refs              |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/child                         |
+      |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "child"

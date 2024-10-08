@@ -15,11 +15,11 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | parked | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git rebase origin/main   |
-      |        | git branch -D parked     |
+      | BRANCH | COMMAND                                 |
+      | parked | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git branch -D parked                    |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

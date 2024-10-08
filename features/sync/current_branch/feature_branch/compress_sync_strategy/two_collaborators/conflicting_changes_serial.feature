@@ -36,7 +36,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |
@@ -55,7 +55,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |
@@ -72,7 +72,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |
@@ -92,7 +92,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
@@ -122,7 +122,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |
@@ -142,7 +142,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
@@ -172,7 +172,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |

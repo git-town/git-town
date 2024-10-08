@@ -17,14 +17,14 @@ Feature: sync the current prototype branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                          |
-      | prototype | git fetch --prune --tags         |
-      |           | git checkout main                |
-      | main      | git rebase origin/main           |
-      |           | git push                         |
-      |           | git checkout prototype           |
-      | prototype | git rebase main --no-update-refs |
-      |           | git rebase origin/prototype      |
+      | BRANCH    | COMMAND                                      |
+      | prototype | git fetch --prune --tags                     |
+      |           | git checkout main                            |
+      | main      | git rebase origin/main --no-update-refs      |
+      |           | git push                                     |
+      |           | git checkout prototype                       |
+      | prototype | git rebase main --no-update-refs             |
+      |           | git rebase origin/prototype --no-update-refs |
     And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |

@@ -21,23 +21,23 @@ Feature: sync a grandchild feature branch using the "compress" strategy
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                |
-      | child  | git fetch --prune --tags               |
-      |        | git checkout main                      |
-      | main   | git rebase origin/main                 |
-      |        | git push                               |
-      |        | git checkout parent                    |
-      | parent | git merge --no-edit --ff origin/parent |
-      |        | git merge --no-edit --ff main          |
-      |        | git reset --soft main                  |
-      |        | git commit -m "local parent commit"    |
-      |        | git push --force-with-lease            |
-      |        | git checkout child                     |
-      | child  | git merge --no-edit --ff origin/child  |
-      |        | git merge --no-edit --ff parent        |
-      |        | git reset --soft parent                |
-      |        | git commit -m "local child commit"     |
-      |        | git push --force-with-lease            |
+      | BRANCH | COMMAND                                 |
+      | child  | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git push                                |
+      |        | git checkout parent                     |
+      | parent | git merge --no-edit --ff origin/parent  |
+      |        | git merge --no-edit --ff main           |
+      |        | git reset --soft main                   |
+      |        | git commit -m "local parent commit"     |
+      |        | git push --force-with-lease             |
+      |        | git checkout child                      |
+      | child  | git merge --no-edit --ff origin/child   |
+      |        | git merge --no-edit --ff parent         |
+      |        | git reset --soft parent                 |
+      |        | git commit -m "local child commit"      |
+      |        | git push --force-with-lease             |
     And all branches are now synchronized
     And the current branch is still "child"
     And these commits exist now
