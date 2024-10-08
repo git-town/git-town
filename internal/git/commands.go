@@ -476,8 +476,12 @@ func (self *Commands) PushTags(runner gitdomain.Runner) error {
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
-	return runner.Run("git", "rebase", target.String(), "--no-update-refs")
+func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName, version Version) error {
+	args := []string{"rebase", target.String()}
+	if version.HasRebaseUpdateRefs() {
+		args = append(args, "--no-update-refs")
+	}
+	return runner.Run("git", args...)
 }
 
 // Remotes provides the names of all Git remotes in this repository.
@@ -683,25 +687,28 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 }
 
 // Version indicates whether the needed Git version is installed.
-func (self *Commands) Version(querier gitdomain.Querier) (major int, minor int, err error) {
+func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
-		return 0, 0, fmt.Errorf(messages.GitVersionProblem, err)
+		return emptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
 	}
 	matches := versionRegexp.FindStringSubmatch(output)
 	if matches == nil {
-		return 0, 0, fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
+		return emptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return 0, 0, fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
+		return emptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
 	}
 	minorVersion, err := strconv.Atoi(matches[2])
 	if err != nil {
-		return 0, 0, fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
+		return emptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
 	}
-	return majorVersion, minorVersion, nil
+	return Version{
+		Major: majorVersion,
+		Minor: minorVersion,
+	}, nil
 }
 
 func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {

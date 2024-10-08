@@ -89,6 +89,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		},
 		ConfigFile:   None[configdomain.PartialConfig](),
 		DryRun:       false,
+		GitVersion:   git.Version{Major: 2, Minor: 38},
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 	})

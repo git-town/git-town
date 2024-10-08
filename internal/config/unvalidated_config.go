@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/confighelpers"
 	"github.com/git-town/git-town/v16/internal/config/envconfig"
 	"github.com/git-town/git-town/v16/internal/config/gitconfig"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
@@ -23,10 +24,11 @@ type Runner interface {
 type UnvalidatedConfig struct {
 	Config          Mutable[configdomain.UnvalidatedConfig] // the merged configuration data
 	ConfigFile      Option[configdomain.PartialConfig]      // content of git-town.toml, nil = no config file exists
-	DryRun          configdomain.DryRun
-	GitConfig       gitconfig.Access           // access to the Git configuration settings
-	GlobalGitConfig configdomain.PartialConfig // content of the global Git configuration
-	LocalGitConfig  configdomain.PartialConfig // content of the local Git configuration
+	DryRun          configdomain.DryRun                     // whether to only print the Git commands but not execute them
+	GitConfig       gitconfig.Access                        // access to the Git configuration settings
+	GitVersion      git.Version                             // the version of the installed Git executable
+	GlobalGitConfig configdomain.PartialConfig              // content of the global Git configuration
+	LocalGitConfig  configdomain.PartialConfig              // content of the local Git configuration
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
@@ -37,6 +39,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 		ConfigFile:      args.ConfigFile,
 		DryRun:          args.DryRun,
 		GitConfig:       args.Access,
+		GitVersion:      args.GitVersion,
 		GlobalGitConfig: args.GlobalConfig,
 		LocalGitConfig:  args.LocalConfig,
 	}, finalMessages
@@ -341,6 +344,7 @@ type NewUnvalidatedConfigArgs struct {
 	Access       gitconfig.Access
 	ConfigFile   Option[configdomain.PartialConfig]
 	DryRun       configdomain.DryRun
+	GitVersion   git.Version
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
 }
