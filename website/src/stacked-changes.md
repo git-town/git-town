@@ -240,10 +240,9 @@ the order of branches.
 
 Merge conflicts happen when you merge two branches that change the same location
 in the same file. Git cannot (and should not) decided which version to use and
-it lets the user sort it out.
+lets the user sort it out.
 
-to resolve with two different commits (commits with different SHAs) making the
-same change. This
+Unfortunately,
 
 To minimize the risk of phantom merge conflicts after shipping the oldest branch
 in a stacked change, ship using a
