@@ -23,7 +23,7 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
       | main    | git rebase origin/main                          |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |

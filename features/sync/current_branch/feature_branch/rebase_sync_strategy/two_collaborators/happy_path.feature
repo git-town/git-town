@@ -29,7 +29,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
@@ -45,7 +45,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |
@@ -63,7 +63,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |

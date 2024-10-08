@@ -22,11 +22,11 @@ Feature: syncing a branch whose parent was shipped
       |        | git checkout main                               |
       | main   | git rebase origin/main                          |
       |        | git checkout parent                             |
-      | parent | git rebase main                                 |
+      | parent | git rebase main --no-update-refs                |
       |        | git checkout main                               |
       | main   | git branch -D parent                            |
       |        | git checkout child                              |
-      | child  | git rebase main                                 |
+      | child  | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
     And it prints:
       """

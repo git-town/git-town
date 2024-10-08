@@ -24,7 +24,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -73,7 +73,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
     And it prints the error:

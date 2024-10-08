@@ -32,7 +32,7 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout gamma                              |
       | gamma  | git rebase origin/beta                          |
-      |        | git rebase alpha                                |
+      |        | git rebase alpha --no-update-refs               |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/gamma                         |
       |        | git push --force-with-lease --force-if-includes |

@@ -40,13 +40,13 @@ Feature: sync the entire stack
       |        | git checkout main                               |
       | main   | git rebase origin/main                          |
       |        | git checkout alpha                              |
-      | alpha  | git rebase main                                 |
+      | alpha  | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
-      | beta   | git rebase alpha                                |
+      | beta   | git rebase alpha --no-update-refs               |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout gamma                              |
-      | gamma  | git rebase beta                                 |
+      | gamma  | git rebase beta --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
     And the current branch is still "alpha"

@@ -20,14 +20,14 @@ Feature: detached syncing a stacked feature branch using --no-push
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git checkout alpha       |
-      | alpha  | git rebase main          |
-      |        | git rebase origin/alpha  |
-      |        | git checkout beta        |
-      | beta   | git rebase alpha         |
-      |        | git rebase origin/beta   |
+      | BRANCH | COMMAND                           |
+      | beta   | git fetch --prune --tags          |
+      |        | git checkout alpha                |
+      | alpha  | git rebase main --no-update-refs  |
+      |        | git rebase origin/alpha           |
+      |        | git checkout beta                 |
+      | beta   | git rebase alpha --no-update-refs |
+      |        | git rebase origin/beta            |
     And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |

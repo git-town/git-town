@@ -26,12 +26,12 @@ Feature: stacked changes
       | main   | git rebase origin/main                          |
       |        | git push                                        |
       |        | git checkout parent                             |
-      | parent | git rebase main                                 |
+      | parent | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/parent                        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
-      | child  | git rebase parent                               |
+      | child  | git rebase parent --no-update-refs              |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/child                         |
       |        | git push --force-with-lease --force-if-includes |

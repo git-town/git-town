@@ -24,7 +24,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       |         | git checkout main                               |
       | main    | git rebase origin/main                          |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
     And it prints the error:

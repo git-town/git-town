@@ -24,7 +24,7 @@ Feature: with sync-perennial-strategy set to "merge"
       | main    | git merge --no-edit --ff origin/main            |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature                       |
       |         | git push --force-with-lease --force-if-includes |
