@@ -29,7 +29,7 @@ Feature: display all executed Git commands
       |          | backend  | git log main..existing --format=%h                              |
       |          | backend  | git log --format=%B -n 1 {{ sha-before-run 'existing commit' }} |
       | existing | frontend | git checkout main                                               |
-      | main     | frontend | git rebase origin/main                                          |
+      | main     | frontend | git rebase origin/main --no-update-refs                         |
       |          | backend  | git rev-list --left-right main...origin/main                    |
       | main     | frontend | git checkout existing                                           |
       | existing | frontend | git merge --no-edit --ff origin/existing                        |

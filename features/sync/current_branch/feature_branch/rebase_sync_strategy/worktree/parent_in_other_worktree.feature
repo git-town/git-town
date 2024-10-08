@@ -24,12 +24,12 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git checkout main                               |
-      | main   | git rebase origin/main                          |
+      | main   | git rebase origin/main --no-update-refs         |
       |        | git push                                        |
       |        | git checkout child                              |
-      | child  | git rebase origin/parent                        |
+      | child  | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/child                         |
+      |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And the current branch is still "child"
     And these commits exist now

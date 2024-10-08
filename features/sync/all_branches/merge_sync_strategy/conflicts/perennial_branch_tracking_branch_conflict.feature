@@ -21,14 +21,14 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: result
     Then I am not prompted for any parent branches
     And it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git checkout alpha       |
-      | alpha  | git rebase origin/alpha  |
-      |        | git checkout beta        |
-      | beta   | git rebase origin/beta   |
+      | BRANCH | COMMAND                                  |
+      | main   | git fetch --prune --tags                 |
+      |        | git add -A                               |
+      |        | git stash                                |
+      |        | git checkout alpha                       |
+      | alpha  | git rebase origin/alpha --no-update-refs |
+      |        | git checkout beta                        |
+      | beta   | git rebase origin/beta --no-update-refs  |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -57,14 +57,14 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH | COMMAND                 |
-      | beta   | git rebase --abort      |
-      |        | git checkout gamma      |
-      | gamma  | git rebase origin/gamma |
-      |        | git checkout main       |
-      | main   | git rebase origin/main  |
-      |        | git push --tags         |
-      |        | git stash pop           |
+      | BRANCH | COMMAND                                  |
+      | beta   | git rebase --abort                       |
+      |        | git checkout gamma                       |
+      | gamma  | git rebase origin/gamma --no-update-refs |
+      |        | git checkout main                        |
+      | main   | git rebase origin/main --no-update-refs  |
+      |        | git push --tags                          |
+      |        | git stash pop                            |
     And the current branch is now "main"
     And the uncommitted file still exists
     And these commits exist now
@@ -89,15 +89,15 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH | COMMAND                 |
-      | beta   | git rebase --continue   |
-      |        | git push                |
-      |        | git checkout gamma      |
-      | gamma  | git rebase origin/gamma |
-      |        | git checkout main       |
-      | main   | git rebase origin/main  |
-      |        | git push --tags         |
-      |        | git stash pop           |
+      | BRANCH | COMMAND                                  |
+      | beta   | git rebase --continue                    |
+      |        | git push                                 |
+      |        | git checkout gamma                       |
+      | gamma  | git rebase origin/gamma --no-update-refs |
+      |        | git checkout main                        |
+      | main   | git rebase origin/main --no-update-refs  |
+      |        | git push --tags                          |
+      |        | git stash pop                            |
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
@@ -108,11 +108,11 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                 |
-      | beta   | git push                |
-      |        | git checkout gamma      |
-      | gamma  | git rebase origin/gamma |
-      |        | git checkout main       |
-      | main   | git rebase origin/main  |
-      |        | git push --tags         |
-      |        | git stash pop           |
+      | BRANCH | COMMAND                                  |
+      | beta   | git push                                 |
+      |        | git checkout gamma                       |
+      | gamma  | git rebase origin/gamma --no-update-refs |
+      |        | git checkout main                        |
+      | main   | git rebase origin/main --no-update-refs  |
+      |        | git push --tags                          |
+      |        | git stash pop                            |

@@ -30,7 +30,7 @@ Feature: display all executed Git commands
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git log main..old --format=%h                 |
       | old    | frontend | git checkout main                             |
-      | main   | frontend | git rebase origin/main                        |
+      | main   | frontend | git rebase origin/main --no-update-refs       |
       |        | backend  | git rev-list --left-right main...origin/main  |
       | main   | frontend | git checkout old                              |
       | old    | frontend | git merge --no-edit --ff main                 |

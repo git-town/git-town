@@ -15,11 +15,11 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout -b new      |
+      | BRANCH   | COMMAND                                 |
+      | existing | git fetch --prune --tags                |
+      |          | git checkout main                       |
+      | main     | git rebase origin/main --no-update-refs |
+      |          | git checkout -b new                     |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |

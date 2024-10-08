@@ -15,7 +15,7 @@ Feature: support Git configuration that includes other files
       """
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git push --tags          |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git push --tags                         |

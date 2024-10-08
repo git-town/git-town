@@ -24,7 +24,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
       | feature-1 | git add -A                                |
       |           | git stash                                 |
       |           | git checkout main                         |
-      | main      | git rebase origin/main                    |
+      | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout feature-1                    |
       | feature-1 | git merge --no-edit --ff origin/feature-1 |
       |           | git merge --no-edit --ff main             |

@@ -17,7 +17,7 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
       |          | git checkout main                        |
-      | main     | git rebase origin/main                   |
+      | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
       | existing | git merge --no-edit --ff origin/existing |
       |          | git merge --no-edit --ff main            |

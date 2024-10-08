@@ -37,7 +37,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff main           |
@@ -59,7 +59,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
@@ -91,7 +91,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:
@@ -123,7 +123,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:

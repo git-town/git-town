@@ -15,10 +15,10 @@ Feature: sync the current contribution branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH       | COMMAND                        |
-      | contribution | git fetch --prune --tags       |
-      |              | git rebase origin/contribution |
-      |              | git push                       |
+      | BRANCH       | COMMAND                                         |
+      | contribution | git fetch --prune --tags                        |
+      |              | git rebase origin/contribution --no-update-refs |
+      |              | git push                                        |
     And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE       |

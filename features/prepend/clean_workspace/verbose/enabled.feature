@@ -29,7 +29,7 @@ Feature: display all executed Git commands
       |        | backend  | git log main..old --format=%h                   |
       |        | backend  | git log --format=%B -n 1 {{ sha 'old commit' }} |
       | old    | frontend | git checkout main                               |
-      | main   | frontend | git rebase origin/main                          |
+      | main   | frontend | git rebase origin/main --no-update-refs         |
       |        | backend  | git rev-list --left-right main...origin/main    |
       | main   | frontend | git checkout old                                |
       | old    | frontend | git merge --no-edit --ff origin/old             |

@@ -16,11 +16,11 @@ Feature: sync the current perennial branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | qa     | git fetch --prune --tags |
-      |        | git rebase origin/qa     |
-      |        | git push                 |
-      |        | git push --tags          |
+      | BRANCH | COMMAND                               |
+      | qa     | git fetch --prune --tags              |
+      |        | git rebase origin/qa --no-update-refs |
+      |        | git push                              |
+      |        | git push --tags                       |
     And all branches are now synchronized
     And the current branch is still "qa"
     And these commits exist now

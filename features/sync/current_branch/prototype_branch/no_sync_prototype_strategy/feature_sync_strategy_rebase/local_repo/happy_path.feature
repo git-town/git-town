@@ -16,11 +16,11 @@ Feature: sync the current prototype branch in a local repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND         |
-      | prototype | git add -A      |
-      |           | git stash       |
-      |           | git rebase main |
-      |           | git stash pop   |
+      | BRANCH    | COMMAND                          |
+      | prototype | git add -A                       |
+      |           | git stash                        |
+      |           | git rebase main --no-update-refs |
+      |           | git stash pop                    |
     And all branches are now synchronized
     And the current branch is still "prototype"
     And the uncommitted file still exists

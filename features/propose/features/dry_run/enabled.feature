@@ -29,7 +29,7 @@ Feature: dry-run proposing changes
       | feature | git fetch --prune --tags                                           |
       | <none>  | Looking for proposal online ... ok                                 |
       | feature | git checkout main                                                  |
-      | main    | git rebase origin/main                                             |
+      | main    | git rebase origin/main --no-update-refs                            |
       |         | git checkout feature                                               |
       | feature | git merge --no-edit --ff origin/feature                            |
       |         | git merge --no-edit --ff main                                      |

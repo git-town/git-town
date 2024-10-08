@@ -19,7 +19,7 @@ Feature: dry run
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |

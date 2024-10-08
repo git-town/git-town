@@ -16,11 +16,11 @@ Feature: inactive parked branches don't get synced
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git push                 |
-      |        | git push --tags          |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git rebase origin/main --no-update-refs |
+      |        | git push                                |
+      |        | git push --tags                         |
     And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

@@ -16,11 +16,11 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | qa     | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git rebase origin/qa     |
+      | BRANCH | COMMAND                               |
+      | qa     | git fetch --prune --tags              |
+      |        | git add -A                            |
+      |        | git stash                             |
+      |        | git rebase origin/qa --no-update-refs |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

@@ -19,9 +19,9 @@ Feature: a default branch type is set, the feature-regex does not match
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                     |
-      | my-branch | git fetch --prune --tags    |
-      |           | git rebase origin/my-branch |
+      | BRANCH    | COMMAND                                      |
+      | my-branch | git fetch --prune --tags                     |
+      |           | git rebase origin/my-branch --no-update-refs |
     And the current branch is still "my-branch"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |

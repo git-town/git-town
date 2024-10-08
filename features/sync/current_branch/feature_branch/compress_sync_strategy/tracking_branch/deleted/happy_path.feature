@@ -20,17 +20,17 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | feature-1 | git fetch --prune --tags      |
-      |           | git add -A                    |
-      |           | git stash                     |
-      |           | git checkout main             |
-      | main      | git rebase origin/main        |
-      |           | git checkout feature-1        |
-      | feature-1 | git merge --no-edit --ff main |
-      |           | git checkout main             |
-      | main      | git branch -D feature-1       |
-      |           | git stash pop                 |
+      | BRANCH    | COMMAND                                 |
+      | feature-1 | git fetch --prune --tags                |
+      |           | git add -A                              |
+      |           | git stash                               |
+      |           | git checkout main                       |
+      | main      | git rebase origin/main --no-update-refs |
+      |           | git checkout feature-1                  |
+      | feature-1 | git merge --no-edit --ff main           |
+      |           | git checkout main                       |
+      | main      | git branch -D feature-1                 |
+      |           | git stash pop                           |
     And it prints:
       """
       deleted branch "feature-1"

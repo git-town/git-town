@@ -19,9 +19,9 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     Then it runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git rebase origin/main                          |
+      |         | git rebase origin/main --no-update-refs         |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And the current branch in the other worktree is still "feature"
     And these commits exist now

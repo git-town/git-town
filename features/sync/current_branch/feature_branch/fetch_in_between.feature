@@ -18,7 +18,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
+      | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff origin/feature |
     And it prints the error:

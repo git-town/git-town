@@ -16,7 +16,7 @@ Feature: append in offline mode
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git checkout main                        |
-      | main     | git rebase origin/main                   |
+      | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
       | existing | git merge --no-edit --ff origin/existing |
       |          | git merge --no-edit --ff main            |

@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       |         | backend  | git log main..feature --format=%h                         |
       |         | backend  | git log --format=%B -n 1 {{ sha 'local feature commit' }} |
       | feature | frontend | git checkout main                                         |
-      | main    | frontend | git rebase origin/main                                    |
+      | main    | frontend | git rebase origin/main --no-update-refs                   |
       |         | backend  | git rev-list --left-right main...origin/main              |
       | main    | frontend | git push                                                  |
       |         | frontend | git checkout feature                                      |

@@ -17,19 +17,19 @@ Feature: "compress" sync with upstream repo
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
-      |         | git fetch upstream main                 |
-      |         | git rebase upstream/main                |
-      |         | git push                                |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
-      |         | git reset --soft main                   |
-      |         | git commit -m "local commit"            |
-      |         | git push --force-with-lease             |
+      | BRANCH  | COMMAND                                   |
+      | feature | git fetch --prune --tags                  |
+      |         | git checkout main                         |
+      | main    | git rebase origin/main --no-update-refs   |
+      |         | git fetch upstream main                   |
+      |         | git rebase upstream/main --no-update-refs |
+      |         | git push                                  |
+      |         | git checkout feature                      |
+      | feature | git merge --no-edit --ff origin/feature   |
+      |         | git merge --no-edit --ff main             |
+      |         | git reset --soft main                     |
+      |         | git commit -m "local commit"              |
+      |         | git push --force-with-lease               |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now

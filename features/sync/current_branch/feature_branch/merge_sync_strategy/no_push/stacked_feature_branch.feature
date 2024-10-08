@@ -20,16 +20,16 @@ Feature: syncing a stacked feature branch using --no-push
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                |
-      | child  | git fetch --prune --tags               |
-      |        | git checkout main                      |
-      | main   | git rebase origin/main                 |
-      |        | git checkout parent                    |
-      | parent | git merge --no-edit --ff origin/parent |
-      |        | git merge --no-edit --ff main          |
-      |        | git checkout child                     |
-      | child  | git merge --no-edit --ff origin/child  |
-      |        | git merge --no-edit --ff parent        |
+      | BRANCH | COMMAND                                 |
+      | child  | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout parent                     |
+      | parent | git merge --no-edit --ff origin/parent  |
+      |        | git merge --no-edit --ff main           |
+      |        | git checkout child                      |
+      | child  | git merge --no-edit --ff origin/child   |
+      |        | git merge --no-edit --ff parent         |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |

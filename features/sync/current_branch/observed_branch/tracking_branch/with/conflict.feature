@@ -15,11 +15,11 @@ Feature: handle conflicts between the current observed branch and its tracking b
 
   Scenario: result
     Then it runs the commands
-      | BRANCH   | COMMAND                    |
-      | observed | git fetch --prune --tags   |
-      |          | git add -A                 |
-      |          | git stash                  |
-      |          | git rebase origin/observed |
+      | BRANCH   | COMMAND                                     |
+      | observed | git fetch --prune --tags                    |
+      |          | git add -A                                  |
+      |          | git stash                                   |
+      |          | git rebase origin/observed --no-update-refs |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

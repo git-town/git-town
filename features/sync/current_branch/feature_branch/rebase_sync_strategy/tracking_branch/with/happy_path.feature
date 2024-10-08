@@ -20,12 +20,12 @@ Feature: sync the current feature branch using the "rebase" sync-feature strateg
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
-      | main    | git rebase origin/main                          |
+      | main    | git rebase origin/main --no-update-refs         |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase main                                 |
+      | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature                       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"

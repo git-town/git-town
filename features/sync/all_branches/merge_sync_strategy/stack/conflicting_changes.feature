@@ -15,15 +15,15 @@ Feature: sync a stack that makes conflicting changes
     And an uncommitted file
     When I run "git-town sync --all"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | alpha  | git fetch --prune --tags              |
-      |        | git add -A                            |
-      |        | git stash                             |
-      |        | git checkout main                     |
-      | main   | git rebase origin/main                |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff main         |
+      | BRANCH | COMMAND                                 |
+      | alpha  | git fetch --prune --tags                |
+      |        | git add -A                              |
+      |        | git stash                               |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout alpha                      |
+      | alpha  | git merge --no-edit --ff origin/alpha   |
+      |        | git merge --no-edit --ff main           |
     And the current branch is now "alpha"
     And it prints the error:
       """

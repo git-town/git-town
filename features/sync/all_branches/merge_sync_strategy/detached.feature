@@ -31,20 +31,20 @@ Feature: sync all feature branches
 
   Scenario: result
     Then it runs the commands
-      | BRANCH       | COMMAND                               |
-      | alpha        | git fetch --prune --tags              |
-      |              | git merge --no-edit --ff origin/alpha |
-      |              | git merge --no-edit --ff main         |
-      |              | git checkout beta                     |
-      | beta         | git merge --no-edit --ff origin/beta  |
-      |              | git merge --no-edit --ff main         |
-      |              | git checkout contribution             |
-      | contribution | git rebase origin/contribution        |
-      |              | git push                              |
-      |              | git checkout observed                 |
-      | observed     | git rebase origin/observed            |
-      |              | git checkout alpha                    |
-      | alpha        | git push --tags                       |
+      | BRANCH       | COMMAND                                         |
+      | alpha        | git fetch --prune --tags                        |
+      |              | git merge --no-edit --ff origin/alpha           |
+      |              | git merge --no-edit --ff main                   |
+      |              | git checkout beta                               |
+      | beta         | git merge --no-edit --ff origin/beta            |
+      |              | git merge --no-edit --ff main                   |
+      |              | git checkout contribution                       |
+      | contribution | git rebase origin/contribution --no-update-refs |
+      |              | git push                                        |
+      |              | git checkout observed                           |
+      | observed     | git rebase origin/observed --no-update-refs     |
+      |              | git checkout alpha                              |
+      | alpha        | git push --tags                                 |
     And the current branch is still "alpha"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
