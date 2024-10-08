@@ -38,7 +38,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	if !gitVersion.IsAcceptableGitVersion() {
+	if !gitVersion.IsMinimumRequiredGitVersion() {
 		return emptyOpenRepoResult(), errors.New(messages.GitVersionTooLow)
 	}
 	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()

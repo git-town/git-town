@@ -11,8 +11,8 @@ func (self Version) HasRebaseUpdateRefs() bool {
 	return self.Major > 2 || (self.Major == 2 && self.Minor >= 38)
 }
 
-// indicates whether the installed Git version satisfies Git Town's minimum version requirement
-func (self Version) IsAcceptableGitVersion() bool {
+// indicates whether the installed Git version works for Git Town
+func (self Version) IsMinimumRequiredGitVersion() bool {
 	return self.Major > 2 || (self.Major == 2 && self.Minor >= 30)
 }
 

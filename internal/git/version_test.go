@@ -16,7 +16,7 @@ func TestIsAcceptableGitVersion(t *testing.T) {
 		{1, 8}:  false,
 	}
 	for version, want := range tests {
-		have := version.IsAcceptableGitVersion()
+		have := version.IsMinimumRequiredGitVersion()
 		must.EqOp(t, want, have)
 	}
 }
