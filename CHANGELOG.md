@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 16.4.1 (2024-10-09)
+
+Thanks to @bengeois, @kevgo, @ruudk, @sergej-koscejev, @stephenwade, @tranhl for contributing great feedback, ideas, and code to 14 shipped PRs and 5 resolved issues!
+
+#### Bug Fixes
+
+- disable `rebase.updateRefs` if your Git version supports it ([#4101](https://github.com/git-town/git-town/discussions/4101))
+
 ## 16.4.0 (2024-10-03)
 
 Git Town 16.4 improves the usability in busy monorepos as well as the stability and resilience of Git Town in more environments.
