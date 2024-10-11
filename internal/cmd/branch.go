@@ -74,7 +74,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
-		HandleUnfinishedState: true,
+		HandleUnfinishedState: false,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
