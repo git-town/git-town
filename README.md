@@ -45,12 +45,12 @@ development. Supports mono-repos and stacked changes. Check out
 
 - [contribute](https://www.git-town.com/commands/contribute) - add commits to
   somebody else's feature branch
-- [observe](https://www.git-town.com/commands/observe) - track somebody
-  else's feature branch without contributing to it
-- [park](https://www.git-town.com/commands/park) - stop
-  syncing one of your feature branches
-- [prototype](https://www.git-town.com/commands/prototype) -
-  sync but don't push a branch
+- [observe](https://www.git-town.com/commands/observe) - track somebody else's
+  feature branch without contributing to it
+- [park](https://www.git-town.com/commands/park) - stop syncing one of your
+  feature branches
+- [prototype](https://www.git-town.com/commands/prototype) - sync but don't push
+  a branch
 
 #### Dealing with errors
 

@@ -4,8 +4,8 @@
 
 The _compress_ command squashes all commits on a branch into a single commit.
 Git Town compresses feature branches and
-[parked branches](https://www.git-town.com/preferences/parked-branches) if
-they are currently checked out. It doesn't compress
+[parked branches](https://www.git-town.com/preferences/parked-branches) if they
+are currently checked out. It doesn't compress
 [perennial](https://www.git-town.com/preferences/perennial-branches),
 [observed](https://www.git-town.com/preferences/observed-branches), and
 [contribution](https://www.git-town.com/preferences/contribution-branches)
