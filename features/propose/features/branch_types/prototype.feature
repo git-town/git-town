@@ -4,8 +4,12 @@ Feature: Create proposals for prototype branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME      | TYPE      | PARENT | LOCATIONS     |
-      | prototype | prototype | main   | local, origin |
+      | NAME      | TYPE      | PARENT | LOCATIONS |
+      | prototype | prototype | main   | local     |
+    And the commits
+      | BRANCH    | LOCATION | MESSAGE          |
+      | main      | local    | main commit      |
+      | prototype | local    | prototype commit |
     And the current branch is "prototype"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
@@ -13,7 +17,17 @@ Feature: Create proposals for prototype branches
     When I run "git-town propose"
 
   Scenario: result
-    Then "open" launches a new proposal with this url in my browser:
+    Then it runs the commands
+      | BRANCH    | COMMAND                                                              |
+      | prototype | git fetch --prune --tags                                             |
+      | <none>    | Looking for proposal online ... ok                                   |
+      | prototype | git checkout main                                                    |
+      | main      | git rebase origin/main --no-update-refs                              |
+      |           | git push                                                             |
+      |           | git checkout prototype                                               |
+      | prototype | git merge --no-edit --ff main                                        |
+      | <none>    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/prototype?expand=1
       """
