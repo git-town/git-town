@@ -12,4 +12,18 @@ Feature: displaying the branches in the middle of an ongoing sync merge conflict
     And the current branch is "feature"
     And Git Town setting "sync-feature-strategy" is "compress"
     And an uncommitted file
-    When I run "git-town sync"
+    And I ran "git-town sync"
+    And it prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    When I run "git-town branch"
+
+  @this
+  Scenario: result
+    Then it runs no commands
+    And it prints:
+      """
+        main
+          feature
+      """
