@@ -19,11 +19,10 @@ Feature: displaying the branches in the middle of an ongoing sync merge conflict
       """
     When I run "git-town branch"
 
-  @this
   Scenario: result
     Then it runs no commands
     And it prints:
       """
         main
-          feature
+      *   feature
       """
