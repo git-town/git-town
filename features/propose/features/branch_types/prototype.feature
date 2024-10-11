@@ -16,6 +16,7 @@ Feature: Create proposals for prototype branches
     And a proposal for this branch does not exist
     When I run "git-town propose"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                                                              |
@@ -26,6 +27,7 @@ Feature: Create proposals for prototype branches
       |           | git push                                                             |
       |           | git checkout prototype                                               |
       | prototype | git merge --no-edit --ff main                                        |
+      |           | git push                                                             |
       | <none>    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
