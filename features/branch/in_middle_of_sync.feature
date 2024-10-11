@@ -10,8 +10,6 @@ Feature: displaying the branches in the middle of an ongoing sync merge conflict
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
-    And Git Town setting "sync-feature-strategy" is "compress"
-    And an uncommitted file
     And I ran "git-town sync"
     And it prints the error:
       """
