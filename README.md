@@ -43,13 +43,13 @@ development. Supports mono-repos and stacked changes. Check out
 
 #### Limit branch syncing
 
-- [contribute](https://www.git-town.com/commands/observe.html) - add commits to
+- [contribute](https://www.git-town.com/commands/contribute) - add commits to
   somebody else's feature branch
-- [observe](https://www.git-town.com/commands/observe.html) - track somebody
+- [observe](https://www.git-town.com/commands/observe) - track somebody
   else's feature branch without contributing to it
-- [park](https://www.git-town.com/advanced-syncing#parked-branches) - stop
+- [park](https://www.git-town.com/commands/park) - stop
   syncing one of your feature branches
-- [prototype](https://www.git-town.com/advanced-syncing#prototype-branches) -
+- [prototype](https://www.git-town.com/commands/prototype) -
   sync but don't push a branch
 
 #### Dealing with errors
@@ -87,7 +87,7 @@ development. Supports mono-repos and stacked changes. Check out
 ## Installation
 
 See the [installation](https://www.git-town.com/install.html) and
-[configuration](https://www.git-town.com/quick-configuration.html) instructions.
+[configuration](https://www.git-town.com/configuration) instructions.
 
 ## Documentation
 

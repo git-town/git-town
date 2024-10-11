@@ -1,14 +1,14 @@
 # git town compress
 
-> _git town compress [--message &lt;text&gt;] [--stack]
+> git town compress [--message &lt;text&gt;] [--stack]
 
 The _compress_ command squashes all commits on a branch into a single commit.
 Git Town compresses feature branches and
-[parked branches](https://www.git-town.com/advanced-syncing#parked-branches) if
+[parked branches](https://www.git-town.com/preferences/parked-branches) if
 they are currently checked out. It doesn't compress
 [perennial](https://www.git-town.com/preferences/perennial-branches),
-[observed](https://www.git-town.com/advanced-syncing#observed-branches), and
-[contribution](https://www.git-town.com/advanced-syncing#contribution-branches)
+[observed](https://www.git-town.com/preferences/observed-branches), and
+[contribution](https://www.git-town.com/preferences/contribution-branches)
 branches.
 
 Branches must be in sync to compress them, so run `git town sync` and resolve
