@@ -125,6 +125,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PushCurrentBranch{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
+				&opcodes.PushCurrentBranchIfLocal{
+					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.PushCurrentBranchIfNeeded{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -454,6 +457,12 @@ func TestLoadSave(t *testing.T) {
         "CurrentBranch": "branch"
       },
       "type": "PushCurrentBranch"
+    },
+    {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "PushCurrentBranchIfLocal"
     },
     {
       "data": {
