@@ -25,6 +25,7 @@ Feature: Create proposals for prototype branches
       |           | git push -u origin parent                                                     |
       |           | git checkout prototype                                                        |
       | prototype | git merge --no-edit --ff parent                                               |
+      |           | git push -u origin prototype                                                  |
       | <none>    | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
