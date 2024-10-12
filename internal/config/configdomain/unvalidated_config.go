@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -64,7 +63,6 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
 	}
-	fmt.Println("2222222222222222222222222222222222222", self.PrototypeBranches)
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
