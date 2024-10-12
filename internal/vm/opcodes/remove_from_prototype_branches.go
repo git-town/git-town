@@ -16,5 +16,7 @@ type RemoveFromPrototypeBranches struct {
 
 func (self *RemoveFromPrototypeBranches) Run(args shared.RunArgs) error {
 	args.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, self.Branch))
-	return args.Config.RemoveFromPrototypeBranches(self.Branch)
+	err := args.Config.RemoveFromPrototypeBranches(self.Branch)
+	fmt.Println("333333333333333333333333333333333333333333333333333", args.Config.Config.PrototypeBranches)
+	return err
 }

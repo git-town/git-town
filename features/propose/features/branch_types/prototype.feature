@@ -16,7 +16,7 @@ Feature: Create proposals for prototype branches
     And a proposal for this branch does not exist
     When I run "git-town propose"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                                                              |

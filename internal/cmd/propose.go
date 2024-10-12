@@ -270,6 +270,9 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 
 func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
+		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
+	}
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:   data.branchInfos,
 		Config:        data.config.Config,
@@ -278,9 +281,6 @@ func proposeProgram(data proposeData) program.Program {
 		Program:       prog,
 		PushBranches:  true,
 	})
-	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
-	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
