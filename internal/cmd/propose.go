@@ -281,6 +281,9 @@ func proposeProgram(data proposeData) program.Program {
 		Program:       prog,
 		PushBranches:  true,
 	})
+	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+		CurrentBranch: data.branchToPropose,
+	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

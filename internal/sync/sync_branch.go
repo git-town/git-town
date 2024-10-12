@@ -56,7 +56,6 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 	}
 	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
 	branchType := args.Config.BranchType(localName)
-	fmt.Println("111111111111111111111111111111111111111", branchType)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
