@@ -172,6 +172,37 @@ func TestBackendCommands(t *testing.T) {
 		must.EqOp(t, initial, branch)
 	})
 
+	t.Run("CurrentBranchHasTrackingBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has tracking branch", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.CreateGitTown(t)
+			repoDir := t.TempDir()
+			repo := testruntime.Clone(origin.TestRunner, repoDir)
+			branch := gitdomain.NewLocalBranchName("branch")
+			main := gitdomain.NewLocalBranchName("main")
+			repo.CheckoutBranch(main)
+			repo.CreateFeatureBranch(branch, main.BranchName())
+			repo.CheckoutBranch(branch)
+			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+			have := repo.CurrentBranchHasTrackingBranch(repo.TestCommands)
+			must.True(t, have)
+		})
+		t.Run("has no tracking branch", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.CreateGitTown(t)
+			repoDir := t.TempDir()
+			repo := testruntime.Clone(origin.TestRunner, repoDir)
+			branch := gitdomain.NewLocalBranchName("branch")
+			main := gitdomain.NewLocalBranchName("main")
+			repo.CheckoutBranch(main)
+			repo.CreateFeatureBranch(branch, main.BranchName())
+			repo.CheckoutBranch(branch)
+			have := repo.CurrentBranchHasTrackingBranch(repo.TestCommands)
+			must.False(t, have)
+		})
+	})
+
 	t.Run("DefaultBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
