@@ -133,6 +133,7 @@ type proposeData struct {
 	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
+	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposalBody        gitdomain.ProposalBody
 	proposalTitle       gitdomain.ProposalTitle
@@ -141,6 +142,10 @@ type proposeData struct {
 }
 
 func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
+	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -260,6 +265,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		existingProposalURL: existingProposalURL,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
+		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposalBody:        bodyText,
 		proposalTitle:       title,
@@ -271,12 +277,13 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-		BranchInfos:   data.branchInfos,
-		Config:        data.config.Config,
-		InitialBranch: data.initialBranch,
-		Remotes:       data.remotes,
-		Program:       prog,
-		PushBranches:  true,
+		BranchInfos:         data.branchInfos,
+		Config:              data.config.Config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.preFetchBranchInfos,
+		Remotes:             data.remotes,
+		Program:             prog,
+		PushBranches:        true,
 	})
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
 		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
