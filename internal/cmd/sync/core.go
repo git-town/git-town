@@ -213,9 +213,17 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if hasPreviousBranch {
 		if previousBranchInfo, hasPreviousBranchInfo := branchesSnapshot.Branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
 			switch previousBranchInfo.SyncStatus {
-			case gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusUpToDate:
+			case
+				gitdomain.SyncStatusLocalOnly,
+				gitdomain.SyncStatusNotInSync,
+				gitdomain.SyncStatusAhead,
+				gitdomain.SyncStatusBehind,
+				gitdomain.SyncStatusUpToDate:
 				previousBranchOpt = previousBranchInfo.LocalName
-			case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+			case
+				gitdomain.SyncStatusDeletedAtRemote,
+				gitdomain.SyncStatusRemoteOnly,
+				gitdomain.SyncStatusOtherWorktree:
 				previousBranchOpt = None[gitdomain.LocalBranchName]()
 			}
 		}

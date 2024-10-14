@@ -123,7 +123,11 @@ func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config 
 			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeMainBranch,
+			configdomain.BranchTypePerennialBranch:
 		}
 	}
 	return nil
@@ -152,7 +156,11 @@ func validateObserveData(data observeData) error {
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
 		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)

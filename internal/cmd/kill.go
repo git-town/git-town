@@ -234,11 +234,18 @@ func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToKillType {
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
 		killFeatureBranch(prog, undoProg, data)
-	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch:
+	case
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeContributionBranch:
 		killLocalBranch(prog, undoProg, data)
-	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+	case
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToKillType))
 	}
 	localBranchNameToKill, hasLocalBranchToKill := data.branchToKillInfo.LocalName.Get()
@@ -320,7 +327,12 @@ type branchWhenDoneArgs struct {
 
 func validateKillData(data killData) error {
 	switch data.branchToKillType {
-	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.KillCannotKillMainBranch)
