@@ -22,7 +22,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos
+	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
 	Config              configdomain.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
