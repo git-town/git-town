@@ -18,6 +18,7 @@ Feature: shipped parent of a stacked change with dependent changes
     And the current branch is "beta"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
@@ -31,19 +32,7 @@ Feature: shipped parent of a stacked change with dependent changes
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
-    And it prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
-    And a merge is now in progress
-
-  Scenario: resolve manually
-    When I resolve the conflict in "file"
-    And I run "git-town continue"
-    Then it runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
+      |        | git push                                |
     And the current branch is still "beta"
     And the branches are now
       | REPOSITORY    | BRANCHES   |
