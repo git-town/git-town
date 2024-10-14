@@ -1,4 +1,4 @@
-Feature: shipped parent of a stacked change with dependent changes
+Feature: shipped parent of a stacked change with conflicting dependent changes
 
   Background:
     Given a Git repo with origin
@@ -18,20 +18,25 @@ Feature: shipped parent of a stacked change with dependent changes
     And the current branch is "beta"
     When I run "git-town sync"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
-      |        | git checkout main                       |
-      | main   | git branch -D alpha                     |
+      |        | git branch -D alpha                     |
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
+    And it prints:
+      """
+      deleted branch "alpha"
+      """
+    And it prints:
+      """
+      branch "beta" is now a child of "main"
+      """
     And the current branch is still "beta"
     And the branches are now
       | REPOSITORY    | BRANCHES   |
