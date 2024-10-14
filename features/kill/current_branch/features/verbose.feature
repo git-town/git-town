@@ -33,11 +33,6 @@ Feature: display all executed Git commands
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout other                                |
       | other   | frontend | git branch -D current                             |
-      |         | backend  | git config git-town.contribution-branches ""      |
-      |         | backend  | git config git-town.observed-branches ""          |
-      |         | backend  | git config git-town.parked-branches ""            |
-      |         | backend  | git config git-town.perennial-branches ""         |
-      |         | backend  | git config git-town.prototype-branches ""         |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/current  |
       |         | backend  | git branch -vva --sort=refname                    |
@@ -46,6 +41,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "other"
