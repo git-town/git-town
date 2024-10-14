@@ -1,3 +1,4 @@
+// Package sync provides functionality around syncing Git branches.
 package sync
 
 import (
@@ -48,7 +49,7 @@ When run on the main branch or a perennial branch:
 
 If the repository contains an "upstream" remote, syncs the main branch with its upstream counterpart. You can disable this by running "git config %s false".`
 
-func SyncCmd() *cobra.Command {
+func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()

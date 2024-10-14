@@ -37,7 +37,7 @@ func Execute() error {
 	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
 	rootCmd.AddCommand(switchCmd())
-	rootCmd.AddCommand(sync.SyncCmd())
+	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())
 	return rootCmd.Execute()
 }
