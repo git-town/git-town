@@ -1,93 +1,74 @@
-Feature: sync the entire stack
+Feature: stacked changes
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME       | TYPE      | PARENT | LOCATIONS     |
-      | alpha      | feature   | main   | local, origin |
-      | beta       | feature   | alpha  | local, origin |
-      | gamma      | feature   | beta   | local, origin |
-      | one        | feature   | main   | local, origin |
-      | two        | feature   | one    | local, origin |
-      | production | perennial |        | local, origin |
-      | qa         | perennial |        | local, origin |
-      | observed   | observed  |        | local, origin |
-      | parked     | parked    | main   | local, origin |
-    And the commits
-      | BRANCH     | LOCATION      | MESSAGE                  |
-      | main       | origin        | main commit              |
-      | alpha      | local, origin | alpha commit             |
-      | beta       | local, origin | beta commit              |
-      | gamma      | local, origin | gamma commit             |
-      | one        | local, origin | one commit               |
-      | two        | local, origin | two commit               |
-      | observed   | local         | local observed commit    |
-      |            | origin        | origin observed commit   |
-      | parked     | local         | local parked commit      |
-      |            | origin        | origin parked commit     |
-      | production | local         | local production commit  |
-      |            | origin        | origin production commit |
-      | qa         | local         | qa local commit          |
-      |            | origin        | qa origin commit         |
-    And the current branch is "alpha"
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And Git Town setting "sync-feature-strategy" is "rebase"
-    When I run "git-town sync --stack"
+    And the commits
+      | BRANCH | LOCATION | MESSAGE              |
+      | main   | local    | local main commit    |
+      |        | origin   | origin main commit   |
+      | parent | local    | local parent commit  |
+      |        | origin   | origin parent commit |
+      | child  | local    | local child commit   |
+      |        | origin   | origin child commit  |
+    And the current branch is "child"
+    When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                         |
-      | alpha  | git fetch --prune --tags                        |
+      | child  | git fetch --prune --tags                        |
       |        | git checkout main                               |
       | main   | git rebase origin/main --no-update-refs         |
-      |        | git checkout alpha                              |
-      | alpha  | git rebase main --no-update-refs                |
+      |        | git push                                        |
+      |        | git checkout parent                             |
+      | parent | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git rebase alpha --no-update-refs               |
+      |        | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
-      | gamma  | git rebase beta --no-update-refs                |
+      |        | git checkout child                              |
+      | child  | git rebase parent --no-update-refs              |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
-    And the current branch is still "alpha"
+      |        | git rebase origin/child --no-update-refs        |
+      |        | git push --force-with-lease --force-if-includes |
+    And all branches are now synchronized
+    And the current branch is still "child"
     And these commits exist now
-      | BRANCH     | LOCATION      | MESSAGE                  |
-      | main       | local, origin | main commit              |
-      | alpha      | local, origin | main commit              |
-      |            |               | alpha commit             |
-      | beta       | local, origin | main commit              |
-      |            |               | alpha commit             |
-      |            |               | beta commit              |
-      | gamma      | local, origin | main commit              |
-      |            |               | alpha commit             |
-      |            |               | beta commit              |
-      |            |               | gamma commit             |
-      | observed   | local         | local observed commit    |
-      |            | origin        | origin observed commit   |
-      | one        | local, origin | one commit               |
-      | parked     | local         | local parked commit      |
-      |            | origin        | origin parked commit     |
-      | production | local         | local production commit  |
-      |            | origin        | origin production commit |
-      | qa         | local         | qa local commit          |
-      |            | origin        | qa origin commit         |
-      | two        | local, origin | two commit               |
+      | BRANCH | LOCATION      | MESSAGE              |
+      | main   | local, origin | origin main commit   |
+      |        |               | local main commit    |
+      | child  | local, origin | origin child commit  |
+      |        |               | origin parent commit |
+      |        |               | origin main commit   |
+      |        |               | local main commit    |
+      |        |               | local parent commit  |
+      |        |               | local child commit   |
+      | parent | local, origin | origin parent commit |
+      |        |               | origin main commit   |
+      |        |               | local main commit    |
+      |        |               | local parent commit  |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                         |
-      | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git reset --hard {{ sha 'beta commit' }}        |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
-      | gamma  | git reset --hard {{ sha 'gamma commit' }}       |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git checkout alpha                              |
-    And the current branch is still "alpha"
-    And the initial commits exist now
+      | BRANCH | COMMAND                                                                                         |
+      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                      |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
+      |        | git checkout parent                                                                             |
+      | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
+      |        | git checkout child                                                                              |
+    And the current branch is still "child"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE              |
+      | main   | local, origin | origin main commit   |
+      |        |               | local main commit    |
+      | child  | local         | local child commit   |
+      |        | origin        | origin child commit  |
+      | parent | local         | local parent commit  |
+      |        | origin        | origin parent commit |
     And the initial branches and lineage exist now
