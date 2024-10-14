@@ -106,9 +106,9 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		Config:              data.config.Config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Remotes:             data.remotes,
 		Program:             NewMutable(&runProgram),
 		PushBranches:        pushBranches,
+		Remotes:             data.remotes,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
