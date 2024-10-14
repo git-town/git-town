@@ -44,8 +44,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       | BRANCH | COMMAND                               |
       | alpha  | git commit --no-edit                  |
       |        | git push                              |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff main         |
       |        | git checkout main                     |
       | main   | git branch -D beta                    |
       |        | git checkout gamma                    |
