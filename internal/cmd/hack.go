@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/sync"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -258,7 +259,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if detached {
 		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
