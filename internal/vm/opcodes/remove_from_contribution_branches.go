@@ -12,5 +12,9 @@ type RemoveFromContributionBranches struct {
 }
 
 func (self *RemoveFromContributionBranches) Run(args shared.RunArgs) error {
-	return args.Config.RemoveFromContributionBranches(self.Branch)
+	var err error
+	if args.Config.Config.ContributionBranches.Contains(self.Branch) {
+		err = args.Config.RemoveFromContributionBranches(self.Branch)
+	}
+	return err
 }
