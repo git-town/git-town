@@ -30,27 +30,30 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
-		switch preFetchBranchInfo.SyncStatus {
-		case
-			gitdomain.SyncStatusUpToDate,
-			gitdomain.SyncStatusBehind,
-			gitdomain.SyncStatusLocalOnly:
-			syncDeleteLocalBranchProgram(list, branch, args)
-		case gitdomain.SyncStatusOtherWorktree:
-		case gitdomain.SyncStatusRemoteOnly:
-			return
-		case gitdomain.SyncStatusAhead:
-		case gitdomain.SyncStatusDeletedAtRemote:
-		case gitdomain.SyncStatusNotInSync:
-			list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
-			pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-				branch:       branch,
-				program:      list,
-				syncStrategy: args.Config.SyncFeatureStrategy,
-			})
-			list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
-		}
+	preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get()
+	syncStatus := preFetchBranchInfo.SyncStatus
+	if !has {
+		syncStatus = gitdomain.SyncStatusNotInSync
+	}
+	switch syncStatus {
+	case
+		gitdomain.SyncStatusUpToDate,
+		gitdomain.SyncStatusBehind,
+		gitdomain.SyncStatusLocalOnly:
+		syncDeleteLocalBranchProgram(list, branch, args)
+	case gitdomain.SyncStatusOtherWorktree:
+	case gitdomain.SyncStatusRemoteOnly:
+		return
+	case gitdomain.SyncStatusAhead:
+	case gitdomain.SyncStatusDeletedAtRemote:
+	case gitdomain.SyncStatusNotInSync:
+		list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
+			branch:       branch,
+			program:      list,
+			syncStrategy: args.Config.SyncFeatureStrategy,
+		})
+		list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
 	}
 }
 
