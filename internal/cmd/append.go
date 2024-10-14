@@ -116,6 +116,7 @@ type appendFeatureData struct {
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
+	prefetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
 	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes
@@ -125,6 +126,10 @@ type appendFeatureData struct {
 
 func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
+	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -204,6 +209,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
+		prefetchBranchInfos:       prefetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
 		remotes:                   remotes,
@@ -216,12 +222,13 @@ func appendProgram(data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-			BranchInfos:   data.branchInfos,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Program:       prog,
-			Remotes:       data.remotes,
-			PushBranches:  true,
+			BranchInfos:         data.branchInfos,
+			Config:              data.config.Config,
+			InitialBranch:       data.initialBranch,
+			PrefetchBranchInfos: data.prefetchBranchInfos,
+			Program:             prog,
+			Remotes:             data.remotes,
+			PushBranches:        true,
 		})
 	}
 	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
