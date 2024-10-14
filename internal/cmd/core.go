@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cmd/debug"
 	"github.com/git-town/git-town/v16/internal/cmd/ship"
 	"github.com/git-town/git-town/v16/internal/cmd/status"
+	"github.com/git-town/git-town/v16/internal/cmd/sync"
 )
 
 // Execute runs the Cobra stack.
@@ -36,7 +37,7 @@ func Execute() error {
 	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
 	rootCmd.AddCommand(switchCmd())
-	rootCmd.AddCommand(syncCmd())
+	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())
 	return rootCmd.Execute()
 }
