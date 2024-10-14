@@ -93,6 +93,7 @@ func Types() []shared.Opcode {
 		&PreserveCheckoutHistory{},
 		&PullCurrentBranch{},
 		&PushCurrentBranch{},
+		&PushCurrentBranchIfLocal{},
 		&PushCurrentBranchIfNeeded{},
 		&PushTags{},
 		&RebaseBranch{},

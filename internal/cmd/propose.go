@@ -281,6 +281,9 @@ func proposeProgram(data proposeData) program.Program {
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
 		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
 	}
+	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+		CurrentBranch: data.branchToPropose,
+	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
