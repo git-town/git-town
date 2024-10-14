@@ -1,4 +1,4 @@
-Feature: shipped parent of a stacked change with conflicting dependent changes
+Feature: shipped parent of a stacked change with conflicting changes
 
   Background:
     Given a Git repo with origin
