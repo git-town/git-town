@@ -25,7 +25,7 @@ type BranchProgramArgs struct {
 	BranchInfos         gitdomain.BranchInfos
 	Config              configdomain.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
-	PrefetchBranchInfos gitdomain.BranchInfos
+	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	PushBranches        configdomain.PushBranches
 	Remotes             gitdomain.Remotes
