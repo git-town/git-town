@@ -140,9 +140,16 @@ func (self SwitchModel) View() string {
 
 func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	switch branchType {
-	case configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch:
+	case
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeFeatureBranch:
 		return false
-	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypePrototypeBranch:
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePerennialBranch,
+		configdomain.BranchTypePrototypeBranch:
 		return true
 	}
 	panic("unhandled branch type:" + branchType.String())

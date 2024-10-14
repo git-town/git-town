@@ -297,9 +297,14 @@ func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType confi
 
 func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
 	switch branchType {
-	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch:
+	case
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypePrototypeBranch:
 		return nil
-	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+	case
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.CompressIsPerennial)
 	case configdomain.BranchTypeObservedBranch:
 		return fmt.Errorf(messages.CompressObservedBranch, branchName)
@@ -311,9 +316,17 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 
 func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
 	switch syncStatus {
-	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
+	case
+		gitdomain.SyncStatusUpToDate,
+		gitdomain.SyncStatusLocalOnly:
 		return nil
-	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusOtherWorktree:
+	case
+		gitdomain.SyncStatusNotInSync,
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusBehind,
+		gitdomain.SyncStatusDeletedAtRemote,
+		gitdomain.SyncStatusRemoteOnly,
+		gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
 	panic("unhandled syncstatus: " + syncStatus.String())
