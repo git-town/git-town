@@ -288,7 +288,7 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 		}
 		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
 		if data.dryRun.IsFalse() {
-			sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
+			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToKill,
 				Lineage: data.config.Config.Lineage,
 				Parent:  data.parentBranch,
