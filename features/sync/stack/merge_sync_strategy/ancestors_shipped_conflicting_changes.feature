@@ -41,13 +41,6 @@ Feature: shipped parent of a stacked change with conflicting changes
       """
       branch "beta" is now a child of "main"
       """
-    And the current branch is still "beta"
-    And the branches are now
-      | REPOSITORY    | BRANCHES   |
-      | local, origin | main, beta |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | beta   | main   |
 
   Scenario: resolve manually
     When I resolve the conflict in "file"
@@ -56,6 +49,13 @@ Feature: shipped parent of a stacked change with conflicting changes
       | BRANCH | COMMAND              |
       | beta   | git commit --no-edit |
       |        | git push             |
+    And the current branch is still "beta"
+    And the branches are now
+      | REPOSITORY    | BRANCHES   |
+      | local, origin | main, beta |
+    And this lineage exists now
+      | BRANCH | PARENT |
+      | beta   | main   |
 
   Scenario: undo
     When I run "git-town undo"
