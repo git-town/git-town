@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/sync"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -16,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/sync"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v16/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
@@ -188,7 +188,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if detached {
 		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := branchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
