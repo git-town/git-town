@@ -16,7 +16,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(args.Program, branchInfo, firstCommitMessage, args)
+		localBranchProgram(args.Program, localName, branchInfo, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
 }
@@ -31,11 +31,7 @@ type BranchProgramArgs struct {
 }
 
 // localBranchProgram provides the program to sync a local branch.
-func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	localName, hasLocalName := branch.LocalName.Get()
-	if !hasLocalName {
-		return
-	}
+func localBranchProgram(list Mutable[program.Program], localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -51,11 +47,11 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 			offline:            args.Config.Offline,
 			program:            list,
 			pushBranches:       args.PushBranches,
-			remoteName:         branch.RemoteName,
+			remoteName:         branchInfo.RemoteName,
 			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
-		PerennialBranchProgram(branch, args)
+		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
@@ -63,13 +59,13 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 			offline:            args.Config.Offline,
 			program:            list,
 			pushBranches:       args.PushBranches,
-			remoteName:         branch.RemoteName,
+			remoteName:         branchInfo.RemoteName,
 			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypeContributionBranch:
-		ContributionBranchProgram(args.Program, branch)
+		ContributionBranchProgram(args.Program, branchInfo)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branch.RemoteName, args.Program)
+		ObservedBranchProgram(branchInfo.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
@@ -77,13 +73,13 @@ func localBranchProgram(list Mutable[program.Program], branch gitdomain.BranchIn
 			offline:            args.Config.Offline,
 			program:            list,
 			pushBranches:       false,
-			remoteName:         branch.RemoteName,
+			remoteName:         branchInfo.RemoteName,
 			syncStrategy:       args.Config.SyncPrototypeStrategy.SyncStrategy(),
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {
-		case !branch.HasTrackingBranch():
+		case !branchInfo.HasTrackingBranch():
 			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
 		case isMainOrPerennialBranch:
 			list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
