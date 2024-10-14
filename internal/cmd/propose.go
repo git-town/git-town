@@ -302,7 +302,10 @@ func proposeProgram(data proposeData) program.Program {
 
 func validateBranchTypeToPropose(branchType configdomain.BranchType) error {
 	switch branchType {
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.MainBranchCannotPropose)

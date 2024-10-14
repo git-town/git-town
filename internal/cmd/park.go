@@ -112,7 +112,12 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 			if err := config.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypePrototypeBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypeMainBranch,
+			configdomain.BranchTypePerennialBranch,
+			configdomain.BranchTypePrototypeBranch:
 		}
 	}
 	return nil
@@ -141,7 +146,11 @@ func validateParkData(data parkData) error {
 			return errors.New(messages.PerennialBranchCannotPark)
 		case configdomain.BranchTypeParkedBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePrototypeBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
 		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)

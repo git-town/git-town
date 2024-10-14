@@ -996,7 +996,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *testruntime.TestRuntime
 			switch {
-			case branchSetup.Locations.Is(git.LocationLocal), branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
+			case
+				branchSetup.Locations.Is(git.LocationLocal),
+				branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
 			case branchSetup.Locations.Is(git.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
