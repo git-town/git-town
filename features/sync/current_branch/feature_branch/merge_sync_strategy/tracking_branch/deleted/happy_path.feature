@@ -24,10 +24,7 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git stash                               |
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
-      |           | git checkout feature-1                  |
-      | feature-1 | git merge --no-edit --ff main           |
-      |           | git checkout main                       |
-      | main      | git branch -D feature-1                 |
+      |           | git branch -D feature-1                 |
       |           | git checkout feature-2                  |
       | feature-2 | git stash pop                           |
     And it prints:
