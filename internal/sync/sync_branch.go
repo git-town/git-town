@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -11,18 +9,7 @@ import (
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	localName, hasLocalName := branchInfo.LocalName.Get()
-	if !hasLocalName {
-		remoteName, hasRemoteName := branchInfo.RemoteName.Get()
-		if !hasRemoteName {
-			panic(fmt.Sprintf("branch %v has neither a local nor remote name", branchInfo))
-		}
-		localName = remoteName.LocalBranchName()
-		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{
-			Branch: localName,
-		})
-	}
+func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		deletedBranchProgram(args.Program, localName, args)
