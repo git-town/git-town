@@ -6,14 +6,7 @@ import "github.com/git-town/git-town/v16/internal/config/configdomain"
 func BranchesProgram(branchesToSync []configdomain.BranchToSync, args BranchProgramArgs) {
 	for _, branchToSync := range branchesToSync {
 		if localBranchName, hasLocalBranch := branchToSync.BranchInfo.LocalName.Get(); hasLocalBranch {
-			BranchProgram(localBranchName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, BranchProgramArgs{
-				BranchInfos:   args.BranchInfos,
-				Config:        args.Config,
-				InitialBranch: args.InitialBranch,
-				Program:       args.Program,
-				PushBranches:  args.PushBranches,
-				Remotes:       args.Remotes,
-			})
+			BranchProgram(localBranchName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, args)
 		}
 	}
 }
