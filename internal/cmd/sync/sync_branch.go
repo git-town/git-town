@@ -22,13 +22,12 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos
-	Config              configdomain.ValidatedConfig
-	InitialBranch       gitdomain.LocalBranchName
-	PrefetchBranchInfos gitdomain.BranchInfos
-	Program             Mutable[program.Program]
-	PushBranches        configdomain.PushBranches
-	Remotes             gitdomain.Remotes
+	BranchInfos   gitdomain.BranchInfos
+	Config        configdomain.ValidatedConfig
+	InitialBranch gitdomain.LocalBranchName
+	Program       Mutable[program.Program]
+	PushBranches  configdomain.PushBranches
+	Remotes       gitdomain.Remotes
 }
 
 // localBranchProgram provides the program to sync a local branch.
