@@ -15,7 +15,6 @@ Feature: delete the current contribution branch
     And the current branch is "contribution" and the previous branch is "feature"
     When I run "git-town kill"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                                          |
