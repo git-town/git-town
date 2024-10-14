@@ -1,4 +1,4 @@
-package cmd
+package sync
 
 import (
 	"errors"
@@ -18,7 +18,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/sync"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v16/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
@@ -49,7 +48,7 @@ When run on the main branch or a perennial branch:
 
 If the repository contains an "upstream" remote, syncs the main branch with its upstream counterpart. You can disable this by running "git config %s false".`
 
-func syncCmd() *cobra.Command {
+func SyncCmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
@@ -101,7 +100,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 
 	runProgram := program.Program{}
-	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:   data.branchInfos,
 		Config:        data.config.Config,
 		InitialBranch: data.initialBranch,
@@ -287,7 +286,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if detached {
 		allBranchNamesToSync = validatedConfig.Config.RemovePerennials(allBranchNamesToSync)
 	}
-	branchesToSync, err := branchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -308,7 +307,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 }
 
 // determines the complete info needed to sync the given branches
-func branchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
+func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
 	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	result := make([]configdomain.BranchToSync, len(branchInfosToSync))
 	if err != nil {
