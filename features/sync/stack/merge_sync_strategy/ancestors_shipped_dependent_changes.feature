@@ -32,7 +32,6 @@ Feature: shipped parent of a stacked change with dependent changes
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
-      |        | git push                                |
     And the current branch is still "beta"
     And the branches are now
       | REPOSITORY    | BRANCHES   |
