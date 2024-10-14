@@ -120,6 +120,7 @@ type prependData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
+	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
 	prototype           configdomain.Prototype
@@ -129,6 +130,10 @@ type prependData struct {
 }
 
 func determinePrependData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -219,6 +224,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
+		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
 		prototype:           prototype,
@@ -232,12 +238,13 @@ func prependProgram(data prependData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-			BranchInfos:   data.branchInfos,
-			Config:        data.config.Config,
-			InitialBranch: data.initialBranch,
-			Program:       prog,
-			PushBranches:  true,
-			Remotes:       data.remotes,
+			BranchInfos:         data.branchInfos,
+			Config:              data.config.Config,
+			InitialBranch:       data.initialBranch,
+			PrefetchBranchInfos: data.preFetchBranchInfos,
+			Program:             prog,
+			PushBranches:        true,
+			Remotes:             data.remotes,
 		})
 	}
 	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{

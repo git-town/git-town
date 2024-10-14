@@ -116,7 +116,7 @@ type appendFeatureData struct {
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	prefetchBranchInfos       gitdomain.BranchInfos
+	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
 	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes
@@ -126,7 +126,7 @@ type appendFeatureData struct {
 
 func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
-	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
 	}
@@ -209,7 +209,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		prefetchBranchInfos:       prefetchBranchSnapshot.Branches,
+		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
 		remotes:                   remotes,
@@ -225,7 +225,7 @@ func appendProgram(data appendFeatureData) program.Program {
 			BranchInfos:         data.branchInfos,
 			Config:              data.config.Config,
 			InitialBranch:       data.initialBranch,
-			PrefetchBranchInfos: data.prefetchBranchInfos,
+			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Remotes:             data.remotes,
 			PushBranches:        true,
