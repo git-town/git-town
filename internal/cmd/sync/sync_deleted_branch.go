@@ -33,7 +33,7 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		switch preFetchBranchInfo.SyncStatus {
 		case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusBehind, gitdomain.SyncStatusLocalOnly:
-			list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
+			syncDeleteLocalBranchProgram(list, branch, args)
 		case gitdomain.SyncStatusAhead:
 		case gitdomain.SyncStatusDeletedAtRemote:
 		case gitdomain.SyncStatusNotInSync:
