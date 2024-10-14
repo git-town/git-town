@@ -1,10 +1,7 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -18,7 +15,6 @@ func (self *RemoveFromParkedBranches) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.Config.ParkedBranches.Contains(self.Branch) {
 		err = args.Config.RemoveFromParkedBranches(self.Branch)
-		args.FinalMessages.Add(fmt.Sprintf(messages.ParkedRemoved, self.Branch))
 	}
 	return err
 }

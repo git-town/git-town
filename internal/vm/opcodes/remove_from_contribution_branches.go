@@ -1,10 +1,7 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -18,7 +15,6 @@ func (self *RemoveFromContributionBranches) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.Config.ContributionBranches.Contains(self.Branch) {
 		err = args.Config.RemoveFromContributionBranches(self.Branch)
-		args.FinalMessages.Add(fmt.Sprintf(messages.ContributionRemoved, self.Branch))
 	}
 	return err
 }
