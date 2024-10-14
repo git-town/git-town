@@ -51,7 +51,9 @@ func localBranchProgram(list Mutable[program.Program], localName gitdomain.Local
 			remoteName:         branchInfo.RemoteName,
 			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
 		})
-	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
+	case
+		configdomain.BranchTypePerennialBranch,
+		configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
