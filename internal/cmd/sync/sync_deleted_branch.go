@@ -30,9 +30,10 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get()
-	syncStatus := preFetchBranchInfo.SyncStatus
-	if !has {
+	var syncStatus gitdomain.SyncStatus
+	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
+		syncStatus = preFetchBranchInfo.SyncStatus
+	} else {
 		syncStatus = gitdomain.SyncStatusNotInSync
 	}
 	switch syncStatus {
