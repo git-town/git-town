@@ -32,6 +32,7 @@ Feature: shipped parent of a stacked change with conflicting changes
       """
       CONFLICT (add/add): Merge conflict in file
       """
+    And a merge is now in progress
     And it prints the error:
       """
       deleted branch "alpha"
