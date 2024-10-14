@@ -8,7 +8,10 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-func RemoveBranchFromLineage(args RemoveBranchFromLineageArgs) {
+func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
+	args.Program.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: args.Branch})
+	args.Program.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: args.Branch})
+	args.Program.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: args.Branch})
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
 		args.Program.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: args.Parent})
@@ -16,7 +19,7 @@ func RemoveBranchFromLineage(args RemoveBranchFromLineageArgs) {
 	args.Program.Value.Add(&opcodes.DeleteParentBranch{Branch: args.Branch})
 }
 
-type RemoveBranchFromLineageArgs struct {
+type RemoveBranchConfigurationArgs struct {
 	Branch  gitdomain.LocalBranchName
 	Lineage configdomain.Lineage
 	Parent  gitdomain.LocalBranchName
