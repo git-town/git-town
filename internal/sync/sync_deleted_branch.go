@@ -30,6 +30,8 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	if preFetchBranchInfo, has := args.PrefetchBranchesSnapshot.Branches.FindByLocalName(branch).Get(); has {
 		switch preFetchBranchInfo.SyncStatus {
+		case gitdomain.SyncStatusAhead:
+		case gitdomain.SyncStatusBehind:
 		case gitdomain.SyncStatusDeletedAtRemote:
 		case gitdomain.SyncStatusLocalOnly:
 		case gitdomain.SyncStatusNotInSync:
