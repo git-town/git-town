@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -12,5 +15,10 @@ type RemoveFromObservedBranches struct {
 }
 
 func (self *RemoveFromObservedBranches) Run(args shared.RunArgs) error {
-	return args.Config.RemoveFromObservedBranches(self.Branch)
+	var err error
+	if args.Config.Config.ObservedBranches.Contains(self.Branch) {
+		err = args.Config.RemoveFromObservedBranches(self.Branch)
+		args.FinalMessages.Add(fmt.Sprintf(messages.ObservedRemoved, self.Branch))
+	}
+	return err
 }

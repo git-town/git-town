@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -12,5 +15,10 @@ type RemoveFromPerennialBranches struct {
 }
 
 func (self *RemoveFromPerennialBranches) Run(args shared.RunArgs) error {
-	return args.Config.RemoveFromPerennialBranches(self.Branch)
+	var err error
+	if args.Config.Config.PerennialBranches.Contains(self.Branch) {
+		err = args.Config.RemoveFromPerennialBranches(self.Branch)
+		args.FinalMessages.Add(fmt.Sprintf(messages.PerennialRemoved, self.Branch))
+	}
+	return err
 }
