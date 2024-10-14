@@ -32,22 +32,26 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		switch preFetchBranchInfo.SyncStatus {
-		case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusBehind, gitdomain.SyncStatusLocalOnly:
+		case
+			gitdomain.SyncStatusUpToDate,
+			gitdomain.SyncStatusBehind,
+			gitdomain.SyncStatusLocalOnly:
 			syncDeleteLocalBranchProgram(list, branch, args)
+		case gitdomain.SyncStatusOtherWorktree:
+		case gitdomain.SyncStatusRemoteOnly:
+			return
 		case gitdomain.SyncStatusAhead:
 		case gitdomain.SyncStatusDeletedAtRemote:
 		case gitdomain.SyncStatusNotInSync:
-		case gitdomain.SyncStatusOtherWorktree:
-		case gitdomain.SyncStatusRemoteOnly:
+			list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+			pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
+				branch:       branch,
+				program:      list,
+				syncStrategy: args.Config.SyncFeatureStrategy,
+			})
+			list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
 		}
 	}
-	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
-	pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-		branch:       branch,
-		program:      list,
-		syncStrategy: args.Config.SyncFeatureStrategy,
-	})
-	list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
 }
 
 // deletes the given local branch as part of syncing it
