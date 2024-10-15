@@ -15,7 +15,7 @@ func (self *UpdateInitialBranchLocalSHAIfNeeded) Run(args shared.RunArgs) error 
 	if err != nil {
 		return err
 	}
-	args.PrependOpcodes(&UpdateInitialBranchLocalSHA{
+	args.PrependOpcodes(&SnapshotInitialUpdateLocalSHA{
 		Branch: self.Branch,
 		SHA:    newSHA,
 	})

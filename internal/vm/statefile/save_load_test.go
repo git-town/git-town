@@ -220,6 +220,7 @@ func TestLoadSave(t *testing.T) {
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcodes.ChangesStage{},
+				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.StashOpenChanges{},
 				&opcodes.UpdateProposalBase{
 					ProposalNumber: 123,
@@ -715,6 +716,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ChangesStage"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "SHA": "111111"
+      },
+      "type": "SnapshotInitialUpdateLocalSHA"
     },
     {
       "data": {},

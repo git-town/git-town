@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-type UpdateInitialBranchLocalSHA struct {
+type SnapshotInitialUpdateLocalSHA struct {
 	Branch                  gitdomain.LocalBranchName
 	SHA                     gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *UpdateInitialBranchLocalSHA) Run(args shared.RunArgs) error {
-	return args.UpdateInitialBranchLocalSHA(self.Branch, self.SHA)
+func (self *SnapshotInitialUpdateLocalSHA) Run(args shared.RunArgs) error {
+	return args.UpdateInitialSnapshotLocalSHA(self.Branch, self.SHA)
 }

@@ -127,6 +127,7 @@ func Types() []shared.Opcode {
 		&LineageParentSetIfExists{},
 		&ChangesStage{},
 		&StashOpenChanges{},
+		&SnapshotInitialUpdateLocalSHA{},
 		&MergeSquash{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
