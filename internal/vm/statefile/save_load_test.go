@@ -77,7 +77,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.MergeContinue{},
 				&opcodes.ContinueRebase{},
-				&opcodes.ContinueRebaseIfNeeded{},
+				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					StartingPoint: gitdomain.NewSHA("123456").Location(),
@@ -342,7 +342,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "ContinueRebaseIfNeeded"
+      "type": "RebaseContinueIfNeeded"
     },
     {
       "data": {
