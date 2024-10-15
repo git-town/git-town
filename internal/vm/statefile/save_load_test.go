@@ -48,6 +48,7 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
+				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
@@ -272,6 +273,13 @@ func TestLoadSave(t *testing.T) {
         "Base": "branch"
       },
       "type": "BranchCurrentReset"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "SetToSHA": "222222"
+      },
+      "type": "BranchRemoteSetToSHA"
     },
     {
       "data": {

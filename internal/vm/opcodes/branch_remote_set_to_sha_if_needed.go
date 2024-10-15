@@ -25,6 +25,6 @@ func (self *BranchRemoteSetToSHAIfNeeded) Run(args shared.RunArgs) error {
 	if currentSHA != self.MustHaveSHA {
 		return fmt.Errorf(messages.BranchHasWrongSHA, self.Branch, self.SetToSHA, self.MustHaveSHA, currentSHA)
 	}
-	args.PrependOpcodes(&ResetRemoteBranchToSHA{Branch: self.Branch, SetToSHA: self.SetToSHA})
+	args.PrependOpcodes(&BranchRemoteSetToSHA{Branch: self.Branch, SetToSHA: self.SetToSHA})
 	return nil
 }
