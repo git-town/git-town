@@ -153,7 +153,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesObservedRemove{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.RemoveFromParkedBranches{
+				&opcodes.BranchesParkedRemove{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.RemoveFromPerennialBranches{
@@ -554,7 +554,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "RemoveFromParkedBranches"
+      "type": "BranchesParkedRemove"
     },
     {
       "data": {
