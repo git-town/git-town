@@ -228,6 +228,11 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
 				},
+				&opcodes.ProposalUpdateBaseToParent{
+					Branch:         "branch",
+					ProposalNumber: 123,
+					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
+				},
 				&opcodes.ProposalUpdateHead{
 					ProposalNumber: 123,
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
@@ -742,6 +747,14 @@ func TestLoadSave(t *testing.T) {
         "ProposalNumber": 123
       },
       "type": "ProposalUpdateBase"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "ProposalUpdateBaseToParent"
     },
     {
       "data": {
