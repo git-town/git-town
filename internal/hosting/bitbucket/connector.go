@@ -67,6 +67,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return Some(hostingdomain.Proposal{
 			MergeWithAPI: true,
 			Number:       123,
+			Source:       branch,
 			Target:       target,
 			Title:        "title",
 			URL:          proposalURLOverride,
@@ -304,6 +305,30 @@ func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
+	source1 := pullRequest["source"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	source2, ok := source1.(map[string]interface{})
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	source3, has := source2["branch"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	source4, ok := source3.(map[string]interface{})
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	source5, has := source4["name"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	source6, ok := source5.(string)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
 	url1, has := pullRequest["links"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -331,6 +356,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.
 	return hostingdomain.Proposal{
 		MergeWithAPI: false,
 		Number:       number,
+		Source:       gitdomain.NewLocalBranchName(source6),
 		Target:       gitdomain.NewLocalBranchName(destination6),
 		Title:        title2,
 		URL:          url6,

@@ -11,22 +11,22 @@ Feature: help for commands
       """
 
     Examples:
-      | COMMAND       |
-      | append        |
-      | completions   |
-      | config        |
-      | diff-parent   |
-      | hack          |
-      | help          |
-      | kill          |
-      | offline       |
-      | prepend       |
-      | propose       |
-      | rename-branch |
-      | repo          |
-      | set-parent    |
-      | ship          |
-      | sync          |
+      | COMMAND     |
+      | append      |
+      | completions |
+      | config      |
+      | diff-parent |
+      | hack        |
+      | help        |
+      | kill        |
+      | offline     |
+      | prepend     |
+      | propose     |
+      | rename      |
+      | repo        |
+      | set-parent  |
+      | ship        |
+      | sync        |
 
   Scenario Outline: outside a Git repository
     Given I am outside a Git repo

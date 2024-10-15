@@ -40,6 +40,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return Some(hostingdomain.Proposal{
 			MergeWithAPI: true,
 			Number:       123,
+			Source:       branch,
 			Target:       target,
 			Title:        "title",
 			URL:          proposalURLOverride,
@@ -165,6 +166,7 @@ func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal
 	return hostingdomain.Proposal{
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
+		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,
 		URL:          mergeRequest.WebURL,

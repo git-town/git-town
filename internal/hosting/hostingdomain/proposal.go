@@ -11,6 +11,9 @@ type Proposal struct {
 	// the number used to identify the proposal on the hosting platform
 	Number int
 
+	// name of the source branch ("head") of this proposal
+	Source gitdomain.LocalBranchName
+
 	// name of the target branch ("base") of this proposal
 	Target gitdomain.LocalBranchName
 

@@ -28,9 +28,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const renameBranchDesc = "Rename a branch both locally and remotely"
+const renameDesc = "Rename a branch both locally and remotely"
 
-const renameBranchHelp = `
+const renameHelp = `
 Renames the given branch in the local and origin repository. Aborts if the new branch name already exists or the tracking branch is out of sync.
 
 - creates a branch with the new name
@@ -47,17 +47,17 @@ When run on a perennial branch:
 - confirm with the "--force"/"-f" option
 - registers the new perennial branch name in the local Git Town configuration`
 
-func renameBranchCommand() *cobra.Command {
+func renameCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
+		Use:   "rename [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
-		Short: renameBranchDesc,
-		Long:  cmdhelpers.Long(renameBranchDesc, renameBranchHelp),
+		Short: renameDesc,
+		Long:  cmdhelpers.Long(renameDesc, renameHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRenameBranch(args, readDryRunFlag(cmd), readForceFlag(cmd), readVerboseFlag(cmd))
+			return executeRename(args, readDryRunFlag(cmd), readForceFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -66,7 +66,7 @@ func renameBranchCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRenameBranch(args []string, dryRun configdomain.DryRun, force configdomain.Force, verbose configdomain.Verbose) error {
+func executeRename(args []string, dryRun configdomain.DryRun, force configdomain.Force, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -78,16 +78,16 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineRenameBranchData(args, force, repo, dryRun, verbose)
+	data, exit, err := determineRenameData(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := renameBranchProgram(data)
+	runProgram := renameProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               "rename-branch",
+		Command:               "rename",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
@@ -116,7 +116,7 @@ func executeRenameBranch(args []string, dryRun configdomain.DryRun, force config
 	})
 }
 
-type renameBranchData struct {
+type renameData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[hostingdomain.Connector]
@@ -132,7 +132,7 @@ type renameBranchData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineRenameBranchData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameBranchData, exit bool, err error) {
+func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameData, exit bool, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -211,7 +211,7 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 		return data, false, errors.New(messages.RenameToSameName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return data, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
+		return data, false, fmt.Errorf(messages.RenameNotInSync, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
@@ -228,7 +228,7 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 		OldBranch:                  oldBranchName,
 		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
 	})
-	return renameBranchData{
+	return renameData{
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connectorOpt,
@@ -245,13 +245,13 @@ func determineRenameBranchData(args []string, force configdomain.Force, repo exe
 	}, false, err
 }
 
-func renameBranchProgram(data renameBranchData) program.Program {
+func renameProgram(data renameData) program.Program {
 	result := NewMutable(&program.Program{})
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
 		return result.Get()
 	}
-	result.Value.Add(&opcodes.RenameBranch{OldName: oldLocalBranch, NewName: data.newBranch})
+	result.Value.Add(&opcodes.Rename{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}

@@ -13,7 +13,7 @@ Feature: rename a perennial branch
       | production | local, origin | production commit |
 
   Scenario: normal rename fails
-    When I run "git-town rename-branch production new"
+    When I run "git-town rename production new"
     Then it runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |
@@ -23,7 +23,7 @@ Feature: rename a perennial branch
       """
 
   Scenario: forced rename works
-    When I run "git-town rename-branch --force production new"
+    When I run "git-town rename --force production new"
     Then it runs the commands
       | BRANCH     | COMMAND                          |
       | production | git fetch --prune --tags         |
@@ -42,7 +42,7 @@ Feature: rename a perennial branch
       | hotfix | new    |
 
   Scenario: undo
-    Given I ran "git-town rename-branch --force production new"
+    Given I ran "git-town rename --force production new"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                                             |
