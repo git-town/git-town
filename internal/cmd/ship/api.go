@@ -68,7 +68,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: branchToShipLocal})
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.ChangeParentToGrandParent{Branch: child})
+		prog.Value.Add(&opcodes.LineageChangeParentToGrandParent{Branch: child})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

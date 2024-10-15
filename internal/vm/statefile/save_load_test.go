@@ -53,7 +53,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPrototypeBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.ChangeParent{
+				&opcodes.LineageChangeParent{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
