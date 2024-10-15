@@ -6,12 +6,12 @@ import (
 )
 
 // removes the branch with the given name from the perennial branches list in the Git config
-type RemoveFromPerennialBranches struct {
+type BranchesPerennialRemove struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RemoveFromPerennialBranches) Run(args shared.RunArgs) error {
+func (self *BranchesPerennialRemove) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.Config.PerennialBranches.Contains(self.Branch) {
 		err = args.Config.RemoveFromPerennialBranches(self.Branch)

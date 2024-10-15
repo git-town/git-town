@@ -257,7 +257,7 @@ func renameProgram(data renameData) program.Program {
 	}
 	if !data.dryRun {
 		if data.config.Config.IsPerennialBranch(data.initialBranch) {
-			result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
 			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
 		} else {
 			if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
