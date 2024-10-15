@@ -221,6 +221,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.ChangesStage{},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
+				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashOpenChanges{},
 				&opcodes.UpdateProposalBase{
 					ProposalNumber: 123,
@@ -723,6 +724,12 @@ func TestLoadSave(t *testing.T) {
         "SHA": "111111"
       },
       "type": "SnapshotInitialUpdateLocalSHA"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "SnapshotInitialUpdateLocalSHAIfNeeded"
     },
     {
       "data": {},

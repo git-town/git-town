@@ -128,6 +128,7 @@ func Types() []shared.Opcode {
 		&ChangesStage{},
 		&StashOpenChanges{},
 		&SnapshotInitialUpdateLocalSHA{},
+		&SnapshotInitialUpdateLocalSHAIfNeeded{},
 		&MergeSquash{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
