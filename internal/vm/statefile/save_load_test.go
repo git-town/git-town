@@ -48,6 +48,7 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchReset{Target: "branch"},
+				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
@@ -269,6 +270,12 @@ func TestLoadSave(t *testing.T) {
         "Target": "branch"
       },
       "type": "BranchReset"
+    },
+    {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "BranchCurrentResetToParent"
     },
     {
       "data": {},

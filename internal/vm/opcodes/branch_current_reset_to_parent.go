@@ -7,12 +7,12 @@ import (
 )
 
 // ResetCurrentBranch resets all commits in the current branch.
-type ResetCurrentBranchToParent struct {
+type BranchCurrentResetToParent struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
+func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Config.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
 		return nil
