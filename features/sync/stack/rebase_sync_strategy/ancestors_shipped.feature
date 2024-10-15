@@ -18,17 +18,17 @@ Feature: shipped parent branches in a stacked change
     And the current branch is "feature-3"
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                                 |
-      | feature-3 | git fetch --prune --tags                |
-      |           | git checkout main                       |
-      | main      | git rebase origin/main --no-update-refs |
-      |           | git branch -D feature-1                 |
-      |           | git branch -D feature-2                 |
-      |           | git checkout feature-3                  |
-      | feature-3 | git rebase feature-1 --no-update-refs   |
+      | BRANCH    | COMMAND                                         |
+      | feature-3 | git fetch --prune --tags                        |
+      |           | git checkout main                               |
+      | main      | git rebase origin/main --no-update-refs         |
+      |           | git branch -D feature-1                         |
+      |           | git branch -D feature-2                         |
+      |           | git checkout feature-3                          |
+      | feature-3 | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
     And it prints:
       """
       deleted branch "feature-1"
