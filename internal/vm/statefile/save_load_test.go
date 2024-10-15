@@ -47,7 +47,7 @@ func TestLoadSave(t *testing.T) {
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.AbortRebase{},
+				&opcodes.RebaseAbort{},
 				&opcodes.AddToContributionBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToObservedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -251,7 +251,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "AbortRebase"
+      "type": "RebaseAbort"
     },
     {
       "data": {

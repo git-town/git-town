@@ -10,7 +10,7 @@ type ContinueRebase struct {
 
 func (self *ContinueRebase) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&AbortRebase{},
+		&RebaseAbort{},
 	}
 }
 

@@ -50,7 +50,7 @@ func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 func Types() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
-		&AbortRebase{},
+		&RebaseAbort{},
 		&AddToContributionBranches{},
 		&AddToObservedBranches{},
 		&AddToParkedBranches{},
