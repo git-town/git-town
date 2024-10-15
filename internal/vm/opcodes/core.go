@@ -77,7 +77,7 @@ func Types() []shared.Opcode {
 		&BranchParentDelete{},
 		&BranchTrackingDelete{},
 		&ChangesDiscard{},
-		&DropStash{},
+		&StashDrop{},
 		&EndOfBranchProgram{},
 		&EnsureHasShippableChanges{},
 		&FetchUpstream{},

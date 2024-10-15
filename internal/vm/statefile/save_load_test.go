@@ -103,7 +103,7 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
 				&opcodes.ChangesDiscard{},
-				&opcodes.DropStash{},
+				&opcodes.StashDrop{},
 				&opcodes.EndOfBranchProgram{},
 				&opcodes.EnsureHasShippableChanges{
 					Branch: gitdomain.NewLocalBranchName("branch"),
@@ -416,7 +416,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "DropStash"
+      "type": "StashDrop"
     },
     {
       "data": {},

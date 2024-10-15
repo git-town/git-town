@@ -13,7 +13,7 @@ type PopStash struct {
 }
 
 func (self *PopStash) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode{&DropStash{}}
+	return []shared.Opcode{&StashDrop{}}
 }
 
 func (self *PopStash) Run(args shared.RunArgs) error {
