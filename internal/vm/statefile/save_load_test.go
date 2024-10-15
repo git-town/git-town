@@ -112,7 +112,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.FetchUpstream{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.MergeParent{
 					Parent: gitdomain.NewBranchName("parent"),
@@ -439,7 +439,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "ForceIfIncludes": true
       },
-      "type": "ForcePushCurrentBranch"
+      "type": "PushCurrentBranchForce"
     },
     {
       "data": {

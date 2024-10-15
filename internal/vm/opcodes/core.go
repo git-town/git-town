@@ -82,7 +82,7 @@ func Types() []shared.Opcode {
 		&BranchEnsureShippableChanges{},
 		&FetchUpstream{},
 		&ForcePush{},
-		&ForcePushCurrentBranch{},
+		&PushCurrentBranchForce{},
 		&BranchDeleteIfEmptyAtRuntime{},
 		&LineageSetParent{},
 		&Merge{},

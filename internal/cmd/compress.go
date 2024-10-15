@@ -284,7 +284,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 		Message:        data.newCommitMessage,
 	})
 	if data.hasTracking && online.IsTrue() {
-		prog.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
+		prog.Value.Add(&opcodes.PushCurrentBranchForce{ForceIfIncludes: true})
 	}
 }
 
