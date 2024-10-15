@@ -14,7 +14,7 @@ func Wrap(program Mutable[program.Program], options WrapOptions) {
 		return
 	}
 	if !options.DryRun {
-		program.Value.Add(&opcodes.PreserveCheckoutHistory{
+		program.Value.Add(&opcodes.CheckoutHistoryPreserve{
 			PreviousBranchCandidates: options.PreviousBranchCandidates,
 		})
 	}

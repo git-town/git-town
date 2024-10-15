@@ -122,7 +122,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeParentIfNeeded{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.PreserveCheckoutHistory{
+				&opcodes.CheckoutHistoryPreserve{
 					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
 				},
 				&opcodes.PullCurrentBranch{},
@@ -477,7 +477,7 @@ func TestLoadSave(t *testing.T) {
           "previous"
         ]
       },
-      "type": "PreserveCheckoutHistory"
+      "type": "CheckoutHistoryPreserve"
     },
     {
       "data": {},

@@ -7,13 +7,13 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// PreserveCheckoutHistory does stuff.
-type PreserveCheckoutHistory struct {
+// CheckoutHistoryPreserve does stuff.
+type CheckoutHistoryPreserve struct {
 	PreviousBranchCandidates []Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods  `exhaustruct:"optional"`
 }
 
-func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
+func (self *CheckoutHistoryPreserve) Run(args shared.RunArgs) error {
 	if !args.Git.CurrentBranchCache.Initialized() {
 		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
 		return nil
