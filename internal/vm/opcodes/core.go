@@ -79,7 +79,7 @@ func Types() []shared.Opcode {
 		&ChangesDiscard{},
 		&StashDrop{},
 		&ProgramEndOfBranch{},
-		&EnsureHasShippableChanges{},
+		&BranchEnsureShippableChanges{},
 		&FetchUpstream{},
 		&ForcePush{},
 		&ForcePushCurrentBranch{},

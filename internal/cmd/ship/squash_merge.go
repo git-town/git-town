@@ -25,7 +25,7 @@ func determineMergeData(repo execute.OpenRepoResult) (result shipDataMerge, err 
 
 func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := NewMutable(&program.Program{})
-	prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
+	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})

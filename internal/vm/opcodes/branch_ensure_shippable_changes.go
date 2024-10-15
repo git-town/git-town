@@ -8,18 +8,18 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// EnsureHasShippableChanges asserts that the branch has unique changes not on the main branch.
-type EnsureHasShippableChanges struct {
+// BranchEnsureShippableChanges asserts that the branch has unique changes not on the main branch.
+type BranchEnsureShippableChanges struct {
 	Branch                  gitdomain.LocalBranchName
 	Parent                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *EnsureHasShippableChanges) AutomaticUndoError() error {
+func (self *BranchEnsureShippableChanges) AutomaticUndoError() error {
 	return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 }
 
-func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
+func (self *BranchEnsureShippableChanges) Run(args shared.RunArgs) error {
 	hasShippableChanges, err := args.Git.HasShippableChanges(args.Backend, self.Branch, self.Parent)
 	if err != nil {
 		return err
@@ -30,6 +30,6 @@ func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *EnsureHasShippableChanges) ShouldUndoOnError() bool {
+func (self *BranchEnsureShippableChanges) ShouldUndoOnError() bool {
 	return true
 }
