@@ -79,7 +79,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// re-create removed omni-branches
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
-		result.Add(&opcodes.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
+		result.Add(&opcodes.BranchCreate{Branch: branch, StartingPoint: sha.Location()})
 		result.Add(&opcodes.CreateTrackingBranch{Branch: branch})
 	}
 
@@ -136,7 +136,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// re-create locally removed branches
 	for _, removedLocalBranch := range self.LocalRemoved.BranchNames() {
 		startingPoint := self.LocalRemoved[removedLocalBranch]
-		result.Add(&opcodes.CreateBranch{
+		result.Add(&opcodes.BranchCreate{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
 		})

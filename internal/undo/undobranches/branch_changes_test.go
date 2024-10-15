@@ -134,7 +134,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.CreateBranch{
+			&opcodes.BranchCreate{
 				Branch:        gitdomain.NewLocalBranchName("branch-1"),
 				StartingPoint: gitdomain.NewSHA("111111").Location(),
 			},
@@ -913,7 +913,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.RevertCommitIfNeeded{SHA: gitdomain.NewSHA("444444")},
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// re-create the feature branch
-			&opcodes.CreateBranch{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},
+			&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},
 			&opcodes.CreateTrackingBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("feature-branch")},
@@ -1304,11 +1304,11 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.CreateBranch{
+			&opcodes.BranchCreate{
 				Branch:        gitdomain.NewLocalBranchName("feature-branch"),
 				StartingPoint: gitdomain.NewSHA("222222").Location(),
 			},
-			&opcodes.CreateBranch{
+			&opcodes.BranchCreate{
 				Branch:        gitdomain.NewLocalBranchName("perennial-branch"),
 				StartingPoint: gitdomain.NewSHA("111111").Location(),
 			},

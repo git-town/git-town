@@ -5,13 +5,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// CreateBranch creates a new branch but leaves the current branch unchanged.
-type CreateBranch struct {
+// BranchCreate creates a new branch but leaves the current branch unchanged.
+type BranchCreate struct {
 	Branch                  gitdomain.LocalBranchName
 	StartingPoint           gitdomain.Location
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CreateBranch) Run(args shared.RunArgs) error {
+func (self *BranchCreate) Run(args shared.RunArgs) error {
 	return args.Git.CreateBranch(args.Frontend, self.Branch, self.StartingPoint)
 }

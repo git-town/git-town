@@ -69,7 +69,7 @@ func Types() []shared.Opcode {
 		&RebaseContinue{},
 		&RebaseContinueIfNeeded{},
 		&BranchCreateAndCheckoutExistingParent{},
-		&CreateBranch{},
+		&BranchCreate{},
 		&CreateProposal{},
 		&CreateRemoteBranch{},
 		&CreateTrackingBranch{},
