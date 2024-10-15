@@ -52,7 +52,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
-	prog.Value.Add(&opcodes.ConnectorMergeProposal{
+	prog.Value.Add(&opcodes.ConnectorProposalMerge{
 		Branch:          branchToShipLocal,
 		ProposalNumber:  apiData.proposal.Number,
 		CommitMessage:   commitMessage,

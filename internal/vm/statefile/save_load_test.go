@@ -69,7 +69,7 @@ func TestLoadSave(t *testing.T) {
 					AuthorOverride: Some(gitdomain.Author("user@acme.com")),
 					Message:        gitdomain.CommitMessage("my message"),
 				},
-				&opcodes.ConnectorMergeProposal{
+				&opcodes.ConnectorProposalMerge{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
 					ProposalMessage: "proposal message",
@@ -330,7 +330,7 @@ func TestLoadSave(t *testing.T) {
         "ProposalMessage": "proposal message",
         "ProposalNumber": 123
       },
-      "type": "ConnectorMergeProposal"
+      "type": "ConnectorProposalMerge"
     },
     {
       "data": {},

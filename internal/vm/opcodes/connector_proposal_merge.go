@@ -11,8 +11,8 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// ConnectorMergeProposal squash merges the branch with the given name into the current branch.
-type ConnectorMergeProposal struct {
+// ConnectorProposalMerge squash merges the branch with the given name into the current branch.
+type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
 	ProposalMessage           string
@@ -22,21 +22,21 @@ type ConnectorMergeProposal struct {
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`
 }
 
-func (self *ConnectorMergeProposal) AbortProgram() []shared.Opcode {
+func (self *ConnectorProposalMerge) AbortProgram() []shared.Opcode {
 	if self.enteredEmptyCommitMessage {
 		return []shared.Opcode{&DiscardOpenChanges{}}
 	}
 	return []shared.Opcode(nil)
 }
 
-func (self *ConnectorMergeProposal) AutomaticUndoError() error {
+func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
 		return errors.New(messages.ShipAbortedMergeError)
 	}
 	return self.mergeError
 }
 
-func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
+func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
 	//nolint:nestif
 	if !hasCommitMessage {
@@ -75,6 +75,6 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 
 // ShouldUndoOnError returns whether this opcode should cause the command to
 // automatically undo if it errors.
-func (self *ConnectorMergeProposal) ShouldUndoOnError() bool {
+func (self *ConnectorProposalMerge) ShouldUndoOnError() bool {
 	return true
 }

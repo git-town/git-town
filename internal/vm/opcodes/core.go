@@ -64,7 +64,7 @@ func Types() []shared.Opcode {
 		&CheckoutUncached{},
 		&Commit{},
 		&CommitWithMessage{},
-		&ConnectorMergeProposal{},
+		&ConnectorProposalMerge{},
 		&ContinueMerge{},
 		&ContinueRebase{},
 		&ContinueRebaseIfNeeded{},
