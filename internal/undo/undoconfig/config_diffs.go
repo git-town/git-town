@@ -24,13 +24,13 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 		result.Add(&opcodes.ConfigGlobalRemove{Key: key})
 	}
 	for key, value := range self.Global.Removed {
-		result.Add(&opcodes.SetGlobalConfig{
+		result.Add(&opcodes.ConfigGlobalSet{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range self.Global.Changed {
-		result.Add(&opcodes.SetGlobalConfig{
+		result.Add(&opcodes.ConfigGlobalSet{
 			Key:   key,
 			Value: change.Before,
 		})

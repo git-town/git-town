@@ -198,7 +198,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevertIfNeeded{
 					SHA: gitdomain.NewSHA("123456"),
 				},
-				&opcodes.SetGlobalConfig{
+				&opcodes.ConfigGlobalSet{
 					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
@@ -682,7 +682,7 @@ func TestLoadSave(t *testing.T) {
         "Key": "git-town.offline",
         "Value": "1"
       },
-      "type": "SetGlobalConfig"
+      "type": "ConfigGlobalSet"
     },
     {
       "data": {
