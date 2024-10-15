@@ -202,7 +202,7 @@ func TestLoadSave(t *testing.T) {
 					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
-				&opcodes.SetLocalConfig{
+				&opcodes.ConfigLocalSet{
 					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
@@ -689,7 +689,7 @@ func TestLoadSave(t *testing.T) {
         "Key": "git-town.offline",
         "Value": "1"
       },
-      "type": "SetLocalConfig"
+      "type": "ConfigLocalSet"
     },
     {
       "data": {

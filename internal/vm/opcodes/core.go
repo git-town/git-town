@@ -122,7 +122,7 @@ func Types() []shared.Opcode {
 		&CommitRevertIfNeeded{},
 		&LineageParentSetFirstExisting{},
 		&ConfigGlobalSet{},
-		&SetLocalConfig{},
+		&ConfigLocalSet{},
 		&SetParent{},
 		&SetParentIfBranchExists{},
 		&SkipCurrentBranch{},
