@@ -9,12 +9,12 @@ import (
 )
 
 // removes the branch with the given name from the prototype branches list in the Git config
-type RemoveFromPrototypeBranches struct {
+type BranchesPrototypeRemove struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RemoveFromPrototypeBranches) Run(args shared.RunArgs) error {
+func (self *BranchesPrototypeRemove) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.Config.PrototypeBranches.Contains(self.Branch) {
 		args.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, self.Branch))

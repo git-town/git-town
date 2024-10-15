@@ -13,7 +13,7 @@ func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 	args.Program.Value.Add(&opcodes.BranchesObservedRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesParkedRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesPerennialRemove{Branch: args.Branch})
-	args.Program.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: args.Branch})
+	args.Program.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: args.Branch})
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
 		args.Program.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
