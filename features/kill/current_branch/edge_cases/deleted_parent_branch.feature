@@ -10,16 +10,21 @@ Feature: the parent of the branch to kill was deleted remotely
     And the current branch is "beta" and the previous branch is "alpha"
     When I run "git-town kill"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
       |        | git push origin :beta    |
-      |        | git checkout main        |
-      | main   | git branch -D alpha      |
-    And the current branch is now "main"
-    And no lineage exists now
+      |        | git checkout alpha       |
+      | alpha  | git branch -D beta       |
+    And the current branch is now "alpha"
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, alpha |
+      | origin     | main        |
+    And this lineage exists now
+      | BRANCH | PARENT |
+      | alpha  | main   |
 
   Scenario: undo
     When I run "git-town undo"
