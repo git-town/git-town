@@ -49,6 +49,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
+				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -264,6 +265,12 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseAbort"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchDeleteIfEmptyAtRuntime"
     },
     {
       "data": {

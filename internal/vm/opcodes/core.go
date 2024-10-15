@@ -83,7 +83,7 @@ func Types() []shared.Opcode {
 		&FetchUpstream{},
 		&ForcePush{},
 		&ForcePushCurrentBranch{},
-		&DeleteBranchIfEmptyAtRuntime{},
+		&BranchDeleteIfEmptyAtRuntime{},
 		&LineageSetParent{},
 		&Merge{},
 		&MergeParent{},

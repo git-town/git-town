@@ -36,7 +36,7 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 		program:      list,
 		syncStrategy: args.Config.SyncFeatureStrategy,
 	})
-	list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
+	list.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: branch})
 }
 
 // deletes the given local branch as part of syncing it

@@ -8,13 +8,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// DeleteBranchIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.
-type DeleteBranchIfEmptyAtRuntime struct {
+// BranchDeleteIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.
+type BranchDeleteIfEmptyAtRuntime struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {
+func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
