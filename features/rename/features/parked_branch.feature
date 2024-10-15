@@ -9,7 +9,7 @@ Feature: rename a parked branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE             |
       | parked | local, origin | low-priority commit |
-    When I run "git-town rename-branch parked new"
+    When I run "git-town rename parked new"
 
   Scenario: result
     Then it runs the commands

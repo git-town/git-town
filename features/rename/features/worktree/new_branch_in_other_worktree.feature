@@ -13,7 +13,7 @@ Feature: rename the current branch to a branch that is active in another worktre
       | other  | local         | other commit |
     And branch "other" is active in another worktree
     And the current branch is "old"
-    When I run "git-town rename-branch other"
+    When I run "git-town rename other"
 
   Scenario: result
     Then it runs the commands

@@ -11,7 +11,7 @@ Feature: don't sync tags while renaming branches
       | origin-tag | origin   |
     And the current branch is "old"
     And Git Town setting "sync-tags" is "false"
-    When I run "git-town rename-branch new"
+    When I run "git-town rename new"
 
   Scenario: result
     Then it runs the commands

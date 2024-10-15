@@ -36,7 +36,7 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandPark,
 		AliasableCommandPrepend,
 		AliasableCommandPropose,
-		AliasableCommandRenameBranch,
+		AliasableCommandRename,
 		AliasableCommandRepo,
 		AliasableCommandSetParent,
 		AliasableCommandShip,

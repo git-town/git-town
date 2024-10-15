@@ -5,7 +5,7 @@ Feature: does not rename the main branch
     And the current branch is "main"
 
   Scenario: try to rename
-    When I run "git-town rename-branch main new"
+    When I run "git-town rename main new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
@@ -16,7 +16,7 @@ Feature: does not rename the main branch
     And the current branch is still "main"
 
   Scenario: try to force rename
-    When I run "git-town rename-branch main new --force"
+    When I run "git-town rename main new --force"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |

@@ -10,7 +10,7 @@ Feature: rename the current branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    When I run "git-town rename-branch new --dry-run"
+    When I run "git-town rename new --dry-run"
 
   Scenario: result
     Then it runs the commands
