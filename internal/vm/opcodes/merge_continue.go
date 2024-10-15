@@ -6,13 +6,13 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// ContinueMerge finishes an ongoing merge conflict
+// MergeContinue finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
-type ContinueMerge struct {
+type MergeContinue struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ContinueMerge) Run(args shared.RunArgs) error {
+func (self *MergeContinue) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {
 		args.PrependOpcodes(&Commit{
 			AuthorOverride:                 None[gitdomain.Author](),

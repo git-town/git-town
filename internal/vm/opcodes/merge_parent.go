@@ -19,7 +19,7 @@ func (self *MergeParent) AbortProgram() []shared.Opcode {
 
 func (self *MergeParent) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&ContinueMerge{},
+		&MergeContinue{},
 	}
 }
 

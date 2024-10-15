@@ -75,7 +75,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},
-				&opcodes.ContinueMerge{},
+				&opcodes.MergeContinue{},
 				&opcodes.ContinueRebase{},
 				&opcodes.ContinueRebaseIfNeeded{},
 				&opcodes.CreateBranch{
@@ -334,7 +334,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "ContinueMerge"
+      "type": "MergeContinue"
     },
     {
       "data": {},
