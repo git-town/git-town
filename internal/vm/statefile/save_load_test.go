@@ -76,7 +76,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalNumber:  123,
 				},
 				&opcodes.MergeContinue{},
-				&opcodes.ContinueRebase{},
+				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
@@ -338,7 +338,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "ContinueRebase"
+      "type": "RebaseContinue"
     },
     {
       "data": {},

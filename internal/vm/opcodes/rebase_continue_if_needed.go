@@ -14,7 +14,7 @@ func (self *RebaseContinueIfNeeded) Run(args shared.RunArgs) error {
 		return err
 	}
 	if repoStatus.RebaseInProgress {
-		args.PrependOpcodes(&ContinueRebase{})
+		args.PrependOpcodes(&RebaseContinue{})
 	}
 	return nil
 }
