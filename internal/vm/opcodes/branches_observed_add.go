@@ -6,11 +6,11 @@ import (
 )
 
 // registers the branch with the given name as an observed branch in the Git config
-type AddToObservedBranches struct {
+type BranchesObservedAdd struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *AddToObservedBranches) Run(args shared.RunArgs) error {
+func (self *BranchesObservedAdd) Run(args shared.RunArgs) error {
 	return args.Config.AddToObservedBranches(self.Branch)
 }

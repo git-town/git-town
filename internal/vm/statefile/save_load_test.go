@@ -48,8 +48,8 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
-				&opcodes.ContributionBranchesAdd{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToObservedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPrototypeBranches{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -257,13 +257,13 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "ContributionBranchesAdd"
+      "type": "BranchesContributionAdd"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "AddToObservedBranches"
+      "type": "BranchesObservedAdd"
     },
     {
       "data": {

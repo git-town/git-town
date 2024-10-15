@@ -6,11 +6,11 @@ import (
 )
 
 // registers the branch with the given name as a contribution branch in the Git config
-type ContributionBranchesAdd struct {
+type BranchesContributionAdd struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ContributionBranchesAdd) Run(args shared.RunArgs) error {
+func (self *BranchesContributionAdd) Run(args shared.RunArgs) error {
 	return args.Config.AddToContributionBranches(self.Branch)
 }
