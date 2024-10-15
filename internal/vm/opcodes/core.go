@@ -51,7 +51,7 @@ func Types() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 		&RebaseAbort{},
-		&AddToContributionBranches{},
+		&ContributionBranchesAdd{},
 		&AddToObservedBranches{},
 		&AddToParkedBranches{},
 		&AddToPerennialBranches{},

@@ -270,7 +270,7 @@ func renameProgram(data renameData) program.Program {
 			}
 			if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.RemoveFromContributionBranches{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.AddToContributionBranches{Branch: data.newBranch})
+				result.Value.Add(&opcodes.ContributionBranchesAdd{Branch: data.newBranch})
 			}
 			if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
