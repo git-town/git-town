@@ -50,7 +50,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseAbort{},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToPrototypeBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.LineageSetParent{
@@ -269,7 +269,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "AddToParkedBranches"
+      "type": "BranchesParkedAdd"
     },
     {
       "data": {

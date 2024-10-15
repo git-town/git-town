@@ -53,7 +53,7 @@ func Types() []shared.Opcode {
 		&RebaseAbort{},
 		&BranchesContributionAdd{},
 		&BranchesObservedAdd{},
-		&AddToParkedBranches{},
+		&BranchesParkedAdd{},
 		&AddToPerennialBranches{},
 		&AddToPrototypeBranches{},
 		&Checkout{},

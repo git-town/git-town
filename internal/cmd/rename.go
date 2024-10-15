@@ -274,7 +274,7 @@ func renameProgram(data renameData) program.Program {
 			}
 			if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.AddToParkedBranches{Branch: data.newBranch})
+				result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
 			}
 			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 				result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})

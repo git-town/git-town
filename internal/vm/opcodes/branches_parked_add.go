@@ -6,11 +6,11 @@ import (
 )
 
 // registers the branch with the given name as a parked branch in the Git config
-type AddToParkedBranches struct {
+type BranchesParkedAdd struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *AddToParkedBranches) Run(args shared.RunArgs) error {
+func (self *BranchesParkedAdd) Run(args shared.RunArgs) error {
 	return args.Config.AddToParkedBranches(self.Branch)
 }
