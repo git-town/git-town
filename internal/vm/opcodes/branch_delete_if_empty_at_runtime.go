@@ -24,7 +24,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 		return err
 	}
 	if hasUnmergedChanges {
-		args.PrependOpcodes(&QueueMessage{
+		args.PrependOpcodes(&MessageQueue{
 			Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, self.Branch),
 		})
 	} else {
@@ -34,7 +34,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 			&RemoveBranchFromLineage{
 				Branch: self.Branch,
 			},
-			&QueueMessage{
+			&MessageQueue{
 				Message: fmt.Sprintf(messages.BranchDeleted, self.Branch),
 			})
 	}

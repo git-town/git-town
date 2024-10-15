@@ -136,6 +136,7 @@ func TestLoadSave(t *testing.T) {
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.PushTags{},
+				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.RebaseBranch{
 					Branch: gitdomain.NewBranchName("branch"),
 				},
@@ -504,6 +505,12 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "PushTags"
+    },
+    {
+      "data": {
+        "Message": "message"
+      },
+      "type": "MessageQueue"
     },
     {
       "data": {

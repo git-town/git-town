@@ -96,7 +96,7 @@ func Types() []shared.Opcode {
 		&PushCurrentBranchIfLocal{},
 		&PushCurrentBranchIfNeeded{},
 		&PushTags{},
-		&QueueMessage{},
+		&MessageQueue{},
 		&RebaseBranch{},
 		&RebaseFeatureTrackingBranch{},
 		&RebaseParentIfNeeded{},
