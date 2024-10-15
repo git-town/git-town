@@ -77,6 +77,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},
+				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.MergeContinue{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
@@ -350,6 +351,12 @@ func TestLoadSave(t *testing.T) {
         "ProposalNumber": 123
       },
       "type": "ConnectorProposalMerge"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "LineageParentSetToGrandParent"
     },
     {
       "data": {},

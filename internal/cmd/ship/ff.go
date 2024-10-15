@@ -32,7 +32,7 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 		}
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
+		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
