@@ -40,7 +40,7 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("LocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.SetExistingParent{
+		opcode := opcodes.LineageParentSetFirstExisting{
 			Branch:    gitdomain.NewLocalBranchName("branch"),
 			Ancestors: gitdomain.NewLocalBranchNames("ancestor-1", "ancestor-2"),
 		}

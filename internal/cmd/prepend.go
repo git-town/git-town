@@ -245,7 +245,7 @@ func prependProgram(data prependData) program.Program {
 		Branch:    data.targetBranch,
 	})
 	// set the parent of the newly created branch
-	prog.Value.Add(&opcodes.SetExistingParent{
+	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
 		Branch:    data.targetBranch,
 		Ancestors: data.newParentCandidates,
 	})

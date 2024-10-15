@@ -64,6 +64,10 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
+				&opcodes.LineageParentSetFirstExisting{
+					Ancestors: gitdomain.NewLocalBranchNames("one", "two"),
+					Branch:    gitdomain.NewLocalBranchName("branch"),
+				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -351,6 +355,16 @@ func TestLoadSave(t *testing.T) {
         "Parent": "parent"
       },
       "type": "LineageParentSet"
+    },
+    {
+      "data": {
+        "Ancestors": [
+          "one",
+          "two"
+        ],
+        "Branch": "branch"
+      },
+      "type": "LineageParentSetFirstExisting"
     },
     {
       "data": {

@@ -120,7 +120,7 @@ func Types() []shared.Opcode {
 		&StashPopIfNeeded{},
 		&CommitRevert{},
 		&CommitRevertIfNeeded{},
-		&SetExistingParent{},
+		&LineageParentSetFirstExisting{},
 		&SetGlobalConfig{},
 		&SetLocalConfig{},
 		&SetParent{},
