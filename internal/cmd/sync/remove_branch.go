@@ -10,7 +10,7 @@ import (
 
 func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 	args.Program.Value.Add(&opcodes.BranchesContributionRemove{Branch: args.Branch})
-	args.Program.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: args.Branch})
+	args.Program.Value.Add(&opcodes.BranchesObservedRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.RemoveFromParkedBranches{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: args.Branch})

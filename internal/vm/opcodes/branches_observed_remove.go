@@ -6,12 +6,12 @@ import (
 )
 
 // removes the branch with the given name from the observed branches list in the Git config
-type RemoveFromObservedBranches struct {
+type BranchesObservedRemove struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RemoveFromObservedBranches) Run(args shared.RunArgs) error {
+func (self *BranchesObservedRemove) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.Config.ObservedBranches.Contains(self.Branch) {
 		err = args.Config.RemoveFromObservedBranches(self.Branch)

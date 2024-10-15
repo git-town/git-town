@@ -265,7 +265,7 @@ func renameProgram(data renameData) program.Program {
 				result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
 			}
 			if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
-				result.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: oldLocalBranch})
+				result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
 			}
 			if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {

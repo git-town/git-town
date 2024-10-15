@@ -102,7 +102,7 @@ func Types() []shared.Opcode {
 		&RebaseParentIfNeeded{},
 		&LineageBranchRemove{},
 		&BranchesContributionRemove{},
-		&RemoveFromObservedBranches{},
+		&BranchesObservedRemove{},
 		&RemoveFromParkedBranches{},
 		&RemoveFromPerennialBranches{},
 		&RemoveFromPrototypeBranches{},
