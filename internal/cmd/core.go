@@ -30,7 +30,7 @@ func Execute() error {
 	rootCmd.AddCommand(proposeCommand())
 	rootCmd.AddCommand(prependCommand())
 	rootCmd.AddCommand(prototypeCmd())
-	rootCmd.AddCommand(renameBranchCommand())
+	rootCmd.AddCommand(renameCommand())
 	rootCmd.AddCommand(repoCommand())
 	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())

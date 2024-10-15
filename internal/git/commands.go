@@ -542,8 +542,8 @@ func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
-// RenameBranch renames the branch with the given old name to the branch with the given new name.
-func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
+// Rename renames the branch with the given old name to the branch with the given new name.
+func (self *Commands) Rename(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 

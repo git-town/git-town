@@ -46,6 +46,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return Some(hostingdomain.Proposal{
 			MergeWithAPI: true,
 			Number:       123,
+			Source:       branch,
 			Target:       target,
 			Title:        "title",
 			URL:          proposalURLOverride,
@@ -200,6 +201,7 @@ func parsePullRequest(pullRequest *gitea.PullRequest) hostingdomain.Proposal {
 	return hostingdomain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
+		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
 		URL:          pullRequest.HTMLURL,

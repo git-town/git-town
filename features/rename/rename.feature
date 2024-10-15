@@ -1,8 +1,8 @@
-Feature: offline mode
+@smoke
+Feature: rename the current branch
 
   Background:
     Given a Git repo with origin
-    And offline mode is enabled
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -11,30 +11,30 @@ Feature: offline mode
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    When I run "git-town rename-branch new"
+    When I run "git-town rename new"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                   |
-      | old    | git branch --move old new |
+      | old    | git fetch --prune --tags  |
+      |        | git branch --move old new |
       |        | git checkout new          |
+      | new    | git push -u origin new    |
+      |        | git push origin :old      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-      | new    | local         | old commit  |
-      | old    | origin        | old commit  |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
+      | new    | local, origin | old commit  |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
+      |        | git push -u origin old                |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
+      |        | git push origin :new                  |
     And the current branch is now "old"
-    And the initial commits exist now
     And the initial branches and lineage exist now

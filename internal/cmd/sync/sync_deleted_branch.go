@@ -16,12 +16,14 @@ func deletedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalB
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
 		syncDeletedFeatureBranchProgram(list, branch, args)
-	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
-		syncDeletedPerennialBranchProgram(list, branch, args)
-	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
-		syncDeletedObservedBranchProgram(list, branch, args)
-	case configdomain.BranchTypePrototypeBranch:
-		syncDeletedPrototypeBranchProgram(list, branch, args)
+	case
+		configdomain.BranchTypePerennialBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
+		syncDeleteLocalBranchProgram(list, branch, args)
 	}
 }
 
@@ -37,43 +39,15 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 	list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
 }
 
-func syncDeletedObservedBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+// deletes the given local branch as part of syncing it
+func syncDeleteLocalBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
-	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
+	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
 		Parent:  parent,
 		Program: list,
 	})
-	list.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: branch})
-	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
-	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
-	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
-}
-
-func syncDeletedPerennialBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
-	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
-		Branch:  branch,
-		Lineage: args.Config.Lineage,
-		Parent:  parent,
-		Program: list,
-	})
-	list.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch})
-	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
-	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
-	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
-}
-
-func syncDeletedPrototypeBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
-	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
-		Branch:  branch,
-		Lineage: args.Config.Lineage,
-		Parent:  parent,
-		Program: list,
-	})
-	list.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: branch})
 	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
 	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
 	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})

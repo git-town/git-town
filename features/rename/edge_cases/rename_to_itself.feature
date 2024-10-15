@@ -8,7 +8,7 @@ Feature: rename a branch to itself
     And the current branch is "old"
 
   Scenario: without force
-    When I run "git-town rename-branch old"
+    When I run "git-town rename old"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
@@ -18,7 +18,7 @@ Feature: rename a branch to itself
       """
 
   Scenario: with force
-    When I run "git-town rename-branch --force old"
+    When I run "git-town rename --force old"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |

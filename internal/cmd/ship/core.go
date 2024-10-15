@@ -163,11 +163,17 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	switch data.branchToShip.SyncStatus {
 	case gitdomain.SyncStatusDeletedAtRemote:
 		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchNameToShip)
-	case gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind:
+	case
+		gitdomain.SyncStatusNotInSync,
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusBehind:
 		return fmt.Errorf(messages.ShipBranchNotInSync, data.branchNameToShip)
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchNameToShip)
-	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusLocalOnly:
+	case
+		gitdomain.SyncStatusUpToDate,
+		gitdomain.SyncStatusRemoteOnly,
+		gitdomain.SyncStatusLocalOnly:
 	}
 	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {

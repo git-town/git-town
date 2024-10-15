@@ -110,7 +110,12 @@ func removeNonPrototypeBranchTypes(branches configdomain.BranchesAndTypes, confi
 			if err := config.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePerennialBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypePrototypeBranch,
+			configdomain.BranchTypeMainBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePerennialBranch:
 		}
 	}
 	return nil
@@ -142,7 +147,11 @@ func validatePrototypeData(data prototypeData) error {
 			return errors.New(messages.PerennialBranchCannotPrototype)
 		case configdomain.BranchTypePrototypeBranch:
 			return fmt.Errorf(messages.BranchIsAlreadyPrototype, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeObservedBranch:
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypeObservedBranch:
 		default:
 			panic("unhandled branch type" + branchType.String())
 		}
