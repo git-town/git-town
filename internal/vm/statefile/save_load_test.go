@@ -46,7 +46,7 @@ func TestLoadSave(t *testing.T) {
 			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
-				&opcodes.AbortMerge{},
+				&opcodes.MergeAbort{},
 				&opcodes.AbortRebase{},
 				&opcodes.AddToContributionBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.AddToObservedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -247,7 +247,7 @@ func TestLoadSave(t *testing.T) {
   "RunProgram": [
     {
       "data": {},
-      "type": "AbortMerge"
+      "type": "MergeAbort"
     },
     {
       "data": {},

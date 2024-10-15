@@ -13,7 +13,7 @@ type MergeParent struct {
 
 func (self *MergeParent) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&AbortMerge{},
+		&MergeAbort{},
 	}
 }
 

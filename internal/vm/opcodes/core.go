@@ -49,7 +49,7 @@ func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 // This is used to iterate all opcode types.
 func Types() []shared.Opcode {
 	return []shared.Opcode{
-		&AbortMerge{},
+		&MergeAbort{},
 		&AbortRebase{},
 		&AddToContributionBranches{},
 		&AddToObservedBranches{},

@@ -2,11 +2,11 @@ package opcodes
 
 import "github.com/git-town/git-town/v16/internal/vm/shared"
 
-// AbortMerge aborts the current merge conflict.
-type AbortMerge struct {
+// MergeAbort aborts the current merge conflict.
+type MergeAbort struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *AbortMerge) Run(args shared.RunArgs) error {
+func (self *MergeAbort) Run(args shared.RunArgs) error {
 	return args.Git.AbortMerge(args.Frontend)
 }
