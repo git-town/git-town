@@ -20,7 +20,7 @@ func Wrap(program Mutable[program.Program], options WrapOptions) {
 	}
 	if options.StashOpenChanges {
 		program.Value.Prepend(&opcodes.StashOpenChanges{})
-		program.Value.Add(&opcodes.RestoreOpenChanges{})
+		program.Value.Add(&opcodes.StashPopIfNeeded{})
 	}
 }
 

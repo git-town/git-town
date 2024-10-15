@@ -187,7 +187,7 @@ func TestLoadSave(t *testing.T) {
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
-				&opcodes.RestoreOpenChanges{},
+				&opcodes.StashPopIfNeeded{},
 				&opcodes.RevertCommit{
 					SHA: gitdomain.NewSHA("123456"),
 				},
@@ -649,7 +649,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "RestoreOpenChanges"
+      "type": "StashPopIfNeeded"
     },
     {
       "data": {
