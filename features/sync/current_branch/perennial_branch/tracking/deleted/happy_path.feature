@@ -1,4 +1,3 @@
-@this
 Feature: sync perennial branch that was deleted at the remote
 
   Background:
