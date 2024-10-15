@@ -31,8 +31,6 @@ Feature: sync perennial branch that was deleted at the remote
     And the perennial branches are now "feature-2"
     And this lineage exists now
       | BRANCH     | PARENT    |
-      | feature-1a | main      |
-      | feature-1b | main      |
       | feature-2a | feature-2 |
 
   Scenario: undo
