@@ -60,7 +60,6 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 
 // deletes the given local branch as part of syncing it
 func syncDeleteLocalBranchProgram(list Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	parent := args.Config.Lineage.Parent(branch).GetOrElse(args.Config.MainBranch)
 	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
