@@ -24,7 +24,7 @@ type ConnectorProposalMerge struct {
 
 func (self *ConnectorProposalMerge) AbortProgram() []shared.Opcode {
 	if self.enteredEmptyCommitMessage {
-		return []shared.Opcode{&DiscardOpenChanges{}}
+		return []shared.Opcode{&ChangesDiscard{}}
 	}
 	return []shared.Opcode(nil)
 }

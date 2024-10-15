@@ -102,7 +102,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchTrackingDelete{
 					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
-				&opcodes.DiscardOpenChanges{},
+				&opcodes.ChangesDiscard{},
 				&opcodes.DropStash{},
 				&opcodes.EndOfBranchProgram{},
 				&opcodes.EnsureHasShippableChanges{
@@ -412,7 +412,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "DiscardOpenChanges"
+      "type": "ChangesDiscard"
     },
     {
       "data": {},

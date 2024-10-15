@@ -21,7 +21,7 @@ type SquashMerge struct {
 
 func (self *SquashMerge) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&DiscardOpenChanges{},
+		&ChangesDiscard{},
 	}
 }
 
