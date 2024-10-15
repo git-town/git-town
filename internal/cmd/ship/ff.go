@@ -27,7 +27,7 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.Config.IsOnline() {
 			if sharedData.config.Config.ShipDeleteTrackingBranch {
-				prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: branchToShipRemoteName})
+				prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
 			}
 		}
 	}

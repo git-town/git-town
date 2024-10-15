@@ -59,7 +59,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 		ProposalMessage: apiData.proposalMessage,
 	})
 	if sharedData.config.Config.ShipDeleteTrackingBranch {
-		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: apiData.branchToShipRemoteName})
+		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: apiData.branchToShipRemoteName})
 	}
 	if hasLocalBranchToShip {
 		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branchToShipLocal})

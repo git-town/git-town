@@ -253,7 +253,7 @@ func killFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data kil
 	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if data.branchToKillInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToKill && data.config.Config.IsOnline() {
 		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
+		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToKill})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
 }

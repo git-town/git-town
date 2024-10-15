@@ -296,7 +296,7 @@ func renameProgram(data renameData) program.Program {
 					ProposalNumber: proposal.Number,
 				})
 			}
-			result.Value.Add(&opcodes.DeleteTrackingBranch{Branch: oldTrackingBranch})
+			result.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
