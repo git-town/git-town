@@ -5,11 +5,11 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-type ResetBranch struct {
+type BranchReset struct {
 	Target                  gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ResetBranch) Run(args shared.RunArgs) error {
+func (self *BranchReset) Run(args shared.RunArgs) error {
 	return args.Git.ResetBranch(args.Frontend, self.Target)
 }

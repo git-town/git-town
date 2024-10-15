@@ -28,6 +28,6 @@ func (self *ResetCurrentBranchToParent) Run(args shared.RunArgs) error {
 	} else {
 		target = parent.TrackingBranch().BranchName()
 	}
-	args.PrependOpcodes(&ResetBranch{Target: target})
+	args.PrependOpcodes(&BranchReset{Target: target})
 	return nil
 }
