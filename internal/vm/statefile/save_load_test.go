@@ -175,7 +175,7 @@ func TestLoadSave(t *testing.T) {
 					NewName: "new",
 					OldName: "old",
 				},
-				&opcodes.ResetCurrentBranchToSHA{
+				&opcodes.BranchCurrentResetToSHA{
 					Hard:     true,
 					SetToSHA: gitdomain.NewSHA("111111"),
 				},
@@ -613,7 +613,7 @@ func TestLoadSave(t *testing.T) {
         "Hard": true,
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHA"
+      "type": "BranchCurrentResetToSHA"
     },
     {
       "data": {

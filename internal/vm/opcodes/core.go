@@ -113,7 +113,7 @@ func Types() []shared.Opcode {
 		&BranchReset{},
 		&ResetCurrentBranch{},
 		&BranchCurrentResetToParent{},
-		&ResetCurrentBranchToSHA{},
+		&BranchCurrentResetToSHA{},
 		&BranchCurrentResetToSHAIfNeeded{},
 		&ResetRemoteBranchToSHA{},
 		&ResetRemoteBranchToSHAIfNeeded{},
