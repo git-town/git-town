@@ -105,6 +105,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.ChangesDiscard{},
 				&opcodes.StashDrop{},
+				&opcodes.StashPop{},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.BranchEnsureShippableChanges{
 					Branch: gitdomain.NewLocalBranchName("branch"),
@@ -424,6 +425,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashDrop"
+    },
+    {
+      "data": {},
+      "type": "StashPop"
     },
     {
       "data": {},

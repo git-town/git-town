@@ -17,6 +17,6 @@ func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
 	if stashSize == 0 && !args.Config.DryRun {
 		return nil
 	}
-	args.PrependOpcodes(&PopStash{})
+	args.PrependOpcodes(&StashPop{})
 	return nil
 }

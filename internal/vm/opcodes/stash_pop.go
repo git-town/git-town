@@ -7,16 +7,16 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// RestoreOpenChanges restores stashed away changes into the workspace.
-type PopStash struct {
+// restores stashed away changes into the workspace
+type StashPop struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *PopStash) ContinueProgram() []shared.Opcode {
+func (self *StashPop) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{&StashDrop{}}
 }
 
-func (self *PopStash) Run(args shared.RunArgs) error {
+func (self *StashPop) Run(args shared.RunArgs) error {
 	err := args.Git.PopStash(args.Frontend)
 	if err != nil {
 		return errors.New(messages.DiffConflictWithMain)
