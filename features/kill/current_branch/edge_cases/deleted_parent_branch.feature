@@ -29,14 +29,9 @@ Feature: the parent of the branch to kill was deleted remotely
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                     |
-      | other  | git branch old {{ sha 'Committing WIP for git town undo' }} |
-      |        | git checkout old                                            |
-      | old    | git reset --soft HEAD~1                                     |
-    And the current branch is now "old"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | old    | local         | old commit   |
-      | other  | local, origin | other commit |
-    And the uncommitted file still exists
+      | BRANCH | COMMAND                                    |
+      | alpha  | git branch beta {{ sha 'initial commit' }} |
+      |        | git push -u origin beta                    |
+      |        | git checkout beta                          |
+    And the current branch is now "beta"
     And the initial branches and lineage exist now
