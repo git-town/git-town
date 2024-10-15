@@ -125,7 +125,6 @@ func Types() []shared.Opcode {
 		&ConfigLocalSet{},
 		&LineageParentSet{},
 		&LineageParentSetIfExists{},
-		&SkipCurrentBranch{},
 		&StageOpenChanges{},
 		&StashOpenChanges{},
 		&SquashMerge{},

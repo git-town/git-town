@@ -214,7 +214,6 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.SkipCurrentBranch{},
 				&opcodes.SquashMerge{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
@@ -704,10 +703,6 @@ func TestLoadSave(t *testing.T) {
         "Parent": "parent"
       },
       "type": "LineageParentSetIfExists"
-    },
-    {
-      "data": {},
-      "type": "SkipCurrentBranch"
     },
     {
       "data": {
