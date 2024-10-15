@@ -188,7 +188,7 @@ func TestLoadSave(t *testing.T) {
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.RevertCommit{
+				&opcodes.CommitRevert{
 					SHA: gitdomain.NewSHA("123456"),
 				},
 				&opcodes.CommitRevertIfNeeded{
@@ -655,7 +655,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "SHA": "123456"
       },
-      "type": "RevertCommit"
+      "type": "CommitRevert"
     },
     {
       "data": {

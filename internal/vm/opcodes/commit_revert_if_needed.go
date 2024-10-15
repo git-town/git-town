@@ -28,6 +28,6 @@ func (self *CommitRevertIfNeeded) Run(args shared.RunArgs) error {
 	if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
 		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
 	}
-	args.PrependOpcodes(&RevertCommit{SHA: self.SHA})
+	args.PrependOpcodes(&CommitRevert{SHA: self.SHA})
 	return nil
 }
