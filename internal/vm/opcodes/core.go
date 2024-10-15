@@ -106,7 +106,7 @@ func Types() []shared.Opcode {
 		&BranchesParkedRemove{},
 		&BranchesPerennialRemove{},
 		&BranchesPrototypeRemove{},
-		&RemoveGlobalConfig{},
+		&ConfigGlobalRemove{},
 		&RemoveLocalConfig{},
 		&RemoveParent{},
 		&Rename{},

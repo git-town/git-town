@@ -43,7 +43,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveGlobalConfig{
+			&opcodes.ConfigGlobalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
 		}
@@ -310,7 +310,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveGlobalConfig{
+			&opcodes.ConfigGlobalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
 			&opcodes.SetGlobalConfig{

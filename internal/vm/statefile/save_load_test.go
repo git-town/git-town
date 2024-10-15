@@ -162,7 +162,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesPrototypeRemove{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.RemoveGlobalConfig{
+				&opcodes.ConfigGlobalRemove{
 					Key: configdomain.KeyOffline,
 				},
 				&opcodes.RemoveLocalConfig{
@@ -572,7 +572,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Key": "git-town.offline"
       },
-      "type": "RemoveGlobalConfig"
+      "type": "ConfigGlobalRemove"
     },
     {
       "data": {
