@@ -6,5 +6,5 @@ import (
 
 func IsEndOfBranchProgramOpcode(opcode Opcode) bool {
 	typeName := gohacks.TypeName(opcode)
-	return typeName == "EndOfBranchProgram"
+	return typeName == "ProgramEndOfBranch"
 }

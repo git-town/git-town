@@ -104,7 +104,7 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcodes.ChangesDiscard{},
 				&opcodes.StashDrop{},
-				&opcodes.EndOfBranchProgram{},
+				&opcodes.ProgramEndOfBranch{},
 				&opcodes.EnsureHasShippableChanges{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
@@ -420,7 +420,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "EndOfBranchProgram"
+      "type": "ProgramEndOfBranch"
     },
     {
       "data": {

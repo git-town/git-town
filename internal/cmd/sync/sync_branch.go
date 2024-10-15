@@ -18,7 +18,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	default:
 		localBranchProgram(args.Program, localName, branchInfo, firstCommitMessage, args)
 	}
-	args.Program.Value.Add(&opcodes.EndOfBranchProgram{})
+	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
 
 type BranchProgramArgs struct {

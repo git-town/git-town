@@ -35,17 +35,17 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 		give := program.Program{
 			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-1")},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-2")},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			&opcodes.RebaseAbort{},
 		}
 		have := optimizer.RemoveDuplicateCheckout(give)
 		want := program.Program{
 			&opcodes.MergeAbort{},
-			&opcodes.EndOfBranchProgram{},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.ProgramEndOfBranch{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			&opcodes.RebaseAbort{},
 		}

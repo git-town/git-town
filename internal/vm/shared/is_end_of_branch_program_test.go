@@ -11,7 +11,7 @@ import (
 func TestIsEndOfBranchProgramOpcode(t *testing.T) {
 	t.Parallel()
 	tests := map[shared.Opcode]bool{
-		&opcodes.EndOfBranchProgram{}: true,
+		&opcodes.ProgramEndOfBranch{}: true,
 		&opcodes.MergeAbort{}:         false,
 	}
 	for give, want := range tests {
