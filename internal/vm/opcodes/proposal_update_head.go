@@ -9,32 +9,32 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// UpdateProposalHead updates the head of the proposal with the given number at the code hosting platform.
-type UpdateProposalHead struct {
+// ProposalUpdateHead updates the head of the proposal with the given number at the code hosting platform.
+type ProposalUpdateHead struct {
 	NewTarget               gitdomain.LocalBranchName
 	OldTarget               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *UpdateProposalHead) AutomaticUndoError() error {
+func (self *ProposalUpdateHead) AutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 
-func (self *UpdateProposalHead) Run(args shared.RunArgs) error {
+func (self *ProposalUpdateHead) Run(args shared.RunArgs) error {
 	if connector, hasConnector := args.Connector.Get(); hasConnector {
 		return connector.UpdateProposalHead(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 	}
 	return hostingdomain.UnsupportedServiceError()
 }
 
-func (self *UpdateProposalHead) ShouldUndoOnError() bool {
+func (self *ProposalUpdateHead) ShouldUndoOnError() bool {
 	return true
 }
 
-func (self *UpdateProposalHead) UndoExternalChangesProgram() []shared.Opcode {
+func (self *ProposalUpdateHead) UndoExternalChangesProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&UpdateProposalHead{
+		&ProposalUpdateHead{
 			NewTarget:      self.OldTarget,
 			OldTarget:      self.NewTarget,
 			ProposalNumber: self.ProposalNumber,
