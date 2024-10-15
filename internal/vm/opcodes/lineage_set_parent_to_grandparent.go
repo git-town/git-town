@@ -17,8 +17,14 @@ func (self *LineageSetParentToGrandParent) Run(args shared.RunArgs) error {
 		return nil
 	}
 	if grandParent, hasGrandParent := args.Config.Config.Lineage.Parent(parent).Get(); hasGrandParent {
-		return args.Config.SetParent(self.Branch, grandParent)
+		args.PrependOpcodes(&LineageSetParent{
+			Branch: self.Branch,
+			Parent: grandParent,
+		})
+	} else {
+		args.PrependOpcodes(&RemoveParent{
+			Branch: self.Branch,
+		})
 	}
-	args.Config.RemoveParent(self.Branch)
 	return nil
 }
