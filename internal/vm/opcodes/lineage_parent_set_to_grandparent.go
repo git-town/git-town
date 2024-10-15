@@ -22,7 +22,7 @@ func (self *LineageParentSetToGrandParent) Run(args shared.RunArgs) error {
 			Parent: grandParent,
 		})
 	} else {
-		args.PrependOpcodes(&RemoveParent{
+		args.PrependOpcodes(&LineageParentRemove{
 			Branch: self.Branch,
 		})
 	}

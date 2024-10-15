@@ -15,12 +15,12 @@ func (self *LineageBranchRemove) Run(args shared.RunArgs) error {
 	children := args.Config.Config.Lineage.Children(self.Branch)
 	for _, child := range children {
 		if !hasParent {
-			args.PrependOpcodes(&RemoveParent{Branch: child})
+			args.PrependOpcodes(&LineageParentRemove{Branch: child})
 		} else {
 			args.PrependOpcodes(&SetParent{Branch: child, Parent: parent})
 		}
 	}
-	args.PrependOpcodes(&RemoveParent{Branch: self.Branch})
+	args.PrependOpcodes(&LineageParentRemove{Branch: self.Branch})
 	args.Config.Config.Lineage.RemoveBranch(self.Branch)
 	return nil
 }
