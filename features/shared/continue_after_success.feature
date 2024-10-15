@@ -29,7 +29,7 @@ Feature: continue after successful command
       | propose                 |
       | sync-perennial-strategy |
       | push-new-branches       |
-      | rename-branch           |
+      | rename                  |
       | repo                    |
       | ship feature -m done    |
       | sync                    |

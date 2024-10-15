@@ -37,7 +37,7 @@ const (
 	KeyAliasPark                           = Key("alias.park")
 	KeyAliasPrepend                        = Key("alias.prepend")
 	KeyAliasPropose                        = Key("alias.propose")
-	KeyAliasRenameBranch                   = Key("alias.rename-branch")
+	KeyAliasRename                         = Key("alias.rename")
 	KeyAliasRepo                           = Key("alias.repo")
 	KeyAliasSetParent                      = Key("alias.set-parent")
 	KeyAliasShip                           = Key("alias.ship")

@@ -173,7 +173,7 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.kill" still doesn't exist
     And global Git setting "alias.prepend" still doesn't exist
     And global Git setting "alias.propose" still doesn't exist
-    And global Git setting "alias.rename-branch" still doesn't exist
+    And global Git setting "alias.rename" still doesn't exist
     And global Git setting "alias.repo" still doesn't exist
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist

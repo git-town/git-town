@@ -9,7 +9,7 @@ Feature: rename an observed branch
     And the commits
       | BRANCH   | LOCATION      | MESSAGE               |
       | observed | local, origin | somebody elses commit |
-    When I run "git-town rename-branch observed new"
+    When I run "git-town rename observed new"
 
   Scenario: result
     Then it runs the commands

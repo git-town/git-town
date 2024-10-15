@@ -77,8 +77,7 @@ development. Supports mono-repos and stacked changes. Check out
 - [compress](https://www.git-town.com/commands/compress.html) - squash all
   commits on feature branches down to a single commit
 - [kill](https://www.git-town.com/commands/kill.html) - remove a feature branch
-- [rename-branch](https://www.git-town.com/commands/rename-branch.html) - rename
-  a branch
+- [rename](https://www.git-town.com/commands/rename.html) - rename a branch
 - [repo](https://www.git-town.com/commands/repo.html) - view the repository
   homepage
 - [ship](https://www.git-town.com/commands/ship.html) - merge a completed

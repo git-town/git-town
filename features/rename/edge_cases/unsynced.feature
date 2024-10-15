@@ -11,7 +11,7 @@ Feature: rename an unsynced branch
     Given the commits
       | BRANCH | LOCATION | MESSAGE       |
       | old    | origin   | origin commit |
-    When I run "git-town rename-branch old new"
+    When I run "git-town rename old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
@@ -25,7 +25,7 @@ Feature: rename an unsynced branch
     Given the commits
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
-    When I run "git-town rename-branch old new"
+    When I run "git-town rename old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |

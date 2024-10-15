@@ -9,7 +9,7 @@ Feature: rename a contribution branch
     And the commits
       | BRANCH       | LOCATION      | MESSAGE               |
       | contribution | local, origin | somebody elses commit |
-    When I run "git-town rename-branch contribution new"
+    When I run "git-town rename contribution new"
 
   Scenario: result
     Then it runs the commands

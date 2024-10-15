@@ -10,7 +10,7 @@ Feature: rename a local-only branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local         | old commit  |
-    When I run "git-town rename-branch new"
+    When I run "git-town rename new"
 
   Scenario: result
     Then it runs the commands

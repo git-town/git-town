@@ -31,7 +31,7 @@
     - [branch](commands/branch.md)
     - [compress](commands/compress.md)
     - [kill](commands/kill.md)
-    - [rename-branch](commands/rename-branch.md)
+    - [rename](commands/rename.md)
     - [repo](commands/repo.md)
     - [ship](commands/ship.md)
   - [Installation commands](installation-commands.md)

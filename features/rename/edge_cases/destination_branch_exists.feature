@@ -13,7 +13,7 @@ Feature: destination branch exists
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
     And the current branch is "alpha"
-    When I run "git-town rename-branch alpha beta"
+    When I run "git-town rename alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |
@@ -34,7 +34,7 @@ Feature: destination branch exists
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
-    When I run "git-town rename-branch alpha beta"
+    When I run "git-town rename alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |

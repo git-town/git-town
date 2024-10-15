@@ -8,7 +8,7 @@ Feature: rename the current branch to a branch that is active in another worktre
       | previous | feature | main   | local     |
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    When I run "git-town rename-branch new"
+    When I run "git-town rename new"
 
   Scenario: result
     Then it runs the commands

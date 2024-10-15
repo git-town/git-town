@@ -1,12 +1,11 @@
-# git town rename-branch
+# git town rename
 
-> _git town rename-branch [--force] [old-name] &lt;new-name&gt;_
+> _git town rename [--force] [old-name] &lt;new-name&gt;_
 
-The _rename-branch_ command changes the name of the current branch in the local
-and origin repository. It requires the branch to be in sync with its tracking
-branch to avoid data loss. It also updates the proposals for the branch being
-renamed, as well as proposals of its child branches into the branch being
-renamed.
+The _rename_ command changes the name of the current branch in the local and
+origin repository. It requires the branch to be in sync with its tracking branch
+to avoid data loss. It also updates the proposals for the branch being renamed,
+as well as proposals of its child branches into the branch being renamed.
 
 Please be aware that most code hosting platforms are unable to update the head
 branch (aka source branch) of proposals. If you rename a branch that already has
@@ -16,8 +15,8 @@ will notify you. Updating proposals of child branches usually works.
 
 ### Positional arguments
 
-When called with only one argument, the _rename-branch_ command renames the
-current branch to the given name.
+When called with only one argument, the _rename_ command renames the current
+branch to the given name.
 
 When called with two arguments, it renames the branch with the given name to the
 given name.
