@@ -293,7 +293,7 @@ Program:
 			"MustHaveSHA": "abcdef",
 			"SetToSHA": "123456"
 		},
-		"type": "ResetCurrentBranchToSHAIfNeeded"
+		"type": "BranchCurrentResetToSHAIfNeeded"
 	},
 	{
 		"data": {},
@@ -304,7 +304,7 @@ Program:
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := program.Program{
-			&opcodes.ResetCurrentBranchToSHAIfNeeded{
+			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				Hard:        false,
 				MustHaveSHA: gitdomain.NewSHA("abcdef"),
 				SetToSHA:    gitdomain.NewSHA("123456"),

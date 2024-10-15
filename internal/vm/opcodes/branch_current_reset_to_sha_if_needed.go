@@ -8,16 +8,16 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ResetCurrentBranchToSHAIfNeeded undoes all commits on the current branch
+// BranchCurrentResetToSHAIfNeeded undoes all commits on the current branch
 // all the way until the given SHA.
-type ResetCurrentBranchToSHAIfNeeded struct {
+type BranchCurrentResetToSHAIfNeeded struct {
 	Hard                    bool
 	MustHaveSHA             gitdomain.SHA
 	SetToSHA                gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ResetCurrentBranchToSHAIfNeeded) Run(args shared.RunArgs) error {
+func (self *BranchCurrentResetToSHAIfNeeded) Run(args shared.RunArgs) error {
 	currentSHA, err := args.Git.CurrentSHA(args.Backend)
 	if err != nil {
 		return err
