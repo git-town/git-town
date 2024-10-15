@@ -87,11 +87,11 @@ func TestLoadSave(t *testing.T) {
 					Branch:     gitdomain.NewLocalBranchName("branch"),
 					MainBranch: gitdomain.NewLocalBranchName("main"),
 				},
-				&opcodes.CreateRemoteBranch{
+				&opcodes.BranchRemoteCreate{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					SHA:    gitdomain.NewSHA("123456"),
 				},
-				&opcodes.CreateTrackingBranch{
+				&opcodes.BranchTrackingCreate{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -377,13 +377,13 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "SHA": "123456"
       },
-      "type": "CreateRemoteBranch"
+      "type": "BranchRemoteCreate"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "CreateTrackingBranch"
+      "type": "BranchTrackingCreate"
     },
     {
       "data": {

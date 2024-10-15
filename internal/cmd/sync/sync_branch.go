@@ -82,7 +82,7 @@ func localBranchProgram(list Mutable[program.Program], localName gitdomain.Local
 	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {
 		case !branchInfo.HasTrackingBranch():
-			list.Value.Add(&opcodes.CreateTrackingBranch{Branch: localName})
+			list.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
 		case isMainOrPerennialBranch:
 			list.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:

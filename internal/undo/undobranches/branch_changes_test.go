@@ -914,7 +914,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// re-create the feature branch
 			&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},
-			&opcodes.CreateTrackingBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 		}
@@ -1393,7 +1393,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			// don't re-create the tracking branch for the perennial branch
 			// because those are protected
-			&opcodes.CreateRemoteBranch{
+			&opcodes.BranchRemoteCreate{
 				Branch: gitdomain.NewLocalBranchName("feature-branch"),
 				SHA:    gitdomain.NewSHA("222222"),
 			},

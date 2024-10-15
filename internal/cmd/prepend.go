@@ -259,7 +259,7 @@ func prependProgram(data prependData) program.Program {
 	}
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasOrigin() && data.config.Config.IsOnline() && (data.config.Config.ShouldPushNewBranches() || hasProposal) {
-		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	if hasProposal {
 		prog.Value.Add(&opcodes.UpdateProposalBase{

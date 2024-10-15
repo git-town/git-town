@@ -287,7 +287,7 @@ func renameProgram(data renameData) program.Program {
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {
-			result.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.newBranch})
+			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {
 				result.Value.Add(&opcodes.UpdateProposalHead{

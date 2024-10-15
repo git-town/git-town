@@ -14,7 +14,7 @@ type PushCurrentBranchIfLocal struct {
 func (self *PushCurrentBranchIfLocal) Run(args shared.RunArgs) error {
 	hasTrackingBranch := args.Git.CurrentBranchHasTrackingBranch(args.Backend)
 	if !hasTrackingBranch {
-		args.PrependOpcodes(&CreateTrackingBranch{
+		args.PrependOpcodes(&BranchTrackingCreate{
 			Branch: self.CurrentBranch,
 		})
 	}

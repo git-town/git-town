@@ -229,7 +229,7 @@ func appendProgram(data appendFeatureData) program.Program {
 		Branch:    data.targetBranch,
 	})
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
-		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.SetExistingParent{
 		Branch:    data.targetBranch,

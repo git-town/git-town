@@ -80,7 +80,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
 		result.Add(&opcodes.BranchCreate{Branch: branch, StartingPoint: sha.Location()})
-		result.Add(&opcodes.CreateTrackingBranch{Branch: branch})
+		result.Add(&opcodes.BranchTrackingCreate{Branch: branch})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
@@ -120,7 +120,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, removedFeatureTrackingBranches := CategorizeRemoteBranchesSHAs(self.RemoteRemoved, args.Config)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
-		result.Add(&opcodes.CreateRemoteBranch{
+		result.Add(&opcodes.BranchRemoteCreate{
 			Branch: branch.LocalBranchName(),
 			SHA:    sha,
 		})
