@@ -219,7 +219,7 @@ func TestLoadSave(t *testing.T) {
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.StageOpenChanges{},
+				&opcodes.ChangesStage{},
 				&opcodes.StashOpenChanges{},
 				&opcodes.UpdateProposalBase{
 					ProposalNumber: 123,
@@ -714,7 +714,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {},
-      "type": "StageOpenChanges"
+      "type": "ChangesStage"
     },
     {
       "data": {},
