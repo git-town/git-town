@@ -17,7 +17,7 @@ func (self *LineageParentSetToGrandParent) Run(args shared.RunArgs) error {
 		return nil
 	}
 	if grandParent, hasGrandParent := args.Config.Config.Lineage.Parent(parent).Get(); hasGrandParent {
-		args.PrependOpcodes(&LineageSetParent{
+		args.PrependOpcodes(&LineageParentSet{
 			Branch: self.Branch,
 			Parent: grandParent,
 		})

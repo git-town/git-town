@@ -55,7 +55,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.LineageSetParent{
+				&opcodes.LineageParentSet{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
@@ -308,7 +308,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "LineageSetParent"
+      "type": "LineageParentSet"
     },
     {
       "data": {

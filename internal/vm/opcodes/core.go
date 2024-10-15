@@ -85,7 +85,7 @@ func Types() []shared.Opcode {
 		&PushCurrentBranchForceIfNeeded{},
 		&BranchDeleteIfEmptyAtRuntime{},
 		&LineageParentSetToGrandParent{},
-		&LineageSetParent{},
+		&LineageParentSet{},
 		&Merge{},
 		&MergeParent{},
 		&MergeParentIfNeeded{},
