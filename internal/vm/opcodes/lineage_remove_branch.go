@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-type RemoveBranchFromLineage struct {
+type LineageRemoveBranch struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
+func (self *LineageRemoveBranch) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	children := args.Config.Config.Lineage.Children(self.Branch)
 	for _, child := range children {
