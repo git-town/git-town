@@ -288,7 +288,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "LineageChangeParent"
+      "type": "LineageSetParent"
     },
     {
       "data": {

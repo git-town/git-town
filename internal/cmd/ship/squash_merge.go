@@ -48,7 +48,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 		}
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.LineageChangeParentToGrandParent{Branch: child})
+		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
