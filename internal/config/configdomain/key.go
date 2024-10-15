@@ -32,7 +32,7 @@ const (
 	KeyAliasContribute                     = Key("alias.contribute")
 	KeyAliasDiffParent                     = Key("alias.diff-parent")
 	KeyAliasHack                           = Key("alias.hack")
-	KeyAliasKill                           = Key("alias.kill")
+	KeyAliasDelete                         = Key("alias.delete")
 	KeyAliasObserve                        = Key("alias.observe")
 	KeyAliasPark                           = Key("alias.park")
 	KeyAliasPrepend                        = Key("alias.prepend")

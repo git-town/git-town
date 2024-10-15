@@ -43,14 +43,14 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
     And the current branch is now "grandchild"
     And a merge is now in progress
 
-  Scenario: skip the grandchild merge conflict and kill the grandchild branch
+  Scenario: skip the grandchild merge conflict and delete the grandchild branch
     When I run "git-town skip"
     Then it runs the commands
       | BRANCH     | COMMAND           |
       | grandchild | git merge --abort |
       |            | git push --tags   |
     And the current branch is now "grandchild"
-    When I run "git-town kill"
+    When I run "git-town delete"
     Then it runs the commands
       | BRANCH     | COMMAND                     |
       | grandchild | git fetch --prune --tags    |

@@ -2,11 +2,11 @@
 
 > _git town ship [--to-parent] [--message &lt;text&gt;] [branch-name]_
 
-_Notice: Most people don't need to use the _ship_ command. The recommended way
+_Notice: Most people don't need to use the \_ship_ command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git town ship` is for edge cases
 like developing in [offline mode](../preferences/offline.md) or when shipping
-[stacked changes](../stacked-changes.md)._
+[stacked changes](../stacked-changes.md).\_
 
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch.
@@ -36,7 +36,7 @@ specifying the commit message via the CLI.
 ### --to-parent / -p
 
 The _ship_ command ships only direct children of the main branch. To ship a
-child branch, you need to first ship or [kill](kill.md) all its ancestor
+child branch, you need to first ship or [delete](delete.md) all its ancestor
 branches. If you really want to ship into a non-perennial branch, you can
 override the protection against that with the `--to-parent` aka `-p` option.
 

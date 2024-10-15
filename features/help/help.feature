@@ -18,7 +18,7 @@ Feature: help for commands
       | diff-parent |
       | hack        |
       | help        |
-      | kill        |
+      | delete      |
       | offline     |
       | prepend     |
       | propose     |

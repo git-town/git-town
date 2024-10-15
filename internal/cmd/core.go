@@ -22,7 +22,7 @@ func Execute() error {
 	rootCmd.AddCommand(debug.RootCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
-	rootCmd.AddCommand(killCommand())
+	rootCmd.AddCommand(deleteCommand())
 	rootCmd.AddCommand(newPullRequestCommand())
 	rootCmd.AddCommand(observeCmd())
 	rootCmd.AddCommand(offlineCmd())

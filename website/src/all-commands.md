@@ -21,7 +21,7 @@ _Commands to create, work on, and ship features._
 
 _Commands to deal with edge cases._
 
-- [git town kill](commands/kill.md) - delete a feature branch
+- [git town delete](commands/delete.md) - delete a feature branch
 - [git town rename](commands/rename.md) - rename a branch
 - [git town repo](commands/repo.md) - view the Git repository in the browser
 

@@ -21,7 +21,7 @@ Feature: continue after successful command
       | diff-parent             |
       | hack new                |
       | help                    |
-      | kill feature            |
+      | delete feature          |
       | main_branch             |
       | offline                 |
       | perennial-branches      |

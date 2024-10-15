@@ -31,7 +31,7 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandContribute,
 		AliasableCommandDiffParent,
 		AliasableCommandHack,
-		AliasableCommandKill,
+		AliasableCommandDelete,
 		AliasableCommandObserve,
 		AliasableCommandPark,
 		AliasableCommandPrepend,
