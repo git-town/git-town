@@ -77,7 +77,7 @@ func TestLoadSave(t *testing.T) {
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},
-				&opcodes.LineageRemoveBranch{Branch: "branch"},
+				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.MergeContinue{},
 				&opcodes.RebaseContinue{},
@@ -359,7 +359,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "LineageRemoveBranch"
+      "type": "LineageBranchRemove"
     },
     {
       "data": {
