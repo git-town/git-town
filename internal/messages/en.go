@@ -176,7 +176,7 @@ nd will be removed in future versions of Git Town.`
 	RebaseProblem                  = "cannot determine rebase in progress: %w"
 	RemoteExistsProblem            = "cannot determine if remote %q exists: %w"
 	RemotesProblem                 = "cannot determine remotes: %w"
-	RenameBranchNotInSync          = "%q is not in sync with its tracking branch, please sync the branches before renaming"
+	RenameNotInSync                = "%q is not in sync with its tracking branch, please sync the branches before renaming"
 	RenameMainBranch               = "the main branch cannot be renamed"
 	RenamePerennialBranchWarning   = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName               = "cannot rename branch to current name"

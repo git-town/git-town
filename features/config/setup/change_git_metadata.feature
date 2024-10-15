@@ -36,32 +36,32 @@ Feature: change existing information in Git metadata
 
   Scenario: result
     Then it runs the commands
-      | COMMAND                                                      |
-      | git config --global alias.append "town append"               |
-      | git config --global alias.compress "town compress"           |
-      | git config --global alias.contribute "town contribute"       |
-      | git config --global alias.diff-parent "town diff-parent"     |
-      | git config --global alias.hack "town hack"                   |
-      | git config --global alias.kill "town kill"                   |
-      | git config --global alias.observe "town observe"             |
-      | git config --global alias.park "town park"                   |
-      | git config --global alias.prepend "town prepend"             |
-      | git config --global alias.propose "town propose"             |
-      | git config --global alias.rename-branch "town rename-branch" |
-      | git config --global alias.repo "town repo"                   |
-      | git config --global alias.set-parent "town set-parent"       |
-      | git config --global alias.ship "town ship"                   |
-      | git config --global alias.sync "town sync"                   |
-      | git config git-town.github-token 123456                      |
-      | git config git-town.hosting-platform github                  |
-      | git config git-town.hosting-origin-hostname code             |
+      | COMMAND                                                  |
+      | git config --global alias.append "town append"           |
+      | git config --global alias.compress "town compress"       |
+      | git config --global alias.contribute "town contribute"   |
+      | git config --global alias.diff-parent "town diff-parent" |
+      | git config --global alias.hack "town hack"               |
+      | git config --global alias.kill "town kill"               |
+      | git config --global alias.observe "town observe"         |
+      | git config --global alias.park "town park"               |
+      | git config --global alias.prepend "town prepend"         |
+      | git config --global alias.propose "town propose"         |
+      | git config --global alias.rename "town rename"           |
+      | git config --global alias.repo "town repo"               |
+      | git config --global alias.set-parent "town set-parent"   |
+      | git config --global alias.ship "town ship"               |
+      | git config --global alias.sync "town sync"               |
+      | git config git-town.github-token 123456                  |
+      | git config git-town.hosting-platform github              |
+      | git config git-town.hosting-origin-hostname code         |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
     And global Git setting "alias.kill" is now "town kill"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
-    And global Git setting "alias.rename-branch" is now "town rename-branch"
+    And global Git setting "alias.rename" is now "town rename"
     And global Git setting "alias.repo" is now "town repo"
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
@@ -92,7 +92,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.kill" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
-    And global Git setting "alias.rename-branch" now doesn't exist
+    And global Git setting "alias.rename" now doesn't exist
     And global Git setting "alias.repo" now doesn't exist
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist

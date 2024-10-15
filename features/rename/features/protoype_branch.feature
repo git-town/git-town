@@ -9,7 +9,7 @@ Feature: rename a prototype branch
     And the commits
       | BRANCH    | LOCATION      | MESSAGE             |
       | prototype | local, origin | experimental commit |
-    When I run "git-town rename-branch prototype new"
+    When I run "git-town rename prototype new"
 
   Scenario: result
     Then it runs the commands

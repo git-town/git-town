@@ -14,7 +14,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.kill" is "town kill"
     And global Git setting "alias.prepend" is "town prepend"
     And global Git setting "alias.propose" is "town propose"
-    And global Git setting "alias.rename-branch" is "town rename-branch"
+    And global Git setting "alias.rename" is "town rename"
     And global Git setting "alias.repo" is "town repo"
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
@@ -66,7 +66,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.kill              |
       | git config --global --unset alias.prepend           |
       | git config --global --unset alias.propose           |
-      | git config --global --unset alias.rename-branch     |
+      | git config --global --unset alias.rename            |
       | git config --global --unset alias.repo              |
       | git config --global --unset alias.set-parent        |
       | git config --global --unset alias.ship              |
@@ -79,7 +79,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.kill" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
-    And global Git setting "alias.rename-branch" now doesn't exist
+    And global Git setting "alias.rename" now doesn't exist
     And global Git setting "alias.repo" now doesn't exist
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
@@ -112,7 +112,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.kill" is now "town kill"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
-    And global Git setting "alias.rename-branch" is now "town rename-branch"
+    And global Git setting "alias.rename" is now "town rename"
     And global Git setting "alias.repo" is now "town repo"
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"

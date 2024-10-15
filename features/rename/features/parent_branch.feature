@@ -11,7 +11,7 @@ Feature: rename a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | parent | local, origin | parent commit |
-    When I run "git-town rename-branch parent new"
+    When I run "git-town rename parent new"
 
   Scenario: result
     Then it runs the commands

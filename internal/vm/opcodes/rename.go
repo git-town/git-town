@@ -6,12 +6,12 @@ import (
 )
 
 // CreateBranch creates a new branch but leaves the current branch unchanged.
-type RenameBranch struct {
+type Rename struct {
 	NewName                 gitdomain.LocalBranchName
 	OldName                 gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RenameBranch) Run(args shared.RunArgs) error {
-	return args.Git.RenameBranch(args.Frontend, self.OldName, self.NewName)
+func (self *Rename) Run(args shared.RunArgs) error {
+	return args.Git.Rename(args.Frontend, self.OldName, self.NewName)
 }

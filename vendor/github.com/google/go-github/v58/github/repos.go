@@ -1440,12 +1440,12 @@ func (s *RepositoriesService) GetBranch(ctx context.Context, owner, repo, branch
 	return b, newResponse(resp), err
 }
 
-// renameBranchRequest represents a request to rename a branch.
-type renameBranchRequest struct {
+// renameRequest represents a request to rename a branch.
+type renameRequest struct {
 	NewName string `json:"new_name"`
 }
 
-// RenameBranch renames a branch in a repository.
+// Rename renames a branch in a repository.
 //
 // To rename a non-default branch: Users must have push access. GitHub Apps must have the `contents:write` repository permission.
 // To rename the default branch: Users must have admin or owner permissions. GitHub Apps must have the `administration:write` repository permission.
@@ -1455,9 +1455,9 @@ type renameBranchRequest struct {
 // GitHub API docs: https://docs.github.com/rest/branches/branches#rename-a-branch
 //
 //meta:operation POST /repos/{owner}/{repo}/branches/{branch}/rename
-func (s *RepositoriesService) RenameBranch(ctx context.Context, owner, repo, branch, newName string) (*Branch, *Response, error) {
+func (s *RepositoriesService) Rename(ctx context.Context, owner, repo, branch, newName string) (*Branch, *Response, error) {
 	u := fmt.Sprintf("repos/%v/%v/branches/%v/rename", owner, repo, url.PathEscape(branch))
-	r := &renameBranchRequest{NewName: newName}
+	r := &renameRequest{NewName: newName}
 	req, err := s.client.NewRequest("POST", u, r)
 	if err != nil {
 		return nil, nil, err
