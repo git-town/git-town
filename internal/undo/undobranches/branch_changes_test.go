@@ -809,7 +809,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			// revert the commit on the perennial branch
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
-			&opcodes.RevertCommitIfNeeded{SHA: gitdomain.NewSHA("444444")},
+			&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("444444")},
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// reset the feature branch to the previous SHA
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
@@ -910,7 +910,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			// revert the undoable commit on the main branch
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
-			&opcodes.RevertCommitIfNeeded{SHA: gitdomain.NewSHA("444444")},
+			&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("444444")},
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// re-create the feature branch
 			&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},

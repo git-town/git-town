@@ -8,14 +8,14 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// RevertCommitIfNeeded adds a commit to the current branch
+// CommitRevertIfNeeded adds a commit to the current branch
 // that reverts the commit with the given SHA.
-type RevertCommitIfNeeded struct {
+type CommitRevertIfNeeded struct {
 	SHA                     gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RevertCommitIfNeeded) Run(args shared.RunArgs) error {
+func (self *CommitRevertIfNeeded) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
