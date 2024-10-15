@@ -54,7 +54,7 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {
-		args.program.Value.Add(&opcodes.PushCurrentBranchForce{ForceIfIncludes: false})
+		args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 	}
 }
 

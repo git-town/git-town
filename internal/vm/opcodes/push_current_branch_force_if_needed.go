@@ -4,13 +4,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// PushCurrentBranchForce force-pushes the branch with the given name to the origin remote.
-type PushCurrentBranchForce struct {
+// PushCurrentBranchForceIfNeeded force-pushes the branch with the given name to the origin remote.
+type PushCurrentBranchForceIfNeeded struct {
 	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *PushCurrentBranchForce) Run(args shared.RunArgs) error {
+func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
