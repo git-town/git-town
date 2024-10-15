@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// registers the branch with the given name as a perennial branch in the Git config
-type AddToPerennialBranches struct {
+// registers the branch with the given name as a prototype branch in the Git config
+type BranchesPrototypeAdd struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *AddToPerennialBranches) Run(args shared.RunArgs) error {
-	return args.Config.AddToPerennialBranches(self.Branch)
+func (self *BranchesPrototypeAdd) Run(args shared.RunArgs) error {
+	return args.Config.AddToPrototypeBranches(self.Branch)
 }

@@ -259,7 +259,7 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.MergeAbort{},
-			&opcodes.AddToPerennialBranches{
+			&opcodes.BranchesPerennialAdd{
 				Branch: gitdomain.NewLocalBranchName("branch"),
 			},
 		}
@@ -267,7 +267,7 @@ func TestProgram(t *testing.T) {
 		want := `
 Program:
 1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
-2: &opcodes.AddToPerennialBranches{Branch:"branch", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
+2: &opcodes.BranchesPerennialAdd{Branch:"branch", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
 `[1:]
 		must.EqOp(t, want, have)
 	})

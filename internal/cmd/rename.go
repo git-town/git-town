@@ -258,11 +258,11 @@ func renameProgram(data renameData) program.Program {
 	if !data.dryRun {
 		if data.config.Config.IsPerennialBranch(data.initialBranch) {
 			result.Value.Add(&opcodes.RemoveFromPerennialBranches{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.AddToPerennialBranches{Branch: data.newBranch})
+			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
 		} else {
 			if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.newBranch})
+				result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
 			}
 			if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.RemoveFromObservedBranches{Branch: oldLocalBranch})
