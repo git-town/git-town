@@ -165,7 +165,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigGlobalRemove{
 					Key: configdomain.KeyOffline,
 				},
-				&opcodes.RemoveLocalConfig{
+				&opcodes.ConfigLocalRemove{
 					Key: configdomain.KeyOffline,
 				},
 				&opcodes.Rename{
@@ -578,7 +578,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Key": "git-town.offline"
       },
-      "type": "RemoveLocalConfig"
+      "type": "ConfigLocalRemove"
     },
     {
       "data": {

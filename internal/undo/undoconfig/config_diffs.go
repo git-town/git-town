@@ -36,7 +36,7 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 		})
 	}
 	for _, key := range self.Local.Added {
-		result.Add(&opcodes.RemoveLocalConfig{Key: key})
+		result.Add(&opcodes.ConfigLocalRemove{Key: key})
 	}
 	for key, value := range self.Local.Removed {
 		result.Add(&opcodes.SetLocalConfig{

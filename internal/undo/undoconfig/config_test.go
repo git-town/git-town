@@ -163,7 +163,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveLocalConfig{
+			&opcodes.ConfigLocalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
 		}
@@ -321,7 +321,7 @@ func TestConfigUndo(t *testing.T) {
 				Key:   configdomain.KeyOffline,
 				Value: "0",
 			},
-			&opcodes.RemoveLocalConfig{
+			&opcodes.ConfigLocalRemove{
 				Key: configdomain.KeyPushHook,
 			},
 			&opcodes.SetLocalConfig{
