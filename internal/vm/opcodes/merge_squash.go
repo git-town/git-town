@@ -11,25 +11,25 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// SquashMerge squash merges the branch with the given name into the current branch.
-type SquashMerge struct {
+// MergeSquash squash merges the branch with the given name into the current branch.
+type MergeSquash struct {
 	Branch        gitdomain.LocalBranchName
 	CommitMessage Option[gitdomain.CommitMessage]
 	Parent        gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
-func (self *SquashMerge) AbortProgram() []shared.Opcode {
+func (self *MergeSquash) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ChangesDiscard{},
 	}
 }
 
-func (self *SquashMerge) AutomaticUndoError() error {
+func (self *MergeSquash) AutomaticUndoError() error {
 	return errors.New(messages.ShipAbortedMergeError)
 }
 
-func (self *SquashMerge) Run(args shared.RunArgs) error {
+func (self *MergeSquash) Run(args shared.RunArgs) error {
 	// TODO: extract into separate opcodes for Git resilience
 	// Possible create a SquashMergeProgram function that returns these opcodes
 	err := args.Git.SquashMerge(args.Frontend, self.Branch)
@@ -71,6 +71,6 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SquashMerge) ShouldUndoOnError() bool {
+func (self *MergeSquash) ShouldUndoOnError() bool {
 	return true
 }

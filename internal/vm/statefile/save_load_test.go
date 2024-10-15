@@ -214,7 +214,7 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.SquashMerge{
+				&opcodes.MergeSquash{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
 					Parent:        gitdomain.NewLocalBranchName("parent"),
@@ -710,7 +710,7 @@ func TestLoadSave(t *testing.T) {
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "SquashMerge"
+      "type": "MergeSquash"
     },
     {
       "data": {},

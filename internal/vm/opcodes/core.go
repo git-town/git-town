@@ -127,7 +127,7 @@ func Types() []shared.Opcode {
 		&LineageParentSetIfExists{},
 		&StageOpenChanges{},
 		&StashOpenChanges{},
-		&SquashMerge{},
+		&MergeSquash{},
 		&UndoLastCommit{},
 		&UpdateProposalBase{},
 		&UpdateProposalHead{},
