@@ -697,7 +697,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
 			// and we can't revert the commit on it since we cannot change the local perennial branch here.
-			&opcodes.ResetRemoteBranchToSHAIfNeeded{
+			&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"),
 				SetToSHA:    gitdomain.NewSHA("333333"),
 				MustHaveSHA: gitdomain.NewSHA("444444"),
@@ -1032,7 +1032,7 @@ func TestChanges(t *testing.T) {
 				SetToSHA:    gitdomain.NewSHA("222222"),
 				Hard:        true,
 			},
-			&opcodes.ResetRemoteBranchToSHAIfNeeded{
+			&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"),
 				MustHaveSHA: gitdomain.NewSHA("666666"),
 				SetToSHA:    gitdomain.NewSHA("222222"),
@@ -1220,7 +1220,7 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
-			&opcodes.ResetRemoteBranchToSHAIfNeeded{
+			&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"),
 				MustHaveSHA: gitdomain.NewSHA("444444"),
 				SetToSHA:    gitdomain.NewSHA("333333"),
