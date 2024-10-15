@@ -147,7 +147,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{
 					RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
-				&opcodes.RemoveFromContributionBranches{
+				&opcodes.BranchesContributionRemove{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcodes.RemoveFromObservedBranches{
@@ -542,7 +542,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "RemoveFromContributionBranches"
+      "type": "BranchesContributionRemove"
     },
     {
       "data": {
