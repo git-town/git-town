@@ -210,7 +210,7 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcodes.SetParentIfBranchExists{
+				&opcodes.LineageParentSetIfExists{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
@@ -703,7 +703,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "SetParentIfBranchExists"
+      "type": "LineageParentSetIfExists"
     },
     {
       "data": {},

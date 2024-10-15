@@ -5,15 +5,15 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// SetParentIfBranchExists sets the given parent branch as the parent of the given branch,
+// LineageParentSetIfExists sets the given parent branch as the parent of the given branch,
 // but only the latter exists.
-type SetParentIfBranchExists struct {
+type LineageParentSetIfExists struct {
 	Branch                  gitdomain.LocalBranchName
 	Parent                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *SetParentIfBranchExists) Run(args shared.RunArgs) error {
+func (self *LineageParentSetIfExists) Run(args shared.RunArgs) error {
 	if !args.Git.BranchExists(args.Backend, self.Branch) {
 		return nil
 	}
