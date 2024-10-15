@@ -291,7 +291,7 @@ func proposeProgram(data proposeData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	prog.Value.Add(&opcodes.CreateProposal{
+	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
 		MainBranch:    data.config.Config.MainBranch,
 		ProposalBody:  data.proposalBody,

@@ -83,7 +83,7 @@ func TestLoadSave(t *testing.T) {
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					StartingPoint: gitdomain.NewSHA("123456").Location(),
 				},
-				&opcodes.CreateProposal{
+				&opcodes.ProposalCreate{
 					Branch:     gitdomain.NewLocalBranchName("branch"),
 					MainBranch: gitdomain.NewLocalBranchName("main"),
 				},
@@ -370,7 +370,7 @@ func TestLoadSave(t *testing.T) {
         "ProposalBody": "",
         "ProposalTitle": ""
       },
-      "type": "CreateProposal"
+      "type": "ProposalCreate"
     },
     {
       "data": {

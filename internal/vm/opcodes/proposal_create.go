@@ -10,8 +10,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// CreateProposal creates a new proposal for the current branch.
-type CreateProposal struct {
+// ProposalCreate creates a new proposal for the current branch.
+type ProposalCreate struct {
 	Branch                  gitdomain.LocalBranchName
 	MainBranch              gitdomain.LocalBranchName
 	ProposalBody            gitdomain.ProposalBody
@@ -19,7 +19,7 @@ type CreateProposal struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CreateProposal) Run(args shared.RunArgs) error {
+func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	parentBranch, hasParentBranch := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	if !hasParentBranch {
 		return fmt.Errorf(messages.ProposalNoParent, self.Branch)
