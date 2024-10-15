@@ -45,7 +45,6 @@ func syncDeleteLocalBranchProgram(list Mutable[program.Program], branch gitdomai
 	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
 		Lineage: args.Config.Lineage,
-		Parent:  parent,
 		Program: list,
 	})
 	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
