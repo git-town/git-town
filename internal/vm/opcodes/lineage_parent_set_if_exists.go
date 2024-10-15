@@ -17,6 +17,6 @@ func (self *LineageParentSetIfExists) Run(args shared.RunArgs) error {
 	if !args.Git.BranchExists(args.Backend, self.Branch) {
 		return nil
 	}
-	args.PrependOpcodes(&SetParent{Branch: self.Branch, Parent: self.Parent})
+	args.PrependOpcodes(&LineageParentSet{Branch: self.Branch, Parent: self.Parent})
 	return nil
 }

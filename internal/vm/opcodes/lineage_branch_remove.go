@@ -17,7 +17,7 @@ func (self *LineageBranchRemove) Run(args shared.RunArgs) error {
 		if !hasParent {
 			args.PrependOpcodes(&LineageParentRemove{Branch: child})
 		} else {
-			args.PrependOpcodes(&SetParent{Branch: child, Parent: parent})
+			args.PrependOpcodes(&LineageParentSet{Branch: child, Parent: parent})
 		}
 	}
 	args.PrependOpcodes(&LineageParentRemove{Branch: self.Branch})

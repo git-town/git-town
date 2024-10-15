@@ -277,13 +277,13 @@ func renameProgram(data renameData) program.Program {
 				result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
 			}
 			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
-				result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
+				result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
 			}
 			result.Value.Add(&opcodes.BranchParentDelete{Branch: oldLocalBranch})
 		}
 	}
 	for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
-		result.Value.Add(&opcodes.SetParent{Branch: child, Parent: data.newBranch})
+		result.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.Config.IsOnline() {

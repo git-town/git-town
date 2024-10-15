@@ -17,7 +17,7 @@ func (self *LineageParentSetFirstExisting) Run(args shared.RunArgs) error {
 	if !hasNearestAncestor {
 		nearestAncestor = args.Config.Config.MainBranch
 	}
-	args.PrependOpcodes(&SetParent{
+	args.PrependOpcodes(&LineageParentSet{
 		Branch: self.Branch,
 		Parent: nearestAncestor,
 	})

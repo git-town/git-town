@@ -123,7 +123,7 @@ func Types() []shared.Opcode {
 		&LineageParentSetFirstExisting{},
 		&ConfigGlobalSet{},
 		&ConfigLocalSet{},
-		&SetParent{},
+		&LineageParentSet{},
 		&LineageParentSetIfExists{},
 		&SkipCurrentBranch{},
 		&StageOpenChanges{},

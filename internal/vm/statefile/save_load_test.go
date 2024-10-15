@@ -206,7 +206,7 @@ func TestLoadSave(t *testing.T) {
 					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
-				&opcodes.SetParent{
+				&opcodes.LineageParentSet{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
@@ -696,7 +696,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "SetParent"
+      "type": "LineageParentSet"
     },
     {
       "data": {
