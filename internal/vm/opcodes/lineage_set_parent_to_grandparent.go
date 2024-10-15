@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// SetParent sets the given parent branch as the parent of the given branch.
+// LineageSetParentToGrandParent sets the given parent branch as the parent of the given branch.
 // Use ChangeParent to change an existing parent.
 type LineageSetParentToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
