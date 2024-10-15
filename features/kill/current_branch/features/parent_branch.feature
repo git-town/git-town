@@ -16,7 +16,6 @@ Feature: delete a branch within a branch chain
     And an uncommitted file
     When I run "git-town kill"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                          |
