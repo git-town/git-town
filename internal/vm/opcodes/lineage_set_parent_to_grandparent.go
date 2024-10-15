@@ -7,12 +7,12 @@ import (
 
 // SetParent sets the given parent branch as the parent of the given branch.
 // Use ChangeParent to change an existing parent.
-type SetParentToGrandParent struct {
+type LineageSetParentToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *SetParentToGrandParent) Run(args shared.RunArgs) error {
+func (self *LineageSetParentToGrandParent) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Config.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil

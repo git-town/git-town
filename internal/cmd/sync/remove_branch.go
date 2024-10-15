@@ -16,7 +16,7 @@ func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 	args.Program.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: args.Branch})
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
-		args.Program.Value.Add(&opcodes.SetParentToGrandParent{Branch: child})
+		args.Program.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
 	}
 	args.Program.Value.Add(&opcodes.DeleteParentBranch{Branch: args.Branch})
 }

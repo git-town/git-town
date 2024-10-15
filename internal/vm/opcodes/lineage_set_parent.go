@@ -8,15 +8,15 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// LineageChangeParent changes the parent of the given branch to the given parent.
+// LineageSetParent changes the parent of the given branch to the given parent.
 // Use SetParent to set the parent if no parent existed before.
-type LineageChangeParent struct {
+type LineageSetParent struct {
 	Branch                  gitdomain.LocalBranchName
 	Parent                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *LineageChangeParent) Run(args shared.RunArgs) error {
+func (self *LineageSetParent) Run(args shared.RunArgs) error {
 	err := args.Config.SetParent(self.Branch, self.Parent)
 	if err != nil {
 		return err
