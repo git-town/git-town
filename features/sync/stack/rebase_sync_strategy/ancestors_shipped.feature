@@ -28,6 +28,7 @@ Feature: shipped parent branches in a stacked change
       |           | git branch -D feature-1                 |
       |           | git branch -D feature-2                 |
       |           | git checkout feature-3                  |
+      | feature-3 | git rebase feature-1 --no-update-refs   |
     And it prints:
       """
       deleted branch "feature-1"
