@@ -98,7 +98,7 @@ func Types() []shared.Opcode {
 		&PushTags{},
 		&MessageQueue{},
 		&RebaseBranch{},
-		&RebaseFeatureTrackingBranch{},
+		&RebaseTrackingBranch{},
 		&RebaseParentIfNeeded{},
 		&RemoveBranchFromLineage{},
 		&RemoveFromContributionBranches{},
