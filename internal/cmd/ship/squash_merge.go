@@ -53,7 +53,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
 	}
-	prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: sharedData.branchNameToShip})
+	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   sharedData.dryRun,

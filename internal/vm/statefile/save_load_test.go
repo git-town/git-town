@@ -95,7 +95,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchTrackingCreate{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.DeleteParentBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -396,7 +396,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
-      "type": "DeleteLocalBranch"
+      "type": "BranchLocalDelete"
     },
     {
       "data": {

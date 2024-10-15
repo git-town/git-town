@@ -73,7 +73,7 @@ func Types() []shared.Opcode {
 		&ProposalCreate{},
 		&BranchRemoteCreate{},
 		&BranchTrackingCreate{},
-		&DeleteLocalBranch{},
+		&BranchLocalDelete{},
 		&DeleteParentBranch{},
 		&DeleteTrackingBranch{},
 		&DiscardOpenChanges{},

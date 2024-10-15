@@ -276,7 +276,7 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 			}
 			prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
 		}
-		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToKill})
+		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: localBranchToKill})
 		if data.dryRun.IsFalse() {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToKill,

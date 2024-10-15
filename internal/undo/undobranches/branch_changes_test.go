@@ -79,7 +79,7 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("branch-1")},
+			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch-1")},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("main")},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -400,8 +400,8 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("main")},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -469,9 +469,9 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []gitdomain.SHA(nil),
 		})
 		wantProgram := program.Program{
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
+			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
-			&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
+			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcodes.DeleteTrackingBranch{
 				Branch: gitdomain.NewRemoteBranchName("origin/perennial-branch"),
 			},
