@@ -139,8 +139,9 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []hostingdomain.Proposal) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.UpdateProposalToParent{
-			ProposalNumber: childProposal.Number,
+			Branch: childProposal.,
 			OldTarget:      childProposal.Target,
+			ProposalNumber: childProposal.Number,
 		})
 	}
 }
