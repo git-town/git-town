@@ -50,8 +50,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) program.Program {
 	prog := NewMutable(&program.Program{})
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
-	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
-	UpdateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
+	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	prog.Value.Add(&opcodes.ConnectorMergeProposal{
 		Branch:          branchToShipLocal,
@@ -69,7 +68,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: branchToShipLocal})
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
+		prog.Value.Add(&opcodes.ChangeParentToGrandParent{Branch: child})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

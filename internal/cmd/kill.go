@@ -117,7 +117,6 @@ type killData struct {
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
-	parentBranch             gitdomain.LocalBranchName
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []hostingdomain.Proposal
 	stashSize                gitdomain.StashSize
@@ -193,13 +192,6 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		mainBranch:       validatedConfig.Config.MainBranch,
 		previousBranch:   previousBranchOpt,
 	})
-	localBranchToKill, hasLocalBranchToKill := branchToKill.LocalName.Get()
-	var parentBranch Option[gitdomain.LocalBranchName]
-	if hasLocalBranchToKill {
-		parentBranch = validatedConfig.Config.Lineage.Parent(localBranchToKill)
-	} else {
-		parentBranch = None[gitdomain.LocalBranchName]()
-	}
 	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -211,7 +203,6 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		OldBranch:                  branchNameToKill,
 		OldBranchHasTrackingBranch: branchToKill.HasTrackingBranch(),
 	})
-	mainBranch := validatedConfig.Config.MainBranch
 	return killData{
 		branchToKillInfo:         *branchToKill,
 		branchToKillType:         branchTypeToKill,
@@ -223,7 +214,6 @@ func determineKillData(args []string, repo execute.OpenRepoResult, dryRun config
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
-		parentBranch:             parentBranch.GetOrElse(mainBranch),
 		previousBranch:           previousBranchOpt,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
@@ -262,7 +252,7 @@ func killProgram(data killData) (runProgram, finalUndoProgram program.Program) {
 func killFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data killData) {
 	trackingBranchToKill, hasTrackingBranchToKill := data.branchToKillInfo.RemoteName.Get()
 	if data.branchToKillInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToKill && data.config.Config.IsOnline() {
-		ship.UpdateChildBranchProposals(prog.Value, data.proposalsOfChildBranches, data.parentBranch)
+		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToKill})
 	}
 	killLocalBranch(prog, finalUndoProgram, data)
@@ -291,7 +281,6 @@ func killLocalBranch(prog, finalUndoProgram Mutable[program.Program], data killD
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToKill,
 				Lineage: data.config.Config.Lineage,
-				Parent:  data.parentBranch,
 				Program: prog,
 			})
 		}

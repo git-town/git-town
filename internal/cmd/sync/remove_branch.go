@@ -16,7 +16,7 @@ func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 	args.Program.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: args.Branch})
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
-		args.Program.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: args.Parent})
+		args.Program.Value.Add(&opcodes.SetParentToGrandParent{Branch: child})
 	}
 	args.Program.Value.Add(&opcodes.DeleteParentBranch{Branch: args.Branch})
 }
@@ -24,6 +24,5 @@ func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 type RemoveBranchConfigurationArgs struct {
 	Branch  gitdomain.LocalBranchName
 	Lineage configdomain.Lineage
-	Parent  gitdomain.LocalBranchName
 	Program Mutable[program.Program]
 }

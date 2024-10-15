@@ -31,7 +31,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
-		UpdateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
+		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.SquashMerge{Branch: sharedData.branchNameToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
@@ -48,7 +48,7 @@ func shipProgramSquashMerge(sharedData sharedShipData, squashMergeData shipDataM
 		}
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
+		prog.Value.Add(&opcodes.ChangeParentToGrandParent{Branch: child})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})

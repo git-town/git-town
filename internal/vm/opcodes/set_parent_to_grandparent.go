@@ -1,0 +1,25 @@
+package opcodes
+
+import (
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/vm/shared"
+)
+
+// SetParent sets the given parent branch as the parent of the given branch.
+// Use ChangeParent to change an existing parent.
+type SetParentToGrandParent struct {
+	Branch                  gitdomain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
+}
+
+func (self *SetParentToGrandParent) Run(args shared.RunArgs) error {
+	parent, hasParent := args.Config.Config.Lineage.Parent(self.Branch).Get()
+	if !hasParent {
+		return nil
+	}
+	grandParent, hasGrandParent := args.Config.Config.Lineage.Parent(parent).Get()
+	if !hasGrandParent {
+		return nil
+	}
+	return args.Config.SetParent(self.Branch, grandParent)
+}
