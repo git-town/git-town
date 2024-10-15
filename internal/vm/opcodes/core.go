@@ -74,7 +74,7 @@ func Types() []shared.Opcode {
 		&BranchRemoteCreate{},
 		&BranchTrackingCreate{},
 		&BranchLocalDelete{},
-		&DeleteParentBranch{},
+		&BranchParentDelete{},
 		&DeleteTrackingBranch{},
 		&DiscardOpenChanges{},
 		&DropStash{},

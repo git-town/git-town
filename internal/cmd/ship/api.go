@@ -65,7 +65,7 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branchToShipLocal})
 	}
 	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: branchToShipLocal})
+		prog.Value.Add(&opcodes.BranchParentDelete{Branch: branchToShipLocal})
 	}
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})

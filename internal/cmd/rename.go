@@ -279,7 +279,7 @@ func renameProgram(data renameData) program.Program {
 			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 				result.Value.Add(&opcodes.SetParent{Branch: data.newBranch, Parent: parentBranch})
 			}
-			result.Value.Add(&opcodes.DeleteParentBranch{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchParentDelete{Branch: oldLocalBranch})
 		}
 	}
 	for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
