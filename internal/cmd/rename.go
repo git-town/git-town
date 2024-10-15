@@ -311,7 +311,7 @@ func renameProgram(data renameData) program.Program {
 
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
-		prog.Add(&opcodes.UpdateProposalBase{
+		prog.Add(&opcodes.ProposalUpdateBase{
 			NewTarget:      target,
 			OldTarget:      childProposal.Target,
 			ProposalNumber: childProposal.Number,

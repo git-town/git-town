@@ -131,7 +131,7 @@ func Types() []shared.Opcode {
 		&SnapshotInitialUpdateLocalSHAIfNeeded{},
 		&MergeSquash{},
 		&UndoLastCommit{},
-		&UpdateProposalBase{},
+		&ProposalUpdateBase{},
 		&UpdateProposalHead{},
 	} //exhaustruct:ignore
 }

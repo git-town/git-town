@@ -20,7 +20,7 @@ func (self *UpdateProposalToParent) Run(args shared.RunArgs) error {
 	if !hasParent {
 		return fmt.Errorf("branch %q has no parent", self.Branch)
 	}
-	args.PrependOpcodes(&UpdateProposalBase{
+	args.PrependOpcodes(&ProposalUpdateBase{
 		NewTarget:      parent,
 		OldTarget:      self.OldTarget,
 		ProposalNumber: self.ProposalNumber,

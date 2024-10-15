@@ -223,7 +223,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashOpenChanges{},
-				&opcodes.UpdateProposalBase{
+				&opcodes.ProposalUpdateBase{
 					ProposalNumber: 123,
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
@@ -741,7 +741,7 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "ProposalNumber": 123
       },
-      "type": "UpdateProposalBase"
+      "type": "ProposalUpdateBase"
     },
     {
       "data": {
