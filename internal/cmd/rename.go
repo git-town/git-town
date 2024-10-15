@@ -251,7 +251,7 @@ func renameProgram(data renameData) program.Program {
 	if !hasOldLocalBranch {
 		return result.Get()
 	}
-	result.Value.Add(&opcodes.BranchRename{OldName: oldLocalBranch, NewName: data.newBranch})
+	result.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}

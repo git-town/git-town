@@ -174,7 +174,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigLocalRemove{
 					Key: configdomain.KeyOffline,
 				},
-				&opcodes.BranchRename{
+				&opcodes.BranchLocalRename{
 					NewName: "new",
 					OldName: "old",
 				},
@@ -630,7 +630,7 @@ func TestLoadSave(t *testing.T) {
         "NewName": "new",
         "OldName": "old"
       },
-      "type": "BranchRename"
+      "type": "BranchLocalRename"
     },
     {
       "data": {
