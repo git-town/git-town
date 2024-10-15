@@ -224,7 +224,7 @@ func appendProgram(data appendFeatureData) program.Program {
 			PushBranches:  true,
 		})
 	}
-	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
+	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})

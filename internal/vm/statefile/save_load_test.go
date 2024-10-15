@@ -46,9 +46,10 @@ func TestLoadSave(t *testing.T) {
 			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
+				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
-				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -245,6 +246,17 @@ func TestLoadSave(t *testing.T) {
   "EndStashSize": 1,
   "FinalUndoProgram": [],
   "RunProgram": [
+    {
+      "data": {
+        "Ancestors": [
+          "one",
+          "two",
+          "three"
+        ],
+        "Branch": "branch"
+      },
+      "type": "BranchCreateAndCheckoutExistingParent"
+    },
     {
       "data": {},
       "type": "MergeAbort"

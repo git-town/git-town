@@ -5,14 +5,14 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// CreateAndCheckoutBranchExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
-type CreateAndCheckoutBranchExistingParent struct {
+// BranchCreateAndCheckoutExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
+type BranchCreateAndCheckoutExistingParent struct {
 	Ancestors               gitdomain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CreateAndCheckoutBranchExistingParent) Run(args shared.RunArgs) error {
+func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err

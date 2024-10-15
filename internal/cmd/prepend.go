@@ -240,7 +240,7 @@ func prependProgram(data prependData) program.Program {
 			Remotes:       data.remotes,
 		})
 	}
-	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
+	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newParentCandidates,
 		Branch:    data.targetBranch,
 	})
