@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ResetCurrentBranch resets all commits in the current branch.
-type ResetCurrentBranch struct {
+// BranchCurrentReset resets all commits in the current branch.
+type BranchCurrentReset struct {
 	Base                    gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ResetCurrentBranch) Run(args shared.RunArgs) error {
+func (self *BranchCurrentReset) Run(args shared.RunArgs) error {
 	return args.Git.ResetBranch(args.Frontend, self.Base)
 }

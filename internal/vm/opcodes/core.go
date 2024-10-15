@@ -111,7 +111,7 @@ func Types() []shared.Opcode {
 		&LineageParentRemove{},
 		&Rename{},
 		&BranchReset{},
-		&ResetCurrentBranch{},
+		&BranchCurrentReset{},
 		&BranchCurrentResetToParent{},
 		&BranchCurrentResetToSHA{},
 		&BranchCurrentResetToSHAIfNeeded{},
