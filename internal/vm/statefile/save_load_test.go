@@ -87,13 +87,13 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
+				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
@@ -421,6 +421,10 @@ func TestLoadSave(t *testing.T) {
       "type": "ProposalCreate"
     },
     {
+      "data": {},
+      "type": "PullCurrentBranch"
+    },
+    {
       "data": {
         "ForceIfIncludes": true
       },
@@ -445,10 +449,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {},
-      "type": "PullCurrentBranch"
     },
     {
       "data": {
