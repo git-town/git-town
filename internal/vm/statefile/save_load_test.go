@@ -52,7 +52,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
-				&opcodes.RebaseAbort{},
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -90,6 +89,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
+				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.BranchCreate{
@@ -312,10 +312,6 @@ func TestLoadSave(t *testing.T) {
       "type": "BranchReset"
     },
     {
-      "data": {},
-      "type": "RebaseAbort"
-    },
-    {
       "data": {
         "Branch": "branch"
       },
@@ -435,6 +431,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "MergeContinue"
+    },
+    {
+      "data": {},
+      "type": "RebaseAbort"
     },
     {
       "data": {},
