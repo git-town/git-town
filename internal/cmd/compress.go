@@ -114,16 +114,15 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 }
 
 type compressBranchesData struct {
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToCompress  []compressBranchData
-	compressEntireStack configdomain.FullStack // TODO: delete this
-	config              config.ValidatedConfig
-	dialogTestInputs    components.TestInputs
-	dryRun              configdomain.DryRun
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	previousBranch      Option[gitdomain.LocalBranchName]
-	stashSize           gitdomain.StashSize
+	branchesSnapshot   gitdomain.BranchesSnapshot
+	branchesToCompress []compressBranchData
+	config             config.ValidatedConfig
+	dialogTestInputs   components.TestInputs
+	dryRun             configdomain.DryRun
+	hasOpenChanges     bool
+	initialBranch      gitdomain.LocalBranchName
+	previousBranch     Option[gitdomain.LocalBranchName]
+	stashSize          gitdomain.StashSize
 }
 
 type compressBranchData struct {
@@ -244,16 +243,15 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		return data, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
 	}
 	return compressBranchesData{
-		branchesSnapshot:    branchesSnapshot,
-		branchesToCompress:  branchesToCompress,
-		compressEntireStack: compressEntireStack,
-		config:              validatedConfig,
-		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		previousBranch:      previousBranch,
-		stashSize:           stashSize,
+		branchesSnapshot:   branchesSnapshot,
+		branchesToCompress: branchesToCompress,
+		config:             validatedConfig,
+		dialogTestInputs:   dialogTestInputs,
+		dryRun:             dryRun,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		previousBranch:     previousBranch,
+		stashSize:          stashSize,
 	}, false, nil
 }
 
