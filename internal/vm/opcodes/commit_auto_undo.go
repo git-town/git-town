@@ -9,10 +9,7 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// Commit commits all open changes as a new commit.
-// If no commit message is given, uses FallbackToDefaultCommitMessage to use the default commit message.
-//
-// If you have a commit message, consider using CommitWithMessage.
+// CommitAutoUndo is a Commit that automatically aborts the Git Town command on failure.
 type CommitAutoUndo struct {
 	AuthorOverride                 Option[gitdomain.Author]
 	FallbackToDefaultCommitMessage bool
