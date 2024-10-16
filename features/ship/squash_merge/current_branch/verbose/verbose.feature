@@ -27,11 +27,11 @@ Feature: display all executed Git commands
       |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git remote get-url origin                         |
+      |         | backend  | git shortlog -s -n -e main..feature               |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash --ff feature                   |
-      |         | backend  | git shortlog -s -n -e main..feature               |
-      | main    | frontend | git commit -m done                                |
+      |         | frontend | git commit -m done                                |
       |         | backend  | git rev-parse --short main                        |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
