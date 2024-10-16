@@ -14,13 +14,13 @@ type RebaseBranch struct {
 
 func (self *RebaseBranch) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&AbortRebase{},
+		&RebaseAbort{},
 	}
 }
 
 func (self *RebaseBranch) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&ContinueRebaseIfNeeded{},
+		&RebaseContinueIfNeeded{},
 	}
 }
 

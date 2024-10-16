@@ -10,7 +10,7 @@ import (
 
 func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataMerge) program.Program {
 	prog := NewMutable(&program.Program{})
-	prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
+	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
@@ -22,22 +22,22 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: sharedData.branchNameToShip})
+		prog.Value.Add(&opcodes.BranchParentDelete{Branch: sharedData.branchNameToShip})
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.Config.IsOnline() {
 			if sharedData.config.Config.ShipDeleteTrackingBranch {
-				prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: branchToShipRemoteName})
+				prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
 			}
 		}
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
+		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
 	}
-	prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: sharedData.branchNameToShip})
+	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   sharedData.dryRun,

@@ -279,7 +279,7 @@ func proposeProgram(data proposeData) program.Program {
 		PushBranches:  true,
 	})
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.RemoveFromPrototypeBranches{Branch: data.branchToPropose})
+		prog.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: data.branchToPropose})
 	}
 	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
 		CurrentBranch: data.branchToPropose,
@@ -291,7 +291,7 @@ func proposeProgram(data proposeData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	prog.Value.Add(&opcodes.CreateProposal{
+	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
 		MainBranch:    data.config.Config.MainBranch,
 		ProposalBody:  data.proposalBody,

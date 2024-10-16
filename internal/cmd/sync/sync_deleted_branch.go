@@ -36,7 +36,7 @@ func syncDeletedFeatureBranchProgram(list Mutable[program.Program], branch gitdo
 		program:      list,
 		syncStrategy: args.Config.SyncFeatureStrategy,
 	})
-	list.Value.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch})
+	list.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: branch})
 }
 
 // deletes the given local branch as part of syncing it
@@ -48,6 +48,6 @@ func syncDeleteLocalBranchProgram(list Mutable[program.Program], branch gitdomai
 		Program: list,
 	})
 	list.Value.Add(&opcodes.CheckoutIfNeeded{Branch: parent})
-	list.Value.Add(&opcodes.DeleteLocalBranch{Branch: branch})
-	list.Value.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
+	list.Value.Add(&opcodes.BranchLocalDelete{Branch: branch})
+	list.Value.Add(&opcodes.MessageQueue{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }

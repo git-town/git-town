@@ -52,23 +52,23 @@ func shipAPIProgram(sharedData sharedShipData, apiData shipDataAPI, commitMessag
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
-	prog.Value.Add(&opcodes.ConnectorMergeProposal{
+	prog.Value.Add(&opcodes.ConnectorProposalMerge{
 		Branch:          branchToShipLocal,
 		ProposalNumber:  apiData.proposal.Number,
 		CommitMessage:   commitMessage,
 		ProposalMessage: apiData.proposalMessage,
 	})
 	if sharedData.config.Config.ShipDeleteTrackingBranch {
-		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: apiData.branchToShipRemoteName})
+		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: apiData.branchToShipRemoteName})
 	}
 	if hasLocalBranchToShip {
-		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: branchToShipLocal})
+		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branchToShipLocal})
 	}
 	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.DeleteParentBranch{Branch: branchToShipLocal})
+		prog.Value.Add(&opcodes.BranchParentDelete{Branch: branchToShipLocal})
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
+		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
