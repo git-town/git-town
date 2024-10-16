@@ -49,10 +49,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
+				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
-				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -292,6 +292,12 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchDeleteIfEmptyAtRuntime"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "SetToSHA": "222222"
       },
@@ -310,12 +316,6 @@ func TestLoadSave(t *testing.T) {
         "Target": "branch"
       },
       "type": "BranchReset"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchDeleteIfEmptyAtRuntime"
     },
     {
       "data": {
