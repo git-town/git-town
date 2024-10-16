@@ -69,6 +69,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ChangesDiscard{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
@@ -106,7 +107,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
 				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
 				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
@@ -302,6 +302,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchesPrototypeAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPrototypeRemove"
     },
     {
       "data": {},
@@ -520,12 +526,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPrototypeRemove"
     },
     {
       "data": {
