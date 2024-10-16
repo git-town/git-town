@@ -67,6 +67,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesParkedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPerennialRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ChangesDiscard{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -105,7 +106,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.BranchesPerennialRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
 				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
@@ -290,6 +290,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchesPerennialAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPerennialRemove"
     },
     {
       "data": {
@@ -514,12 +520,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPerennialRemove"
     },
     {
       "data": {
