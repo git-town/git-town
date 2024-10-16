@@ -75,10 +75,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
+				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
 				&opcodes.BranchRemoteCreate{Branch: gitdomain.NewLocalBranchName("branch"), SHA: gitdomain.NewSHA("123456")},
 				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -346,6 +346,15 @@ func TestLoadSave(t *testing.T) {
       "type": "MergeParent"
     },
     {
+      "data": {
+        "Branch": "branch",
+        "MainBranch": "main",
+        "ProposalBody": "",
+        "ProposalTitle": ""
+      },
+      "type": "ProposalCreate"
+    },
+    {
       "data": {},
       "type": "RebaseAbort"
     },
@@ -356,15 +365,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "MainBranch": "main",
-        "ProposalBody": "",
-        "ProposalTitle": ""
-      },
-      "type": "ProposalCreate"
     },
     {
       "data": {
