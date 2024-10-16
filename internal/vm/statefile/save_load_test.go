@@ -67,6 +67,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ChangesDiscard{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
@@ -92,7 +93,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
@@ -291,6 +291,14 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "PreviousBranchCandidates": [
+          "previous"
+        ]
+      },
+      "type": "CheckoutHistoryPreserve"
+    },
+    {
+      "data": {
         "Branch": "branch"
       },
       "type": "CheckoutIfNeeded"
@@ -437,14 +445,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "PreviousBranchCandidates": [
-          "previous"
-        ]
-      },
-      "type": "CheckoutHistoryPreserve"
     },
     {
       "data": {},
