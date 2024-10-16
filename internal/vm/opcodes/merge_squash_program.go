@@ -20,16 +20,6 @@ type MergeSquashProgram struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *MergeSquashProgram) AbortProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&ChangesDiscard{},
-	}
-}
-
-func (self *MergeSquashProgram) AutomaticUndoError() error {
-	return errors.New(messages.ShipAbortedMergeError)
-}
-
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	// TODO: extract into separate opcodes for Git resilience
 	// Possible create a SquashMergeProgram function that returns these opcodes
@@ -67,8 +57,4 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	)
 	args.PrependOpcodes(program...)
 	return nil
-}
-
-func (self *MergeSquashProgram) ShouldUndoOnError() bool {
-	return true
 }
