@@ -65,7 +65,7 @@ func syncDeleteLocalBranchProgram(list Mutable[program.Program], branch gitdomai
 		Lineage: args.Config.Lineage,
 		Program: list,
 	})
-	list.Value.Add(&opcodes.CheckoutParent{CurrentBranch: branch})
+	list.Value.Add(&opcodes.CheckoutParentOrMain{CurrentBranch: branch})
 	list.Value.Add(&opcodes.BranchLocalDelete{Branch: branch})
 	list.Value.Add(&opcodes.MessageQueue{Message: fmt.Sprintf(messages.BranchDeleted, branch)})
 }
