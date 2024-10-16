@@ -7,10 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// Commit commits all open changes as a new commit.
-// If no commit message is given, uses FallbackToDefaultCommitMessage to use the default commit message.
-//
-// If you have a commit message, consider using CommitWithMessage.
+// comments out the currently active commit message
 type CommitMessageCommentOut struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
