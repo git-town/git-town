@@ -21,8 +21,6 @@ type MergeSquashProgram struct {
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
-	// TODO: extract into separate opcodes for Git resilience
-	// Possible create a SquashMergeProgram function that returns these opcodes
 	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
