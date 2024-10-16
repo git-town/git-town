@@ -77,6 +77,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: gitdomain.CommitMessage("my message")},
+				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
+				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
 				&opcodes.ConnectorProposalMerge{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -107,8 +109,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
-				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
 				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
 				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
@@ -356,6 +356,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "ConfigGlobalRemove"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "ConfigLocalRemove"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "ProposalMessage": "proposal message",
@@ -526,18 +538,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline"
-      },
-      "type": "ConfigGlobalRemove"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline"
-      },
-      "type": "ConfigLocalRemove"
     },
     {
       "data": {
