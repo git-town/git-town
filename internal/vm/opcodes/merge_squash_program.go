@@ -47,16 +47,15 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	} else {
 		authorOpt = Some(author)
 	}
-	err = args.Git.SquashMerge(args.Frontend, self.Branch)
-	if err != nil {
-		return err
+	program := []shared.Opcode{
+		&MergeSquashAutoUndo{
+			Branch: self.Branch,
+		},
 	}
 	if !args.Config.DryRun {
-		if err = args.Git.CommentOutSquashCommitMessage(""); err != nil {
-			return fmt.Errorf(messages.SquashMessageProblem, err)
-		}
+		program = append(program, &CommitMessageCommentOut{})
 	}
-	args.PrependOpcodes(
+	program = append(program,
 		&CommitAutoUndo{
 			AuthorOverride:                 authorOpt,
 			FallbackToDefaultCommitMessage: false,
@@ -64,7 +63,9 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 		},
 		&RegisterUndoablePerennialCommit{
 			Parent: self.Parent.BranchName(),
-		})
+		},
+	)
+	args.PrependOpcodes(program...)
 	return nil
 }
 
