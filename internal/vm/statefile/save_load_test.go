@@ -71,6 +71,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetFirstExisting{Ancestors: gitdomain.NewLocalBranchNames("one", "two"), Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.LineageParentSetIfExists{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
+				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
 				&opcodes.RebaseAbort{},
@@ -89,7 +90,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchEnsureShippableChanges{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
-				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
 				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
@@ -326,6 +326,12 @@ func TestLoadSave(t *testing.T) {
       "type": "LineageParentSetToGrandParent"
     },
     {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "Merge"
+    },
+    {
       "data": {},
       "type": "MergeAbort"
     },
@@ -419,12 +425,6 @@ func TestLoadSave(t *testing.T) {
         "ForceIfIncludes": true
       },
       "type": "PushCurrentBranchForceIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "Merge"
     },
     {
       "data": {
