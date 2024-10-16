@@ -36,8 +36,8 @@ contribution branch and always
 [rebases](preferences/sync-feature-strategy.md#rebase) your local commits.
 Syncing removes contribution branches from your machine as soon as their
 tracking branch is gone, even if you have unpushed local commits.
-[Killing](commands/kill.md) a contribution branch only deletes your local copy
-and not the tracking branch.
+[Deleting](commands/delete.md) a contribution branch only deletes your local
+copy and not the tracking branch.
 
 You can make any feature branch a contribution branch by running
 [git town contribute](commands/contribute.md) on it. Convert a contribution
@@ -51,7 +51,7 @@ configuration or the config file.
 Observed branches are for people who want to observe the work of somebody else
 without contributing commits to it. Similar to contribution branches, you cannot
 [propose](commands/propose.md) or [ship](commands/ship.md) observed branches,
-[kill](commands/kill.md) only deletes your local copy and not the tracking
+[delete](commands/delete.md) only deletes your local copy and not the tracking
 branch, `git town sync` always uses the
 [rebase](preferences/sync-feature-strategy.md#rebase) sync-feature-strategy and
 will remove a local observed branch as soon as its tracking branch is gone, even

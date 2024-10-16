@@ -32,7 +32,7 @@ Merges the given or current feature branch into its parent.
 How exactly this happen depends on the configured ship-strategy.
 
 Ships only direct children of the main branch.
-To ship a child branch, ship or kill all ancestor branches first
+To ship a child branch, ship or delete all ancestor branches first
 or ship with the "--to-parent" flag.
 
 To use the online functionality, configure a personal access token with the "repo" scope
@@ -136,12 +136,12 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	})
 }
 
-func UpdateChildBranchProposals(prog *program.Program, proposals []hostingdomain.Proposal, targetBranch gitdomain.LocalBranchName) {
+func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []hostingdomain.Proposal) {
 	for _, childProposal := range proposals {
-		prog.Add(&opcodes.UpdateProposalBase{
-			ProposalNumber: childProposal.Number,
-			NewTarget:      targetBranch,
+		prog.Add(&opcodes.UpdateProposalToParent{
+			Branch:         childProposal.Source,
 			OldTarget:      childProposal.Target,
+			ProposalNumber: childProposal.Number,
 		})
 	}
 }

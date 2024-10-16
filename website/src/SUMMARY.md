@@ -30,7 +30,7 @@
   - [Additional commands](additional-commands.md)
     - [branch](commands/branch.md)
     - [compress](commands/compress.md)
-    - [kill](commands/kill.md)
+    - [delete](commands/delete.md)
     - [rename](commands/rename.md)
     - [repo](commands/repo.md)
     - [ship](commands/ship.md)

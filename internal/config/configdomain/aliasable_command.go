@@ -16,7 +16,7 @@ const (
 	AliasableCommandContribute = AliasableCommand("contribute")
 	AliasableCommandDiffParent = AliasableCommand("diff-parent")
 	AliasableCommandHack       = AliasableCommand("hack")
-	AliasableCommandKill       = AliasableCommand("kill")
+	AliasableCommandDelete     = AliasableCommand("delete")
 	AliasableCommandObserve    = AliasableCommand("observe")
 	AliasableCommandPark       = AliasableCommand("park")
 	AliasableCommandPrepend    = AliasableCommand("prepend")
