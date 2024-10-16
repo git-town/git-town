@@ -55,6 +55,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
+				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
 				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -80,7 +81,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchParentDelete{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchTrackingDelete{Branch: gitdomain.NewRemoteBranchName("origin/branch")},
@@ -217,6 +217,12 @@ func TestLoadSave(t *testing.T) {
         "Target": "branch"
       },
       "type": "BranchReset"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchTrackingCreate"
     },
     {
       "data": {
@@ -372,12 +378,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchTrackingCreate"
     },
     {
       "data": {
