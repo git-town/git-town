@@ -8,12 +8,12 @@ import (
 // CheckoutParentOrMain checks out the parent branch of the current branch,
 // or the main branch if the current branch has no parent.
 type CheckoutParentOrMain struct {
-	CurrentBranch           gitdomain.LocalBranchName
+	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CheckoutParentOrMain) Run(args shared.RunArgs) error {
-	parent := args.Config.Config.Lineage.Parent(self.CurrentBranch).GetOrElse(args.Config.Config.MainBranch)
+	parent := args.Config.Config.Lineage.Parent(self.Branch).GetOrElse(args.Config.Config.MainBranch)
 	args.PrependOpcodes(&CheckoutIfNeeded{Branch: parent})
 	return nil
 }
