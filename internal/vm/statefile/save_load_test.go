@@ -72,6 +72,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: gitdomain.CommitMessage("my message")},
 				&opcodes.ConnectorProposalMerge{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
+				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
 				&opcodes.LineageParentSet{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
@@ -89,7 +90,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
@@ -329,6 +329,12 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch"
       },
+      "type": "FetchUpstream"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
       "type": "LineageBranchRemove"
     },
     {
@@ -419,12 +425,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "FetchUpstream"
     },
     {
       "data": {
