@@ -33,16 +33,16 @@ func (self *MergeSquash) AutomaticUndoError() error {
 func (self *MergeSquash) Run(args shared.RunArgs) error {
 	// TODO: extract into separate opcodes for Git resilience
 	// Possible create a SquashMergeProgram function that returns these opcodes
-	err := args.Git.SquashMerge(args.Frontend, self.Branch)
-	if err != nil {
-		return err
-	}
 	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
 	if aborted {
 		return errors.New("aborted by user")
+	}
+	err = args.Git.SquashMerge(args.Frontend, self.Branch)
+	if err != nil {
+		return err
 	}
 	repoAuthor := args.Config.Author()
 	if !args.Config.DryRun {
