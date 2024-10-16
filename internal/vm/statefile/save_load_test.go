@@ -98,9 +98,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
+				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.BranchesContributionRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesObservedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -477,18 +477,18 @@ func TestLoadSave(t *testing.T) {
       "type": "RebaseContinueIfNeeded"
     },
     {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "RebaseParentIfNeeded"
+    },
+    {
       "data": {},
       "type": "StashDrop"
     },
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RebaseParentIfNeeded"
     },
     {
       "data": {
