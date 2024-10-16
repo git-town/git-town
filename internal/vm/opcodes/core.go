@@ -128,6 +128,7 @@ func Types() []shared.Opcode {
 		&PushCurrentBranchIfLocal{},
 		&PushCurrentBranchIfNeeded{},
 		&PushTags{},
+		&RegisterUndoablePerennialCommit{},
 		&SnapshotInitialUpdateLocalSHA{},
 		&SnapshotInitialUpdateLocalSHAIfNeeded{},
 		&StashDrop{},

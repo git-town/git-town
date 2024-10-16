@@ -121,6 +121,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
+				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashDrop{},
@@ -632,6 +633,12 @@ func TestLoadSave(t *testing.T) {
         "RemoteBranch": "origin/branch"
       },
       "type": "RebaseTrackingBranch"
+    },
+    {
+      "data": {
+        "Parent": "parent"
+      },
+      "type": "RegisterUndoablePerennialCommit"
     },
     {
       "data": {
