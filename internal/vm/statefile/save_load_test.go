@@ -90,12 +90,12 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushTags{},
 				&opcodes.MessageQueue{Message: "message"},
@@ -437,6 +437,12 @@ func TestLoadSave(t *testing.T) {
       "type": "PushCurrentBranchForceIfNeeded"
     },
     {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "PushCurrentBranchIfLocal"
+    },
+    {
       "data": {},
       "type": "RebaseAbort"
     },
@@ -455,12 +461,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "CurrentBranch": "branch"
-      },
-      "type": "PushCurrentBranchIfLocal"
     },
     {
       "data": {
