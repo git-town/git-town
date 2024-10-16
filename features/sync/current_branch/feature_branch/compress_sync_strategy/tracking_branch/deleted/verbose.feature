@@ -14,7 +14,6 @@ Feature: display all executed Git commands for the "compress" sync strategy
     And Git Town setting "sync-feature-strategy" is "compress"
     When I run "git-town sync --verbose"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | TYPE     | COMMAND                                            |
