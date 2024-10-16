@@ -85,6 +85,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
 				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
+				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.ConnectorProposalMerge{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -116,7 +117,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.ChangesStage{},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
@@ -409,6 +409,13 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "ConfigLocalSet"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "ProposalMessage": "proposal message",
@@ -583,13 +590,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPopIfNeeded"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline",
-        "Value": "1"
-      },
-      "type": "ConfigLocalSet"
     },
     {
       "data": {
