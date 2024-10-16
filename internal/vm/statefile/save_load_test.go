@@ -511,7 +511,7 @@ func TestLoadSave(t *testing.T) {
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "MergeSquash"
+      "type": "MergeSquashProgram"
     },
     {
       "data": {
