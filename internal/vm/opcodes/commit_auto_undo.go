@@ -18,10 +18,9 @@ type CommitAutoUndo struct {
 }
 
 func (self *CommitAutoUndo) AbortProgram() []shared.Opcode {
-	result := []shared.Opcode{
+	return []shared.Opcode{
 		&ChangesDiscard{},
 	}
-	return result
 }
 
 func (self *CommitAutoUndo) AutomaticUndoError() error {
