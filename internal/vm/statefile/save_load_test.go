@@ -116,11 +116,11 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
+				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
+				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
-				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashOpenChanges{},
 				&opcodes.ProposalUpdateBase{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 				&opcodes.ProposalUpdateBaseToParent{Branch: "branch", ProposalNumber: 123, OldTarget: gitdomain.NewLocalBranchName("old-target")},
@@ -592,18 +592,6 @@ func TestLoadSave(t *testing.T) {
       "type": "RebaseTrackingBranch"
     },
     {
-      "data": {},
-      "type": "StashDrop"
-    },
-    {
-      "data": {},
-      "type": "StashPop"
-    },
-    {
-      "data": {},
-      "type": "StashPopIfNeeded"
-    },
-    {
       "data": {
         "Branch": "branch",
         "SHA": "111111"
@@ -615,6 +603,18 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "SnapshotInitialUpdateLocalSHAIfNeeded"
+    },
+    {
+      "data": {},
+      "type": "StashDrop"
+    },
+    {
+      "data": {},
+      "type": "StashPop"
+    },
+    {
+      "data": {},
+      "type": "StashPopIfNeeded"
     },
     {
       "data": {},
