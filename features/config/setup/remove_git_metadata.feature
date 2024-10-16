@@ -11,7 +11,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.diff-parent" is "town diff-parent"
     And global Git setting "alias.hack" is "town hack"
-    And global Git setting "alias.kill" is "town kill"
+    And global Git setting "alias.delete" is "town delete"
     And global Git setting "alias.prepend" is "town prepend"
     And global Git setting "alias.propose" is "town propose"
     And global Git setting "alias.rename" is "town rename"
@@ -63,7 +63,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.append            |
       | git config --global --unset alias.diff-parent       |
       | git config --global --unset alias.hack              |
-      | git config --global --unset alias.kill              |
+      | git config --global --unset alias.delete            |
       | git config --global --unset alias.prepend           |
       | git config --global --unset alias.propose           |
       | git config --global --unset alias.rename            |
@@ -76,7 +76,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
-    And global Git setting "alias.kill" now doesn't exist
+    And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
@@ -109,7 +109,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
-    And global Git setting "alias.kill" is now "town kill"
+    And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename" is now "town rename"

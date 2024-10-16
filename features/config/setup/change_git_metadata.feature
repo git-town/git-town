@@ -42,7 +42,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.contribute "town contribute"   |
       | git config --global alias.diff-parent "town diff-parent" |
       | git config --global alias.hack "town hack"               |
-      | git config --global alias.kill "town kill"               |
+      | git config --global alias.delete "town delete"           |
       | git config --global alias.observe "town observe"         |
       | git config --global alias.park "town park"               |
       | git config --global alias.prepend "town prepend"         |
@@ -58,7 +58,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
-    And global Git setting "alias.kill" is now "town kill"
+    And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename" is now "town rename"
@@ -89,7 +89,7 @@ Feature: change existing information in Git metadata
     Then global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
-    And global Git setting "alias.kill" now doesn't exist
+    And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
