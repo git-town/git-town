@@ -48,11 +48,10 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
+				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
-				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
-				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
@@ -89,6 +88,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
+				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
@@ -286,6 +286,12 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "BranchCurrentResetToParent"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "SetToSHA": "222222"
       },
@@ -304,16 +310,6 @@ func TestLoadSave(t *testing.T) {
         "Target": "branch"
       },
       "type": "BranchReset"
-    },
-    {
-      "data": {
-        "CurrentBranch": "branch"
-      },
-      "type": "BranchCurrentResetToParent"
-    },
-    {
-      "data": {},
-      "type": "MergeAbort"
     },
     {
       "data": {},
@@ -431,6 +427,10 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "LineageParentSetToGrandParent"
+    },
+    {
+      "data": {},
+      "type": "MergeAbort"
     },
     {
       "data": {},
