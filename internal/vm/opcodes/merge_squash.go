@@ -56,11 +56,15 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 	}
-	err = args.Git.Commit(args.Frontend, self.CommitMessage, false, authorOpt)
-	if err != nil {
-		return err
-	}
-	args.PrependOpcodes(&RegisterUndoablePerennialCommit{Parent: self.Parent.BranchName()})
+	args.PrependOpcodes(
+		&CommitAutoUndo{
+			AuthorOverride:                 authorOpt,
+			FallbackToDefaultCommitMessage: false,
+			Message:                        self.CommitMessage,
+		},
+		&RegisterUndoablePerennialCommit{
+			Parent: self.Parent.BranchName(),
+		})
 	return nil
 }
 
