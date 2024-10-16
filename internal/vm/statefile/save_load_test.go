@@ -74,6 +74,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.ChangesDiscard{},
+				&opcodes.ChangesStage{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -118,7 +119,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.ChangesStage{},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashOpenChanges{},
@@ -334,6 +334,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ChangesDiscard"
+    },
+    {
+      "data": {},
+      "type": "ChangesStage"
     },
     {
       "data": {
@@ -598,10 +602,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPopIfNeeded"
-    },
-    {
-      "data": {},
-      "type": "ChangesStage"
     },
     {
       "data": {
