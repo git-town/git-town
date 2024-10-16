@@ -85,6 +85,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
 				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
 				&opcodes.PullCurrentBranch{},
@@ -98,7 +99,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.PushTags{},
-				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
 				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
@@ -408,6 +408,12 @@ func TestLoadSave(t *testing.T) {
       "type": "MergeParentIfNeeded"
     },
     {
+      "data": {
+        "Message": "message"
+      },
+      "type": "MessageQueue"
+    },
+    {
       "data": {},
       "type": "ProgramEndOfBranch"
     },
@@ -471,12 +477,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "PushTags"
-    },
-    {
-      "data": {
-        "Message": "message"
-      },
-      "type": "MessageQueue"
     },
     {
       "data": {
