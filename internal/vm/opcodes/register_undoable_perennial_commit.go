@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// RestoreOpenChanges restores stashed away changes into the workspace.
+// registers the commit on the current perennial branch as undoable
 type RegisterUndoablePerennialCommit struct {
 	Parent                  gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
