@@ -99,6 +99,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
 				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
@@ -117,7 +118,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.ChangesStage{},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
@@ -499,6 +499,14 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch",
+        "CommitMessage": "commit message",
+        "Parent": "parent"
+      },
+      "type": "MergeSquash"
+    },
+    {
+      "data": {
         "Message": "message"
       },
       "type": "MessageQueue"
@@ -590,14 +598,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPopIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "CommitMessage": "commit message",
-        "Parent": "parent"
-      },
-      "type": "MergeSquash"
     },
     {
       "data": {},
