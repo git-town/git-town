@@ -11,7 +11,7 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// MergeSquashProgram squash merges the branch with the given name into the current branch.
+// MergeSquashProgram prepends the opcodes to squash merge the branch with the given name into the current branch.
 type MergeSquashProgram struct {
 	Authors       []gitdomain.Author
 	Branch        gitdomain.LocalBranchName
