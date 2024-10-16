@@ -80,6 +80,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
 				&opcodes.CheckoutUncached{Branch: "branch"},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitAutoUndo{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitMessageCommentOut{},
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
@@ -100,7 +102,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: "parent"},
 				&opcodes.MergeParentIfNeeded{Branch: "branch"},
-				&opcodes.MergeSquash{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
+				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
@@ -119,6 +121,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
+				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashDrop{},
@@ -375,6 +378,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "AuthorOverride": "user@acme.com",
+        "FallbackToDefaultCommitMessage": true,
+        "Message": "my message"
+      },
+      "type": "CommitAutoUndo"
+    },
+    {
+      "data": {},
+      "type": "CommitMessageCommentOut"
+    },
+    {
+      "data": {
         "SHA": "123456"
       },
       "type": "CommitRevert"
@@ -503,11 +518,15 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Authors": [
+          "author 1 \u003cone@acme.com\u003e",
+          "author 2 \u003ctwo@acme.com\u003e"
+        ],
         "Branch": "branch",
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "MergeSquash"
+      "type": "MergeSquashProgram"
     },
     {
       "data": {
@@ -614,6 +633,12 @@ func TestLoadSave(t *testing.T) {
         "RemoteBranch": "origin/branch"
       },
       "type": "RebaseTrackingBranch"
+    },
+    {
+      "data": {
+        "Parent": "parent"
+      },
+      "type": "RegisterUndoablePerennialCommit"
     },
     {
       "data": {
