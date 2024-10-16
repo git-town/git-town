@@ -32,7 +32,7 @@ Merges the given or current feature branch into its parent.
 How exactly this happen depends on the configured ship-strategy.
 
 Ships only direct children of the main branch.
-To ship a child branch, ship or kill all ancestor branches first
+To ship a child branch, ship or delete all ancestor branches first
 or ship with the "--to-parent" flag.
 
 To use the online functionality, configure a personal access token with the "repo" scope

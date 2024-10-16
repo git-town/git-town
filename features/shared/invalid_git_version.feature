@@ -19,7 +19,7 @@ Feature: require minimum Git version
       | config setup |
       | diff-parent  |
       | hack foo     |
-      | kill         |
+      | delete       |
       | offline      |
       | propose      |
       | prepend foo  |

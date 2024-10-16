@@ -170,7 +170,7 @@ Feature: Accepting all default values leads to a working setup
     Then global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
-    And global Git setting "alias.kill" still doesn't exist
+    And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.prepend" still doesn't exist
     And global Git setting "alias.propose" still doesn't exist
     And global Git setting "alias.rename" still doesn't exist
