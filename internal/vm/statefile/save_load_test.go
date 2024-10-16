@@ -46,6 +46,7 @@ func TestLoadSave(t *testing.T) {
 			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
+				&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("branch"), StartingPoint: gitdomain.NewSHA("123456").Location()},
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
@@ -75,7 +76,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("branch"), StartingPoint: gitdomain.NewSHA("123456").Location()},
 				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
 				&opcodes.BranchRemoteCreate{Branch: gitdomain.NewLocalBranchName("branch"), SHA: gitdomain.NewSHA("123456")},
 				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -154,6 +154,13 @@ func TestLoadSave(t *testing.T) {
   "EndStashSize": 1,
   "FinalUndoProgram": [],
   "RunProgram": [
+    {
+      "data": {
+        "Branch": "branch",
+        "StartingPoint": "123456"
+      },
+      "type": "BranchCreate"
+    },
     {
       "data": {
         "Ancestors": [
@@ -337,13 +344,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "StartingPoint": "123456"
-      },
-      "type": "BranchCreate"
     },
     {
       "data": {
