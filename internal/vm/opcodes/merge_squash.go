@@ -44,12 +44,12 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	repoAuthor := args.Config.Author()
 	if !args.Config.DryRun {
 		if err = args.Git.CommentOutSquashCommitMessage(""); err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 	}
+	repoAuthor := args.Config.Author()
 	var authorOpt Option[gitdomain.Author]
 	if repoAuthor == author {
 		authorOpt = None[gitdomain.Author]()
