@@ -58,186 +58,73 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.LineageParentSet{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.LineageParentSetFirstExisting{
-					Ancestors: gitdomain.NewLocalBranchNames("one", "two"),
-					Branch:    gitdomain.NewLocalBranchName("branch"),
-				},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.Commit{
-					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
-					FallbackToDefaultCommitMessage: true,
-					Message:                        Some(gitdomain.CommitMessage("my message")),
-				},
-				&opcodes.CommitWithMessage{
-					AuthorOverride: Some(gitdomain.Author("user@acme.com")),
-					Message:        gitdomain.CommitMessage("my message"),
-				},
-				&opcodes.ConnectorProposalMerge{
-					Branch:          gitdomain.NewLocalBranchName("branch"),
-					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
-					ProposalMessage: "proposal message",
-					ProposalNumber:  123,
-				},
+				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: gitdomain.CommitMessage("my message")},
+				&opcodes.ConnectorProposalMerge{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
+				&opcodes.LineageParentSet{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.LineageParentSetFirstExisting{Ancestors: gitdomain.NewLocalBranchNames("one", "two"), Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.LineageParentSetIfExists{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.BranchCreate{
-					Branch:        gitdomain.NewLocalBranchName("branch"),
-					StartingPoint: gitdomain.NewSHA("123456").Location(),
-				},
-				&opcodes.ProposalCreate{
-					Branch:     gitdomain.NewLocalBranchName("branch"),
-					MainBranch: gitdomain.NewLocalBranchName("main"),
-				},
-				&opcodes.BranchRemoteCreate{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					SHA:    gitdomain.NewSHA("123456"),
-				},
-				&opcodes.BranchTrackingCreate{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
+				&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("branch"), StartingPoint: gitdomain.NewSHA("123456").Location()},
+				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
+				&opcodes.BranchRemoteCreate{Branch: gitdomain.NewLocalBranchName("branch"), SHA: gitdomain.NewSHA("123456")},
+				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.BranchParentDelete{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.BranchTrackingDelete{
-					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
-				},
+				&opcodes.BranchParentDelete{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchTrackingDelete{Branch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.ChangesDiscard{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.ProgramEndOfBranch{},
-				&opcodes.BranchEnsureShippableChanges{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.FetchUpstream{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
+				&opcodes.BranchEnsureShippableChanges{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
-				&opcodes.MergeParent{
-					Parent: gitdomain.NewBranchName("parent"),
-				},
-				&opcodes.MergeParentIfNeeded{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.CheckoutHistoryPreserve{
-					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
-				},
+				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
+				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.PushCurrentBranchIfLocal{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.PushCurrentBranchIfNeeded{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
+				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushTags{},
 				&opcodes.MessageQueue{Message: "message"},
-				&opcodes.RebaseBranch{
-					Branch: gitdomain.NewBranchName("branch"),
-				},
-				&opcodes.RebaseParentIfNeeded{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RebaseTrackingBranch{
-					RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch"),
-				},
-				&opcodes.BranchesContributionRemove{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.BranchesObservedRemove{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.BranchesParkedRemove{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.BranchesPerennialRemove{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.BranchesPrototypeRemove{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.ConfigGlobalRemove{
-					Key: configdomain.KeyOffline,
-				},
-				&opcodes.ConfigLocalRemove{
-					Key: configdomain.KeyOffline,
-				},
-				&opcodes.BranchLocalRename{
-					NewName: "new",
-					OldName: "old",
-				},
-				&opcodes.BranchCurrentResetToSHA{
-					Hard:     true,
-					SetToSHA: gitdomain.NewSHA("111111"),
-				},
-				&opcodes.BranchCurrentResetToSHAIfNeeded{
-					Hard:        true,
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
-				},
+				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
+				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
+				&opcodes.BranchesContributionRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesObservedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesParkedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPerennialRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
+				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
+				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
+				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
+				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.CommitRevert{
-					SHA: gitdomain.NewSHA("123456"),
-				},
-				&opcodes.CommitRevertIfNeeded{
-					SHA: gitdomain.NewSHA("123456"),
-				},
-				&opcodes.ConfigGlobalSet{
-					Key:   configdomain.KeyOffline,
-					Value: "1",
-				},
-				&opcodes.ConfigLocalSet{
-					Key:   configdomain.KeyOffline,
-					Value: "1",
-				},
-				&opcodes.LineageParentSet{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.LineageParentSetIfExists{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.MergeSquash{
-					Branch:        gitdomain.NewLocalBranchName("branch"),
-					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
-					Parent:        gitdomain.NewLocalBranchName("parent"),
-				},
+				&opcodes.CommitRevert{SHA: gitdomain.NewSHA("123456")},
+				&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("123456")},
+				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.ChangesStage{},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashOpenChanges{},
-				&opcodes.ProposalUpdateBase{
-					ProposalNumber: 123,
-					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
-					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
-				},
-				&opcodes.ProposalUpdateBaseToParent{
-					Branch:         "branch",
-					ProposalNumber: 123,
-					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
-				},
-				&opcodes.ProposalUpdateHead{
-					ProposalNumber: 123,
-					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
-					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
-				},
+				&opcodes.ProposalUpdateBase{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
+				&opcodes.ProposalUpdateBaseToParent{Branch: "branch", ProposalNumber: 123, OldTarget: gitdomain.NewLocalBranchName("old-target")},
+				&opcodes.ProposalUpdateHead{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: SomeP(&runstate.UnfinishedRunStateDetails{
@@ -349,23 +236,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
-        "Parent": "parent"
-      },
-      "type": "LineageParentSet"
-    },
-    {
-      "data": {
-        "Ancestors": [
-          "one",
-          "two"
-        ],
-        "Branch": "branch"
-      },
-      "type": "LineageParentSetFirstExisting"
-    },
-    {
-      "data": {
         "Branch": "branch"
       },
       "type": "Checkout"
@@ -417,6 +287,30 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "LineageParentRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "LineageParentSet"
+    },
+    {
+      "data": {
+        "Ancestors": [
+          "one",
+          "two"
+        ],
+        "Branch": "branch"
+      },
+      "type": "LineageParentSetFirstExisting"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "LineageParentSetIfExists"
     },
     {
       "data": {
@@ -696,20 +590,6 @@ func TestLoadSave(t *testing.T) {
         "Value": "1"
       },
       "type": "ConfigLocalSet"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "Parent": "parent"
-      },
-      "type": "LineageParentSet"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "Parent": "parent"
-      },
-      "type": "LineageParentSetIfExists"
     },
     {
       "data": {
