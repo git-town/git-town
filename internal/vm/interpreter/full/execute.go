@@ -46,7 +46,7 @@ func Execute(args ExecuteArgs) error {
 			Git:                             args.Git,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
-			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
+			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
 			return errored(nextStep, err, args)

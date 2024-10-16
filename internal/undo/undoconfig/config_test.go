@@ -43,7 +43,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveGlobalConfig{
+			&opcodes.ConfigGlobalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
 		}
@@ -83,7 +83,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.SetGlobalConfig{
+			&opcodes.ConfigGlobalSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
 				Value: "1",
 			},
@@ -126,7 +126,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.SetGlobalConfig{
+			&opcodes.ConfigGlobalSet{
 				Key:   configdomain.KeyOffline,
 				Value: "0",
 			},
@@ -163,7 +163,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveLocalConfig{
+			&opcodes.ConfigLocalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
 		}
@@ -203,7 +203,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.SetLocalConfig{
+			&opcodes.ConfigLocalSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
 				Value: "1",
 			},
@@ -246,7 +246,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.SetLocalConfig{
+			&opcodes.ConfigLocalSet{
 				Key:   configdomain.KeyOffline,
 				Value: "0",
 			},
@@ -310,25 +310,25 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.RemoveGlobalConfig{
+			&opcodes.ConfigGlobalRemove{
 				Key: configdomain.KeySyncPerennialStrategy,
 			},
-			&opcodes.SetGlobalConfig{
+			&opcodes.ConfigGlobalSet{
 				Key:   configdomain.KeyPushHook,
 				Value: "0",
 			},
-			&opcodes.SetGlobalConfig{
+			&opcodes.ConfigGlobalSet{
 				Key:   configdomain.KeyOffline,
 				Value: "0",
 			},
-			&opcodes.RemoveLocalConfig{
+			&opcodes.ConfigLocalRemove{
 				Key: configdomain.KeyPushHook,
 			},
-			&opcodes.SetLocalConfig{
+			&opcodes.ConfigLocalSet{
 				Key:   configdomain.KeyGithubToken,
 				Value: "token",
 			},
-			&opcodes.SetLocalConfig{
+			&opcodes.ConfigLocalSet{
 				Key:   configdomain.KeyPerennialBranches,
 				Value: "prod",
 			},

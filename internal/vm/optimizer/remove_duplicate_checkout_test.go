@@ -16,16 +16,16 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 	t.Run("duplicate checkout opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
-			&opcodes.AbortMerge{},
+			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-1")},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-2")},
-			&opcodes.AbortRebase{},
+			&opcodes.RebaseAbort{},
 		}
 		have := optimizer.RemoveDuplicateCheckout(give)
 		want := program.Program{
-			&opcodes.AbortMerge{},
+			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-2")},
-			&opcodes.AbortRebase{},
+			&opcodes.RebaseAbort{},
 		}
 		must.Eq(t, want, have)
 	})
@@ -33,21 +33,21 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 	t.Run("duplicate checkout opcodes mixed with end-of-branch opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
-			&opcodes.AbortMerge{},
+			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-1")},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-2")},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
-			&opcodes.AbortRebase{},
+			&opcodes.RebaseAbort{},
 		}
 		have := optimizer.RemoveDuplicateCheckout(give)
 		want := program.Program{
-			&opcodes.AbortMerge{},
-			&opcodes.EndOfBranchProgram{},
-			&opcodes.EndOfBranchProgram{},
+			&opcodes.MergeAbort{},
+			&opcodes.ProgramEndOfBranch{},
+			&opcodes.ProgramEndOfBranch{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
-			&opcodes.AbortRebase{},
+			&opcodes.RebaseAbort{},
 		}
 		must.Eq(t, want, have)
 	})
@@ -55,13 +55,13 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 	t.Run("a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
-			&opcodes.AbortMerge{},
+			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-1")},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
 		}
 		have := optimizer.RemoveDuplicateCheckout(give)
 		want := program.Program{
-			&opcodes.AbortMerge{},
+			&opcodes.MergeAbort{},
 			&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
 		}
 		must.Eq(t, want, have)
@@ -70,13 +70,13 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 	t.Run("no duplicate checkout opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
-			&opcodes.AbortMerge{},
-			&opcodes.AbortRebase{},
+			&opcodes.MergeAbort{},
+			&opcodes.RebaseAbort{},
 		}
 		have := optimizer.RemoveDuplicateCheckout(give)
 		want := program.Program{
-			&opcodes.AbortMerge{},
-			&opcodes.AbortRebase{},
+			&opcodes.MergeAbort{},
+			&opcodes.RebaseAbort{},
 		}
 		must.Eq(t, want, have)
 	})

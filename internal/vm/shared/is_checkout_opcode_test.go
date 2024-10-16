@@ -15,7 +15,7 @@ func TestIsCheckout(t *testing.T) {
 	tests := map[shared.Opcode]bool{
 		&opcodes.CheckoutIfNeeded{Branch: branch}: true,  // Checkout is (obviously) a checkout opcode
 		&opcodes.CheckoutIfExists{Branch: branch}: true,  // CheckoutIfExists is also a checkout opcode
-		&opcodes.AbortMerge{}:                     false, // any other opcode doesn't match
+		&opcodes.MergeAbort{}:                     false, // any other opcode doesn't match
 	}
 	for give, want := range tests {
 		have := shared.IsCheckoutOpcode(give)

@@ -253,7 +253,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
 	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.Config.IsOnline() {
 		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-		prog.Value.Add(&opcodes.DeleteTrackingBranch{Branch: trackingBranchToDelete})
+		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 }
@@ -263,20 +263,20 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get(); hasLocalBranchToDelete {
 		if data.initialBranch == localBranchToDelete {
 			if data.hasOpenChanges {
-				prog.Value.Add(&opcodes.StageOpenChanges{})
+				prog.Value.Add(&opcodes.ChangesStage{})
 				prog.Value.Add(&opcodes.CommitWithMessage{
 					AuthorOverride: None[gitdomain.Author](),
 					Message:        gitdomain.CommitMessage("Committing WIP for git town undo"),
 				})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
-				prog.Value.Add(&opcodes.UpdateInitialBranchLocalSHAIfNeeded{Branch: data.initialBranch})
+				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
 				// when undoing, manually undo the just committed changes so that they are uncommitted again
 				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
 				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
 			}
 			prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
 		}
-		prog.Value.Add(&opcodes.DeleteLocalBranch{Branch: localBranchToDelete})
+		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: localBranchToDelete})
 		if data.dryRun.IsFalse() {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,
