@@ -5,7 +5,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// CheckoutParentOrMain checks out the parent branch of the current branch.
+// CheckoutParentOrMain checks out the parent branch of the current branch,
+// or the main branch if the current branch has no parent.
 type CheckoutParentOrMain struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
