@@ -47,14 +47,14 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		Branch: args.localName,
 	})
 	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
-		args.program.Value.Add(&opcodes.ResetCurrentBranchToParent{CurrentBranch: args.localName})
+		args.program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.localName})
 		args.program.Value.Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
 			Message:        firstCommitMessage,
 		})
 	}
 	if hasTrackingBranch && args.offline.IsFalse() {
-		args.program.Value.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: false})
+		args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 	}
 }
 
@@ -75,7 +75,7 @@ func syncFeatureBranchRebaseProgram(args syncFeatureBranchProgramArgs) {
 	})
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		if args.offline.IsFalse() {
-			args.program.Value.Add(&opcodes.RebaseFeatureTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
+			args.program.Value.Add(&opcodes.RebaseTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
 		}
 	}
 }

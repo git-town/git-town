@@ -16,7 +16,7 @@ type MergeFastForward struct {
 
 func (self *MergeFastForward) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&AbortMerge{},
+		&MergeAbort{},
 	}
 }
 

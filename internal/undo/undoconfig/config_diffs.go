@@ -21,31 +21,31 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 func (self ConfigDiffs) UndoProgram() program.Program {
 	result := program.Program{}
 	for _, key := range self.Global.Added {
-		result.Add(&opcodes.RemoveGlobalConfig{Key: key})
+		result.Add(&opcodes.ConfigGlobalRemove{Key: key})
 	}
 	for key, value := range self.Global.Removed {
-		result.Add(&opcodes.SetGlobalConfig{
+		result.Add(&opcodes.ConfigGlobalSet{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range self.Global.Changed {
-		result.Add(&opcodes.SetGlobalConfig{
+		result.Add(&opcodes.ConfigGlobalSet{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
 	for _, key := range self.Local.Added {
-		result.Add(&opcodes.RemoveLocalConfig{Key: key})
+		result.Add(&opcodes.ConfigLocalRemove{Key: key})
 	}
 	for key, value := range self.Local.Removed {
-		result.Add(&opcodes.SetLocalConfig{
+		result.Add(&opcodes.ConfigLocalSet{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range self.Local.Changed {
-		result.Add(&opcodes.SetLocalConfig{
+		result.Add(&opcodes.ConfigLocalSet{
 			Key:   key,
 			Value: change.Before,
 		})

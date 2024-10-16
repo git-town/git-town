@@ -21,5 +21,5 @@ type RunArgs struct {
 	Git                             git.Commands
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
-	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error
+	UpdateInitialSnapshotLocalSHA   func(gitdomain.LocalBranchName, gitdomain.SHA) error
 }

@@ -46,176 +46,85 @@ func TestLoadSave(t *testing.T) {
 			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
-				&opcodes.AbortMerge{},
-				&opcodes.AbortRebase{},
-				&opcodes.AddToContributionBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToObservedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToParkedBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.AddToPrototypeBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.LineageSetParent{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
+				&opcodes.BranchCreate{Branch: gitdomain.NewLocalBranchName("branch"), StartingPoint: gitdomain.NewSHA("123456").Location()},
+				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
+				&opcodes.BranchCurrentReset{Base: "branch"},
+				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
+				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
+				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
+				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
+				&opcodes.BranchEnsureShippableChanges{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
+				&opcodes.BranchParentDelete{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchRemoteCreate{Branch: gitdomain.NewLocalBranchName("branch"), SHA: gitdomain.NewSHA("123456")},
+				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
+				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
+				&opcodes.BranchReset{Target: "branch"},
+				&opcodes.BranchTrackingCreate{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchTrackingDelete{Branch: gitdomain.NewRemoteBranchName("origin/branch")},
+				&opcodes.BranchesContributionAdd{Branch: gitdomain.NewLocalBranchName("branch")}, // TODO: use string constants here, they get converted to the right data type
+				&opcodes.BranchesContributionRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesObservedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesObservedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesParkedRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPerennialRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchesPrototypeRemove{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.ChangesDiscard{},
+				&opcodes.ChangesStage{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.Commit{
-					AuthorOverride:                 Some(gitdomain.Author("user@acme.com")),
-					FallbackToDefaultCommitMessage: true,
-					Message:                        Some(gitdomain.CommitMessage("my message")),
-				},
-				&opcodes.CommitWithMessage{
-					AuthorOverride: Some(gitdomain.Author("user@acme.com")),
-					Message:        gitdomain.CommitMessage("my message"),
-				},
-				&opcodes.ConnectorMergeProposal{
-					Branch:          gitdomain.NewLocalBranchName("branch"),
-					CommitMessage:   Some(gitdomain.CommitMessage("commit message")),
-					ProposalMessage: "proposal message",
-					ProposalNumber:  123,
-				},
-				&opcodes.ContinueMerge{},
-				&opcodes.ContinueRebase{},
-				&opcodes.ContinueRebaseIfNeeded{},
-				&opcodes.CreateBranch{
-					Branch:        gitdomain.NewLocalBranchName("branch"),
-					StartingPoint: gitdomain.NewSHA("123456").Location(),
-				},
-				&opcodes.CreateProposal{
-					Branch:     gitdomain.NewLocalBranchName("branch"),
-					MainBranch: gitdomain.NewLocalBranchName("main"),
-				},
-				&opcodes.CreateRemoteBranch{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					SHA:    gitdomain.NewSHA("123456"),
-				},
-				&opcodes.CreateTrackingBranch{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.DeleteLocalBranch{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcodes.DeleteParentBranch{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.DeleteTrackingBranch{
-					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
-				},
-				&opcodes.DiscardOpenChanges{},
-				&opcodes.DropStash{},
-				&opcodes.EndOfBranchProgram{},
-				&opcodes.EnsureHasShippableChanges{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.FetchUpstream{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true},
+				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitRevert{SHA: gitdomain.NewSHA("123456")},
+				&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("123456")},
+				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: gitdomain.CommitMessage("my message")},
+				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
+				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
+				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.ConnectorProposalMerge{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
+				&opcodes.FetchUpstream{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.LineageBranchRemove{Branch: "branch"},
+				&opcodes.LineageParentRemove{Branch: "branch"},
+				&opcodes.LineageParentSet{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.LineageParentSetFirstExisting{Ancestors: gitdomain.NewLocalBranchNames("one", "two"), Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.LineageParentSetIfExists{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
-				&opcodes.MergeParent{
-					Parent: gitdomain.NewBranchName("parent"),
-				},
-				&opcodes.MergeParentIfNeeded{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.PreserveCheckoutHistory{
-					PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))},
-				},
+				&opcodes.MergeAbort{},
+				&opcodes.MergeContinue{},
+				&opcodes.MergeParent{Parent: gitdomain.NewBranchName("parent")},
+				&opcodes.MergeParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
+				&opcodes.MessageQueue{Message: "message"},
+				&opcodes.ProgramEndOfBranch{},
+				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
+				&opcodes.ProposalUpdateBase{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
+				&opcodes.ProposalUpdateBaseToParent{Branch: "branch", ProposalNumber: 123, OldTarget: gitdomain.NewLocalBranchName("old-target")},
+				&opcodes.ProposalUpdateHead{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.PushCurrentBranchIfLocal{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.PushCurrentBranchIfNeeded{
-					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-				},
+				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushTags{},
-				&opcodes.RebaseBranch{
-					Branch: gitdomain.NewBranchName("branch"),
-				},
-				&opcodes.RebaseParentIfNeeded{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RebaseFeatureTrackingBranch{
-					RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch"),
-				},
-				&opcodes.RemoveFromContributionBranches{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RemoveFromObservedBranches{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RemoveFromParkedBranches{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RemoveFromPerennialBranches{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RemoveFromPrototypeBranches{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-				},
-				&opcodes.RemoveGlobalConfig{
-					Key: configdomain.KeyOffline,
-				},
-				&opcodes.RemoveLocalConfig{
-					Key: configdomain.KeyOffline,
-				},
-				&opcodes.Rename{
-					NewName: "new",
-					OldName: "old",
-				},
-				&opcodes.ResetCurrentBranchToSHA{
-					Hard:     true,
-					SetToSHA: gitdomain.NewSHA("111111"),
-				},
-				&opcodes.ResetCurrentBranchToSHAIfNeeded{
-					Hard:        true,
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
-				},
-				&opcodes.RestoreOpenChanges{},
-				&opcodes.RevertCommit{
-					SHA: gitdomain.NewSHA("123456"),
-				},
-				&opcodes.RevertCommitIfNeeded{
-					SHA: gitdomain.NewSHA("123456"),
-				},
-				&opcodes.SetGlobalConfig{
-					Key:   configdomain.KeyOffline,
-					Value: "1",
-				},
-				&opcodes.SetLocalConfig{
-					Key:   configdomain.KeyOffline,
-					Value: "1",
-				},
-				&opcodes.SetParent{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.SetParentIfBranchExists{
-					Branch: gitdomain.NewLocalBranchName("branch"),
-					Parent: gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.SkipCurrentBranch{},
-				&opcodes.SquashMerge{
-					Branch:        gitdomain.NewLocalBranchName("branch"),
-					CommitMessage: Some(gitdomain.CommitMessage("commit message")),
-					Parent:        gitdomain.NewLocalBranchName("parent"),
-				},
-				&opcodes.StageOpenChanges{},
+				&opcodes.RebaseAbort{},
+				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
+				&opcodes.RebaseContinue{},
+				&opcodes.RebaseContinueIfNeeded{},
+				&opcodes.RebaseParentIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
+				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
+				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
+				&opcodes.StashDrop{},
+				&opcodes.StashPop{},
+				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
-				&opcodes.UpdateProposalBase{
-					ProposalNumber: 123,
-					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
-					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
-				},
-				&opcodes.UpdateProposalHead{
-					ProposalNumber: 123,
-					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
-					OldTarget:      gitdomain.NewLocalBranchName("old-target"),
-				},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: SomeP(&runstate.UnfinishedRunStateDetails{
@@ -246,55 +155,203 @@ func TestLoadSave(t *testing.T) {
   "FinalUndoProgram": [],
   "RunProgram": [
     {
-      "data": {},
-      "type": "AbortMerge"
+      "data": {
+        "Branch": "branch",
+        "StartingPoint": "123456"
+      },
+      "type": "BranchCreate"
     },
     {
-      "data": {},
-      "type": "AbortRebase"
+      "data": {
+        "Ancestors": [
+          "one",
+          "two",
+          "three"
+        ],
+        "Branch": "branch"
+      },
+      "type": "BranchCreateAndCheckoutExistingParent"
+    },
+    {
+      "data": {
+        "Base": "branch"
+      },
+      "type": "BranchCurrentReset"
+    },
+    {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "BranchCurrentResetToParent"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "SetToSHA": "111111"
+      },
+      "type": "BranchCurrentResetToSHA"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
+      },
+      "type": "BranchCurrentResetToSHAIfNeeded"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "AddToContributionBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "AddToObservedBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "AddToParkedBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "AddToPerennialBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "AddToPrototypeBranches"
+      "type": "BranchDeleteIfEmptyAtRuntime"
     },
     {
       "data": {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "LineageSetParent"
+      "type": "BranchEnsureShippableChanges"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchLocalDelete"
+    },
+    {
+      "data": {
+        "NewName": "new",
+        "OldName": "old"
+      },
+      "type": "BranchLocalRename"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchParentDelete"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "SHA": "123456"
+      },
+      "type": "BranchRemoteCreate"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "SetToSHA": "222222"
+      },
+      "type": "BranchRemoteSetToSHA"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "MustHaveSHA": "111111",
+        "SetToSHA": "222222"
+      },
+      "type": "BranchRemoteSetToSHAIfNeeded"
+    },
+    {
+      "data": {
+        "Target": "branch"
+      },
+      "type": "BranchReset"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchTrackingCreate"
+    },
+    {
+      "data": {
+        "Branch": "origin/branch"
+      },
+      "type": "BranchTrackingDelete"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesContributionAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesContributionRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesObservedAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesObservedRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesParkedAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesParkedRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPerennialAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPerennialRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPrototypeAdd"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchesPrototypeRemove"
+    },
+    {
+      "data": {},
+      "type": "ChangesDiscard"
+    },
+    {
+      "data": {},
+      "type": "ChangesStage"
     },
     {
       "data": {
         "Branch": "branch"
       },
       "type": "Checkout"
+    },
+    {
+      "data": {
+        "PreviousBranchCandidates": [
+          "previous"
+        ]
+      },
+      "type": "CheckoutHistoryPreserve"
     },
     {
       "data": {
@@ -318,10 +375,48 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "SHA": "123456"
+      },
+      "type": "CommitRevert"
+    },
+    {
+      "data": {
+        "SHA": "123456"
+      },
+      "type": "CommitRevertIfNeeded"
+    },
+    {
+      "data": {
         "AuthorOverride": "user@acme.com",
         "Message": "my message"
       },
       "type": "CommitWithMessage"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "ConfigGlobalRemove"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "ConfigGlobalSet"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "ConfigLocalRemove"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "ConfigLocalSet"
     },
     {
       "data": {
@@ -330,85 +425,7 @@ func TestLoadSave(t *testing.T) {
         "ProposalMessage": "proposal message",
         "ProposalNumber": 123
       },
-      "type": "ConnectorMergeProposal"
-    },
-    {
-      "data": {},
-      "type": "ContinueMerge"
-    },
-    {
-      "data": {},
-      "type": "ContinueRebase"
-    },
-    {
-      "data": {},
-      "type": "ContinueRebaseIfNeeded"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "StartingPoint": "123456"
-      },
-      "type": "CreateBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "MainBranch": "main",
-        "ProposalBody": "",
-        "ProposalTitle": ""
-      },
-      "type": "CreateProposal"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "SHA": "123456"
-      },
-      "type": "CreateRemoteBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "CreateTrackingBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "DeleteLocalBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "DeleteParentBranch"
-    },
-    {
-      "data": {
-        "Branch": "origin/branch"
-      },
-      "type": "DeleteTrackingBranch"
-    },
-    {
-      "data": {},
-      "type": "DiscardOpenChanges"
-    },
-    {
-      "data": {},
-      "type": "DropStash"
-    },
-    {
-      "data": {},
-      "type": "EndOfBranchProgram"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "Parent": "parent"
-      },
-      "type": "EnsureHasShippableChanges"
+      "type": "ConnectorProposalMerge"
     },
     {
       "data": {
@@ -418,15 +435,59 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "ForceIfIncludes": true
+        "Branch": "branch"
       },
-      "type": "ForcePushCurrentBranch"
+      "type": "LineageBranchRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "LineageParentRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "LineageParentSet"
+    },
+    {
+      "data": {
+        "Ancestors": [
+          "one",
+          "two"
+        ],
+        "Branch": "branch"
+      },
+      "type": "LineageParentSetFirstExisting"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "LineageParentSetIfExists"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "LineageParentSetToGrandParent"
     },
     {
       "data": {
         "Branch": "branch"
       },
       "type": "Merge"
+    },
+    {
+      "data": {},
+      "type": "MergeAbort"
+    },
+    {
+      "data": {},
+      "type": "MergeContinue"
     },
     {
       "data": {
@@ -442,11 +503,54 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "PreviousBranchCandidates": [
-          "previous"
-        ]
+        "Branch": "branch",
+        "CommitMessage": "commit message",
+        "Parent": "parent"
       },
-      "type": "PreserveCheckoutHistory"
+      "type": "MergeSquash"
+    },
+    {
+      "data": {
+        "Message": "message"
+      },
+      "type": "MessageQueue"
+    },
+    {
+      "data": {},
+      "type": "ProgramEndOfBranch"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "MainBranch": "main",
+        "ProposalBody": "",
+        "ProposalTitle": ""
+      },
+      "type": "ProposalCreate"
+    },
+    {
+      "data": {
+        "NewTarget": "new-target",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "ProposalUpdateBase"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "ProposalUpdateBaseToParent"
+    },
+    {
+      "data": {
+        "NewTarget": "new-target",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "ProposalUpdateHead"
     },
     {
       "data": {},
@@ -457,6 +561,12 @@ func TestLoadSave(t *testing.T) {
         "CurrentBranch": "branch"
       },
       "type": "PushCurrentBranch"
+    },
+    {
+      "data": {
+        "ForceIfIncludes": true
+      },
+      "type": "PushCurrentBranchForceIfNeeded"
     },
     {
       "data": {
@@ -475,10 +585,22 @@ func TestLoadSave(t *testing.T) {
       "type": "PushTags"
     },
     {
+      "data": {},
+      "type": "RebaseAbort"
+    },
+    {
       "data": {
         "Branch": "branch"
       },
       "type": "RebaseBranch"
+    },
+    {
+      "data": {},
+      "type": "RebaseContinue"
+    },
+    {
+      "data": {},
+      "type": "RebaseContinueIfNeeded"
     },
     {
       "data": {
@@ -491,151 +613,36 @@ func TestLoadSave(t *testing.T) {
         "PushBranches": false,
         "RemoteBranch": "origin/branch"
       },
-      "type": "RebaseFeatureTrackingBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RemoveFromContributionBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RemoveFromObservedBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RemoveFromParkedBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RemoveFromPerennialBranches"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "RemoveFromPrototypeBranches"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline"
-      },
-      "type": "RemoveGlobalConfig"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline"
-      },
-      "type": "RemoveLocalConfig"
-    },
-    {
-      "data": {
-        "NewName": "new",
-        "OldName": "old"
-      },
-      "type": "Rename"
-    },
-    {
-      "data": {
-        "Hard": true,
-        "SetToSHA": "111111"
-      },
-      "type": "ResetCurrentBranchToSHA"
-    },
-    {
-      "data": {
-        "Hard": true,
-        "MustHaveSHA": "222222",
-        "SetToSHA": "111111"
-      },
-      "type": "ResetCurrentBranchToSHAIfNeeded"
-    },
-    {
-      "data": {},
-      "type": "RestoreOpenChanges"
-    },
-    {
-      "data": {
-        "SHA": "123456"
-      },
-      "type": "RevertCommit"
-    },
-    {
-      "data": {
-        "SHA": "123456"
-      },
-      "type": "RevertCommitIfNeeded"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline",
-        "Value": "1"
-      },
-      "type": "SetGlobalConfig"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline",
-        "Value": "1"
-      },
-      "type": "SetLocalConfig"
+      "type": "RebaseTrackingBranch"
     },
     {
       "data": {
         "Branch": "branch",
-        "Parent": "parent"
+        "SHA": "111111"
       },
-      "type": "SetParent"
+      "type": "SnapshotInitialUpdateLocalSHA"
     },
     {
       "data": {
-        "Branch": "branch",
-        "Parent": "parent"
+        "Branch": "branch"
       },
-      "type": "SetParentIfBranchExists"
+      "type": "SnapshotInitialUpdateLocalSHAIfNeeded"
     },
     {
       "data": {},
-      "type": "SkipCurrentBranch"
-    },
-    {
-      "data": {
-        "Branch": "branch",
-        "CommitMessage": "commit message",
-        "Parent": "parent"
-      },
-      "type": "SquashMerge"
+      "type": "StashDrop"
     },
     {
       "data": {},
-      "type": "StageOpenChanges"
+      "type": "StashPop"
+    },
+    {
+      "data": {},
+      "type": "StashPopIfNeeded"
     },
     {
       "data": {},
       "type": "StashOpenChanges"
-    },
-    {
-      "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
-        "ProposalNumber": 123
-      },
-      "type": "UpdateProposalBase"
-    },
-    {
-      "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
-        "ProposalNumber": 123
-      },
-      "type": "UpdateProposalHead"
     }
   ],
   "TouchedBranches": [

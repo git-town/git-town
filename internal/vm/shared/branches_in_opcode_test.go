@@ -26,7 +26,7 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("LocalBranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.LineageSetParent{
+		opcode := opcodes.LineageParentSet{
 			Branch: gitdomain.NewLocalBranchName("branch"),
 			Parent: gitdomain.NewLocalBranchName("parent"),
 		}
@@ -40,7 +40,7 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("LocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.SetExistingParent{
+		opcode := opcodes.LineageParentSetFirstExisting{
 			Branch:    gitdomain.NewLocalBranchName("branch"),
 			Ancestors: gitdomain.NewLocalBranchNames("ancestor-1", "ancestor-2"),
 		}
@@ -55,7 +55,7 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("RemoteBranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.DeleteTrackingBranch{
+		opcode := opcodes.BranchTrackingDelete{
 			Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 		}
 		have := shared.BranchesInOpcode(&opcode)
