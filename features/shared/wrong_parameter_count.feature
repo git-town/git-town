@@ -16,7 +16,7 @@ Feature: too few or many parameters
       | completions arg1      | unknown completion type: "arg1"                    |
       | config arg1           | unknown command "arg1" for "git-town config"       |
       | config setup arg1     | unknown command "arg1" for "git-town config setup" |
-      | kill arg1 arg2        | accepts at most 1 arg(s), received 2               |
+      | delete arg1 arg2      | accepts at most 1 arg(s), received 2               |
       | offline arg1 arg2     | accepts at most 1 arg(s), received 2               |
       | propose arg1          | unknown command "arg1" for "git-town propose"      |
       | prepend               | accepts 1 arg(s), received 0                       |

@@ -219,12 +219,12 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		prog.Add(&opcodes.AddToPerennialBranches{Branch: data.initialBranch})
-		prog.Add(&opcodes.DeleteParentBranch{Branch: data.initialBranch})
+		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
+		prog.Add(&opcodes.BranchParentDelete{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		prog.Add(&opcodes.SetParent{Branch: data.initialBranch, Parent: selectedBranch})
+		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		if data.connector.IsSome() && hasProposal {
-			prog.Add(&opcodes.UpdateProposalBase{
+			prog.Add(&opcodes.ProposalUpdateBase{
 				NewTarget:      selectedBranch,
 				OldTarget:      proposal.Target,
 				ProposalNumber: proposal.Number,

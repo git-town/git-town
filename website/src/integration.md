@@ -119,14 +119,14 @@ customCommands:
     loadingText: 'Hacking'
   - key: 'K'
     context: 'localBranches'
-    description: 'Git-Town Kill (deletes the current feature branch and sYnc)'
-    command: 'git-town kill'
+    description: 'Git-Town Delete (deletes the current feature branch and sYnc)'
+    command: 'git-town delete'
     prompts:
     - type: 'confirm'
       title: 'Delete current feature branch'
       body: 'Are you sure you want to delete the current feature branch?'
     stream: true
-    loadingText: 'Killing Feature Branch'
+    loadingText: 'Deleting Feature Branch'
   - key: 'p'
     context: 'localBranches'
     description: 'Git-Town Propose (creates a pull request)'

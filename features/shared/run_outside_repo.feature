@@ -13,7 +13,7 @@ Feature: require a Git repository
       | COMMAND               |
       | git-town config       |
       | git-town hack feature |
-      | git-town kill         |
+      | git-town delete       |
       | git-town propose      |
       | git-town repo         |
       | git-town ship         |

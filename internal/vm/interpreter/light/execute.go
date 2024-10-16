@@ -32,7 +32,7 @@ func Execute(args ExecuteArgs) {
 			Git:                             args.Git,
 			PrependOpcodes:                  args.Prog.Prepend,
 			RegisterUndoablePerennialCommit: nil,
-			UpdateInitialBranchLocalSHA:     nil,
+			UpdateInitialSnapshotLocalSHA:   nil,
 		})
 		if err != nil {
 			fmt.Println(colors.Red().Styled("NOTICE: " + err.Error()))

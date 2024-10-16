@@ -231,19 +231,19 @@ func appendProgram(data appendFeatureData) program.Program {
 			PushBranches:        true,
 		})
 	}
-	prog.Value.Add(&opcodes.CreateAndCheckoutBranchExistingParent{
+	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
 	if data.remotes.HasOrigin() && data.config.Config.ShouldPushNewBranches() && data.config.Config.IsOnline() {
-		prog.Value.Add(&opcodes.CreateTrackingBranch{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
-	prog.Value.Add(&opcodes.SetExistingParent{
+	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
 	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
-		prog.Value.Add(&opcodes.AddToPrototypeBranches{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

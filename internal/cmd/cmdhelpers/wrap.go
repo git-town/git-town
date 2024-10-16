@@ -14,13 +14,13 @@ func Wrap(program Mutable[program.Program], options WrapOptions) {
 		return
 	}
 	if !options.DryRun {
-		program.Value.Add(&opcodes.PreserveCheckoutHistory{
+		program.Value.Add(&opcodes.CheckoutHistoryPreserve{
 			PreviousBranchCandidates: options.PreviousBranchCandidates,
 		})
 	}
 	if options.StashOpenChanges {
 		program.Value.Prepend(&opcodes.StashOpenChanges{})
-		program.Value.Add(&opcodes.RestoreOpenChanges{})
+		program.Value.Add(&opcodes.StashPopIfNeeded{})
 	}
 }
 
