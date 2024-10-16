@@ -11,12 +11,11 @@ import (
 func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataMerge) program.Program {
 	prog := NewMutable(&program.Program{})
 	prog.Value.Add(&opcodes.EnsureHasShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
-	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
-		UpdateChildBranchProposals(prog.Value, sharedData.proposalsOfChildBranches, localTargetBranch)
+		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.MergeFastForward{Branch: sharedData.branchNameToShip})
 	if squashMergeData.remotes.HasOrigin() && sharedData.config.Config.IsOnline() {
@@ -33,7 +32,7 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 		}
 	}
 	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.ChangeParent{Branch: child, Parent: localTargetBranch})
+		prog.Value.Add(&opcodes.LineageSetParentToGrandParent{Branch: child})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
