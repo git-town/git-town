@@ -16,6 +16,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
+      |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
@@ -37,7 +38,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 24 shell commands.
       """
     And the current branch is now "new"
     And the uncommitted file still exists

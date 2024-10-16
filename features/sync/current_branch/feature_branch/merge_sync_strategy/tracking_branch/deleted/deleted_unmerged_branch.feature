@@ -9,7 +9,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
-      | branch-2 | local, origin | branch-2 commit |
+      | branch-2 | local         | branch-2 commit |
     And origin deletes the "branch-2" branch
     And the current branch is "branch-2"
     And an uncommitted file

@@ -102,12 +102,13 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 
 	runProgram := program.Program{}
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
-		BranchInfos:   data.branchInfos,
-		Config:        data.config.Config,
-		InitialBranch: data.initialBranch,
-		Program:       NewMutable(&runProgram),
-		PushBranches:  pushBranches,
-		Remotes:       data.remotes,
+		BranchInfos:         data.branchInfos,
+		Config:              data.config.Config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
+		Program:             NewMutable(&runProgram),
+		PushBranches:        pushBranches,
+		Remotes:             data.remotes,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
@@ -162,22 +163,27 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 }
 
 type syncData struct {
-	branchInfos      gitdomain.BranchInfos
-	branchesSnapshot gitdomain.BranchesSnapshot
-	branchesToSync   []configdomain.BranchToSync
-	config           config.ValidatedConfig
-	detached         configdomain.Detached
-	dialogTestInputs components.TestInputs
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	previousBranch   Option[gitdomain.LocalBranchName]
-	remotes          gitdomain.Remotes
-	shouldPushTags   bool
-	stashSize        gitdomain.StashSize
+	branchInfos              gitdomain.BranchInfos
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchesToSync           []configdomain.BranchToSync
+	config                   config.ValidatedConfig
+	detached                 configdomain.Detached
+	dialogTestInputs         components.TestInputs
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
+	previousBranch           Option[gitdomain.LocalBranchName]
+	remotes                  gitdomain.Remotes
+	shouldPushTags           bool
+	stashSize                gitdomain.StashSize
 }
 
 func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -300,18 +306,19 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		return data, false, err
 	}
 	return syncData{
-		branchInfos:      branchesSnapshot.Branches,
-		branchesSnapshot: branchesSnapshot,
-		branchesToSync:   branchesToSync,
-		config:           validatedConfig,
-		detached:         detached,
-		dialogTestInputs: dialogTestInputs,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		previousBranch:   previousBranchOpt,
-		remotes:          remotes,
-		shouldPushTags:   shouldPushTags,
-		stashSize:        stashSize,
+		branchInfos:              branchesSnapshot.Branches,
+		branchesSnapshot:         branchesSnapshot,
+		branchesToSync:           branchesToSync,
+		config:                   validatedConfig,
+		detached:                 detached,
+		dialogTestInputs:         dialogTestInputs,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
+		previousBranch:           previousBranchOpt,
+		remotes:                  remotes,
+		shouldPushTags:           shouldPushTags,
+		stashSize:                stashSize,
 	}, false, err
 }
 

@@ -20,9 +20,9 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
+      |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git remote                                    |
-      |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
@@ -32,12 +32,8 @@ Feature: display all executed Git commands
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main --no-update-refs       |
       |        | backend  | git rev-list --left-right main...origin/main  |
-      | main   | frontend | git checkout old                              |
-      | old    | frontend | git merge --no-edit --ff main                 |
-      |        | backend  | git diff main..old                            |
-      | old    | frontend | git checkout main                             |
-      | main   | frontend | git branch -D old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
+      | main   | frontend | git branch -D old                             |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git branch -vva --sort=refname                |
@@ -46,7 +42,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 24 shell commands.
       """
     And the current branch is now "main"
     And the branches are now

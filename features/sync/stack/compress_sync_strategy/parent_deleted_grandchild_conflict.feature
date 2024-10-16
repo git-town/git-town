@@ -23,10 +23,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
       |            | git checkout main                          |
       | main       | git rebase origin/main --no-update-refs    |
       |            | git push                                   |
-      |            | git checkout child                         |
-      | child      | git merge --no-edit --ff main              |
-      |            | git checkout main                          |
-      | main       | git branch -D child                        |
+      |            | git branch -D child                        |
       |            | git checkout grandchild                    |
       | grandchild | git merge --no-edit --ff origin/grandchild |
       |            | git merge --no-edit --ff main              |

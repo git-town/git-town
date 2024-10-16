@@ -82,7 +82,7 @@ func Types() []shared.Opcode {
 		&CheckoutHistoryPreserve{},
 		&CheckoutIfExists{},
 		&CheckoutIfNeeded{},
-		&CheckoutParent{},
+		&CheckoutParentOrMain{},
 		&CheckoutUncached{},
 		&ChangesStage{},
 		&Commit{},
