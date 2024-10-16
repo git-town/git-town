@@ -53,6 +53,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchEnsureShippableChanges{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
 				&opcodes.BranchParentDelete{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchRemoteCreate{Branch: gitdomain.NewLocalBranchName("branch"), SHA: gitdomain.NewSHA("123456")},
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
@@ -111,7 +112,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
 				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.StashPopIfNeeded{},
@@ -202,6 +202,13 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchLocalDelete"
+    },
+    {
+      "data": {
+        "NewName": "new",
+        "OldName": "old"
+      },
+      "type": "BranchLocalRename"
     },
     {
       "data": {
@@ -550,13 +557,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "NewName": "new",
-        "OldName": "old"
-      },
-      "type": "BranchLocalRename"
     },
     {
       "data": {
