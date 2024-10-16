@@ -63,7 +63,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
-				&opcodes.BranchesContributionAdd{Branch: "branch"}, // TODO: use string constants here, they get converted to the right data type
+				&opcodes.BranchesContributionAdd{Branch: "branch"},
 				&opcodes.BranchesContributionRemove{Branch: "branch"},
 				&opcodes.BranchesObservedAdd{Branch: "branch"},
 				&opcodes.BranchesObservedRemove{Branch: "branch"},
