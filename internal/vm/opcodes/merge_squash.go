@@ -60,11 +60,7 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	squashedCommitSHA, err := args.Git.SHAForBranch(args.Backend, self.Parent.BranchName())
-	if err != nil {
-		return err
-	}
-	args.RegisterUndoablePerennialCommit(squashedCommitSHA)
+	args.PrependOpcodes(&RegisterUndoablePerennialCommit{Parent: self.Parent.BranchName()})
 	return nil
 }
 
