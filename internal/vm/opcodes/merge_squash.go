@@ -40,6 +40,13 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 	if aborted {
 		return errors.New("aborted by user")
 	}
+	repoAuthor := args.Config.Author()
+	var authorOpt Option[gitdomain.Author]
+	if repoAuthor == author {
+		authorOpt = None[gitdomain.Author]()
+	} else {
+		authorOpt = Some(author)
+	}
 	err = args.Git.SquashMerge(args.Frontend, self.Branch)
 	if err != nil {
 		return err
@@ -48,13 +55,6 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 		if err = args.Git.CommentOutSquashCommitMessage(""); err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
-	}
-	repoAuthor := args.Config.Author()
-	var authorOpt Option[gitdomain.Author]
-	if repoAuthor == author {
-		authorOpt = None[gitdomain.Author]()
-	} else {
-		authorOpt = Some(author)
 	}
 	err = args.Git.Commit(args.Frontend, self.CommitMessage, false, authorOpt)
 	if err != nil {
