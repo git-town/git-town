@@ -64,6 +64,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchesParkedAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPerennialAdd{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.BranchesPrototypeAdd{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.ChangesDiscard{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -84,7 +85,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.ChangesDiscard{},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
 				&opcodes.ProgramEndOfBranch{},
@@ -273,6 +273,10 @@ func TestLoadSave(t *testing.T) {
       "type": "BranchesPrototypeAdd"
     },
     {
+      "data": {},
+      "type": "ChangesDiscard"
+    },
+    {
       "data": {
         "Branch": "branch"
       },
@@ -396,10 +400,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
-    },
-    {
-      "data": {},
-      "type": "ChangesDiscard"
     },
     {
       "data": {},
