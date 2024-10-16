@@ -19,7 +19,6 @@ import (
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
-// TODO: rename all commands to have the form noun-verb, i.e. "RebaseAbort" instead of "AbortRebase"
 type Commands struct {
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	RemotesCache       *cache.Remotes                 // caches Git remotes
