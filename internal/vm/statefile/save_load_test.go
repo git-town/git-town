@@ -80,6 +80,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
 				&opcodes.CheckoutUncached{Branch: "branch"},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitAutoUndo{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
@@ -372,6 +373,14 @@ func TestLoadSave(t *testing.T) {
         "Message": "my message"
       },
       "type": "Commit"
+    },
+    {
+      "data": {
+        "AuthorOverride": "user@acme.com",
+        "FallbackToDefaultCommitMessage": true,
+        "Message": "my message"
+      },
+      "type": "CommitAutoUndo"
     },
     {
       "data": {
