@@ -76,6 +76,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.CheckoutUncached{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
+				&opcodes.CommitRevert{SHA: gitdomain.NewSHA("123456")},
+				&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("123456")},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: gitdomain.CommitMessage("my message")},
 				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
 				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
@@ -113,8 +115,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.StashPopIfNeeded{},
-				&opcodes.CommitRevert{SHA: gitdomain.NewSHA("123456")},
-				&opcodes.CommitRevertIfNeeded{SHA: gitdomain.NewSHA("123456")},
 				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.MergeSquash{Branch: gitdomain.NewLocalBranchName("branch"), CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: gitdomain.NewLocalBranchName("parent")},
@@ -349,6 +349,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "SHA": "123456"
+      },
+      "type": "CommitRevert"
+    },
+    {
+      "data": {
+        "SHA": "123456"
+      },
+      "type": "CommitRevertIfNeeded"
+    },
+    {
+      "data": {
         "AuthorOverride": "user@acme.com",
         "Message": "my message"
       },
@@ -564,18 +576,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPopIfNeeded"
-    },
-    {
-      "data": {
-        "SHA": "123456"
-      },
-      "type": "CommitRevert"
-    },
-    {
-      "data": {
-        "SHA": "123456"
-      },
-      "type": "CommitRevertIfNeeded"
     },
     {
       "data": {
