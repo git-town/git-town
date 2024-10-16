@@ -100,7 +100,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: "parent"},
 				&opcodes.MergeParentIfNeeded{Branch: "branch"},
-				&opcodes.MergeSquash{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
+				&opcodes.MergeSquash{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
@@ -503,6 +503,10 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Authors": [
+          "author 1 \u003cone@acme.com\u003e",
+          "author 2 \u003ctwo@acme.com\u003e"
+        ],
         "Branch": "branch",
         "CommitMessage": "commit message",
         "Parent": "parent"

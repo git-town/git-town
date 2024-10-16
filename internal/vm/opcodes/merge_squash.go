@@ -13,6 +13,7 @@ import (
 
 // MergeSquash squash merges the branch with the given name into the current branch.
 type MergeSquash struct {
+	Authors       []gitdomain.Author
 	Branch        gitdomain.LocalBranchName
 	CommitMessage Option[gitdomain.CommitMessage]
 	Parent        gitdomain.LocalBranchName
@@ -36,11 +37,7 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := args.Git.BranchAuthors(args.Backend, self.Branch, self.Parent)
-	if err != nil {
-		return err
-	}
-	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, branchAuthors, args.DialogTestInputs.Next())
+	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}

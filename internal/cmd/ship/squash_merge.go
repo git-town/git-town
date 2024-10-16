@@ -10,15 +10,21 @@ import (
 )
 
 type shipDataMerge struct {
+	authors []gitdomain.Author
 	remotes gitdomain.Remotes
 }
 
-func determineMergeData(repo execute.OpenRepoResult) (result shipDataMerge, err error) {
+func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.LocalBranchName) (result shipDataMerge, err error) {
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return result, err
 	}
+	branchAuthors, err := repo.Git.BranchAuthors(repo.Backend, branch, parent)
+	if err != nil {
+		return result, err
+	}
 	return shipDataMerge{
+		authors: branchAuthors,
 		remotes: remotes,
 	}, nil
 }

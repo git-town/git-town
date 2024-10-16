@@ -21,15 +21,16 @@ import (
 
 // data that all ship strategies use
 type sharedShipData struct {
-	branchNameToShip         gitdomain.LocalBranchName
-	branchToShip             gitdomain.BranchInfo
-	branchesSnapshot         gitdomain.BranchesSnapshot
-	childBranches            gitdomain.LocalBranchNames
-	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
-	dialogTestInputs         components.TestInputs
-	dryRun                   configdomain.DryRun
-	hasOpenChanges           bool
+	branchNameToShip gitdomain.LocalBranchName
+	branchToShip     gitdomain.BranchInfo
+	branchesSnapshot gitdomain.BranchesSnapshot
+	childBranches    gitdomain.LocalBranchNames
+	config           config.ValidatedConfig
+	connector        Option[hostingdomain.Connector]
+	dialogTestInputs components.TestInputs
+	dryRun           configdomain.DryRun
+	hasOpenChanges   bool
+
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
