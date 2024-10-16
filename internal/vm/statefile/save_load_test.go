@@ -50,6 +50,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
+				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
+				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchEnsureShippableChanges{Branch: gitdomain.NewLocalBranchName("branch"), Parent: gitdomain.NewLocalBranchName("parent")},
 				&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -112,8 +114,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseTrackingBranch{RemoteBranch: gitdomain.NewRemoteBranchName("origin/branch")},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: gitdomain.NewSHA("111111")},
-				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: gitdomain.NewSHA("222222"), SetToSHA: gitdomain.NewSHA("111111")},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
 				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
@@ -183,6 +183,21 @@ func TestLoadSave(t *testing.T) {
         "CurrentBranch": "branch"
       },
       "type": "BranchCurrentResetToParent"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "SetToSHA": "111111"
+      },
+      "type": "BranchCurrentResetToSHA"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
+      },
+      "type": "BranchCurrentResetToSHAIfNeeded"
     },
     {
       "data": {
@@ -557,21 +572,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashPop"
-    },
-    {
-      "data": {
-        "Hard": true,
-        "SetToSHA": "111111"
-      },
-      "type": "BranchCurrentResetToSHA"
-    },
-    {
-      "data": {
-        "Hard": true,
-        "MustHaveSHA": "222222",
-        "SetToSHA": "111111"
-      },
-      "type": "BranchCurrentResetToSHAIfNeeded"
     },
     {
       "data": {},
