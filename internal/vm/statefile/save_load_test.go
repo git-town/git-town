@@ -100,7 +100,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParent{Parent: "parent"},
 				&opcodes.MergeParentIfNeeded{Branch: "branch"},
-				&opcodes.MergeSquash{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
+				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},

@@ -11,8 +11,8 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// MergeSquash squash merges the branch with the given name into the current branch.
-type MergeSquash struct {
+// MergeSquashProgram squash merges the branch with the given name into the current branch.
+type MergeSquashProgram struct {
 	Authors       []gitdomain.Author
 	Branch        gitdomain.LocalBranchName
 	CommitMessage Option[gitdomain.CommitMessage]
@@ -20,17 +20,17 @@ type MergeSquash struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *MergeSquash) AbortProgram() []shared.Opcode {
+func (self *MergeSquashProgram) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ChangesDiscard{},
 	}
 }
 
-func (self *MergeSquash) AutomaticUndoError() error {
+func (self *MergeSquashProgram) AutomaticUndoError() error {
 	return errors.New(messages.ShipAbortedMergeError)
 }
 
-func (self *MergeSquash) Run(args shared.RunArgs) error {
+func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	// TODO: extract into separate opcodes for Git resilience
 	// Possible create a SquashMergeProgram function that returns these opcodes
 	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
@@ -68,6 +68,6 @@ func (self *MergeSquash) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *MergeSquash) ShouldUndoOnError() bool {
+func (self *MergeSquashProgram) ShouldUndoOnError() bool {
 	return true
 }
