@@ -106,6 +106,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProposalCreate{Branch: gitdomain.NewLocalBranchName("branch"), MainBranch: gitdomain.NewLocalBranchName("main")},
 				&opcodes.ProposalUpdateBase{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 				&opcodes.ProposalUpdateBaseToParent{Branch: "branch", ProposalNumber: 123, OldTarget: gitdomain.NewLocalBranchName("old-target")},
+				&opcodes.ProposalUpdateHead{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("branch")},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
@@ -124,7 +125,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
-				&opcodes.ProposalUpdateHead{ProposalNumber: 123, NewTarget: gitdomain.NewLocalBranchName("new-target"), OldTarget: gitdomain.NewLocalBranchName("old-target")},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: SomeP(&runstate.UnfinishedRunStateDetails{
@@ -545,6 +545,14 @@ func TestLoadSave(t *testing.T) {
       "type": "ProposalUpdateBaseToParent"
     },
     {
+      "data": {
+        "NewTarget": "new-target",
+        "OldTarget": "old-target",
+        "ProposalNumber": 123
+      },
+      "type": "ProposalUpdateHead"
+    },
+    {
       "data": {},
       "type": "PullCurrentBranch"
     },
@@ -635,14 +643,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashOpenChanges"
-    },
-    {
-      "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
-        "ProposalNumber": 123
-      },
-      "type": "ProposalUpdateHead"
     }
   ],
   "TouchedBranches": [
