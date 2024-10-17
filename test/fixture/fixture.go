@@ -78,7 +78,6 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 			Commands:   &gitCommands,
 			Config:     devRepo.Config,
 		},
-		Config: devRepo.Config,
 	})
 }
 
