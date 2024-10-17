@@ -23,10 +23,10 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo OptionP[testruntime.TestRuntime]
+	CoworkerRepo OptionP[commands.TestCommands]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo OptionP[testruntime.TestRuntime]
+	DevRepo OptionP[commands.TestCommands]
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
@@ -35,18 +35,18 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo OptionP[testruntime.TestRuntime]
+	OriginRepo OptionP[commands.TestCommands]
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
-	SecondWorktree OptionP[testruntime.TestRuntime]
+	SecondWorktree OptionP[commands.TestCommands]
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo OptionP[testruntime.TestRuntime]
+	SubmoduleRepo OptionP[commands.TestCommands]
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo OptionP[testruntime.TestRuntime]
+	UpstreamRepo OptionP[commands.TestCommands]
 }
 
 // AddCoworkerRepo adds a coworker repository.
@@ -72,12 +72,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	self.SecondWorktree = SomeP(&testruntime.TestRuntime{
-		TestCommands: commands.TestCommands{
-			TestRunner: &runner,
-			Commands:   &gitCommands,
-			Config:     devRepo.Config,
-		},
+	self.SecondWorktree = SomeP(&commands.TestCommands{
+		TestRunner: &runner,
+		Commands:   &gitCommands,
+		Config:     devRepo.Config,
 	})
 }
 
@@ -232,7 +230,7 @@ func developerRepoPath(rootDir string) string {
 	return filepath.Join(rootDir, "developer")
 }
 
-func initializeWorkspace(repo *testruntime.TestRuntime) {
+func initializeWorkspace(repo *commands.TestCommands) {
 	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
 	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
