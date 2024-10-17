@@ -52,7 +52,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
+			SharedConfig: configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 			},
 		}
@@ -111,7 +111,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
+			SharedConfig: configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 			},
 		}
@@ -146,7 +146,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
+			SharedConfig: configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 			},
 		}
@@ -175,7 +175,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
+			SharedConfig: configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 			},
 		}
