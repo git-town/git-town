@@ -23,15 +23,6 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	return self.SharedConfig.PartialBranchType(branch)
 }
 
-// TODO: this is identical to UnvalidatedBranchesAndTypes. Merge these two methods.
-func (self *UnvalidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
-	result := make(BranchesAndTypes, len(branches))
-	for _, branch := range branches {
-		result[branch] = self.BranchType(branch)
-	}
-	return result
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
