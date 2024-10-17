@@ -24,10 +24,7 @@ Feature: shipped parent of a stacked change with conflicting changes
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
-      |        | git checkout main                       |
-      | main   | git branch -D alpha                     |
+      |        | git branch -D alpha                     |
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
@@ -36,6 +33,14 @@ Feature: shipped parent of a stacked change with conflicting changes
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
+    And it prints the error:
+      """
+      deleted branch "alpha"
+      """
+    And it prints the error:
+      """
+      branch "beta" is now a child of "main"
+      """
 
   Scenario: resolve manually
     When I resolve the conflict in "file"

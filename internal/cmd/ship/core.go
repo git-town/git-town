@@ -91,13 +91,13 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		}
 		shipProgram = shipAPIProgram(sharedData, apiData, message)
 	case configdomain.ShipStragegyFastForward:
-		mergeData, err := determineMergeData(repo)
+		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
 		shipProgram = shipProgramFastForward(sharedData, mergeData)
 	case configdomain.ShipStrategySquashMerge:
-		squashMergeData, err := determineMergeData(repo)
+		squashMergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}

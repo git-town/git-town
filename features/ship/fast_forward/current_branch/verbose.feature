@@ -27,6 +27,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git remote get-url origin                         |
+      |         | backend  | git shortlog -s -n -e main..feature               |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --ff-only feature                       |
@@ -41,7 +42,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 24 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"
 

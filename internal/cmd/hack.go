@@ -167,6 +167,10 @@ type createFeatureBranchArgs struct {
 }
 
 func determineHackData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
@@ -273,6 +277,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
 		remotes:                   remotes,

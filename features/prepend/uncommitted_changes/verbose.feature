@@ -19,6 +19,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                   |
       |        | backend  | git config -lz --includes --global              |
       |        | backend  | git config -lz --includes --local               |
+      |        | backend  | git branch -vva --sort=refname                  |
       |        | backend  | git status --long --ignore-submodules           |
       |        | backend  | git stash list                                  |
       |        | backend  | git branch -vva --sort=refname                  |
@@ -44,7 +45,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                  |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "parent"
 

@@ -18,10 +18,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | shipped | git fetch --prune --tags                |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout shipped                    |
-      | shipped | git merge --no-edit --ff main           |
-      |         | git checkout main                       |
-      | main    | git branch -D shipped                   |
+      |         | git branch -D shipped                   |
       |         | git checkout -b new                     |
     And it prints:
       """
