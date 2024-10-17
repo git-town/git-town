@@ -80,9 +80,9 @@ func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) g
 }
 
 func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig, defaults ValidatedConfig) ValidatedConfig {
-	var result PartialConfig
+	result := EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		result = configFile
+		result = result.Merge(configFile)
 	}
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)

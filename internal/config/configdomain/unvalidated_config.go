@@ -77,9 +77,9 @@ func DefaultConfig() UnvalidatedConfig {
 }
 
 func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
-	var result PartialConfig
+	result := EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		result = configFile
+		result = result.Merge(configFile)
 	}
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)
