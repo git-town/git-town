@@ -235,3 +235,24 @@ You always have to ship the oldest branch first. You can use
 [git town prepend](commands/prepend.md) to insert a feature branch as a parent
 of the current feature branch or [set parent](commands/set-parent.md) to change
 the order of branches.
+
+#### Avoid phantom merge conflicts
+
+To eliminate phantom merge conflicts after shipping the oldest branch in a
+stacked change, ship using a
+[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+This guarantees that the new commit(s) on the main branch are the exact same
+commit(s) from the shipped feature branch. This helps Git recognize those
+commits at the next `git town sync` operation and omit unnecessary merge and
+rebase operations.
+
+GitLab provides fast-forward merges
+[out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
+utilize by using [git town ship](commands/ship.md) with the
+[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
+This problem is documented by
+[GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
+
+You might want to [compress](commands/compress.md) the feature branch to have
+only one new commit on the main branch.
