@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
@@ -17,13 +15,6 @@ type ValidatedConfig struct {
 
 func EmptyValidatedConfig() ValidatedConfig {
 	return ValidatedConfig{} //exhaustruct:ignore
-}
-
-// Author provides the locally Git configured user.
-func (self *ValidatedConfig) Author() gitdomain.Author {
-	email := self.Config.GitUserEmail
-	name := self.Config.GitUserName
-	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
 }
 
 func (self *ValidatedConfig) Reload() {
