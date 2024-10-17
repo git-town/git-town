@@ -13,7 +13,7 @@ type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
-	*UnvalidatedConfig
+	SharedConfig
 }
 
 // Author provides the locally Git configured user.
@@ -27,7 +27,7 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	return self.UnvalidatedConfig.BranchType(branch)
+	return self.SharedConfig.PartialBranchType(branch)
 }
 
 func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {

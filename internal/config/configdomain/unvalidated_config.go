@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"slices"
-
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
@@ -11,39 +9,10 @@ import (
 // It might be lacking essential information in case Git metadata and config files don't contain it.
 // If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfig struct {
-	Aliases                  Aliases
-	BitbucketAppPassword     Option[BitbucketAppPassword]
-	BitbucketUsername        Option[BitbucketUsername]
-	ContributionBranches     gitdomain.LocalBranchNames
-	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  CreatePrototypeBranches
-	DefaultBranchType        DefaultBranchType
-	FeatureRegex             Option[FeatureRegex]
-	GitHubToken              Option[GitHubToken]
-	GitLabToken              Option[GitLabToken]
-	GitUserEmail             Option[GitUserEmail]
-	GitUserName              Option[GitUserName]
-	GiteaToken               Option[GiteaToken]
-	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
-	Lineage                  Lineage
-	MainBranch               Option[gitdomain.LocalBranchName]
-	ObservedBranches         gitdomain.LocalBranchNames
-	ObservedRegex            Option[ObservedRegex]
-	Offline                  Offline
-	ParkedBranches           gitdomain.LocalBranchNames
-	PerennialBranches        gitdomain.LocalBranchNames
-	PerennialRegex           Option[PerennialRegex]
-	PrototypeBranches        gitdomain.LocalBranchNames
-	PushHook                 PushHook
-	PushNewBranches          PushNewBranches
-	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
-	ShipStrategy             ShipStrategy
-	SyncFeatureStrategy      SyncFeatureStrategy
-	SyncPerennialStrategy    SyncPerennialStrategy
-	SyncPrototypeStrategy    SyncPrototypeStrategy
-	SyncTags                 SyncTags
-	SyncUpstream             SyncUpstream
+	GitUserEmail Option[GitUserEmail]
+	GitUserName  Option[GitUserName]
+	MainBranch   Option[gitdomain.LocalBranchName]
+	SharedConfig
 }
 
 // indicates the branch type of the given branch
@@ -51,44 +20,16 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	if self.IsPerennialBranch(branch) {
-		return BranchTypePerennialBranch
-	}
-	if slices.Contains(self.ContributionBranches, branch) {
-		return BranchTypeContributionBranch
-	}
-	if slices.Contains(self.ObservedBranches, branch) {
-		return BranchTypeObservedBranch
-	}
-	if slices.Contains(self.ParkedBranches, branch) {
-		return BranchTypeParkedBranch
-	}
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return BranchTypePrototypeBranch
-	}
-	if self.MatchesFeatureBranchRegex(branch) {
-		return BranchTypeFeatureBranch
-	}
-	if self.MatchesContributionRegex(branch) {
-		return BranchTypeContributionBranch
-	}
-	if self.MatchesObservedRegex(branch) {
-		return BranchTypeObservedBranch
-	}
-	return self.DefaultBranchType.BranchType
+	return self.SharedConfig.PartialBranchType(branch)
 }
 
+// TODO: this is identical to UnvalidatedBranchesAndTypes. Merge these two methods.
 func (self *UnvalidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
 	result := make(BranchesAndTypes, len(branches))
 	for _, branch := range branches {
 		result[branch] = self.BranchType(branch)
 	}
 	return result
-}
-
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *UnvalidatedConfig) ContainsLineage() bool {
-	return self.Lineage.Len() > 0
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -106,58 +47,11 @@ func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBra
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
-func (self *UnvalidatedConfig) IsOnline() bool {
-	return self.Online().IsTrue()
-}
-
-func (self *UnvalidatedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PerennialBranches, branch) {
-		return true
-	}
-	if perennialRegex, has := self.PerennialRegex.Get(); has {
-		return perennialRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
 		return append(gitdomain.LocalBranchNames{mainBranch}, self.PerennialBranches...)
 	}
 	return self.PerennialBranches
-}
-
-func (self *UnvalidatedConfig) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
-	if contributionRegex, has := self.ContributionRegex.Get(); has {
-		return contributionRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *UnvalidatedConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
-	if featureRegex, has := self.FeatureRegex.Get(); has {
-		return featureRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *UnvalidatedConfig) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
-	if observedRegex, has := self.ObservedRegex.Get(); has {
-		return observedRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *UnvalidatedConfig) NoPushHook() NoPushHook {
-	return self.PushHook.Negate()
-}
-
-func (self *UnvalidatedConfig) Online() Online {
-	return self.Offline.ToOnline()
-}
-
-func (self *UnvalidatedConfig) ShouldPushNewBranches() bool {
-	return self.PushNewBranches.IsTrue()
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -174,39 +68,8 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
-		Aliases:                  Aliases{},
-		BitbucketAppPassword:     None[BitbucketAppPassword](),
-		BitbucketUsername:        None[BitbucketUsername](),
-		ContributionBranches:     gitdomain.NewLocalBranchNames(),
-		ContributionRegex:        None[ContributionRegex](),
-		CreatePrototypeBranches:  false,
-		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
-		FeatureRegex:             None[FeatureRegex](),
-		GitHubToken:              None[GitHubToken](),
-		GitLabToken:              None[GitLabToken](),
-		GitUserEmail:             None[GitUserEmail](),
-		GitUserName:              None[GitUserName](),
-		GiteaToken:               None[GiteaToken](),
-		HostingOriginHostname:    None[HostingOriginHostname](),
-		HostingPlatform:          None[HostingPlatform](),
-		Lineage:                  NewLineage(),
-		MainBranch:               None[gitdomain.LocalBranchName](),
-		ObservedBranches:         gitdomain.NewLocalBranchNames(),
-		ObservedRegex:            None[ObservedRegex](),
-		Offline:                  false,
-		ParkedBranches:           gitdomain.NewLocalBranchNames(),
-		PerennialBranches:        gitdomain.NewLocalBranchNames(),
-		PerennialRegex:           None[PerennialRegex](),
-		PrototypeBranches:        gitdomain.NewLocalBranchNames(),
-		PushHook:                 true,
-		PushNewBranches:          false,
-		ShipDeleteTrackingBranch: true,
-		ShipStrategy:             ShipStrategyAPI,
-		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
-		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
-		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,
-		SyncTags:                 true,
-		SyncUpstream:             true,
+		MainBranch:   None[gitdomain.LocalBranchName](),
+		SharedConfig: DefaultSharedConfig(),
 	}
 }
 

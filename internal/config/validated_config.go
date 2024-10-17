@@ -30,9 +30,9 @@ func (self *ValidatedConfig) Reload() {
 		LocalGitConfig:  self.LocalGitConfig,
 	}
 	self.Config = configdomain.ValidatedConfig{
-		UnvalidatedConfig: &unvalidateConfig,
-		GitUserEmail:      self.Config.GitUserEmail,
-		GitUserName:       self.Config.GitUserName,
-		MainBranch:        self.Config.MainBranch,
+		SharedConfig: unvalidateConfig.SharedConfig,
+		GitUserEmail: self.Config.GitUserEmail,
+		GitUserName:  self.Config.GitUserName,
+		MainBranch:   self.Config.MainBranch,
 	}
 }
