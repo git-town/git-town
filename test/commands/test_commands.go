@@ -69,7 +69,6 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
-	fmt.Println("3333333333333333333333333333333333333333333333333333", self.Config.Config.Lineage)
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	var result []git.Commit
@@ -86,14 +85,20 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
-	args := []string{"log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
+	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
-		args = append(args, "--not", parent.String())
+		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
+	} else {
+		args = append(args, branch.String())
 	}
 	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
 	result := make([]git.Commit, 0, len(lines))
 	for _, line := range lines {
+		if len(strings.TrimSpace(line)) == 0 {
+			continue
+		}
+		fmt.Println("11111111111111111111111111111111111111111111111111 LINE", line)
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
@@ -316,7 +321,6 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
 	_, localGitConfig, _ := self.Config.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	lineage := localGitConfig.Lineage
 	for _, branchName := range lineage.BranchNames() {

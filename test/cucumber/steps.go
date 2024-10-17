@@ -726,7 +726,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if hasDevRepo {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
 			devRepo.Config.Reload()
-			fmt.Println("4444444444444444444444444444444444444444444444", devRepo.Config.Config.Lineage)
 		} else {
 			parts, err := shellquote.Split(command)
 			asserts.NoError(err)
@@ -1530,8 +1529,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Println("555555555555555555555555555555555555555555555", devRepo.Config.Config.Lineage)
 		return state.compareGherkinTable(table)
 	})
 
