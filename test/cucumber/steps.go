@@ -31,7 +31,6 @@ import (
 	"github.com/git-town/git-town/v16/test/helpers"
 	"github.com/git-town/git-town/v16/test/output"
 	"github.com/git-town/git-town/v16/test/subshell"
-	"github.com/git-town/git-town/v16/test/testruntime"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
 )
@@ -147,7 +146,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			devRepo.Verbose = true
 		}
 		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		fixture.OriginRepo = NoneP[testruntime.TestRuntime]()
+		fixture.OriginRepo = NoneP[commands.TestCommands]()
 		state := ScenarioState{
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
@@ -469,9 +468,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		var haveOpt Option[string]
 		switch locality {
 		case "local", "":
-			haveOpt = devRepo.TestCommands.LocalGitConfig(key)
+			haveOpt = devRepo.LocalGitConfig(key)
 		case "global":
-			haveOpt = devRepo.TestCommands.GlobalGitConfig(key)
+			haveOpt = devRepo.GlobalGitConfig(key)
 		default:
 			return fmt.Errorf("unknown locality: %q", locality)
 		}
@@ -496,9 +495,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		var valueOpt Option[string]
 		switch locality {
 		case "local", "":
-			valueOpt = devRepo.TestCommands.LocalGitConfig(key)
+			valueOpt = devRepo.LocalGitConfig(key)
 		case "global":
-			valueOpt = devRepo.TestCommands.GlobalGitConfig(key)
+			valueOpt = devRepo.GlobalGitConfig(key)
 		default:
 			return fmt.Errorf("unknown locality: %q", locality)
 		}
@@ -543,13 +542,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
 		asserts.NoError(os.Mkdir(envPath, 0o777))
 		fixture := fixture.Fixture{
-			CoworkerRepo:   NoneP[testruntime.TestRuntime](),
-			DevRepo:        NoneP[testruntime.TestRuntime](),
+			CoworkerRepo:   NoneP[commands.TestCommands](),
+			DevRepo:        NoneP[commands.TestCommands](),
 			Dir:            envPath,
-			OriginRepo:     NoneP[testruntime.TestRuntime](),
-			SecondWorktree: NoneP[testruntime.TestRuntime](),
-			SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
-			UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+			OriginRepo:     NoneP[commands.TestCommands](),
+			SecondWorktree: NoneP[commands.TestCommands](),
+			SubmoduleRepo:  NoneP[commands.TestCommands](),
+			UpstreamRepo:   NoneP[commands.TestCommands](),
 		}
 		state := ScenarioState{
 			fixture:              fixture,
@@ -995,7 +994,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
-			var repoToCreateBranchIn *testruntime.TestRuntime
+			var repoToCreateBranchIn *commands.TestCommands
 			switch {
 			case
 				branchSetup.Locations.Is(git.LocationLocal),
@@ -1217,7 +1216,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.CurrentBranch(secondWorkTree.TestCommands)
+		actual, err := secondWorkTree.CurrentBranch(secondWorkTree)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
@@ -1265,7 +1264,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the currently checked out commit is "([^"]+)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.TestCommands.CurrentCommitMessage()
+		have := devRepo.CurrentCommitMessage()
 		if have != want {
 			return fmt.Errorf("expected commit %q but got %q", want, have)
 		}
@@ -1627,12 +1626,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 func updateInitialSHAs(state *ScenarioState) {
 	devRepo := state.fixture.DevRepo.GetOrPanic()
 	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
-		state.initialDevSHAs = Some(devRepo.TestCommands.CommitSHAs())
+		state.initialDevSHAs = Some(devRepo.CommitSHAs())
 	}
 	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
-		state.initialOriginSHAs = Some(originRepo.TestCommands.CommitSHAs())
+		state.initialOriginSHAs = Some(originRepo.CommitSHAs())
 	}
 	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
-		state.initialWorktreeSHAs = Some(secondWorkTree.TestCommands.CommitSHAs())
+		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
 	}
 }
