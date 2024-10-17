@@ -19,12 +19,6 @@ func EmptyValidatedConfig() ValidatedConfig {
 	return ValidatedConfig{} //exhaustruct:ignore
 }
 
-// AddToPerennialBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *ValidatedConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.Config.PerennialBranches, branches...))
-}
-
 // Author provides the locally Git configured user.
 func (self *ValidatedConfig) Author() gitdomain.Author {
 	email := self.Config.GitUserEmail

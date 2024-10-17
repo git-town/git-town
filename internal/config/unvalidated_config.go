@@ -63,6 +63,12 @@ func (self *UnvalidatedConfig) AddToParkedBranches(branches ...gitdomain.LocalBr
 	return self.SetParkedBranches(append(self.Config.Value.ParkedBranches, branches...))
 }
 
+// AddToPerennialBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *ValidatedConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetPerennialBranches(append(self.Config.PerennialBranches, branches...))
+}
+
 // AddToPrototypeBranches registers the given branch names as prototype branches.
 // The branches must exist.
 func (self *UnvalidatedConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
