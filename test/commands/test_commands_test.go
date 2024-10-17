@@ -9,6 +9,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/git-town/git-town/v16/test/filesystem"
 	"github.com/git-town/git-town/v16/test/fixture"
 	"github.com/git-town/git-town/v16/test/git"
@@ -215,7 +216,7 @@ func TestTestCommands(t *testing.T) {
 			FileName:    "hello.txt",
 			Message:     "commit",
 		})
-		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), []string(nil))
+		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), None[gitdomain.LocalBranchName](), []string(nil))
 		must.Len(t, 1, commits)
 		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
 		must.EqOp(t, "hello world", content)

@@ -76,15 +76,20 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
 		}
-		commits := self.CommitsInBranch(branch, fields)
+		parent := self.Config.Config.Lineage.Parent(branch)
+		commits := self.CommitsInBranch(branch, parent, fields)
 		result = append(result, commits...)
 	}
 	return result
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fields []string) []git.Commit {
-	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
+	args := []string{"log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		args = append(args, "--not", parent.String())
+	}
+	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
 	result := make([]git.Commit, 0, len(lines))
 	for _, line := range lines {
