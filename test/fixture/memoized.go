@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/commands"
 	"github.com/git-town/git-town/v16/test/filesystem"
 	"github.com/git-town/git-town/v16/test/testruntime"
 )
@@ -58,13 +59,13 @@ func (self Memoized) AsFixture() Fixture {
 	originRepo := testruntime.New(originDir, self.Dir, "")
 	devRepo := testruntime.New(developerDir, self.Dir, binDir)
 	return Fixture{
-		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		CoworkerRepo:   NoneP[commands.TestCommands](),
 		DevRepo:        SomeP(&devRepo),
 		Dir:            self.Dir,
 		OriginRepo:     SomeP(&originRepo),
-		SecondWorktree: NoneP[testruntime.TestRuntime](),
-		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
-		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+		SecondWorktree: NoneP[commands.TestCommands](),
+		SubmoduleRepo:  NoneP[commands.TestCommands](),
+		UpstreamRepo:   NoneP[commands.TestCommands](),
 	}
 }
 
@@ -84,12 +85,12 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	// and connect the main branches again
 	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
 	return Fixture{
-		CoworkerRepo:   NoneP[testruntime.TestRuntime](),
+		CoworkerRepo:   NoneP[commands.TestCommands](),
 		DevRepo:        SomeP(&devRepo),
 		Dir:            dir,
 		OriginRepo:     SomeP(&originRepo),
-		SecondWorktree: NoneP[testruntime.TestRuntime](),
-		SubmoduleRepo:  NoneP[testruntime.TestRuntime](),
-		UpstreamRepo:   NoneP[testruntime.TestRuntime](),
+		SecondWorktree: NoneP[commands.TestCommands](),
+		SubmoduleRepo:  NoneP[commands.TestCommands](),
+		UpstreamRepo:   NoneP[commands.TestCommands](),
 	}
 }
