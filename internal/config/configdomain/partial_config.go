@@ -174,7 +174,7 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
-		SharedConfig: SharedConfig{
+		SharedConfig: &SharedConfig{
 			Aliases:                  self.Aliases,
 			BitbucketAppPassword:     self.BitbucketAppPassword,
 			BitbucketUsername:        self.BitbucketUsername,

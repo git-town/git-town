@@ -28,7 +28,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
 				PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 				ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
@@ -55,7 +55,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 			},
 		}
@@ -71,7 +71,7 @@ func TestValidatedConfig(t *testing.T) {
 		must.NoError(t, err)
 		config := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 				PerennialRegex:    perennialRegexOpt,
 			},
@@ -96,7 +96,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			},
 		}

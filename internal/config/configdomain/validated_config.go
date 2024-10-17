@@ -13,7 +13,7 @@ type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
-	SharedConfig
+	*SharedConfig
 }
 
 // Author provides the locally Git configured user.

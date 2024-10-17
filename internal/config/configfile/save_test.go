@@ -43,7 +43,7 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		give := configdomain.UnvalidatedConfig{
 			MainBranch: None[gitdomain.LocalBranchName](),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				CreatePrototypeBranches:  true,
 				DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
 				FeatureRegex:             None[configdomain.FeatureRegex](),

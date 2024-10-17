@@ -12,7 +12,7 @@ type UnvalidatedConfig struct {
 	GitUserEmail Option[GitUserEmail]
 	GitUserName  Option[GitUserName]
 	MainBranch   Option[gitdomain.LocalBranchName]
-	SharedConfig
+	*SharedConfig
 }
 
 // indicates the branch type of the given branch
@@ -67,11 +67,12 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
+	sharedConfig := DefaultSharedConfig()
 	return UnvalidatedConfig{
 		GitUserEmail: None[GitUserEmail](),
 		GitUserName:  None[GitUserName](),
 		MainBranch:   None[gitdomain.LocalBranchName](),
-		SharedConfig: DefaultSharedConfig(),
+		SharedConfig: &sharedConfig,
 	}
 }
 

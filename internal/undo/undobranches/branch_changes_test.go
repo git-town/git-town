@@ -65,7 +65,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("branch-1"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PushHook:          false,
 				PerennialBranches: gitdomain.NewLocalBranchNames(),
@@ -121,7 +121,7 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           configdomain.Lineage{},
 				PerennialBranches: gitdomain.NewLocalBranchNames(),
 				PushHook:          false,
@@ -211,7 +211,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				Lineage:           lineage,
 				PushHook:          false,
@@ -302,7 +302,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -387,7 +387,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -456,7 +456,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -550,7 +550,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          true,
@@ -682,7 +682,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          true,
@@ -792,7 +792,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -893,7 +893,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1012,7 +1012,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1109,7 +1109,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1206,7 +1206,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1291,7 +1291,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1378,7 +1378,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
@@ -1460,7 +1460,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			SharedConfig: configdomain.SharedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				Lineage:           lineage,
 				PerennialBranches: gitdomain.NewLocalBranchNames(),
 				PushHook:          false,
