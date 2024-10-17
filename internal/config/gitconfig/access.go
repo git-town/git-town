@@ -139,6 +139,8 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 	case configdomain.ConfigScopeLocal:
 		cmdArgs = append(cmdArgs, "--local")
 	}
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa", self)
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa", self.Runner)
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
 		return snapshot, configdomain.EmptyPartialConfig(), nil //nolint:nilerr

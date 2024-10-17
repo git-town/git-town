@@ -38,13 +38,13 @@ func (self *ValidatedConfig) Reload() {
 	fmt.Println("1111111111111111111111111111111111111111111111111111", self.LocalGitConfig)
 	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
 	fmt.Println("2222222222222222222222222222222222222222222222222222", unvalidatedConfig.Lineage)
+	self.UnvalidatedConfig = &UnvalidatedConfig{}
 	self.Config = configdomain.ValidatedConfig{
 		UnvalidatedConfig: &unvalidatedConfig,
 		GitUserEmail:      self.Config.GitUserEmail,
 		GitUserName:       self.Config.GitUserName,
 		MainBranch:        self.Config.MainBranch,
 	}
-	self.UnvalidatedConfig = &UnvalidatedConfig{}
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
