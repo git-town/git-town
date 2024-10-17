@@ -250,8 +250,8 @@ GitLab provides fast-forward merges
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
 utilize by using [git town ship](commands/ship.md) with the
-[fast-forward shipping strategy](preferences/ship-strategy#fast-forward). This
-problem is documented by
+[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
+This problem is documented by
 [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
 
 You might want to [compress](commands/compress.md) the feature branch to have
