@@ -1,4 +1,4 @@
-Feature: stacked changes
+Feature: stacked changes where each branch makes independent changes
 
   Background:
     Given a Git repo with origin
