@@ -144,10 +144,10 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 	}
 	return config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
-			UnvalidatedConfig: args.unvalidated.Config.Value,
-			GitUserEmail:      gitUserEmail,
-			GitUserName:       gitUserName,
-			MainBranch:        mainBranch,
+			SharedConfig: args.unvalidated.Config.Value.SharedConfig,
+			GitUserEmail: gitUserEmail,
+			GitUserName:  gitUserName,
+			MainBranch:   mainBranch,
 		},
 		UnvalidatedConfig: &args.unvalidated,
 	}, false, nil
