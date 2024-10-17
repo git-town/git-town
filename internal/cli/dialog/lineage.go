@@ -16,7 +16,6 @@ import (
 func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, additionalPerennials gitdomain.LocalBranchNames, aborted bool, err error) {
 	additionalLineage = configdomain.NewLineage()
 	branchesToVerify := args.BranchesToVerify
-	mainBranchName, hasMainBranchName := args.Config.MainBranch.Get()
 	for i := 0; i < len(branchesToVerify); i++ {
 		branchToVerify := branchesToVerify[i]
 		branchType, hasBranchType := args.BranchesAndTypes[branchToVerify]
@@ -25,15 +24,15 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// If the main branch isn't local, it isn't in args.BranchesAndTypes.
 		// We therefore exclude it manually here.
-		if hasMainBranchName && branchToVerify == mainBranchName {
+		if branchToVerify == args.MainBranch {
 			continue
 		}
 		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
 		// We therefore exclude them manually here.
-		if slices.Contains(args.Config.PerennialBranches, branchToVerify) {
+		if slices.Contains(args.PerennialBranches, branchToVerify) {
 			continue
 		}
-		if parent, hasParent := args.Config.Lineage.Parent(branchToVerify).Get(); hasParent {
+		if parent, hasParent := args.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
@@ -52,7 +51,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Branch:          branchToVerify,
 			DefaultChoice:   args.DefaultChoice,
 			DialogTestInput: args.DialogTestInputs.Next(),
-			Lineage:         args.Config.Lineage,
+			Lineage:         args.Lineage,
 			LocalBranches:   args.LocalBranches,
 			MainBranch:      args.MainBranch,
 		})
@@ -73,12 +72,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 }
 
 type LineageArgs struct {
-	BranchesAndTypes configdomain.BranchesAndTypes
-	BranchesToVerify gitdomain.LocalBranchNames
-	Config           configdomain.UnvalidatedConfig
-	Connector        Option[hostingdomain.Connector]
-	DefaultChoice    gitdomain.LocalBranchName
-	DialogTestInputs components.TestInputs
-	LocalBranches    gitdomain.LocalBranchNames
-	MainBranch       gitdomain.LocalBranchName
+	BranchesAndTypes  configdomain.BranchesAndTypes
+	BranchesToVerify  gitdomain.LocalBranchNames
+	Connector         Option[hostingdomain.Connector]
+	DefaultChoice     gitdomain.LocalBranchName
+	DialogTestInputs  components.TestInputs
+	Lineage           configdomain.Lineage
+	LocalBranches     gitdomain.LocalBranchNames
+	MainBranch        gitdomain.LocalBranchName
+	PerennialBranches gitdomain.LocalBranchNames
 }
