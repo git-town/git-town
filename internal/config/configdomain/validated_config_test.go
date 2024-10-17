@@ -27,11 +27,13 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
-			ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
-			MainBranch:           Some(gitdomain.NewLocalBranchName("main")),
-			PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-			ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
-			ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			SharedConfig: configdomain.SharedConfig{
+				ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
+				PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+				ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
+				ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
+			},
 		}
 		tests := map[string]bool{
 			"feature":     false,
@@ -52,8 +54,10 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
-			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
-			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			SharedConfig: configdomain.SharedConfig{
+				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
+			},
 		}
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("feature")))
 		must.True(t, config.IsMainBranch(gitdomain.NewLocalBranchName("main")))
@@ -66,9 +70,11 @@ func TestValidatedConfig(t *testing.T) {
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")
 		must.NoError(t, err)
 		config := configdomain.UnvalidatedConfig{
-			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
-			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-			PerennialRegex:    perennialRegexOpt,
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			SharedConfig: configdomain.SharedConfig{
+				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
+				PerennialRegex:    perennialRegexOpt,
+			},
 		}
 		tests := map[string]bool{
 			"main":      false,
@@ -89,8 +95,10 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
-			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			SharedConfig: configdomain.SharedConfig{
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			},
 		}
 		have := config.MainAndPerennials()
 		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
