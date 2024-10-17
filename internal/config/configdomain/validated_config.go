@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
@@ -76,4 +77,14 @@ func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) g
 		}
 	}
 	return result
+}
+
+func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig, defaults ValidatedConfig) ValidatedConfig {
+	var result PartialConfig
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
+		result = configFile
+	}
+	result = result.Merge(globalGitConfig)
+	result = result.Merge(localGitConfig)
+	return result.ToValidatedConfig(defaults)
 }
