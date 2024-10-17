@@ -253,3 +253,6 @@ utilize by using [git town ship](commands/ship.md) with the
 [fast-forward shipping strategy](preferences/ship-strategy#fast-forward). This
 problem is documented by
 [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
+
+You might want to [compress](commands/compress.md) the feature branch to have
+only one new commit on the main branch.
