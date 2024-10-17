@@ -69,6 +69,7 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
+	fmt.Println("3333333333333333333333333333333333333333333333333333", self.Config.Config.Lineage)
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	var result []git.Commit

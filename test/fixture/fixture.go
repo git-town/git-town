@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -131,6 +132,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
+	fmt.Println("66666666666666666666666666666666666666666666666", self.DevRepo.GetOrPanic().Config.Config.Lineage)
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {

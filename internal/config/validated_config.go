@@ -35,13 +35,16 @@ func (self *ValidatedConfig) Author() gitdomain.Author {
 func (self *ValidatedConfig) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unvalidateConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
+	fmt.Println("1111111111111111111111111111111111111111111111111111", self.LocalGitConfig)
+	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
+	fmt.Println("2222222222222222222222222222222222222222222222222222", unvalidatedConfig.Lineage)
 	self.Config = configdomain.ValidatedConfig{
-		UnvalidatedConfig: &unvalidateConfig,
+		UnvalidatedConfig: &unvalidatedConfig,
 		GitUserEmail:      self.Config.GitUserEmail,
 		GitUserName:       self.Config.GitUserName,
 		MainBranch:        self.Config.MainBranch,
 	}
+	self.UnvalidatedConfig = &UnvalidatedConfig{}
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
