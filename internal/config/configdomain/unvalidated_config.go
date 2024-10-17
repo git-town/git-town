@@ -68,6 +68,8 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
+		GitUserEmail: None[GitUserEmail](),
+		GitUserName:  None[GitUserName](),
 		MainBranch:   None[gitdomain.LocalBranchName](),
 		SharedConfig: DefaultSharedConfig(),
 	}
