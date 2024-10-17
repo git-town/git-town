@@ -168,43 +168,48 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+func (self PartialConfig) ToSharedConfig(defaults SharedConfig) SharedConfig {
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
+	return SharedConfig{
+		Aliases:                  self.Aliases,
+		BitbucketAppPassword:     self.BitbucketAppPassword,
+		BitbucketUsername:        self.BitbucketUsername,
+		ContributionBranches:     self.ContributionBranches,
+		ContributionRegex:        self.ContributionRegex,
+		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
+		DefaultBranchType:        self.DefaultBranchType.GetOrElse(DefaultBranchType{BranchTypeFeatureBranch}),
+		FeatureRegex:             self.FeatureRegex,
+		GitHubToken:              self.GitHubToken,
+		GitLabToken:              self.GitLabToken,
+		GiteaToken:               self.GiteaToken,
+		HostingOriginHostname:    self.HostingOriginHostname,
+		HostingPlatform:          self.HostingPlatform,
+		Lineage:                  self.Lineage,
+		ObservedBranches:         self.ObservedBranches,
+		ObservedRegex:            self.ObservedRegex,
+		Offline:                  self.Offline.GetOrElse(defaults.Offline),
+		ParkedBranches:           self.ParkedBranches,
+		PerennialBranches:        self.PerennialBranches,
+		PerennialRegex:           self.PerennialRegex,
+		PrototypeBranches:        self.PrototypeBranches,
+		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
+		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
+		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
+		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
+		SyncFeatureStrategy:      syncFeatureStrategy,
+		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
+		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
+		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
+		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
+	}
+}
+
+func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+	sharedConfig := self.ToSharedConfig(*defaults.SharedConfig)
 	return UnvalidatedConfig{
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
-		SharedConfig: &SharedConfig{
-			Aliases:                  self.Aliases,
-			BitbucketAppPassword:     self.BitbucketAppPassword,
-			BitbucketUsername:        self.BitbucketUsername,
-			ContributionBranches:     self.ContributionBranches,
-			ContributionRegex:        self.ContributionRegex,
-			CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
-			DefaultBranchType:        self.DefaultBranchType.GetOrElse(DefaultBranchType{BranchTypeFeatureBranch}),
-			FeatureRegex:             self.FeatureRegex,
-			GitHubToken:              self.GitHubToken,
-			GitLabToken:              self.GitLabToken,
-			GiteaToken:               self.GiteaToken,
-			HostingOriginHostname:    self.HostingOriginHostname,
-			HostingPlatform:          self.HostingPlatform,
-			Lineage:                  self.Lineage,
-			ObservedBranches:         self.ObservedBranches,
-			ObservedRegex:            self.ObservedRegex,
-			Offline:                  self.Offline.GetOrElse(defaults.Offline),
-			ParkedBranches:           self.ParkedBranches,
-			PerennialBranches:        self.PerennialBranches,
-			PerennialRegex:           self.PerennialRegex,
-			PrototypeBranches:        self.PrototypeBranches,
-			PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
-			PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
-			ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
-			ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
-			SyncFeatureStrategy:      syncFeatureStrategy,
-			SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
-			SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
-			SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
-			SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
-		},
+		SharedConfig: &sharedConfig,
 	}
 }
