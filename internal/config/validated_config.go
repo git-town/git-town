@@ -2,8 +2,6 @@ package config
 
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -27,10 +25,4 @@ func (self *ValidatedConfig) Reload() {
 		GitUserName:       self.Config.GitUserName,
 		MainBranch:        self.Config.MainBranch,
 	}
-}
-
-// RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (self *ValidatedConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
-	self.Config.PerennialBranches = slice.Remove(self.Config.PerennialBranches, branch)
-	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
