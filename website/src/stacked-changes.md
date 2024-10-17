@@ -236,19 +236,17 @@ You always have to ship the oldest branch first. You can use
 of the current feature branch or [set parent](commands/set-parent.md) to change
 the order of branches.
 
-#### Ship using fast-forward
+#### Avoid phantom merge conflicts
 
-Merge conflicts happen when you merge two branches that change the same location
-in the same file. Git cannot (and should not) decided which version to use and
-lets the user sort it out.
-
-To eliminate phantom merge conflicts after shipping the oldest branch
-in a stacked change, ship using a
+To eliminate phantom merge conflicts after shipping the oldest branch in a
+stacked change, ship using a
 [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This guarantees that the new commit(s) on the main branch are the exact
-same commit(s) from the shipped feature branch, compared to the main branch containing new commits with the exact same changes. Comparing children feature branches against commit
+This guarantees that the new commit(s) on the main branch are the exact same
+commit(s) from the shipped feature branch. This helps Git recognize those
+commits at the next `git town sync` operation and omit unnecessary merge and
+rebase operations.
 
-GitLab provides this
+GitLab provides fast-forward merges
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
 utilize by using [git town ship](commands/ship.md) with the
