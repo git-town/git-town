@@ -242,13 +242,11 @@ Merge conflicts happen when you merge two branches that change the same location
 in the same file. Git cannot (and should not) decided which version to use and
 lets the user sort it out.
 
-Unfortunately,
-
-To minimize the risk of phantom merge conflicts after shipping the oldest branch
+To eliminate phantom merge conflicts after shipping the oldest branch
 in a stacked change, ship using a
-[fast-forward merging](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This approach guarantees that the new commits on the main branch are the exact
-same commits that were on the shipped feature branch. This helps Git resolve
+[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+This guarantees that the new commit(s) on the main branch are the exact
+same commit(s) from the shipped feature branch, compared to the main branch containing new commits with the exact same changes. Comparing children feature branches against commit
 
 GitLab provides this
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
