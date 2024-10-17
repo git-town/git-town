@@ -29,8 +29,10 @@ func TestBranchesAndTypes(t *testing.T) {
 		t.Parallel()
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := configdomain.UnvalidatedConfig{
-			MainBranch:        Some(gitdomain.NewLocalBranchName("main")),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
+			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			SharedConfig: &configdomain.SharedConfig{
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
+			},
 		}
 		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
