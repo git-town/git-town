@@ -19,9 +19,9 @@ func EmptyValidatedConfig() ValidatedConfig {
 func (self *ValidatedConfig) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unvalidateConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
+	unvalidatedConfig := configdomain.NewUnvalidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig)
 	self.UnvalidatedConfig = &UnvalidatedConfig{
-		Config:          NewMutable(&unvalidateConfig),
+		Config:          NewMutable(&unvalidatedConfig),
 		ConfigFile:      self.ConfigFile,
 		DryRun:          self.DryRun,
 		GitConfig:       self.GitConfig,
