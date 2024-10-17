@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -13,6 +14,13 @@ type ValidatedConfig struct {
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
 	*UnvalidatedConfig
+}
+
+// Author provides the locally Git configured user.
+func (self *ValidatedConfig) Author() gitdomain.Author {
+	email := self.GitUserEmail
+	name := self.GitUserName
+	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {

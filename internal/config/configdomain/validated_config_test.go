@@ -13,6 +13,17 @@ import (
 func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Author", func(t *testing.T) {
+		t.Parallel()
+		conf := configdomain.ValidatedConfig{
+			GitUserName:  configdomain.GitUserName("name"),
+			GitUserEmail: configdomain.GitUserEmail("email"),
+		}
+		have := conf.Author()
+		want := gitdomain.Author("name <email>")
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{

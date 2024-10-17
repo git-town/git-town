@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
@@ -15,19 +14,6 @@ import (
 
 func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
-
-	t.Run("Author", func(t *testing.T) {
-		t.Parallel()
-		conf := config.ValidatedConfig{
-			Config: configdomain.ValidatedConfig{
-				GitUserName:  configdomain.GitUserName("name"),
-				GitUserEmail: configdomain.GitUserEmail("email"),
-			},
-		}
-		have := conf.Author()
-		want := gitdomain.Author("name <email>")
-		must.EqOp(t, want, have)
-	})
 
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
