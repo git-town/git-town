@@ -50,7 +50,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
-		Config:           args.Unvalidated.Config.Get(),
 		Connector:        args.Connector,
 		DefaultChoice:    mainBranch,
 		DialogTestInputs: args.TestInputs,
