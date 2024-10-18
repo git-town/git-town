@@ -27,8 +27,8 @@ your repo tidy by cleaning up old branches. You can use Git Town alongside
 
 ### Is Git Town compatible with other Git tools?
 
-Yes, we try to be good citizens in the Git ecosystem. If you run into any issues
-with compatibility issues, please
+Yes, we try to be good citizens in the Git ecosystem. If you run into
+compatibility issues, please
 [let us know](https://github.com/git-town/git-town/issues/new)!
 
 ### Does my whole team have to use Git Town?
