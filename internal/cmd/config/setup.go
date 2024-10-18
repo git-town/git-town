@@ -40,7 +40,7 @@ func SetupCommand() *cobra.Command {
 // the config settings to be used if the user accepts all default options
 func defaultUserInput() userInput {
 	return userInput{
-		config:        configdomain.DefaultConfig(),
+		config:        config.DefaultConfig(),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }
@@ -290,22 +290,22 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveCreatePrototypeBranches(oldConfig.UnvalidatedConfig.Value.CreatePrototypeBranches, userInput.config.NormalConfig.CreatePrototypeBranches, oldConfig))
-	fc.Check(saveHostingPlatform(oldConfig.UnvalidatedConfig.Value.HostingPlatform, userInput.config.NormalConfig.HostingPlatform, gitCommands, frontend))
-	fc.Check(saveOriginHostname(oldConfig.UnvalidatedConfig.Value.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
-	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.Value.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
-	fc.Check(savePerennialBranches(oldConfig.UnvalidatedConfig.Value.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
-	fc.Check(savePerennialRegex(oldConfig.UnvalidatedConfig.Value.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
-	fc.Check(saveDefaultBranchType(oldConfig.UnvalidatedConfig.Value.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
-	fc.Check(saveFeatureRegex(oldConfig.UnvalidatedConfig.Value.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
-	fc.Check(savePushHook(oldConfig.UnvalidatedConfig.Value.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
-	fc.Check(savePushNewBranches(oldConfig.UnvalidatedConfig.Value.PushNewBranches, userInput.config.NormalConfig.PushNewBranches, oldConfig))
-	fc.Check(saveShipStrategy(oldConfig.UnvalidatedConfig.Value.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig))
-	fc.Check(saveShipDeleteTrackingBranch(oldConfig.UnvalidatedConfig.Value.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
-	fc.Check(saveSyncFeatureStrategy(oldConfig.UnvalidatedConfig.Value.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
-	fc.Check(saveSyncPerennialStrategy(oldConfig.UnvalidatedConfig.Value.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
-	fc.Check(saveSyncUpstream(oldConfig.UnvalidatedConfig.Value.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
-	fc.Check(saveSyncTags(oldConfig.UnvalidatedConfig.Value.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
+	fc.Check(saveCreatePrototypeBranches(oldConfig.NormalConfig.CreatePrototypeBranches, userInput.config.NormalConfig.CreatePrototypeBranches, oldConfig))
+	fc.Check(saveHostingPlatform(oldConfig.NormalConfig.HostingPlatform, userInput.config.NormalConfig.HostingPlatform, gitCommands, frontend))
+	fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
+	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
+	fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
+	fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
+	fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
+	fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
+	fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
+	fc.Check(savePushNewBranches(oldConfig.NormalConfig.PushNewBranches, userInput.config.NormalConfig.PushNewBranches, oldConfig))
+	fc.Check(saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig))
+	fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
+	fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
+	fc.Check(saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
+	fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
 	return fc.Err
 }
 
@@ -350,14 +350,14 @@ func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototype
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetCreatePrototypeBranches(newValue)
+	return config.NormalConfig.SetCreatePrototypeBranches(newValue)
 }
 
 func saveDefaultBranchType(oldValue, newValue configdomain.DefaultBranchType, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetDefaultBranchTypeLocally(newValue)
+	return config.NormalConfig.SetDefaultBranchTypeLocally(newValue)
 }
 
 func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
@@ -365,9 +365,9 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return config.SetFeatureRegexLocally(value)
+		return config.NormalConfig.SetFeatureRegexLocally(value)
 	}
-	config.RemoveFeatureRegex()
+	config.NormalConfig.RemoveFeatureRegex()
 	return nil
 }
 
@@ -434,8 +434,8 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {
-	if slices.Compare(oldValue, newValue) != 0 || config.LocalGitConfig.PerennialBranches == nil {
-		return config.SetPerennialBranches(newValue)
+	if slices.Compare(oldValue, newValue) != 0 || config.NormalConfig.LocalGitConfig.PerennialBranches == nil {
+		return config.NormalConfig.SetPerennialBranches(newValue)
 	}
 	return nil
 }
@@ -445,9 +445,9 @@ func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], 
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return config.SetPerennialRegexLocally(value)
+		return config.NormalConfig.SetPerennialRegexLocally(value)
 	}
-	config.RemovePerennialRegex()
+	config.NormalConfig.RemovePerennialRegex()
 	return nil
 }
 
@@ -455,78 +455,78 @@ func savePushHook(oldValue, newValue configdomain.PushHook, config config.Unvali
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetPushHookLocally(newValue)
+	return config.NormalConfig.SetPushHookLocally(newValue)
 }
 
 func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetPushNewBranches(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetPushNewBranches(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetShipDeleteTrackingBranch(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipDeleteTrackingBranch(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveShipStrategy(oldValue, newValue configdomain.ShipStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetShipStrategy(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipStrategy(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetSyncFeatureStrategy(newValue)
+	return config.NormalConfig.SetSyncFeatureStrategy(newValue)
 }
 
 func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetSyncPerennialStrategy(newValue)
+	return config.NormalConfig.SetSyncPerennialStrategy(newValue)
 }
 
 func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.SetSyncTags(newValue)
+	return config.NormalConfig.SetSyncTags(newValue)
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
-	err := configfile.Save(&userInput.config)
+	err := configfile.Save(&userInput.config.UnvalidatedConfig)
 	if err != nil {
 		return err
 	}
-	config.RemoveCreatePrototypeBranches()
+	config.NormalConfig.RemoveCreatePrototypeBranches()
 	config.RemoveMainBranch()
-	config.RemovePerennialBranches()
-	config.RemovePerennialRegex()
-	config.RemovePushNewBranches()
-	config.RemovePushHook()
-	config.RemoveShipStrategy()
-	config.RemoveShipDeleteTrackingBranch()
-	config.RemoveSyncFeatureStrategy()
-	config.RemoveSyncPerennialStrategy()
-	config.RemoveSyncUpstream()
-	config.RemoveSyncTags()
-	err = saveDefaultBranchType(config.UnvalidatedConfig.Value.DefaultBranchType, userInput.config.DefaultBranchType, config)
+	config.NormalConfig.RemovePerennialBranches()
+	config.NormalConfig.RemovePerennialRegex()
+	config.NormalConfig.RemovePushNewBranches()
+	config.NormalConfig.RemovePushHook()
+	config.NormalConfig.RemoveShipStrategy()
+	config.NormalConfig.RemoveShipDeleteTrackingBranch()
+	config.NormalConfig.RemoveSyncFeatureStrategy()
+	config.NormalConfig.RemoveSyncPerennialStrategy()
+	config.NormalConfig.RemoveSyncUpstream()
+	config.NormalConfig.RemoveSyncTags()
+	err = saveDefaultBranchType(config.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, config)
 	if err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.UnvalidatedConfig.Value.FeatureRegex, userInput.config.FeatureRegex, config)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config)
 }
