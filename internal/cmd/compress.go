@@ -96,7 +96,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
+		Config:                  data.validatedConfig,
 		Connector:               None[hostingdomain.Connector](),
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
@@ -116,7 +116,8 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 type compressBranchesData struct {
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
-	config             config.ValidatedConfig
+	normalConfig       config.NormalConfig
+	validatedConfig    config.ValidatedConfig
 	dialogTestInputs   components.TestInputs
 	dryRun             configdomain.DryRun
 	hasOpenChanges     bool
@@ -166,7 +167,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names(), repo.NormalConfig.Config.Value)
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -190,7 +191,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	}
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToCompress = repo.NormalConfig.Config.Value.Lineage.BranchLineageWithoutRoot(initialBranch)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -200,14 +201,14 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		if !hasBranchInfo {
 			return data, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName(), repo.NormalConfig.Config.Value)
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			return data, exit, err
 		}
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
 			return data, exit, err
 		}
-		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
+		parent := repo.NormalConfig.Config.Value.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return data, exit, err
@@ -245,7 +246,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	return compressBranchesData{
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
-		config:             validatedConfig,
+		validatedConfig:    validatedConfig,
 		dialogTestInputs:   dialogTestInputs,
 		dryRun:             dryRun,
 		hasOpenChanges:     repoStatus.OpenChanges,
@@ -258,7 +259,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 func compressProgram(data compressBranchesData) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
+		compressBranchProgram(prog, branchToCompress, data.normalConfig.Config.Value.Online(), data.initialBranch)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch.BranchName().LocalName()})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
