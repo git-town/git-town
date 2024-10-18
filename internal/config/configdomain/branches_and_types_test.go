@@ -30,7 +30,7 @@ func TestBranchesAndTypes(t *testing.T) {
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := configdomain.UnvalidatedConfig{
 			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			SharedConfig: &configdomain.SharedConfig{
+			NormalConfig: &configdomain.NormalConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 			},
 		}

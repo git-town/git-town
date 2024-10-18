@@ -12,7 +12,7 @@ type UnvalidatedConfig struct {
 	GitUserEmail Option[GitUserEmail]
 	GitUserName  Option[GitUserName]
 	MainBranch   Option[gitdomain.LocalBranchName]
-	*SharedConfig
+	*NormalConfig
 }
 
 // indicates the branch type of the given branch
@@ -20,7 +20,7 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) Bran
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	return self.SharedConfig.PartialBranchType(branch)
+	return self.NormalConfig.PartialBranchType(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -63,7 +63,7 @@ func DefaultConfig() UnvalidatedConfig {
 		GitUserEmail: None[GitUserEmail](),
 		GitUserName:  None[GitUserName](),
 		MainBranch:   None[gitdomain.LocalBranchName](),
-		SharedConfig: &sharedConfig,
+		NormalConfig: &sharedConfig,
 	}
 }
 

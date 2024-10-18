@@ -168,9 +168,9 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToSharedConfig(defaults SharedConfig) SharedConfig {
+func (self PartialConfig) ToSharedConfig(defaults NormalConfig) NormalConfig {
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
-	return SharedConfig{
+	return NormalConfig{
 		Aliases:                  self.Aliases,
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
@@ -205,21 +205,21 @@ func (self PartialConfig) ToSharedConfig(defaults SharedConfig) SharedConfig {
 }
 
 func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
-	sharedConfig := self.ToSharedConfig(*defaults.SharedConfig)
+	sharedConfig := self.ToSharedConfig(*defaults.NormalConfig)
 	return UnvalidatedConfig{
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
-		SharedConfig: &sharedConfig,
+		NormalConfig: &sharedConfig,
 	}
 }
 
 func (self PartialConfig) ToValidatedConfig(defaults ValidatedConfig) ValidatedConfig {
-	sharedConfig := self.ToSharedConfig(*defaults.SharedConfig)
+	sharedConfig := self.ToSharedConfig(*defaults.NormalConfig)
 	return ValidatedConfig{
 		GitUserEmail: self.GitUserEmail.GetOrElse(defaults.GitUserEmail),
 		GitUserName:  self.GitUserName.GetOrElse(defaults.GitUserName),
 		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
-		SharedConfig: &sharedConfig,
+		NormalConfig: &sharedConfig,
 	}
 }

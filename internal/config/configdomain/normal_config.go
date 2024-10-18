@@ -9,7 +9,7 @@ import (
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
-type SharedConfig struct {
+type NormalConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
@@ -43,15 +43,15 @@ type SharedConfig struct {
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *SharedConfig) ContainsLineage() bool {
+func (self *NormalConfig) ContainsLineage() bool {
 	return self.Lineage.Len() > 0
 }
 
-func (self *SharedConfig) IsOnline() bool {
+func (self *NormalConfig) IsOnline() bool {
 	return self.Online().IsTrue()
 }
 
-func (self *SharedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	if slices.Contains(self.PerennialBranches, branch) {
 		return true
 	}
@@ -61,36 +61,36 @@ func (self *SharedConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bo
 	return false
 }
 
-func (self *SharedConfig) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfig) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
 	if contributionRegex, has := self.ContributionRegex.Get(); has {
 		return contributionRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *SharedConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
 	if featureRegex, has := self.FeatureRegex.Get(); has {
 		return featureRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *SharedConfig) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfig) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
 	if observedRegex, has := self.ObservedRegex.Get(); has {
 		return observedRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *SharedConfig) NoPushHook() NoPushHook {
+func (self *NormalConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 
-func (self *SharedConfig) Online() Online {
+func (self *NormalConfig) Online() Online {
 	return self.Offline.ToOnline()
 }
 
-func (self *SharedConfig) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
 	if self.IsPerennialBranch(branch) {
 		return BranchTypePerennialBranch
 	}
@@ -118,12 +118,12 @@ func (self *SharedConfig) PartialBranchType(branch gitdomain.LocalBranchName) Br
 	return self.DefaultBranchType.BranchType
 }
 
-func (self *SharedConfig) ShouldPushNewBranches() bool {
+func (self *NormalConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
 
-func DefaultSharedConfig() SharedConfig {
-	return SharedConfig{
+func DefaultSharedConfig() NormalConfig {
+	return NormalConfig{
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
