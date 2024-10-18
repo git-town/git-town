@@ -35,4 +35,4 @@ with your setup, please
 ### Does my whole team have to use Git Town?
 
 No. Git Town is already useful even if you are the only person using it. It
-simply executes the Git commands that you would (should) run.
+simply executes the Git commands that you would (should) normally run.
