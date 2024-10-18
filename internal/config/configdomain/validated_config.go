@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
@@ -13,7 +14,7 @@ type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName
 	MainBranch   gitdomain.LocalBranchName
-	*UnvalidatedConfig
+	*SharedConfig
 }
 
 // Author provides the locally Git configured user.
@@ -27,7 +28,7 @@ func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) Branch
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	return self.UnvalidatedConfig.BranchType(branch)
+	return self.SharedConfig.PartialBranchType(branch)
 }
 
 func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
@@ -76,4 +77,14 @@ func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) g
 		}
 	}
 	return result
+}
+
+func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig, defaults ValidatedConfig) ValidatedConfig {
+	result := EmptyPartialConfig()
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
+		result = result.Merge(configFile)
+	}
+	result = result.Merge(globalGitConfig)
+	result = result.Merge(localGitConfig)
+	return result.ToValidatedConfig(defaults)
 }

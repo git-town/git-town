@@ -219,7 +219,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(localBranchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(localBranchNames)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

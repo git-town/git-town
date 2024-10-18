@@ -77,7 +77,7 @@ func TestValidatedConfig(t *testing.T) {
 		must.NoError(t, err)
 		config := configdomain.ValidatedConfig{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
-			UnvalidatedConfig: &configdomain.UnvalidatedConfig{
+			SharedConfig: &configdomain.SharedConfig{
 				ContributionBranches: gitdomain.LocalBranchNames{contribution},
 				ObservedBranches:     gitdomain.LocalBranchNames{observed},
 				ParkedBranches:       gitdomain.LocalBranchNames{parked},

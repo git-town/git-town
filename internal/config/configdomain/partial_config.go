@@ -168,9 +168,9 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+func (self PartialConfig) ToSharedConfig(defaults SharedConfig) SharedConfig {
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
-	return UnvalidatedConfig{
+	return SharedConfig{
 		Aliases:                  self.Aliases,
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
@@ -181,13 +181,10 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,
-		GitUserEmail:             self.GitUserEmail,
-		GitUserName:              self.GitUserName,
 		GiteaToken:               self.GiteaToken,
 		HostingOriginHostname:    self.HostingOriginHostname,
 		HostingPlatform:          self.HostingPlatform,
 		Lineage:                  self.Lineage,
-		MainBranch:               self.MainBranch,
 		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
@@ -204,5 +201,25 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
 		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
+	}
+}
+
+func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+	sharedConfig := self.ToSharedConfig(*defaults.SharedConfig)
+	return UnvalidatedConfig{
+		GitUserEmail: self.GitUserEmail,
+		GitUserName:  self.GitUserName,
+		MainBranch:   self.MainBranch,
+		SharedConfig: &sharedConfig,
+	}
+}
+
+func (self PartialConfig) ToValidatedConfig(defaults ValidatedConfig) ValidatedConfig {
+	sharedConfig := self.ToSharedConfig(*defaults.SharedConfig)
+	return ValidatedConfig{
+		GitUserEmail: self.GitUserEmail.GetOrElse(defaults.GitUserEmail),
+		GitUserName:  self.GitUserName.GetOrElse(defaults.GitUserName),
+		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
+		SharedConfig: &sharedConfig,
 	}
 }
