@@ -40,7 +40,7 @@ func SetupCommand() *cobra.Command {
 // the config settings to be used if the user accepts all default options
 func defaultUserInput() userInput {
 	return userInput{
-		config:        config.DefaultConfig(),
+		config:        config.DefaultUnvalidatedConfig(),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }

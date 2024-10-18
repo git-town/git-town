@@ -122,7 +122,7 @@ func (self *NormalConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
 
-func DefaultSharedConfig() NormalConfig {
+func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),

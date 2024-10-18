@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/confighelpers"
 	"github.com/git-town/git-town/v16/internal/config/envconfig"
 	"github.com/git-town/git-town/v16/internal/config/gitconfig"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
@@ -19,6 +20,7 @@ type NormalConfig struct {
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          configdomain.DryRun                // whether to only print the Git commands but not execute them
 	GitConfig       gitconfig.Access                   // access to the Git configuration settings
+	GitVersion      git.Version                        // version of the installed Git executable
 	GlobalGitConfig configdomain.PartialConfig         // content of the global Git configuration
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
 }

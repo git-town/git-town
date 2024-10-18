@@ -80,7 +80,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

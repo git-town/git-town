@@ -93,10 +93,10 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 
 	// remove outdated lineage
-	if err = data.config.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
+	if err = data.config.NormalConfig.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
 		return err
 	}
-	if err = cleanupPerennialParentEntries(data.config.ValidatedConfig.Lineage, data.config.ValidatedConfig.PerennialBranches, data.config.GitConfig, repo.FinalMessages); err != nil {
+	if err = cleanupPerennialParentEntries(data.config.ValidatedConfig.Lineage, data.config.ValidatedConfig.PerennialBranches, data.config.NormalConfig.GitConfig, repo.FinalMessages); err != nil {
 		return err
 	}
 
@@ -243,7 +243,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -270,7 +270,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
-	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

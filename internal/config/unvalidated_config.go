@@ -15,20 +15,40 @@ type Runner interface {
 }
 
 type UnvalidatedConfig struct {
-	UnvalidatedConfig configdomain.UnvalidatedConfig
 	NormalConfig      NormalConfig
-	GitConfig         gitconfig.Access // access to the Git configuration settings
-	GitVersion        git.Version      // the version of the installed Git executable
+	UnvalidatedConfig configdomain.UnvalidatedConfig
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
 	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
+		NormalConfig: NormalConfig{
+			NormalConfig:    configdomain.NormalConfig{},
+			ConfigFile:      args.ConfigFile,
+			DryRun:          args.DryRun,
+			GitConfig:       args.Access,
+			GitVersion:      args.GitVersion,
+			GlobalGitConfig: args.GlobalConfig,
+			LocalGitConfig:  args.LocalConfig,
+		},
 		UnvalidatedConfig: config,
-		GitConfig:         args.Access,
-		GitVersion:        args.GitVersion,
 	}, finalMessages
+}
+
+func (self *UnvalidatedConfig) DefaultConfig() UnvalidatedConfig {
+	return UnvalidatedConfig{
+		UnvalidatedConfig: configdomain.DefaultConfig(),
+		NormalConfig: NormalConfig{
+			NormalConfig:    configdomain.DefaultNormalConfig(),
+			ConfigFile:      Option{},
+			DryRun:          false,
+			GitConfig:       gitconfig.Access{},
+			GitVersion:      git.Version{},
+			GlobalGitConfig: configdomain.PartialConfig{},
+			LocalGitConfig:  configdomain.PartialConfig{},
+		},
+	}
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
