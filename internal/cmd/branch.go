@@ -92,16 +92,16 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 			initialBranchOpt = Some(initialBranch)
 		}
 	}
-	defaultBranchType := repo.UnvalidatedConfig.UnvalidatedConfig.Value.DefaultBranchType
+	defaultBranchType := repo.UnvalidatedConfig.NormalConfig.Config.DefaultBranchType
 	colors := colors.NewDialogColors()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesAndTypes:  branchesAndTypes,
 		colors:            colors,
 		defaultBranchType: defaultBranchType,
 		initialBranchOpt:  initialBranchOpt,
-		lineage:           repo.UnvalidatedConfig.UnvalidatedConfig.Value.Lineage,
+		lineage:           repo.UnvalidatedConfig.NormalConfig.Config.Lineage,
 	}, false, err
 }
 

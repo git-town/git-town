@@ -16,10 +16,9 @@ type Runner interface {
 
 type UnvalidatedConfig struct {
 	UnvalidatedConfig configdomain.UnvalidatedConfig
-	NormalConfig      configdomain.NormalConfig
-	ConfigFile        Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	GitConfig         gitconfig.Access                   // access to the Git configuration settings
-	GitVersion        git.Version                        // the version of the installed Git executable
+	NormalConfig      NormalConfig
+	GitConfig         gitconfig.Access // access to the Git configuration settings
+	GitVersion        git.Version      // the version of the installed Git executable
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
@@ -27,7 +26,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		UnvalidatedConfig: config,
-		ConfigFile:        args.ConfigFile,
 		GitConfig:         args.Access,
 		GitVersion:        args.GitVersion,
 	}, finalMessages
@@ -36,14 +34,14 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.UnvalidatedConfig.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
+	return self.UnvalidatedConfig.IsMainBranch(branch) || self.NormalConfig.Config.IsPerennialBranch(branch)
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	if mainBranch, hasMainBranch := self.UnvalidatedConfig.MainBranch.Get(); hasMainBranch {
-		return append(gitdomain.LocalBranchNames{mainBranch}, self.NormalConfig.PerennialBranches...)
+		return append(gitdomain.LocalBranchNames{mainBranch}, self.NormalConfig.Config.PerennialBranches...)
 	}
-	return self.NormalConfig.PerennialBranches
+	return self.NormalConfig.Config.PerennialBranches
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
@@ -63,7 +61,7 @@ func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) e
 func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.LocalBranchNames) configdomain.BranchesAndTypes {
 	result := make(configdomain.BranchesAndTypes, len(branches))
 	for _, branch := range branches {
-		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
+		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.Config.PartialBranchType(branch))
 	}
 	return result
 }

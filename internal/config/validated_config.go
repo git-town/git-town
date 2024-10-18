@@ -16,9 +16,9 @@ func EmptyValidatedConfig() ValidatedConfig {
 }
 
 func (self *ValidatedConfig) Reload() {
-	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	validateConfig := configdomain.NewValidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig, self.ValidatedConfig)
+	_, self.NormalConfig.GlobalGitConfig, _ = self.NormalConfig.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	_, self.NormalConfig.LocalGitConfig, _ = self.NormalConfig.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	validateConfig := configdomain.NewValidatedConfig(self.NormalConfig.ConfigFile, self.NormalConfig.GlobalGitConfig, self.NormalConfig.LocalGitConfig, self.ValidatedConfig)
 	self.ValidatedConfig = configdomain.ValidatedConfig{
 		NormalConfig: validateConfig.NormalConfig,
 		GitUserEmail: self.ValidatedConfig.GitUserEmail,
