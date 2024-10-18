@@ -17,14 +17,14 @@ When set up, "git town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:
 
-	git town completions bash | source
+	source <(git-town completions bash)
 
 To load completions for each session, add the above line to your ~/.bashrc file.
 
 
 To load autocompletion for Zsh, run this command:
 
-	git town completions zsh | source
+	source <(git-town completions zsh)
 
 To load completions for each session, add the above line to your ~/.zshrc file.
 
