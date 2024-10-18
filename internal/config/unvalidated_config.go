@@ -41,7 +41,7 @@ func (self *UnvalidatedConfig) DefaultConfig() UnvalidatedConfig {
 		UnvalidatedConfig: configdomain.DefaultConfig(),
 		NormalConfig: NormalConfig{
 			NormalConfig:    configdomain.DefaultNormalConfig(),
-			ConfigFile:      Option{},
+			ConfigFile:      None[configdomain.PartialConfig](),
 			DryRun:          false,
 			GitConfig:       gitconfig.Access{},
 			GitVersion:      git.Version{},

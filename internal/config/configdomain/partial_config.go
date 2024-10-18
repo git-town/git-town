@@ -205,12 +205,10 @@ func (self PartialConfig) ToSharedConfig(defaults NormalConfig) NormalConfig {
 }
 
 func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
-	sharedConfig := self.ToSharedConfig(*defaults.NormalConfig)
 	return UnvalidatedConfig{
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
-		NormalConfig: &sharedConfig,
 	}
 }
 
