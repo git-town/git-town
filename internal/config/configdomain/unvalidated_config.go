@@ -55,8 +55,8 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-// DefaultConfig provides the default configuration data to use when nothing is configured.
-func DefaultConfig() UnvalidatedConfig {
+// DefaultUnvalidatedConfig provides the default configuration data to use when nothing is configured.
+func DefaultUnvalidatedConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		GitUserEmail: None[GitUserEmail](),
 		GitUserName:  None[GitUserName](),
@@ -72,6 +72,6 @@ func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, loc
 	data = data.Merge(globalGitConfig)
 	data = data.Merge(localGitConfig)
 	normalConfig := data.ToNormalConfig(DefaultNormalConfig())
-	unvalidatedConfig := data.ToUnvalidatedConfig(DefaultConfig())
+	unvalidatedConfig := data.ToUnvalidatedConfig(DefaultUnvalidatedConfig())
 	return normalConfig, unvalidatedConfig
 }

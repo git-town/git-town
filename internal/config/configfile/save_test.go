@@ -187,7 +187,7 @@ perennial-branches = "rebase"
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.DefaultConfig()
+		give := configdomain.DefaultUnvalidatedConfig()
 		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 		err := configfile.Save(&give)
 		defer os.Remove(configfile.FileName)
