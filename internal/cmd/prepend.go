@@ -178,7 +178,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil {
 		return data, false, err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -196,20 +196,20 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	branchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
-		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
-	parentOpt := validatedConfig.Config.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.ValidatedConfig.Lineage.Parent(initialBranch)
 	parent, hasParent := parentOpt.Get()
 	if !hasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	parentAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
 	return prependData{
@@ -239,7 +239,7 @@ func prependProgram(data prependData) program.Program {
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
-			Config:              data.config.Config,
+			Config:              data.config.ValidatedConfig,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
@@ -261,11 +261,11 @@ func prependProgram(data prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
+	if data.prototype.IsTrue() || data.config.ValidatedConfig.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	}
 	proposal, hasProposal := data.proposal.Get()
-	if data.remotes.HasOrigin() && data.config.Config.IsOnline() && (data.config.Config.ShouldPushNewBranches() || hasProposal) {
+	if data.remotes.HasOrigin() && data.config.ValidatedConfig.IsOnline() && (data.config.ValidatedConfig.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	if hasProposal {

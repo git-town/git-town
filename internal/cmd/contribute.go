@@ -138,7 +138,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if err != nil {
 		return contributeData{}, err
 	}
-	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.UnvalidatedConfig.Get())
 	return contributeData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,

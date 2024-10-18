@@ -16,7 +16,7 @@ import (
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[hostingdomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.RemoteURL(remote).Get()
-	hostingPlatform := config.Config.Get().HostingPlatform
+	hostingPlatform := config.UnvalidatedConfig.Get().HostingPlatform
 	platform, hasPlatform := Detect(remoteURL, hostingPlatform).Get()
 	if !hasRemoteURL || !hasPlatform {
 		return None[hostingdomain.Connector](), nil
@@ -25,16 +25,16 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-			AppPassword:     config.Config.Get().BitbucketAppPassword,
+			AppPassword:     config.UnvalidatedConfig.Get().BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
 			Log:             log,
 			RemoteURL:       remoteURL,
-			UserName:        config.Config.Get().BitbucketUsername,
+			UserName:        config.UnvalidatedConfig.Get().BitbucketUsername,
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  config.Config.Get().GiteaToken,
+			APIToken:  config.UnvalidatedConfig.Get().GiteaToken,
 			Log:       log,
 			RemoteURL: remoteURL,
 		})
@@ -42,7 +42,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	case configdomain.HostingPlatformGitHub:
 		var err error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  github.GetAPIToken(config.Config.Get().GitHubToken),
+			APIToken:  github.GetAPIToken(config.UnvalidatedConfig.Get().GitHubToken),
 			Log:       log,
 			RemoteURL: remoteURL,
 		})
@@ -50,7 +50,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	case configdomain.HostingPlatformGitLab:
 		var err error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  config.Config.Get().GitLabToken,
+			APIToken:  config.UnvalidatedConfig.Get().GitLabToken,
 			Log:       log,
 			RemoteURL: remoteURL,
 		})

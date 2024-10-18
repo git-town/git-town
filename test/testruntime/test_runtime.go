@@ -93,8 +93,8 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 	})
 	validatedConfig := config.ValidatedConfig{
-		Config: configdomain.ValidatedConfig{
-			NormalConfig: unvalidatedConfig.Config.Value.NormalConfig,
+		ValidatedConfig: configdomain.ValidatedConfig{
+			NormalConfig: unvalidatedConfig.UnvalidatedConfig.Value.NormalConfig,
 			GitUserEmail: "test@test.com",
 			GitUserName:  "Tester",
 			MainBranch:   gitdomain.NewLocalBranchName("main"),

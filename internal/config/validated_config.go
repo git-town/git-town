@@ -7,8 +7,8 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type ValidatedConfig struct {
-	*UnvalidatedConfig
-	Config configdomain.ValidatedConfig // the merged configuration data
+	NormalConfig    *NormalConfig
+	ValidatedConfig configdomain.ValidatedConfig // the merged configuration data
 }
 
 func EmptyValidatedConfig() ValidatedConfig {
@@ -18,11 +18,11 @@ func EmptyValidatedConfig() ValidatedConfig {
 func (self *ValidatedConfig) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	validateConfig := configdomain.NewValidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig, self.Config)
-	self.Config = configdomain.ValidatedConfig{
+	validateConfig := configdomain.NewValidatedConfig(self.ConfigFile, self.GlobalGitConfig, self.LocalGitConfig, self.ValidatedConfig)
+	self.ValidatedConfig = configdomain.ValidatedConfig{
 		NormalConfig: validateConfig.NormalConfig,
-		GitUserEmail: self.Config.GitUserEmail,
-		GitUserName:  self.Config.GitUserName,
-		MainBranch:   self.Config.MainBranch,
+		GitUserEmail: self.ValidatedConfig.GitUserEmail,
+		GitUserName:  self.ValidatedConfig.GitUserName,
+		MainBranch:   self.ValidatedConfig.MainBranch,
 	}
 }

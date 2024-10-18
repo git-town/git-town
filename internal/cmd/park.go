@@ -128,7 +128,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if err != nil {
 		return parkData{}, err
 	}
-	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.UnvalidatedConfig.Get())
 	return parkData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,

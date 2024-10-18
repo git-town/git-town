@@ -111,11 +111,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.Config.Value.Aliases, data.dialogInputs.Next())
+	data.userInput.config.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.UnvalidatedConfig.Value.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	existingMainBranch := config.Config.Value.MainBranch
+	existingMainBranch := config.UnvalidatedConfig.Value.MainBranch
 	if existingMainBranch.IsNone() {
 		existingMainBranch = gitCommands.DefaultBranch(backend)
 	}
@@ -127,91 +127,91 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		return aborted, err
 	}
 	data.userInput.config.MainBranch = Some(mainBranch)
-	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.Config.Value.PerennialBranches, mainBranch, data.dialogInputs.Next())
+	data.userInput.config.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.UnvalidatedConfig.Value.PerennialBranches, mainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.Config.Value.PerennialRegex, data.dialogInputs.Next())
+	data.userInput.config.PerennialRegex, aborted, err = dialog.PerennialRegex(config.UnvalidatedConfig.Value.PerennialRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.Config.Value.DefaultBranchType, data.dialogInputs.Next())
+	data.userInput.config.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.UnvalidatedConfig.Value.DefaultBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.FeatureRegex, aborted, err = dialog.FeatureRegex(config.Config.Value.FeatureRegex, data.dialogInputs.Next())
+	data.userInput.config.FeatureRegex, aborted, err = dialog.FeatureRegex(config.UnvalidatedConfig.Value.FeatureRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.Config.Value.HostingPlatform, data.dialogInputs.Next())
+	data.userInput.config.HostingPlatform, aborted, err = dialog.HostingPlatform(config.UnvalidatedConfig.Value.HostingPlatform, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	if platform, has := determineHostingPlatform(config, data.userInput.config.HostingPlatform).Get(); has {
 		switch platform {
 		case configdomain.HostingPlatformBitbucket:
-			data.userInput.config.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.Config.Value.BitbucketUsername, data.dialogInputs.Next())
+			data.userInput.config.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.UnvalidatedConfig.Value.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
-			data.userInput.config.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.Config.Value.BitbucketAppPassword, data.dialogInputs.Next())
+			data.userInput.config.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.UnvalidatedConfig.Value.BitbucketAppPassword, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitea:
-			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.Config.Value.GiteaToken, data.dialogInputs.Next())
+			data.userInput.config.GiteaToken, aborted, err = dialog.GiteaToken(config.UnvalidatedConfig.Value.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitHub:
-			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.Config.Value.GitHubToken, data.dialogInputs.Next())
+			data.userInput.config.GitHubToken, aborted, err = dialog.GitHubToken(config.UnvalidatedConfig.Value.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		case configdomain.HostingPlatformGitLab:
-			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.Config.Value.GitLabToken, data.dialogInputs.Next())
+			data.userInput.config.GitLabToken, aborted, err = dialog.GitLabToken(config.UnvalidatedConfig.Value.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
 		}
 	}
-	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.Config.Value.HostingOriginHostname, data.dialogInputs.Next())
+	data.userInput.config.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.UnvalidatedConfig.Value.HostingOriginHostname, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.Config.Value.SyncFeatureStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.UnvalidatedConfig.Value.SyncFeatureStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.Config.Value.SyncPerennialStrategy, data.dialogInputs.Next())
+	data.userInput.config.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.UnvalidatedConfig.Value.SyncPerennialStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.Config.Value.SyncUpstream, data.dialogInputs.Next())
+	data.userInput.config.SyncUpstream, aborted, err = dialog.SyncUpstream(config.UnvalidatedConfig.Value.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.SyncTags, aborted, err = dialog.SyncTags(config.Config.Value.SyncTags, data.dialogInputs.Next())
+	data.userInput.config.SyncTags, aborted, err = dialog.SyncTags(config.UnvalidatedConfig.Value.SyncTags, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.Config.Value.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.PushNewBranches, aborted, err = dialog.PushNewBranches(config.UnvalidatedConfig.Value.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.Config.Value.PushHook, data.dialogInputs.Next())
+	data.userInput.config.PushHook, aborted, err = dialog.PushHook(config.UnvalidatedConfig.Value.PushHook, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.CreatePrototypeBranches, aborted, err = dialog.CreatePrototypeBranches(config.Config.Value.CreatePrototypeBranches, data.dialogInputs.Next())
+	data.userInput.config.CreatePrototypeBranches, aborted, err = dialog.CreatePrototypeBranches(config.UnvalidatedConfig.Value.CreatePrototypeBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipStrategy, aborted, err = dialog.ShipStrategy(config.Config.Value.ShipStrategy, data.dialogInputs.Next())
+	data.userInput.config.ShipStrategy, aborted, err = dialog.ShipStrategy(config.UnvalidatedConfig.Value.ShipStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.Config.Value.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+	data.userInput.config.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.UnvalidatedConfig.Value.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -255,27 +255,27 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 }
 
 func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	err := saveAliases(oldConfig.Config.Value.Aliases, userInput.config.Aliases, gitCommands, frontend)
+	err := saveAliases(oldConfig.UnvalidatedConfig.Value.Aliases, userInput.config.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketUsername(oldConfig.Config.Value.BitbucketUsername, userInput.config.BitbucketUsername, gitCommands, frontend)
+	err = saveBitbucketUsername(oldConfig.UnvalidatedConfig.Value.BitbucketUsername, userInput.config.BitbucketUsername, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketAppPassword(oldConfig.Config.Value.BitbucketAppPassword, userInput.config.BitbucketAppPassword, gitCommands, frontend)
+	err = saveBitbucketAppPassword(oldConfig.UnvalidatedConfig.Value.BitbucketAppPassword, userInput.config.BitbucketAppPassword, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(oldConfig.Config.Value.GiteaToken, userInput.config.GiteaToken, gitCommands, frontend)
+	err = saveGiteaToken(oldConfig.UnvalidatedConfig.Value.GiteaToken, userInput.config.GiteaToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(oldConfig.Config.Value.GitHubToken, userInput.config.GitHubToken, gitCommands, frontend)
+	err = saveGitHubToken(oldConfig.UnvalidatedConfig.Value.GitHubToken, userInput.config.GitHubToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(oldConfig.Config.Value.GitLabToken, userInput.config.GitLabToken, gitCommands, frontend)
+	err = saveGitLabToken(oldConfig.UnvalidatedConfig.Value.GitLabToken, userInput.config.GitLabToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -290,22 +290,22 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveCreatePrototypeBranches(oldConfig.Config.Value.CreatePrototypeBranches, userInput.config.CreatePrototypeBranches, oldConfig))
-	fc.Check(saveHostingPlatform(oldConfig.Config.Value.HostingPlatform, userInput.config.HostingPlatform, gitCommands, frontend))
-	fc.Check(saveOriginHostname(oldConfig.Config.Value.HostingOriginHostname, userInput.config.HostingOriginHostname, gitCommands, frontend))
-	fc.Check(saveMainBranch(oldConfig.Config.Value.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
-	fc.Check(savePerennialBranches(oldConfig.Config.Value.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
-	fc.Check(savePerennialRegex(oldConfig.Config.Value.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
-	fc.Check(saveDefaultBranchType(oldConfig.Config.Value.DefaultBranchType, userInput.config.DefaultBranchType, oldConfig))
-	fc.Check(saveFeatureRegex(oldConfig.Config.Value.FeatureRegex, userInput.config.FeatureRegex, oldConfig))
-	fc.Check(savePushHook(oldConfig.Config.Value.PushHook, userInput.config.PushHook, oldConfig))
-	fc.Check(savePushNewBranches(oldConfig.Config.Value.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
-	fc.Check(saveShipStrategy(oldConfig.Config.Value.ShipStrategy, userInput.config.ShipStrategy, oldConfig))
-	fc.Check(saveShipDeleteTrackingBranch(oldConfig.Config.Value.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
-	fc.Check(saveSyncFeatureStrategy(oldConfig.Config.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
-	fc.Check(saveSyncPerennialStrategy(oldConfig.Config.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
-	fc.Check(saveSyncUpstream(oldConfig.Config.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
-	fc.Check(saveSyncTags(oldConfig.Config.Value.SyncTags, userInput.config.SyncTags, oldConfig))
+	fc.Check(saveCreatePrototypeBranches(oldConfig.UnvalidatedConfig.Value.CreatePrototypeBranches, userInput.config.CreatePrototypeBranches, oldConfig))
+	fc.Check(saveHostingPlatform(oldConfig.UnvalidatedConfig.Value.HostingPlatform, userInput.config.HostingPlatform, gitCommands, frontend))
+	fc.Check(saveOriginHostname(oldConfig.UnvalidatedConfig.Value.HostingOriginHostname, userInput.config.HostingOriginHostname, gitCommands, frontend))
+	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.Value.MainBranch, userInput.config.MainBranch.GetOrPanic(), oldConfig))
+	fc.Check(savePerennialBranches(oldConfig.UnvalidatedConfig.Value.PerennialBranches, userInput.config.PerennialBranches, oldConfig))
+	fc.Check(savePerennialRegex(oldConfig.UnvalidatedConfig.Value.PerennialRegex, userInput.config.PerennialRegex, oldConfig))
+	fc.Check(saveDefaultBranchType(oldConfig.UnvalidatedConfig.Value.DefaultBranchType, userInput.config.DefaultBranchType, oldConfig))
+	fc.Check(saveFeatureRegex(oldConfig.UnvalidatedConfig.Value.FeatureRegex, userInput.config.FeatureRegex, oldConfig))
+	fc.Check(savePushHook(oldConfig.UnvalidatedConfig.Value.PushHook, userInput.config.PushHook, oldConfig))
+	fc.Check(savePushNewBranches(oldConfig.UnvalidatedConfig.Value.PushNewBranches, userInput.config.PushNewBranches, oldConfig))
+	fc.Check(saveShipStrategy(oldConfig.UnvalidatedConfig.Value.ShipStrategy, userInput.config.ShipStrategy, oldConfig))
+	fc.Check(saveShipDeleteTrackingBranch(oldConfig.UnvalidatedConfig.Value.ShipDeleteTrackingBranch, userInput.config.ShipDeleteTrackingBranch, oldConfig))
+	fc.Check(saveSyncFeatureStrategy(oldConfig.UnvalidatedConfig.Value.SyncFeatureStrategy, userInput.config.SyncFeatureStrategy, oldConfig))
+	fc.Check(saveSyncPerennialStrategy(oldConfig.UnvalidatedConfig.Value.SyncPerennialStrategy, userInput.config.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncUpstream(oldConfig.UnvalidatedConfig.Value.SyncUpstream, userInput.config.SyncUpstream, oldConfig))
+	fc.Check(saveSyncTags(oldConfig.UnvalidatedConfig.Value.SyncTags, userInput.config.SyncTags, oldConfig))
 	return fc.Err
 }
 
@@ -524,9 +524,9 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.RemoveSyncPerennialStrategy()
 	config.RemoveSyncUpstream()
 	config.RemoveSyncTags()
-	err = saveDefaultBranchType(config.Config.Value.DefaultBranchType, userInput.config.DefaultBranchType, config)
+	err = saveDefaultBranchType(config.UnvalidatedConfig.Value.DefaultBranchType, userInput.config.DefaultBranchType, config)
 	if err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.Config.Value.FeatureRegex, userInput.config.FeatureRegex, config)
+	return saveFeatureRegex(config.UnvalidatedConfig.Value.FeatureRegex, userInput.config.FeatureRegex, config)
 }

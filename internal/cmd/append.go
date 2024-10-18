@@ -167,7 +167,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -189,15 +189,15 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	branchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
-		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
-	initialAndAncestors := validatedConfig.Config.Lineage.BranchAndAncestors(initialBranch)
+	initialAndAncestors := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
 	return appendFeatureData{
 		branchInfos:               branchesSnapshot.Branches,
@@ -223,7 +223,7 @@ func appendProgram(data appendFeatureData) program.Program {
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
-			Config:              data.config.Config,
+			Config:              data.config.ValidatedConfig,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
@@ -235,14 +235,14 @@ func appendProgram(data appendFeatureData) program.Program {
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.Config.NormalConfig.ShouldPushNewBranches() && data.config.Config.IsOnline() {
+	if data.remotes.HasOrigin() && data.config.ValidatedConfig.NormalConfig.ShouldPushNewBranches() && data.config.ValidatedConfig.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
-	if data.prototype.IsTrue() || data.config.Config.CreatePrototypeBranches.IsTrue() {
+	if data.prototype.IsTrue() || data.config.ValidatedConfig.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}

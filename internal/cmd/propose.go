@@ -186,7 +186,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		return data, false, err
 	}
 	branchToPropose := initialBranch
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -204,11 +204,11 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToPropose := validatedConfig.Config.BranchType(branchToPropose)
+	branchTypeToPropose := validatedConfig.ValidatedConfig.BranchType(branchToPropose)
 	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
 		return data, false, err
 	}
-	parentOfBranchToPropose, hasParentBranch := validatedConfig.Config.Lineage.Parent(branchToPropose).Get()
+	parentOfBranchToPropose, hasParentBranch := validatedConfig.ValidatedConfig.Lineage.Parent(branchToPropose).Get()
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
 	}
@@ -226,11 +226,11 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 			existingProposalURL = Some(existingProposal.URL)
 		}
 	}
-	branchNamesToSync := validatedConfig.Config.Lineage.BranchAndAncestors(branchToPropose)
+	branchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(branchToPropose)
 	if detached {
-		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -278,7 +278,7 @@ func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
-		Config:              data.config.Config,
+		Config:              data.config.ValidatedConfig,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.preFetchBranchInfos,
 		Remotes:             data.remotes,
@@ -300,7 +300,7 @@ func proposeProgram(data proposeData) program.Program {
 	})
 	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
-		MainBranch:    data.config.Config.MainBranch,
+		MainBranch:    data.config.ValidatedConfig.MainBranch,
 		ProposalBody:  data.proposalBody,
 		ProposalTitle: data.proposalTitle,
 	})

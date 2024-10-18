@@ -80,7 +80,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -98,7 +98,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil || exit {
 		return data, exit, err
 	}
-	switch validatedConfig.Config.BranchType(branchNameToShip) {
+	switch validatedConfig.ValidatedConfig.BranchType(branchNameToShip) {
 	case configdomain.BranchTypeContributionBranch:
 		return data, false, errors.New(messages.ContributionBranchCannotShip)
 	case configdomain.BranchTypeMainBranch:
@@ -112,7 +112,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
 	}
-	targetBranchName, hasTargetBranch := validatedConfig.Config.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.ValidatedConfig.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
@@ -120,14 +120,14 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	childBranches := validatedConfig.Config.Lineage.Children(branchNameToShip)
+	childBranches := validatedConfig.ValidatedConfig.Lineage.Children(branchNameToShip)
 	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		Lineage:                    validatedConfig.Config.Lineage,
+		Lineage:                    validatedConfig.ValidatedConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToShip,
 		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),

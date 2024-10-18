@@ -107,7 +107,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.InitialBranch,
-		Config:                   args.Config.Config,
+		Config:                   args.Config.ValidatedConfig,
 		EndBranch:                args.InitialBranch,
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,

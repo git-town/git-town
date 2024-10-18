@@ -46,7 +46,7 @@ func executeDisplayConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	printConfig(repo.UnvalidatedConfig.Config.Get())
+	printConfig(repo.UnvalidatedConfig.UnvalidatedConfig.Get())
 	return nil
 }
 

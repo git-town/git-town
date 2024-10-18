@@ -96,14 +96,14 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err = data.config.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
 		return err
 	}
-	if err = cleanupPerennialParentEntries(data.config.Config.Lineage, data.config.Config.PerennialBranches, data.config.GitConfig, repo.FinalMessages); err != nil {
+	if err = cleanupPerennialParentEntries(data.config.ValidatedConfig.Lineage, data.config.ValidatedConfig.PerennialBranches, data.config.GitConfig, repo.FinalMessages); err != nil {
 		return err
 	}
 
 	runProgram := program.Program{}
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
-		Config:              data.config.Config,
+		Config:              data.config.ValidatedConfig,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             NewMutable(&runProgram),
@@ -117,9 +117,9 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	runProgram.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
-		MainBranch: data.config.Config.MainBranch,
+		MainBranch: data.config.ValidatedConfig.MainBranch,
 	})
-	if data.remotes.HasOrigin() && data.shouldPushTags && data.config.Config.IsOnline() {
+	if data.remotes.HasOrigin() && data.shouldPushTags && data.config.ValidatedConfig.IsOnline() {
 		runProgram.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(NewMutable(&runProgram), cmdhelpers.WrapOptions{
@@ -243,7 +243,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -266,11 +266,11 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case syncStack.Enabled():
-		branchNamesToSync = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToSync = validatedConfig.ValidatedConfig.Lineage.BranchLineageWithoutRoot(initialBranch)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
-	branchesAndTypes = repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -290,18 +290,18 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	}
 	var shouldPushTags bool
 	switch {
-	case validatedConfig.Config.SyncTags.IsFalse():
+	case validatedConfig.ValidatedConfig.SyncTags.IsFalse():
 		shouldPushTags = false
 	case syncAllBranches.Enabled():
 		shouldPushTags = true
 	default:
-		shouldPushTags = validatedConfig.Config.IsMainOrPerennialBranch(initialBranch)
+		shouldPushTags = validatedConfig.ValidatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
-	allBranchNamesToSync := validatedConfig.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	if detached {
-		allBranchNamesToSync = validatedConfig.Config.RemovePerennials(allBranchNamesToSync)
+		allBranchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(allBranchNamesToSync)
 	}
-	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}

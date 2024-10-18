@@ -219,7 +219,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(localBranchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(localBranchNames)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -240,7 +240,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
-			targetBranches: validatedConfig.Config.BranchesAndTypes(branchesToValidate),
+			targetBranches: validatedConfig.ValidatedConfig.BranchesAndTypes(branchesToValidate),
 		})
 		return data, false, nil
 	}
@@ -259,11 +259,11 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch}
 	if detached {
-		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -276,7 +276,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch},
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,

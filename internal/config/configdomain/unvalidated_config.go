@@ -12,15 +12,14 @@ type UnvalidatedConfig struct {
 	GitUserEmail Option[GitUserEmail]
 	GitUserName  Option[GitUserName]
 	MainBranch   Option[gitdomain.LocalBranchName]
-	*NormalConfig
 }
 
 // indicates the branch type of the given branch
-func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName, normalConfig *NormalConfig) BranchType {
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	return self.NormalConfig.PartialBranchType(branch)
+	return normalConfig.PartialBranchType(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name

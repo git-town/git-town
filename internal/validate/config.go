@@ -13,13 +13,13 @@ import (
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// check Git user data
-	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.Config.Get())
+	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.UnvalidatedConfig.Get())
 	if err != nil {
 		return config.EmptyValidatedConfig(), false, err
 	}
 
 	// enter and save main and perennials
-	mainBranch, hasMain := args.Unvalidated.Config.Value.MainBranch.Get()
+	mainBranch, hasMain := args.Unvalidated.UnvalidatedConfig.Value.MainBranch.Get()
 	if !hasMain {
 		validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:               args.Backend,
@@ -27,8 +27,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 			GetDefaultBranch:      args.Git.DefaultBranch,
 			HasConfigFile:         args.Unvalidated.ConfigFile.IsSome(),
 			LocalBranches:         args.LocalBranches,
-			UnvalidatedMain:       args.Unvalidated.Config.Value.MainBranch,
-			UnvalidatedPerennials: args.Unvalidated.Config.Value.PerennialBranches,
+			UnvalidatedMain:       args.Unvalidated.UnvalidatedConfig.Value.MainBranch,
+			UnvalidatedPerennials: args.Unvalidated.UnvalidatedConfig.Value.PerennialBranches,
 		})
 		if err != nil || aborted {
 			return config.EmptyValidatedConfig(), aborted, err
@@ -39,7 +39,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		if len(additionalPerennials) > 0 {
-			newPerennials := append(args.Unvalidated.Config.Value.PerennialBranches, additionalPerennials...)
+			newPerennials := append(args.Unvalidated.UnvalidatedConfig.Value.PerennialBranches, additionalPerennials...)
 			if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
 				return config.EmptyValidatedConfig(), false, err
 			}
@@ -53,10 +53,10 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		Connector:         args.Connector,
 		DefaultChoice:     mainBranch,
 		DialogTestInputs:  args.TestInputs,
-		Lineage:           args.Unvalidated.Config.Value.Lineage,
+		Lineage:           args.Unvalidated.UnvalidatedConfig.Value.Lineage,
 		LocalBranches:     args.LocalBranches,
 		MainBranch:        mainBranch,
-		PerennialBranches: args.Unvalidated.Config.Value.PerennialBranches,
+		PerennialBranches: args.Unvalidated.UnvalidatedConfig.Value.PerennialBranches,
 	})
 	if err != nil || exit {
 		return config.EmptyValidatedConfig(), exit, err
@@ -67,7 +67,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 		}
 	}
 	if len(additionalPerennials) > 0 {
-		newPerennials := append(args.Unvalidated.Config.Value.PerennialBranches, additionalPerennials...)
+		newPerennials := append(args.Unvalidated.UnvalidatedConfig.Value.PerennialBranches, additionalPerennials...)
 		if err = args.Unvalidated.SetPerennialBranches(newPerennials); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
@@ -75,8 +75,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 
 	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
-		Config: configdomain.ValidatedConfig{
-			NormalConfig: args.Unvalidated.Config.Value.NormalConfig,
+		ValidatedConfig: configdomain.ValidatedConfig{
+			NormalConfig: args.Unvalidated.UnvalidatedConfig.Value.NormalConfig,
 			GitUserEmail: gitUserEmail,
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,

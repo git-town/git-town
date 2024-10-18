@@ -13,7 +13,7 @@ type CheckoutParentOrMain struct {
 }
 
 func (self *CheckoutParentOrMain) Run(args shared.RunArgs) error {
-	parent := args.Config.Config.Lineage.Parent(self.Branch).GetOrElse(args.Config.Config.MainBranch)
+	parent := args.Config.ValidatedConfig.Lineage.Parent(self.Branch).GetOrElse(args.Config.ValidatedConfig.MainBranch)
 	args.PrependOpcodes(&CheckoutIfNeeded{Branch: parent})
 	return nil
 }

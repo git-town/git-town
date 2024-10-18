@@ -249,11 +249,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.Config.ContributionBranches, branch) {
+		if !slices.Contains(devRepo.Config.ValidatedConfig.ContributionBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
-				strings.Join(devRepo.Config.Config.ContributionBranches.Strings(), ", "),
+				strings.Join(devRepo.Config.ValidatedConfig.ContributionBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -263,7 +263,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.Config.BranchType(branch)
+		branchType := devRepo.Config.ValidatedConfig.BranchType(branch)
 		if branchType != configdomain.BranchTypeFeatureBranch {
 			return fmt.Errorf("branch %q is a %s", branch, branchType)
 		}
@@ -274,11 +274,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.Config.ObservedBranches, branch) {
+		if !slices.Contains(devRepo.Config.ValidatedConfig.ObservedBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't observed as expected.\nObserved branches: %s",
 				branch,
-				strings.Join(devRepo.Config.Config.ObservedBranches.Strings(), ", "),
+				strings.Join(devRepo.Config.ValidatedConfig.ObservedBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -288,11 +288,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.Config.ParkedBranches, branch) {
+		if !slices.Contains(devRepo.Config.ValidatedConfig.ParkedBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't parked as expected.\nParked branches: %s",
 				branch,
-				strings.Join(devRepo.Config.Config.ParkedBranches.Strings(), ", "),
+				strings.Join(devRepo.Config.ValidatedConfig.ParkedBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -302,11 +302,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.Config.IsPerennialBranch(branch) {
+		if !devRepo.Config.ValidatedConfig.IsPerennialBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't perennial as expected.\nPerennial branches: %s",
 				branch,
-				strings.Join(devRepo.Config.Config.PerennialBranches.Strings(), ", "),
+				strings.Join(devRepo.Config.ValidatedConfig.PerennialBranches.Strings(), ", "),
 			)
 		}
 		return nil
@@ -316,11 +316,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.Config.PrototypeBranches, branch) {
+		if !slices.Contains(devRepo.Config.ValidatedConfig.PrototypeBranches, branch) {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,
-				devRepo.Config.Config.PrototypeBranches.Join(", "),
+				devRepo.Config.ValidatedConfig.PrototypeBranches.Join(", "),
 			)
 		}
 		return nil
@@ -411,7 +411,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("key not found")
 		}
 		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
-		have := devRepo.Config.Config.Aliases[aliasableCommand]
+		have := devRepo.Config.ValidatedConfig.Aliases[aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -426,7 +426,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("key not found")
 		}
 		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
-		command, has := devRepo.Config.Config.Aliases[aliasableCommand]
+		command, has := devRepo.Config.ValidatedConfig.Aliases[aliasableCommand]
 		if has {
 			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
 		}
@@ -918,8 +918,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.Config.ContainsLineage() {
-			lineage := devRepo.Config.Config.Lineage
+		if devRepo.Config.ValidatedConfig.ContainsLineage() {
+			lineage := devRepo.Config.ValidatedConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil
@@ -1361,7 +1361,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.Config.MainBranch
+		have := devRepo.Config.ValidatedConfig.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}

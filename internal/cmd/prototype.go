@@ -126,7 +126,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if err != nil {
 		return prototypeData{}, err
 	}
-	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.UnvalidatedConfig.Get())
 	return prototypeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,

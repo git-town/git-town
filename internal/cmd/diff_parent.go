@@ -109,7 +109,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -131,7 +131,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	if err != nil || exit {
 		return data, exit, err
 	}
-	parentBranch, hasParent := validatedConfig.Config.Lineage.Parent(branch).Get()
+	parentBranch, hasParent := validatedConfig.ValidatedConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return data, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
