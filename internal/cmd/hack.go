@@ -134,7 +134,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.backend,
 		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
+		Config:                  args.appendData.validatedConfig,
 		Connector:               None[hostingdomain.Connector](),
 		DialogTestInputs:        args.appendData.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
@@ -271,7 +271,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
-		config:                    validatedConfig,
+		validatedConfig:           validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,

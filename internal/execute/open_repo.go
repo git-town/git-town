@@ -65,7 +65,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+	normalConfig, unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access:       configGitAccess,
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
@@ -81,7 +81,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
 	})
-	isOffline := unvalidatedConfig.Config.Value.Offline
+	isOffline := normalConfig.Config.Value.Offline
 	if args.ValidateIsOnline && isOffline.IsTrue() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return emptyOpenRepoResult(), err
@@ -105,6 +105,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Frontend:          frontEndRunner,
 		Git:               gitCommands,
 		IsOffline:         isOffline,
+		NormalConfig:      normalConfig,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
 	}, err
@@ -127,6 +128,7 @@ type OpenRepoResult struct {
 	Frontend          gitdomain.Runner
 	Git               git.Commands
 	IsOffline         configdomain.Offline
+	NormalConfig      config.NormalConfig
 	RootDir           gitdomain.RepoRootDir
 	UnvalidatedConfig config.UnvalidatedConfig
 }

@@ -12,15 +12,14 @@ type UnvalidatedConfig struct {
 	GitUserEmail Option[GitUserEmail]
 	GitUserName  Option[GitUserName]
 	MainBranch   Option[gitdomain.LocalBranchName]
-	*NormalConfig
 }
 
 // indicates the branch type of the given branch
-func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName, normalConfig *NormalConfig) BranchType {
 	if self.IsMainBranch(branch) {
 		return BranchTypeMainBranch
 	}
-	return self.NormalConfig.PartialBranchType(branch)
+	return normalConfig.PartialBranchType(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -34,45 +33,45 @@ func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bo
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
-func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
+func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName, normalConfig *NormalConfig) bool {
+	return self.IsMainBranch(branch) || normalConfig.IsPerennialBranch(branch)
 }
 
-func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
+func (self *UnvalidatedConfig) MainAndPerennials(normalConfig *NormalConfig) gitdomain.LocalBranchNames {
 	if mainBranch, hasMainBranch := self.MainBranch.Get(); hasMainBranch {
-		return append(gitdomain.LocalBranchNames{mainBranch}, self.PerennialBranches...)
+		return append(gitdomain.LocalBranchNames{mainBranch}, normalConfig.PerennialBranches...)
 	}
-	return self.PerennialBranches
+	return normalConfig.PerennialBranches
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
 // This method's name startes with "Unvalidated" to indicate that the types might be incomplete,
 // and you should use ValidatedConfig.BranchesAndTypes if possible.
-func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.LocalBranchNames) BranchesAndTypes {
+func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.LocalBranchNames, normalConfig *NormalConfig) BranchesAndTypes {
 	result := make(BranchesAndTypes, len(branches))
 	for _, branch := range branches {
-		result[branch] = self.BranchType(branch)
+		result[branch] = self.BranchType(branch, normalConfig)
 	}
 	return result
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
-	sharedConfig := DefaultSharedConfig()
 	return UnvalidatedConfig{
 		GitUserEmail: None[GitUserEmail](),
 		GitUserName:  None[GitUserName](),
 		MainBranch:   None[gitdomain.LocalBranchName](),
-		NormalConfig: &sharedConfig,
 	}
 }
 
-func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
-	result := EmptyPartialConfig()
+func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) (NormalConfig, UnvalidatedConfig) {
+	data := EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		result = result.Merge(configFile)
+		data = data.Merge(configFile)
 	}
-	result = result.Merge(globalGitConfig)
-	result = result.Merge(localGitConfig)
-	return result.ToUnvalidatedConfig(DefaultConfig())
+	data = data.Merge(globalGitConfig)
+	data = data.Merge(localGitConfig)
+	normalConfig := data.ToNormalConfig(DefaultNormalConfig())
+	unvalidatedConfig := data.ToUnvalidatedConfig(DefaultConfig())
+	return normalConfig, unvalidatedConfig
 }
