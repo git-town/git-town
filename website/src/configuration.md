@@ -28,3 +28,8 @@ Configuring API access takes only one minute. Here is how you do it:
 - Bitbucket: [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
 - gitea: [access token](preferences/gitea-token.md)
+
+### Install shell autocompletion
+
+To have your shell auto-complete Git Town commands, set up
+[shell autocompletion](commands/completions.md)
