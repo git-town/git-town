@@ -69,8 +69,8 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 	if err != nil || exit {
 		return err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(data.branchNames)
-	defaultBranchType := repo.UnvalidatedConfig.UnvalidatedConfig.Value.DefaultBranchType
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
+	defaultBranchType := repo.UnvalidatedConfig.NormalConfig.DefaultBranchType
 	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.ValidatedConfig.Lineage, defaultBranchType, allBranches, data.regexes)
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
@@ -141,7 +141,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(localBranches)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranches)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

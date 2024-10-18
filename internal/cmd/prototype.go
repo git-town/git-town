@@ -60,7 +60,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
-	if err = repo.UnvalidatedConfig.AddToPrototypeBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.AddToPrototypeBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonPrototypeBranchTypes(data.branchesToPrototype, repo.UnvalidatedConfig); err != nil {
@@ -103,11 +103,11 @@ func removeNonPrototypeBranchTypes(branches configdomain.BranchesAndTypes, confi
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
 		case
@@ -126,7 +126,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if err != nil {
 		return prototypeData{}, err
 	}
-	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.UnvalidatedConfig.Get())
+	branchesToPrototype, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.UnvalidatedConfig)
 	return prototypeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,

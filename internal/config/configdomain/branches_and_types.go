@@ -9,11 +9,15 @@ import (
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
 
-func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig UnvalidatedConfig) {
+type domainUnvalidatedConfig interface {
+	BranchType(gitdomain.LocalBranchName) BranchType
+}
+
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig domainUnvalidatedConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
-func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig UnvalidatedConfig) {
+func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig domainUnvalidatedConfig) {
 	for _, branch := range branches {
 		self.Add(branch, fullConfig)
 	}

@@ -390,7 +390,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := configdomain.NewParentKey(branchName)
-		return devRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
+		return devRepo.Config.NormalConfig.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
@@ -436,7 +436,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.GitConfig.SetGlobalConfigValue(configdomain.Key(name), value)
+		return devRepo.Config.NormalConfig.GitConfig.SetGlobalConfigValue(configdomain.Key(name), value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
@@ -449,9 +449,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		locality = strings.TrimSpace(locality)
 		switch locality {
 		case "local", "":
-			return devRepo.Config.GitConfig.SetLocalConfigValue(key, value)
+			return devRepo.Config.NormalConfig.GitConfig.SetLocalConfigValue(key, value)
 		case "global":
-			return devRepo.Config.GitConfig.SetGlobalConfigValue(key, value)
+			return devRepo.Config.NormalConfig.GitConfig.SetGlobalConfigValue(key, value)
 		default:
 			return fmt.Errorf("unknown locality: %q", locality)
 		}
@@ -964,7 +964,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^offline mode is enabled$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetOffline(true)
+		return devRepo.Config.NormalConfig.SetOffline(true)
 	})
 
 	sc.Step(`^origin deletes the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
@@ -1029,7 +1029,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
 				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-					err := repoToCreateBranchIn.Config.SetParent(branchSetup.Name, parent)
+					err := repoToCreateBranchIn.Config.NormalConfig.SetParent(branchSetup.Name, parent)
 					asserts.NoError(err)
 				}
 			}
@@ -1107,7 +1107,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the contribution branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.LocalGitConfig.ContributionBranches
+		actual := devRepo.Config.NormalConfig.LocalGitConfig.ContributionBranches
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 contribution branch, got %q", actual)
 		}
@@ -1192,14 +1192,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 	})
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		syncFeatureStrategy, err := configdomain.ParseSyncFeatureStrategy(value)
 		asserts.NoError(err)
-		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.SetSyncFeatureStrategy(syncFeatureStrategy.GetOrPanic())
+		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetSyncFeatureStrategy(syncFeatureStrategy.GetOrPanic())
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {

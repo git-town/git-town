@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -25,4 +26,11 @@ func (self *ValidatedConfig) Reload() {
 		GitUserName:  self.ValidatedConfig.GitUserName,
 		MainBranch:   self.ValidatedConfig.MainBranch,
 	}
+}
+
+// SetMainBranch marks the given branch as the main branch
+// in the Git Town configuration.
+func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
+	self.ValidatedConfig.MainBranch = branch
+	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
