@@ -11,6 +11,11 @@ the its branch stack.
 
 ![example branch stack created by the Git Town GitHub Action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
 
+## Shell autocompletion
+
+To have your shell auto-complete Git Town commands, set up
+[shell autocompletion](commands/completions.md)
+
 ## Shell prompt
 
 You can display a reminder for running `git town continue` to finish a pending
