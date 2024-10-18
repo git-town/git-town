@@ -94,7 +94,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 	}
 	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
 	colors := colors.NewDialogColors()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.BranchesAndTypes(branchesSnapshot.Branches.Names())
+	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesAndTypes:  branchesAndTypes,
