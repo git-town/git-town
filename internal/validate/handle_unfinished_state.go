@@ -144,7 +144,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 	}
 	return config.ValidatedConfig{
 		Config: configdomain.ValidatedConfig{
-			SharedConfig: args.unvalidated.Config.Value.SharedConfig,
+			NormalConfig: args.unvalidated.Config.Value.NormalConfig,
 			GitUserEmail: gitUserEmail,
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,
