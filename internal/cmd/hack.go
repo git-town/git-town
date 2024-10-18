@@ -219,7 +219,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedConfig.Value.UnvalidatedBranchesAndTypes(localBranchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -295,13 +295,13 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			err = args.config.RemoveFromContributionBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromContributionBranches(branchName)
 		case configdomain.BranchTypeObservedBranch:
-			err = args.config.RemoveFromObservedBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
-			err = args.config.RemoveFromParkedBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromParkedBranches(branchName)
 		case configdomain.BranchTypePrototypeBranch:
-			err = args.config.RemoveFromPrototypeBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromPrototypeBranches(branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeMainBranch,
