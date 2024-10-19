@@ -4,7 +4,6 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 

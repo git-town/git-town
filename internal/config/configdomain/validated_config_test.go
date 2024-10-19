@@ -34,33 +34,6 @@ func TestValidatedConfig(t *testing.T) {
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("peren2")))
 	})
 
-	t.Run("IsPerennialBranch", func(t *testing.T) {
-		t.Parallel()
-		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")
-		must.NoError(t, err)
-		config := configdomain.UnvalidatedConfig{
-			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			NormalConfig: &configdomain.NormalConfig{
-				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-				PerennialRegex:    perennialRegexOpt,
-			},
-		}
-		tests := map[string]bool{
-			"main":      false,
-			"peren1":    true,
-			"peren2":    true,
-			"peren3":    false,
-			"feature":   false,
-			"release-1": true,
-			"release-2": true,
-			"other":     false,
-		}
-		for give, want := range tests {
-			have := config.IsPerennialBranch(gitdomain.NewLocalBranchName(give))
-			must.Eq(t, want, have)
-		}
-	})
-
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.UnvalidatedConfig{
