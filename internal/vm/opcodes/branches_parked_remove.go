@@ -14,7 +14,7 @@ type BranchesParkedRemove struct {
 func (self *BranchesParkedRemove) Run(args shared.RunArgs) error {
 	var err error
 	if args.Config.ValidatedConfig.ParkedBranches.Contains(self.Branch) {
-		err = args.Config.RemoveFromParkedBranches(self.Branch)
+		err = args.Config.NormalConfig.RemoveFromParkedBranches(self.Branch)
 	}
 	return err
 }

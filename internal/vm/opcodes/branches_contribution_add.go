@@ -12,5 +12,5 @@ type BranchesContributionAdd struct {
 }
 
 func (self *BranchesContributionAdd) Run(args shared.RunArgs) error {
-	return args.Config.AddToContributionBranches(self.Branch)
+	return args.Config.NormalConfig.AddToContributionBranches(self.Branch)
 }

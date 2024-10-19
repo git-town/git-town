@@ -12,6 +12,6 @@ type BranchParentDelete struct {
 }
 
 func (self *BranchParentDelete) Run(args shared.RunArgs) error {
-	args.Config.RemoveParent(self.Branch)
+	args.Config.NormalConfig.RemoveParent(self.Branch)
 	return nil
 }

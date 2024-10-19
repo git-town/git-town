@@ -19,7 +19,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		Backend:        args.Backend,
 		Config:         args.Config.ValidatedConfig,
-		DryRun:         args.Config.DryRun,
+		DryRun:         args.Config.NormalConfig.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: false,
 		NoPushHook:     args.Config.ValidatedConfig.NoPushHook(),

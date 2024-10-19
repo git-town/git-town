@@ -8,8 +8,8 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type ValidatedConfig struct {
-	NormalConfig    NormalConfig
-	ValidatedConfig configdomain.ValidatedConfig // the merged configuration data
+	NormalConfig
+	configdomain.ValidatedConfig
 }
 
 func EmptyValidatedConfig() ValidatedConfig {

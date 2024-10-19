@@ -12,5 +12,5 @@ type BranchesParkedAdd struct {
 }
 
 func (self *BranchesParkedAdd) Run(args shared.RunArgs) error {
-	return args.Config.AddToParkedBranches(self.Branch)
+	return args.Config.NormalConfig.AddToParkedBranches(self.Branch)
 }
