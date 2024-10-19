@@ -508,7 +508,7 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
-	err := configfile.Save(&userInput.config.UnvalidatedConfig)
+	err := configfile.Save(&userInput.config)
 	if err != nil {
 		return err
 	}

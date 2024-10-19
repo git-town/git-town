@@ -36,21 +36,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	}, finalMessages
 }
 
-func (self *UnvalidatedConfig) DefaultConfig() UnvalidatedConfig {
-	return UnvalidatedConfig{
-		UnvalidatedConfig: configdomain.DefaultConfig(),
-		NormalConfig: NormalConfig{
-			NormalConfig:    configdomain.DefaultNormalConfig(),
-			ConfigFile:      None[configdomain.PartialConfig](),
-			DryRun:          false,
-			GitConfig:       gitconfig.Access{},
-			GitVersion:      git.Version{},
-			GlobalGitConfig: configdomain.PartialConfig{},
-			LocalGitConfig:  configdomain.PartialConfig{},
-		},
-	}
-}
-
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -65,14 +50,14 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyMainBranch)
+	_ = self.NormalConfig.GitConfig.RemoveLocalConfigValue(configdomain.KeyMainBranch)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
+	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -93,4 +78,19 @@ type NewUnvalidatedConfigArgs struct {
 	GitVersion   git.Version
 	GlobalConfig configdomain.PartialConfig
 	LocalConfig  configdomain.PartialConfig
+}
+
+func DefaultUnvalidatedConfig() UnvalidatedConfig {
+	return UnvalidatedConfig{
+		UnvalidatedConfig: configdomain.DefaultConfig(),
+		NormalConfig: NormalConfig{
+			NormalConfig:    configdomain.DefaultNormalConfig(),
+			ConfigFile:      None[configdomain.PartialConfig](),
+			DryRun:          false,
+			GitConfig:       gitconfig.Access{},
+			GitVersion:      git.Version{},
+			GlobalGitConfig: configdomain.PartialConfig{},
+			LocalGitConfig:  configdomain.PartialConfig{},
+		},
+	}
 }
