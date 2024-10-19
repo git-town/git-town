@@ -3,6 +3,7 @@ package execute
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -10,7 +11,7 @@ import (
 )
 
 // provides the branches to make contribution, observed, parked, or prototype
-func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config configdomain.ValidatedConfig) (branchesToMark configdomain.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
+func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config config.UnvalidatedConfig) (branchesToMark configdomain.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
 	branchesToMark = configdomain.BranchesAndTypes{}
 	switch len(args) {
 	case 0:
