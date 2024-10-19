@@ -1253,12 +1253,16 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				Lineage:           lineage,
-				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-				PushHook:          false,
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					Lineage:           lineage,
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+					PushHook:          false,
+				},
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
@@ -1338,12 +1342,16 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				Lineage:           lineage,
-				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-				PushHook:          false,
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					Lineage:           lineage,
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+					PushHook:          false,
+				},
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
@@ -1425,12 +1433,16 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				Lineage:           lineage,
-				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-				PushHook:          false,
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					Lineage:           lineage,
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+					PushHook:          false,
+				},
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
@@ -1507,12 +1519,16 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineage()
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				Lineage:           lineage,
-				PerennialBranches: gitdomain.NewLocalBranchNames(),
-				PushHook:          false,
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					Lineage:           lineage,
+					PerennialBranches: gitdomain.NewLocalBranchNames(),
+					PushHook:          false,
+				},
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
