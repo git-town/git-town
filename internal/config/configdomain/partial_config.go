@@ -211,13 +211,3 @@ func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) Unvali
 		MainBranch:   self.MainBranch,
 	}
 }
-
-func (self PartialConfig) ToValidatedConfig(defaults ValidatedConfig) ValidatedConfig {
-	sharedConfig := self.ToSharedConfig(*defaults.NormalConfig)
-	return ValidatedConfig{
-		GitUserEmail: self.GitUserEmail.GetOrElse(defaults.GitUserEmail),
-		GitUserName:  self.GitUserName.GetOrElse(defaults.GitUserName),
-		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
-		NormalConfig: &sharedConfig,
-	}
-}

@@ -208,7 +208,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
 		return data, false, err
 	}
-	parentOfBranchToPropose, hasParentBranch := validatedConfig.ValidatedConfig.Lineage.Parent(branchToPropose).Get()
+	parentOfBranchToPropose, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get()
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
 	}
@@ -226,7 +226,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 			existingProposalURL = Some(existingProposal.URL)
 		}
 	}
-	branchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(branchToPropose)
+	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(branchToPropose)
 	if detached {
 		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
@@ -278,7 +278,7 @@ func proposeProgram(data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
-		Config:              data.config.ValidatedConfig,
+		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.preFetchBranchInfos,
 		Remotes:             data.remotes,

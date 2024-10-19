@@ -196,7 +196,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNamesToSync := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(initialBranch)
+	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
 		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
 	}
@@ -204,12 +204,12 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil {
 		return data, false, err
 	}
-	parentOpt := validatedConfig.ValidatedConfig.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	parent, hasParent := parentOpt.Get()
 	if !hasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	parentAndAncestors := validatedConfig.ValidatedConfig.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
 	return prependData{
@@ -239,7 +239,7 @@ func prependProgram(data prependData) program.Program {
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
-			Config:              data.config.ValidatedConfig,
+			Config:              data.config,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
@@ -261,11 +261,11 @@ func prependProgram(data prependData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.prototype.IsTrue() || data.config.ValidatedConfig.CreatePrototypeBranches.IsTrue() {
+	if data.prototype.IsTrue() || data.config.NormalConfig.CreatePrototypeBranches.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	}
 	proposal, hasProposal := data.proposal.Get()
-	if data.remotes.HasOrigin() && data.config.ValidatedConfig.IsOnline() && (data.config.ValidatedConfig.ShouldPushNewBranches() || hasProposal) {
+	if data.remotes.HasOrigin() && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	if hasProposal {

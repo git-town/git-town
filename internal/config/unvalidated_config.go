@@ -9,14 +9,15 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-type Runner interface {
-	Query(executable string, args ...string) (string, error)
-	Run(executable string, args ...string) error
-}
-
 type UnvalidatedConfig struct {
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfig
+}
+
+// TODO: delete?
+type Runner interface {
+	Query(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {

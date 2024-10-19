@@ -72,7 +72,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		Branch:          data.initialBranch,
 		DefaultChoice:   data.defaultChoice,
 		DialogTestInput: data.dialogTestInputs.Next(),
-		Lineage:         data.config.ValidatedConfig.Lineage,
+		Lineage:         data.config.NormalConfig.Lineage,
 		LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      data.mainBranch,
 	})
@@ -183,7 +183,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	parentOpt := validatedConfig.ValidatedConfig.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {

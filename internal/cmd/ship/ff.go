@@ -14,19 +14,19 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
-	if squashMergeData.remotes.HasOrigin() && sharedData.config.ValidatedConfig.IsOnline() {
+	if squashMergeData.remotes.HasOrigin() && sharedData.config.NormalConfig.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.MergeFastForward{Branch: sharedData.branchNameToShip})
-	if squashMergeData.remotes.HasOrigin() && sharedData.config.ValidatedConfig.IsOnline() {
+	if squashMergeData.remotes.HasOrigin() && sharedData.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
 		prog.Value.Add(&opcodes.BranchParentDelete{Branch: sharedData.branchNameToShip})
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
-		if sharedData.config.ValidatedConfig.IsOnline() {
-			if sharedData.config.ValidatedConfig.ShipDeleteTrackingBranch {
+		if sharedData.config.NormalConfig.IsOnline() {
+			if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
 				prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
 			}
 		}

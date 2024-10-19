@@ -219,11 +219,11 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	parentOpt := validatedConfig.ValidatedConfig.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		Lineage:                    validatedConfig.ValidatedConfig.Lineage,
+		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    false,
 		OldBranch:                  oldBranchName,
 		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
@@ -260,33 +260,33 @@ func renameProgram(data renameData) program.Program {
 			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
 			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
 		} else {
-			if slices.Contains(data.config.ValidatedConfig.PrototypeBranches, data.initialBranch) {
+			if slices.Contains(data.config.NormalConfig.PrototypeBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
 			}
-			if slices.Contains(data.config.ValidatedConfig.ObservedBranches, data.initialBranch) {
+			if slices.Contains(data.config.NormalConfig.ObservedBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
 			}
-			if slices.Contains(data.config.ValidatedConfig.ContributionBranches, data.initialBranch) {
+			if slices.Contains(data.config.NormalConfig.ContributionBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.BranchesContributionRemove{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.newBranch})
 			}
-			if slices.Contains(data.config.ValidatedConfig.ParkedBranches, data.initialBranch) {
+			if slices.Contains(data.config.NormalConfig.ParkedBranches, data.initialBranch) {
 				result.Value.Add(&opcodes.BranchesParkedRemove{Branch: oldLocalBranch})
 				result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
 			}
-			if parentBranch, hasParent := data.config.ValidatedConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
+			if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 				result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
 			}
 			result.Value.Add(&opcodes.BranchParentDelete{Branch: oldLocalBranch})
 		}
 	}
-	for _, child := range data.config.ValidatedConfig.Lineage.Children(oldLocalBranch) {
+	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch) {
 		result.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
-		if data.oldBranch.HasTrackingBranch() && data.config.ValidatedConfig.IsOnline() {
+		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.IsOnline() {
 			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {

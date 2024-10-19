@@ -198,7 +198,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
-		Lineage:                    validatedConfig.ValidatedConfig.Lineage,
+		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToDelete,
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
@@ -251,7 +251,7 @@ func deleteProgram(data deleteData) (runProgram, finalUndoProgram program.Progra
 // deleteFeatureBranch deletes the given feature branch everywhere it exists (locally and remotely).
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
 	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
-	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.ValidatedConfig.IsOnline() {
+	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.IsOnline() {
 		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
@@ -280,7 +280,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 		if data.dryRun.IsFalse() {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,
-				Lineage: data.config.ValidatedConfig.Lineage,
+				Lineage: data.config.NormalConfig.Lineage,
 				Program: prog,
 			})
 		}
