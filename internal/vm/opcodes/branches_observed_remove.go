@@ -13,7 +13,7 @@ type BranchesObservedRemove struct {
 
 func (self *BranchesObservedRemove) Run(args shared.RunArgs) error {
 	var err error
-	if args.Config.ValidatedConfig.ObservedBranches.Contains(self.Branch) {
+	if args.Config.NormalConfig.ObservedBranches.Contains(self.Branch) {
 		err = args.Config.NormalConfig.RemoveFromObservedBranches(self.Branch)
 	}
 	return err

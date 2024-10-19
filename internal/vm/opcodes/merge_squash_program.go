@@ -40,7 +40,7 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 			Branch: self.Branch,
 		},
 	}
-	if !args.Config.DryRun {
+	if !args.Config.NormalConfig.DryRun {
 		program = append(program, &CommitMessageCommentOut{})
 	}
 	program = append(program,

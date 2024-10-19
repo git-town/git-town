@@ -25,7 +25,7 @@ func Execute(args ExecuteArgs) error {
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
-		Config:         args.Config.ValidatedConfig,
+		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
