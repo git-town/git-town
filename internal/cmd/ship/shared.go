@@ -98,7 +98,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil || exit {
 		return data, exit, err
 	}
-	switch validatedConfig.ValidatedConfig.BranchType(branchNameToShip) {
+	switch validatedConfig.BranchType(branchNameToShip) {
 	case configdomain.BranchTypeContributionBranch:
 		return data, false, errors.New(messages.ContributionBranchCannotShip)
 	case configdomain.BranchTypeMainBranch:

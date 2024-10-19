@@ -76,7 +76,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
 		ValidatedConfig: configdomain.ValidatedConfig{
-			NormalConfig: &args.Unvalidated.NormalConfig.NormalConfig,
 			GitUserEmail: gitUserEmail,
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,

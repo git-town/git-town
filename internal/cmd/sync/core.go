@@ -295,11 +295,11 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	case syncAllBranches.Enabled():
 		shouldPushTags = true
 	default:
-		shouldPushTags = validatedConfig.ValidatedConfig.IsMainOrPerennialBranch(initialBranch)
+		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	if detached {
-		allBranchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(allBranchNamesToSync)
+		allBranchNamesToSync = validatedConfig.RemovePerennials(allBranchNamesToSync)
 	}
 	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {

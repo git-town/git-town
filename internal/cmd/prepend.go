@@ -198,7 +198,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
-		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {

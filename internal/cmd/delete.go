@@ -179,7 +179,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToDelete := validatedConfig.ValidatedConfig.BranchType(branchNameToDelete)
+	branchTypeToDelete := validatedConfig.BranchType(branchNameToDelete)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)

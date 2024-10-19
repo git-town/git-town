@@ -204,7 +204,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToPropose := validatedConfig.ValidatedConfig.BranchType(branchToPropose)
+	branchTypeToPropose := validatedConfig.BranchType(branchToPropose)
 	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
 		return data, false, err
 	}
@@ -228,7 +228,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(branchToPropose)
 	if detached {
-		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {

@@ -29,7 +29,7 @@ func Execute(args ExecuteArgs) error {
 		DryRun:         args.RunState.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.Config.ValidatedConfig.NoPushHook(),
+		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
 		RunState:       args.RunState,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{

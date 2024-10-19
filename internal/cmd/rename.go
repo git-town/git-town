@@ -203,7 +203,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
 	if force.IsFalse() {
-		if validatedConfig.ValidatedConfig.IsPerennialBranch(oldBranchName) {
+		if validatedConfig.NormalConfig.IsPerennialBranch(oldBranchName) {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -256,7 +256,7 @@ func renameProgram(data renameData) program.Program {
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
-		if data.config.ValidatedConfig.IsPerennialBranch(data.initialBranch) {
+		if data.config.NormalConfig.IsPerennialBranch(data.initialBranch) {
 			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
 			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
 		} else {

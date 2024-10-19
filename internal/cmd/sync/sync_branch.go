@@ -34,13 +34,13 @@ type BranchProgramArgs struct {
 
 // localBranchProgram provides the program to sync a local branch.
 func localBranchProgram(prog Mutable[program.Program], localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	isMainOrPerennialBranch := args.Config.ValidatedConfig.IsMainOrPerennialBranch(localName)
+	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
-	branchType := args.Config.ValidatedConfig.BranchType(localName)
+	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{

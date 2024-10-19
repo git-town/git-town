@@ -153,7 +153,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	if !toParent {
 		branch := data.branchToShip.LocalName.GetOrPanic()
 		parentBranch := data.targetBranch.LocalName.GetOrPanic()
-		if !data.config.ValidatedConfig.IsMainOrPerennialBranch(parentBranch) {
+		if !data.config.IsMainOrPerennialBranch(parentBranch) {
 			ancestors := data.config.NormalConfig.Lineage.Ancestors(branch)
 			ancestorsWithoutMainOrPerennial := ancestors[1:]
 			oldestAncestor := ancestorsWithoutMainOrPerennial[0]

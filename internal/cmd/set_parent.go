@@ -207,7 +207,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 }
 
 func verifySetParentData(data setParentData) error {
-	if data.config.ValidatedConfig.IsMainOrPerennialBranch(data.initialBranch) {
+	if data.config.IsMainOrPerennialBranch(data.initialBranch) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.initialBranch)
 	}
 	return nil

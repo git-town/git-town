@@ -200,7 +200,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		if !hasBranchInfo {
 			return data, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := validatedConfig.ValidatedConfig.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := validatedConfig.BranchType(branchNameToCompress.BranchName().LocalName())
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			return data, exit, err
 		}

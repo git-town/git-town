@@ -191,7 +191,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
-		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {

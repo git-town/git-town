@@ -240,7 +240,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
-			targetBranches: validatedConfig.ValidatedConfig.BranchesAndTypes(branchesToValidate),
+			targetBranches: validatedConfig.BranchesAndTypes(branchesToValidate),
 		})
 		return data, false, nil
 	}
@@ -261,7 +261,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch}
 	if detached {
-		branchNamesToSync = validatedConfig.ValidatedConfig.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
