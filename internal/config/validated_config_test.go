@@ -1,9 +1,11 @@
 package config_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
@@ -15,13 +17,44 @@ import (
 func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
+		t.Parallel()
+		config := config.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
+					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
+					ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
+				},
+			},
+		}
+		tests := map[string]bool{
+			"feature":     false,
+			"main":        true,
+			"perennial-1": true,
+			"perennial-2": true,
+			"perennial-3": false,
+			"observed":    false,
+			"parked":      false,
+		}
+		for give, want := range tests {
+			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
+			fmt.Println(give)
+			must.Eq(t, want, have)
+		}
+	})
+
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		repo.CreateFeatureBranch("feature1", "main")
 		repo.CreateFeatureBranch("feature2", "main")
 		repo.Config.Reload()
-		have := repo.Config.ValidatedConfig.Lineage
+		have := repo.Config.NormalConfig.Lineage
 		want := configdomain.NewLineage()
 		want.Add(gitdomain.NewLocalBranchName("feature1"), gitdomain.NewLocalBranchName("main"))
 		want.Add(gitdomain.NewLocalBranchName("feature2"), gitdomain.NewLocalBranchName("main"))
@@ -42,7 +75,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.RemoteURL(gitdomain.RemoteOrigin).Get()
+			have, has := repo.Config.NormalConfig.RemoteURL(gitdomain.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}
@@ -58,7 +91,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo.Config.Reload()
 			want := configdomain.NewLineage()
 			want.Add(branch, gitdomain.NewLocalBranchName("main"))
-			must.Eq(t, want, repo.Config.ValidatedConfig.Lineage)
+			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
 		})
 	})
 
@@ -75,15 +108,19 @@ func TestValidatedConfig(t *testing.T) {
 		prototype := gitdomain.NewLocalBranchName("prototype")
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				ContributionBranches: gitdomain.LocalBranchNames{contribution},
-				ObservedBranches:     gitdomain.LocalBranchNames{observed},
-				ParkedBranches:       gitdomain.LocalBranchNames{parked},
-				PerennialBranches:    gitdomain.LocalBranchNames{perennial1},
-				PerennialRegex:       perennialRegexOpt,
-				PrototypeBranches:    gitdomain.LocalBranchNames{prototype},
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					ContributionBranches: gitdomain.LocalBranchNames{contribution},
+					ObservedBranches:     gitdomain.LocalBranchNames{observed},
+					ParkedBranches:       gitdomain.LocalBranchNames{parked},
+					PerennialBranches:    gitdomain.LocalBranchNames{perennial1},
+					PerennialRegex:       perennialRegexOpt,
+					PrototypeBranches:    gitdomain.LocalBranchNames{prototype},
+				},
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{

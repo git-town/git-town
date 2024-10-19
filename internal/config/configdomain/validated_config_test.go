@@ -1,7 +1,6 @@
 package configdomain_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -24,40 +23,10 @@ func TestValidatedConfig(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
-		t.Parallel()
-		config := configdomain.UnvalidatedConfig{
-			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			NormalConfig: &configdomain.NormalConfig{
-				ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
-				PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-				ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
-				ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
-			},
-		}
-		tests := map[string]bool{
-			"feature":     false,
-			"main":        true,
-			"perennial-1": true,
-			"perennial-2": true,
-			"perennial-3": false,
-			"observed":    false,
-			"parked":      false,
-		}
-		for give, want := range tests {
-			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
-			fmt.Println(give)
-			must.Eq(t, want, have)
-		}
-	})
-
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.UnvalidatedConfig{
-			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			NormalConfig: &configdomain.NormalConfig{
-				PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-			},
+		config := configdomain.ValidatedConfig{
+			MainBranch: gitdomain.NewLocalBranchName("main"),
 		}
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("feature")))
 		must.True(t, config.IsMainBranch(gitdomain.NewLocalBranchName("main")))
