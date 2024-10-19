@@ -7,6 +7,7 @@ import (
 
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
+// TODO: rename to ValidatedConfigData
 type ValidatedConfig struct {
 	NormalConfig    NormalConfig
 	ValidatedConfig configdomain.ValidatedConfig
