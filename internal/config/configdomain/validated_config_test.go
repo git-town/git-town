@@ -33,17 +33,4 @@ func TestValidatedConfig(t *testing.T) {
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("peren1")))
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("peren2")))
 	})
-
-	t.Run("MainAndPerennials", func(t *testing.T) {
-		t.Parallel()
-		config := configdomain.UnvalidatedConfig{
-			MainBranch: Some(gitdomain.NewLocalBranchName("main")),
-			NormalConfig: &configdomain.NormalConfig{
-				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-			},
-		}
-		have := config.MainAndPerennials()
-		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
-		must.Eq(t, want, have)
-	})
 }

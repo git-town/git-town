@@ -61,6 +61,23 @@ func TestValidatedConfig(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("MainAndPerennials", func(t *testing.T) {
+		t.Parallel()
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+				},
+			},
+		}
+		have := config.MainAndPerennials()
+		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
+		must.Eq(t, want, have)
+	})
+
 	t.Run("RemoteURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
