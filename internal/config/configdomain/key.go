@@ -51,6 +51,7 @@ const (
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedAliasKill				   = Key("alias.kill")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
@@ -106,6 +107,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
+	KeyDeprecatedAliasKill,
 	KeyFeatureRegex,
 	KeyGiteaToken,
 	KeyGithubToken,
@@ -157,6 +159,7 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver:         KeyHostingPlatform,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyHostingPlatform,
+	KeyDeprecatedAliasKill: 					KeyAliasDelete,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,
