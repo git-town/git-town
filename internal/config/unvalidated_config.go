@@ -22,11 +22,11 @@ type Runner interface {
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
-	config := configdomain.NewUnvalidatedConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
+	unvalidatedConfig, normalConfig := ParseConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			NormalConfig:    configdomain.NormalConfig{},
+			NormalConfig:    normalConfig,
 			ConfigFile:      args.ConfigFile,
 			DryRun:          args.DryRun,
 			GitConfig:       args.Access,
@@ -34,7 +34,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 			GlobalGitConfig: args.GlobalConfig,
 			LocalGitConfig:  args.LocalConfig,
 		},
-		UnvalidatedConfig: config,
+		UnvalidatedConfig: unvalidatedConfig,
 	}, finalMessages
 }
 
@@ -99,4 +99,14 @@ func DefaultUnvalidatedConfig() UnvalidatedConfig {
 			LocalGitConfig:  configdomain.PartialConfig{},
 		},
 	}
+}
+
+func ParseConfig(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
+	result := configdomain.EmptyPartialConfig()
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
+		result = result.Merge(configFile)
+	}
+	result = result.Merge(globalGitConfig)
+	result = result.Merge(localGitConfig)
+	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }

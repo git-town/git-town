@@ -47,13 +47,3 @@ func DefaultConfig() UnvalidatedConfig {
 		MainBranch:   None[gitdomain.LocalBranchName](),
 	}
 }
-
-func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig) UnvalidatedConfig {
-	result := EmptyPartialConfig()
-	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		result = result.Merge(configFile)
-	}
-	result = result.Merge(globalGitConfig)
-	result = result.Merge(localGitConfig)
-	return result.ToUnvalidatedConfig()
-}
