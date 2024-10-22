@@ -21,23 +21,6 @@ type Runner interface {
 	Run(executable string, args ...string) error
 }
 
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
-	unvalidatedConfig, normalConfig := ParseConfig(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
-	finalMessages := stringslice.NewCollector()
-	return UnvalidatedConfig{
-		NormalConfig: NormalConfig{
-			NormalConfig:    normalConfig,
-			ConfigFile:      args.ConfigFile,
-			DryRun:          args.DryRun,
-			GitConfig:       args.Access,
-			GitVersion:      args.GitVersion,
-			GlobalGitConfig: args.GlobalConfig,
-			LocalGitConfig:  args.LocalConfig,
-		},
-		UnvalidatedConfig: unvalidatedConfig,
-	}, finalMessages
-}
-
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	return self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
 }
@@ -101,7 +84,24 @@ func DefaultUnvalidatedConfig() UnvalidatedConfig {
 	}
 }
 
-func ParseConfig(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
+	unvalidatedConfig, normalConfig := MergeConfigs(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
+	finalMessages := stringslice.NewCollector()
+	return UnvalidatedConfig{
+		NormalConfig: NormalConfig{
+			NormalConfig:    normalConfig,
+			ConfigFile:      args.ConfigFile,
+			DryRun:          args.DryRun,
+			GitConfig:       args.Access,
+			GitVersion:      args.GitVersion,
+			GlobalGitConfig: args.GlobalConfig,
+			LocalGitConfig:  args.LocalConfig,
+		},
+		UnvalidatedConfig: unvalidatedConfig,
+	}, finalMessages
+}
+
+func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = result.Merge(configFile)
