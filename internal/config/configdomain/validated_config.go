@@ -37,6 +37,6 @@ func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, local
 	config = config.Merge(localGitConfig)
 	normalConfig := config.ToNormalConfig()
 	unvalidatedConfig := config.ToUnvalidatedConfig()
-	validatedConfig := unvalidatedConfig.ToValidatedConfig()
+	validatedConfig := unvalidatedConfig.ToValidatedConfig(defaults)
 	return config.ToValidatedConfig(defaults)
 }

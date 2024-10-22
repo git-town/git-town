@@ -31,6 +31,14 @@ func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bo
 	return false
 }
 
+func (self UnvalidatedConfig) ToValidatedConfig(defaults ValidatedConfig) ValidatedConfig {
+	return ValidatedConfig{
+		GitUserEmail: self.GitUserEmail.GetOrElse(defaults.GitUserEmail),
+		GitUserName:  self.GitUserName.GetOrElse(defaults.GitUserName),
+		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
+	}
+}
+
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
