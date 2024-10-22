@@ -6,5 +6,4 @@ import (
 
 func TestUnvalidatedConfig(t *testing.T) {
 	t.Parallel()
-
 }

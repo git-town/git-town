@@ -29,11 +29,14 @@ func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool
 }
 
 func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig, defaults ValidatedConfig) ValidatedConfig {
-	result := EmptyPartialConfig()
+	config := EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		result = result.Merge(configFile)
+		config = config.Merge(configFile)
 	}
-	result = result.Merge(globalGitConfig)
-	result = result.Merge(localGitConfig)
-	return result.ToValidatedConfig(defaults)
+	config = config.Merge(globalGitConfig)
+	config = config.Merge(localGitConfig)
+	normalConfig := config.ToNormalConfig()
+	unvalidatedConfig := config.ToUnvalidatedConfig()
+	validatedConfig := unvalidatedConfig.ToValidatedConfig()
+	return config.ToValidatedConfig(defaults)
 }

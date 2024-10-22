@@ -168,7 +168,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToSharedConfig(defaults NormalConfig) NormalConfig {
+func (self PartialConfig) ToNormalConfig(defaults NormalConfig) NormalConfig {
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
 	return NormalConfig{
 		Aliases:                  self.Aliases,
