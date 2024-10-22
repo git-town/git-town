@@ -60,15 +60,6 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-type NewUnvalidatedConfigArgs struct {
-	Access       gitconfig.Access
-	ConfigFile   Option[configdomain.PartialConfig]
-	DryRun       configdomain.DryRun
-	GitVersion   git.Version
-	GlobalConfig configdomain.PartialConfig
-	LocalConfig  configdomain.PartialConfig
-}
-
 func DefaultUnvalidatedConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		UnvalidatedConfig: configdomain.DefaultConfig(),
@@ -99,6 +90,15 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 		},
 		UnvalidatedConfig: unvalidatedConfig,
 	}, finalMessages
+}
+
+type NewUnvalidatedConfigArgs struct {
+	Access       gitconfig.Access
+	ConfigFile   Option[configdomain.PartialConfig]
+	DryRun       configdomain.DryRun
+	GitVersion   git.Version
+	GlobalConfig configdomain.PartialConfig
+	LocalConfig  configdomain.PartialConfig
 }
 
 func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
