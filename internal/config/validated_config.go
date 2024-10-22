@@ -46,16 +46,17 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 func (self *ValidatedConfig) Reload() {
 	_, globalGitConfig, _ := self.NormalConfig.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, localGitConfig, _ := self.NormalConfig.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	self.ValidatedConfig = configdomain.NewValidatedConfig(self.NormalConfig.ConfigFile, self.NormalConfig.GlobalGitConfig, self.NormalConfig.LocalGitConfig, self.ValidatedConfig)
-	unvalidatedConfig, _ := NewUnvalidatedConfig(NewUnvalidatedConfigArgs{
-		Access:       self.NormalConfig.GitConfig,
-		ConfigFile:   self.NormalConfig.ConfigFile,
-		DryRun:       self.NormalConfig.DryRun,
-		GitVersion:   self.NormalConfig.GitVersion,
-		GlobalConfig: globalGitConfig,
-		LocalConfig:  localGitConfig,
-	})
-	self.ValidatedConfig = unvalidatedConfig.ToValidatedConfig()
+	validatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, self.NormalConfig.GlobalGitConfig, self.NormalConfig.LocalGitConfig, self.ValidatedConfig)
+	self.ValidatedConfig = validatedConfig
+	self.NormalConfig = NormalConfig{
+		NormalConfig:    normalConfig,
+		ConfigFile:      self.NormalConfig.ConfigFile,
+		DryRun:          self.NormalConfig.DryRun,
+		GitConfig:       self.NormalConfig.GitConfig,
+		GitVersion:      self.NormalConfig.GitVersion,
+		GlobalGitConfig: globalGitConfig,
+		LocalGitConfig:  localGitConfig,
+	}
 }
 
 // provides this collection without the perennial branch at the root
@@ -79,7 +80,7 @@ func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) err
 	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
-func NewValidatedConfig(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig, defaults configdomain.ValidatedConfig) ValidatedConfig {
+func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig, defaults configdomain.ValidatedConfig) (configdomain.ValidatedConfig, configdomain.NormalConfig) {
 	config := configdomain.EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		config = config.Merge(configFile)
@@ -89,16 +90,5 @@ func NewValidatedConfig(configFile Option[configdomain.PartialConfig], globalGit
 	normalConfig := config.ToNormalConfig(configdomain.DefaultNormalConfig())
 	unvalidatedConfig := config.ToUnvalidatedConfig()
 	validatedConfig := unvalidatedConfig.ToValidatedConfig(defaults)
-	return ValidatedConfig{
-		NormalConfig: NormalConfig{
-			NormalConfig:    normalConfig,
-			ConfigFile:      configFile,
-			DryRun:          defaults.DryRun,
-			GitConfig:       defaults.GitConfig,
-			GitVersion:      defaults.GitVersion,
-			GlobalGitConfig: globalGitConfig,
-			LocalGitConfig:  localGitConfig,
-		},
-		ValidatedConfig: validatedConfig,
-	}
+	return validatedConfig, normalConfig
 }
