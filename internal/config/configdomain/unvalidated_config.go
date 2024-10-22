@@ -55,5 +55,5 @@ func NewUnvalidatedConfig(configFile Option[PartialConfig], globalGitConfig, loc
 	}
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)
-	return result.ToUnvalidatedConfig(DefaultConfig())
+	return result.ToUnvalidatedConfig()
 }

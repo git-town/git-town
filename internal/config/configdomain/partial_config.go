@@ -204,7 +204,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfig) NormalConfig {
 	}
 }
 
-func (self PartialConfig) ToUnvalidatedConfig(defaults UnvalidatedConfig) UnvalidatedConfig {
+func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,

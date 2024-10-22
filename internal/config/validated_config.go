@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -76,4 +77,28 @@ func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) g
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.ValidatedConfig.MainBranch = branch
 	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
+}
+
+func NewValidatedConfig(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig, defaults configdomain.ValidatedConfig) ValidatedConfig {
+	config := configdomain.EmptyPartialConfig()
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
+		config = config.Merge(configFile)
+	}
+	config = config.Merge(globalGitConfig)
+	config = config.Merge(localGitConfig)
+	normalConfig := config.ToNormalConfig(configdomain.DefaultNormalConfig())
+	unvalidatedConfig := config.ToUnvalidatedConfig()
+	validatedConfig := unvalidatedConfig.ToValidatedConfig(defaults)
+	return ValidatedConfig{
+		NormalConfig: NormalConfig{
+			NormalConfig:    normalConfig,
+			ConfigFile:      configFile,
+			DryRun:          defaults.DryRun,
+			GitConfig:       defaults.GitConfig,
+			GitVersion:      defaults.GitVersion,
+			GlobalGitConfig: globalGitConfig,
+			LocalGitConfig:  localGitConfig,
+		},
+		ValidatedConfig: validatedConfig,
+	}
 }

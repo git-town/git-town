@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
@@ -26,17 +25,4 @@ func (self *ValidatedConfig) Author() gitdomain.Author {
 // is the main branch of the repository.
 func (self *ValidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
-}
-
-func NewValidatedConfig(configFile Option[PartialConfig], globalGitConfig, localGitConfig PartialConfig, defaults ValidatedConfig) ValidatedConfig {
-	config := EmptyPartialConfig()
-	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		config = config.Merge(configFile)
-	}
-	config = config.Merge(globalGitConfig)
-	config = config.Merge(localGitConfig)
-	normalConfig := config.ToNormalConfig()
-	unvalidatedConfig := config.ToUnvalidatedConfig()
-	validatedConfig := unvalidatedConfig.ToValidatedConfig(defaults)
-	return config.ToValidatedConfig(defaults)
 }
