@@ -39,8 +39,8 @@ func (self UnvalidatedConfig) ToValidatedConfig(defaults ValidatedConfig) Valida
 	}
 }
 
-// DefaultConfig provides the default configuration data to use when nothing is configured.
-func DefaultConfig() UnvalidatedConfig {
+// DefaultUnvalidatedConfig provides the default configuration data to use when nothing is configured.
+func DefaultUnvalidatedConfig() UnvalidatedConfig {
 	return UnvalidatedConfig{
 		GitUserEmail: None[GitUserEmail](),
 		GitUserName:  None[GitUserName](),

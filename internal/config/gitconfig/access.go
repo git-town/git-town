@@ -177,3 +177,8 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err
 }
+
+// an empty Access instance, to be used only in testing
+func EmptyAccess() Access {
+	return Access{}
+}

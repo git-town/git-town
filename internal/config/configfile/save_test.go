@@ -7,6 +7,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/configfile"
+	"github.com/git-town/git-town/v16/internal/config/gitconfig"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -190,9 +192,9 @@ perennial-branches = "rebase"
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		give := config.DefaultUnvalidatedConfig()
-		give.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
-		err := configfile.Save(&give)
+		config := config.DefaultUnvalidatedConfig(gitconfig.EmptyAccess(), git.EmptyVersion())
+		config.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
+		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)

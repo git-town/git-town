@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/configfile"
+	"github.com/git-town/git-town/v16/internal/config/gitconfig"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -38,9 +39,9 @@ func SetupCommand() *cobra.Command {
 }
 
 // the config settings to be used if the user accepts all default options
-func defaultUserInput() userInput {
+func defaultUserInput(gitAccess gitconfig.Access, gitVersion git.Version) userInput {
 	return userInput{
-		config:        config.DefaultUnvalidatedConfig(),
+		config:        config.DefaultUnvalidatedConfig(gitAccess, gitVersion),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }
@@ -250,7 +251,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
-		userInput:     defaultUserInput(),
+		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfig, repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, err
 }
 
