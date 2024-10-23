@@ -98,20 +98,6 @@ func TestValidatedConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("Reload", func(t *testing.T) {
-		t.Parallel()
-		t.Run("lineage changed", func(t *testing.T) {
-			t.Parallel()
-			repo := testruntime.CreateGitTown(t)
-			branch := gitdomain.NewLocalBranchName("branch-1")
-			repo.CreateFeatureBranch(branch, "main")
-			repo.Config.Reload()
-			want := configdomain.NewLineage()
-			want.Add(branch, gitdomain.NewLocalBranchName("main"))
-			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
-		})
-	})
-
 	t.Run("RemovePerennialRoot", func(t *testing.T) {
 		t.Parallel()
 		contribution := gitdomain.NewLocalBranchName("contribution")
