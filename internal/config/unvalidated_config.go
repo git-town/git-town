@@ -78,16 +78,16 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 
 func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
-		UnvalidatedConfig: configdomain.DefaultUnvalidatedConfig(),
 		NormalConfig: NormalConfig{
-			NormalConfig:    configdomain.DefaultNormalConfig(),
 			ConfigFile:      None[configdomain.PartialConfig](),
 			DryRun:          false,
 			GitConfig:       gitAccess,
 			GitVersion:      gitVersion,
 			GlobalGitConfig: configdomain.EmptyPartialConfig(),
 			LocalGitConfig:  configdomain.EmptyPartialConfig(),
+			NormalConfig:    configdomain.DefaultNormalConfig(),
 		},
+		UnvalidatedConfig: configdomain.DefaultUnvalidatedConfig(),
 	}
 }
 
@@ -118,13 +118,13 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			NormalConfig:    normalConfig,
 			ConfigFile:      args.ConfigFile,
 			DryRun:          args.DryRun,
 			GitConfig:       args.Access,
 			GitVersion:      args.GitVersion,
 			GlobalGitConfig: args.GlobalConfig,
 			LocalGitConfig:  args.LocalConfig,
+			NormalConfig:    normalConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
 	}, finalMessages
