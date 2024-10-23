@@ -11,6 +11,18 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
+// ConfigSetting contains a key-value pair for a configuration setting.
+type ConfigSetting struct {
+	Key   Key
+	Value string
+}
+
+// ConfigUpdate contains the before and after values of a configuration setting.
+type ConfigUpdate struct {
+	After  ConfigSetting
+	Before ConfigSetting
+}
+
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
@@ -51,7 +63,7 @@ const (
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
-	KeyDeprecatedAliasKill				   = Key("alias.kill")
+	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
@@ -159,7 +171,6 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver:         KeyHostingPlatform,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyHostingPlatform,
-	KeyDeprecatedAliasKill: 					KeyAliasDelete,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,
@@ -172,4 +183,18 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 // ObsoleteKeys defines the keys that are sunset and should get deleted
 var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
+}
+
+// ConfigUpdates defines the config that should have its keys and values to be updated
+var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedAliasKill,
+			Value: "town kill",
+		},
+		After: ConfigSetting{
+			Key:   KeyAliasDelete,
+			Value: "town delete",
+		},
+	},
 }
