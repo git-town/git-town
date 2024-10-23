@@ -38,6 +38,22 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
+func (self *UnvalidatedConfig) Reload() {
+	_, globalGitConfig, _ := self.NormalConfig.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	_, localGitConfig, _ := self.NormalConfig.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, self.NormalConfig.GlobalGitConfig, self.NormalConfig.LocalGitConfig)
+	self.UnvalidatedConfig = unvalidatedConfig
+	self.NormalConfig = NormalConfig{
+		NormalConfig:    normalConfig,
+		ConfigFile:      self.NormalConfig.ConfigFile,
+		DryRun:          self.NormalConfig.DryRun,
+		GitConfig:       self.NormalConfig.GitConfig,
+		GitVersion:      self.NormalConfig.GitVersion,
+		GlobalGitConfig: globalGitConfig,
+		LocalGitConfig:  localGitConfig,
+	}
+}
+
 func (self *UnvalidatedConfig) RemoveMainBranch() {
 	_ = self.NormalConfig.GitConfig.RemoveLocalConfigValue(configdomain.KeyMainBranch)
 }
@@ -109,4 +125,16 @@ func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
+}
+
+func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
+	config := configdomain.EmptyPartialConfig()
+	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
+		config = config.Merge(configFile)
+	}
+	config = config.Merge(globalGitConfig)
+	config = config.Merge(localGitConfig)
+	normalConfig := config.ToNormalConfig(configdomain.DefaultNormalConfig())
+	unvalidatedConfig := config.ToUnvalidatedConfig()
+	return unvalidatedConfig, normalConfig
 }

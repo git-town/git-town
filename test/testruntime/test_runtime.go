@@ -92,17 +92,10 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 	})
-	validatedConfig := config.ValidatedConfig{
-		ValidatedConfig: configdomain.ValidatedConfig{
-			GitUserEmail: "test@test.com",
-			GitUserName:  "Tester",
-			MainBranch:   gitdomain.NewLocalBranchName("main"),
-		},
-		NormalConfig: unvalidatedConfig.NormalConfig,
-	}
+	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
 		Commands:   &gitCommands,
-		Config:     validatedConfig,
+		Config:     unvalidatedConfig,
 		TestRunner: &testRunner,
 	}
 	return testCommands
