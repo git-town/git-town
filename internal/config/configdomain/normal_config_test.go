@@ -10,6 +10,7 @@ import (
 
 func TestNormalConfig(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")

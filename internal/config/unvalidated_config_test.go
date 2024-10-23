@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -21,6 +22,15 @@ func TestUnvalidatedConfig(t *testing.T) {
 			want := configdomain.NewLineage()
 			want.Add("branch", "main")
 			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
+		})
+		t.Run("contribution branches changed", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			repo.CreateBranch("branch", "main")
+			repo.Config.NormalConfig.AddToContributionBranches("branch")
+			repo.Config.Reload()
+			want := gitdomain.NewLocalBranchNames("branch")
+			must.Eq(t, want, repo.Config.NormalConfig.ContributionBranches)
 		})
 	})
 }
