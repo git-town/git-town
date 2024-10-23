@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -17,11 +16,10 @@ func TestUnvalidatedConfig(t *testing.T) {
 		t.Run("lineage changed", func(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
-			branch := gitdomain.NewLocalBranchName("branch-1")
-			repo.CreateFeatureBranch(branch, "main")
+			repo.CreateFeatureBranch("branch", "main")
 			repo.Config.Reload()
 			want := configdomain.NewLineage()
-			want.Add(branch, "main")
+			want.Add("branch", "main")
 			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
 		})
 	})

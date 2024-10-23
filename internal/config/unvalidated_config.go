@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/gitconfig"
 	"github.com/git-town/git-town/v16/internal/git"
@@ -41,6 +43,7 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 func (self *UnvalidatedConfig) Reload() {
 	_, globalGitConfig, _ := self.NormalConfig.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, localGitConfig, _ := self.NormalConfig.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	fmt.Println("1111111111111111111111111111111111111111111111 LOCAL", localGitConfig)
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, self.NormalConfig.GlobalGitConfig, self.NormalConfig.LocalGitConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
@@ -107,7 +110,9 @@ func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, 
 		config = config.Merge(configFile)
 	}
 	config = config.Merge(globalGitConfig)
+	fmt.Println("222222222222222222222222222222222222", localGitConfig.Lineage)
 	config = config.Merge(localGitConfig)
+	fmt.Println("333333333333333333333333333333333333", config.Lineage)
 	normalConfig := config.ToNormalConfig(configdomain.DefaultNormalConfig())
 	unvalidatedConfig := config.ToUnvalidatedConfig()
 	return unvalidatedConfig, normalConfig
