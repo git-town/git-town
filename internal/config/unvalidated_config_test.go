@@ -21,7 +21,7 @@ func TestUnvalidatedConfig(t *testing.T) {
 			repo.CreateFeatureBranch(branch, "main")
 			repo.Config.Reload()
 			want := configdomain.NewLineage()
-			want.Add(branch, gitdomain.NewLocalBranchName("main"))
+			want.Add(branch, "main")
 			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
 		})
 	})
