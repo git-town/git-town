@@ -171,6 +171,13 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
+			for _, update := range configdomain.ConfigUpdates {
+				if configKey == update.Before.Key && value == update.Before.Value {
+					self.UpdateDeprecatedSetting(configKey, update.After.Key, update.After.Value, scope)
+					configKey = update.After.Key
+					value = update.After.Value
+				}
+			}
 		}
 		snapshot[configKey] = value
 	}
