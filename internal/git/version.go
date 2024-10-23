@@ -16,13 +16,7 @@ func (self Version) IsMinimumRequiredGitVersion() bool {
 	return self.Major > 2 || (self.Major == 2 && self.Minor >= 30)
 }
 
-// provides an empty version instance
-func emptyVersion() Version {
-	var result Version
-	return result
-}
-
 // an empty version, to be used only in testing
 func EmptyVersion() Version {
-	return Version{}
+	return Version{} //exhaustruct:ignore
 }

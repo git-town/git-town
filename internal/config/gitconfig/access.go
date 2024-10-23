@@ -180,5 +180,5 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 
 // an empty Access instance, to be used only in testing
 func EmptyAccess() Access {
-	return Access{}
+	return Access{} //exhaustruct:ignore
 }

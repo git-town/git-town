@@ -14,14 +14,6 @@ type UnvalidatedConfig struct {
 	MainBranch   Option[gitdomain.LocalBranchName]
 }
 
-// indicates the branch type of the given branch, if it can determine it
-func (self *UnvalidatedConfig) PartialBranchType(branch gitdomain.LocalBranchName) Option[BranchType] {
-	if self.IsMainBranch(branch) {
-		return Some(BranchTypeMainBranch)
-	}
-	return None[BranchType]()
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
@@ -29,6 +21,14 @@ func (self *UnvalidatedConfig) IsMainBranch(branch gitdomain.LocalBranchName) bo
 		return branch == mainBranch
 	}
 	return false
+}
+
+// indicates the branch type of the given branch, if it can determine it
+func (self *UnvalidatedConfig) PartialBranchType(branch gitdomain.LocalBranchName) Option[BranchType] {
+	if self.IsMainBranch(branch) {
+		return Some(BranchTypeMainBranch)
+	}
+	return None[BranchType]()
 }
 
 func (self UnvalidatedConfig) ToValidatedConfig(defaults ValidatedConfig) ValidatedConfig {
