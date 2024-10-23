@@ -259,28 +259,27 @@ func renameProgram(data renameData) program.Program {
 		if data.config.Config.IsPerennialBranch(data.initialBranch) {
 			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
 			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
-		} else {
-			if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
-				result.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
-			}
-			if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
-				result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
-			}
-			if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {
-				result.Value.Add(&opcodes.BranchesContributionRemove{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.newBranch})
-			}
-			if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
-				result.Value.Add(&opcodes.BranchesParkedRemove{Branch: oldLocalBranch})
-				result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
-			}
-			if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
-				result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
-			}
-			result.Value.Add(&opcodes.BranchParentDelete{Branch: oldLocalBranch})
 		}
+		if slices.Contains(data.config.Config.PrototypeBranches, data.initialBranch) {
+			result.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
+		}
+		if slices.Contains(data.config.Config.ObservedBranches, data.initialBranch) {
+			result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
+		}
+		if slices.Contains(data.config.Config.ContributionBranches, data.initialBranch) {
+			result.Value.Add(&opcodes.BranchesContributionRemove{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.newBranch})
+		}
+		if slices.Contains(data.config.Config.ParkedBranches, data.initialBranch) {
+			result.Value.Add(&opcodes.BranchesParkedRemove{Branch: oldLocalBranch})
+			result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
+		}
+		if parentBranch, hasParent := data.config.Config.Lineage.Parent(oldLocalBranch).Get(); hasParent {
+			result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
+		}
+		result.Value.Add(&opcodes.BranchParentDelete{Branch: oldLocalBranch})
 	}
 	for _, child := range data.config.Config.Lineage.Children(oldLocalBranch) {
 		result.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
