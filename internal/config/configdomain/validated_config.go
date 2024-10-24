@@ -8,6 +8,7 @@ import (
 
 // ValidatedConfig is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
 // This is ensured by querying from the user if needed.
+// TODO: rename to ValidatedConfigData
 type ValidatedConfig struct {
 	GitUserEmail GitUserEmail
 	GitUserName  GitUserName

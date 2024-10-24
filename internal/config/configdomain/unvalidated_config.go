@@ -8,6 +8,7 @@ import (
 // UnvalidatedConfig is the Git Town configuration as read from disk.
 // It might be lacking essential information in case Git metadata and config files don't contain it.
 // If you need this information, validate it into a ValidatedConfig.
+// TODO: rename to UnvalidatedConfigData
 type UnvalidatedConfig struct {
 	GitUserEmail Option[GitUserEmail]
 	GitUserName  Option[GitUserName]
