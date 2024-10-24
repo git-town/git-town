@@ -103,32 +103,36 @@ BEGIN OUTPUT FROM 'git branch -vva'
 %s
 END OUTPUT FROM 'git branch -vva'
 `
-	GitUserEmailMissing                   = `please set the Git user email by running: git config --global user.email "<your email>"`
-	GitUserNameMissing                    = `please set the Git user name by running: git config --global user.name "<your name>"`
-	GitURLCannotParse                     = "cannot parse Git URL %q"
-	GitVersionMajorNotNumber              = "cannot convert major version %q to int: %w"
-	GitVersionMinorNotNumber              = "cannot convert minor version %q to int: %w"
-	GitVersionProblem                     = "cannot determine Git version: %w"
-	GitVersionUnexpectedOutput            = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
-	GitVersionTooLow                      = "this app requires Git 2.30 or higher"
-	HackTooManyArguments                  = "please provide only one branch to create"
-	HackBranchIsAlreadyFeature            = "branch %q is already a feature branch"
-	HackBranchIsNowFeature                = "branch %q is now a feature branch\n"
-	HackCannotFeatureMainBranch           = "you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?"
-	HackCannotFeaturePerennialBranch      = "branch %q is a perennial branch and therefore be a feature branch"
-	HostingBitbucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
-	HostingBitbucketMergingViaAPI         = "Bitbucket API: merging PR %s ... "
-	HostingGitlabMergingViaAPI            = "Merging MR !%d ... "
-	HostingGitlabUpdateMRViaAPI           = "Updating target branch for MR !%d to %q ... "
-	HostingGiteaNotImplemented            = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
-	HostingGiteaUpdatePRViaAPI            = "Gitea API: Updating base branch for PR #%d to #%s"
-	HostingGithubMergingViaAPI            = "GitHub API: merging PR %s ... "
-	HostingPlatformUnknown                = "unknown hosting platform: %q"
-	InputAddOrRemove                      = `invalid argument %q. Please provide either "add" or "remove"`
-	InputYesOrNo                          = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	DeleteBranchOtherWorktree             = `branch %q is active in another worktree`
-	DeleteCannotDeleteMainBranch          = "you cannot delete the main branch"
-	DeleteCannotDeletePerennialBranches   = "you cannot delete perennial branches"
+	GitUserEmailMissing                 = `please set the Git user email by running: git config --global user.email "<your email>"`
+	GitUserNameMissing                  = `please set the Git user name by running: git config --global user.name "<your name>"`
+	GitURLCannotParse                   = "cannot parse Git URL %q"
+	GitVersionMajorNotNumber            = "cannot convert major version %q to int: %w"
+	GitVersionMinorNotNumber            = "cannot convert minor version %q to int: %w"
+	GitVersionProblem                   = "cannot determine Git version: %w"
+	GitVersionUnexpectedOutput          = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
+	GitVersionTooLow                    = "this app requires Git 2.30 or higher"
+	HackTooManyArguments                = "please provide only one branch to create"
+	HackBranchIsAlreadyFeature          = "branch %q is already a feature branch"
+	HackBranchIsNowFeature              = "branch %q is now a feature branch\n"
+	HackCannotFeatureMainBranch         = "you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?"
+	HackCannotFeaturePerennialBranch    = "branch %q is a perennial branch and therefore be a feature branch"
+	HostingBitbucketNotImplemented      = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
+	HostingBitbucketMergingViaAPI       = "Bitbucket API: merging PR %s ... "
+	HostingGitlabMergingViaAPI          = "Merging MR !%d ... "
+	HostingGitlabUpdateMRViaAPI         = "Updating target branch for MR !%d to %q ... "
+	HostingGiteaNotImplemented          = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
+	HostingGiteaUpdatePRViaAPI          = "Gitea API: Updating base branch for PR #%d to #%s"
+	HostingGithubMergingViaAPI          = "GitHub API: merging PR %s ... "
+	HostingPlatformUnknown              = "unknown hosting platform: %q"
+	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
+	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	DeleteBranchOtherWorktree           = `branch %q is active in another worktree`
+	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
+	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
+	KillDeprecation                     = `DEPRECATION NOTICE
+
+	This command has been renamed to "git town delete"
+	and will be removed in future versions of Git Town.`
 	MainBranch                            = "Main branch: %s\n"
 	MainBranchCannotMakeContribution      = "cannot make the main branch a contribution branch"
 	MainBranchCannotObserve               = "cannot observe the main branch"
@@ -170,7 +174,7 @@ END OUTPUT FROM 'git branch -vva'
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 
 This command has been renamed to "git town propose"
-nd will be removed in future versions of Git Town.`
+and will be removed in future versions of Git Town.`
 	PushHook                       = "Push hook: %s\n"
 	PushNewBranches                = "Push new branches: %s\n"
 	RebaseProblem                  = "cannot determine rebase in progress: %w"
