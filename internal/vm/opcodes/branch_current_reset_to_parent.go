@@ -13,7 +13,7 @@ type BranchCurrentResetToParent struct {
 }
 
 func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
+	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
 		return nil
 	}

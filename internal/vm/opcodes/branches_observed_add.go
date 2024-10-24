@@ -12,5 +12,5 @@ type BranchesObservedAdd struct {
 }
 
 func (self *BranchesObservedAdd) Run(args shared.RunArgs) error {
-	return args.Config.NormalConfig.AddToObservedBranches(self.Branch)
+	return args.Config.Value.NormalConfig.AddToObservedBranches(self.Branch)
 }

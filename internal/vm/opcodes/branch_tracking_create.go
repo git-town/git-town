@@ -13,5 +13,5 @@ type BranchTrackingCreate struct {
 }
 
 func (self *BranchTrackingCreate) Run(args shared.RunArgs) error {
-	return args.Git.CreateTrackingBranch(args.Frontend, self.Branch, gitdomain.RemoteOrigin, args.Config.NormalConfig.NoPushHook())
+	return args.Git.CreateTrackingBranch(args.Frontend, self.Branch, gitdomain.RemoteOrigin, args.Config.Value.NormalConfig.NoPushHook())
 }

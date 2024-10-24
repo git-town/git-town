@@ -19,7 +19,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		panic(messages.BranchInfosNotProvided)
 	}
 	for branch := self.Branch; ; {
-		parent, hasParent := args.Config.NormalConfig.Lineage.Parent(branch).Get()
+		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
 		}

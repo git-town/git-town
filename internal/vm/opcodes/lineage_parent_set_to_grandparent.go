@@ -12,11 +12,11 @@ type LineageParentSetToGrandParent struct {
 }
 
 func (self *LineageParentSetToGrandParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.NormalConfig.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
 	}
-	if grandParent, hasGrandParent := args.Config.NormalConfig.Lineage.Parent(parent).Get(); hasGrandParent {
+	if grandParent, hasGrandParent := args.Config.Value.NormalConfig.Lineage.Parent(parent).Get(); hasGrandParent {
 		args.PrependOpcodes(&LineageParentSet{
 			Branch: self.Branch,
 			Parent: grandParent,

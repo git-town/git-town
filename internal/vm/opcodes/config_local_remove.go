@@ -11,5 +11,5 @@ type ConfigLocalRemove struct {
 }
 
 func (self *ConfigLocalRemove) Run(args shared.RunArgs) error {
-	return args.Config.NormalConfig.GitConfig.RemoveLocalConfigValue(self.Key)
+	return args.Config.Value.NormalConfig.GitConfig.RemoveLocalConfigValue(self.Key)
 }

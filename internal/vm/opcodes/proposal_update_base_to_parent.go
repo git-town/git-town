@@ -16,7 +16,7 @@ type ProposalUpdateBaseToParent struct {
 }
 
 func (self *ProposalUpdateBaseToParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.NormalConfig.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return fmt.Errorf("branch %q has no parent", self.Branch)
 	}

@@ -11,5 +11,5 @@ type ForcePush struct {
 }
 
 func (self *ForcePush) Run(args shared.RunArgs) error {
-	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.NormalConfig.NoPushHook(), self.ForceIfIncludes)
+	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), self.ForceIfIncludes)
 }

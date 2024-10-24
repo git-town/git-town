@@ -14,7 +14,7 @@ func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if stashSize == 0 && !args.Config.NormalConfig.DryRun {
+	if stashSize == 0 && !args.Config.Value.NormalConfig.DryRun {
 		return nil
 	}
 	args.PrependOpcodes(&StashPop{})

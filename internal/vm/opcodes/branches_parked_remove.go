@@ -13,8 +13,8 @@ type BranchesParkedRemove struct {
 
 func (self *BranchesParkedRemove) Run(args shared.RunArgs) error {
 	var err error
-	if args.Config.NormalConfig.ParkedBranches.Contains(self.Branch) {
-		err = args.Config.NormalConfig.RemoveFromParkedBranches(self.Branch)
+	if args.Config.Value.NormalConfig.ParkedBranches.Contains(self.Branch) {
+		err = args.Config.Value.NormalConfig.RemoveFromParkedBranches(self.Branch)
 	}
 	return err
 }
