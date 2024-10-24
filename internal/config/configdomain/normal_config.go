@@ -8,6 +8,7 @@ import (
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
+// TODO: rename to NormalConfigData
 type NormalConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
