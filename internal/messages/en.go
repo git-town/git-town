@@ -175,11 +175,15 @@ END OUTPUT FROM 'git branch -vva'
 
 This command has been renamed to "git town propose"
 and will be removed in future versions of Git Town.`
-	PushHook                       = "Push hook: %s\n"
-	PushNewBranches                = "Push new branches: %s\n"
-	RebaseProblem                  = "cannot determine rebase in progress: %w"
-	RemoteExistsProblem            = "cannot determine if remote %q exists: %w"
-	RemotesProblem                 = "cannot determine remotes: %w"
+	PushHook                = "Push hook: %s\n"
+	PushNewBranches         = "Push new branches: %s\n"
+	RebaseProblem           = "cannot determine rebase in progress: %w"
+	RemoteExistsProblem     = "cannot determine if remote %q exists: %w"
+	RemotesProblem          = "cannot determine remotes: %w"
+	RenameBranchDeprecation = `DEPRECATION NOTICE
+
+This command has been renamed to "git town rename"
+and will be removed in future versions of Git Town.`
 	RenameNotInSync                = "%q is not in sync with its tracking branch, please sync the branches before renaming"
 	RenameMainBranch               = "the main branch cannot be renamed"
 	RenamePerennialBranchWarning   = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
