@@ -184,7 +184,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err

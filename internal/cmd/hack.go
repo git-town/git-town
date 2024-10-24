@@ -232,7 +232,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		LocalBranches:      localBranchNames,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err

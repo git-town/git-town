@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/skip"
 	"github.com/git-town/git-town/v16/internal/validate"
 	"github.com/git-town/git-town/v16/internal/vm/statefile"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -100,7 +101,7 @@ func executeSkip(verbose configdomain.Verbose) error {
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return err
