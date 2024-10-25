@@ -25,11 +25,11 @@ func Execute(args ExecuteArgs) error {
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
-		Config:         args.Config.Config,
+		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.Config.Config.NoPushHook(),
+		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
 		RunState:       args.RunState,
 	})
 	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{

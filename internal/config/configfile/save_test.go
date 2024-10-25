@@ -4,8 +4,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/configfile"
+	"github.com/git-town/git-town/v16/internal/config/gitconfig"
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -41,32 +44,34 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.UnvalidatedConfig{
-			MainBranch: None[gitdomain.LocalBranchName](),
-			NormalConfig: &configdomain.NormalConfig{
-				CreatePrototypeBranches:  true,
-				DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
-				FeatureRegex:             None[configdomain.FeatureRegex](),
-				HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-				HostingPlatform:          None[configdomain.HostingPlatform](),
-				Lineage:                  configdomain.NewLineage(),
-				ObservedBranches:         gitdomain.LocalBranchNames{},
-				Offline:                  false,
-				ParkedBranches:           gitdomain.LocalBranchNames{},
-				PerennialBranches:        gitdomain.LocalBranchNames{},
-				PerennialRegex:           None[configdomain.PerennialRegex](),
-				PushHook:                 true,
-				PushNewBranches:          false,
-				ShipStrategy:             configdomain.ShipStrategySquashMerge,
-				ShipDeleteTrackingBranch: true,
-				SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
-				SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-				SyncTags:                 true,
-				SyncUpstream:             true,
+		give := config.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfig: configdomain.NormalConfig{
+					CreatePrototypeBranches:  true,
+					DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
+					FeatureRegex:             None[configdomain.FeatureRegex](),
+					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
+					HostingPlatform:          None[configdomain.HostingPlatform](),
+					Lineage:                  configdomain.NewLineage(),
+					ObservedBranches:         gitdomain.LocalBranchNames{},
+					Offline:                  false,
+					ParkedBranches:           gitdomain.LocalBranchNames{},
+					PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
+					PerennialRegex:           None[configdomain.PerennialRegex](),
+					PushHook:                 true,
+					PushNewBranches:          false,
+					ShipStrategy:             configdomain.ShipStrategySquashMerge,
+					ShipDeleteTrackingBranch: true,
+					SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
+					SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+					SyncTags:                 true,
+					SyncUpstream:             true,
+				},
 			},
 		}
-		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
-		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
 		have := configfile.RenderTOML(&give)
 		want := `
 # Git Town configuration file
@@ -187,9 +192,10 @@ perennial-branches = "rebase"
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.DefaultConfig()
-		give.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
-		err := configfile.Save(&give)
+		var gitAccess gitconfig.Access
+		config := config.DefaultUnvalidatedConfig(gitAccess, git.EmptyVersion())
+		config.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
+		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)

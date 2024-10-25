@@ -219,7 +219,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(localBranchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -232,7 +232,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		LocalBranches:      localBranchNames,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -240,7 +240,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if !shouldCreateBranch {
 		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
 			config:         validatedConfig,
-			targetBranches: validatedConfig.Config.BranchesAndTypes(branchesToValidate),
+			targetBranches: validatedConfig.BranchesAndTypes(branchesToValidate),
 		})
 		return data, false, nil
 	}
@@ -259,11 +259,11 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch}
 	if detached {
-		branchNamesToSync = validatedConfig.Config.RemovePerennials(branchNamesToSync)
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.Config.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -276,7 +276,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch},
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
@@ -295,13 +295,13 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			err = args.config.RemoveFromContributionBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromContributionBranches(branchName)
 		case configdomain.BranchTypeObservedBranch:
-			err = args.config.RemoveFromObservedBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromObservedBranches(branchName)
 		case configdomain.BranchTypeParkedBranch:
-			err = args.config.RemoveFromParkedBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromParkedBranches(branchName)
 		case configdomain.BranchTypePrototypeBranch:
-			err = args.config.RemoveFromPrototypeBranches(branchName)
+			err = args.config.NormalConfig.RemoveFromPrototypeBranches(branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeMainBranch,

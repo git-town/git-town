@@ -4,11 +4,11 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
+// TODO: rename to NormalConfigData
 type NormalConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
@@ -122,7 +122,7 @@ func (self *NormalConfig) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
 
-func DefaultSharedConfig() NormalConfig {
+func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),

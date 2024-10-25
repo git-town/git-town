@@ -69,7 +69,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.AddToObservedBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
@@ -112,15 +112,15 @@ func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config 
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeParkedBranch:
-			if err := config.RemoveFromParkedBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypePrototypeBranch:
-			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
 				return err
 			}
 		case
@@ -138,7 +138,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if err != nil {
 		return observeData{}, err
 	}
-	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return observeData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,

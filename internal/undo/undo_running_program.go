@@ -1,6 +1,7 @@
 package undo
 
 import (
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -31,7 +32,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 
 type CreateUndoProgramArgs struct {
 	Backend        gitdomain.RunnerQuerier
-	Config         configdomain.ValidatedConfig
+	Config         config.ValidatedConfig
 	DryRun         configdomain.DryRun
 	Git            git.Commands
 	HasOpenChanges bool

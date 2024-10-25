@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/validate"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -109,7 +110,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -126,12 +127,12 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err
 	}
-	parentBranch, hasParent := validatedConfig.Config.Lineage.Parent(branch).Get()
+	parentBranch, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return data, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
