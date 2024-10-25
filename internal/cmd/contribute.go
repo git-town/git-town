@@ -69,7 +69,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.UnvalidatedConfig.AddToContributionBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.AddToContributionBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
@@ -112,15 +112,15 @@ func removeNonContributionBranchTypes(branches configdomain.BranchesAndTypes, co
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeParkedBranch:
-			if err := config.RemoveFromParkedBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypePrototypeBranch:
-			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
 				return err
 			}
 		case
@@ -138,7 +138,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if err != nil {
 		return contributeData{}, err
 	}
-	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToMakeContribution, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return contributeData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,

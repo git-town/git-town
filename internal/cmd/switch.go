@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/regexes"
 	"github.com/git-town/git-town/v16/internal/validate"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -69,9 +70,9 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 	if err != nil || exit {
 		return err
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(data.branchNames)
-	defaultBranchType := repo.UnvalidatedConfig.Config.Value.DefaultBranchType
-	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.Config.Lineage, defaultBranchType, allBranches, data.regexes)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
+	defaultBranchType := repo.UnvalidatedConfig.NormalConfig.DefaultBranchType
+	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.NormalConfig.Lineage, defaultBranchType, allBranches, data.regexes)
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
 	}
@@ -141,7 +142,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(localBranches)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranches)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -154,7 +155,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -169,7 +170,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		config:             validatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
-		lineage:            validatedConfig.Config.Lineage,
+		lineage:            validatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
 	}, false, err

@@ -12,5 +12,5 @@ type BranchesPrototypeAdd struct {
 }
 
 func (self *BranchesPrototypeAdd) Run(args shared.RunArgs) error {
-	return args.Config.AddToPrototypeBranches(self.Branch)
+	return args.Config.Value.NormalConfig.AddToPrototypeBranches(self.Branch)
 }

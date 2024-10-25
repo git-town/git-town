@@ -1,9 +1,11 @@
 package config_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
@@ -15,16 +17,64 @@ import (
 func TestValidatedConfig(t *testing.T) {
 	t.Parallel()
 
+	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
+		t.Parallel()
+		config := config.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
+					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
+					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
+					ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
+				},
+			},
+		}
+		tests := map[string]bool{
+			"feature":     false,
+			"main":        true,
+			"perennial-1": true,
+			"perennial-2": true,
+			"perennial-3": false,
+			"observed":    false,
+			"parked":      false,
+		}
+		for give, want := range tests {
+			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
+			fmt.Println(give)
+			must.Eq(t, want, have)
+		}
+	})
+
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		repo.CreateFeatureBranch("feature1", "main")
 		repo.CreateFeatureBranch("feature2", "main")
 		repo.Config.Reload()
-		have := repo.Config.Config.Lineage
+		have := repo.Config.NormalConfig.Lineage
 		want := configdomain.NewLineage()
 		want.Add(gitdomain.NewLocalBranchName("feature1"), gitdomain.NewLocalBranchName("main"))
 		want.Add(gitdomain.NewLocalBranchName("feature2"), gitdomain.NewLocalBranchName("main"))
+		must.Eq(t, want, have)
+	})
+
+	t.Run("MainAndPerennials", func(t *testing.T) {
+		t.Parallel()
+		config := config.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+				},
+			},
+		}
+		have := config.MainAndPerennials()
+		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
 		must.Eq(t, want, have)
 	})
 
@@ -42,24 +92,10 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.RemoteURL(gitdomain.RemoteOrigin).Get()
+			have, has := repo.Config.NormalConfig.RemoteURL(gitdomain.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}
-	})
-
-	t.Run("Reload", func(t *testing.T) {
-		t.Parallel()
-		t.Run("lineage changed", func(t *testing.T) {
-			t.Parallel()
-			repo := testruntime.CreateGitTown(t)
-			branch := gitdomain.NewLocalBranchName("branch-1")
-			repo.CreateFeatureBranch(branch, "main")
-			repo.Config.Reload()
-			want := configdomain.NewLineage()
-			want.Add(branch, gitdomain.NewLocalBranchName("main"))
-			must.Eq(t, want, repo.Config.Config.Lineage)
-		})
 	})
 
 	t.Run("RemovePerennialRoot", func(t *testing.T) {
@@ -75,15 +111,19 @@ func TestValidatedConfig(t *testing.T) {
 		prototype := gitdomain.NewLocalBranchName("prototype")
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
-		config := configdomain.ValidatedConfig{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
-			NormalConfig: &configdomain.NormalConfig{
-				ContributionBranches: gitdomain.LocalBranchNames{contribution},
-				ObservedBranches:     gitdomain.LocalBranchNames{observed},
-				ParkedBranches:       gitdomain.LocalBranchNames{parked},
-				PerennialBranches:    gitdomain.LocalBranchNames{perennial1},
-				PerennialRegex:       perennialRegexOpt,
-				PrototypeBranches:    gitdomain.LocalBranchNames{prototype},
+		config := config.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
+					ContributionBranches: gitdomain.LocalBranchNames{contribution},
+					ObservedBranches:     gitdomain.LocalBranchNames{observed},
+					ParkedBranches:       gitdomain.LocalBranchNames{parked},
+					PerennialBranches:    gitdomain.LocalBranchNames{perennial1},
+					PerennialRegex:       perennialRegexOpt,
+					PrototypeBranches:    gitdomain.LocalBranchNames{prototype},
+				},
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{

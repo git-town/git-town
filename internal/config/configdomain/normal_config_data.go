@@ -4,12 +4,11 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
-type NormalConfig struct {
+type NormalConfigData struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
@@ -43,15 +42,15 @@ type NormalConfig struct {
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *NormalConfig) ContainsLineage() bool {
+func (self *NormalConfigData) ContainsLineage() bool {
 	return self.Lineage.Len() > 0
 }
 
-func (self *NormalConfig) IsOnline() bool {
+func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
 }
 
-func (self *NormalConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	if slices.Contains(self.PerennialBranches, branch) {
 		return true
 	}
@@ -61,36 +60,36 @@ func (self *NormalConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bo
 	return false
 }
 
-func (self *NormalConfig) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfigData) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
 	if contributionRegex, has := self.ContributionRegex.Get(); has {
 		return contributionRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *NormalConfig) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfigData) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
 	if featureRegex, has := self.FeatureRegex.Get(); has {
 		return featureRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *NormalConfig) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
+func (self *NormalConfigData) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
 	if observedRegex, has := self.ObservedRegex.Get(); has {
 		return observedRegex.MatchesBranch(branch)
 	}
 	return false
 }
 
-func (self *NormalConfig) NoPushHook() NoPushHook {
+func (self *NormalConfigData) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 
-func (self *NormalConfig) Online() Online {
+func (self *NormalConfigData) Online() Online {
 	return self.Offline.ToOnline()
 }
 
-func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
+func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
 	if self.IsPerennialBranch(branch) {
 		return BranchTypePerennialBranch
 	}
@@ -118,16 +117,16 @@ func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) Br
 	return self.DefaultBranchType.BranchType
 }
 
-func (self *NormalConfig) ShouldPushNewBranches() bool {
+func (self *NormalConfigData) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
 
-func DefaultSharedConfig() NormalConfig {
-	return NormalConfig{
+func DefaultNormalConfig() NormalConfigData {
+	return NormalConfigData{
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
-		ContributionBranches:     gitdomain.NewLocalBranchNames(),
+		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		CreatePrototypeBranches:  false,
 		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
@@ -138,13 +137,13 @@ func DefaultSharedConfig() NormalConfig {
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  NewLineage(),
-		ObservedBranches:         gitdomain.NewLocalBranchNames(),
+		ObservedBranches:         gitdomain.LocalBranchNames{},
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
-		ParkedBranches:           gitdomain.NewLocalBranchNames(),
-		PerennialBranches:        gitdomain.NewLocalBranchNames(),
+		ParkedBranches:           gitdomain.LocalBranchNames{},
+		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[PerennialRegex](),
-		PrototypeBranches:        gitdomain.NewLocalBranchNames(),
+		PrototypeBranches:        gitdomain.LocalBranchNames{},
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,

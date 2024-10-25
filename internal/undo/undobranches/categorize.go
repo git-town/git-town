@@ -1,11 +1,11 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config configdomain.ValidatedConfig) (perennials, features undodomain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config config.ValidatedConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
 		if localBefore, hasLocalBefore := change.Before.LocalName.Get(); hasLocalBefore {
 			if config.IsMainOrPerennialBranch(localBefore) {
@@ -18,7 +18,7 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 	return
 }
 
-func CategorizeLocalBranchChange(change LocalBranchChange, config configdomain.ValidatedConfig) (changedPerennials, changedFeatures LocalBranchChange) {
+func CategorizeLocalBranchChange(change LocalBranchChange, config config.ValidatedConfig) (changedPerennials, changedFeatures LocalBranchChange) {
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
@@ -31,7 +31,7 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config configdomain.V
 	return
 }
 
-func CategorizeRemoteBranchChange(change RemoteBranchChange, config configdomain.ValidatedConfig) (perennialChanges, featureChanges RemoteBranchChange) {
+func CategorizeRemoteBranchChange(change RemoteBranchChange, config config.ValidatedConfig) (perennialChanges, featureChanges RemoteBranchChange) {
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
@@ -44,7 +44,7 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config configdomain
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config configdomain.ValidatedConfig) (perennials, features RemoteBranchesSHAs) {
+func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.ValidatedConfig) (perennials, features RemoteBranchesSHAs) {
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {

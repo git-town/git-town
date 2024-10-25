@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/format"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/spf13/cobra"
@@ -46,42 +47,42 @@ func executeDisplayConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	printConfig(repo.UnvalidatedConfig.Config.Get())
+	printConfig(repo.UnvalidatedConfig)
 	return nil
 }
 
-func printConfig(config configdomain.UnvalidatedConfig) {
+func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Branches")
-	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))
-	print.Entry("perennial branches", format.StringsSetting((config.PerennialBranches.Join(", "))))
-	print.Entry("perennial regex", format.StringSetting(config.PerennialRegex.String()))
-	print.Entry("default branch type", format.StringSetting(config.DefaultBranchType.String()))
-	print.Entry("feature regex", format.StringSetting(config.FeatureRegex.String()))
-	print.Entry("parked branches", format.StringsSetting((config.ParkedBranches.Join(", "))))
-	print.Entry("contribution branches", format.StringsSetting((config.ContributionBranches.Join(", "))))
-	print.Entry("contribution regex", format.StringsSetting((config.ContributionRegex.String())))
-	print.Entry("observed branches", format.StringsSetting((config.ObservedBranches.Join(", "))))
-	print.Entry("observed regex", format.StringsSetting((config.ObservedRegex.String())))
+	print.Entry("main branch", format.StringSetting(config.UnvalidatedConfig.MainBranch.String()))
+	print.Entry("perennial branches", format.StringsSetting((config.NormalConfig.PerennialBranches.Join(", "))))
+	print.Entry("perennial regex", format.StringSetting(config.NormalConfig.PerennialRegex.String()))
+	print.Entry("default branch type", format.StringSetting(config.NormalConfig.DefaultBranchType.String()))
+	print.Entry("feature regex", format.StringSetting(config.NormalConfig.FeatureRegex.String()))
+	print.Entry("parked branches", format.StringsSetting((config.NormalConfig.ParkedBranches.Join(", "))))
+	print.Entry("contribution branches", format.StringsSetting((config.NormalConfig.ContributionBranches.Join(", "))))
+	print.Entry("contribution regex", format.StringsSetting((config.NormalConfig.ContributionRegex.String())))
+	print.Entry("observed branches", format.StringsSetting((config.NormalConfig.ObservedBranches.Join(", "))))
+	print.Entry("observed regex", format.StringsSetting((config.NormalConfig.ObservedRegex.String())))
 	fmt.Println()
 	print.Header("Configuration")
-	print.Entry("offline", format.Bool(config.Offline.IsTrue()))
-	print.Entry("run pre-push hook", format.Bool(bool(config.PushHook)))
-	print.Entry("push new branches", format.Bool(config.ShouldPushNewBranches()))
-	print.Entry("ship strategy", config.ShipStrategy.String())
-	print.Entry("ship deletes the tracking branch", format.Bool(config.ShipDeleteTrackingBranch.IsTrue()))
-	print.Entry("sync-feature strategy", config.SyncFeatureStrategy.String())
-	print.Entry("sync-perennial strategy", config.SyncPerennialStrategy.String())
-	print.Entry("sync with upstream", format.Bool(config.SyncUpstream.IsTrue()))
-	print.Entry("sync tags", format.Bool(config.SyncTags.IsTrue()))
+	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsTrue()))
+	print.Entry("run pre-push hook", format.Bool(bool(config.NormalConfig.PushHook)))
+	print.Entry("push new branches", format.Bool(config.NormalConfig.ShouldPushNewBranches()))
+	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
+	print.Entry("ship deletes the tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
+	print.Entry("sync-feature strategy", config.NormalConfig.SyncFeatureStrategy.String())
+	print.Entry("sync-perennial strategy", config.NormalConfig.SyncPerennialStrategy.String())
+	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
+	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("hosting platform override", format.StringSetting(config.HostingPlatform.String()))
-	print.Entry("GitHub token", format.OptionalStringerSetting(config.GitHubToken))
-	print.Entry("GitLab token", format.OptionalStringerSetting(config.GitLabToken))
-	print.Entry("Gitea token", format.OptionalStringerSetting(config.GiteaToken))
+	print.Entry("hosting platform override", format.StringSetting(config.NormalConfig.HostingPlatform.String()))
+	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
+	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
+	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
 	fmt.Println()
-	if config.Lineage.Len() > 0 {
-		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
+	if config.NormalConfig.Lineage.Len() > 0 {
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
 	}
 }
