@@ -19,9 +19,9 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := config.UnvalidatedConfig{
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
-				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+		config := config.ValidatedConfig{
+			ValidatedConfig: configdomain.ValidatedConfig{
+				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfig: configdomain.NormalConfig{
