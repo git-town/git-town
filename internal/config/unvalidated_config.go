@@ -12,7 +12,7 @@ import (
 // TODO: rename to UnvalidatedConfigData
 type UnvalidatedConfig struct {
 	NormalConfig      NormalConfig
-	UnvalidatedConfig configdomain.UnvalidatedConfig
+	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
 
 // TODO: delete?
@@ -44,13 +44,13 @@ func (self *UnvalidatedConfig) Reload() {
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		ConfigFile:      self.NormalConfig.ConfigFile,
-		DryRun:          self.NormalConfig.DryRun,
-		GitConfig:       self.NormalConfig.GitConfig,
-		GitVersion:      self.NormalConfig.GitVersion,
-		GlobalGitConfig: globalGitConfig,
-		LocalGitConfig:  localGitConfig,
-		NormalConfig:    normalConfig,
+		ConfigFile:       self.NormalConfig.ConfigFile,
+		DryRun:           self.NormalConfig.DryRun,
+		GitConfig:        self.NormalConfig.GitConfig,
+		GitVersion:       self.NormalConfig.GitVersion,
+		GlobalGitConfig:  globalGitConfig,
+		LocalGitConfig:   localGitConfig,
+		NormalConfigData: normalConfig,
 	}
 }
 
@@ -79,19 +79,19 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:      None[configdomain.PartialConfig](),
-			DryRun:          false,
-			GitConfig:       gitAccess,
-			GitVersion:      gitVersion,
-			GlobalGitConfig: configdomain.EmptyPartialConfig(),
-			LocalGitConfig:  configdomain.EmptyPartialConfig(),
-			NormalConfig:    configdomain.DefaultNormalConfig(),
+			ConfigFile:       None[configdomain.PartialConfig](),
+			DryRun:           false,
+			GitConfig:        gitAccess,
+			GitVersion:       gitVersion,
+			GlobalGitConfig:  configdomain.EmptyPartialConfig(),
+			LocalGitConfig:   configdomain.EmptyPartialConfig(),
+			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
 		UnvalidatedConfig: configdomain.DefaultUnvalidatedConfig(),
 	}
 }
 
-func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
+func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
 	result := configdomain.EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = result.Merge(configFile)
@@ -101,7 +101,7 @@ func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 
-func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfig, configdomain.NormalConfig) {
+func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
 	config := configdomain.EmptyPartialConfig()
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		config = config.Merge(configFile)
@@ -118,13 +118,13 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:      args.ConfigFile,
-			DryRun:          args.DryRun,
-			GitConfig:       args.Access,
-			GitVersion:      args.GitVersion,
-			GlobalGitConfig: args.GlobalConfig,
-			LocalGitConfig:  args.LocalConfig,
-			NormalConfig:    normalConfig,
+			ConfigFile:       args.ConfigFile,
+			DryRun:           args.DryRun,
+			GitConfig:        args.Access,
+			GitVersion:       args.GitVersion,
+			GlobalGitConfig:  args.GlobalConfig,
+			LocalGitConfig:   args.LocalConfig,
+			NormalConfigData: normalConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
 	}, finalMessages

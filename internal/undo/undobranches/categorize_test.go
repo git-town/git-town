@@ -56,7 +56,7 @@ func TestCategorize(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 				},
 			},
@@ -119,7 +119,7 @@ func TestCategorize(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 				},
 			},
@@ -158,7 +158,7 @@ func TestCategorize(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 				},
 			},
@@ -191,7 +191,7 @@ func TestCategorize(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				},
 			},

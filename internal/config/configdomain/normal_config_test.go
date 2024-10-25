@@ -15,7 +15,7 @@ func TestNormalConfig(t *testing.T) {
 		t.Parallel()
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")
 		must.NoError(t, err)
-		config := configdomain.NormalConfig{
+		config := configdomain.NormalConfigData{
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 			PerennialRegex:    perennialRegexOpt,
 		}

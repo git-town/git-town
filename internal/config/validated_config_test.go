@@ -24,7 +24,7 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
 					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
@@ -68,7 +68,7 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 				},
 			},
@@ -116,7 +116,7 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.LocalBranchNames{contribution},
 					ObservedBranches:     gitdomain.LocalBranchNames{observed},
 					ParkedBranches:       gitdomain.LocalBranchNames{parked},

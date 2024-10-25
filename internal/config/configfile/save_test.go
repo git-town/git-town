@@ -45,11 +45,11 @@ func TestSave(t *testing.T) {
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		give := config.UnvalidatedConfig{
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
 				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					CreatePrototypeBranches:  true,
 					DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
 					FeatureRegex:             None[configdomain.FeatureRegex](),

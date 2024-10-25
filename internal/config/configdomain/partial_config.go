@@ -168,9 +168,9 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToNormalConfig(defaults NormalConfig) NormalConfig {
+func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfigData {
 	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
-	return NormalConfig{
+	return NormalConfigData{
 		Aliases:                  self.Aliases,
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
@@ -204,8 +204,8 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfig) NormalConfig {
 	}
 }
 
-func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfig {
-	return UnvalidatedConfig{
+func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfigData {
+	return UnvalidatedConfigData{
 		GitUserEmail: self.GitUserEmail,
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,

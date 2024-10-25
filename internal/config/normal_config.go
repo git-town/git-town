@@ -17,7 +17,7 @@ import (
 
 // TODO: rename to NormalConfigData
 type NormalConfig struct {
-	configdomain.NormalConfig
+	configdomain.NormalConfigData
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          configdomain.DryRun                // whether to only print the Git commands but not execute them
 	GitConfig       gitconfig.Access                   // access to the Git configuration settings
