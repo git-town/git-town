@@ -178,7 +178,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if err != nil || exit {
 		return data, exit, err
 	}
-	mainBranch := validatedConfig.ValidatedConfig.MainBranch
+	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)

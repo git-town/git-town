@@ -13,18 +13,18 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
-		conf := configdomain.ValidatedConfig{
+		config := configdomain.ValidatedConfigData{
 			GitUserName:  configdomain.GitUserName("name"),
 			GitUserEmail: configdomain.GitUserEmail("email"),
 		}
-		have := conf.Author()
+		have := config.Author()
 		want := gitdomain.Author("name <email>")
 		must.EqOp(t, want, have)
 	})
 
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.ValidatedConfig{
+		config := configdomain.ValidatedConfigData{
 			MainBranch: gitdomain.NewLocalBranchName("main"),
 		}
 		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("feature")))

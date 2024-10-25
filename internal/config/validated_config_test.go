@@ -20,11 +20,11 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
 					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
@@ -64,11 +64,11 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 				},
 			},
@@ -112,11 +112,11 @@ func TestValidatedConfig(t *testing.T) {
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.LocalBranchNames{contribution},
 					ObservedBranches:     gitdomain.LocalBranchNames{observed},
 					ParkedBranches:       gitdomain.LocalBranchNames{parked},

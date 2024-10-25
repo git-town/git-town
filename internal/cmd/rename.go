@@ -199,7 +199,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if validatedConfig.ValidatedConfig.IsMainBranch(oldBranchName) {
+	if validatedConfig.ValidatedConfigData.IsMainBranch(oldBranchName) {
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
 	if force.IsFalse() {

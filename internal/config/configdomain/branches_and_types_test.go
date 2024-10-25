@@ -17,7 +17,7 @@ func TestBranchesAndTypes(t *testing.T) {
 		t.Parallel()
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := config.UnvalidatedConfig{
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
 				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 			},
 		}
@@ -32,11 +32,11 @@ func TestBranchesAndTypes(t *testing.T) {
 		t.Parallel()
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := config.UnvalidatedConfig{
-			UnvalidatedConfig: configdomain.UnvalidatedConfig{
+			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
 				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 				},
 			},

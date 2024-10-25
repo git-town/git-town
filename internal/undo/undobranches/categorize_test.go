@@ -52,11 +52,11 @@ func TestCategorize(t *testing.T) {
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 				},
 			},
@@ -115,11 +115,11 @@ func TestCategorize(t *testing.T) {
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 				},
 			},
@@ -154,11 +154,11 @@ func TestCategorize(t *testing.T) {
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 				},
 			},
@@ -187,11 +187,11 @@ func TestCategorize(t *testing.T) {
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfig: configdomain.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				},
 			},

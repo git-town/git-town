@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/messages"
 )
 
-func GitUser(config configdomain.UnvalidatedConfig) (configdomain.GitUserEmail, configdomain.GitUserName, error) {
+func GitUser(config configdomain.UnvalidatedConfigData) (configdomain.GitUserEmail, configdomain.GitUserName, error) {
 	gitUserEmail, hasGitUserEmail := config.GitUserEmail.Get()
 	if !hasGitUserEmail {
 		return "", "", errors.New(messages.GitUserEmailMissing)

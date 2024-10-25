@@ -230,7 +230,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -300,7 +300,7 @@ func proposeProgram(data proposeData) program.Program {
 	})
 	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
-		MainBranch:    data.config.ValidatedConfig.MainBranch,
+		MainBranch:    data.config.ValidatedConfigData.MainBranch,
 		ProposalBody:  data.proposalBody,
 		ProposalTitle: data.proposalTitle,
 	})

@@ -59,7 +59,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfig.IsMainBranch(currentBranch)) {
+	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
 		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
 			unfinishedDetails.CanSkip = true
 		}
