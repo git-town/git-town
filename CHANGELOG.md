@@ -2,20 +2,19 @@
 
 ## 16.5.0 (2024-10-25)
 
-Git Town 16.5
 
 #### New Features
 
-- `git town sync` now deletes a local branch whose tracking branch is gone without syncing it first if the branch was in sync with its tracking branch before Git Town runs. This is another reason to keep your branches in sync ([#3641](https://github.com/git-town/git-town/issues/3641)).
-- The new `rename` command replaces the current `rename-branch` command. The `rename-branch` command is now deprecated and will be removed in a future release. Please update your tooling to use `rename` from now on. Existing aliases for `git town rename-branch` get automatically updated to the new commands ([#4038](https://github.com/git-town/git-town/issues/4038)).
+- `git town sync` now automatically deletes a local branch if its remote tracking branch is gone, without attempting to sync it first--assuming the branch was in sync before Git Town ran. ([#3641](https://github.com/git-town/git-town/issues/3641)).
+- The new `git town rename` command replaces the current `git town rename-branch` command. The `rename-branch` command is now deprecated and will be removed in a future release. Please update your tooling to use `git town rename` from now on. Existing Git aliases for `git town rename-branch` get automatically updated to the new commands ([#4038](https://github.com/git-town/git-town/issues/4038)).
 - The new `delete` command replaces the current `kill` command. The `kill` command is now deprecated ([#4039](https://github.com/git-town/git-town/issues/4039)).
-- `git town branch` now runs in the middle of an unfinished sync ([#4108](https://github.com/git-town/git-town/issues/4108)).
+- You can now run `git town branch` in the middle of an unfinished sync ([#4108](https://github.com/git-town/git-town/issues/4108)).
 
 #### Bug Fixes
 
-- Various improvements that make Git Town more resilient against concurrently running Git processes ([#4142](https://github.com/git-town/git-town/pull/4142)).
+- `git town ship` is now resilient against concurrently running Git processes ([#4142](https://github.com/git-town/git-town/pull/4142)).
 - `git town propose` now pushes prototype branches ([#4109](https://github.com/git-town/git-town/issues/4109)).
-- `git town propose` now uses the first existing ancestor branch when the parent branch got shipped remotely ([#4135](https://github.com/git-town/git-town/pull/4135)).
+- `git town propose` now uses the first existing ancestor branch as the parent if the parent branch got shipped remotely ([#4135](https://github.com/git-town/git-town/pull/4135)).
 
 ## 16.4.1 (2024-10-09)
 
