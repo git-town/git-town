@@ -14,7 +14,7 @@ func TestConnect(t *testing.T) {
 		want string
 	}{
 		{
-			give: []string(nil),
+			give: []string{},
 			want: "",
 		},
 		{

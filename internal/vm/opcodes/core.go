@@ -13,7 +13,7 @@ import (
 type undeclaredOpcodeMethods struct{}
 
 func (self *undeclaredOpcodeMethods) AbortProgram() []shared.Opcode {
-	return []shared.Opcode(nil)
+	return []shared.Opcode{}
 }
 
 func (self *undeclaredOpcodeMethods) AutomaticUndoError() error {
@@ -21,7 +21,7 @@ func (self *undeclaredOpcodeMethods) AutomaticUndoError() error {
 }
 
 func (self *undeclaredOpcodeMethods) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode(nil)
+	return []shared.Opcode{}
 }
 
 func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
@@ -33,7 +33,7 @@ func (self *undeclaredOpcodeMethods) ShouldUndoOnError() bool {
 }
 
 func (self *undeclaredOpcodeMethods) UndoExternalChangesProgram() []shared.Opcode {
-	return []shared.Opcode(nil)
+	return []shared.Opcode{}
 }
 
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn

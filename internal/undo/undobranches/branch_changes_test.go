@@ -80,7 +80,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("main")},
@@ -140,7 +140,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchCreate{
@@ -234,7 +234,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
@@ -329,7 +329,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchTrackingDelete{
@@ -418,7 +418,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
@@ -491,7 +491,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchLocalDelete{Branch: gitdomain.NewLocalBranchName("perennial-branch")},
@@ -589,7 +589,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
@@ -725,7 +725,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
@@ -1067,7 +1067,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1168,7 +1168,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("feature-branch")},
@@ -1269,7 +1269,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
@@ -1358,7 +1358,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchCreate{
@@ -1449,7 +1449,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrDefault(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			// don't re-create the tracking branch for the perennial branch
@@ -1535,7 +1535,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
 			// No changes should happen here since all changes were syncs on perennial branches.
