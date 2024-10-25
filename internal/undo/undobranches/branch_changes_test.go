@@ -66,7 +66,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("branch-1"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -126,7 +126,7 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantChanges, haveChanges)
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -220,7 +220,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -315,7 +315,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -404,7 +404,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -477,7 +477,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -575,7 +575,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -711,7 +711,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -825,7 +825,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -930,7 +930,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1053,7 +1053,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1154,7 +1154,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1255,7 +1255,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1344,7 +1344,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1435,7 +1435,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -1521,7 +1521,7 @@ func TestChanges(t *testing.T) {
 		lineage.Add(gitdomain.NewLocalBranchName("feature-branch"), gitdomain.NewLocalBranchName("main"))
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{

@@ -53,7 +53,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -116,7 +116,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -155,7 +155,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -188,7 +188,7 @@ func TestCategorize(t *testing.T) {
 		}
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
