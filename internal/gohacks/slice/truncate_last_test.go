@@ -13,7 +13,7 @@ func TestTruncateLast(t *testing.T) {
 
 	t.Run("list contains no elements", func(t *testing.T) {
 		t.Parallel()
-		list := []int(nil)
+		list := []int{}
 		have := slice.TruncateLast(list)
 		must.Len(t, 0, have)
 	})

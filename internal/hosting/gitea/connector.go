@@ -154,7 +154,7 @@ func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName
 }
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
-	result := []*gitea.PullRequest(nil)
+	result := []*gitea.PullRequest{}
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() && pullRequest.Base.Name == target.String() {
 			result = append(result, pullRequest)
@@ -164,7 +164,7 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdom
 }
 
 func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
-	result := []*gitea.PullRequest(nil)
+	result := []*gitea.PullRequest{}
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() {
 			result = append(result, pullRequest)

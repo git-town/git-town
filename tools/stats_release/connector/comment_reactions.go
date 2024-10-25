@@ -10,7 +10,7 @@ import (
 
 func (gh Connector) CommentReactions(comment github.IssueComment) []*github.Reaction {
 	if *comment.Reactions.TotalCount == 0 {
-		return []*github.Reaction(nil)
+		return []*github.Reaction{}
 	}
 	fmt.Printf("loading reactions to comment #%d ", comment.GetID())
 	var result []*github.Reaction
