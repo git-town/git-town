@@ -72,7 +72,7 @@ func TestChanges(t *testing.T) {
 				NormalConfigData: configdomain.NormalConfigData{
 					Lineage:           lineage,
 					PushHook:          false,
-					PerennialBranches: gitdomain.NewLocalBranchNames(),
+					PerennialBranches: gitdomain.LocalBranchNames{},
 				},
 			},
 		}
@@ -131,7 +131,7 @@ func TestChanges(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					Lineage:           configdomain.Lineage{},
-					PerennialBranches: gitdomain.NewLocalBranchNames(),
+					PerennialBranches: gitdomain.LocalBranchNames{},
 					PushHook:          false,
 				},
 			},

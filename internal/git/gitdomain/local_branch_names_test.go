@@ -72,7 +72,7 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 		t.Run("no branch names", func(t *testing.T) {
 			t.Parallel()
-			branches := gitdomain.NewLocalBranchNames()
+			branches := gitdomain.LocalBranchNames{}
 			must.Eq(t, 0, len(branches))
 		})
 	})

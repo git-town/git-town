@@ -21,7 +21,7 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		t.Run("no perennial branches", func(t *testing.T) {
 			t.Parallel()
-			give := gitdomain.NewLocalBranchNames()
+			give := gitdomain.LocalBranchNames{}
 			have := configfile.RenderPerennialBranches(give)
 			want := "[]"
 			must.EqOp(t, want, have)
