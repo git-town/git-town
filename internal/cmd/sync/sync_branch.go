@@ -1,6 +1,7 @@
 package sync
 
 import (
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -23,7 +24,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 
 type BranchProgramArgs struct {
 	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
-	Config              configdomain.ValidatedConfig
+	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
@@ -45,11 +46,11 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 		FeatureBranchProgram(featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
-			offline:            args.Config.Offline,
+			offline:            args.Config.NormalConfig.Offline,
 			program:            prog,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
+			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case
 		configdomain.BranchTypePerennialBranch,
@@ -59,11 +60,11 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
-			offline:            args.Config.Offline,
+			offline:            args.Config.NormalConfig.Offline,
 			program:            prog,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.SyncFeatureStrategy.SyncStrategy(),
+			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branchInfo)
@@ -73,21 +74,21 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 		FeatureBranchProgram(featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
-			offline:            args.Config.Offline,
+			offline:            args.Config.NormalConfig.Offline,
 			program:            prog,
 			pushBranches:       false,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.SyncPrototypeStrategy.SyncStrategy(),
+			syncStrategy:       args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(),
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
 		case isMainOrPerennialBranch:
 			prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
-			pushFeatureBranchProgram(prog, localName, args.Config.SyncFeatureStrategy)
+			pushFeatureBranchProgram(prog, localName, args.Config.NormalConfig.SyncFeatureStrategy)
 		}
 	}
 }

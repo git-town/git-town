@@ -3,7 +3,7 @@ package undobranches
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/undo/undodomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
@@ -184,7 +184,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
-	Config                   configdomain.ValidatedConfig
+	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
 	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA

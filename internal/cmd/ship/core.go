@@ -83,7 +83,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		return err
 	}
 	var shipProgram program.Program
-	switch sharedData.config.Config.ShipStrategy {
+	switch sharedData.config.NormalConfig.ShipStrategy {
 	case configdomain.ShipStrategyAPI:
 		apiData, err := determineAPIData(sharedData)
 		if err != nil {
@@ -147,14 +147,14 @@ func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []
 }
 
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent, message Option[gitdomain.CommitMessage]) error {
-	if data.config.Config.ShipStrategy == configdomain.ShipStragegyFastForward && message.IsSome() {
+	if data.config.NormalConfig.ShipStrategy == configdomain.ShipStragegyFastForward && message.IsSome() {
 		return errors.New(messages.ShipMessageWithFastForward)
 	}
 	if !toParent {
 		branch := data.branchToShip.LocalName.GetOrPanic()
 		parentBranch := data.targetBranch.LocalName.GetOrPanic()
-		if !data.config.Config.IsMainOrPerennialBranch(parentBranch) {
-			ancestors := data.config.Config.Lineage.Ancestors(branch)
+		if !data.config.IsMainOrPerennialBranch(parentBranch) {
+			ancestors := data.config.NormalConfig.Lineage.Ancestors(branch)
 			ancestorsWithoutMainOrPerennial := ancestors[1:]
 			oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 			return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)

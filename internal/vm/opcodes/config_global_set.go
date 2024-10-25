@@ -12,5 +12,5 @@ type ConfigGlobalSet struct {
 }
 
 func (self *ConfigGlobalSet) Run(args shared.RunArgs) error {
-	return args.Config.GitConfig.SetGlobalConfigValue(self.Key, self.Value)
+	return args.Config.Value.NormalConfig.GitConfig.SetGlobalConfigValue(self.Key, self.Value)
 }

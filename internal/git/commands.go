@@ -697,19 +697,19 @@ func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
 	}
 	matches := versionRegexp.FindStringSubmatch(output)
 	if matches == nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
 	}
 	minorVersion, err := strconv.Atoi(matches[2])
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
 	}
 	return Version{
 		Major: majorVersion,

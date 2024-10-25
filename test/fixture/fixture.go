@@ -232,7 +232,7 @@ func developerRepoPath(rootDir string) string {
 
 func initializeWorkspace(repo *commands.TestCommands) {
 	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
-	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
+	asserts.NoError(repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
 	// NOTE: the developer repos receives the initial branch from origin
 	//       but we don't want it here because it isn't used in tests.

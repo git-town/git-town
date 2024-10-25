@@ -31,7 +31,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Frontend:          args.Repo.Frontend,
 			Git:               args.Git,
 			HasOpenChanges:    args.RepoStatus.OpenChanges,
-			PushHook:          args.UnvalidatedConfig.Config.Value.PushHook,
+			PushHook:          args.UnvalidatedConfig.NormalConfig.PushHook,
 			RepoStatus:        args.RepoStatus,
 			RootDir:           args.Repo.RootDir,
 			UnvalidatedConfig: args.UnvalidatedConfig,
@@ -55,7 +55,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 		}
 		if remotes.HasOrigin() && args.Repo.IsOffline.IsFalse() {
-			err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.Config.Get().SyncTags)
+			err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags)
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 			}
