@@ -21,7 +21,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -65,7 +65,7 @@ func TestValidatedConfig(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -113,7 +113,7 @@ func TestValidatedConfig(t *testing.T) {
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchName("main"),
+				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
