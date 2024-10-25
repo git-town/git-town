@@ -8,8 +8,8 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type ValidatedConfig struct {
-	NormalConfig    NormalConfig
-	ValidatedConfig configdomain.ValidatedConfig
+	NormalConfig        NormalConfig
+	ValidatedConfigData configdomain.ValidatedConfigData
 }
 
 func EmptyValidatedConfig() ValidatedConfig {
@@ -17,7 +17,7 @@ func EmptyValidatedConfig() ValidatedConfig {
 }
 
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
-	if self.ValidatedConfig.IsMainBranch(branch) {
+	if self.ValidatedConfigData.IsMainBranch(branch) {
 		return configdomain.BranchTypeMainBranch
 	}
 	return self.NormalConfig.PartialBranchType(branch)
@@ -34,11 +34,11 @@ func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchName
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.ValidatedConfig.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
+	return self.ValidatedConfigData.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
 }
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
-	return append(gitdomain.LocalBranchNames{self.ValidatedConfig.MainBranch}, self.NormalConfig.PerennialBranches...)
+	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
 }
 
 // provides this collection without the perennial branch at the root
@@ -58,6 +58,6 @@ func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) g
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
-	self.ValidatedConfig.MainBranch = branch
+	self.ValidatedConfigData.MainBranch = branch
 	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }

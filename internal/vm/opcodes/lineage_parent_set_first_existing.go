@@ -15,7 +15,7 @@ type LineageParentSetFirstExisting struct {
 func (self *LineageParentSetFirstExisting) Run(args shared.RunArgs) error {
 	nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get()
 	if !hasNearestAncestor {
-		nearestAncestor = args.Config.Value.ValidatedConfig.MainBranch
+		nearestAncestor = args.Config.Value.ValidatedConfigData.MainBranch
 	}
 	args.PrependOpcodes(&LineageParentSet{
 		Branch: self.Branch,

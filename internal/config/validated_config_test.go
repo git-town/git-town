@@ -20,7 +20,7 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
@@ -64,7 +64,7 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{
@@ -112,7 +112,7 @@ func TestValidatedConfig(t *testing.T) {
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
-			ValidatedConfig: configdomain.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: gitdomain.NewLocalBranchName("main"),
 			},
 			NormalConfig: config.NormalConfig{

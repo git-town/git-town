@@ -9,7 +9,6 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// TODO: rename to UnvalidatedConfigData
 type UnvalidatedConfig struct {
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData

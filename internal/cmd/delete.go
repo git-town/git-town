@@ -189,7 +189,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		branchNameToDelete: branchNameToDelete,
 		branches:           branchesSnapshot.Branches,
 		initialBranch:      initialBranch,
-		mainBranch:         validatedConfig.ValidatedConfig.MainBranch,
+		mainBranch:         validatedConfig.ValidatedConfigData.MainBranch,
 		previousBranch:     previousBranchOpt,
 	})
 	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})

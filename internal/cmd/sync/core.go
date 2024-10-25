@@ -117,7 +117,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	runProgram.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
-		MainBranch: data.config.ValidatedConfig.MainBranch,
+		MainBranch: data.config.ValidatedConfigData.MainBranch,
 	})
 	if data.remotes.HasOrigin() && data.shouldPushTags && data.config.NormalConfig.IsOnline() {
 		runProgram.Add(&opcodes.PushTags{})
@@ -301,7 +301,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if detached {
 		allBranchNamesToSync = validatedConfig.RemovePerennials(allBranchNamesToSync)
 	}
-	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
+	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}

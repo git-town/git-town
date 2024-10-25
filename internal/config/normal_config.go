@@ -15,7 +15,6 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// TODO: rename to NormalConfigData
 type NormalConfig struct {
 	configdomain.NormalConfigData
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists

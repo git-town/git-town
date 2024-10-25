@@ -259,11 +259,11 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfig.MainBranch)
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -276,7 +276,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfig.MainBranch},
+		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
