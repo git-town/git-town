@@ -129,6 +129,15 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Ke
 	}
 }
 
+func (self *Access) UpdateDeprecatedCustomSetting(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		self.UpdateDeprecatedCustomGlobalSetting(key, oldValue, newValue)
+	case configdomain.ConfigScopeLocal:
+		self.UpdateDeprecatedCustomLocalSetting(key, oldValue, newValue)
+	}
+}
+
 func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
 	err := self.RemoveLocalConfigValue(oldKey)
@@ -147,15 +156,6 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, val
 		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
 	case configdomain.ConfigScopeLocal:
 		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
-	}
-}
-
-func (self *Access) UpdateDeprecatedSettingValue(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		self.UpdateDeprecatedCustomGlobalSetting(key, oldValue, newValue)
-	case configdomain.ConfigScopeLocal:
-		self.UpdateDeprecatedCustomLocalSetting(key, oldValue, newValue)
 	}
 }
 
@@ -206,7 +206,7 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					configKey = update.After.Key
 					value = update.After.Value
 				} else if value == update.Before.Value {
-					self.UpdateDeprecatedSettingValue(configdomain.Key(key), update.Before.Value, update.After.Value, scope)
+					self.UpdateDeprecatedCustomSetting(configdomain.Key(key), update.Before.Value, update.After.Value, scope)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
