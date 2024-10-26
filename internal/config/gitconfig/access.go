@@ -111,7 +111,7 @@ func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldK
 	}
 	err = self.SetConfigValue(scope, newKey, value)
 	if err != nil {
-		fmt.Printf(messages.SettingCannotWrite, newKey, err)
+		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
 	}
 }
 
