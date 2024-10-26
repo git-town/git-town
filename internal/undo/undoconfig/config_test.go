@@ -43,8 +43,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -163,8 +164,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeLocal,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -310,8 +312,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 			},
 			&opcodes.ConfigGlobalSet{
 				Key:   configdomain.KeyPushHook,
@@ -321,8 +324,9 @@ func TestConfigUndo(t *testing.T) {
 				Key:   configdomain.KeyOffline,
 				Value: "0",
 			},
-			&opcodes.ConfigLocalRemove{
-				Key: configdomain.KeyPushHook,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeyPushHook,
+				Scope: configdomain.ConfigScopeLocal,
 			},
 			&opcodes.ConfigLocalSet{
 				Key:   configdomain.KeyGithubToken,

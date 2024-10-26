@@ -1,6 +1,7 @@
 package undoconfig
 
 import (
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/program"
 )
@@ -21,7 +22,10 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 func (self ConfigDiffs) UndoProgram() program.Program {
 	result := program.Program{}
 	for _, key := range self.Global.Added {
-		result.Add(&opcodes.ConfigGlobalRemove{Key: key})
+		result.Add(&opcodes.ConfigRemove{
+			Key:   key,
+			Scope: configdomain.ConfigScopeGlobal,
+		})
 	}
 	for key, value := range self.Global.Removed {
 		result.Add(&opcodes.ConfigGlobalSet{
@@ -36,7 +40,10 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 		})
 	}
 	for _, key := range self.Local.Added {
-		result.Add(&opcodes.ConfigLocalRemove{Key: key})
+		result.Add(&opcodes.ConfigRemove{
+			Key:   key,
+			Scope: configdomain.ConfigScopeLocal,
+		})
 	}
 	for key, value := range self.Local.Removed {
 		result.Add(&opcodes.ConfigLocalSet{
