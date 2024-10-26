@@ -82,7 +82,7 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) er
 	return nil
 }
 
-// SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
+// SetConfigValue sets the given configuration setting in the global Git configuration.
 func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
 	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
