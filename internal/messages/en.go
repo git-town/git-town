@@ -199,6 +199,7 @@ and will be removed in future versions of Git Town.`
 	RunstateSaveProblem            = "cannot save run state: %w"
 	SetParentNoFeatureBranch       = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	SettingDeprecatedGlobalMessage = "Upgrading deprecated global setting %q to %q."
+	SettingDeprecatedValueMessage  = "Upgrading value of %s Git alias %q from %q to %q."
 	SettingGlobalCannotRemove      = "ERROR: cannot remove global Git setting %q: %v"
 	SettingGlobalCannotWrite       = "ERROR: cannot write global Git setting %q: %v"
 	SettingIgnoreInvalid           = "Notice: ignoring invalid dialog input setting %q\n"
