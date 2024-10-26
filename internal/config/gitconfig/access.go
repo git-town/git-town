@@ -93,12 +93,10 @@ func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdom
 }
 
 // updates a custom Git alias (not set up by Git Town)
-// TODO: merge with UpdateDeprecatedCustomLocalSetting
 func (self *Access) UpdateDeprecatedCustomSetting(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "global", key, oldValue, newValue)))
 	err := self.SetConfigValue(scope, key, newValue)
 	if err != nil {
-		// TODO: unify with messages.SettingLocalCannotWrite
 		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
 	}
 }
