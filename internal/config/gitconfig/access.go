@@ -98,6 +98,7 @@ func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) erro
 }
 
 // updates a custom Git alias (not set up by Git Town)
+// TODO: merge with UpdateDeprecatedCustomLocalSetting
 func (self *Access) UpdateDeprecatedCustomGlobalSetting(key configdomain.Key, oldValue, newValue string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "global", key, oldValue, newValue)))
 	err := self.SetGlobalConfigValue(key, newValue)
