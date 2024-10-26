@@ -70,7 +70,6 @@ const (
 	DiffConflictWithMain              = "conflicts between your uncommmitted changes and the main branch"
 	DryRun                            = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 	ValueInvalid                      = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
-	ValueGlobalInvalid                = "invalid value for global %s: %q. Please provide either \"true\" or \"false\""
 	ConflictDetectionProblem          = "cannot determine conflicts: %w"
 	ContinueNothingToDo               = "nothing to continue"
 	ContinueUnresolvedConflicts       = "you must resolve the conflicts before continuing"
