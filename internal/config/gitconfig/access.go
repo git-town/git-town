@@ -109,6 +109,14 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Ke
 	}
 }
 
+func (self *Access) UpdateDeprecatedGlobalSettingValue(key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "global", key, oldValue, newValue)))
+	err := self.SetGlobalConfigValue(key, newValue)
+	if err != nil {
+		fmt.Printf(messages.SettingGlobalCannotWrite, key, err)
+	}
+}
+
 func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
 	err := self.RemoveLocalConfigValue(oldKey)
@@ -121,12 +129,29 @@ func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key
 	}
 }
 
+func (self *Access) UpdateDeprecatedLocalSettingValue(key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "local", key, oldValue, newValue)))
+	err := self.SetLocalConfigValue(key, newValue)
+	if err != nil {
+		fmt.Printf(messages.SettingLocalCannotWrite, key, err)
+	}
+}
+
 func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, scope configdomain.ConfigScope) {
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
 		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
 	case configdomain.ConfigScopeLocal:
 		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
+	}
+}
+
+func (self *Access) UpdateDeprecatedSettingValue(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		self.UpdateDeprecatedGlobalSettingValue(key, oldValue, newValue)
+	case configdomain.ConfigScopeLocal:
+		self.UpdateDeprecatedLocalSettingValue(key, oldValue, newValue)
 	}
 }
 
@@ -173,6 +198,10 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 			}
 			for _, update := range configdomain.ConfigUpdates {
 				if configKey == update.Before.Key && value == update.Before.Value {
+					self.UpdateDeprecatedSetting(configKey, update.After.Key, update.After.Value, scope)
+					configKey = update.After.Key
+					value = update.After.Value
+				} else if value == update.Before.Value {
 					self.UpdateDeprecatedSetting(configKey, update.After.Key, update.After.Value, scope)
 					configKey = update.After.Key
 					value = update.After.Value
