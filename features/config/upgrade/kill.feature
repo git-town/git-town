@@ -13,10 +13,10 @@ Feature: automatically upgrade kill alias
 
   Scenario: Git alias to "git town kill" with another name
     Given a Git repo with origin
-    And custom global Git setting "alias.erase" is "town kill"
+    And custom global Git setting "alias.my-command" is "town kill"
     When I run "git town hack foo"
     Then it prints:
       """
-      Upgrading value of global Git alias "alias.erase" from "town kill" to "town delete".
+      Upgrading value of global Git alias "alias.my-command" from "town kill" to "town delete".
       """
-    And custom global Git setting "alias.erase" is now "town delete"
+    And custom global Git setting "alias.my-command" is now "town delete"
