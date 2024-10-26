@@ -5,11 +5,12 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-type ConfigLocalRemove struct {
+type ConfigRemove struct {
 	Key                     configdomain.Key // the config key to remove
+	Scope                   configdomain.ConfigScope
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConfigLocalRemove) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitConfig.RemoveLocalConfigValue(self.Key)
+func (self *ConfigRemove) Run(args shared.RunArgs) error {
+	return args.Config.Value.NormalConfig.GitConfig.RemoveConfigValue(self.Scope, self.Key)
 }
