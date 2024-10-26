@@ -45,11 +45,11 @@ func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
 }
 
 func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
-	args := []string{}
+	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
 		args = append(args, "--global")
 	}
-	args = append(args, "config", "--unset", key.String())
+	args = append(args, "--unset", key.String())
 	return self.Run("git", args...)
 }
 
