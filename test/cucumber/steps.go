@@ -477,14 +477,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
 		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
-		var haveOpt Option[string]
-		switch scope {
-		case configdomain.ConfigScopeLocal:
-			haveOpt = devRepo.LocalGitConfig(key)
-		case configdomain.ConfigScopeGlobal:
-			haveOpt = devRepo.GlobalGitConfig(key)
-		}
-		have, has := haveOpt.Get()
+		have, has := devRepo.GitConfig(scope, key).Get()
 		if !has {
 			return fmt.Errorf(`expected %s setting %q to be %q but doesn't exist`, scope, name, want)
 		}
@@ -502,14 +495,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
 		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
-		var valueOpt Option[string]
-		switch scope {
-		case configdomain.ConfigScopeLocal:
-			valueOpt = devRepo.LocalGitConfig(key)
-		case configdomain.ConfigScopeGlobal:
-			valueOpt = devRepo.GlobalGitConfig(key)
-		}
-		if value, hasValue := valueOpt.Get(); hasValue {
+		if value, hasValue := devRepo.GitConfig(scope, key).Get(); hasValue {
 			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", scope, name, value)
 		}
 		return nil
