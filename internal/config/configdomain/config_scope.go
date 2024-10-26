@@ -1,24 +1,15 @@
 package configdomain
 
 // defines the type of Git configuration used
-type ConfigScope int
+type ConfigScope string
 
 const (
-	// the global Git configuration
-	ConfigScopeGlobal ConfigScope = iota
-
-	// the local Git configuration
-	ConfigScopeLocal
+	ConfigScopeGlobal ConfigScope = "global"
+	ConfigScopeLocal  ConfigScope = "local"
 )
 
 func (self ConfigScope) String() string {
-	switch self {
-	case ConfigScopeGlobal:
-		return "global"
-	case ConfigScopeLocal:
-		return "local"
-	}
-	panic("unknown scope")
+	return string(self)
 }
 
 func ParseConfigScope(text string) ConfigScope {
