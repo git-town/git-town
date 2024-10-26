@@ -11,7 +11,6 @@ Feature: automatically upgrade kill alias
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.kill" now doesn't exist
 
-  @this
   Scenario: Git alias to "git town kill" with another name
     Given a Git repo with origin
     And custom global Git setting "alias.erase" is "town kill"
@@ -20,4 +19,4 @@ Feature: automatically upgrade kill alias
       """
       Upgrading value of global Git alias "alias.erase" from "town kill" to "town delete".
       """
-    And global Git setting "alias.erase" is now "town delete"
+    And custom global Git setting "alias.erase" is now "town delete"

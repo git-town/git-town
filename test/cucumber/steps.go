@@ -333,6 +333,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.SetGitAlias(aliasableCommand, value)
 	})
 
+	sc.Step(`^custom global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		aliasableCommand := configdomain.AliasableCommand(name)
+		have, err := devRepo.LoadGitAlias(aliasableCommand)
+		asserts.NoError(err)
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
 	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
