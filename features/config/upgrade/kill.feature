@@ -18,6 +18,6 @@ Feature: automatically upgrade kill alias
     When I run "git town hack foo"
     Then it prints:
       """
-      Upgrading value of global Git alias "alias.erase" from "git town kill" to "git town delete".
+      Upgrading value of global Git alias "alias.erase" from "town kill" to "town delete".
       """
     And global Git setting "alias.erase" is now "town delete"

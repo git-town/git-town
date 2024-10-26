@@ -177,10 +177,10 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if !hasConfigKey {
-			continue
-		}
+		configKey, _ := configdomain.ParseKey(key).Get()
+		// if !hasConfigKey {
+		// 	continue
+		// }
 		if updateOutdated {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
@@ -202,7 +202,7 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					configKey = update.After.Key
 					value = update.After.Value
 				} else if value == update.Before.Value {
-					self.UpdateDeprecatedSetting(configKey, update.After.Key, update.After.Value, scope)
+					self.UpdateDeprecatedSettingValue(configdomain.Key(key), update.Before.Value, update.After.Value, scope)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
