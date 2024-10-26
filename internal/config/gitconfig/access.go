@@ -117,6 +117,15 @@ func (self *Access) UpdateDeprecatedCustomLocalSetting(key configdomain.Key, old
 	}
 }
 
+func (self *Access) UpdateDeprecatedCustomSetting(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		self.UpdateDeprecatedCustomGlobalSetting(key, oldValue, newValue)
+	case configdomain.ConfigScopeLocal:
+		self.UpdateDeprecatedCustomLocalSetting(key, oldValue, newValue)
+	}
+}
+
 func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
 	err := self.RemoveGlobalConfigValue(oldKey)
@@ -126,15 +135,6 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Ke
 	err = self.SetGlobalConfigValue(newKey, value)
 	if err != nil {
 		fmt.Printf(messages.SettingGlobalCannotWrite, newKey, err)
-	}
-}
-
-func (self *Access) UpdateDeprecatedCustomSetting(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		self.UpdateDeprecatedCustomGlobalSetting(key, oldValue, newValue)
-	case configdomain.ConfigScopeLocal:
-		self.UpdateDeprecatedCustomLocalSetting(key, oldValue, newValue)
 	}
 }
 
