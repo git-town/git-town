@@ -44,18 +44,13 @@ func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
 	return NewOption(strings.TrimSpace(output))
 }
 
-func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		return self.RemoveGlobalConfigValue(key)
-	case configdomain.ConfigScopeLocal:
-		return self.RemoveLocalConfigValue(key)
+func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
+	args := []string{}
+	if scope == configdomain.ConfigScopeGlobal {
+		args = append(args, "--global")
 	}
-	panic(messages.ConfigScopeUnhandled)
-}
-
-func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
-	return self.Run("git", "config", "--global", "--unset", key.String())
+	args = append(args, "config", "--unset", key.String())
+	return self.Run("git", args...)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
