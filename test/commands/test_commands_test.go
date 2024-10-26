@@ -216,7 +216,7 @@ func TestTestCommands(t *testing.T) {
 			FileName:    "hello.txt",
 			Message:     "commit",
 		})
-		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), None[gitdomain.LocalBranchName](), []string(nil))
+		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), None[gitdomain.LocalBranchName](), []string{})
 		must.Len(t, 1, commits)
 		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
 		must.EqOp(t, "hello world", content)
@@ -229,7 +229,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string(nil), gitdomain.NewLocalBranchName("initial"))
+		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"))
 		must.Len(t, 1, commits)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)

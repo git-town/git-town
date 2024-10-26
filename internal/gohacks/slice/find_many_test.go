@@ -30,7 +30,7 @@ func TestFindMany(t *testing.T) {
 
 	t.Run("haystack is empty", func(t *testing.T) {
 		t.Parallel()
-		haystack := []string(nil)
+		haystack := []string{}
 		needles := []string{"one", "two"}
 		have := slice.FindMany(haystack, needles)
 		must.Len(t, 0, have)
@@ -39,7 +39,7 @@ func TestFindMany(t *testing.T) {
 	t.Run("no needles given", func(t *testing.T) {
 		t.Parallel()
 		haystack := []string{"one", "two", "three"}
-		needles := []string(nil)
+		needles := []string{}
 		have := slice.FindMany(haystack, needles)
 		must.Len(t, 0, have)
 	})

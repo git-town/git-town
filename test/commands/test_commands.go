@@ -330,6 +330,11 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	return result
 }
 
+// SetGitAlias sets the Git alias with the given name to the given value.
+func (self *TestCommands) LoadGitAlias(name configdomain.AliasableCommand) (string, error) {
+	return self.Query("git", "config", "--get", "--global", configdomain.AliasKeyPrefix+name.String())
+}
+
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
 func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, error) {

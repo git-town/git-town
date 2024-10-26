@@ -36,7 +36,7 @@ func TestGetAll(t *testing.T) {
 
 	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
-		give := []Option[int](nil)
+		give := []Option[int]{}
 		have := slice.GetAll(give)
 		must.Len(t, 0, have)
 	})

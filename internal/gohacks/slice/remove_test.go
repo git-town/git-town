@@ -29,7 +29,7 @@ func TestRemove(t *testing.T) {
 
 	t.Run("empty slice", func(t *testing.T) {
 		t.Parallel()
-		list := []string(nil)
+		list := []string{}
 		have := slice.Remove(list, "foo")
 		must.Len(t, 0, have)
 	})
