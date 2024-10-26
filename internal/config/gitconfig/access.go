@@ -103,9 +103,9 @@ func (self *Access) UpdateDeprecatedCustomSetting(scope configdomain.ConfigScope
 
 func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
-	err := self.RemoveConfigValue(configdomain.ConfigScopeGlobal, oldKey)
+	err := self.RemoveConfigValue(scope, oldKey)
 	if err != nil {
-		fmt.Printf(messages.SettingGlobalCannotRemove, oldKey, err)
+		fmt.Printf(messages.SettingCannotRemove, scope, oldKey, err)
 	}
 	err = self.SetConfigValue(scope, newKey, value)
 	if err != nil {
