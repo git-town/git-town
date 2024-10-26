@@ -97,6 +97,25 @@ func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) erro
 	return self.Run("git", "config", key.String(), value)
 }
 
+// updates a custom Git alias (not set up by Git Town)
+func (self *Access) UpdateDeprecatedCustomGlobalSetting(key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "global", key, oldValue, newValue)))
+	err := self.SetGlobalConfigValue(key, newValue)
+	if err != nil {
+		// TODO: unify with messages.SettingLocalCannotWrite
+		fmt.Printf(messages.SettingGlobalCannotWrite, key, err)
+	}
+}
+
+// updates a custom Git alias (not set up by Git Town)
+func (self *Access) UpdateDeprecatedCustomLocalSetting(key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "local", key, oldValue, newValue)))
+	err := self.SetLocalConfigValue(key, newValue)
+	if err != nil {
+		fmt.Printf(messages.SettingLocalCannotWrite, key, err)
+	}
+}
+
 func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
 	err := self.RemoveGlobalConfigValue(oldKey)
@@ -106,14 +125,6 @@ func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Ke
 	err = self.SetGlobalConfigValue(newKey, value)
 	if err != nil {
 		fmt.Printf(messages.SettingGlobalCannotWrite, newKey, err)
-	}
-}
-
-func (self *Access) UpdateDeprecatedGlobalSettingValue(key configdomain.Key, oldValue, newValue string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "global", key, oldValue, newValue)))
-	err := self.SetGlobalConfigValue(key, newValue)
-	if err != nil {
-		fmt.Printf(messages.SettingGlobalCannotWrite, key, err)
 	}
 }
 
@@ -129,14 +140,6 @@ func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key
 	}
 }
 
-func (self *Access) UpdateDeprecatedLocalSettingValue(key configdomain.Key, oldValue, newValue string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, "local", key, oldValue, newValue)))
-	err := self.SetLocalConfigValue(key, newValue)
-	if err != nil {
-		fmt.Printf(messages.SettingLocalCannotWrite, key, err)
-	}
-}
-
 func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, scope configdomain.ConfigScope) {
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
@@ -149,9 +152,9 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, val
 func (self *Access) UpdateDeprecatedSettingValue(key configdomain.Key, oldValue, newValue string, scope configdomain.ConfigScope) {
 	switch scope {
 	case configdomain.ConfigScopeGlobal:
-		self.UpdateDeprecatedGlobalSettingValue(key, oldValue, newValue)
+		self.UpdateDeprecatedCustomGlobalSetting(key, oldValue, newValue)
 	case configdomain.ConfigScopeLocal:
-		self.UpdateDeprecatedLocalSettingValue(key, oldValue, newValue)
+		self.UpdateDeprecatedCustomLocalSetting(key, oldValue, newValue)
 	}
 }
 
