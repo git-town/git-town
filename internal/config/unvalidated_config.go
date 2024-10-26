@@ -61,7 +61,7 @@ func (self *UnvalidatedConfig) RemoveMainBranch() {
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.NormalConfig.GitConfig.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
+	return self.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.

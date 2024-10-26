@@ -289,8 +289,16 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GlobalGitConfig(name configdomain.Key) Option[string] {
-	output, err := self.Query("git", "config", "--global", "--get", name.String())
+func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
+	args := []string{"config"}
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		args = append(args, "--global")
+	case configdomain.ConfigScopeLocal:
+		args = append(args, "--local")
+	}
+	args = append(args, "--get", name.String())
+	output, err := self.Query("git", args...)
 	if err != nil {
 		return None[string]()
 	}
@@ -359,14 +367,6 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	}
 	branches = slice.Hoist(branches, mainBranch)
 	return branches, nil
-}
-
-func (self *TestCommands) LocalGitConfig(name configdomain.Key) Option[string] {
-	output, err := self.Query("git", "config", "--local", "--get", name.String())
-	if err != nil {
-		return None[string]()
-	}
-	return Some(output)
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
