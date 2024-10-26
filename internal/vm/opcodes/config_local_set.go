@@ -12,5 +12,5 @@ type ConfigLocalSet struct {
 }
 
 func (self *ConfigLocalSet) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitConfig.SetLocalConfigValue(self.Key, self.Value)
+	return args.Config.Value.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, self.Key, self.Value)
 }

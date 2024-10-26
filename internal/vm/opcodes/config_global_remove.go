@@ -11,5 +11,5 @@ type ConfigGlobalRemove struct {
 }
 
 func (self *ConfigGlobalRemove) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitConfig.RemoveGlobalConfigValue(self.Key)
+	return args.Config.Value.NormalConfig.GitConfig.RemoveConfigValue(configdomain.ConfigScopeGlobal, self.Key)
 }

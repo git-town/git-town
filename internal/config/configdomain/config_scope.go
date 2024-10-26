@@ -20,3 +20,14 @@ func (self ConfigScope) String() string {
 	}
 	panic("unknown scope")
 }
+
+func ParseConfigScope(text string) ConfigScope {
+	switch text {
+	case "local", "":
+		return ConfigScopeLocal
+	case "global":
+		return ConfigScopeGlobal
+	default:
+		panic("unknown locality: " + text)
+	}
+}

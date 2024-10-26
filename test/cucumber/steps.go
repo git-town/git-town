@@ -409,7 +409,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := configdomain.NewParentKey(branchName)
-		return devRepo.Config.NormalConfig.GitConfig.SetLocalConfigValue(configKey, value)
+		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configKey, value)
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
@@ -455,7 +455,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.GitConfig.SetGlobalConfigValue(configdomain.Key(name), value)
+		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(name), value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
@@ -465,15 +465,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		locality = strings.TrimSpace(locality)
-		switch locality {
-		case "local", "":
-			return devRepo.Config.NormalConfig.GitConfig.SetLocalConfigValue(key, value)
-		case "global":
-			return devRepo.Config.NormalConfig.GitConfig.SetGlobalConfigValue(key, value)
-		default:
-			return fmt.Errorf("unknown locality: %q", locality)
-		}
+		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
+		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(scope, key, value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
@@ -483,22 +476,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		locality = strings.TrimSpace(locality)
-		var haveOpt Option[string]
-		switch locality {
-		case "local", "":
-			haveOpt = devRepo.LocalGitConfig(key)
-		case "global":
-			haveOpt = devRepo.GlobalGitConfig(key)
-		default:
-			return fmt.Errorf("unknown locality: %q", locality)
-		}
-		have, has := haveOpt.Get()
+		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
+		have, has := devRepo.GitConfig(scope, key).Get()
 		if !has {
-			return fmt.Errorf(`expected %s setting %q to be %q but doesn't exist`, locality, name, want)
+			return fmt.Errorf(`expected %s setting %q to be %q but doesn't exist`, scope, name, want)
 		}
 		if have != want {
-			return fmt.Errorf(`expected %s setting %q to be %q but is %q`, locality, name, want, have)
+			return fmt.Errorf(`expected %s setting %q to be %q but is %q`, scope, name, want, have)
 		}
 		return nil
 	})
@@ -510,18 +494,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if !hasKey {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
-		locality = strings.TrimSpace(locality)
-		var valueOpt Option[string]
-		switch locality {
-		case "local", "":
-			valueOpt = devRepo.LocalGitConfig(key)
-		case "global":
-			valueOpt = devRepo.GlobalGitConfig(key)
-		default:
-			return fmt.Errorf("unknown locality: %q", locality)
-		}
-		if value, hasValue := valueOpt.Get(); hasValue {
-			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", locality, name, value)
+		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
+		if value, hasValue := devRepo.GitConfig(scope, key).Get(); hasValue {
+			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", scope, name, value)
 		}
 		return nil
 	})
