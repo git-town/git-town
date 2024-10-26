@@ -1,5 +1,7 @@
 package configdomain
 
+import "fmt"
+
 // defines the type of Git configuration used
 type ConfigScope int
 
@@ -19,4 +21,15 @@ func (self ConfigScope) String() string {
 		return "local"
 	}
 	panic("unknown scope")
+}
+
+func ParseConfigScope(text string) ConfigScope {
+	switch text {
+	case "local", "":
+		return ConfigScopeLocal
+	case "global":
+		return ConfigScopeGlobal
+	default:
+		panic(fmt.Errorf("unknown locality: %q", text))
+	}
 }
