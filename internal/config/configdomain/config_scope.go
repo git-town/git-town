@@ -1,7 +1,5 @@
 package configdomain
 
-import "fmt"
-
 // defines the type of Git configuration used
 type ConfigScope int
 
@@ -30,6 +28,6 @@ func ParseConfigScope(text string) ConfigScope {
 	case "global":
 		return ConfigScopeGlobal
 	default:
-		panic(fmt.Errorf("unknown locality: %q", text))
+		panic("unknown locality: " + text)
 	}
 }
