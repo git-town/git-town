@@ -28,14 +28,16 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 		})
 	}
 	for key, value := range self.Global.Removed {
-		result.Add(&opcodes.ConfigGlobalSet{
+		result.Add(&opcodes.ConfigSet{
 			Key:   key,
+			Scope: configdomain.ConfigScopeGlobal,
 			Value: value,
 		})
 	}
 	for key, change := range self.Global.Changed {
-		result.Add(&opcodes.ConfigGlobalSet{
+		result.Add(&opcodes.ConfigSet{
 			Key:   key,
+			Scope: configdomain.ConfigScopeGlobal,
 			Value: change.Before,
 		})
 	}
@@ -46,14 +48,16 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 		})
 	}
 	for key, value := range self.Local.Removed {
-		result.Add(&opcodes.ConfigLocalSet{
+		result.Add(&opcodes.ConfigSet{
 			Key:   key,
+			Scope: configdomain.ConfigScopeLocal,
 			Value: value,
 		})
 	}
 	for key, change := range self.Local.Changed {
-		result.Add(&opcodes.ConfigLocalSet{
+		result.Add(&opcodes.ConfigSet{
 			Key:   key,
+			Scope: configdomain.ConfigScopeLocal,
 			Value: change.Before,
 		})
 	}

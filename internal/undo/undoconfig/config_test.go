@@ -84,8 +84,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "1",
 			},
 		}
@@ -127,8 +128,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
 		}
@@ -205,8 +207,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "1",
 			},
 		}
@@ -248,8 +251,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "0",
 			},
 		}
@@ -316,24 +320,28 @@ func TestConfigUndo(t *testing.T) {
 				Key:   configdomain.KeySyncPerennialStrategy,
 				Scope: configdomain.ConfigScopeGlobal,
 			},
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyPushHook,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
 			&opcodes.ConfigRemove{
 				Key:   configdomain.KeyPushHook,
 				Scope: configdomain.ConfigScopeLocal,
 			},
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyGithubToken,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "token",
 			},
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyPerennialBranches,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "prod",
 			},
 		}

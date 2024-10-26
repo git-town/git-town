@@ -86,8 +86,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
-				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
-				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -416,16 +415,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Key": "git-town.offline",
+        "Scope": "local",
         "Value": "1"
       },
-      "type": "ConfigGlobalSet"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline",
-        "Value": "1"
-      },
-      "type": "ConfigLocalSet"
+      "type": "ConfigSet"
     },
     {
       "data": {
