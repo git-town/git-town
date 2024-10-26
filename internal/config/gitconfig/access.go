@@ -181,7 +181,10 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, _ := configdomain.ParseKey(key).Get()
+		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
+		// if !hasConfigKey {
+		// 	continue
+		// }
 		if updateOutdated {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
@@ -209,7 +212,9 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 				}
 			}
 		}
-		snapshot[configKey] = value
+		if hasConfigKey {
+			snapshot[configKey] = value
+		}
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err
