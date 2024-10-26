@@ -10,3 +10,13 @@ const (
 	// the local Git configuration
 	ConfigScopeLocal
 )
+
+func (self ConfigScope) String() string {
+	switch self {
+	case ConfigScopeGlobal:
+		return "global"
+	case ConfigScopeLocal:
+		return "local"
+	}
+	panic("unknown scope")
+}
