@@ -15,6 +15,10 @@
 - `git town propose` now pushes prototype branches after converting them to feature branches ([#4109](https://github.com/git-town/git-town/issues/4109)).
 - `git town propose` now uses the first existing ancestor branch as the parent if the current parent branch was shipped or deleted remotely ([#4135](https://github.com/git-town/git-town/pull/4135)).
 
+#### Contributors
+
+Big thanks to @JamieMcKernanKaizen, @PowerSchill, @bengeois, @kevgo, @ruudk, @sergej-koscejev, @stephenwade, @tranhl, @vectro for contributing to 53 shipped PRs and 12 resolved issues!
+
 ## 16.4.1 (2024-10-09)
 
 Thanks to @bengeois, @kevgo, @ruudk, @sergej-koscejev, @stephenwade, @tranhl for contributing great feedback, ideas, and code to 14 shipped PRs and 5 resolved issues!
