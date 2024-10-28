@@ -1,5 +1,24 @@
 # Git Town Changelog
 
+## 16.5.0 (2024-10-25)
+
+#### New Features
+
+- `git town sync` now automatically deletes a local branch if its remote tracking branch is gone, without attempting to sync it first--assuming the branch was in sync before Git Town ran. ([#3641](https://github.com/git-town/git-town/issues/3641)).
+- The new `git town rename` command replaces the current `git town rename-branch` command. The `rename-branch` command is now deprecated and will be removed in a future release. Please update your tooling to use `git town rename` from now on. Existing Git aliases calling `git town rename-branch` get automatically updated to the new commands ([#4038](https://github.com/git-town/git-town/issues/4038)).
+- Same for the new `delete` command, it replaces the now deprecated `kill` command. ([#4039](https://github.com/git-town/git-town/issues/4039)).
+- You can now run `git town branch` in the middle of an unfinished sync ([#4108](https://github.com/git-town/git-town/issues/4108)).
+
+#### Bug Fixes
+
+- `git town ship` is now resilient against concurrently running Git processes ([#4142](https://github.com/git-town/git-town/pull/4142)).
+- `git town propose` now pushes prototype branches after converting them to feature branches ([#4109](https://github.com/git-town/git-town/issues/4109)).
+- `git town propose` now uses the first existing ancestor branch as the parent if the current parent branch was shipped or deleted remotely ([#4135](https://github.com/git-town/git-town/pull/4135)).
+
+#### Contributors
+
+Big thanks to @JamieMcKernanKaizen, @PowerSchill, @bengeois, @kevgo, @ruudk, @sergej-koscejev, @stephenwade, @tranhl, @vectro for contributing to 53 shipped PRs and 12 resolved issues!
+
 ## 16.4.1 (2024-10-09)
 
 Thanks to @bengeois, @kevgo, @ruudk, @sergej-koscejev, @stephenwade, @tranhl for contributing great feedback, ideas, and code to 14 shipped PRs and 5 resolved issues!
