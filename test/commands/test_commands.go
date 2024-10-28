@@ -26,7 +26,7 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
-	Config config.ValidatedConfig
+	Config config.UnvalidatedConfig
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -123,7 +123,7 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 // The parent branch must already exist.
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(branch, parent.BranchName())
-	asserts.NoError(self.Config.SetParent(branch, parent))
+	asserts.NoError(self.Config.NormalConfig.SetParent(branch, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -141,7 +141,7 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 // creates a contribution branches with the given name in this repository
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.AddToContributionBranches(name))
+	asserts.NoError(self.Config.NormalConfig.AddToContributionBranches(name))
 }
 
 // creates a feature branch with the given name in this repository
@@ -168,25 +168,25 @@ func (self *TestCommands) CreateFolder(name string) {
 // creates an observed branch with the given name in this repository
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.AddToObservedBranches(name))
+	asserts.NoError(self.Config.NormalConfig.AddToObservedBranches(name))
 }
 
 // creates a parked branch with the given name and parent in this repository
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.AddToParkedBranches(name))
+	asserts.NoError(self.Config.NormalConfig.AddToParkedBranches(name))
 }
 
 // creates a perennial branch with the given name in this repository
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.AddToPerennialBranches(name))
+	asserts.NoError(self.Config.NormalConfig.AddToPerennialBranches(name))
 }
 
 // creates a prototype branch with the given name and parent in this repository
 func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.AddToPrototypeBranches(name))
+	asserts.NoError(self.Config.NormalConfig.AddToPrototypeBranches(name))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -278,8 +278,16 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GlobalGitConfig(name configdomain.Key) Option[string] {
-	output, err := self.Query("git", "config", "--global", "--get", name.String())
+func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
+	args := []string{"config"}
+	switch scope {
+	case configdomain.ConfigScopeGlobal:
+		args = append(args, "--global")
+	case configdomain.ConfigScopeLocal:
+		args = append(args, "--local")
+	}
+	args = append(args, "--get", name.String())
+	output, err := self.Query("git", args...)
 	if err != nil {
 		return None[string]()
 	}
@@ -310,13 +318,18 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	_, localGitConfig, _ := self.Config.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	_, localGitConfig, _ := self.Config.NormalConfig.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	lineage := localGitConfig.Lineage
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage.Parent(branchName).String())
 	}
 	result.Sort()
 	return result
+}
+
+// SetGitAlias sets the Git alias with the given name to the given value.
+func (self *TestCommands) LoadGitAlias(name configdomain.AliasableCommand) (string, error) {
+	return self.Query("git", "config", "--get", "--global", configdomain.AliasKeyPrefix+name.String())
 }
 
 // LocalBranches provides the names of all branches in the local repository,
@@ -343,14 +356,6 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	}
 	branches = slice.Hoist(branches, mainBranch)
 	return branches, nil
-}
-
-func (self *TestCommands) LocalGitConfig(name configdomain.Key) Option[string] {
-	output, err := self.Query("git", "config", "--local", "--get", name.String())
-	if err != nil {
-		return None[string]()
-	}
-	return Some(output)
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
@@ -381,7 +386,7 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.Config.GitConfig.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+	return self.Config.NormalConfig.GitConfig.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
@@ -482,9 +487,9 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	self.Config.Reload()
-	for aliasName, aliasValue := range self.Config.Config.Aliases {
+	for aliasName, aliasValue := range self.Config.NormalConfig.Aliases {
 		if strings.HasPrefix(aliasValue, "town ") {
-			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.Config.Aliases)
+			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.NormalConfig.Aliases)
 		}
 	}
 	return nil

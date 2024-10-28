@@ -29,7 +29,7 @@ func TestHoist(t *testing.T) {
 
 	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
-		list := []string(nil)
+		list := []string{}
 		have := slice.Hoist(list, "initial")
 		must.Len(t, 0, have)
 	})

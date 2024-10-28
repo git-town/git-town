@@ -62,7 +62,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
-	if err = repo.UnvalidatedConfig.AddToParkedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.AddToParkedBranches(branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonParkBranchTypes(data.branchesToPark, repo.UnvalidatedConfig); err != nil {
@@ -105,11 +105,11 @@ func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomai
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
+			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
 		case
@@ -128,7 +128,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if err != nil {
 		return parkData{}, err
 	}
-	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig.Config.Get())
+	branchesToPark, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return parkData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,

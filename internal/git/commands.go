@@ -39,7 +39,7 @@ func (self *Commands) AbortRebase(runner gitdomain.Runner) error {
 func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
 	output, err := querier.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
-		return []gitdomain.Author(nil), err
+		return []gitdomain.Author{}, err
 	}
 	lines := stringslice.Lines(output)
 	result := make([]gitdomain.Author, len(lines))
@@ -697,19 +697,19 @@ func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
 	}
 	matches := versionRegexp.FindStringSubmatch(output)
 	if matches == nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
 	}
 	minorVersion, err := strconv.Atoi(matches[2])
 	if err != nil {
-		return emptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
 	}
 	return Version{
 		Major: majorVersion,

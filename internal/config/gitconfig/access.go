@@ -44,18 +44,13 @@ func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
 	return NewOption(strings.TrimSpace(output))
 }
 
-func (self *Access) RemoveConfigValue(key configdomain.Key, scope configdomain.ConfigScope) error {
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		return self.RemoveGlobalConfigValue(key)
-	case configdomain.ConfigScopeLocal:
-		return self.RemoveLocalConfigValue(key)
+func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
+	args := []string{"config"}
+	if scope == configdomain.ConfigScopeGlobal {
+		args = append(args, "--global")
 	}
-	panic(messages.ConfigScopeUnhandled)
-}
-
-func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
-	return self.Run("git", "config", "--global", "--unset", key.String())
+	args = append(args, "--unset", key.String())
+	return self.Run("git", args...)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
@@ -87,46 +82,34 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) er
 	return nil
 }
 
-// SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) error {
-	return self.Run("git", "config", "--global", key.String(), value)
-}
-
-// SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
-	return self.Run("git", "config", key.String(), value)
-}
-
-func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)))
-	err := self.RemoveGlobalConfigValue(oldKey)
-	if err != nil {
-		fmt.Printf(messages.SettingGlobalCannotRemove, oldKey, err)
+// SetConfigValue sets the given configuration setting in the global Git configuration.
+func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
+	args := []string{"config"}
+	if scope == configdomain.ConfigScopeGlobal {
+		args = append(args, "--global")
 	}
-	err = self.SetGlobalConfigValue(newKey, value)
+	args = append(args, key.String(), value)
+	return self.Run("git", args...)
+}
+
+// updates a custom Git alias (not set up by Git Town)
+func (self *Access) UpdateDeprecatedCustomSetting(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
+	err := self.SetConfigValue(scope, key, newValue)
 	if err != nil {
-		fmt.Printf(messages.SettingGlobalCannotWrite, newKey, err)
+		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
 	}
 }
 
-func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)))
-	err := self.RemoveLocalConfigValue(oldKey)
+func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
+	err := self.RemoveConfigValue(scope, oldKey)
 	if err != nil {
-		fmt.Printf(messages.SettingLocalCannotRemove, oldKey, err)
+		fmt.Printf(messages.SettingCannotRemove, scope, oldKey, err)
 	}
-	err = self.SetLocalConfigValue(newKey, value)
+	err = self.SetConfigValue(scope, newKey, value)
 	if err != nil {
-		fmt.Printf(messages.SettingLocalCannotWrite, newKey, err)
-	}
-}
-
-func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, scope configdomain.ConfigScope) {
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
-	case configdomain.ConfigScopeLocal:
-		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
+		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
 	}
 }
 
@@ -153,13 +136,10 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if !hasConfigKey {
-			continue
-		}
 		if updateOutdated {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
-				self.UpdateDeprecatedSetting(configKey, newKey, value, scope)
+				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
 				configKey = newKey
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
@@ -167,12 +147,25 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				_ = self.RemoveConfigValue(configKey, scope)
+				_ = self.RemoveConfigValue(scope, configKey)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
+			for _, update := range configdomain.ConfigUpdates {
+				if configKey == update.Before.Key && value == update.Before.Value {
+					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
+					configKey = update.After.Key
+					value = update.After.Value
+				} else if value == update.Before.Value {
+					self.UpdateDeprecatedCustomSetting(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
+					configKey = update.After.Key
+					value = update.After.Value
+				}
+			}
 		}
-		snapshot[configKey] = value
+		if hasConfigKey {
+			snapshot[configKey] = value
+		}
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err

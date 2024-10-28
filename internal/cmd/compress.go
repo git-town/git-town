@@ -166,7 +166,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -183,14 +183,14 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err
 	}
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = validatedConfig.Config.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToCompress = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -200,14 +200,14 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		if !hasBranchInfo {
 			return data, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := validatedConfig.Config.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := validatedConfig.BranchType(branchNameToCompress.BranchName().LocalName())
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			return data, exit, err
 		}
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
 			return data, exit, err
 		}
-		parent := validatedConfig.Config.Lineage.Parent(branchNameToCompress)
+		parent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
 		if err != nil {
 			return data, exit, err
@@ -258,7 +258,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 func compressProgram(data compressBranchesData) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(prog, branchToCompress, data.config.Config.Online(), data.initialBranch)
+		compressBranchProgram(prog, branchToCompress, data.config.NormalConfig.Online(), data.initialBranch)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch.BranchName().LocalName()})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

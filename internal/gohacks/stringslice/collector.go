@@ -21,7 +21,7 @@ func (self Collector) Add(text string) {
 // Result provides all accumulated string instances.
 func (self Collector) Result() []string {
 	if self.data == nil {
-		return []string(nil)
+		return []string{}
 	}
 	return *self.data
 }

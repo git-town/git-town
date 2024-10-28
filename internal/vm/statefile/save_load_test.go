@@ -85,10 +85,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
-				&opcodes.ConfigGlobalRemove{Key: configdomain.KeyOffline},
-				&opcodes.ConfigGlobalSet{Key: configdomain.KeyOffline, Value: "1"},
-				&opcodes.ConfigLocalRemove{Key: configdomain.KeyOffline},
-				&opcodes.ConfigLocalSet{Key: configdomain.KeyOffline, Value: "1"},
+				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
+				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -135,7 +133,7 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			}),
-			UndoablePerennialCommits: []gitdomain.SHA(nil),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 
 		wantJSON := `
@@ -409,29 +407,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Key": "git-town.offline"
+        "Key": "git-town.offline",
+        "Scope": "local"
       },
-      "type": "ConfigGlobalRemove"
+      "type": "ConfigRemove"
     },
     {
       "data": {
         "Key": "git-town.offline",
+        "Scope": "local",
         "Value": "1"
       },
-      "type": "ConfigGlobalSet"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline"
-      },
-      "type": "ConfigLocalRemove"
-    },
-    {
-      "data": {
-        "Key": "git-town.offline",
-        "Value": "1"
-      },
-      "type": "ConfigLocalSet"
+      "type": "ConfigSet"
     },
     {
       "data": {
@@ -675,7 +662,7 @@ func TestLoadSave(t *testing.T) {
     "branch-2"
   ],
   "UndoAPIProgram": [],
-  "UndoablePerennialCommits": null,
+  "UndoablePerennialCommits": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

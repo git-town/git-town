@@ -5,12 +5,13 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-type ConfigLocalSet struct {
+type ConfigSet struct {
 	Key                     configdomain.Key
+	Scope                   configdomain.ConfigScope
 	Value                   string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConfigLocalSet) Run(args shared.RunArgs) error {
-	return args.Config.GitConfig.SetLocalConfigValue(self.Key, self.Value)
+func (self *ConfigSet) Run(args shared.RunArgs) error {
+	return args.Config.Value.NormalConfig.GitConfig.SetConfigValue(self.Scope, self.Key, self.Value)
 }

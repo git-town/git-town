@@ -13,8 +13,8 @@ type BranchesPerennialRemove struct {
 
 func (self *BranchesPerennialRemove) Run(args shared.RunArgs) error {
 	var err error
-	if args.Config.Config.PerennialBranches.Contains(self.Branch) {
-		err = args.Config.RemoveFromPerennialBranches(self.Branch)
+	if args.Config.Value.NormalConfig.PerennialBranches.Contains(self.Branch) {
+		err = args.Config.Value.NormalConfig.RemoveFromPerennialBranches(self.Branch)
 	}
 	return err
 }

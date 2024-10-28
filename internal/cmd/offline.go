@@ -52,7 +52,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 	}
 	switch len(args) {
 	case 0:
-		displayOfflineStatus(repo.UnvalidatedConfig.Config.Get())
+		displayOfflineStatus(repo.UnvalidatedConfig)
 	case 1:
 		err = setOfflineStatus(args[0], repo.UnvalidatedConfig)
 		if err != nil {
@@ -68,13 +68,13 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
-		TouchedBranches:       []gitdomain.BranchName(nil),
+		TouchedBranches:       []gitdomain.BranchName{},
 		Verbose:               verbose,
 	})
 }
 
-func displayOfflineStatus(config configdomain.UnvalidatedConfig) {
-	fmt.Println(format.Bool(config.Offline.IsTrue()))
+func displayOfflineStatus(config config.UnvalidatedConfig) {
+	fmt.Println(format.Bool(config.NormalConfig.Offline.IsTrue()))
 }
 
 func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
@@ -83,7 +83,7 @@ func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
 	if offline, has := value.Get(); has {
-		return config.SetOffline(configdomain.Offline(offline))
+		return config.NormalConfig.SetOffline(configdomain.Offline(offline))
 	}
 	// in the future, we could remove the offline setting here
 	return nil

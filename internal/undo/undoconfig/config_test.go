@@ -43,8 +43,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -68,14 +69,14 @@ func TestConfigUndo(t *testing.T) {
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
 			Global: undoconfig.ConfigDiff{
-				Added: []configdomain.Key(nil),
+				Added: []configdomain.Key{},
 				Removed: map[configdomain.Key]string{
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
 			Local: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
@@ -83,8 +84,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "1",
 			},
 		}
@@ -108,7 +110,7 @@ func TestConfigUndo(t *testing.T) {
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
 			Global: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyOffline: {
@@ -118,7 +120,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 			Local: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
@@ -126,8 +128,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
 		}
@@ -163,8 +166,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeLocal,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -188,12 +192,12 @@ func TestConfigUndo(t *testing.T) {
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
 			Global: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
 			Local: undoconfig.ConfigDiff{
-				Added: []configdomain.Key(nil),
+				Added: []configdomain.Key{},
 				Removed: map[configdomain.Key]string{
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
@@ -203,8 +207,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "1",
 			},
 		}
@@ -228,12 +233,12 @@ func TestConfigUndo(t *testing.T) {
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
 			Global: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
 			Local: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key(nil),
+				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyOffline: {
@@ -246,8 +251,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "0",
 			},
 		}
@@ -310,26 +316,32 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigGlobalRemove{
-				Key: configdomain.KeySyncPerennialStrategy,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
 			},
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyPushHook,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
-			&opcodes.ConfigGlobalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyOffline,
+				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
 			},
-			&opcodes.ConfigLocalRemove{
-				Key: configdomain.KeyPushHook,
+			&opcodes.ConfigRemove{
+				Key:   configdomain.KeyPushHook,
+				Scope: configdomain.ConfigScopeLocal,
 			},
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyGithubToken,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "token",
 			},
-			&opcodes.ConfigLocalSet{
+			&opcodes.ConfigSet{
 				Key:   configdomain.KeyPerennialBranches,
+				Scope: configdomain.ConfigScopeLocal,
 				Value: "prod",
 			},
 		}
@@ -339,7 +351,7 @@ func TestConfigUndo(t *testing.T) {
 
 func emptyConfigDiff() undoconfig.ConfigDiff {
 	return undoconfig.ConfigDiff{
-		Added:   []configdomain.Key(nil),
+		Added:   []configdomain.Key{},
 		Changed: map[configdomain.Key]undodomain.Change[string]{},
 		Removed: map[configdomain.Key]string{},
 	}

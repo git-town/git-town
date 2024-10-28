@@ -72,7 +72,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		Branch:          data.initialBranch,
 		DefaultChoice:   data.defaultChoice,
 		DialogTestInput: data.dialogTestInputs.Next(),
-		Lineage:         data.config.Config.Lineage,
+		Lineage:         data.config.NormalConfig.Lineage,
 		LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
 		MainBranch:      data.mainBranch,
 	})
@@ -156,7 +156,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		return data, exit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.Config.Value.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -173,17 +173,17 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return data, exit, err
 	}
-	mainBranch := validatedConfig.Config.MainBranch
+	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	parentOpt := validatedConfig.Config.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
@@ -207,7 +207,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 }
 
 func verifySetParentData(data setParentData) error {
-	if data.config.Config.IsMainOrPerennialBranch(data.initialBranch) {
+	if data.config.IsMainOrPerennialBranch(data.initialBranch) {
 		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.initialBranch)
 	}
 	return nil

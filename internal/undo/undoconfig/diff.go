@@ -8,7 +8,7 @@ import (
 // SingleCacheDiff provides a diff of the two given SingleCache instances.
 func SingleCacheDiff(before, after configdomain.SingleSnapshot) ConfigDiff {
 	result := ConfigDiff{
-		Added:   nil,
+		Added:   []configdomain.Key{},
 		Changed: map[configdomain.Key]undodomain.Change[string]{},
 		Removed: map[configdomain.Key]string{},
 	}

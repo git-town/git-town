@@ -12,5 +12,5 @@ type BranchesPerennialAdd struct {
 }
 
 func (self *BranchesPerennialAdd) Run(args shared.RunArgs) error {
-	return args.Config.AddToPerennialBranches(self.Branch)
+	return args.Config.Value.NormalConfig.AddToPerennialBranches(self.Branch)
 }

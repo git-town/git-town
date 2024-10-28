@@ -52,7 +52,7 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewBranchName("initial"))
 	err := repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main"))
 	must.NoError(t, err)
-	err = repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{})
+	err = repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }
@@ -92,18 +92,10 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		GlobalConfig: configdomain.EmptyPartialConfig(),
 		LocalConfig:  configdomain.EmptyPartialConfig(),
 	})
-	validatedConfig := config.ValidatedConfig{
-		Config: configdomain.ValidatedConfig{
-			NormalConfig: unvalidatedConfig.Config.Value.NormalConfig,
-			GitUserEmail: "test@test.com",
-			GitUserName:  "Tester",
-			MainBranch:   gitdomain.NewLocalBranchName("main"),
-		},
-		UnvalidatedConfig: &unvalidatedConfig,
-	}
+	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
 		Commands:   &gitCommands,
-		Config:     validatedConfig,
+		Config:     unvalidatedConfig,
 		TestRunner: &testRunner,
 	}
 	return testCommands

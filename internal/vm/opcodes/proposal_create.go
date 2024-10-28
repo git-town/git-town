@@ -20,7 +20,7 @@ type ProposalCreate struct {
 }
 
 func (self *ProposalCreate) Run(args shared.RunArgs) error {
-	parentBranch, hasParentBranch := args.Config.Config.Lineage.Parent(self.Branch).Get()
+	parentBranch, hasParentBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParentBranch {
 		return fmt.Errorf(messages.ProposalNoParent, self.Branch)
 	}
