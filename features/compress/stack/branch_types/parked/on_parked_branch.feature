@@ -39,8 +39,7 @@ Feature: compresses active parked branches
     And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | child  | local, origin | parked 1 |
-      |        |               | child 1  |
+      | child  | local, origin | child 1  |
       | parked | local, origin | parked 1 |
     And file "parked_1" still has content "parked 1"
     And file "parked_2" still has content "parked 2"

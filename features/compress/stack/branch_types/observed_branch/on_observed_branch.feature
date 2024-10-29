@@ -36,9 +36,7 @@ Feature: does not compress an active observed branch
     And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
-      | child    | local, origin | observed 1 |
-      |          |               | observed 2 |
-      |          |               | child 1    |
+      | child    | local, origin | child 1    |
       | observed | local, origin | observed 1 |
       |          |               | observed 2 |
     And file "observed_1" still has content "observed 1"
