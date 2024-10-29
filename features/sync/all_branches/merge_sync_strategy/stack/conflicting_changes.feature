@@ -56,16 +56,16 @@ Feature: sync a stack that makes conflicting changes
     And the current branch is now "alpha"
     And no merge is in progress
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT  |
-      | main   | local, origin | main commit                    | file      | main content  |
-      | alpha  | local, origin | alpha commit                   | file      | alpha content |
-      |        |               | main commit                    | file      | main content  |
-      |        |               | Merge branch 'main' into alpha |           |               |
-      | beta   | local, origin | beta commit                    | file      | beta content  |
-      |        |               | alpha commit                   | file      | alpha content |
-      |        |               | main commit                    | file      | main content  |
-      |        |               | Merge branch 'main' into alpha |           |               |
-      |        |               | Merge branch 'alpha' into beta |           |               |
+      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT           |
+      | main   | local, origin | main commit                    | file      | main content           |
+      | alpha  | local, origin | alpha commit                   | file      | alpha content          |
+      |        |               | main commit                    | file      | main content           |
+      |        |               | Merge branch 'main' into alpha | file      | resolved alpha content |
+      | beta   | local, origin | beta commit                    | file      | beta content           |
+      |        |               | alpha commit                   | file      | alpha content          |
+      |        |               | main commit                    | file      | main content           |
+      |        |               | Merge branch 'main' into alpha | file      | resolved alpha content |
+      |        |               | Merge branch 'alpha' into beta | file      | resolved beta content  |
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                               |
