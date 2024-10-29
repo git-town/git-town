@@ -14,7 +14,6 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
     When I run "git-town ship"
     And I add commit "additional commit" to the "main" branch
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
