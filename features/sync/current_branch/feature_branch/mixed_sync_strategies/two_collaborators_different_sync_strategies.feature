@@ -56,10 +56,10 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git push                      |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT     |
-      | feature | local, coworker, origin | my first commit                                            | file.txt  | my content       |
-      |         | coworker, origin        | coworker first commit                                      | file.txt  | coworker content |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |           |                  |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT            |
+      | feature | local, coworker, origin | my first commit                                            | file.txt  | my content              |
+      |         | coworker, origin        | coworker first commit                                      | file.txt  | coworker content        |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content |
     And the coworkers workspace now contains file "file.txt" with content "my and coworker content"
 
     # I add a conflicting commit locally and then sync
@@ -91,5 +91,5 @@ Feature: compatibility between different sync-feature-strategy settings
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
       |         |                         | my first commit                                            | file.txt  | my content                  |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |           |                             |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
       |         | local, origin           | my second commit                                           | file.txt  | my new and coworker content |
