@@ -36,9 +36,6 @@ Feature: with sync-perennial-strategy set to "merge"
       | feature | local, origin | local feature commit                                       |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | local main commit                                          |
-      |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
 
   Scenario: undo

@@ -29,7 +29,6 @@ Feature: offline mode
       | main    | local    | local main commit                |
       |         | origin   | origin main commit               |
       | feature | local    | local feature commit             |
-      |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
       |         | origin   | origin feature commit            |
 

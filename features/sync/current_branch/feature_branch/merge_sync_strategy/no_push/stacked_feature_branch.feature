@@ -38,18 +38,10 @@ Feature: syncing a stacked feature branch using --no-push
       | child  | local         | local child commit                                       |
       |        | local, origin | origin child commit                                      |
       |        | local         | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
       | parent | local         | local parent commit                                      |
       |        | local, origin | origin parent commit                                     |
       |        | local         | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
     And the initial branches and lineage exist now
 
