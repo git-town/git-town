@@ -19,8 +19,6 @@ Feature: offline mode
     And the current branch is now "new"
     And the uncommitted file still exists
     And the initial commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
