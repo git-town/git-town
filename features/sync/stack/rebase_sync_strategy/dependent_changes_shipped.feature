@@ -33,8 +33,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout beta                               |
       | beta   | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And the current branch is still "beta"
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit | file      | alpha content |
@@ -52,9 +52,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout beta                                    |
     And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | origin        | alpha commit |
-      | alpha  | local         | alpha commit |
-      | beta   | local, origin | beta commit  |
-      |        | origin        | alpha commit |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | main   | origin        | alpha commit | file      | alpha content |
+      | alpha  | local         | alpha commit | file      | alpha content |
+      | beta   | local, origin | beta commit  | file      | beta content  |
+      |        | origin        | alpha commit | file      | alpha content |
     And the initial branches and lineage exist now
