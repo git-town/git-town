@@ -19,7 +19,6 @@ Feature: creating a new prototype branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-      | new    | local         | main commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
