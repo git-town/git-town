@@ -76,7 +76,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
 		}
-		parent := self.Config.Config.Lineage.Parent(branch)
+		parent := self.Config.NormalConfig.Lineage.Parent(branch)
 		commits := self.CommitsInBranch(branch, parent, fields)
 		result = append(result, commits...)
 	}
