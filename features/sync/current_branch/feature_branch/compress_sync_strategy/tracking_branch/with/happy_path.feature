@@ -36,10 +36,13 @@ Feature: sync the current omni feature branch using the "compress" sync-feature 
       |         |               | local main commit    |
       | feature | local, origin | local feature commit |
     And these committed files exist now
-      | BRANCH  | NAME          | CONTENT              |
-      | main    | local, origin | origin main commit   |
-      |         |               | local main commit    |
-      | feature | local, origin | local feature commit |
+      | BRANCH  | NAME                | CONTENT                |
+      | main    | main local file     | main local content     |
+      |         | main origin file    | main origin content    |
+      | feature | feature local file  | feature local content  |
+      |         | feature origin file | feature origin content |
+      |         | main local file     | main local content     |
+      |         | main origin file    | main origin content    |
 
   Scenario: undo
     When I run "git-town undo"
