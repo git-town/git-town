@@ -230,8 +230,7 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 		if !hasParent {
 			return parentOpt
 		}
-		parentExists := self.BranchExists(self, parent)
-		if parentExists {
+		if self.BranchExists(self, parent) {
 			return parentOpt
 		}
 		branch = parent
