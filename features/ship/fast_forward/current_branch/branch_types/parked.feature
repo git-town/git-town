@@ -41,6 +41,5 @@ Feature: shipping a parked branch using the fast-forward strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parked commit |
-      | parked | local, origin | parked commit |
     And the initial branches and lineage exist now
     And branch "parked" is now parked
