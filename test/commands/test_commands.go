@@ -83,22 +83,6 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 	return result
 }
 
-// provides the first ancestor of the given branch that actually exists in the repo
-func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
-	for {
-		parentOpt := lineage.Parent(branch)
-		parent, hasParent := parentOpt.Get()
-		if !hasParent {
-			return parentOpt
-		}
-		parentExists := self.BranchExists(self, parent)
-		if parentExists {
-			return parentOpt
-		}
-		branch = parent
-	}
-}
-
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
 	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
@@ -233,6 +217,22 @@ func (self *TestCommands) CreateTag(name string) {
 
 func (self *TestCommands) CurrentCommitMessage() string {
 	return self.MustQuery("git", "log", "-1", "--pretty=%B")
+}
+
+// provides the first ancestor of the given branch that actually exists in the repo
+func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+	for {
+		parentOpt := lineage.Parent(branch)
+		parent, hasParent := parentOpt.Get()
+		if !hasParent {
+			return parentOpt
+		}
+		parentExists := self.BranchExists(self, parent)
+		if parentExists {
+			return parentOpt
+		}
+		branch = parent
+	}
 }
 
 // Fetch retrieves the updates from the origin repo.
