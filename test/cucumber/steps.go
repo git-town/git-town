@@ -982,6 +982,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err = originRepo.Commit(originRepo.TestRunner, commitMessage, false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(branchToShip)
+		originRepo.CheckoutBranch("initial")
 	})
 
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) {
