@@ -76,18 +76,27 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
 		}
-		parentOpt := lineage.Parent(branch)
-		parent, hasParent := parentOpt.Get()
-		if hasParent {
-			parentExists := self.BranchExists(self, parent)
-			if !parentExists {
-				parentOpt = lineage.Parent(parent)
-			}
-		}
+		parentOpt := self.ExistingParent(branch, lineage)
 		commits := self.CommitsInBranch(branch, parentOpt, fields)
 		result = append(result, commits...)
 	}
 	return result
+}
+
+// provides the first ancestor of the given branch that actually exists in the repo
+func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+	for {
+		parentOpt := lineage.Parent(branch)
+		parent, hasParent := parentOpt.Get()
+		if !hasParent {
+			return parentOpt
+		}
+		parentExists := self.BranchExists(self, parent)
+		if parentExists {
+			return parentOpt
+		}
+		branch = parent
+	}
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
