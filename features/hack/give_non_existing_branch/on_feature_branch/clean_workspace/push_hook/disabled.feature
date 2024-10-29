@@ -21,7 +21,6 @@ Feature: auto-push the new branch without running Git push hooks
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
-      | new    | local, origin | origin commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

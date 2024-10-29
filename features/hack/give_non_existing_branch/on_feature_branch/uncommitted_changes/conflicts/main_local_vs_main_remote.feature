@@ -21,11 +21,10 @@ Feature: conflicts between the main branch and its tracking branch
       |          | git checkout -b new main |
       | new      | git stash pop            |
     And the current branch is now "new"
-    And these commits exist now
+    And the initial commits exist now
       | BRANCH | LOCATION | MESSAGE                   |
       | main   | local    | conflicting local commit  |
       |        | origin   | conflicting origin commit |
-      | new    | local    | conflicting local commit  |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

@@ -22,7 +22,6 @@ Feature: on a forked repo
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-      | new    | local                   | upstream commit |
 
   Scenario: undo
     When I run "git-town undo"
