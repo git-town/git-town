@@ -55,16 +55,8 @@ Feature: sync before proposing
       | child  | local, origin | local child commit                                       |
       |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
-      |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
       | parent | local, origin | local parent commit                                      |
       |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
