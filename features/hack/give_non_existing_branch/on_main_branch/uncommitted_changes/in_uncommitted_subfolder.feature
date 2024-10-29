@@ -8,6 +8,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And an uncommitted file with name "uncommitted_folder/uncommitted" and content "uncommitted"
     When I run "git-town hack new" in the "uncommitted_folder" folder
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |
@@ -16,10 +17,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |        | git checkout -b new |
       | new    | git stash pop       |
     And the current branch is now "new"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-      | new    | local         | main commit |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
