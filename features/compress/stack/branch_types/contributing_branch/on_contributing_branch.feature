@@ -36,9 +36,7 @@ Feature: does not compress the active contribution branch
     And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE        |
-      | child        | local, origin | contribution 1 |
-      |              |               | contribution 2 |
-      |              |               | child 1        |
+      | child        | local, origin | child 1        |
       | contribution | local, origin | contribution 1 |
       |              |               | contribution 2 |
     And file "contribution_1" still has content "contribution 1"

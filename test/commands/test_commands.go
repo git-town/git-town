@@ -68,7 +68,10 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) []git.Commit {
+	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
+	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
+	//       We therefore always provide the lineage of the local repo.
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	var result []git.Commit
@@ -76,18 +79,28 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
 		}
-		commits := self.CommitsInBranch(branch, fields)
+		parent := self.ExistingParent(branch, lineage)
+		commits := self.CommitsInBranch(branch, parent, fields)
 		result = append(result, commits...)
 	}
 	return result
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fields []string) []git.Commit {
-	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
+	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
+	} else {
+		args = append(args, branch.String())
+	}
+	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
 	result := make([]git.Commit, 0, len(lines))
 	for _, line := range lines {
+		if len(strings.TrimSpace(line)) == 0 {
+			continue
+		}
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
@@ -207,6 +220,21 @@ func (self *TestCommands) CreateTag(name string) {
 
 func (self *TestCommands) CurrentCommitMessage() string {
 	return self.MustQuery("git", "log", "-1", "--pretty=%B")
+}
+
+// provides the first ancestor of the given branch that actually exists in the repo
+func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+	for {
+		parentOpt := lineage.Parent(branch)
+		parent, hasParent := parentOpt.Get()
+		if !hasParent {
+			return None[gitdomain.LocalBranchName]()
+		}
+		if self.BranchExists(self, parent) {
+			return Some(parent)
+		}
+		branch = parent
+	}
 }
 
 // Fetch retrieves the updates from the origin repo.

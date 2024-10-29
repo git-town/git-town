@@ -73,7 +73,6 @@ Feature: merge conflict
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | main commit                      |
       | feature | local, origin | feature commit                   |
-      |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

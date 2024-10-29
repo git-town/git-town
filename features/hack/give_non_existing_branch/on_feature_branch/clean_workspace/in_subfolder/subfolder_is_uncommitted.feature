@@ -20,10 +20,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout -b new                     |
     And the current branch is now "new"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-      | new    | local         | main commit |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

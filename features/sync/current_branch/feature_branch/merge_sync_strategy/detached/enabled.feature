@@ -38,16 +38,11 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       | alpha  | local, origin | local alpha commit                                     |
       |        |               | origin alpha commit                                    |
       |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        |               | local main commit                                      |
       |        |               | Merge branch 'main' into alpha                         |
+      |        | origin        | local main commit                                      |
       | beta   | local, origin | local beta commit                                      |
       |        |               | origin beta commit                                     |
       |        |               | Merge remote-tracking branch 'origin/beta' into beta   |
-      |        |               | local alpha commit                                     |
-      |        |               | origin alpha commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        |               | local main commit                                      |
-      |        |               | Merge branch 'main' into alpha                         |
       |        |               | Merge branch 'alpha' into beta                         |
 
   Scenario: undo

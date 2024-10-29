@@ -28,7 +28,6 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
     Then it runs no commands
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE         |
-      | main    | local, origin | added submodule |
-      | feature | local, origin | added submodule |
+      | BRANCH | LOCATION      | MESSAGE         |
+      | main   | local, origin | added submodule |
     And the initial branches and lineage exist now

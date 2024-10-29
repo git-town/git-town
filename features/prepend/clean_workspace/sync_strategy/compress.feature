@@ -36,12 +36,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       |          | git push --force-with-lease              |
       |          | git checkout -b branch-1a branch-1       |
     And the current branch is now "branch-1a"
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE         |
-      | branch-1  | local, origin | branch-1 commit |
-      | branch-1a | local         | branch-1 commit |
-      | branch-2  | local, origin | branch-1 commit |
-      |           |               | branch-2 commit |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH    | PARENT    |
       | branch-1  | main      |

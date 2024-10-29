@@ -66,10 +66,7 @@ Feature: conflicts between uncommitted changes and the main branch
       | BRANCH | COMMAND        |
       | new    | git stash drop |
     And the current branch is now "new"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
-      | main   | local, origin | conflicting commit | conflicting_file | main content |
-      | new    | local         | conflicting commit | conflicting_file | main content |
+    And the initial commits exist now
     And file "conflicting_file" now has content "resolved content"
 
   Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts

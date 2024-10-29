@@ -34,8 +34,6 @@ Feature: active parked branches get synced like normal feature branches
       | parked | local, origin | local parked commit                                      |
       |        |               | origin parked commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parked' into parked |
-      |        |               | origin main commit                                       |
-      |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parked                          |
 
   Scenario: undo

@@ -44,13 +44,8 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local, origin | origin main commit  |
       |        |               | local main commit   |
-      | child  | local, origin | origin main commit  |
-      |        |               | local main commit   |
-      |        |               | local parent commit |
-      |        |               | local child commit  |
-      | parent | local, origin | origin main commit  |
-      |        |               | local main commit   |
-      |        |               | local parent commit |
+      | child  | local, origin | local child commit  |
+      | parent | local, origin | local parent commit |
 
   Scenario: undo
     When I run "git-town undo"

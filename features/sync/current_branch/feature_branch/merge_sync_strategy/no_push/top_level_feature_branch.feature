@@ -31,8 +31,6 @@ Feature: syncing a top-level feature branch using --no-push
       | feature | local         | local feature commit                                       |
       |         | local, origin | origin feature commit                                      |
       |         | local         | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | origin main commit                                         |
-      |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
     And the initial branches and lineage exist now
 

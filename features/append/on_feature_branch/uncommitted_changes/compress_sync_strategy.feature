@@ -23,12 +23,7 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git checkout -b new |
       | new      | git stash pop       |
     And the current branch is now "new"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE           |
-      | existing | local, origin | existing commit 1 |
-      |          |               | existing commit 2 |
-      | new      | local         | existing commit 1 |
-      |          |               | existing commit 2 |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |

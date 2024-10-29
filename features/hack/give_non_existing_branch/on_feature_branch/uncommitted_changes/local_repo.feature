@@ -21,10 +21,7 @@ Feature: local repo
       | new      | git stash pop            |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE     |
-      | main   | local    | main commit |
-      | new    | local    | main commit |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

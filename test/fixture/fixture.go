@@ -128,22 +128,23 @@ func (self *Fixture) Branches() datatable.DataTable {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"))
+	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
+	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		originCommits := originRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)

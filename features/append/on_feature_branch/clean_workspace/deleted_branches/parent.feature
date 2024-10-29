@@ -43,10 +43,6 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | parent commit                  |
       | child  | local, origin | child commit                   |
-      |        |               | parent commit                  |
-      |        |               | Merge branch 'main' into child |
-      | new    | local         | child commit                   |
-      |        |               | parent commit                  |
       |        |               | Merge branch 'main' into child |
 
   Scenario: undo

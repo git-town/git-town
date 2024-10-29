@@ -41,10 +41,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
       | alpha  | local, origin | folder commit                  |
-      |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local, origin | beta commit                    |
-      |        |               | main commit                    |
       |        |               | Merge branch 'main' into beta  |
 
   Scenario: undo

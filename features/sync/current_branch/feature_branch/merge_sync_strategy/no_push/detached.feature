@@ -36,16 +36,10 @@ Feature: detached syncing a stacked feature branch using --no-push
       | alpha  | local         | local alpha commit                                     |
       |        | local, origin | origin alpha commit                                    |
       |        | local         | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        |               | local main commit                                      |
       |        |               | Merge branch 'main' into alpha                         |
       | beta   | local         | local beta commit                                      |
       |        | local, origin | origin beta commit                                     |
       |        | local         | Merge remote-tracking branch 'origin/beta' into beta   |
-      |        |               | local alpha commit                                     |
-      |        |               | origin alpha commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        |               | local main commit                                      |
-      |        |               | Merge branch 'main' into alpha                         |
       |        |               | Merge branch 'alpha' into beta                         |
     And the initial branches and lineage exist now
 

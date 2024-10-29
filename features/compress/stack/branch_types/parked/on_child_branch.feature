@@ -34,9 +34,7 @@ Feature: does not compress non-active parked branches in the stack
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | child  | local, origin | parked 1 |
-      |        |               | parked 2 |
-      |        |               | child 1  |
+      | child  | local, origin | child 1  |
       | parked | local, origin | parked 1 |
       |        |               | parked 2 |
     And file "parked_1" still has content "parked 1"

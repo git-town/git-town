@@ -25,7 +25,6 @@ Feature: hack a new branch while the main branch is active in another worktree
       | main     | origin          | origin main commit |
       |          | worktree        | local main commit  |
       | existing | local, worktree | existing commit    |
-      | new      | local           | local main commit  |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

@@ -31,7 +31,6 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           |
       | existing | local, origin | existing commit 1 |
-      | new      | local         | existing commit 1 |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |

@@ -39,8 +39,7 @@ Feature: does not compress non-active prototype branches in the stack
     And the current branch is still "child"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE     |
-      | child     | local, origin | prototype 1 |
-      |           |               | child 1     |
+      | child     | local, origin | child 1     |
       | prototype | local, origin | prototype 1 |
     And file "parked_1" still has content "prototype 1"
     And file "parked_2" still has content "prototype 2"

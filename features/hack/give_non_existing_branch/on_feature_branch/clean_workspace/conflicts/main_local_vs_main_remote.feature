@@ -60,8 +60,6 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
-      | new    | local         | conflicting origin commit |
-      |        |               | conflicting local commit  |
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

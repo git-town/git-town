@@ -55,10 +55,8 @@ Feature: sync all feature branches
       | BRANCH     | LOCATION      | MESSAGE                        |
       | main       | local, origin | main commit                    |
       | alpha      | local, origin | alpha commit                   |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into alpha |
       | beta       | local, origin | beta commit                    |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into beta  |
       | observed   | local, origin | origin observed commit         |
       |            | local         | local observed commit          |
@@ -97,10 +95,8 @@ Feature: sync all feature branches
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | local, origin | main commit              |
-      | alpha      | local, origin | main commit              |
-      |            |               | alpha commit             |
-      | beta       | local, origin | main commit              |
-      |            |               | beta commit              |
+      | alpha      | local, origin | alpha commit             |
+      | beta       | local, origin | beta commit              |
       | observed   | local, origin | origin observed commit   |
       |            | local         | local observed commit    |
       | parked     | local         | local parked commit      |

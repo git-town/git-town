@@ -81,10 +81,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main    | local, origin | conflicting main commit          |
       | current | local, origin | conflicting current commit       |
       |         |               | folder commit                    |
-      |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into current |
       | other   | local, origin | other commit                     |
-      |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

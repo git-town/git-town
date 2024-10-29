@@ -37,12 +37,10 @@ Feature: sync a branch whose parent is active in another worktree
       | child  | origin, worktree        | local child commit                                      |
       |        |                         | origin child commit                                     |
       |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        |                         | origin parent commit                                    |
       |        |                         | Merge remote-tracking branch 'origin/parent' into child |
+      |        | worktree                | origin parent commit                                    |
       | parent | local                   | local parent commit                                     |
       |        | origin                  | origin parent commit                                    |
-
-  Scenario: undo
     When I run "git-town undo" in the other worktree
     Then it runs the commands
       | BRANCH | COMMAND                                                                            |

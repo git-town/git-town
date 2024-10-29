@@ -39,9 +39,8 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, origin | feature commit |
-      | feature | local         | feature commit |
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
     And these branches exist now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

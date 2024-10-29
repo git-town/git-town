@@ -48,5 +48,4 @@ Feature: ship a parent branch using the fast-forward strategy
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parent commit |
       | child  | local, origin | child commit  |
-      | parent | local, origin | parent commit |
     And the initial branches and lineage exist now

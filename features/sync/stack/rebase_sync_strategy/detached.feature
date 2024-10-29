@@ -51,11 +51,8 @@ Feature: sync the entire stack
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |
       | alpha      | local, origin | alpha commit             |
-      | beta       | local, origin | alpha commit             |
-      |            |               | beta commit              |
-      | gamma      | local, origin | alpha commit             |
-      |            |               | beta commit              |
-      |            |               | gamma commit             |
+      | beta       | local, origin | beta commit              |
+      | gamma      | local, origin | gamma commit             |
       | observed   | local         | local observed commit    |
       |            | origin        | origin observed commit   |
       | one        | local, origin | one commit               |

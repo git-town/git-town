@@ -30,8 +30,8 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
       """
     And the current branch is now "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE           |
-      | main    | local         | feature commit    |
-      |         |               | additional commit |
-      | feature | local, origin | feature commit    |
+      | BRANCH  | LOCATION | MESSAGE           |
+      | main    | local    | feature commit    |
+      |         |          | additional commit |
+      | feature | origin   | feature commit    |
     And the initial branches and lineage exist now

@@ -19,7 +19,6 @@ Feature: in a subfolder on the main branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
-      | new    | local         | folder commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

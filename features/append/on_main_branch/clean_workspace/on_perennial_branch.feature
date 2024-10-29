@@ -21,7 +21,6 @@ Feature: append to a perennial branch
     And the current branch is now "new"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |
-      | new        | local         | production commit |
       | production | local, origin | production commit |
     And this lineage exists now
       | BRANCH | PARENT     |
