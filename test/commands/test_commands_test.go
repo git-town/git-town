@@ -225,13 +225,19 @@ func TestTestCommands(t *testing.T) {
 	t.Run("FilesInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
+		runtime.CreateCommit(git.Commit{
+			Branch:    "initial",
+			FileName:  "initial_file",
+			Locations: []git.Location{git.LocationLocal},
+			Message:   "initial file commit",
+		})
 		runtime.CreateFile("f1.txt", "one")
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
-		must.Len(t, 1, commits)
-		fileNames := runtime.FilesInCommit(commits[0].SHA)
+		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"))
+		must.Len(t, 2, commits)
+		fileNames := runtime.FilesInCommit(commits[1].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
 	})
 
