@@ -6,19 +6,18 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION | MESSAGE            | FILE NAME | FILE CONTENT  |
-      | alpha  | local    | local alpha commit | file      | alpha content |
+      | BRANCH | LOCATION      | MESSAGE            | FILE NAME | FILE CONTENT  |
+      | alpha  | local, origin | local alpha commit | file      | alpha content |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION | MESSAGE           | FILE NAME | FILE CONTENT |
-      | beta   | local    | local beta commit | file      | beta content |
+      | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | local beta commit | file      | beta content |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME | FILE CONTENT  |
       | alpha  | local, origin | local alpha commit | file      | alpha content |
-      | beta   | local, origin | local alpha commit | file      | alpha content |
-      |        |               | local beta commit  | file      | beta content  |
+      | beta   | local, origin | local beta commit  | file      | beta content  |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "beta"
     And I ran "git-town sync"
@@ -36,10 +35,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME | FILE CONTENT  |
       | alpha  | local, origin | local alpha commit | file      | alpha content |
-      | beta   | local, origin | local alpha commit | file      | alpha content |
-      |        |               | local beta commit  | file      | beta content  |
+      | beta   | local, origin | local beta commit  | file      | beta content  |
     And origin ships the "alpha" branch
-    # And inspect the repo
     When I run "git-town sync"
 
   @this
@@ -56,19 +53,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And all branches are now synchronized
     And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE             |
-      | main   | local, origin | origin main commit  |
-      |        |               | local main commit   |
-      | beta   | local, origin | origin beta commit  |
-      |        |               | origin alpha commit |
-      |        |               | origin main commit  |
-      |        |               | local main commit   |
-      |        |               | local alpha commit  |
-      |        |               | local beta commit   |
-      | alpha  | local, origin | origin alpha commit |
-      |        |               | origin main commit  |
-      |        |               | local main commit   |
-      |        |               | local alpha commit  |
+      | BRANCH | LOCATION      | MESSAGE            | FILE NAME | FILE CONTENT  |
+      | main   | local, origin | local alpha commit | file      | alpha content |
+      | beta   | local, origin | local beta commit  | file      | beta content  |
 
   Scenario: undo
     When I run "git-town undo"
