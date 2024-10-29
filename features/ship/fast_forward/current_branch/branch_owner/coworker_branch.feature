@@ -35,7 +35,6 @@ Feature: ship a coworker's feature branch
       |        | git checkout feature                           |
     And the current branch is now "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE         |
-      | main    | local, origin | coworker commit |
-      | feature | local, origin | coworker commit |
+      | BRANCH | LOCATION      | MESSAGE         |
+      | main   | local, origin | coworker commit |
     And the initial branches and lineage exist now
