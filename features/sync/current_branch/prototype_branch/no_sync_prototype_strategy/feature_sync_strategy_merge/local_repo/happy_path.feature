@@ -24,7 +24,6 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
       | prototype | local    | local commit                       |
-      |           |          | main commit                        |
       |           |          | Merge branch 'main' into prototype |
     And all branches are now synchronized
     And the current branch is still "prototype"

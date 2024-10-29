@@ -32,8 +32,6 @@ Feature: sync the current prototype branch with tracking branch
       | prototype | local         | local commit                                                   |
       |           | local, origin | origin commit                                                  |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
-      |           |               | main local commit                                              |
-      |           |               | main origin commit                                             |
       |           |               | Merge branch 'main' into prototype                             |
 
   Scenario: undo

@@ -28,8 +28,7 @@ Feature: offline mode
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
-      | feature | local    | local main commit     |
-      |         |          | local feature commit  |
+      | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
 
   Scenario: undo

@@ -33,9 +33,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         |               | local main commit      |
-      | feature | local, origin | origin main commit     |
-      |         |               | local main commit      |
-      |         |               | local feature commit 1 |
+      | feature | local, origin | local feature commit 1 |
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |

@@ -37,8 +37,8 @@ Feature: sync a branch whose parent is active in another worktree
       | child  | local, origin           | local child commit                                      |
       |        |                         | origin child commit                                     |
       |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        |                         | origin parent commit                                    |
-      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
+      |        | local                   | origin parent commit                                    |
+      |        | local, origin           | Merge remote-tracking branch 'origin/parent' into child |
       | parent | origin                  | origin parent commit                                    |
       |        | worktree                | local parent commit                                     |
 

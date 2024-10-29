@@ -25,7 +25,6 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
-      | new      | local         | main commit     |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

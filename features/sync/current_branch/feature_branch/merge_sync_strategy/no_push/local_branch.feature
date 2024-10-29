@@ -27,8 +27,6 @@ Feature: syncing a local feature branch using --no-push
       | main    | local, origin | origin main commit               |
       |         | local         | local main commit                |
       | feature | local         | local feature commit             |
-      |         |               | origin main commit               |
-      |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
     And the initial branches and lineage exist now
 

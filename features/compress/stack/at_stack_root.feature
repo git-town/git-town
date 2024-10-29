@@ -54,11 +54,8 @@ Feature: compress the commits on an entire stack when at the stack root
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
       | alpha  | local, origin | alpha 1 |
-      | beta   | local, origin | alpha 1 |
-      |        |               | beta 1  |
-      | gamma  | local, origin | alpha 1 |
-      |        |               | beta 1  |
-      |        |               | gamma 1 |
+      | beta   | local, origin | beta 1  |
+      | gamma  | local, origin | gamma 1 |
     And file "alpha_1" still has content "alpha 1"
     And file "alpha_2" still has content "alpha 2"
     And file "alpha_3" still has content "alpha 3"

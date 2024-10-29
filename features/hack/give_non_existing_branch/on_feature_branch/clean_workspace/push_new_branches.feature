@@ -20,7 +20,6 @@ Feature: auto-push the new branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
-      | new    | local, origin | origin commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

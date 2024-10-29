@@ -25,7 +25,6 @@ Feature: append a new feature branch to an existing feature branch with uncommit
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-      | new      | local         | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |

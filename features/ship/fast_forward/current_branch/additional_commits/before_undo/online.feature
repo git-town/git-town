@@ -22,8 +22,7 @@ Feature: partially undo an online ship using the fast-forward strategy after add
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE           |
-      | main    | local, origin | feature commit    |
-      |         | local         | additional commit |
-      | feature | local, origin | feature commit    |
+      | BRANCH | LOCATION      | MESSAGE           |
+      | main   | local, origin | feature commit    |
+      |        | local         | additional commit |
     And the initial branches and lineage exist now

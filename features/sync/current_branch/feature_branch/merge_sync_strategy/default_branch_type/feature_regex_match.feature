@@ -37,8 +37,6 @@ Feature: a default branch type is set, the feature-regex matches
       | my-branch | local, origin | local my-branch commit                                         |
       |           |               | origin my-branch commit                                        |
       |           |               | Merge remote-tracking branch 'origin/my-branch' into my-branch |
-      |           |               | origin main commit                                             |
-      |           |               | local main commit                                              |
       |           |               | Merge branch 'main' into my-branch                             |
 
   Scenario: undo

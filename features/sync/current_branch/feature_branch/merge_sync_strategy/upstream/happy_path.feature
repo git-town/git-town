@@ -32,7 +32,6 @@ Feature: with upstream repo
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |
       | feature | local, origin           | local commit                     |
-      |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |
 
   Scenario: undo

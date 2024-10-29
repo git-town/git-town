@@ -40,11 +40,9 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local         | local main commit  |
       |        | origin        | origin main commit |
-      | alpha  | local, origin | local main commit  |
-      |        |               | local alpha commit |
-      | beta   | local, origin | local main commit  |
-      |        |               | local alpha commit |
-      |        |               | local beta commit  |
+      | alpha  | local, origin | local alpha commit |
+      |        | origin        | local main commit  |
+      | beta   | local, origin | local beta commit  |
 
   Scenario: undo
     When I run "git-town undo"

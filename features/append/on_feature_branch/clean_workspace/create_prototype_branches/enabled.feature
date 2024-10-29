@@ -24,10 +24,7 @@ Feature: auto-creating a prototype branch when appending
       |          | git checkout -b new                      |
     And the current branch is now "new"
     And branch "new" is now prototype
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
-      | new      | local         | existing commit |
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |

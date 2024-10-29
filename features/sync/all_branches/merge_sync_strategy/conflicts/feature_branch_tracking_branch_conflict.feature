@@ -79,12 +79,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
       | alpha  | local, origin | alpha commit                   |
-      |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local         | local beta commit              |
       |        | origin        | origin beta commit             |
       | gamma  | local, origin | gamma commit                   |
-      |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
     And these committed files exist now
       | BRANCH | NAME             | CONTENT            |

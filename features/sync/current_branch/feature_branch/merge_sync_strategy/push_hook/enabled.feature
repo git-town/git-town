@@ -35,8 +35,6 @@ Feature: push-hook setting set to "true"
       | feature | local, origin | local feature commit                                       |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | origin main commit                                         |
-      |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
 
   Scenario: undo

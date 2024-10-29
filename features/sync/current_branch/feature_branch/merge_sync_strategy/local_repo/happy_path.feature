@@ -22,7 +22,6 @@ Feature: sync the current feature branch (in a local repo)
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | main commit                      |
       | feature | local    | feature commit                   |
-      |         |          | main commit                      |
       |         |          | Merge branch 'main' into feature |
 
   Scenario: undo

@@ -44,8 +44,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | parent commit  |
-      | child  | local, origin | parent commit  |
-      |        |               | child commit 1 |
+      | child  | local, origin | child commit 1 |
 
   Scenario: undo
     When I run "git-town undo"

@@ -30,8 +30,8 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | feature | origin, worktree | local feature commit                                       |
       |         |                  | origin feature commit                                      |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |                  | origin main commit                                         |
       |         |                  | Merge remote-tracking branch 'origin/main' into feature    |
+      |         | worktree         | origin main commit                                         |
 
   Scenario: undo
     When I run "git-town undo" in the other worktree

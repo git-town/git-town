@@ -44,10 +44,9 @@ Feature: skip deleting the remote branch when shipping another branch using the 
       | other  | git branch feature {{ sha 'feature commit' }} |
     And the current branch is now "other"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, origin | feature commit |
-      | feature | local         | feature commit |
-      | other   | local         | other commit   |
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
+      | other  | local         | other commit   |
     And these branches exist now
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |

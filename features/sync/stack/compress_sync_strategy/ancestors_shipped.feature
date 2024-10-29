@@ -53,9 +53,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | feature-1 commit   |
       |           |               | feature-2 commit   |
-      | feature-3 | local, origin | feature-1 commit   |
-      |           |               | feature-2 commit   |
-      |           |               | feature-3 commit A |
+      | feature-3 | local, origin | feature-3 commit A |
 
   Scenario: undo
     When I run "git-town undo"

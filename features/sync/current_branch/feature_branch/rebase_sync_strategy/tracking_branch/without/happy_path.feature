@@ -30,9 +30,7 @@ Feature: sync the current feature branch without a tracking branch
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
-      | feature | local, origin | origin main commit   |
-      |         |               | local main commit    |
-      |         |               | local feature commit |
+      | feature | local, origin | local feature commit |
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |

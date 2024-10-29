@@ -70,11 +70,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | BRANCH | LOCATION | MESSAGE                        |
       | main   | local    | main commit                    |
       | alpha  | local    | alpha commit                   |
-      |        |          | main commit                    |
       |        |          | Merge branch 'main' into alpha |
       | beta   | local    | beta commit                    |
       | gamma  | local    | gamma commit                   |
-      |        |          | main commit                    |
       |        |          | Merge branch 'main' into gamma |
     And these committed files exist now
       | BRANCH | NAME             | CONTENT       |

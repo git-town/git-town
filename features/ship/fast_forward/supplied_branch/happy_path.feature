@@ -50,7 +50,6 @@ Feature: ship the supplied feature branch
       |        | git stash pop                                 |
     And the current branch is now "other"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, origin | feature commit |
-      | feature | local, origin | feature commit |
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
     And the initial branches and lineage exist now
