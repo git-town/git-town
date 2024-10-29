@@ -20,7 +20,6 @@ Feature: in a local repo
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-      | new      | local    | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
