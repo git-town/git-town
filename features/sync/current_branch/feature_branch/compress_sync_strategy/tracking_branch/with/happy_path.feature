@@ -34,9 +34,7 @@ Feature: sync the current omni feature branch using the "compress" sync-feature 
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
-      | feature | local, origin | origin main commit   |
-      |         |               | local main commit    |
-      |         |               | local feature commit |
+      | feature | local, origin | local feature commit |
     And these committed files exist now
       | BRANCH  | NAME          | CONTENT              |
       | main    | local, origin | origin main commit   |

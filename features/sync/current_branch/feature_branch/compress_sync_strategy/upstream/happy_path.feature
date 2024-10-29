@@ -35,8 +35,7 @@ Feature: "compress" sync with upstream repo
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main    | local, origin, upstream | upstream commit | upstream_file | upstream content |
-      | feature | local, origin           | upstream commit | upstream_file | upstream content |
-      |         |                         | local commit    | local file    | local content    |
+      | feature | local, origin           | local commit    | local file    | local content    |
 
   Scenario: undo
     When I run "git-town undo"
