@@ -55,10 +55,8 @@ Feature: sync all feature branches
       | BRANCH     | LOCATION      | MESSAGE                        |
       | main       | local, origin | main commit                    |
       | alpha      | local, origin | alpha commit                   |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into alpha |
       | beta       | local, origin | beta commit                    |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into beta  |
       | observed   | local, origin | origin observed commit         |
       |            | local         | local observed commit          |

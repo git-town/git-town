@@ -31,6 +31,5 @@ Feature: does not sync branches that exist only on remotes
       | BRANCH | LOCATION      | MESSAGE                       |
       | main   | local, origin | main commit                   |
       | mine   | local, origin | my commit                     |
-      |        |               | main commit                   |
       |        |               | Merge branch 'main' into mine |
       | other  | origin        | coworker commit               |

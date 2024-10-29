@@ -33,8 +33,7 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | local main commit      |
       |         | origin   | origin main commit     |
-      | feature | local    | local main commit      |
-      |         |          | local feature commit 1 |
+      | feature | local    | local feature commit 1 |
       |         | origin   | origin feature commit  |
 
   Scenario: undo
