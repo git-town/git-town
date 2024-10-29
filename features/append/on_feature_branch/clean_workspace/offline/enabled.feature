@@ -22,10 +22,7 @@ Feature: append in offline mode
       |          | git merge --no-edit --ff main            |
       |          | git checkout -b new                      |
     And the current branch is now "new"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
-      | new      | local         | existing commit |
+    And the initial commits exist now
 
   Scenario: undo
     Given I ran "git-town append new"
