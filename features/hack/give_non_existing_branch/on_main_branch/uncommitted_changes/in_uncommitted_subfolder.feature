@@ -8,7 +8,6 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And an uncommitted file with name "uncommitted_folder/uncommitted" and content "uncommitted"
     When I run "git-town hack new" in the "uncommitted_folder" folder
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |
