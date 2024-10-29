@@ -23,7 +23,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                         |
@@ -44,20 +43,18 @@ Feature: shipped the head branch of a synced stack with dependent changes
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                                                       |
-      | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin beta commit' }}:beta   |
-      |        | git checkout alpha                                                                            |
-      | alpha  | git reset --hard {{ sha-before-run 'local alpha commit' }}                                    |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin alpha commit' }}:alpha |
-      |        | git checkout beta                                                                             |
+      | BRANCH | COMMAND                                                    |
+      | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes            |
+      |        | git checkout main                                          |
+      | main   | git reset --hard {{ sha 'initial commit' }}                |
+      |        | git branch alpha {{ sha-before-run 'local alpha commit' }} |
+      |        | git checkout beta                                          |
     And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE             |
-      | main   | local, origin | origin main commit  |
-      |        |               | local main commit   |
-      | beta   | local         | local beta commit   |
-      |        | origin        | origin beta commit  |
-      | alpha  | local         | local alpha commit  |
-      |        | origin        | origin alpha commit |
+      | BRANCH | LOCATION      | MESSAGE            |
+      | main   | origin        | local alpha commit |
+      | alpha  | local         | local alpha commit |
+      | beta   | local, origin | local beta commit  |
+      |        | origin        | local alpha commit |
     And the initial branches and lineage exist now
