@@ -40,8 +40,7 @@ Feature: shipping a prototype branch using the fast-forward strategy
       |        | git checkout prototype                            |
     And the current branch is now "prototype"
     And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | main      | local, origin | prototype commit |
-      | prototype | local, origin | prototype commit |
+      | BRANCH | LOCATION      | MESSAGE          |
+      | main   | local, origin | prototype commit |
     And the initial branches and lineage exist now
     And branch "prototype" is now prototype
