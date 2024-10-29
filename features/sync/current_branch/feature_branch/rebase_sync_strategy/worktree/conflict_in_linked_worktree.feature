@@ -54,5 +54,5 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main    | origin           | conflicting main commit | conflicting_file | main content     |
-      | feature | origin, worktree | conflicting main commit | conflicting_file | main content     |
-      |         |                  | resolved commit         | conflicting_file | resolved content |
+      | feature | origin, worktree | resolved commit         | conflicting_file | resolved content |
+      |         | worktree         | conflicting main commit | conflicting_file | main content     |

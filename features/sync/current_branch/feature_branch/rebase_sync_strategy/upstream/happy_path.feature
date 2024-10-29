@@ -31,8 +31,7 @@ Feature: with upstream repo
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
-      | feature | local, origin           | upstream commit |
-      |         |                         | local commit    |
+      | feature | local, origin           | local commit    |
 
   Scenario: undo
     When I run "git-town undo"
