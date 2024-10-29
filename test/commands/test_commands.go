@@ -73,7 +73,6 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
-
 	asserts.NoError(err)
 	var result []git.Commit
 	for _, branch := range branches {
