@@ -22,9 +22,6 @@ Feature: conflicts between the main branch and its tracking branch
       | new      | git stash pop            |
     And the current branch is now "new"
     And the initial commits exist now
-      | BRANCH | LOCATION | MESSAGE                   |
-      | main   | local    | conflicting local commit  |
-      |        | origin   | conflicting origin commit |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
