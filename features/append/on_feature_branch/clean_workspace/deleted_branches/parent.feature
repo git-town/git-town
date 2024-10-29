@@ -14,7 +14,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
     And the current branch is "child"
     When I run "git-town append new"
 
-  @debug @this
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |

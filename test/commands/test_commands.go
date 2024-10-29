@@ -93,13 +93,6 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
 	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
-	// The problem:
-	// In the local repo, it has the lineage, so it is able to look only at the actual commits of the branch
-	// by running "git log xxx main..child".
-	// In the remote repo, it does not have the lineage right now, so it looks at all the CommitsInBranch
-	// by running "git log xxx child".
-	// That's why it _thinks_ that origin has the parent commit.
-	// A possible solution is providing the parentOpt always based on the local lineage, even when querying the remote repo.
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
 	} else {
@@ -112,7 +105,6 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		fmt.Println("11111111111111111111111111111111111111111111111111 LINE", line)
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
