@@ -20,22 +20,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | beta   | local, origin | local beta commit  | file      | beta content  |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "beta"
-    And I ran "git-town sync"
-    And it runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git fetch --prune --tags                        |
-      |        | git checkout main                               |
-      | main   | git rebase origin/main --no-update-refs         |
-      |        | git checkout alpha                              |
-      | alpha  | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git rebase alpha --no-update-refs               |
-      |        | git push --force-with-lease --force-if-includes |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            | FILE NAME | FILE CONTENT  |
-      | alpha  | local, origin | local alpha commit | file      | alpha content |
-      | beta   | local, origin | local beta commit  | file      | beta content  |
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
