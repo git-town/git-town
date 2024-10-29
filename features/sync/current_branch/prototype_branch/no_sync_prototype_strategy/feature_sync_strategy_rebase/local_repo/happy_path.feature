@@ -27,8 +27,7 @@ Feature: sync the current prototype branch in a local repo
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |
-      | prototype | local    | main commit  |
-      |           |          | local commit |
+      | prototype | local    | local commit |
     And the initial branches and lineage exist now
 
   Scenario: undo
