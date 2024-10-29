@@ -33,6 +33,7 @@ Feature: sync the entire stack
     And Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --stack --detached"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                         |
@@ -51,11 +52,8 @@ Feature: sync the entire stack
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |
       | alpha      | local, origin | alpha commit             |
-      | beta       | local, origin | alpha commit             |
-      |            |               | beta commit              |
-      | gamma      | local, origin | alpha commit             |
-      |            |               | beta commit              |
-      |            |               | gamma commit             |
+      | beta       | local, origin | beta commit              |
+      | gamma      | local, origin | gamma commit             |
       | observed   | local         | local observed commit    |
       |            | origin        | origin observed commit   |
       | one        | local, origin | one commit               |
