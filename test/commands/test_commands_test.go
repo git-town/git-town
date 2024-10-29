@@ -235,7 +235,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"))
+		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		fileNames := runtime.FilesInCommit(commits[1].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
