@@ -48,7 +48,7 @@ func TestTestCommands(t *testing.T) {
 			FileName:    "file2",
 			Message:     "second commit",
 		})
-		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
+		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[0].Branch)
 		must.EqOp(t, "file1", commits[0].FileName)
@@ -125,7 +125,7 @@ func TestTestCommands(t *testing.T) {
 				FileName:    "hello.txt",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
 			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
@@ -143,7 +143,7 @@ func TestTestCommands(t *testing.T) {
 				FileName:    "hello.txt",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
 			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
@@ -229,7 +229,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"))
+		commits := runtime.Commits([]string{}, gitdomain.NewLocalBranchName("initial"), runtime.Config.NormalConfig.Lineage)
 		must.Len(t, 1, commits)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)

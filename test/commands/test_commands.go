@@ -68,7 +68,7 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) []git.Commit {
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	var result []git.Commit
@@ -76,7 +76,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 		if strings.HasPrefix(branch.String(), "+ ") {
 			continue
 		}
-		parent := self.Config.NormalConfig.Lineage.Parent(branch)
+		parent := lineage.Parent(branch)
 		commits := self.CommitsInBranch(branch, parent, fields)
 		result = append(result, commits...)
 	}
