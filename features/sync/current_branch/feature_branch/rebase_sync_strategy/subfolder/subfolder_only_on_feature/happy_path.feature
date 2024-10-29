@@ -39,10 +39,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
-      | alpha  | local, origin | main commit   |
-      |        |               | folder commit |
-      | beta   | local, origin | main commit   |
-      |        |               | beta commit   |
+      | alpha  | local, origin | folder commit |
+      | beta   | local, origin | beta commit   |
 
   Scenario: undo
     When I run "git-town undo"
