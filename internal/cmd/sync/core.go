@@ -329,32 +329,31 @@ func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 	if err != nil {
 		return result, err
 	}
-	mainInfo, hasMainInfo := branchesSnapshot.Branches.FindLocalOrRemote(mainBranch).Get()
-	if !hasMainInfo {
-		return result, errors.New("main branch not found in this repo")
-	}
-	mainIsLocal := mainInfo.LocalName.IsSome()
 	for b, branchInfoToSync := range branchInfosToSync {
-		var branchNameToSync gitdomain.BranchName
-		if localBranchNameToSync, hasLocalBranchToSync := branchInfoToSync.LocalName.Get(); hasLocalBranchToSync {
-			branchNameToSync = localBranchNameToSync.BranchName()
-		} else if remoteBranchNameToSync, hasRemoteBranch := branchInfoToSync.RemoteName.Get(); hasRemoteBranch {
-			branchNameToSync = remoteBranchNameToSync.BranchName()
-		} else {
-			panic("branchinfo has neither local nor remote name")
+		branchNameToSync := branchInfoToSync.GetLocalOrRemoteName()
+		if branchNameToSync.LocalName() == mainBranch {
+			result[b] = configdomain.BranchToSync{
+				BranchInfo:         branchInfoToSync,
+				FirstCommitMessage: None[gitdomain.CommitMessage](),
+			}
+			continue
 		}
-		var firstCommitMessage Option[gitdomain.CommitMessage]
-		if branchNameToSync.LocalName() != mainBranch {
-			var mainBranchTarget gitdomain.BranchName
-			if mainIsLocal {
-				mainBranchTarget = mainBranch.BranchName()
-			} else {
-				mainBranchTarget = mainBranch.AtRemote(gitdomain.RemoteOrigin).BranchName()
+		parentLocalName, hasParentName := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchNameToSync.LocalName()).Get()
+		if !hasParentName {
+			parentLocalName = mainBranch
+		}
+		parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindLocalOrRemote(parentLocalName).Get()
+		if !hasParentBranchInfo {
+			result[b] = configdomain.BranchToSync{
+				BranchInfo:         branchInfoToSync,
+				FirstCommitMessage: None[gitdomain.CommitMessage](),
 			}
-			firstCommitMessage, err = repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, mainBranchTarget)
-			if err != nil {
-				return result, err
-			}
+			continue
+		}
+		parentBranchName := parentBranchInfo.GetLocalOrRemoteName()
+		firstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, parentBranchName)
+		if err != nil {
+			return result, err
 		}
 		result[b] = configdomain.BranchToSync{
 			BranchInfo:         branchInfoToSync,
