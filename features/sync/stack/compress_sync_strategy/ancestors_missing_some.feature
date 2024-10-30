@@ -19,7 +19,6 @@ Feature: stacked changes where an ancestor branch isn't local
     And Git Town setting "sync-feature-strategy" is "compress"
     And I ran "git branch -d main"
     And I ran "git branch -d beta"
-    # And inspect the repo
     When I run "git-town sync"
 
   Scenario:
