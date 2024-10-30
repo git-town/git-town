@@ -37,7 +37,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And a merge is now in progress
 
   Scenario: resolve and continue
-    When I resolve the conflict in "file"
+    When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                     |
@@ -48,9 +48,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT     |
-      | main   | local, origin | alpha commit | file      | alpha content    |
-      | beta   | local, origin | beta commit  | file      | resolved content |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT          |
+      | main   | local, origin | alpha commit | file      | alpha content         |
+      | beta   | local, origin | beta commit  | file      | resolved beta content |
 
   Scenario: undo
     When I run "git-town undo"

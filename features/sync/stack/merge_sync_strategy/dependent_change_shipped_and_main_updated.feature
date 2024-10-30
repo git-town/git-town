@@ -41,7 +41,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       """
 
   Scenario: resolve and continue
-    When I resolve the conflict in "file"
+    When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND              |
@@ -50,12 +50,12 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT     |
-      | main   | local, origin | alpha commit                  | file      | alpha content    |
-      |        |               | additional commit             | new_file  |                  |
-      | beta   | local, origin | alpha commit                  | file      | alpha content    |
-      |        |               | beta commit                   | file      | beta content     |
-      |        |               | Merge branch 'main' into beta | file      | resolved content |
+      | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT          |
+      | main   | local, origin | alpha commit                  | file      | alpha content         |
+      |        |               | additional commit             | new_file  |                       |
+      | beta   | local, origin | alpha commit                  | file      | alpha content         |
+      |        |               | beta commit                   | file      | beta content          |
+      |        |               | Merge branch 'main' into beta | file      | resolved beta content |
 
   Scenario: undo
     When I run "git-town undo"

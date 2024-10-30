@@ -54,7 +54,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
-    When I resolve the conflict in "file"
+    When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                     |
@@ -68,7 +68,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |
       | main   | local, origin | alpha commit               | file      | alpha content         |
       |        |               | independent commit on main | file      | resolved main content |
-      | beta   | local, origin | beta commit                | file      | resolved content      |
+      | beta   | local, origin | beta commit                | file      | resolved beta content |
 
   Scenario: undo
     When I run "git-town undo"
