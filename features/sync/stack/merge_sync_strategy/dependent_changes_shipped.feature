@@ -22,6 +22,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
@@ -32,14 +33,23 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
-    # TODO: resolve this phantom merge conflict automatically
+    # TODO: resolve this phantom merge conflict automatically. "file" has this content:
+    # <<<<<<< HEAD
+    # beta content
+    # =======
+    # alpha content
+    # >>>>>>> main
+    #
+    # It should choose "beta content" here.
+    # Branch "beta" changes "alpha content" to "beta content".
+    # This merge conflict is asking us to verify this again. It should not do that. It should know that the change from "alpha content" to "beta content" is legit.
+    # Branch "alpha" has "alpha content" and branch "main" also has "alpha content" --> no unrelated changes, it's okay to use the version on "beta" here.
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "file"
     And I run "git-town continue" and close the editor
