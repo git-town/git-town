@@ -15,9 +15,11 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
     And the current branch is "beta"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
+  # @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
@@ -72,7 +74,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git merge --abort                                    |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
       |        | git checkout main                                    |
       | main   | git reset --hard {{ sha 'initial commit' }}          |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
