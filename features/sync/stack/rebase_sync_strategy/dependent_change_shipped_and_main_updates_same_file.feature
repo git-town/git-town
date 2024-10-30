@@ -39,7 +39,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And a rebase is now in progress
 
   Scenario: resolve and continue
-    When I resolve the conflict in "file"
+    When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -53,7 +53,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       CONFLICT (content): Merge conflict in file
       """
     And a rebase is now in progress
-    When I resolve the conflict in "file"
+    When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                                         |
@@ -62,9 +62,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And all branches are now synchronized
     And the current branch is now "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT     |
-      | main   | local, origin | alpha commit               | file      | alpha content    |
-      |        |               | independent commit on main | file      | resolved content |
+      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |
+      | main   | local, origin | alpha commit               | file      | alpha content         |
+      |        |               | independent commit on main | file      | resolved main content |
+      | beta   | local, origin | beta commit                | file      | resolved beta content |
 
   Scenario: undo
     When I run "git-town undo"
