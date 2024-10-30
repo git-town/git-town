@@ -44,6 +44,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
     # Branch "beta" changes "alpha content" to "beta content".
     # This merge conflict is asking us to verify this again. It should not do that. It should know that the change from "alpha content" to "beta content" is legit.
     # Branch "alpha" has "alpha content" and branch "main" also has "alpha content" --> no unrelated changes, it's okay to use the version on "beta" here.
+    #
+    # One possible way to make this easier is to delete branch "alpha" at the end, after syncing all branches.
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
