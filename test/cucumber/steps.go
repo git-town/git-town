@@ -501,7 +501,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(ctx context.Context, message, branch string) {
+	sc.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch$`, func(ctx context.Context, message, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateCommit(git.Commit{
@@ -509,6 +509,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 			FileName: "new_file",
 			Message:  gitdomain.CommitMessage(message),
 		})
+	})
+
+	sc.Step(`^I add this commit to the "([^"]*)" branch$`, func(ctx context.Context, branch string, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		commit := git.FromGherkinTable(table)[0]
+		commit.Branch = gitdomain.LocalBranchName(branch)
+		devRepo.CreateCommit(commit)
 	})
 
 	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *godog.Table) {
@@ -982,6 +990,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		err = originRepo.Commit(originRepo.TestRunner, commitMessage, false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
 		asserts.NoError(err)
 		originRepo.RemoveBranch(branchToShip)
+		originRepo.CheckoutBranch("initial")
 	})
 
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) {
