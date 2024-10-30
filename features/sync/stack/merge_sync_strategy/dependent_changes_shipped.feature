@@ -34,6 +34,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
     # TODO: resolve this phantom merge conflict automatically. "file" has this content:
+    #
     # <<<<<<< HEAD
     # beta content
     # =======
@@ -45,12 +46,17 @@ Feature: shipped the head branch of a synced stack with dependent changes
     # This merge conflict is asking us to verify this again. It should not do that. It should know that the change from "alpha content" to "beta content" is legit.
     # Branch "alpha" has "alpha content" and branch "main" also has "alpha content" --> no unrelated changes, it's okay to use the version on "beta" here.
     #
-    # One possible way to make this easier is to delete branch "alpha" at the end, after syncing all branches.
+    # Both these commands display the file content on various branches, even in the middle of a merge conflict:
+    # 1. git show alpha:file
+    # 2. git show 123456:file   (123456 is the SHA of a commit, for example the SHA that branch "alpha" points to)
+    #
+    # Another possible way to make this easier is to delete branch "alpha" at the end, after syncing all branches. This way, branch "alpha" is still around for checking the file content on it.
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
+    And inspect the repo
 
   Scenario: resolve and continue
     When I resolve the conflict in "file"
