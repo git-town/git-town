@@ -1,0 +1,87 @@
+Feature: shipped the head branch of a synced stack with dependent changes that create a file while main also creates the same file
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | alpha  | local, origin | alpha commit | file      | alpha content |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | beta commit | file      | beta content |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | alpha  | local, origin | alpha commit | file      | alpha content |
+      | beta   | local, origin | beta commit  | file      | beta content  |
+    And Git Town setting "sync-feature-strategy" is "merge"
+    And origin ships the "alpha" branch
+    And I add this commit to the "main" branch
+      | MESSAGE                    | FILE NAME | FILE CONTENT   |
+      | independent commit on main | file      | main content 1 |
+    And the current branch is "beta"
+    When I run "git-town sync"
+
+  Scenario: result
+    Then it runs the commands
+      | BRANCH | COMMAND                                 |
+      | beta   | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+    And it prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file
+      """
+    And a rebase is now in progress
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file"
+    And I run "git-town continue" and close the editor
+    Then it runs the commands
+      | BRANCH | COMMAND                              |
+      | main   | git rebase --continue                |
+      |        | git push                             |
+      |        | git branch -D alpha                  |
+      |        | git checkout beta                    |
+      | beta   | git merge --no-edit --ff origin/beta |
+      |        | git merge --no-edit --ff main        |
+    And it prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file
+      """
+    And a merge is now in progress
+    When I resolve the conflict in "file"
+    And I run "git-town continue" and close the editor
+    Then it runs the commands
+      | BRANCH | COMMAND              |
+      | beta   | git commit --no-edit |
+      |        | git push             |
+    And all branches are now synchronized
+    And the current branch is now "beta"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT     |
+      | main   | local, origin | alpha commit                  | file      | alpha content    |
+      |        |               | independent commit on main    | file      | resolved content |
+      | beta   | local, origin | alpha commit                  | file      | alpha content    |
+      |        |               | beta commit                   | file      | beta content     |
+      |        |               | Merge branch 'main' into beta |           |                  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND            |
+      | main   | git rebase --abort |
+      |        | git checkout beta  |
+    And the current branch is still "beta"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT   |
+      | main   | local         | independent commit on main | file      | main content 1 |
+      |        | origin        | alpha commit               | file      | alpha content  |
+      | alpha  | local         | alpha commit               | file      | alpha content  |
+      | beta   | local, origin | beta commit                | file      | beta content   |
+      |        | origin        | alpha commit               | file      | alpha content  |
+    And the initial branches and lineage exist now
