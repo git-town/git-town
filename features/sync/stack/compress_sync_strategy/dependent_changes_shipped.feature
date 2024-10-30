@@ -17,7 +17,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch
-    When I run "git-town sync"
+    # And inspect the repo
+    When I run "git-town sync -v"
 
   Scenario: result
     Then it runs the commands
@@ -35,21 +36,22 @@ Feature: shipped the head branch of a synced stack with dependent changes
       """
     And a merge is now in progress
 
+  @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH | COMMAND                      |
-      | beta   | git commit --no-edit         |
-      |        | git reset --soft main        |
-      |        | git commit -m "alpha commit" |
-      |        | git push --force-with-lease  |
+      | BRANCH | COMMAND                     |
+      | beta   | git commit --no-edit        |
+      |        | git reset --soft main       |
+      |        | git commit -m "beta commit" |
+      |        | git push --force-with-lease |
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT     |
       | main   | local, origin | alpha commit | file      | alpha content    |
-      | beta   | local, origin | alpha commit | file      | resolved content |
+      | beta   | local, origin | beta commit  | file      | resolved content |
 
   Scenario: undo
     When I run "git-town undo"
