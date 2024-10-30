@@ -22,7 +22,6 @@ Feature: stacked changes where an ancestor branch isn't local
     # And inspect the repo
     When I run "git-town sync"
 
-  @debug @this
   Scenario:
     Then it runs the commands
       | BRANCH | COMMAND                               |
