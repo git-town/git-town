@@ -25,7 +25,7 @@ Feature: display all executed Git commands
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       | <none>  | frontend | Looking for proposal online ... ok                                 |
-      |         | backend  | git log main..feature --format=%h                                  |
+      |         | backend  | git log main..feature --format=%s --reverse                        |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main --no-update-refs                            |
       |         | backend  | git rev-list --left-right main...origin/main                       |

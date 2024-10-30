@@ -350,21 +350,16 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 }
 
 // provides the commit message of the first commit in the branch with the given name
-func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, mainBranch gitdomain.BranchName) (Option[gitdomain.CommitMessage], error) {
-	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", mainBranch, branch), "--format=%h")
+func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branch, parent gitdomain.BranchName) (Option[gitdomain.CommitMessage], error) {
+	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", parent, branch), "--format=%s", "--reverse")
 	if err != nil {
 		return None[gitdomain.CommitMessage](), err
 	}
-	hashes := stringslice.Lines(output)
-	if len(hashes) == 0 {
+	lines := stringslice.Lines(output)
+	if len(lines) == 0 {
 		return None[gitdomain.CommitMessage](), nil
 	}
-	hash := hashes[len(hashes)-1]
-	message, err := runner.QueryTrim("git", "log", "--format=%B", "-n", "1", hash)
-	if err != nil {
-		return None[gitdomain.CommitMessage](), err
-	}
-	return Some(gitdomain.CommitMessage(message)), nil
+	return Some(gitdomain.CommitMessage(lines[0])), nil
 }
 
 func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {

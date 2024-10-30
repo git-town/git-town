@@ -28,7 +28,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
-      |        | backend  | git log main..old --format=%h                 |
+      |        | backend  | git log main..old --format=%s --reverse       |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main --no-update-refs       |
       |        | backend  | git rev-list --left-right main...origin/main  |

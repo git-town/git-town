@@ -14,38 +14,37 @@ Feature: display all executed Git commands
   Scenario: result
     When I run "git-town prepend parent --verbose"
     Then it runs the commands
-      | BRANCH | TYPE     | COMMAND                                         |
-      |        | backend  | git version                                     |
-      |        | backend  | git rev-parse --show-toplevel                   |
-      |        | backend  | git config -lz --includes --global              |
-      |        | backend  | git config -lz --includes --local               |
-      |        | backend  | git branch -vva --sort=refname                  |
-      |        | backend  | git status --long --ignore-submodules           |
-      |        | backend  | git stash list                                  |
-      |        | backend  | git branch -vva --sort=refname                  |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
-      |        | backend  | git remote                                      |
-      |        | backend  | git remote get-url origin                       |
-      |        | backend  | git log main..old --format=%h                   |
-      |        | backend  | git log --format=%B -n 1 {{ sha 'old commit' }} |
-      | old    | frontend | git add -A                                      |
-      |        | frontend | git stash                                       |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main   |
-      | old    | frontend | git checkout -b parent main                     |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main   |
-      |        | backend  | git config git-town-branch.parent.parent main   |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old    |
-      |        | backend  | git config git-town-branch.old.parent parent    |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old    |
-      |        | backend  | git stash list                                  |
-      | parent | frontend | git stash pop                                   |
-      |        | backend  | git branch -vva --sort=refname                  |
-      |        | backend  | git config -lz --includes --global              |
-      |        | backend  | git config -lz --includes --local               |
-      |        | backend  | git stash list                                  |
+      | BRANCH | TYPE     | COMMAND                                       |
+      |        | backend  | git version                                   |
+      |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git config -lz --includes --global            |
+      |        | backend  | git config -lz --includes --local             |
+      |        | backend  | git branch -vva --sort=refname                |
+      |        | backend  | git status --long --ignore-submodules         |
+      |        | backend  | git stash list                                |
+      |        | backend  | git branch -vva --sort=refname                |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git remote                                    |
+      |        | backend  | git remote get-url origin                     |
+      |        | backend  | git log main..old --format=%s --reverse       |
+      | old    | frontend | git add -A                                    |
+      |        | frontend | git stash                                     |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
+      | old    | frontend | git checkout -b parent main                   |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
+      |        | backend  | git config git-town-branch.parent.parent main |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
+      |        | backend  | git config git-town-branch.old.parent parent  |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
+      |        | backend  | git stash list                                |
+      | parent | frontend | git stash pop                                 |
+      |        | backend  | git branch -vva --sort=refname                |
+      |        | backend  | git config -lz --includes --global            |
+      |        | backend  | git config -lz --includes --local             |
+      |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "parent"
 
