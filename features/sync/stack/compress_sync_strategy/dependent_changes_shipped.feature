@@ -17,7 +17,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch
-    # And inspect the repo
     When I run "git-town sync -v"
 
   Scenario: result
@@ -36,7 +35,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
       """
     And a merge is now in progress
 
-  @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "file"
     And I run "git-town continue" and close the editor
