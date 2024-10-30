@@ -29,7 +29,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git branch -vva --sort=refname                     |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
       |          | backend  | git remote get-url origin                          |
-      |          | backend  | git log main..branch-2 --format=%h                 |
+      |          | backend  | git log main..branch-2 --format=%s --reverse       |
       | branch-2 | frontend | git checkout main                                  |
       | main     | frontend | git rebase origin/main --no-update-refs            |
       |          | backend  | git rev-list --left-right main...origin/main       |
