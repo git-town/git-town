@@ -779,6 +779,19 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 			incomingChangeOpt = Some(change)
 		}
 	}
+	if len(filePath) > 0 {
+		currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
+		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
+		if hasCurrentBranchChange && hasIncomingChange {
+			unmergedFile := UnmergedFile{
+				FilePath:            filePath,
+				BaseChange:          baseChangeOpt,
+				CurrentBranchChange: currentBranchChange,
+				IncomingChange:      incomingChange,
+			}
+			result = append(result, unmergedFile)
+		}
+	}
 	return result, nil
 }
 
