@@ -7,6 +7,8 @@ type ConflictPhantomFinalize struct {
 }
 
 func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
-	// TODO
+	// See if we can commit now.
+	// We can commit if all unresolved merge conflicts have been resolved.
+	// Unresolved merge conflicts can remain if there are non-phantom merge conflicts.
 	return nil
 }
