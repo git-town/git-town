@@ -735,10 +735,10 @@ func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFile, 
 	if err != nil {
 		return []UnmergedFile{}, err
 	}
-	return ParseUnmergedFileOutput(output)
+	return ParseLsFilesUnmergedOutput(output)
 }
 
-func ParseUnmergedFileOutput(output string) ([]UnmergedFile, error) {
+func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 	return []UnmergedFile{}, nil
