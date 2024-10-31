@@ -12,6 +12,18 @@ type ConflictPhantomDetect struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
+func (self *ConflictPhantomDetect) AbortProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeAbort{},
+	}
+}
+
+func (self *ConflictPhantomDetect) ContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeContinue{},
+	}
+}
+
 func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	unmergedFiles, err := args.Git.UnmergedFiles(args.Backend)
 	if err != nil {
