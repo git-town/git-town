@@ -52,5 +52,6 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 		}
 	}
 	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}
+	args.PrependOpcodes(newOpcodes...)
 	return nil
 }

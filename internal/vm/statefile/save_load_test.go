@@ -87,6 +87,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
+				&opcodes.ConflictPhantomDetect{},
+				&opcodes.ConflictPhantomFinalize{},
+				&opcodes.ConflictPhantomResolve{FilePath: "file"},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -419,6 +422,20 @@ func TestLoadSave(t *testing.T) {
         "Value": "1"
       },
       "type": "ConfigSet"
+    },
+    {
+      "data": {},
+      "type": "ConflictPhantomDetect"
+    },
+    {
+      "data": {},
+      "type": "ConflictPhantomFinalize"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "ConflictPhantomResolve"
     },
     {
       "data": {
