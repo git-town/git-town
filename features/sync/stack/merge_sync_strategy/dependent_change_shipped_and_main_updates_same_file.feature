@@ -49,17 +49,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git checkout beta                    |
       | beta   | git merge --no-edit --ff origin/beta |
       |        | git merge --no-edit --ff main        |
-    And it prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
-    And a merge is now in progress
-    When I resolve the conflict in "file" with "resolved beta content"
-    And I run "git-town continue" and close the editor
-    Then it runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
+      |        | git checkout --ours file             |
+      |        | git add file                         |
+      |        | git commit --no-edit                 |
+      |        | git push                             |
     And all branches are now synchronized
     And the current branch is now "beta"
     And these commits exist now
@@ -68,7 +61,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        |               | independent commit on main    | file      | resolved main content |
       | beta   | local, origin | alpha commit                  | file      | alpha content         |
       |        |               | beta commit                   | file      | beta content          |
-      |        |               | Merge branch 'main' into beta | file      | resolved beta content |
+      |        |               | Merge branch 'main' into beta |           |                       |
 
   Scenario: undo
     When I run "git-town undo"
