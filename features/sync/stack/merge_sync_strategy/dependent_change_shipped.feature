@@ -8,15 +8,16 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | file      | alpha content |
+    # | alpha  | local, origin | alpha commit 2 | file_2      | alpha content |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
+    # | beta   | local, origin | beta commit 2 | file_2      | beta content |
     And the current branch is "beta"
     And origin ships the "alpha" branch
-    # And inspect the repo
     When I run "git-town sync"
 
   Scenario: result
