@@ -11,22 +11,12 @@ type MergeParent struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParent) AbortProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&MergeAbort{},
-	}
-}
-
-func (self *MergeParent) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&MergeContinue{},
-	}
-}
-
 func (self *MergeParent) Run(args shared.RunArgs) error {
 	err := args.Git.MergeBranchNoEdit(args.Frontend, self.Parent)
 	if err != nil {
-		args.PrependOpcodes(&ConflictPhantomDetect{})
+		args.PrependOpcodes(&ConflictPhantomDetect{
+			ParentBranch: self.Parent.LocalName(),
+		})
 	}
 	return nil
 }

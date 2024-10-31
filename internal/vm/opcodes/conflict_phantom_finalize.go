@@ -4,13 +4,24 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 type ConflictPhantomFinalize struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
+}
+
+func (self *ConflictPhantomFinalize) AbortProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeAbort{},
+	}
+}
+
+func (self *ConflictPhantomFinalize) ContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeContinue{},
+	}
 }
 
 func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
@@ -20,7 +31,7 @@ func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
 	}
 	if len(unmergedFiles) > 0 {
 		// there are still unmerged files --> these are not phantom merge conflicts, let the user sort this out
-		return errors.New(messages.UndoContinueGuidance)
+		return errors.New("git merge conflict")
 	}
 	// here all merge conflicts have been resolved --> commit and continue
 	args.PrependOpcodes(

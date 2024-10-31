@@ -334,8 +334,11 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
+func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, parentBranch, mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
 	result := []PhantomMergeConflict{}
+	if parentBranch == mainBranch {
+		return []PhantomMergeConflict{}, nil
+	}
 	for _, unmergedFile := range unmergedFiles {
 		if unmergedFile.HasDifferentPermissions() {
 			continue
