@@ -348,7 +348,9 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 			// file on the main branch has a different SHA than the incoming file --> not a phantom merge conflict
 			continue
 		}
-		result = append(result, PhantomMergeConflict{})
+		result = append(result, PhantomMergeConflict{
+			FilePath: unmergedFile.FilePath,
+		})
 	}
 	return result, nil
 }
@@ -834,7 +836,14 @@ type UnmergedFile struct {
 }
 
 func (self UnmergedFile) HasDifferentPermissions() bool {
-	// TODO
+	if self.CurrentBranchChange.Permission != self.IncomingChange.Permission {
+		return true
+	}
+	if baseChange, hasBaseChange := self.BaseChange.Get(); hasBaseChange {
+		if baseChange.Permission != self.IncomingChange.Permission {
+			return true
+		}
+	}
 	return false
 }
 
