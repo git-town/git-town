@@ -968,6 +968,7 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 }
 
 func ParseLsTreeOutput(output string) (gitdomain.SHA, error) {
+	// TODO
 	return gitdomain.NewSHA(""), nil
 }
 

@@ -8,6 +8,7 @@ type ConflictPhantomResolve struct {
 }
 
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
+	// TODO
 	args.Git.StageFiles(args.Frontend)
 	return nil
 }
