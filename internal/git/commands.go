@@ -360,6 +360,7 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 }
 
 type PhantomMergeConflict struct {
+	FilePath string
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.

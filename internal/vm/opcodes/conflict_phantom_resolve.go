@@ -3,6 +3,7 @@ package opcodes
 import "github.com/git-town/git-town/v16/internal/vm/shared"
 
 type ConflictPhantomResolve struct {
+	FilePath                string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

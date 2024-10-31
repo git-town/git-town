@@ -1,7 +1,6 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -45,10 +44,12 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts := git.DetectPhantomMergeConflicts(unmergedFiles)
+	phantomMergeConflicts, err := args.Git.DetectPhantomMergeConflicts(args.Backend, unmergedFiles, args.Config.Value.ValidatedConfigData.MainBranch)
 	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
 	for p, phantomMergeConflict := range phantomMergeConflicts {
-		newOpcodes[p] = &ConflictPhantomResolve{}
+		newOpcodes[p] = &ConflictPhantomResolve{
+			FilePath: phantomMergeConflict.FilePath,
+		}
 	}
 	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}
 	return nil
