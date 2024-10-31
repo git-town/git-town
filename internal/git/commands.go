@@ -739,9 +739,42 @@ func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFile, 
 }
 
 func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
+	result := []UnmergedFile{}
+	filePath := ""
+	baseChangeOpt := None[LsFilesUnmergedChange]()
+	currentBranchChangeOpt := None[LsFilesUnmergedChange]()
+	incomingChangeOpt := None[LsFilesUnmergedChange]()
+	for _, line := range stringslice.Lines(output) {
+		change, stage, file := ParseLsFilesUnmergedLine(line)
+		if file != filePath {
+			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
+			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
+			if hasCurrentBranchChange && hasIncomingChange {
+				unmergedFile := UnmergedFile{
+					FilePath:            filePath,
+					BaseChange:          baseChangeOpt,
+					CurrentBranchChange: currentBranchChange,
+					IncomingChange:      incomingChange,
+				}
+				result = append(result, unmergedFile)
+			}
+			filePath = file
+			baseChangeOpt = None[LsFilesUnmergedChange]()
+			currentBranchChangeOpt = None[LsFilesUnmergedChange]()
+			incomingChangeOpt = None[LsFilesUnmergedChange]()
+		}
+		switch stage {
+		case LsFilesUnmergedStageBase:
+			baseChangeOpt = Some(change)
+		case LsFilesUnmergedStageCurrentBranch:
+			currentBranchChangeOpt = Some(change)
+		case LsFilesUnmergedStageIncoming:
+			incomingChangeOpt = Some(change)
+		}
+	}
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
-	return []UnmergedFile{}, nil
+	return result, nil
 }
 
 // information about a file with merge conflicts
@@ -756,6 +789,14 @@ type LsFilesUnmergedChange struct {
 	Permission string
 	SHA        gitdomain.SHA
 }
+
+type LsFilesUnmergedStage int
+
+const (
+	LsFilesUnmergedStageBase          LsFilesUnmergedStage = 1
+	LsFilesUnmergedStageCurrentBranch LsFilesUnmergedStage = 2
+	LsFilesUnmergedStageIncoming      LsFilesUnmergedStage = 3
+)
 
 func (self UnmergedFile) HasDifferentPermissions() bool {
 	return false
