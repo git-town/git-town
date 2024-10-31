@@ -968,8 +968,24 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 }
 
 func ParseLsTreeOutput(output string) (gitdomain.SHA, error) {
-	// TODO
-	return gitdomain.NewSHA(""), nil
+	// Example output:
+	// 100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file
+	output = strings.TrimSpace(output)
+	// skip permissions
+	_, remainder, match := strings.Cut(output, " ")
+	if !match {
+		return "", fmt.Errorf("cannot read permissions portion from the output of \"git ls-tree\": %q", output)
+	}
+	objType, remainder, match := strings.Cut(remainder, " ")
+	if objType != "blob" {
+		return "", fmt.Errorf("unexpected object type (%s) in the output of \"git ls-tree\": %q", objType, output)
+	}
+	shaText, remainder, match := strings.Cut(remainder, " ")
+	sha, err := gitdomain.NewSHAErr(shaText)
+	if err != nil {
+		return "", fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
+	}
+	return sha, nil
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
