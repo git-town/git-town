@@ -18,7 +18,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
@@ -29,34 +28,25 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
-    And inspect the repo
-    And it prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
-    And a merge is now in progress
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "file" with "resolved beta content"
-    And I run "git-town continue" and close the editor
-    Then it runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
+      |        | git checkout --ours file                |
+      |        | git add file                            |
+      |        | git commit --no-edit                    |
+      |        | git push                                |
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT          |
-      | main   | local, origin | alpha commit                  | file      | alpha content         |
-      | beta   | local, origin | alpha commit                  | file      | alpha content         |
-      |        |               | beta commit                   | file      | beta content          |
-      |        |               | Merge branch 'main' into beta | file      | resolved beta content |
+      | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT  |
+      | main   | local, origin | alpha commit                  | file      | alpha content |
+      | beta   | local, origin | alpha commit                  | file      | alpha content |
+      |        |               | beta commit                   | file      | beta content  |
+      |        |               | Merge branch 'main' into beta |           |               |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git merge --abort                                    |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
       |        | git checkout main                                    |
       | main   | git reset --hard {{ sha 'initial commit' }}          |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |

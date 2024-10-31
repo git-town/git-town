@@ -24,10 +24,9 @@ func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
 	}
 	// here all merge conflicts have been resolved --> commit and continue
 	args.PrependOpcodes(
-		&ChangesStage{},
 		&Commit{
 			AuthorOverride:                 None[gitdomain.Author](),
-			FallbackToDefaultCommitMessage: false,
+			FallbackToDefaultCommitMessage: true,
 			Message:                        None[gitdomain.CommitMessage](),
 		},
 	)
