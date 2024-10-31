@@ -41,13 +41,21 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
 	branchType := args.Config.BranchType(localName)
+	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
+	parentSHAOpt := None[gitdomain.SHA]()
+	if parentName, hasParentName := parentNameOpt.Get(); hasParentName {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+			parentSHAOpt = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+		}
+	}
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParent:     args.Config.NormalConfig.Lineage.Parent(localName),
+			originalParentName: parentNameOpt,
+			originalParentSHA:  parentSHAOpt,
 			program:            prog,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -62,7 +70,8 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParent:     args.Config.NormalConfig.Lineage.Parent(localName),
+			originalParentName: parentNameOpt,
+			originalParentSHA:  parentSHAOpt,
 			program:            prog,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -77,7 +86,8 @@ func localBranchProgram(prog Mutable[program.Program], localName gitdomain.Local
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParent:     args.Config.NormalConfig.Lineage.Parent(localName),
+			originalParentName: parentNameOpt,
+			originalParentSHA:  parentSHAOpt,
 			program:            prog,
 			pushBranches:       false,
 			remoteName:         branchInfo.RemoteName,
@@ -101,8 +111,9 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch:         args.branch,
-			OriginalParent: args.originalParent,
+			Branch:             args.branch,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
@@ -110,17 +121,19 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		})
 	case configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch:         args.branch,
-			OriginalParent: args.originalParent,
+			Branch:             args.branch,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
 		})
 	}
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
-	branch         gitdomain.LocalBranchName
-	originalParent Option[gitdomain.LocalBranchName]
-	program        Mutable[program.Program]
-	syncStrategy   configdomain.SyncFeatureStrategy
+	branch             gitdomain.LocalBranchName
+	originalParentName Option[gitdomain.LocalBranchName]
+	originalParentSHA  Option[gitdomain.SHA]
+	program            Mutable[program.Program]
+	syncStrategy       configdomain.SyncFeatureStrategy
 }
 
 func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {

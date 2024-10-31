@@ -334,10 +334,12 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
+func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, parentBranchOpt Option[gitdomain.LocalBranchName], parentBranchSHA Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
-	if !hasParentBranch || parentBranch == mainBranch {
+	parentSHA, hasParentSHA := parentBranchSHA.Get()
+	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111", parentBranchOpt, mainBranch)
+	if !hasParentBranch || !hasParentSHA || parentBranch == mainBranch {
 		return []PhantomMergeConflict{}, nil
 	}
 	for _, unmergedFile := range unmergedFiles {
@@ -348,8 +350,12 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		if err != nil {
 			return []PhantomMergeConflict{}, err
 		}
-		if shaOnMain != unmergedFile.IncomingChange.SHA {
-			// file on the main branch has a different SHA than the incoming file --> not a phantom merge conflict
+		shaOnOriginalParent, err := self.ContentBlobSHA(querier, parentSHA.Location(), unmergedFile.FilePath)
+		if err != nil {
+			return []PhantomMergeConflict{}, err
+		}
+		if shaOnMain != shaOnOriginalParent {
+			// not a phantom merge conflict
 			continue
 		}
 		result = append(result, PhantomMergeConflict{

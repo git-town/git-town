@@ -49,11 +49,19 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 	case gitdomain.SyncStatusDeletedAtRemote:
 	case gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+		parentNameOpt := args.Config.NormalConfig.Lineage.Parent(branch)
+		parentSHA := None[gitdomain.SHA]()
+		if parentName, hasParentName := parentNameOpt.Get(); hasParentName {
+			if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+				parentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+			}
+		}
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-			branch:         branch,
-			originalParent: args.Config.NormalConfig.Lineage.Parent(branch),
-			program:        prog,
-			syncStrategy:   args.Config.NormalConfig.SyncFeatureStrategy,
+			branch:             branch,
+			originalParentName: parentNameOpt,
+			originalParentSHA:  parentSHA,
+			program:            prog,
+			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy,
 		})
 		prog.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: branch})
 	}

@@ -8,6 +8,7 @@ import (
 
 type ConflictPhantomDetect struct {
 	ParentBranch            Option[gitdomain.LocalBranchName]
+	ParentSHA               Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -16,7 +17,7 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts, err := args.Git.DetectPhantomMergeConflicts(args.Backend, unmergedFiles, self.ParentBranch, args.Config.Value.ValidatedConfigData.MainBranch)
+	phantomMergeConflicts, err := args.Git.DetectPhantomMergeConflicts(args.Backend, unmergedFiles, self.ParentBranch, self.ParentSHA, args.Config.Value.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return err
 	}
