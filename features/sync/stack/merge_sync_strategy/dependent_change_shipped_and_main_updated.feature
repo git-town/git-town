@@ -49,12 +49,12 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |        |               | beta commit                   | file      | beta content  |
       |        |               | Merge branch 'main' into beta |           |               |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git merge --abort                                    |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
     And the current branch is still "beta"
     And these commits exist now
