@@ -44,7 +44,8 @@ Feature: shipped parent of a stacked change with conflicting changes
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git merge --abort                                    |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
       |        | git checkout main                                    |
       | main   | git reset --hard {{ sha 'initial commit' }}          |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |

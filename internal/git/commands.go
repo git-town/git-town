@@ -338,7 +338,6 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	parentSHA, hasParentSHA := parentBranchSHA.Get()
-	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111", parentBranchOpt, mainBranch)
 	if !hasParentBranch || !hasParentSHA || parentBranch == mainBranch {
 		return []PhantomMergeConflict{}, nil
 	}
