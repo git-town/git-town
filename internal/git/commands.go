@@ -745,7 +745,10 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 	currentBranchChangeOpt := None[LsFilesUnmergedChange]()
 	incomingChangeOpt := None[LsFilesUnmergedChange]()
 	for _, line := range stringslice.Lines(output) {
-		change, stage, file := ParseLsFilesUnmergedLine(line)
+		change, stage, file, err := ParseLsFilesUnmergedLine(line)
+		if err != nil {
+			return []UnmergedFile{}, err
+		}
 		if file != filePath {
 			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
@@ -772,9 +775,43 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 			incomingChangeOpt = Some(change)
 		}
 	}
+	return result, nil
+}
+
+func ParseLsFilesUnmergedLine(line string) (LsFilesUnmergedChange, LsFilesUnmergedStage, string, error) {
+	// Example output to parse:
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
-	return result, nil
+	permissions, remainder, match := strings.Cut(line, "\t")
+	if !match {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("cannot read permissions portion from output of \"git ls-files --unmerged\": %q", line)
+	}
+	shaText, remainder, match := strings.Cut(remainder, "\t")
+	if !match {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("cannot read SHA portion from output of \"git ls-files --unmerged\": %q", line)
+	}
+	sha, err := gitdomain.NewSHAErr(shaText)
+	if err != nil {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("invalid SHA (%s) in output of \"git ls-files --unmerged\": %q", err, line)
+	}
+	stageText, remainder, match := strings.Cut(remainder, "\t")
+	if !match {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("cannot read stage portion from output of \"git ls-files --unmerged\": %q", line)
+	}
+	stageInt, err := strconv.Atoi(stageText)
+	if err != nil {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("stage portion from output of \"git ls-files --unmerged\" is not a number (%s): %q", err, line)
+	}
+	stage, err := NewLsFilesUnmergedStage(stageInt)
+	if err != nil {
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("unknown stage ID in output of \"git ls-files --unmerged\": %q", line)
+	}
+	filePath := remainder
+	change := LsFilesUnmergedChange{
+		Permission: permissions,
+		SHA:        sha,
+	}
+	return change, stage, filePath, nil
 }
 
 // information about a file with merge conflicts
@@ -797,6 +834,21 @@ const (
 	LsFilesUnmergedStageCurrentBranch LsFilesUnmergedStage = 2
 	LsFilesUnmergedStageIncoming      LsFilesUnmergedStage = 3
 )
+
+var LsFilesUnmergedStages []LsFilesUnmergedStage = []LsFilesUnmergedStage{
+	LsFilesUnmergedStageBase,
+	LsFilesUnmergedStageCurrentBranch,
+	LsFilesUnmergedStageIncoming,
+}
+
+func NewLsFilesUnmergedStage(value int) (LsFilesUnmergedStage, error) {
+	for _, stage := range LsFilesUnmergedStages {
+		if int(stage) == value {
+			return stage, nil
+		}
+	}
+	return 0, fmt.Errorf("unknown stage ID: %q", value)
+}
 
 func (self UnmergedFile) HasDifferentPermissions() bool {
 	return false
