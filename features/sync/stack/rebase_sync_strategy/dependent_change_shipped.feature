@@ -14,10 +14,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | file      | alpha content |
-      | beta   | local, origin | beta commit  | file      | beta content  |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "beta"
     And origin ships the "alpha" branch
