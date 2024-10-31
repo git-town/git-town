@@ -387,6 +387,16 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ParseUnmergedFileOutput", func(t *testing.T) {
+		t.Parallel()
+		give := `
+100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
+100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
+`
+		have, err := git.ParseUnmergedFileOutput(give)
+		want := []git.UnmergedFile{}
+	})
+
 	t.Run("RepoStatus", func(t *testing.T) {
 		t.Run("HasOpenChanges", func(t *testing.T) {
 			t.Parallel()

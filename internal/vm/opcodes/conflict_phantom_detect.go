@@ -1,14 +1,16 @@
 package opcodes
 
-import "github.com/git-town/git-town/v16/internal/vm/shared"
+import (
+	"github.com/git-town/git-town/v16/internal/git"
+	"github.com/git-town/git-town/v16/internal/vm/shared"
+)
 
-type DetectPhantomMergeConflict struct {
+type ConflictPhantomDetect struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 /*
-
-	"git ls-files -u" shows the status of all conflicting files.
+	"git ls-files --unmerged" shows the status of all conflicting files.
 
 	Example output:
 
@@ -38,7 +40,16 @@ type DetectPhantomMergeConflict struct {
 	This means it's a phantom merge conflict.
 */
 
-func (self *DetectPhantomMergeConflict) Run(args shared.RunArgs) error {
-
+func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
+	unmergedFiles, err := args.Git.UnmergedFiles(args.Backend)
+	if err != nil {
+		return err
+	}
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(unmergedFiles)
+	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
+	for p, phantomMergeConflict := range phantomMergeConflicts {
+		newOpcodes[p] = &ConflictPhantomResolve{}
+	}
+	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}
 	return nil
 }

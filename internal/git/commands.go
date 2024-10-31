@@ -194,6 +194,15 @@ func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdo
 	return result, nil
 }
 
+// provides the SHA1 value of the content blob of the given file on the given branch/sha
+func (self *Commands) ContentBlobSHA(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (gitdomain.SHA, error) {
+	output, err := querier.Query("git", "ls-tree", branch.String(), filePath)
+	if err != nil {
+		return gitdomain.SHA(""), err
+	}
+	return ParseLsTreeOutput(output)
+}
+
 // ContinueRebase continues the currently ongoing rebase.
 func (self *Commands) ContinueRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "rebase", "--continue")
@@ -319,6 +328,38 @@ func (self *Commands) DeleteOriginHostname(runner gitdomain.Runner) error {
 func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
+}
+
+func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
+	result := []PhantomMergeConflict{}
+	for _, unmergedFile := range unmergedFiles {
+		if unmergedFile.HasDifferentPermissions() {
+			continue
+		}
+		shaOnMain, err := self.ContentBlobSHA(querier, mainBranch.Location(), unmergedFile.FilePath)
+		if err != nil {
+			return []PhantomMergeConflict{}, err
+		}
+		if shaOnMain != unmergedFile.IncomingSHA {
+			continue
+		}
+		result = append(result, PhantomMergeConflict{})
+		// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
+		// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
+
+		// The first column is the file permissions. They must match in phantom merge conflicts.
+		// The second column is the SHA1 of the file content (blob).
+		// The third column is the stage number.
+		// The fourth column is the path of the conflicting file.
+
+		// Stage 1 (not in the example output) is the common ancestor (base version).
+		// Stage 2 (c887ff) is the the local file (on the current branch)
+		// Stage 3 (ece1e5) is the version being merged in (from the parent branch)
+	}
+	return result, nil
+}
+
+type PhantomMergeConflict struct {
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
@@ -687,6 +728,31 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
+// provides information about files with merge conflicts during a merge conflict
+func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFile, error) {
+	output, err := querier.Query("git", "ls-files", "--unmerged")
+	if err != nil {
+		return []UnmergedFile{}, err
+	}
+	return ParseUnmergedFileOutput(output)
+}
+
+func ParseUnmergedFileOutput(output string) ([]UnmergedFile, error) {
+	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
+	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
+	return []UnmergedFile{}, nil
+}
+
+// information about a file with merge conflicts
+type UnmergedFile struct {
+	FilePath    string
+	IncomingSHA gitdomain.SHA
+}
+
+func (self UnmergedFile) HasDifferentPermissions() bool {
+	return false
+}
+
 // Version indicates whether the needed Git version is installed.
 func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
@@ -790,6 +856,10 @@ func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchNam
 	partsWithBranchName := parts[4:]
 	branchNameWithClosingParen := strings.Join(partsWithBranchName, " ")
 	return gitdomain.NewLocalBranchName(branchNameWithClosingParen[:len(branchNameWithClosingParen)-1])
+}
+
+func ParseLsTreeOutput(output string) (gitdomain.SHA, error) {
+	return gitdomain.NewSHA(""), nil
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
