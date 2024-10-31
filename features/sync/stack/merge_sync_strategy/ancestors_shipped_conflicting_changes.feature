@@ -28,27 +28,10 @@ Feature: shipped parent of a stacked change with conflicting changes
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |
       |        | git merge --no-edit --ff main           |
-    And it prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
-    And a merge is now in progress
-    And it prints the error:
-      """
-      deleted branch "alpha"
-      """
-    And it prints the error:
-      """
-      branch "beta" is now a child of "main"
-      """
-
-  Scenario: resolve manually
-    When I resolve the conflict in "file"
-    And I run "git-town continue"
-    Then it runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
+      |        | git checkout --ours file                |
+      |        | git add file                            |
+      |        | git commit --no-edit                    |
+      |        | git push                                |
     And the current branch is still "beta"
     And the branches are now
       | REPOSITORY    | BRANCHES   |
