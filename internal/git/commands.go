@@ -110,6 +110,10 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 	return nil
 }
 
+func (self *Commands) CheckoutOurs(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--ours", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
