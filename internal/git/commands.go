@@ -340,7 +340,7 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		if err != nil {
 			return []PhantomMergeConflict{}, err
 		}
-		if shaOnMain != unmergedFile.IncomingSHA {
+		if shaOnMain != unmergedFile.IncomingChange.SHA {
 			continue
 		}
 		result = append(result, PhantomMergeConflict{})
@@ -746,8 +746,15 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 
 // information about a file with merge conflicts
 type UnmergedFile struct {
-	FilePath    string
-	IncomingSHA gitdomain.SHA
+	FilePath            string
+	BaseChange          Option[LsFilesUnmergedChange]
+	CurrentBranchChange LsFilesUnmergedChange
+	IncomingChange      LsFilesUnmergedChange
+}
+
+type LsFilesUnmergedChange struct {
+	Permission string
+	SHA        gitdomain.SHA
 }
 
 func (self UnmergedFile) HasDifferentPermissions() bool {
