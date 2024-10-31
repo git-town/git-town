@@ -14,6 +14,7 @@ func FeatureBranchProgram(args featureBranchArgs) {
 		firstCommitMessage: args.firstCommitMessage,
 		localName:          args.localName,
 		offline:            args.offline,
+		originalParent:     args.originalParent,
 		program:            args.program,
 		pushBranches:       args.pushBranches,
 		remoteName:         args.remoteName,
@@ -31,8 +32,9 @@ func FeatureBranchProgram(args featureBranchArgs) {
 type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline     // whether offline mode is enabled
-	program            Mutable[program.Program] // the program to update
+	offline            configdomain.Offline              // whether offline mode is enabled
+	originalParent     Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	program            Mutable[program.Program]          // the program to update
 	pushBranches       configdomain.PushBranches
 	remoteName         Option[gitdomain.RemoteBranchName]
 	syncStrategy       configdomain.SyncStrategy // the sync-feature-strategy
@@ -44,7 +46,8 @@ func syncFeatureBranchCompressProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
 	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		Branch: args.localName,
+		Branch:         args.localName,
+		OriginalParent: args.originalParent,
 	})
 	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
 		args.program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.localName})
@@ -64,7 +67,8 @@ func syncFeatureBranchMergeProgram(args syncFeatureBranchProgramArgs) {
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	}
 	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		Branch: args.localName,
+		Branch:         args.localName,
+		OriginalParent: args.originalParent,
 	})
 }
 
@@ -84,6 +88,7 @@ type syncFeatureBranchProgramArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
 	offline            configdomain.Offline // whether offline mode is enabled
+	originalParent     Option[gitdomain.LocalBranchName]
 	program            Mutable[program.Program]
 	pushBranches       configdomain.PushBranches
 	remoteName         Option[gitdomain.RemoteBranchName]

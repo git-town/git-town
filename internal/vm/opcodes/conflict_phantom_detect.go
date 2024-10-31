@@ -3,10 +3,11 @@ package opcodes
 import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 type ConflictPhantomDetect struct {
-	ParentBranch            gitdomain.LocalBranchName
+	ParentBranch            Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

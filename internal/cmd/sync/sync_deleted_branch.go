@@ -50,9 +50,10 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 	case gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-			branch:       branch,
-			program:      prog,
-			syncStrategy: args.Config.NormalConfig.SyncFeatureStrategy,
+			branch:         branch,
+			originalParent: args.Config.NormalConfig.Lineage.Parent(branch),
+			program:        prog,
+			syncStrategy:   args.Config.NormalConfig.SyncFeatureStrategy,
 		})
 		prog.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: branch})
 	}
