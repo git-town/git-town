@@ -745,6 +745,10 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 	currentBranchChangeOpt := None[LsFilesUnmergedChange]()
 	incomingChangeOpt := None[LsFilesUnmergedChange]()
 	for _, line := range stringslice.Lines(output) {
+		line = strings.TrimSpace(line)
+		if len(line) == 0 {
+			continue
+		}
 		change, stage, file, err := ParseLsFilesUnmergedLine(line)
 		if err != nil {
 			return []UnmergedFile{}, err
@@ -782,11 +786,11 @@ func ParseLsFilesUnmergedLine(line string) (LsFilesUnmergedChange, LsFilesUnmerg
 	// Example output to parse:
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
-	permissions, remainder, match := strings.Cut(line, "\t")
+	permissions, remainder, match := strings.Cut(line, " ")
 	if !match {
 		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("cannot read permissions portion from output of \"git ls-files --unmerged\": %q", line)
 	}
-	shaText, remainder, match := strings.Cut(remainder, "\t")
+	shaText, remainder, match := strings.Cut(remainder, " ")
 	if !match {
 		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("cannot read SHA portion from output of \"git ls-files --unmerged\": %q", line)
 	}
