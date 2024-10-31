@@ -980,7 +980,7 @@ func ParseLsTreeOutput(output string) (gitdomain.SHA, error) {
 	if objType != "blob" {
 		return "", fmt.Errorf("unexpected object type (%s) in the output of \"git ls-tree\": %q", objType, output)
 	}
-	shaText, remainder, match := strings.Cut(remainder, " ")
+	shaText, remainder, match := strings.Cut(remainder, "\t")
 	sha, err := gitdomain.NewSHAErr(shaText)
 	if err != nil {
 		return "", fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
