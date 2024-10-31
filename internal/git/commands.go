@@ -361,6 +361,7 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 
 type PhantomMergeConflict struct {
 	FilePath string
+	// TODO
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
@@ -839,6 +840,11 @@ type UnmergedFile struct {
 	IncomingChange      LsFilesUnmergedChange
 }
 
+func (self UnmergedFile) HasDifferentPermissions() bool {
+	// TODO
+	return false
+}
+
 type LsFilesUnmergedChange struct {
 	Permission string
 	SHA        gitdomain.SHA
@@ -865,10 +871,6 @@ func NewLsFilesUnmergedStage(value int) (LsFilesUnmergedStage, error) {
 		}
 	}
 	return 0, fmt.Errorf("unknown stage ID: %q", value)
-}
-
-func (self UnmergedFile) HasDifferentPermissions() bool {
-	return false
 }
 
 // Version indicates whether the needed Git version is installed.
