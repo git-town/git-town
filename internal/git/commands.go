@@ -771,7 +771,7 @@ const (
 	LsFilesUnmergedStageIncoming      LsFilesUnmergedStage = 3
 )
 
-var LsFilesUnmergedStages []LsFilesUnmergedStage = []LsFilesUnmergedStage{
+var LsFilesUnmergedStages = []LsFilesUnmergedStage{ //nolint:gochecknoglobals
 	LsFilesUnmergedStageBase,
 	LsFilesUnmergedStageCurrentBranch,
 	LsFilesUnmergedStageIncoming,
@@ -905,7 +905,7 @@ func ParseLsFilesUnmergedLine(line string) (LsFilesUnmergedChange, LsFilesUnmerg
 	}
 	sha, err := gitdomain.NewSHAErr(shaText)
 	if err != nil {
-		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("invalid SHA (%s) in output of \"git ls-files --unmerged\": %q", err, line)
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("invalid SHA (%w) in output of \"git ls-files --unmerged\": %q", err, line)
 	}
 	stageText, remainder, match := strings.Cut(remainder, "\t")
 	if !match {
@@ -913,7 +913,7 @@ func ParseLsFilesUnmergedLine(line string) (LsFilesUnmergedChange, LsFilesUnmerg
 	}
 	stageInt, err := strconv.Atoi(stageText)
 	if err != nil {
-		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("stage portion from output of \"git ls-files --unmerged\" is not a number (%s): %q", err, line)
+		return LsFilesUnmergedChange{}, 0, "", fmt.Errorf("stage portion from output of \"git ls-files --unmerged\" is not a number (%w): %q", err, line)
 	}
 	stage, err := NewLsFilesUnmergedStage(stageInt)
 	if err != nil {
@@ -994,10 +994,16 @@ func ParseLsTreeOutput(output string) (gitdomain.SHA, error) {
 		return "", fmt.Errorf("cannot read permissions portion from the output of \"git ls-tree\": %q", output)
 	}
 	objType, remainder, match := strings.Cut(remainder, " ")
+	if !match {
+		return "", fmt.Errorf("cannot read object type from the output of \"git ls-tree\": %q", output)
+	}
 	if objType != "blob" {
 		return "", fmt.Errorf("unexpected object type (%s) in the output of \"git ls-tree\": %q", objType, output)
 	}
-	shaText, remainder, match := strings.Cut(remainder, "\t")
+	shaText, _, match := strings.Cut(remainder, "\t")
+	if !match {
+		return "", fmt.Errorf("cannot read SHA from the output of \"git ls-tree\": %q", output)
+	}
 	sha, err := gitdomain.NewSHAErr(shaText)
 	if err != nil {
 		return "", fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
