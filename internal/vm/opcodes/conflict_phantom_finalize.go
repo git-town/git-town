@@ -1,14 +1,35 @@
 package opcodes
 
-import "github.com/git-town/git-town/v16/internal/vm/shared"
+import (
+	"errors"
+
+	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
+	"github.com/git-town/git-town/v16/internal/vm/shared"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+)
 
 type ConflictPhantomFinalize struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
-	// See if we can commit now.
-	// We can commit if all unresolved merge conflicts have been resolved.
-	// Unresolved merge conflicts can remain if there are non-phantom merge conflicts.
+	unmergedFiles, err := args.Git.UnmergedFiles(args.Backend)
+	if err != nil {
+		return err
+	}
+	if len(unmergedFiles) > 0 {
+		// there are still unmerged files --> these are not phantom merge conflicts, let the user sort this out
+		return errors.New(messages.UndoContinueGuidance)
+	}
+	// here all merge conflicts have been resolved --> commit and continue
+	args.PrependOpcodes(
+		&ChangesStage{},
+		&Commit{
+			AuthorOverride:                 None[gitdomain.Author](),
+			FallbackToDefaultCommitMessage: false,
+			Message:                        None[gitdomain.CommitMessage](),
+		},
+	)
 	return nil
 }
