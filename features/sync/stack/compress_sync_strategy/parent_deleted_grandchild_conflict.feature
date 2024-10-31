@@ -16,6 +16,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync --all"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                                    |
@@ -29,7 +30,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
       |            | git merge --no-edit --ff main              |
     And it prints the error:
       """
-      exit status 1
+      git merge conflict
       """
     And it prints the error:
       """

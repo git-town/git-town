@@ -199,12 +199,16 @@ func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdo
 }
 
 // provides the SHA1 value of the content blob of the given file on the given branch/sha
-func (self *Commands) ContentBlobSHA(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (gitdomain.SHA, error) {
-	output, err := querier.Query("git", "ls-tree", branch.String(), filePath)
+func (self *Commands) ContentBlobSHA(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (Option[gitdomain.SHA], error) {
+	output, err := querier.QueryTrim("git", "ls-tree", branch.String(), filePath)
 	if err != nil {
-		return gitdomain.SHA(""), err
+		return None[gitdomain.SHA](), err
 	}
-	return ParseLsTreeOutput(output)
+	if len(output) == 0 {
+		return None[gitdomain.SHA](), nil
+	}
+	sha, err := ParseLsTreeOutput(output)
+	return Some(sha), err
 }
 
 // ContinueRebase continues the currently ongoing rebase.
