@@ -341,20 +341,10 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 			return []PhantomMergeConflict{}, err
 		}
 		if shaOnMain != unmergedFile.IncomingChange.SHA {
+			// file on the main branch has a different SHA than the incoming file --> not a phantom merge conflict
 			continue
 		}
 		result = append(result, PhantomMergeConflict{})
-		// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
-		// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
-
-		// The first column is the file permissions. They must match in phantom merge conflicts.
-		// The second column is the SHA1 of the file content (blob).
-		// The third column is the stage number.
-		// The fourth column is the path of the conflicting file.
-
-		// Stage 1 (not in the example output) is the common ancestor (base version).
-		// Stage 2 (c887ff) is the the local file (on the current branch)
-		// Stage 3 (ece1e5) is the version being merged in (from the parent branch)
 	}
 	return result, nil
 }
