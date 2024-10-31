@@ -7,7 +7,6 @@ type DetectPhantomMergeConflict struct {
 }
 
 /*
-			here the merge resulted in an error --> check for phantom merge conflict
 
 	"git ls-files -u" shows the status of all conflicting files.
 
@@ -39,7 +38,7 @@ type DetectPhantomMergeConflict struct {
 	This means it's a phantom merge conflict.
 */
 
-func (self *MergeParent) Run(args shared.RunArgs) error {
+func (self *DetectPhantomMergeConflict) Run(args shared.RunArgs) error {
 
 	return nil
 }
