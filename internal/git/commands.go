@@ -736,9 +736,9 @@ func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFile, 
 
 // information about a file with merge conflicts
 type UnmergedFile struct {
-	FilePath            string
 	BaseChange          Option[LsFilesUnmergedChange]
 	CurrentBranchChange LsFilesUnmergedChange
+	FilePath            string
 	IncomingChange      LsFilesUnmergedChange
 }
 
@@ -943,9 +943,9 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 			if hasCurrentBranchChange && hasIncomingChange {
 				unmergedFile := UnmergedFile{
-					FilePath:            filePath,
 					BaseChange:          baseChangeOpt,
 					CurrentBranchChange: currentBranchChange,
+					FilePath:            filePath,
 					IncomingChange:      incomingChange,
 				}
 				result = append(result, unmergedFile)
@@ -969,9 +969,9 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFile, error) {
 		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 		if hasCurrentBranchChange && hasIncomingChange {
 			unmergedFile := UnmergedFile{
-				FilePath:            filePath,
 				BaseChange:          baseChangeOpt,
 				CurrentBranchChange: currentBranchChange,
+				FilePath:            filePath,
 				IncomingChange:      incomingChange,
 			}
 			result = append(result, unmergedFile)
