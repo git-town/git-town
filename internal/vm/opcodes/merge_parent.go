@@ -24,5 +24,9 @@ func (self *MergeParent) ContinueProgram() []shared.Opcode {
 }
 
 func (self *MergeParent) Run(args shared.RunArgs) error {
-	return args.Git.MergeBranchNoEdit(args.Frontend, self.Parent)
+	err := args.Git.MergeBranchNoEdit(args.Frontend, self.Parent)
+	if err != nil {
+		args.PrependOpcodes(&DetectPhantomMergeConflict{})
+	}
+	return nil
 }

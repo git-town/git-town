@@ -18,6 +18,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
@@ -46,6 +47,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
     # 2. git show 123456:file   (123456 is the SHA of a commit, for example the SHA that branch "alpha" points to)
     #
     # Another possible way to make this easier is to delete branch "alpha" at the end, after syncing all branches. This way, branch "alpha" is still around for checking the file content on it.
+    And inspect the repo
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
