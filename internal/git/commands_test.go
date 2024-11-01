@@ -273,17 +273,17 @@ func TestBackendCommands(t *testing.T) {
 					Main: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
-						SHA:        "222222",
+						SHA:        "111111",
 					}),
 					Parent: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100644",
-						SHA:        "111111",
+						SHA:        "222222",
 					}),
 					Current: git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
-						SHA:        "111111",
+						SHA:        "222222",
 					},
 				},
 			}
