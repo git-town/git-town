@@ -849,7 +849,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) {
+	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
@@ -867,8 +867,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching commands run, see diff above")
+			return errors.New("mismatching commands run, see diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
