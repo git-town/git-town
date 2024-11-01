@@ -27,10 +27,12 @@ func TestUnmergedFile(t *testing.T) {
 					FilePath:   "file",
 					BaseChange: None[git.BlobInfo](),
 					CurrentBranchChange: git.BlobInfo{
+						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
 					},
 					IncomingChange: git.BlobInfo{
+						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
 					},
