@@ -468,6 +468,20 @@ func TestBackendCommands(t *testing.T) {
 		}
 	})
 
+	t.Run("NewUnmergedStage", func(t *testing.T) {
+		t.Parallel()
+		tests := map[int]git.UnmergedStage{
+			1: git.UnmergedStageBase,
+			2: git.UnmergedStageCurrentBranch,
+			3: git.UnmergedStageIncoming,
+		}
+		for give, want := range tests {
+			have, err := git.NewUnmergedStage(give)
+			must.NoError(t, err)
+			must.Eq(t, want, have)
+		}
+	})
+
 	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch name is one word", func(t *testing.T) {
