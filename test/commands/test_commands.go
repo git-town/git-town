@@ -222,11 +222,6 @@ func (self *TestCommands) CurrentCommitMessage() string {
 	return self.MustQuery("git", "log", "-1", "--pretty=%B")
 }
 
-func (self *TestCommands) DeleteFile(name string) {
-	filePath := filepath.Join(self.WorkingDir, name)
-	asserts.NoError(os.Remove(filePath))
-}
-
 // provides the first ancestor of the given branch that actually exists in the repo
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
 	for {
