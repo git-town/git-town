@@ -198,7 +198,7 @@ func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdo
 	return result, nil
 }
 
-// provides the SHA1 value of the content blob of the given file on the given branch/sha
+// provides the SHA1 checksum of the content blob of the given file on the given branch/sha
 func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (Option[BlobInfo], error) {
 	output, err := querier.QueryTrim("git", "ls-tree", branch.String(), filePath)
 	if err != nil || len(output) == 0 {
