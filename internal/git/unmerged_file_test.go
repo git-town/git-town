@@ -22,7 +22,7 @@ func TestUnmergedFile(t *testing.T) {
 `[1:]
 			have, err := git.ParseLsFilesUnmergedOutput(give)
 			must.NoError(t, err)
-			want := []git.UnmergedFileInfo{
+			want := []git.FileConflictQuickInfo{
 				{
 					FilePath:   "file",
 					BaseChange: None[git.BlobInfo](),

@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -10,8 +11,8 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-// information about a file with merge conflicts
-type UnmergedFileInfo struct {
+// quick information about a file with merge conflicts
+type FileConflictQuickInfo struct {
 	BaseChange          Option[BlobInfo]
 	CurrentBranchChange BlobInfo
 	FilePath            string
@@ -38,10 +39,39 @@ var UnmergedStages = []UnmergedStage{ //nolint:gochecknoglobals
 	UnmergedStageIncoming,
 }
 
-type UnresolvedConflictInfo struct {
-	mainBlobInfo    Option[BlobInfo] // info about the file on the main branch
-	parentBlobInfo  Option[BlobInfo] // info about the file on the original parent
-	currentBlobInfo BlobInfo         // info about the file on the current branch
+// complete information about a file with merge conflicts to determine whether it is a pantom merge conflict
+type FileConflictFullInfo struct {
+	Main    Option[BlobInfo] // info about the file on the main branch
+	Parent  Option[BlobInfo] // info about the file on the original parent
+	Current BlobInfo         // info about the file on the current branch
+}
+
+type FileConflictFullInfos []FileConflictFullInfo
+
+type PhantomMergeConflict struct {
+	FilePath string
+}
+
+func DetectPhantomMergeConflicts(unresolvedConflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+	result := []PhantomMergeConflict{}
+	parentBranch, hasParentBranch := parentBranchOpt.Get()
+	if !hasParentBranch || parentBranch == mainBranch {
+		return []PhantomMergeConflict{}
+	}
+	for _, unresolvedConflictInfo := range unresolvedConflictInfos {
+		originalParentInfo, hasOriginalParentInfo := unresolvedConflictInfo.Parent.Get()
+		if !hasOriginalParentInfo || unresolvedConflictInfo.Current.Permission != originalParentInfo.Permission {
+			continue
+		}
+		if !reflect.DeepEqual(unresolvedConflictInfo.Main, unresolvedConflictInfo.Parent) {
+			// not a phantom merge conflict
+			continue
+		}
+		result = append(result, PhantomMergeConflict{
+			FilePath: unresolvedConflictInfo.Current.FilePath,
+		})
+	}
+	return result
 }
 
 func EmptyBlobInfo() BlobInfo {
@@ -85,8 +115,8 @@ func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, err
 	return change, stage, filePath, nil
 }
 
-func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFileInfo, error) {
-	result := []UnmergedFileInfo{}
+func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) {
+	result := []FileConflictQuickInfo{}
 	filePath := ""
 	baseChangeOpt := None[BlobInfo]()
 	currentBranchChangeOpt := None[BlobInfo]()
@@ -98,13 +128,13 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFileInfo, error) {
 		}
 		change, stage, file, err := ParseLsFilesUnmergedLine(line)
 		if err != nil {
-			return []UnmergedFileInfo{}, err
+			return []FileConflictQuickInfo{}, err
 		}
 		if file != filePath {
 			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 			if hasCurrentBranchChange && hasIncomingChange {
-				unmergedFile := UnmergedFileInfo{
+				unmergedFile := FileConflictQuickInfo{
 					BaseChange:          baseChangeOpt,
 					CurrentBranchChange: currentBranchChange,
 					FilePath:            filePath,
@@ -130,7 +160,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]UnmergedFileInfo, error) {
 		currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 		if hasCurrentBranchChange && hasIncomingChange {
-			unmergedFile := UnmergedFileInfo{
+			unmergedFile := FileConflictQuickInfo{
 				BaseChange:          baseChangeOpt,
 				CurrentBranchChange: currentBranchChange,
 				FilePath:            filePath,

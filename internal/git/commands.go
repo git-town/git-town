@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -336,42 +335,6 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFileInfo, parentBranchOpt Option[gitdomain.LocalBranchName], parentBranchSHA Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
-	result := []PhantomMergeConflict{}
-	parentBranch, hasParentBranch := parentBranchOpt.Get()
-	parentSHA, hasParentSHA := parentBranchSHA.Get()
-	if !hasParentBranch || !hasParentSHA || parentBranch == mainBranch {
-		return []PhantomMergeConflict{}, nil
-	}
-	for _, unmergedFile := range unmergedFiles {
-		mainBlobInfoOpt, err := self.ContentBlobInfo(querier, mainBranch.Location(), unmergedFile.FilePath)
-		if err != nil {
-			return []PhantomMergeConflict{}, err
-		}
-		originalParentBlobInfoOpt, err := self.ContentBlobInfo(querier, parentSHA.Location(), unmergedFile.FilePath)
-		if err != nil {
-			return []PhantomMergeConflict{}, err
-		}
-		originalParentBlobInfo, hasOriginalParentBlobInfo := originalParentBlobInfoOpt.Get()
-		if !hasOriginalParentBlobInfo || unmergedFile.CurrentBranchChange.Permission != originalParentBlobInfo.Permission {
-			continue
-		}
-
-		if !reflect.DeepEqual(mainBlobInfoOpt, originalParentBlobInfoOpt) {
-			// not a phantom merge conflict
-			continue
-		}
-		result = append(result, PhantomMergeConflict{
-			FilePath: unmergedFile.FilePath,
-		})
-	}
-	return result, nil
-}
-
-type PhantomMergeConflict struct {
-	FilePath string
-}
-
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
@@ -398,6 +361,36 @@ func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncT
 // FetchUpstream fetches updates from the upstream remote.
 func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
+}
+
+// provides information about files with merge conflicts during a merge conflict
+func (self *Commands) FileConflictQuickInfos(querier gitdomain.Querier) ([]FileConflictQuickInfo, error) {
+	output, err := querier.Query("git", "ls-files", "--unmerged")
+	if err != nil {
+		return []FileConflictQuickInfo{}, err
+	}
+	return ParseLsFilesUnmergedOutput(output)
+}
+
+func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
+	mainBlobInfoOpt, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.FilePath)
+	if err != nil {
+		return FileConflictFullInfo{}, err
+	}
+	originalParentBlobInfoOpt, err := self.ContentBlobInfo(querier, parentLocation, quickInfo.FilePath)
+	if err != nil {
+		return FileConflictFullInfo{}, err
+	}
+	result := FileConflictFullInfo{
+		Main:    mainBlobInfoOpt,
+		Parent:  originalParentBlobInfoOpt,
+		Current: quickInfo.CurrentBranchChange,
+	}
+	return result, nil
+}
+
+func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
+	return []FileConflictFullInfo{}, nil
 }
 
 // provides the commit message of the first commit in the branch with the given name
@@ -736,15 +729,6 @@ func (self *Commands) StashSize(querier gitdomain.Querier) (gitdomain.StashSize,
 
 func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
-}
-
-// provides information about files with merge conflicts during a merge conflict
-func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFileInfo, error) {
-	output, err := querier.Query("git", "ls-files", "--unmerged")
-	if err != nil {
-		return []UnmergedFileInfo{}, err
-	}
-	return ParseLsFilesUnmergedOutput(output)
 }
 
 // Version indicates whether the needed Git version is installed.
