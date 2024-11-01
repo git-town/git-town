@@ -25,7 +25,7 @@ func (self *ConflictPhantomFinalize) ContinueProgram() []shared.Opcode {
 }
 
 func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
-	unmergedFiles, err := args.Git.UnmergedFiles(args.Backend)
+	unmergedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
 		return err
 	}
