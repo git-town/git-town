@@ -16,7 +16,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | beta   | local, origin | beta commit | file      | beta content |
     And Git Town setting "sync-feature-strategy" is "merge"
     And origin ships the "alpha" branch
-    And I add commit "additional commit" to the "main" branch
+    And I add commit "indepedent commit" to the "main" branch
     And the current branch is "beta"
     When I run "git-town sync"
 
@@ -40,7 +40,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit                  | file      | alpha content |
-      |        |               | additional commit             | new_file  |               |
+      |        |               | indepedent commit             | new_file  |               |
       | beta   | local, origin | alpha commit                  | file      | alpha content |
       |        |               | beta commit                   | file      | beta content  |
       |        |               | Merge branch 'main' into beta |           |               |
@@ -56,7 +56,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit      | file      | alpha content |
-      |        |               | additional commit | new_file  |               |
+      |        |               | indepedent commit | new_file  |               |
       | alpha  | local         | alpha commit      | file      | alpha content |
       | beta   | local, origin | beta commit       | file      | beta content  |
       |        | origin        | alpha commit      | file      | alpha content |
