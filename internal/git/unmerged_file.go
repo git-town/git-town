@@ -83,9 +83,8 @@ func EmptyBlobInfo() BlobInfo {
 }
 
 func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, error) {
-	// Example output to parse:
+	// Example text to parse:
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
-	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 	permissions, remainder, match := strings.Cut(line, " ")
 	if !match {
 		return BlobInfo{}, 0, "", fmt.Errorf("cannot read permissions portion from output of \"git ls-files --unmerged\": %q", line)
@@ -120,6 +119,9 @@ func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, err
 }
 
 func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) {
+	// Example output to parse:
+	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
+	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 	result := []FileConflictQuickInfo{}
 	filePath := ""
 	baseChangeOpt := None[BlobInfo]()
