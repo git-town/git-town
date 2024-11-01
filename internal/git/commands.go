@@ -840,7 +840,7 @@ func LastBranchInRef(output string) string {
 	return output[index+1:]
 }
 
-func NewLsFilesUnmergedStage(value int) (UnmergedStage, error) {
+func NewUnmergedStage(value int) (UnmergedStage, error) {
 	for _, stage := range UnmergedStages {
 		if int(stage) == value {
 			return stage, nil

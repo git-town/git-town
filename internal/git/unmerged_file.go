@@ -103,7 +103,7 @@ func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, err
 	if err != nil {
 		return BlobInfo{}, 0, "", fmt.Errorf("stage portion from output of \"git ls-files --unmerged\" is not a number (%w): %q", err, line)
 	}
-	stage, err := NewLsFilesUnmergedStage(stageInt)
+	stage, err := NewUnmergedStage(stageInt)
 	if err != nil {
 		return BlobInfo{}, 0, "", fmt.Errorf("unknown stage ID in output of \"git ls-files --unmerged\": %q", line)
 	}
