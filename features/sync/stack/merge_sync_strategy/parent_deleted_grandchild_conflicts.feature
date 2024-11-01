@@ -27,6 +27,10 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git merge --no-edit --ff main              |
     And it prints the error:
       """
+      git merge conflict
+      """
+    And it prints the error:
+      """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
