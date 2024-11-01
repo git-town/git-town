@@ -11,6 +11,9 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+	// TODO: calculate originalParentName and originalParentSHA here and provide as arguments.
+	// Also, possibly provide the BranchInfo of the original parent branch here, because both values can be derived from it.
+	// Don't store the branchinfo in the opcodes, though.
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		deletedBranchProgram(args.Program, localName, args)
