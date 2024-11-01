@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
@@ -30,7 +31,7 @@ func (self *ConflictPhantomDetect) ContinueProgram() []shared.Opcode {
 func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	parentSHA, hasParentSHA := self.ParentSHA.Get()
 	if !hasParentSHA {
-		return errors.New("git merge conflict")
+		return errors.New(messages.ConflictMerge)
 	}
 	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
