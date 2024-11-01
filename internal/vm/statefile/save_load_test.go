@@ -87,6 +87,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
+				&opcodes.ConflictPhantomDetect{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.ConflictPhantomFinalize{},
+				&opcodes.ConflictPhantomResolve{FilePath: "file"},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -98,8 +101,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.Merge{Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParent{Parent: "parent"},
-				&opcodes.MergeParentIfNeeded{Branch: "branch"},
+				&opcodes.MergeParent{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
@@ -422,6 +425,23 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "ParentBranch": "parent",
+        "ParentSHA": "123456"
+      },
+      "type": "ConflictPhantomDetect"
+    },
+    {
+      "data": {},
+      "type": "ConflictPhantomFinalize"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "ConflictPhantomResolve"
+    },
+    {
+      "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "ProposalMessage": "proposal message",
@@ -493,13 +513,17 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Parent": "parent"
+        "CurrentParent": "parent",
+        "OriginalParentName": "original-parent",
+        "OriginalParentSHA": "123456"
       },
       "type": "MergeParent"
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "branch",
+        "OriginalParentName": "original-parent",
+        "OriginalParentSHA": "123456"
       },
       "type": "MergeParentIfNeeded"
     },

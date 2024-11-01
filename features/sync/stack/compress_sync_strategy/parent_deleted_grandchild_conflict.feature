@@ -29,7 +29,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
       |            | git merge --no-edit --ff main              |
     And it prints the error:
       """
-      exit status 1
+      git merge conflict
       """
     And it prints the error:
       """

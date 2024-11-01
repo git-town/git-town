@@ -32,7 +32,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And a merge is now in progress
     And it prints the error:
       """
-      exit status 1
+      git merge conflict
       """
 
   Scenario: undo

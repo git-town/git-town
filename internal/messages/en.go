@@ -58,6 +58,7 @@ const (
 	ConfigShipStrategyUnknown         = "unknown ship strategy: %q"
 	ConfigSyncStrategyUnknown         = "unknown sync strategy: %q"
 	ConfigRemoveError                 = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
+	ConflictMerge                     = "git merge conflict"
 	ContinueMessage                   = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance              = "To continue by skipping the current branch, run \"git town skip\"."
 	ContributeBranchIsNowContribution = "branch %q is now a contribution branch\n"

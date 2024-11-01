@@ -11,10 +11,18 @@ type SHA string
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHA(id string) SHA {
-	if !validateSHA(id) {
-		panic(fmt.Sprintf("%q is not a valid Git SHA", id))
+	result, err := NewSHAErr(id)
+	if err != nil {
+		panic(err)
 	}
-	return SHA(id)
+	return result
+}
+
+func NewSHAErr(id string) (SHA, error) {
+	if !validateSHA(id) {
+		return SHA(""), fmt.Errorf("%q is not a valid Git SHA", id)
+	}
+	return SHA(id), nil
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.

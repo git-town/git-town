@@ -110,6 +110,10 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 	return nil
 }
 
+func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--ours", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -192,6 +196,16 @@ func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdo
 		})
 	}
 	return result, nil
+}
+
+// provides the SHA1 checksum of the content blob of the given file on the given branch/sha
+func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (Option[BlobInfo], error) {
+	output, err := querier.QueryTrim("git", "ls-tree", branch.String(), filePath)
+	if err != nil || len(output) == 0 {
+		return None[BlobInfo](), err
+	}
+	sha, err := ParseLsTreeOutput(output)
+	return Some(sha), err
 }
 
 // ContinueRebase continues the currently ongoing rebase.
@@ -347,6 +361,47 @@ func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncT
 // FetchUpstream fetches updates from the upstream remote.
 func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
+}
+
+// provides enough information about the unresolved merge conflict for the given file to determine whether this is a phantom merge conflict
+func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
+	mainBlob, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.CurrentBranchChange.FilePath)
+	if err != nil {
+		return FileConflictFullInfo{}, err
+	}
+	// this is the blob at the original parent, before Git Town ran
+	parentBlob, err := self.ContentBlobInfo(querier, parentLocation, quickInfo.CurrentBranchChange.FilePath)
+	if err != nil {
+		return FileConflictFullInfo{}, err
+	}
+	result := FileConflictFullInfo{
+		Current: quickInfo.CurrentBranchChange,
+		Main:    mainBlob,
+		Parent:  parentBlob,
+	}
+	return result, nil
+}
+
+// provides enough information about the unresolved merge conflicts for the given files to determine the phantom merge conflicts among them
+func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
+	result := make([]FileConflictFullInfo, len(quickInfos))
+	for q, quickInfo := range quickInfos {
+		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, mainBranch)
+		if err != nil {
+			return result, err
+		}
+		result[q] = fullInfo
+	}
+	return result, nil
+}
+
+// provides information about files with merge conflicts during a merge conflict
+func (self *Commands) FileConflictQuickInfos(querier gitdomain.Querier) ([]FileConflictQuickInfo, error) {
+	output, err := querier.Query("git", "ls-files", "--unmerged")
+	if err != nil {
+		return []FileConflictQuickInfo{}, err
+	}
+	return ParseLsFilesUnmergedOutput(output)
 }
 
 // provides the commit message of the first commit in the branch with the given name
@@ -783,6 +838,15 @@ func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteB
 func LastBranchInRef(output string) string {
 	index := strings.LastIndex(output, "/")
 	return output[index+1:]
+}
+
+func NewUnmergedStage(value int) (UnmergedStage, error) {
+	for _, stage := range UnmergedStages {
+		if int(stage) == value {
+			return stage, nil
+		}
+	}
+	return 0, fmt.Errorf("unknown stage ID: %q", value)
 }
 
 func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
