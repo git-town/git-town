@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -178,14 +177,6 @@ func (self *TestCommands) CreateFile(name, content string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 	//nolint:gosec // need permission 700 here in order for tests to work
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
-}
-
-// creates a file with the given name and content in this repository
-func (self *TestCommands) CreateFileWithPermissions(name, content string, permissions fs.FileMode) {
-	filePath := filepath.Join(self.WorkingDir, name)
-	folderPath := filepath.Dir(filePath)
-	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
-	asserts.NoError(os.WriteFile(filePath, []byte(content), permissions))
 }
 
 // CreateFolder creates a folder with the given name in this repository.
