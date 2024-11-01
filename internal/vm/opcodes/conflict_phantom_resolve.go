@@ -15,12 +15,6 @@ func (self *ConflictPhantomResolve) AbortProgram() []shared.Opcode {
 	}
 }
 
-func (self *ConflictPhantomResolve) ContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&MergeContinue{},
-	}
-}
-
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
 	err := args.Git.CheckoutOurVersion(args.Frontend, self.FilePath)
 	if err != nil {
