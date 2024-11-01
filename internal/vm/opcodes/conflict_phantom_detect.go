@@ -37,7 +37,8 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), args.Config.Value.ValidatedConfigData.MainBranch)
+	mainBranch := args.Config.Value.ValidatedConfigData.MainBranch
+	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), mainBranch)
 	if err != nil {
 		return err
 	}
