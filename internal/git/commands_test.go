@@ -1160,8 +1160,4 @@ func TestBackendCommands(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 	})
-
-	t.Run("UnmergedFileInfo", func(t *testing.T) {
-		t.Parallel()
-	})
 }
