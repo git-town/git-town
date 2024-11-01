@@ -216,31 +216,6 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("legit phantom merge conflict", func(t *testing.T) {
 			t.Parallel()
-			// repo := testruntime.CreateGitTown(t)
-			// // create the stack
-			// main := gitdomain.NewLocalBranchName("main")
-			// alpha := gitdomain.NewLocalBranchName("alpha")
-			// beta := gitdomain.NewLocalBranchName("beta")
-			// repo.CreateAndCheckoutFeatureBranch(alpha, main.Location())
-			// repo.CreateFile("file", "alpha content")
-			// repo.StageFiles("file")
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
-			// repo.CreateAndCheckoutFeatureBranch(beta, alpha.Location())
-			// repo.CreateFile("file", "beta content")
-			// repo.StageFiles("file")
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
-			// // ship branch alpha
-			// repo.CheckoutBranch(main)
-			// repo.SquashMerge(repo, alpha)
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
-			// // sync beta branch
-			// repo.CheckoutBranch(beta)
-			// err := repo.MergeBranch(main)
-			// must.Error(t, err)
-			// // verify
-			// quickInfos, err := repo.FileConflictQuickInfos(repo)
-			// must.NoError(t, err)
-			// fullInfos, err := repo.FileConflictFullInfos(repo, quickInfos, alpha.Location(), main)
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Main: Some(git.BlobInfo{
@@ -268,86 +243,78 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("permissions differ", func(t *testing.T) {
 			t.Parallel()
-			// repo := testruntime.CreateGitTown(t)
-			// create the stack
-			// main := gitdomain.NewLocalBranchName("main")
-			// alpha := gitdomain.NewLocalBranchName("alpha")
-			// beta := gitdomain.NewLocalBranchName("beta")
-			// repo.CreateAndCheckoutFeatureBranch(alpha, main.Location())
-			// repo.CreateFileWithPermissions("file", "alpha content", 0o644)
-			// repo.StageFiles("file")
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
-			// repo.CreateAndCheckoutFeatureBranch(beta, alpha.Location())
-			// repo.DeleteFile("file")
-			// repo.CreateFileWithPermissions("file", "alpha content", 0o755)
-			// repo.StageFiles("file")
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
-			// alphaSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
-			// must.NoError(t, err)
-			// betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
-			// must.NoError(t, err)
-			// // ship branch alpha
-			// repo.CheckoutBranch(main)
-			// repo.SquashMerge(repo, alpha)
-			// repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
-			// // verify
-			// unmergedFiles := []git.FileConflictQuickInfo{
-			// 	{
-			// 		BaseChange: None[git.BlobInfo](),
-			// 		CurrentBranchChange: git.BlobInfo{
-			// 			Permission: "100755",
-			// 			SHA:        betaSHA,
-			// 		},
-			// 		FilePath: "file",
-			// 	},
-			// }
-			// parentBranch := Some(alpha)
-			// have, err := repo.DetectPhantomMergeConflicts(repo, unmergedFiles, parentBranch, Some(alphaSHA), main)
-			// want := []git.PhantomMergeConflict{}
-			// must.Eq(t, want, have)
+			fullInfos := []git.FileConflictFullInfo{
+				{
+					Main: Some(git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
+					Parent: Some(git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100644",
+						SHA:        "111111",
+					}),
+					Current: git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					},
+				},
+			}
+			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
+			want := []git.PhantomMergeConflict{}
+			must.Eq(t, want, have)
 		})
-		t.Run("file contents differ", func(t *testing.T) {
+		t.Run("file checksums between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			// 	repo := testruntime.CreateGitTown(t)
-			// 	// create the stack
-			// 	main := gitdomain.NewLocalBranchName("main")
-			// 	alpha := gitdomain.NewLocalBranchName("alpha")
-			// 	beta := gitdomain.NewLocalBranchName("beta")
-			// 	repo.CreateAndCheckoutFeatureBranch(alpha, main.Location())
-			// 	repo.CreateFile("file", "alpha content")
-			// 	repo.StageFiles("file")
-			// 	repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
-			// 	repo.CreateAndCheckoutFeatureBranch(beta, alpha.Location())
-			// 	repo.DeleteFile("file")
-			// 	repo.CreateFile("file", "alpha content")
-			// 	repo.StageFiles("file")
-			// 	repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
-			// 	alphaSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
-			// 	must.NoError(t, err)
-			// 	betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
-			// 	must.NoError(t, err)
-			// 	// ship branch alpha
-			// 	repo.CheckoutBranch(main)
-			// 	repo.SquashMerge(repo, alpha)
-			// 	repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
-			// 	// verify
-			// 	unmergedFiles := []git.FileConflictQuickInfo{
-			// 		{
-			// 			BaseChange: None[git.BlobInfo](),
-			// 			CurrentBranchChange: git.BlobInfo{
-			// 				Permission: "100755",
-			// 				SHA:        betaSHA,
-			// 			},
-			// 			FilePath: "file",
-			// 		},
-			// 	}
-			// 	parentBranch := Some(alpha)
-			// 	have, err := git.DetectPhantomMergeConflicts(unmergedFiles, parentBranch, Some(alphaSHA), main)
-			// 	want := []git.PhantomMergeConflict{}
-			// 	must.Eq(t, want, have)
+			fullInfos := []git.FileConflictFullInfo{
+				{
+					Main: Some(git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "222222",
+					}),
+					Parent: Some(git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100644",
+						SHA:        "111111",
+					}),
+					Current: git.BlobInfo{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					},
+				},
+			}
+			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
+			want := []git.PhantomMergeConflict{}
+			must.Eq(t, want, have)
 		})
-		t.Run("file names differ", func(t *testing.T) {
+		t.Run("file names between parent and main differ", func(t *testing.T) {
 			t.Parallel()
+			fullInfos := []git.FileConflictFullInfo{
+				{
+					Main: Some(git.BlobInfo{
+						FilePath:   "file-1",
+						Permission: "100755",
+						SHA:        "222222",
+					}),
+					Parent: Some(git.BlobInfo{
+						FilePath:   "file-2",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
+					Current: git.BlobInfo{
+						FilePath:   "file-2",
+						Permission: "100755",
+						SHA:        "111111",
+					},
+				},
+			}
+			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
+			want := []git.PhantomMergeConflict{}
+			must.Eq(t, want, have)
 		})
 	})
 
