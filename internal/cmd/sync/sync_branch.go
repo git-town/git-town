@@ -12,15 +12,22 @@ import (
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	// TODO: calculate originalParentName and originalParentSHA here and provide as arguments.
+	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
+	parentSHAOpt := None[gitdomain.SHA]()
+	if parentName, hasParentName := parentNameOpt.Get(); hasParentName {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+			parentSHAOpt = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+		}
+	}
 	// Also, possibly provide the BranchInfo of the original parent branch here, because both values can be derived from it.
 	// Don't store the branchinfo in the opcodes, though.
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		deletedBranchProgram(args.Program, localName, args)
+		deletedBranchProgram(args.Program, localName, parentNameOpt, parentSHAOpt, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(localName, branchInfo, firstCommitMessage, args)
+		localBranchProgram(localName, branchInfo, parentNameOpt, parentSHAOpt, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
@@ -36,7 +43,7 @@ type BranchProgramArgs struct {
 }
 
 // localBranchProgram provides the program to sync a local branch.
-func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -44,21 +51,14 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	}
 	args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
 	branchType := args.Config.BranchType(localName)
-	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
-	parentSHAOpt := None[gitdomain.SHA]()
-	if parentName, hasParentName := parentNameOpt.Get(); hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
-			parentSHAOpt = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
-		}
-	}
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParentName: parentNameOpt,
-			originalParentSHA:  parentSHAOpt,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -73,8 +73,8 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParentName: parentNameOpt,
-			originalParentSHA:  parentSHAOpt,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -89,8 +89,8 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
-			originalParentName: parentNameOpt,
-			originalParentSHA:  parentSHAOpt,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       false,
 			remoteName:         branchInfo.RemoteName,
