@@ -369,6 +369,7 @@ func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo 
 	if err != nil {
 		return FileConflictFullInfo{}, err
 	}
+	// this is the blob at the original parent, before Git Town ran
 	parentBlob, err := self.ContentBlobInfo(querier, parentLocation, quickInfo.FilePath)
 	if err != nil {
 		return FileConflictFullInfo{}, err
