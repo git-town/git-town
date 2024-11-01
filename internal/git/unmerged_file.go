@@ -140,13 +140,12 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 			if hasCurrentBranchChange && hasIncomingChange {
-				unmergedFile := FileConflictQuickInfo{
+				result = append(result, FileConflictQuickInfo{
 					BaseChange:          baseChangeOpt,
 					CurrentBranchChange: currentBranchChange,
 					FilePath:            filePath,
 					IncomingChange:      incomingChange,
-				}
-				result = append(result, unmergedFile)
+				})
 			}
 			filePath = file
 			baseChangeOpt = None[BlobInfo]()
@@ -166,13 +165,12 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 		if hasCurrentBranchChange && hasIncomingChange {
-			unmergedFile := FileConflictQuickInfo{
+			result = append(result, FileConflictQuickInfo{
 				BaseChange:          baseChangeOpt,
 				CurrentBranchChange: currentBranchChange,
 				FilePath:            filePath,
 				IncomingChange:      incomingChange,
-			}
-			result = append(result, unmergedFile)
+			})
 		}
 	}
 	return result, nil
