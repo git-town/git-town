@@ -58,7 +58,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.After(func(ctx context.Context, scenario *godog.Scenario, err error) (context.Context, error) {
 		ctxValue := ctx.Value(keyScenarioState)
 		if ctxValue == nil {
-			panic("after-scenario hook has found no scenario state found to clean up")
+			return ctx, errors.New("after-scenario hook has found no scenario state found to clean up")
 		}
 		state := ctxValue.(*ScenarioState)
 		if err != nil {
@@ -128,13 +128,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
-	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) {
+	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
 		if branchesOutOfSync {
-			panic("unexpected out of sync:\n" + output)
+			return errors.New("unexpected out of sync:\n" + output)
 		}
+		return nil
 	})
 
 	sc.Step(`^a local Git repo$`, func(ctx context.Context) (context.Context, error) {
@@ -167,12 +168,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
-	sc.Step(`^a merge is now in progress$`, func(ctx context.Context) {
+	sc.Step(`^a merge is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if !devRepo.HasMergeInProgress(devRepo.TestRunner) {
-			panic("expected merge in progress")
+			return errors.New("expected merge in progress")
 		}
+		return nil
 	})
 
 	sc.Step(`^an additional "([^"]+)" remote with URL "([^"]+)"$`, func(ctx context.Context, remote, url string) {
@@ -219,14 +221,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
-	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) {
+	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
 		asserts.NoError(err)
 		if !repoStatus.RebaseInProgress {
-			panic("expected rebase in progress")
+			return errors.New("expected rebase in progress")
 		}
+		return nil
 	})
 
 	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(ctx context.Context, name, url string) {
@@ -849,7 +852,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) {
+	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
@@ -867,8 +870,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching commands run, see diff above")
+			return errors.New("mismatching commands run, see diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
@@ -904,17 +908,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.AddSubmodule(state.fixture.SubmoduleRepo.GetOrPanic().WorkingDir)
 	})
 
-	sc.Step(`^no commits exist now$`, func(ctx context.Context) {
+	sc.Step(`^no commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		noCommits := datatable.DataTable{}
 		noCommits.AddRow(state.initialCommits.GetOrPanic().Cells[0]...)
 		errDiff, errCount := currentCommits.EqualDataTable(noCommits)
 		if errCount == 0 {
-			return
+			return nil
 		}
 		fmt.Println(errDiff)
-		panic("found unexpected commits")
+		return errors.New("found unexpected commits")
 	})
 
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
@@ -974,14 +978,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branchName string) {
+	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branchName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main")
 		asserts.NoError(err)
 		if commitMessage.IsNone() {
-			panic("branch to ship contains no commits")
+			return errors.New("branch to ship contains no commits")
 		}
 		originRepo.CheckoutBranch("main")
 		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
@@ -991,9 +995,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		asserts.NoError(err)
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
+		return nil
 	})
 
-	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *commands.TestCommands
@@ -1007,13 +1012,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			case branchSetup.Locations.Is(git.LocationUpstream):
 				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
 			default:
-				panic("unhandled location to create the new branch: " + branchSetup.Locations.String())
+				return errors.New("unhandled location to create the new branch: " + branchSetup.Locations.String())
 			}
 			branchType, hasBranchType := branchSetup.BranchType.Get()
 			if hasBranchType {
 				switch branchType {
 				case configdomain.BranchTypeMainBranch:
-					panic("main branch exists already")
+					return errors.New("main branch exists already")
 				case configdomain.BranchTypeFeatureBranch:
 					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
 				case configdomain.BranchTypePerennialBranch:
@@ -1027,7 +1032,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypePrototypeBranch:
 					repoToCreateBranchIn.CreatePrototypeBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
 				default:
-					panic("unhandled branch type: " + branchType.String())
+					return errors.New("unhandled branch type: " + branchType.String())
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
@@ -1041,21 +1046,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
 					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 				default:
-					panic("unhandled location to push the new branch to: " + branchSetup.Locations.String())
+					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
 				}
 			}
 		}
+		return nil
 	})
 
-	sc.Step(`^the branches are now$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^the branches are now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		existing := state.fixture.Branches()
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
 			fmt.Println(diff)
-			panic("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
@@ -1092,19 +1099,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(configfile.FileName, content.Content)
 	})
 
-	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) {
+	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, err := devRepo.FileContentErr(configfile.FileName)
 		if err != nil {
-			panic("no configuration file found")
+			return errors.New("no configuration file found")
 		}
 		have = strings.TrimSpace(have)
 		want := strings.TrimSpace(content.Content)
 		if have != want {
 			fmt.Println(cmp.Diff(want, have))
-			panic("mismatching config file content")
+			return errors.New("mismatching config file content")
 		}
+		return nil
 	})
 
 	sc.Step(`^the contribution branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
@@ -1228,15 +1236,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) {
+	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
 		if !devRepo.BranchExists(devRepo.TestRunner, branch) {
-			panic("cannot check out non-existing branch: " + branch)
+			return fmt.Errorf("cannot check out non-existing branch: %q", branch)
 		}
 		devRepo.CheckoutBranch(branch)
+		return nil
 	})
 
 	sc.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(ctx context.Context, currentText, previousText string) {
@@ -1281,7 +1290,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return os.WriteFile(filePath, []byte(docString.Content), 0o700)
 	})
 
-	sc.Step(`^the initial branches and lineage exist now$`, func(ctx context.Context) {
+	sc.Step(`^the initial branches and lineage exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		// verify initial branches
@@ -1293,7 +1302,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching branches found, see diff above")
+			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
 		currentLineage := devRepo.LineageTable()
@@ -1301,11 +1310,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
-			panic("mismatching lineage found, see the diff above")
+			return errors.New("mismatching lineage found, see the diff above")
 		}
+		return nil
 	})
 
-	sc.Step(`^the initial branches exist now$`, func(ctx context.Context) {
+	sc.Step(`^the initial branches exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := state.fixture.Branches()
 		want := state.initialBranches.GetOrPanic()
@@ -1315,22 +1325,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching branches found, see diff above")
+			return errors.New("mismatching branches found, see diff above")
 		}
+		return nil
 	})
 
-	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) {
+	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
 		if errCount == 0 {
-			return
+			return nil
 		}
 		fmt.Println(errDiff)
-		panic("current commits are not the same as the initial commits")
+		return errors.New("current commits are not the same as the initial commits")
 	})
 
-	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) {
+	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.LineageTable()
@@ -1340,19 +1351,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
 			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
 			fmt.Println(diff)
-			panic("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
+		return nil
 	})
 
-	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) {
+	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
 		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
 		if errCount == 0 {
-			return
+			return nil
 		}
 		fmt.Println(errDiff)
-		panic("current tags are not the same as the initial commits")
+		return errors.New("current tags are not the same as the initial commits")
 	})
 
 	sc.Step(`^the main branch is "([^"]+)"$`, func(ctx context.Context, name string) error {
@@ -1518,7 +1530,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) {
+	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentBranches := state.fixture.Branches()
 		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
@@ -1526,8 +1538,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching branches found, see diff above")
+			return errors.New("mismatching branches found, see diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
@@ -1535,7 +1548,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return state.compareGherkinTable(table)
 	})
 
-	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		fileTable := devRepo.FilesInBranches(gitdomain.NewLocalBranchName("main"))
@@ -1543,19 +1556,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching files found, see diff above")
+			return errors.New("mismatching files found, see diff above")
 		}
+		return nil
 	})
 
-	sc.Step(`^these tags exist now$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^these tags exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
 			fmt.Println(diff)
-			panic("mismatching tags found, see diff above")
+			return errors.New("mismatching tags found, see diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^the tags$`, func(ctx context.Context, table *godog.Table) {
@@ -1592,7 +1607,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 	})
 
-	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) {
+	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		table := devRepo.LineageTable()
@@ -1600,8 +1615,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
 			fmt.Println(diff)
-			panic("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
+		return nil
 	})
 
 	sc.Step(`^tool "([^"]*)" is broken$`, func(ctx context.Context, name string) {
