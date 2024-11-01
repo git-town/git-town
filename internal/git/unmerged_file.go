@@ -38,6 +38,12 @@ var UnmergedStages = []UnmergedStage{ //nolint:gochecknoglobals
 	UnmergedStageIncoming,
 }
 
+type UnresolvedConflictInfo struct {
+	mainBlobInfo    Option[BlobInfo] // info about the file on the main branch
+	parentBlobInfo  Option[BlobInfo] // info about the file on the original parent
+	currentBlobInfo BlobInfo         // info about the file on the current branch
+}
+
 func EmptyBlobInfo() BlobInfo {
 	var result BlobInfo
 	return result
