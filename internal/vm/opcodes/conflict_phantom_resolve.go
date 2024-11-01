@@ -26,9 +26,5 @@ func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	err = args.Git.StageFiles(args.Frontend, self.FilePath)
-	if err != nil {
-		return err
-	}
-	return nil
+	return args.Git.StageFiles(args.Frontend, self.FilePath)
 }
