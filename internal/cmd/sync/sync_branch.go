@@ -11,23 +11,20 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	// TODO: calculate originalParentName and originalParentSHA here and provide as arguments.
-	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
-	parentSHAOpt := None[gitdomain.SHA]()
-	if parentName, hasParentName := parentNameOpt.Get(); hasParentName {
+	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
+	originalParentSHA := None[gitdomain.SHA]()
+	if parentName, hasParentName := originalParentName.Get(); hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
-			parentSHAOpt = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
-	// Also, possibly provide the BranchInfo of the original parent branch here, because both values can be derived from it.
-	// Don't store the branchinfo in the opcodes, though.
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		deletedBranchProgram(args.Program, localName, parentNameOpt, parentSHAOpt, args)
+		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(localName, branchInfo, parentNameOpt, parentSHAOpt, firstCommitMessage, args)
+		localBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
