@@ -49,6 +49,7 @@ type FileConflictFullInfo struct {
 	Parent  Option[BlobInfo] // info about the file on the original parent
 }
 
+// describes a file within an unresolved merge conflict that experiences a phantom merge conflict
 type PhantomMergeConflict struct {
 	FilePath string
 }
