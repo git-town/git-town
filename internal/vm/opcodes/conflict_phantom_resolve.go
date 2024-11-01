@@ -10,7 +10,7 @@ type ConflictPhantomResolve struct {
 }
 
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
-	err := args.Git.CheckoutOurs(args.Frontend, self.FilePath)
+	err := args.Git.CheckoutOurVersion(args.Frontend, self.FilePath)
 	if err != nil {
 		return err
 	}

@@ -111,7 +111,7 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 	return nil
 }
 
-func (self *Commands) CheckoutOurs(runner gitdomain.Runner, file string) error {
+func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) error {
 	return runner.Run("git", "checkout", "--ours", file)
 }
 
