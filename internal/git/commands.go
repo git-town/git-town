@@ -389,7 +389,7 @@ func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo 
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
+func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
 	return []FileConflictFullInfo{}, nil
 }
 

@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -25,11 +26,15 @@ func (self *ConflictPhantomDetect) ContinueProgram() []shared.Opcode {
 }
 
 func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
-	unmergedFiles, err := args.Git.UnmergedFiles(args.Backend)
+	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts, err := args.Git.DetectPhantomMergeConflicts(args.Backend, unmergedFiles, self.ParentBranch, self.ParentSHA, args.Config.Value.ValidatedConfigData.MainBranch)
+	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, self.ParentSHA, args.Config.Value.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return err
+	}
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, args.Config.Value.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return err
 	}
