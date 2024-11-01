@@ -212,6 +212,60 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("DetectPhantomMergeConflicts", func(t *testing.T) {
+		t.Parallel()
+		t.Run("legit phantom merge conflict", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			// create the stack
+			main := gitdomain.NewLocalBranchName("main")
+			alpha := gitdomain.NewLocalBranchName("alpha")
+			beta := gitdomain.NewLocalBranchName("beta")
+			repo.CreateAndCheckoutFeatureBranch(repo, alpha, main.Location())
+			repo.CreateFile("file", "alpha content")
+			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
+			repo.CreateFeatureBranch(beta, alpha.BranchName())
+			repo.CreateFile("file", "beta content")
+			repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
+			parentSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
+			must.NoError(t, err)
+			// ship branch alpha
+			repo.CheckoutBranch(main)
+			repo.SquashMerge(repo, alpha)
+			repo.StageFiles("-A")
+			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
+			repo.RemoveBranch(alpha)
+			// verify
+			betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
+			must.NoError(t, err)
+			unmergedFiles := []git.UnmergedFileInfo{
+				{
+					BaseChange: None[git.BlobInfo](),
+					CurrentBranchChange: git.BlobInfo{
+						Permission: "100755",
+						SHA:        betaSHA,
+					},
+					FilePath: "file",
+				},
+			}
+			parentBranch := Some(alpha)
+			have, err := repo.DetectPhantomMergeConflicts(repo, unmergedFiles, parentBranch, Some(parentSHA), main)
+			want := []git.PhantomMergeConflict{
+				{FilePath: "file"},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("permissions differ", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("file contents differ", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("file names differ", func(t *testing.T) {
+			t.Parallel()
+		})
+	})
+
 	t.Run("FirstCommitMessageInBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is empty", func(t *testing.T) {
@@ -1041,81 +1095,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
-	t.Run("UnmergedFile", func(t *testing.T) {
+	t.Run("UnmergedFileInfo", func(t *testing.T) {
 		t.Parallel()
-		t.Run("HasDifferentPermissions", func(t *testing.T) {
-			t.Parallel()
-			t.Run("all two match", func(t *testing.T) {
-				t.Parallel()
-				unmergedFile := git.UnmergedFile{
-					BaseChange: None[git.LsFilesUnmergedChange](),
-					CurrentBranchChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-					IncomingChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-				}
-				must.False(t, unmergedFile.HasDifferentPermissions())
-			})
-			t.Run("all three match", func(t *testing.T) {
-				t.Parallel()
-				unmergedFile := git.UnmergedFile{
-					BaseChange: Some(git.LsFilesUnmergedChange{
-						Permission: "100755",
-					}),
-					CurrentBranchChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-					IncomingChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-				}
-				must.False(t, unmergedFile.HasDifferentPermissions())
-			})
-			t.Run("current != incoming", func(t *testing.T) {
-				t.Parallel()
-				unmergedFile := git.UnmergedFile{
-					BaseChange: None[git.LsFilesUnmergedChange](),
-					CurrentBranchChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-					IncomingChange: git.LsFilesUnmergedChange{
-						Permission: "100644",
-					},
-				}
-				must.True(t, unmergedFile.HasDifferentPermissions())
-			})
-			t.Run("base != current", func(t *testing.T) {
-				t.Parallel()
-				unmergedFile := git.UnmergedFile{
-					BaseChange: Some(git.LsFilesUnmergedChange{
-						Permission: "100644",
-					}),
-					CurrentBranchChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-					IncomingChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-				}
-				must.True(t, unmergedFile.HasDifferentPermissions())
-			})
-			t.Run("base != incoming", func(t *testing.T) {
-				t.Parallel()
-				unmergedFile := git.UnmergedFile{
-					BaseChange: Some(git.LsFilesUnmergedChange{
-						Permission: "100755",
-					}),
-					CurrentBranchChange: git.LsFilesUnmergedChange{
-						Permission: "100755",
-					},
-					IncomingChange: git.LsFilesUnmergedChange{
-						Permission: "100644",
-					},
-				}
-				must.True(t, unmergedFile.HasDifferentPermissions())
-			})
-		})
 	})
 }

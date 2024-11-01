@@ -200,10 +200,10 @@ func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdo
 }
 
 // provides the SHA1 value of the content blob of the given file on the given branch/sha
-func (self *Commands) ContentBlobSHA(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (Option[gitdomain.SHA], error) {
+func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomain.Location, filePath string) (Option[BlobInfo], error) {
 	output, err := querier.QueryTrim("git", "ls-tree", branch.String(), filePath)
 	if err != nil || len(output) == 0 {
-		return None[gitdomain.SHA](), err
+		return None[BlobInfo](), err
 	}
 	sha, err := ParseLsTreeOutput(output)
 	return Some(sha), err
@@ -336,7 +336,7 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFile, parentBranchOpt Option[gitdomain.LocalBranchName], parentBranchSHA Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
+func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unmergedFiles []UnmergedFileInfo, parentBranchOpt Option[gitdomain.LocalBranchName], parentBranchSHA Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]PhantomMergeConflict, error) {
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	parentSHA, hasParentSHA := parentBranchSHA.Get()
@@ -344,18 +344,19 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		return []PhantomMergeConflict{}, nil
 	}
 	for _, unmergedFile := range unmergedFiles {
-		if unmergedFile.HasDifferentPermissions() {
+		mainBlobInfo, err := self.ContentBlobInfo(querier, mainBranch.Location(), unmergedFile.FilePath)
+		if err != nil {
+			return []PhantomMergeConflict{}, err
+		}
+		originalParentBlobInfoOpt, err := self.ContentBlobInfo(querier, parentSHA.Location(), unmergedFile.FilePath)
+		if err != nil {
+			return []PhantomMergeConflict{}, err
+		}
+		originalParentBlobInfo, hasOriginalParentBlobInfo := originalParentBlobInfoOpt.Get()
+		if !hasOriginalParentBlobInfo || unmergedFile.CurrentBranchChange.Permission != originalParentBlobInfo.Permission {
 			continue
 		}
-		shaOnMain, err := self.ContentBlobSHA(querier, mainBranch.Location(), unmergedFile.FilePath)
-		if err != nil {
-			return []PhantomMergeConflict{}, err
-		}
-		shaOnOriginalParent, err := self.ContentBlobSHA(querier, parentSHA.Location(), unmergedFile.FilePath)
-		if err != nil {
-			return []PhantomMergeConflict{}, err
-		}
-		if !reflect.DeepEqual(shaOnMain, shaOnOriginalParent) {
+		if !reflect.DeepEqual(mainBlobInfo, originalParentBlobInfo) {
 			// not a phantom merge conflict
 			continue
 		}
@@ -737,10 +738,10 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 }
 
 // provides information about files with merge conflicts during a merge conflict
-func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFile, error) {
+func (self *Commands) UnmergedFiles(querier gitdomain.Querier) ([]UnmergedFileInfo, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
-		return []UnmergedFile{}, err
+		return []UnmergedFileInfo{}, err
 	}
 	return ParseLsFilesUnmergedOutput(output)
 }
@@ -843,8 +844,8 @@ func LastBranchInRef(output string) string {
 	return output[index+1:]
 }
 
-func NewLsFilesUnmergedStage(value int) (LsFilesUnmergedStage, error) {
-	for _, stage := range LsFilesUnmergedStages {
+func NewLsFilesUnmergedStage(value int) (UnmergedStage, error) {
+	for _, stage := range UnmergedStages {
 		if int(stage) == value {
 			return stage, nil
 		}
