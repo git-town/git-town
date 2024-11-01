@@ -13,40 +13,41 @@ import (
 
 // quick information about a file with merge conflicts
 type FileConflictQuickInfo struct {
-	BaseChange          Option[BlobInfo]
-	CurrentBranchChange BlobInfo
-	FilePath            string
-	IncomingChange      BlobInfo
+	BaseChange          Option[BlobInfo] // info about the base version of the file (when 3-way merging)
+	CurrentBranchChange BlobInfo         // info about the content of the file on the branch where the merge conflict occurs
+	FilePath            string           // relative path of the conflicting file in the repo
+	IncomingChange      BlobInfo         // info about the content of the file on the branch being merged in
 }
 
+// describes the content of a file in Git
 type BlobInfo struct {
-	FilePath   string
-	Permission string
-	SHA        gitdomain.SHA
+	FilePath   string        // relative path of the file in the repo
+	Permission string        // permissions, in the form "100755"
+	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
 }
 
+// describes the roles that a file can play in a merge conflict
 type UnmergedStage int
 
 const (
-	UnmergedStageBase          UnmergedStage = 1
-	UnmergedStageCurrentBranch UnmergedStage = 2
-	UnmergedStageIncoming      UnmergedStage = 3
+	UnmergedStageBase          UnmergedStage = 1 // the base version in a 3-way merge
+	UnmergedStageCurrentBranch UnmergedStage = 2 // the file on the branch on which the merge conflict happens
+	UnmergedStageIncoming      UnmergedStage = 3 // the file on the branch getting merged in
 )
 
+// all possile UnmergedStages instances
 var UnmergedStages = []UnmergedStage{ //nolint:gochecknoglobals
 	UnmergedStageBase,
 	UnmergedStageCurrentBranch,
 	UnmergedStageIncoming,
 }
 
-// complete information about a file with merge conflicts to determine whether it is a pantom merge conflict
+// complete information about a file with merge conflicts, to determine whether it is a pantom merge conflict
 type FileConflictFullInfo struct {
 	Current BlobInfo         // info about the file on the current branch
 	Main    Option[BlobInfo] // info about the file on the main branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
 }
-
-type FileConflictFullInfos []FileConflictFullInfo
 
 type PhantomMergeConflict struct {
 	FilePath string
