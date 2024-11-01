@@ -54,23 +54,23 @@ type PhantomMergeConflict struct {
 	FilePath string
 }
 
-func DetectPhantomMergeConflicts(unresolvedConflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == mainBranch {
 		return []PhantomMergeConflict{}
 	}
-	for _, unresolvedConflictInfo := range unresolvedConflictInfos {
-		originalParentInfo, hasOriginalParentInfo := unresolvedConflictInfo.Parent.Get()
-		if !hasOriginalParentInfo || unresolvedConflictInfo.Current.Permission != originalParentInfo.Permission {
+	for _, conflictInfo := range conflictInfos {
+		originalParentInfo, hasOriginalParentInfo := conflictInfo.Parent.Get()
+		if !hasOriginalParentInfo || conflictInfo.Current.Permission != originalParentInfo.Permission {
 			continue
 		}
-		if !reflect.DeepEqual(unresolvedConflictInfo.Main, unresolvedConflictInfo.Parent) {
-			// not a phantom merge conflict
+		if !reflect.DeepEqual(conflictInfo.Main, conflictInfo.Parent) {
+			// main and parent don't have the exact same version of the file --> not a phantom merge conflict
 			continue
 		}
 		result = append(result, PhantomMergeConflict{
-			FilePath: unresolvedConflictInfo.Current.FilePath,
+			FilePath: conflictInfo.Current.FilePath,
 		})
 	}
 	return result
