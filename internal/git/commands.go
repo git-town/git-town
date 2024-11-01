@@ -363,15 +363,6 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-// provides information about files with merge conflicts during a merge conflict
-func (self *Commands) FileConflictQuickInfos(querier gitdomain.Querier) ([]FileConflictQuickInfo, error) {
-	output, err := querier.Query("git", "ls-files", "--unmerged")
-	if err != nil {
-		return []FileConflictQuickInfo{}, err
-	}
-	return ParseLsFilesUnmergedOutput(output)
-}
-
 func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
 	mainBlobInfoOpt, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.FilePath)
 	if err != nil {
@@ -382,15 +373,32 @@ func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo 
 		return FileConflictFullInfo{}, err
 	}
 	result := FileConflictFullInfo{
+		Current: quickInfo.CurrentBranchChange,
 		Main:    mainBlobInfoOpt,
 		Parent:  originalParentBlobInfoOpt,
-		Current: quickInfo.CurrentBranchChange,
 	}
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation Option[gitdomain.SHA], mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
-	return []FileConflictFullInfo{}, nil
+func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
+	result := make([]FileConflictFullInfo, len(quickInfos))
+	for q, quickInfo := range quickInfos {
+		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, mainBranch)
+		if err != nil {
+			return result, err
+		}
+		result[q] = fullInfo
+	}
+	return result, nil
+}
+
+// provides information about files with merge conflicts during a merge conflict
+func (self *Commands) FileConflictQuickInfos(querier gitdomain.Querier) ([]FileConflictQuickInfo, error) {
+	output, err := querier.Query("git", "ls-files", "--unmerged")
+	if err != nil {
+		return []FileConflictQuickInfo{}, err
+	}
+	return ParseLsFilesUnmergedOutput(output)
 }
 
 // provides the commit message of the first commit in the branch with the given name

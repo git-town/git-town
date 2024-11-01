@@ -41,9 +41,9 @@ var UnmergedStages = []UnmergedStage{ //nolint:gochecknoglobals
 
 // complete information about a file with merge conflicts to determine whether it is a pantom merge conflict
 type FileConflictFullInfo struct {
+	Current BlobInfo         // info about the file on the current branch
 	Main    Option[BlobInfo] // info about the file on the main branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
-	Current BlobInfo         // info about the file on the current branch
 }
 
 type FileConflictFullInfos []FileConflictFullInfo
@@ -109,6 +109,7 @@ func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, err
 	}
 	filePath := remainder
 	change := BlobInfo{
+		FilePath:   filePath,
 		Permission: permissions,
 		SHA:        sha,
 	}

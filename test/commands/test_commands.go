@@ -128,7 +128,8 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	self.CreateAndCheckoutBranchWithParent(self, name, parent)
+	err := self.CreateAndCheckoutBranchWithParent(self, name, parent)
+	asserts.NoError(err)
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
@@ -184,7 +185,6 @@ func (self *TestCommands) CreateFileWithPermissions(name, content string, permis
 	filePath := filepath.Join(self.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
-	//nolint:gosec // need permission 700 here in order for tests to work
 	asserts.NoError(os.WriteFile(filePath, []byte(content), permissions))
 }
 

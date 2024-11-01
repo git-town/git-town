@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
@@ -26,18 +28,19 @@ func (self *ConflictPhantomDetect) ContinueProgram() []shared.Opcode {
 }
 
 func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
+	parentSHA, hasParentSHA := self.ParentSHA.Get()
+	if !hasParentSHA {
+		return errors.New("git merge conflict")
+	}
 	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
 		return err
 	}
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, self.ParentSHA, args.Config.Value.ValidatedConfigData.MainBranch)
+	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), args.Config.Value.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return err
 	}
 	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, args.Config.Value.ValidatedConfigData.MainBranch)
-	if err != nil {
-		return err
-	}
 	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
 	for p, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes[p] = &ConflictPhantomResolve{
