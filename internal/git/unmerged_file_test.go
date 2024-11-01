@@ -14,7 +14,6 @@ func TestUnmergedFile(t *testing.T) {
 
 	t.Run("ParseLsFilesUnmergedOutput", func(t *testing.T) {
 		t.Parallel()
-
 		t.Run("simple version", func(t *testing.T) {
 			give := `
 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
