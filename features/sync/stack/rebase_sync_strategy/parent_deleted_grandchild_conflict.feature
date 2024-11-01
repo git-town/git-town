@@ -27,7 +27,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | grandchild | git rebase main --no-update-refs        |
     And it prints the error:
       """
-      exit status 1
+      git merge conflict
       """
     And it prints the error:
       """
