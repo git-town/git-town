@@ -363,6 +363,7 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
+// provides enough information about the unresolved merge conflict for the given file to determine whether this is a phantom merge conflict
 func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
 	mainBlobInfoOpt, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.FilePath)
 	if err != nil {
@@ -380,6 +381,7 @@ func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo 
 	return result, nil
 }
 
+// provides enough information about the unresolved merge conflicts for the given files to determine the phantom merge conflicts among them
 func (self *Commands) FileConflictFullInfos(querier gitdomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
 	result := make([]FileConflictFullInfo, len(quickInfos))
 	for q, quickInfo := range quickInfos {
