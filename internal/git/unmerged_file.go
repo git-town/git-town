@@ -163,17 +163,15 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		}
 	}
 	if filePath, hasFilePath := filePathOpt.Get(); hasFilePath {
-		if len(filePath) > 0 {
-			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
-			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
-			if hasCurrentBranchChange && hasIncomingChange {
-				result = append(result, FileConflictQuickInfo{
-					BaseChange:          baseChangeOpt,
-					CurrentBranchChange: currentBranchChange,
-					FilePath:            filePath,
-					IncomingChange:      incomingChange,
-				})
-			}
+		currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
+		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
+		if len(filePath) > 0 && hasCurrentBranchChange && hasIncomingChange {
+			result = append(result, FileConflictQuickInfo{
+				BaseChange:          baseChangeOpt,
+				CurrentBranchChange: currentBranchChange,
+				FilePath:            filePath,
+				IncomingChange:      incomingChange,
+			})
 		}
 	}
 	return result, nil
