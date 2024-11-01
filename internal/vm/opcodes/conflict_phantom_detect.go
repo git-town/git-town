@@ -42,7 +42,7 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, args.Config.Value.ValidatedConfigData.MainBranch)
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, mainBranch)
 	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
 	for p, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes[p] = &ConflictPhantomResolve{
