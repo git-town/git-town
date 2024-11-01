@@ -14,31 +14,29 @@ func TestUnmergedFile(t *testing.T) {
 
 	t.Run("ParseLsFilesUnmergedOutput", func(t *testing.T) {
 		t.Parallel()
-		t.Run("simple version", func(t *testing.T) {
-			give := `
+		give := `
 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 `[1:]
-			have, err := git.ParseLsFilesUnmergedOutput(give)
-			must.NoError(t, err)
-			want := []git.FileConflictQuickInfo{
-				{
+		have, err := git.ParseLsFilesUnmergedOutput(give)
+		must.NoError(t, err)
+		want := []git.FileConflictQuickInfo{
+			{
+				FilePath:   "file",
+				BaseChange: None[git.BlobInfo](),
+				CurrentBranchChange: git.BlobInfo{
 					FilePath:   "file",
-					BaseChange: None[git.BlobInfo](),
-					CurrentBranchChange: git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
-					},
-					IncomingChange: git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
-					},
+					Permission: "100755",
+					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
 				},
-			}
-			must.Eq(t, want, have)
-		})
+				IncomingChange: git.BlobInfo{
+					FilePath:   "file",
+					Permission: "100755",
+					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
+				},
+			},
+		}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("ParseLsTreeOutput", func(t *testing.T) {
