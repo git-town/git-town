@@ -12,10 +12,10 @@ import (
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
-		syncDeletedFeatureBranchProgram(prog, branch, args)
+		syncDeletedFeatureBranchProgram(prog, branch, originalParentName, originalParentSHA, args)
 	case
 		configdomain.BranchTypePerennialBranch,
 		configdomain.BranchTypeMainBranch,
@@ -29,7 +29,7 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], args BranchProgramArgs) {
 	var syncStatus gitdomain.SyncStatus
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		syncStatus = preFetchBranchInfo.SyncStatus
@@ -50,9 +50,11 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 	case gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-			branch:       branch,
-			program:      prog,
-			syncStrategy: args.Config.NormalConfig.SyncFeatureStrategy,
+			branch:             branch,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
+			program:            prog,
+			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy,
 		})
 		prog.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: branch})
 	}

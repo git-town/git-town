@@ -11,13 +11,20 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
+	originalParentSHA := None[gitdomain.SHA]()
+	if parentName, hasParentName := originalParentName.Get(); hasParentName {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+		}
+	}
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		deletedBranchProgram(args.Program, localName, args)
+		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(localName, branchInfo, firstCommitMessage, args)
+		localBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
@@ -33,7 +40,7 @@ type BranchProgramArgs struct {
 }
 
 // localBranchProgram provides the program to sync a local branch.
-func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -47,6 +54,8 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -61,6 +70,8 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
@@ -75,6 +86,8 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       false,
 			remoteName:         branchInfo.RemoteName,
@@ -98,7 +111,9 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch: args.branch,
+			Branch:             args.branch,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
@@ -106,15 +121,19 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		})
 	case configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch: args.branch,
+			Branch:             args.branch,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
 		})
 	}
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
-	branch       gitdomain.LocalBranchName
-	program      Mutable[program.Program]
-	syncStrategy configdomain.SyncFeatureStrategy
+	branch             gitdomain.LocalBranchName
+	originalParentName Option[gitdomain.LocalBranchName]
+	originalParentSHA  Option[gitdomain.SHA]
+	program            Mutable[program.Program]
+	syncStrategy       configdomain.SyncFeatureStrategy
 }
 
 func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {

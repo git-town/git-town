@@ -27,7 +27,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git merge --no-edit --ff main              |
     And it prints the error:
       """
-      exit status 1
+      git merge conflict
       """
     And it prints the error:
       """
