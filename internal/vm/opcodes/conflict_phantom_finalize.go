@@ -34,7 +34,7 @@ func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
 		// there are still unmerged files --> these are not phantom merge conflicts, let the user sort this out
 		return errors.New(messages.ConflictMerge)
 	}
-	// here all merge conflicts have been resolved --> commit and continue
+	// here all merge conflicts have been resolved --> commit to finish the merge conflict and continue the program
 	args.PrependOpcodes(
 		&Commit{
 			AuthorOverride:                 None[gitdomain.Author](),
