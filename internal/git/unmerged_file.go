@@ -123,7 +123,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 	result := []FileConflictQuickInfo{}
-	filePath := ""
+	filePathOpt := None[string]()
 	baseChangeOpt := None[BlobInfo]()
 	currentBranchChangeOpt := None[BlobInfo]()
 	incomingChangeOpt := None[BlobInfo]()
@@ -136,7 +136,8 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		if err != nil {
 			return []FileConflictQuickInfo{}, err
 		}
-		if file != filePath {
+		filePath, hasFilePath := filePathOpt.Get()
+		if !hasFilePath || file != filePath {
 			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
 			if hasCurrentBranchChange && hasIncomingChange {
@@ -147,7 +148,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 					IncomingChange:      incomingChange,
 				})
 			}
-			filePath = file
+			filePathOpt = Some(file)
 			baseChangeOpt = None[BlobInfo]()
 			currentBranchChangeOpt = None[BlobInfo]()
 			incomingChangeOpt = None[BlobInfo]()
@@ -161,16 +162,18 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 			incomingChangeOpt = Some(change)
 		}
 	}
-	if len(filePath) > 0 {
-		currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
-		incomingChange, hasIncomingChange := incomingChangeOpt.Get()
-		if hasCurrentBranchChange && hasIncomingChange {
-			result = append(result, FileConflictQuickInfo{
-				BaseChange:          baseChangeOpt,
-				CurrentBranchChange: currentBranchChange,
-				FilePath:            filePath,
-				IncomingChange:      incomingChange,
-			})
+	if filePath, hasFilePath := filePathOpt.Get(); hasFilePath {
+		if len(filePath) > 0 {
+			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
+			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
+			if hasCurrentBranchChange && hasIncomingChange {
+				result = append(result, FileConflictQuickInfo{
+					BaseChange:          baseChangeOpt,
+					CurrentBranchChange: currentBranchChange,
+					FilePath:            filePath,
+					IncomingChange:      incomingChange,
+				})
+			}
 		}
 	}
 	return result, nil
