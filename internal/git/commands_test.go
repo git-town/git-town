@@ -223,21 +223,21 @@ func TestBackendCommands(t *testing.T) {
 			beta := gitdomain.NewLocalBranchName("beta")
 			repo.CreateAndCheckoutFeatureBranch(alpha, main.Location())
 			repo.CreateFile("file", "alpha content")
+			repo.StageFiles("file")
 			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
 			repo.CreateAndCheckoutFeatureBranch(beta, alpha.Location())
 			repo.CreateFile("file", "beta content")
+			repo.StageFiles("file")
 			repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
-			parentSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
+			alphaSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
+			must.NoError(t, err)
+			betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
 			must.NoError(t, err)
 			// ship branch alpha
 			repo.CheckoutBranch(main)
 			repo.SquashMerge(repo, alpha)
-			repo.StageFiles("-A")
 			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
-			repo.RemoveBranch(alpha)
 			// verify
-			betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
-			must.NoError(t, err)
 			unmergedFiles := []git.UnmergedFileInfo{
 				{
 					BaseChange: None[git.BlobInfo](),
@@ -249,7 +249,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			parentBranch := Some(alpha)
-			have, err := repo.DetectPhantomMergeConflicts(repo, unmergedFiles, parentBranch, Some(parentSHA), main)
+			have, err := repo.DetectPhantomMergeConflicts(repo, unmergedFiles, parentBranch, Some(alphaSHA), main)
 			want := []git.PhantomMergeConflict{
 				{FilePath: "file"},
 			}

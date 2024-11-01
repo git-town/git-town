@@ -344,7 +344,7 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		return []PhantomMergeConflict{}, nil
 	}
 	for _, unmergedFile := range unmergedFiles {
-		mainBlobInfo, err := self.ContentBlobInfo(querier, mainBranch.Location(), unmergedFile.FilePath)
+		mainBlobInfoOpt, err := self.ContentBlobInfo(querier, mainBranch.Location(), unmergedFile.FilePath)
 		if err != nil {
 			return []PhantomMergeConflict{}, err
 		}
@@ -356,7 +356,8 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		if !hasOriginalParentBlobInfo || unmergedFile.CurrentBranchChange.Permission != originalParentBlobInfo.Permission {
 			continue
 		}
-		if !reflect.DeepEqual(mainBlobInfo, originalParentBlobInfo) {
+
+		if !reflect.DeepEqual(mainBlobInfoOpt, originalParentBlobInfoOpt) {
 			// not a phantom merge conflict
 			continue
 		}
