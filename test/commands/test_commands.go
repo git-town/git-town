@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -178,6 +179,15 @@ func (self *TestCommands) CreateFile(name, content string) {
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
 }
 
+// creates a file with the given name and content in this repository
+func (self *TestCommands) CreateFileWithPermissions(name, content string, permissions fs.FileMode) {
+	filePath := filepath.Join(self.WorkingDir, name)
+	folderPath := filepath.Dir(filePath)
+	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
+	//nolint:gosec // need permission 700 here in order for tests to work
+	asserts.NoError(os.WriteFile(filePath, []byte(content), permissions))
+}
+
 // CreateFolder creates a folder with the given name in this repository.
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
@@ -226,6 +236,11 @@ func (self *TestCommands) CreateTag(name string) {
 
 func (self *TestCommands) CurrentCommitMessage() string {
 	return self.MustQuery("git", "log", "-1", "--pretty=%B")
+}
+
+func (self *TestCommands) DeleteFile(name string) {
+	filePath := filepath.Join(self.WorkingDir, name)
+	asserts.NoError(os.Remove(filePath))
 }
 
 // provides the first ancestor of the given branch that actually exists in the repo

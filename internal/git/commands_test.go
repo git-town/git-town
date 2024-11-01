@@ -257,6 +257,43 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("permissions differ", func(t *testing.T) {
 			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			// create the stack
+			main := gitdomain.NewLocalBranchName("main")
+			alpha := gitdomain.NewLocalBranchName("alpha")
+			beta := gitdomain.NewLocalBranchName("beta")
+			repo.CreateAndCheckoutFeatureBranch(alpha, main.Location())
+			repo.CreateFileWithPermissions("file", "alpha content", 0o600)
+			repo.StageFiles("file")
+			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha commit")), false, None[gitdomain.Author]())
+			repo.CreateAndCheckoutFeatureBranch(beta, alpha.Location())
+			repo.DeleteFile("file")
+			repo.CreateFileWithPermissions("file", "alpha content", 0o644)
+			repo.StageFiles("file")
+			repo.Commit(repo, Some(gitdomain.CommitMessage("beta commit")), false, None[gitdomain.Author]())
+			alphaSHA, err := repo.SHAForBranch(repo, alpha.BranchName())
+			must.NoError(t, err)
+			betaSHA, err := repo.SHAForBranch(repo, beta.BranchName())
+			must.NoError(t, err)
+			// ship branch alpha
+			repo.CheckoutBranch(main)
+			repo.SquashMerge(repo, alpha)
+			repo.Commit(repo, Some(gitdomain.CommitMessage("alpha feature")), false, None[gitdomain.Author]())
+			// verify
+			unmergedFiles := []git.UnmergedFileInfo{
+				{
+					BaseChange: None[git.BlobInfo](),
+					CurrentBranchChange: git.BlobInfo{
+						Permission: "100755",
+						SHA:        betaSHA,
+					},
+					FilePath: "file",
+				},
+			}
+			parentBranch := Some(alpha)
+			have, err := repo.DetectPhantomMergeConflicts(repo, unmergedFiles, parentBranch, Some(alphaSHA), main)
+			want := []git.PhantomMergeConflict{}
+			must.Eq(t, want, have)
 		})
 		t.Run("file contents differ", func(t *testing.T) {
 			t.Parallel()
