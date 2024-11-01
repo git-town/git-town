@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -357,7 +358,7 @@ func (self *Commands) DetectPhantomMergeConflicts(querier gitdomain.Querier, unm
 		if err != nil {
 			return []PhantomMergeConflict{}, err
 		}
-		if shaOnMain != shaOnOriginalParent {
+		if !reflect.DeepEqual(shaOnMain, shaOnOriginalParent) {
 			// not a phantom merge conflict
 			continue
 		}

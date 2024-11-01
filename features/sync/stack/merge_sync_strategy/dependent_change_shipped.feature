@@ -20,7 +20,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                                 |
