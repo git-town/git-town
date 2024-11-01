@@ -22,7 +22,6 @@ func TestUnmergedFile(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileConflictQuickInfo{
 			{
-				FilePath:   "file",
 				BaseChange: None[git.BlobInfo](),
 				CurrentBranchChange: git.BlobInfo{
 					FilePath:   "file",

@@ -365,12 +365,12 @@ func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.Lo
 
 // provides enough information about the unresolved merge conflict for the given file to determine whether this is a phantom merge conflict
 func (self *Commands) FileConflictFullInfo(querier gitdomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
-	mainBlob, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.FilePath)
+	mainBlob, err := self.ContentBlobInfo(querier, mainBranch.Location(), quickInfo.CurrentBranchChange.FilePath)
 	if err != nil {
 		return FileConflictFullInfo{}, err
 	}
 	// this is the blob at the original parent, before Git Town ran
-	parentBlob, err := self.ContentBlobInfo(querier, parentLocation, quickInfo.FilePath)
+	parentBlob, err := self.ContentBlobInfo(querier, parentLocation, quickInfo.CurrentBranchChange.FilePath)
 	if err != nil {
 		return FileConflictFullInfo{}, err
 	}

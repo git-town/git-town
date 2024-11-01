@@ -15,7 +15,6 @@ import (
 type FileConflictQuickInfo struct {
 	BaseChange          Option[BlobInfo] // info about the base version of the file (when 3-way merging)
 	CurrentBranchChange BlobInfo         // info about the content of the file on the branch where the merge conflict occurs
-	FilePath            string           // relative path of the conflicting file in the repo
 	IncomingChange      BlobInfo         // info about the content of the file on the branch being merged in
 }
 
@@ -144,7 +143,6 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 				result = append(result, FileConflictQuickInfo{
 					BaseChange:          baseChangeOpt,
 					CurrentBranchChange: currentBranchChange,
-					FilePath:            filePath,
 					IncomingChange:      incomingChange,
 				})
 			}
@@ -162,14 +160,12 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 			incomingChangeOpt = Some(change)
 		}
 	}
-	filePath, hasFilePath := filePathOpt.Get()
 	currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
 	incomingChange, hasIncomingChange := incomingChangeOpt.Get()
-	if hasFilePath && hasCurrentBranchChange && hasIncomingChange {
+	if hasCurrentBranchChange && hasIncomingChange {
 		result = append(result, FileConflictQuickInfo{
 			BaseChange:          baseChangeOpt,
 			CurrentBranchChange: currentBranchChange,
-			FilePath:            filePath,
 			IncomingChange:      incomingChange,
 		})
 	}
