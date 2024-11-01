@@ -58,6 +58,7 @@ func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBra
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == mainBranch {
+		// branches that don't have a parent or whose parent is the main branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
 	for _, conflictInfo := range conflictInfos {
