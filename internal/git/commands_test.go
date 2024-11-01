@@ -244,14 +244,17 @@ func TestBackendCommands(t *testing.T) {
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Main: Some(git.BlobInfo{
+						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
 					Parent: Some(git.BlobInfo{
+						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
 					Current: git.BlobInfo{
+						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					},
