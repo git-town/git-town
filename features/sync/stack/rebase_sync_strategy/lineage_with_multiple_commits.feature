@@ -40,7 +40,6 @@ Feature: stack that changes the same file in multiple commits per branch
       """
     And a rebase is now in progress
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "favorite-fruit" with "resolved apple"
     And I run "git-town continue" and close the editor
@@ -58,7 +57,7 @@ Feature: stack that changes the same file in multiple commits per branch
     And a rebase is still in progress
     And I resolve the conflict in "favorite-fruit" with "resolved peach"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    And it runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git rebase --continue                           |
       |        | git push --force-with-lease --force-if-includes |

@@ -806,6 +806,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^it prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		return nil
+	})
+
 	sc.Step(`^it prints no output$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output := state.runOutput.GetOrPanic()
@@ -821,20 +835,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := stripansi.Strip(state.runOutput.GetOrPanic())
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^it prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.runExitCodeChecked = true
-		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !regex.MatchString(have) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
-		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
 		}
 		return nil
 	})
