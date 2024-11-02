@@ -221,7 +221,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
-	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) error {
+	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
