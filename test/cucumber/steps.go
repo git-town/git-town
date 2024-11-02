@@ -825,6 +825,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^it prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		return nil
+	})
+
 	sc.Step(`^it prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.runExitCodeChecked = true

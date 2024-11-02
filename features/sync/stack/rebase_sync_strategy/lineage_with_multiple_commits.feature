@@ -34,6 +34,10 @@ Feature: stack that changes the same file in multiple commits per branch
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
       """
+    And it prints an error like:
+      """
+      could not apply .* alpha commit 1
+      """
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -45,6 +49,10 @@ Feature: stack that changes the same file in multiple commits per branch
     And it prints the error:
       """
       CONFLICT (content): Merge conflict in favorite-fruit
+      """
+    And it prints an error like:
+      """
+      could not apply .* alpha commit 2
       """
     And a rebase is now in progress
     And I resolve the conflict in "favorite-fruit" with "resolved peach"
