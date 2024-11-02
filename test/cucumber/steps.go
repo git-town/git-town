@@ -221,7 +221,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
-	sc.Step(`^a rebase is now in progress$`, func(ctx context.Context) error {
+	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
@@ -802,6 +802,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("==================================================================")
 			fmt.Println()
 			return errors.New("expected text not found")
+		}
+		return nil
+	})
+
+	sc.Step(`^it prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
 		}
 		return nil
 	})
