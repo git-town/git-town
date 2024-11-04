@@ -24,7 +24,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		localBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
+		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
@@ -39,8 +39,8 @@ type BranchProgramArgs struct {
 	Remotes             gitdomain.Remotes
 }
 
-// localBranchProgram provides the program to sync a local branch.
-func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+// LocalBranchProgram provides the program to sync a local branch.
+func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
 	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
