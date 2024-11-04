@@ -107,20 +107,22 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 }
 
 type mergeData struct {
-	branchesSnapshot         gitdomain.BranchesSnapshot
-	branchesToSync           []configdomain.BranchToSync
-	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
-	dialogTestInputs         components.TestInputs
-	dryRun                   configdomain.DryRun
-	grandParentBranch        gitdomain.LocalBranchName
-	hasOpenChanges           bool
-	initialBranch            gitdomain.LocalBranchName
-	parentBranch             gitdomain.LocalBranchName
-	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
-	previousBranch           Option[gitdomain.LocalBranchName]
-	remotes                  gitdomain.Remotes
-	stashSize                gitdomain.StashSize
+	branchesSnapshot                gitdomain.BranchesSnapshot
+	branchesToSync                  []configdomain.BranchToSync
+	config                          config.ValidatedConfig
+	connector                       Option[hostingdomain.Connector]
+	dialogTestInputs                components.TestInputs
+	dryRun                          configdomain.DryRun
+	grandParentBranch               gitdomain.LocalBranchName
+	hasOpenChanges                  bool
+	initialBranch                   gitdomain.LocalBranchName
+	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
+	initialBranchInfo               gitdomain.BranchInfo
+	parentBranch                    gitdomain.LocalBranchName
+	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
+	previousBranch                  Option[gitdomain.LocalBranchName]
+	remotes                         gitdomain.Remotes
+	stashSize                       gitdomain.StashSize
 }
 
 func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (mergeData, bool, error) {
@@ -218,7 +220,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 
 func mergeProgram(data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
@@ -227,27 +229,6 @@ func mergeProgram(data mergeData) program.Program {
 		PushBranches:        true,
 		Remotes:             data.remotes,
 	})
-	// Option 1:
-	// Enforce that the branches are in sync here,
-	// for example by syncing them detached.
-	// Then simply remove the parent branch
-	// and make the branch inherit directly from the grandparent.
-	// This will work with all sync strategies.
-	//
-	// Option 2:
-	// Merge/rebase the branch manually here.
-	//
-	// Option 1 seems more idiomatic and elegant since it naturally enforces branch syncing.
-	// With option 2, we would need to either resolve merge conflicts while merging branches
-	// or manually verify whether branches are in sync with their ancestry, which is cumbersome.
-	switch data.config.NormalConfig.SyncFeatureStrategy {
-	case configdomain.SyncFeatureStrategyCompress:
-		mergeUsingCompressStrategy(prog, data)
-	case configdomain.SyncFeatureStrategyMerge:
-		mergeUsingMergeStrategy(prog, data)
-	case configdomain.SyncFeatureStrategyRebase:
-		mergeUsingRebaseStrategy(prog, data)
-	}
 	// update proposals
 	// remove the branches
 	prog.Value.Add(&opcodes.LineageParentSet{
