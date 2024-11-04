@@ -114,7 +114,7 @@ type mergeData struct {
 	grandParentBranch gitdomain.LocalBranchName
 	hasOpenChanges    bool
 	initialBranch     gitdomain.LocalBranchName
-	parentBranch      gitdomain.BranchName
+	parentBranch      gitdomain.LocalBranchName
 	previousBranch    Option[gitdomain.LocalBranchName]
 	stashSize         gitdomain.StashSize
 }
@@ -182,7 +182,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	}
 	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
 	if !hasGrandParentBranch {
-		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch)
+		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	return mergeData{
@@ -194,7 +194,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		grandParentBranch: grandParentBranch,
 		hasOpenChanges:    repoStatus.OpenChanges,
 		initialBranch:     initialBranch,
-		parentBranch:      parentBranch.BranchName(),
+		parentBranch:      parentBranch,
 		previousBranch:    previousBranch,
 		stashSize:         stashSize,
 	}, false, err
@@ -216,8 +216,11 @@ func mergeProgram(data mergeData) program.Program {
 		Branch: data.initialBranch,
 		Parent: data.grandParentBranch,
 	})
+	prog.Value.Add(&opcodes.LineageParentRemove{
+		Branch: data.parentBranch,
+	})
 	prog.Value.Add(&opcodes.BranchLocalDelete{
-		Branch: data.parentBranch.LocalName(),
+		Branch: data.parentBranch,
 	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -233,7 +236,7 @@ func mergeUsingCompressStrategy(prog Mutable[program.Program], data mergeData) {
 
 func mergeUsingMergeStrategy(prog Mutable[program.Program], data mergeData) {
 	prog.Value.Add(&opcodes.Merge{
-		Branch: data.parentBranch,
+		Branch: data.parentBranch.BranchName(),
 	})
 }
 
@@ -244,5 +247,6 @@ func validateMergeData(data mergeData) error {
 		return errors.New(messages.MergeOpenChanges)
 	}
 	// ensure branches in sync with tracking branches
+	// ensure parent branch has only one child
 	return nil
 }
