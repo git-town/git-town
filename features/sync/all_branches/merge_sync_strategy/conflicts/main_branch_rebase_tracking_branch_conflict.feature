@@ -61,8 +61,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | main    | git rebase --continue                   |
       |         | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
       |         | git checkout main                       |
       | main    | git push --tags                         |
