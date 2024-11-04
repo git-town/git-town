@@ -18,17 +18,12 @@ Feature: merging a branch in a stack with its parent
   @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff main         |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff alpha        |
-      |        | git push                              |
-      |        | git merge --no-edit --ff alpha        |
-      |        | git branch -D alpha                   |
-      |        | git push origin :alpha                |
+      | BRANCH | COMMAND                              |
+      | beta   | git merge --no-edit --ff origin/beta |
+      |        | git merge --no-edit --ff alpha       |
+      |        | git push                             |
+      |        | git branch -D alpha                  |
+      |        | git push origin :alpha               |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
@@ -36,7 +31,7 @@ Feature: merging a branch in a stack with its parent
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
       | beta   | local, origin | beta commit                    | beta-file  | beta content  |
-      |        | local         | alpha commit                   | alpha-file | alpha content |
+      |        |               | alpha commit                   | alpha-file | alpha content |
       |        |               | Merge branch 'alpha' into beta |            |               |
     And these committed files exist now
       | BRANCH | NAME       | CONTENT       |
