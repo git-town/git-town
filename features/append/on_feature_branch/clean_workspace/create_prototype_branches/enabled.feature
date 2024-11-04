@@ -12,6 +12,7 @@ Feature: auto-creating a prototype branch when appending
     And Git Town setting "create-prototype-branches" is "true"
     When I run "git-town append new"
 
+  # @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
