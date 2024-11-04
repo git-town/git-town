@@ -31,6 +31,10 @@ Feature: merging a branch in a stack with its parent
       | beta   | local, origin | beta commit                    | beta-file  | beta content  |
       |        | local         | alpha commit                   | alpha-file | alpha content |
       |        |               | Merge branch 'alpha' into beta |            |               |
+    And these committed files exist now
+      | BRANCH | NAME       | CONTENT       |
+      | beta   | alpha-file | alpha content |
+      |        | beta-file  | beta content  |
 
   Scenario: undo
     When I run "git-town undo"

@@ -202,6 +202,19 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 
 func mergeProgram(data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	// Option 1:
+	// Enforce that the branches are in sync here,
+	// for example by syncing them detached.
+	// Then simply remove the parent branch
+	// and make the branch inherit directly from the grandparent.
+	// This will work with all sync strategies.
+	//
+	// Option 2:
+	// Merge/rebase the branch manually here.
+	//
+	// Option 1 seems more idiomatic and elegant since it naturally enforces branch syncing.
+	// With option 2, we would need to either resolve merge conflicts while merging branches
+	// or manually verify whether branches are in sync with their ancestry, which is cumbersome.
 	switch data.config.NormalConfig.SyncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyCompress:
 		mergeUsingCompressStrategy(prog, data)
