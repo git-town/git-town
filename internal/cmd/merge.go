@@ -200,21 +200,26 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	initialBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, initialBranch.BranchName(), parentBranch.BranchName())
+	if err != nil {
+		return mergeData{}, false, err
+	}
 	return mergeData{
-		branchesSnapshot:         branchesSnapshot,
-		branchesToSync:           branchesToSync,
-		config:                   validatedConfig,
-		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
-		grandParentBranch:        grandParentBranch,
-		hasOpenChanges:           repoStatus.OpenChanges,
-		initialBranch:            initialBranch,
-		parentBranch:             parentBranch,
-		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
-		previousBranch:           previousBranch,
-		remotes:                  remotes,
-		stashSize:                stashSize,
+		branchesSnapshot:                branchesSnapshot,
+		branchesToSync:                  branchesToSync,
+		config:                          validatedConfig,
+		connector:                       connector,
+		dialogTestInputs:                dialogTestInputs,
+		dryRun:                          dryRun,
+		grandParentBranch:               grandParentBranch,
+		hasOpenChanges:                  repoStatus.OpenChanges,
+		initialBranch:                   initialBranch,
+		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
+		parentBranch:                    parentBranch,
+		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
+		previousBranch:                  previousBranch,
+		remotes:                         remotes,
+		stashSize:                       stashSize,
 	}, false, err
 }
 
