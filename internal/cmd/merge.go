@@ -2,17 +2,22 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v16/internal/cli/flags"
+	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v16/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/program"
@@ -58,8 +63,8 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil {
 		return err
 	}
-	data, err := determineMergeData(repo)
-	if err != nil {
+	data, exit, err := determineMergeData(repo, dryRun, verbose)
+	if err != nil || exit {
 		return err
 	}
 	err = validateMergeData(data)
@@ -113,14 +118,80 @@ type mergeData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult) (mergeData, error) {
+func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (mergeData, bool, error) {
 	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return mergeData{}, err
+		return mergeData{}, false, err
 	}
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	if err != nil {
+		return mergeData{}, false, err
+	}
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return mergeData{}, false, err
+	}
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 !repoStatus.OpenChanges,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return mergeData{}, exit, err
+	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesSnapshot:   branchesSnapshot,
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		Connector:          connector,
+		DialogTestInputs:   dialogTestInputs,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		LocalBranches:      localBranches,
+		RepoStatus:         repoStatus,
+		TestInputs:         dialogTestInputs,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return mergeData{}, exit, err
+	}
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
+	if !hasParentBranch {
+		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
+	}
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	return mergeData{
 		branchesSnapshot: branchesSnapshot,
-	}, err
+		config:           validatedConfig,
+		connector:        connector,
+		dialogTestInputs: dialogTestInputs,
+		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    initialBranch,
+		parentBranch:     parentBranch.BranchName(),
+		previousBranch:   previousBranch,
+		stashSize:        stashSize,
+	}, false, err
 }
 
 func mergeProgram(data mergeData) program.Program {
