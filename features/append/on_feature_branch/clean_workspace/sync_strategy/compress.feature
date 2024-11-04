@@ -21,11 +21,11 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |          | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff origin/existing |
-      |          | git merge --no-edit --ff main            |
+      | existing | git merge --no-edit --ff main            |
       |          | git reset --soft main                    |
       |          | git commit -m "existing commit 1"        |
       |          | git push --force-with-lease              |
+      |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
     And these commits exist now
