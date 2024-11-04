@@ -19,8 +19,8 @@ Feature: auto-create prototype branches when prepending
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout old                        |
-      | old    | git merge --no-edit --ff origin/old     |
-      |        | git merge --no-edit --ff main           |
+      | old    | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/old     |
       |        | git checkout -b parent main             |
     And the current branch is now "parent"
     And branch "parent" is now prototype

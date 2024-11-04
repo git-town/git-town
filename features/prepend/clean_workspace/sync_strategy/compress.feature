@@ -16,6 +16,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
