@@ -50,7 +50,7 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	branchType := args.Config.BranchType(localName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
-		FeatureBranchProgram(featureBranchArgs{
+		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
@@ -59,14 +59,13 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case
 		configdomain.BranchTypePerennialBranch,
 		configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
-		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
+		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
@@ -75,14 +74,13 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branchInfo)
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branchInfo.RemoteName, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
-		FeatureBranchProgram(featureBranchArgs{
+		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
@@ -91,7 +89,6 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			program:            args.Program,
 			pushBranches:       false,
 			remoteName:         branchInfo.RemoteName,
-			syncStrategy:       args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(),
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
