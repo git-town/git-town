@@ -1,16 +1,11 @@
 package cmd
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -51,11 +46,11 @@ func executeMerge(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := determineObserveData(args, repo)
+	data, err := determineMergeData(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(data)
+	err = validateMergeData(data)
 	if err != nil {
 		return err
 	}
@@ -66,7 +61,6 @@ func executeMerge(args []string, verbose configdomain.Verbose) error {
 	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
 		return err
 	}
-	printObservedBranches(branchNames)
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
 		if err = repo.Git.CheckoutBranch(repo.Frontend, checkout, false); err != nil {
 			return err
@@ -86,51 +80,20 @@ func executeMerge(args []string, verbose configdomain.Verbose) error {
 	})
 }
 
-type observeData struct {
+type mergeData struct {
 	branchInfos       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
 	branchesToObserve configdomain.BranchesAndTypes
 	checkout          Option[gitdomain.LocalBranchName]
 }
 
-func printObservedBranches(branches gitdomain.LocalBranchNames) {
-	for _, branch := range branches {
-		fmt.Printf(messages.ObservedBranchIsNowObserved, branch)
-	}
-}
-
-func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
-}
-
-func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
+func determineMergeData(args []string, repo execute.OpenRepoResult) (mergeData, error) {
 	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return observeData{}, err
+		return mergeData{}, err
 	}
 	branchesToObserve, branchToCheckout, err := execute.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return observeData{
+	return mergeData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
@@ -138,29 +101,6 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}, err
 }
 
-func validateObserveData(data observeData) error {
-	for branchName, branchType := range data.branchesToObserve {
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotObserve)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotObserve)
-		case configdomain.BranchTypeObservedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch:
-		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
-		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
-		if hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
-		}
-	}
+func validateMergeData(data mergeData) error {
 	return nil
 }
