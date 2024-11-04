@@ -20,8 +20,8 @@ Feature: don't sync tags while prepending
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout old                        |
-      | old    | git merge --no-edit --ff origin/old     |
-      |        | git merge --no-edit --ff main           |
+      | old    | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/old     |
       |        | git checkout -b new main                |
     And the initial tags exist now
 
