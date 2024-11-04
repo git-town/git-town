@@ -17,8 +17,8 @@ Feature: GitHub support
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --tags                                           |
       | <none>  | Looking for proposal online ... ok                                 |
-      | feature | git merge --no-edit --ff origin/feature                            |
-      |         | git merge --no-edit --ff main                                      |
+      | feature | git merge --no-edit --ff main                                      |
+      |         | git merge --no-edit --ff origin/feature                            |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
