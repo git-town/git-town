@@ -139,6 +139,7 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranchCannotPropose               = "cannot propose the main branch"
 	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
+	MergeOpenChanges                      = "please commit or remove the open changes first"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
