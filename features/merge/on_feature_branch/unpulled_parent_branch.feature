@@ -8,12 +8,14 @@ Feature: merging a branch in a stack with its parent
       | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
+      | alpha  | origin        | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
+  # @debug
+  # @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                              |
@@ -36,7 +38,6 @@ Feature: merging a branch in a stack with its parent
       | beta   | alpha-file | alpha content |
       |        | beta-file  | beta content  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
