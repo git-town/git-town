@@ -53,9 +53,9 @@ type featureBranchArgs struct {
 }
 
 func syncFeatureTrackingBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) bool {
-	if args.offline.IsTrue() {
-		return false
-	}
+	// if args.offline.IsTrue() {
+	// 	return false
+	// }
 	trackingBranch, hasTrackingBranch := args.remoteName.Get()
 	if !hasTrackingBranch {
 		return hasTrackingBranch

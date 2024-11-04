@@ -76,10 +76,12 @@ Feature: sync all feature branches
       |            | git checkout main                               |
       | main       | git rebase origin/main --no-update-refs         |
       |            | git checkout alpha                              |
-      | alpha      | git rebase main --no-update-refs                |
+      | alpha      | git push --force-with-lease --force-if-includes |
+      |            | git rebase main --no-update-refs                |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout beta                               |
-      | beta       | git rebase main --no-update-refs                |
+      | beta       | git push --force-with-lease --force-if-includes |
+      |            | git rebase main --no-update-refs                |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout observed                           |
       | observed   | git rebase origin/observed --no-update-refs     |
