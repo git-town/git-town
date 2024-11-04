@@ -200,6 +200,10 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
+		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
+	}
 	initialBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, initialBranch.BranchName(), parentBranch.BranchName())
 	if err != nil {
 		return mergeData{}, false, err
@@ -215,6 +219,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		hasOpenChanges:                  repoStatus.OpenChanges,
 		initialBranch:                   initialBranch,
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
+		initialBranchInfo:               *initialBranchInfo,
 		parentBranch:                    parentBranch,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
@@ -258,16 +263,6 @@ func mergeProgram(data mergeData) program.Program {
 	})
 	return prog.Get()
 }
-
-func mergeUsingCompressStrategy(prog Mutable[program.Program], data mergeData) {}
-
-func mergeUsingMergeStrategy(prog Mutable[program.Program], data mergeData) {
-	prog.Value.Add(&opcodes.Merge{
-		Branch: data.parentBranch.BranchName(),
-	})
-}
-
-func mergeUsingRebaseStrategy(prog Mutable[program.Program], data mergeData) {}
 
 func validateMergeData(data mergeData) error {
 	if data.hasOpenChanges {
