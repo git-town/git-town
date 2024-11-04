@@ -24,16 +24,16 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout branch-1                    |
       | branch-1 | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/branch-1 |
       |          | git reset --soft main                    |
       |          | git commit -m "branch-1 commit"          |
       |          | git push --force-with-lease              |
-      |          | git merge --no-edit --ff origin/branch-1 |
       |          | git checkout branch-2                    |
       | branch-2 | git merge --no-edit --ff branch-1        |
+      |          | git merge --no-edit --ff origin/branch-2 |
       |          | git reset --soft branch-1                |
       |          | git commit -m "branch-2 commit"          |
       |          | git push --force-with-lease              |
-      |          | git merge --no-edit --ff origin/branch-2 |
       |          | git checkout -b branch-1a branch-1       |
     And the current branch is now "branch-1a"
     And the initial commits exist now
