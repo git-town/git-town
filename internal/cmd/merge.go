@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/cli/flags"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v16/internal/cmd/sync"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
@@ -106,26 +107,24 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 }
 
 type mergeData struct {
-	branchesSnapshot  gitdomain.BranchesSnapshot
-	config            config.ValidatedConfig
-	connector         Option[hostingdomain.Connector]
-	dialogTestInputs  components.TestInputs
-	dryRun            configdomain.DryRun
-	grandParentBranch gitdomain.LocalBranchName
-	hasOpenChanges    bool
-	initialBranch     gitdomain.LocalBranchName
-	parentBranch      gitdomain.LocalBranchName
-	previousBranch    Option[gitdomain.LocalBranchName]
-	stashSize         gitdomain.StashSize
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchesToSync           []configdomain.BranchToSync
+	config                   config.ValidatedConfig
+	connector                Option[hostingdomain.Connector]
+	dialogTestInputs         components.TestInputs
+	dryRun                   configdomain.DryRun
+	grandParentBranch        gitdomain.LocalBranchName
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	parentBranch             gitdomain.LocalBranchName
+	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
+	previousBranch           Option[gitdomain.LocalBranchName]
+	remotes                  gitdomain.Remotes
+	stashSize                gitdomain.StashSize
 }
 
 func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (mergeData, bool, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return mergeData{}, false, err
-	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return mergeData{}, false, err
 	}
@@ -158,6 +157,11 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	if !hasInitialBranch {
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	if err != nil {
+		return mergeData{}, false, err
+	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -185,23 +189,44 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return mergeData{}, false, err
+	}
+	branchNamesToSync := gitdomain.LocalBranchNames{parentBranch, initialBranch}
+	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return mergeData{}, false, err
+	}
 	return mergeData{
-		branchesSnapshot:  branchesSnapshot,
-		config:            validatedConfig,
-		connector:         connector,
-		dialogTestInputs:  dialogTestInputs,
-		dryRun:            dryRun,
-		grandParentBranch: grandParentBranch,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     initialBranch,
-		parentBranch:      parentBranch,
-		previousBranch:    previousBranch,
-		stashSize:         stashSize,
+		branchesSnapshot:         branchesSnapshot,
+		branchesToSync:           branchesToSync,
+		config:                   validatedConfig,
+		connector:                connector,
+		dialogTestInputs:         dialogTestInputs,
+		dryRun:                   dryRun,
+		grandParentBranch:        grandParentBranch,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		parentBranch:             parentBranch,
+		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
+		previousBranch:           previousBranch,
+		remotes:                  remotes,
+		stashSize:                stashSize,
 	}, false, err
 }
 
 func mergeProgram(data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+		BranchInfos:         data.branchesSnapshot.Branches,
+		Config:              data.config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
+		Program:             prog,
+		PushBranches:        true,
+		Remotes:             data.remotes,
+	})
 	// Option 1:
 	// Enforce that the branches are in sync here,
 	// for example by syncing them detached.
