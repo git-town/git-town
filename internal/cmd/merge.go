@@ -54,7 +54,7 @@ func mergeCmd() *cobra.Command {
 func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
-		PrintBranchNames: false,
+		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
@@ -138,7 +138,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 !repoStatus.OpenChanges,
+		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -204,11 +204,16 @@ func mergeProgram(data mergeData) program.Program {
 	case configdomain.SyncFeatureStrategyRebase:
 		mergeUsingRebaseStrategy(prog, data)
 	}
+	// update proposals
+	// remove the branches
+	prog.Value.Add(&opcodes.BranchLocalDelete{
+		Branch: data.parentBranch.LocalName(),
+	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
+		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog.Get()

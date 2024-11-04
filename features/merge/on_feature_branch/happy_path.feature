@@ -14,17 +14,17 @@ Feature: merging a branch in a stack with its parent
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
+  # @debug
   @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND             |
-      | beta   | git merge alpha     |
-      |        | git branch -D alpha |
+      | BRANCH | COMMAND                        |
+      | beta   | git merge --no-edit --ff alpha |
+      |        | git branch -D alpha            |
     And the current branch is still "beta"
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
+      | BRANCH | PARENT |
+      | beta   | main   |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 3    |
