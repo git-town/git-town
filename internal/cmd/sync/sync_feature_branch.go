@@ -10,9 +10,25 @@ import (
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	// sync with the tracking branch
-	hasTrackingBranch := syncFeatureTrackingBranchProgram(syncStrategy, args)
-	// sync with the parent branch
+	trackingBranch, hasTrackingBranch := args.remoteName.Get()
+	syncFeatureParentBranch(syncStrategy, hasTrackingBranch, args)
+	if hasTrackingBranch {
+		syncFeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
+	}
+}
+
+type featureBranchArgs struct {
+	firstCommitMessage Option[gitdomain.CommitMessage]
+	localName          gitdomain.LocalBranchName
+	offline            configdomain.Offline              // whether offline mode is enabled
+	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
+	program            Mutable[program.Program]          // the program to update
+	pushBranches       configdomain.PushBranches
+	remoteName         Option[gitdomain.RemoteBranchName]
+}
+
+func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, hasTrackingBranch bool, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyMerge:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
@@ -41,25 +57,10 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	}
 }
 
-type featureBranchArgs struct {
-	firstCommitMessage Option[gitdomain.CommitMessage]
-	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline              // whether offline mode is enabled
-	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
-	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
-	program            Mutable[program.Program]          // the program to update
-	pushBranches       configdomain.PushBranches
-	remoteName         Option[gitdomain.RemoteBranchName]
-}
-
-func syncFeatureTrackingBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) bool {
+func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	// if args.offline.IsTrue() {
 	// 	return false
 	// }
-	trackingBranch, hasTrackingBranch := args.remoteName.Get()
-	if !hasTrackingBranch {
-		return hasTrackingBranch
-	}
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
@@ -70,5 +71,4 @@ func syncFeatureTrackingBranchProgram(syncStrategy configdomain.SyncStrategy, ar
 			args.program.Value.Add(&opcodes.RebaseTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
 		}
 	}
-	return hasTrackingBranch
 }
