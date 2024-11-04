@@ -140,6 +140,7 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
 	MergeOpenChanges                      = "please commit or remove the open changes first"
+	MergeNoGrandParent                    = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                         = "cannot merge branch %q because it has no parent"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"

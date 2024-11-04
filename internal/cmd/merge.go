@@ -106,16 +106,17 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 }
 
 type mergeData struct {
-	branchesSnapshot gitdomain.BranchesSnapshot
-	config           config.ValidatedConfig
-	connector        Option[hostingdomain.Connector]
-	dialogTestInputs components.TestInputs
-	dryRun           configdomain.DryRun
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	parentBranch     gitdomain.BranchName
-	previousBranch   Option[gitdomain.LocalBranchName]
-	stashSize        gitdomain.StashSize
+	branchesSnapshot  gitdomain.BranchesSnapshot
+	config            config.ValidatedConfig
+	connector         Option[hostingdomain.Connector]
+	dialogTestInputs  components.TestInputs
+	dryRun            configdomain.DryRun
+	grandParentBranch gitdomain.LocalBranchName
+	hasOpenChanges    bool
+	initialBranch     gitdomain.LocalBranchName
+	parentBranch      gitdomain.BranchName
+	previousBranch    Option[gitdomain.LocalBranchName]
+	stashSize         gitdomain.StashSize
 }
 
 func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (mergeData, bool, error) {
@@ -179,18 +180,23 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	if !hasParentBranch {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
+	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
+	if !hasGrandParentBranch {
+		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch)
+	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	return mergeData{
-		branchesSnapshot: branchesSnapshot,
-		config:           validatedConfig,
-		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
-		dryRun:           dryRun,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		parentBranch:     parentBranch.BranchName(),
-		previousBranch:   previousBranch,
-		stashSize:        stashSize,
+		branchesSnapshot:  branchesSnapshot,
+		config:            validatedConfig,
+		connector:         connector,
+		dialogTestInputs:  dialogTestInputs,
+		dryRun:            dryRun,
+		grandParentBranch: grandParentBranch,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     initialBranch,
+		parentBranch:      parentBranch.BranchName(),
+		previousBranch:    previousBranch,
+		stashSize:         stashSize,
 	}, false, err
 }
 
@@ -206,6 +212,10 @@ func mergeProgram(data mergeData) program.Program {
 	}
 	// update proposals
 	// remove the branches
+	prog.Value.Add(&opcodes.LineageParentSet{
+		Branch: data.initialBranch,
+		Parent: data.grandParentBranch,
+	})
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.parentBranch.LocalName(),
 	})
