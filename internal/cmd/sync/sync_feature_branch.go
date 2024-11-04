@@ -11,9 +11,9 @@ import (
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	trackingBranch, hasTrackingBranch := args.remoteName.Get()
-	syncFeatureParentBranch(syncStrategy, hasTrackingBranch, args)
+	syncFeatureParentBranch(syncStrategy, args)
 	if hasTrackingBranch {
-		syncFeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
+		syncFeatureTrackingBranchProgram(trackingBranch, hasTrackingBranch, syncStrategy, args)
 	}
 }
 
@@ -28,7 +28,7 @@ type featureBranchArgs struct {
 	remoteName         Option[gitdomain.RemoteBranchName]
 }
 
-func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, hasTrackingBranch bool, args featureBranchArgs) {
+func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyMerge:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
@@ -44,6 +44,14 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, hasTracking
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,
 		})
+	}
+}
+
+// separate pull and push of the tracking branch here?
+func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, hasTrackingBranch bool, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
+	switch syncStrategy {
+	case configdomain.SyncStrategyCompress:
+		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 		if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
 			args.program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.localName})
 			args.program.Value.Add(&opcodes.CommitWithMessage{
@@ -54,13 +62,6 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, hasTracking
 		if hasTrackingBranch && args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 		}
-	}
-}
-
-func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	switch syncStrategy {
-	case configdomain.SyncStrategyCompress:
-		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	case configdomain.SyncStrategyMerge:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	case configdomain.SyncStrategyRebase:
