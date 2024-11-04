@@ -36,13 +36,14 @@ Feature: merging a branch in a stack with its parent
       | beta   | alpha-file | alpha content |
       |        | beta-file  | beta content  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
-    And the current branch is now "existing"
+      | BRANCH | COMMAND                                              |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
+      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
+      |        | git push -u origin alpha                             |
+    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
