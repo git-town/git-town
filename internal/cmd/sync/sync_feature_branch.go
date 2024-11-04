@@ -58,9 +58,6 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, hasTracking
 }
 
 func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	// if args.offline.IsTrue() {
-	// 	return false
-	// }
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
