@@ -222,6 +222,9 @@ func mergeProgram(data mergeData) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.parentBranch,
 	})
+	prog.Value.Add(&opcodes.BranchTrackingDelete{
+		Branch: data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

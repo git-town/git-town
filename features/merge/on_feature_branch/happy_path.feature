@@ -7,9 +7,9 @@ Feature: merging a branch in a stack with its parent
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT |
-      | alpha  | local, origin | alpha commit | alpha-file |              |
-      | beta   | local, origin | beta commit  | beta-file  |              |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
+      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
+      | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
@@ -21,15 +21,16 @@ Feature: merging a branch in a stack with its parent
       | BRANCH | COMMAND                        |
       | beta   | git merge --no-edit --ff alpha |
       |        | git branch -D alpha            |
+      |        | git push origin :alpha         |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME           | FILE CONTENT         |
-      | beta   | local, origin | beta commit                    | default_file_name_2 | default file content |
-      |        | local         | alpha commit                   | default_file_name_1 | default file content |
-      |        |               | Merge branch 'alpha' into beta |                     |                      |
+      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
+      | beta   | local, origin | beta commit                    | beta-file  | beta content  |
+      |        | local         | alpha commit                   | alpha-file | alpha content |
+      |        |               | Merge branch 'alpha' into beta |            |               |
 
   Scenario: undo
     When I run "git-town undo"
