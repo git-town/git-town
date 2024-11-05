@@ -14,7 +14,7 @@ Feature: offline mode
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    # And inspect the repo
+    And inspect the repo
     When I run "git-town sync -v"
 
   @debug

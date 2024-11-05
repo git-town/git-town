@@ -248,8 +248,10 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			return
 		}
 	} else {
+		fmt.Println("55555555555555555555555555555555555555555555555555555555555555555555555555555555")
 		err = subProcess.Run()
 	}
+	fmt.Println("666666666666666666666666666666666666666666666666666666666666666666666666666666")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
