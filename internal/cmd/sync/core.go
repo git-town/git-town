@@ -63,7 +63,6 @@ func Cmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			fmt.Println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
 	}
