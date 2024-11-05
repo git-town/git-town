@@ -16,15 +16,14 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                                    |
-      | child      | git fetch --prune --tags                   |
-      |            | git checkout main                          |
-      | main       | git rebase origin/main --no-update-refs    |
-      |            | git push                                   |
-      |            | git branch -D child                        |
-      |            | git checkout grandchild                    |
-      | grandchild | git merge --no-edit --ff origin/grandchild |
-      |            | git merge --no-edit --ff main              |
+      | BRANCH     | COMMAND                                 |
+      | child      | git fetch --prune --tags                |
+      |            | git checkout main                       |
+      | main       | git rebase origin/main --no-update-refs |
+      |            | git push                                |
+      |            | git branch -D child                     |
+      |            | git checkout grandchild                 |
+      | grandchild | git merge --no-edit --ff main           |
     And it prints the error:
       """
       git merge conflict
