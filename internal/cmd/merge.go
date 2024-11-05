@@ -236,17 +236,19 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
-	sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(
-		gitdomain.RemoteOrigin),
-		data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
-		sync.FeatureTrackingArgs{
-			FirstCommitMessage: data.parentBranchFirstCommitMessage,
-			LocalName:          data.parentBranch,
-			Offline:            data.offline,
-			Program:            prog,
-			PushBranches:       true,
-		})
+	if data.remotes.HasOrigin() {
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
+		sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(
+			gitdomain.RemoteOrigin),
+			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
+			sync.FeatureTrackingArgs{
+				FirstCommitMessage: data.parentBranchFirstCommitMessage,
+				LocalName:          data.parentBranch,
+				Offline:            data.offline,
+				Program:            prog,
+				PushBranches:       true,
+			})
+	}
 	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		Config:              data.config,
