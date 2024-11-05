@@ -12,7 +12,7 @@ import (
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	syncFeatureParentBranch(syncStrategy, args)
 	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
-		syncFeatureTrackingBranchProgram(trackingBranch, hasTrackingBranch, syncStrategy, args)
+		syncFeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
 	}
 }
 
@@ -47,7 +47,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 }
 
 // separate pull and push of the tracking branch here?
-func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, hasTrackingBranch bool, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
+func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
@@ -58,13 +58,13 @@ func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName,
 				Message:        firstCommitMessage,
 			})
 		}
-		if hasTrackingBranch && args.offline.IsFalse() {
+		if args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 		}
 	case configdomain.SyncStrategyMerge:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
 	case configdomain.SyncStrategyRebase:
-		if _, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch && args.offline.IsFalse() {
+		if _, hasRemote := args.remoteName.Get(); hasRemote && args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.RebaseTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
 		}
 	}
