@@ -30,8 +30,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git merge --no-edit --ff origin/alpha   |
       |        | git push                                |
       |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff origin/beta    |
-      |        | git merge --no-edit --ff main           |
+      | beta   | git merge --no-edit --ff main           |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -54,8 +53,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git reset --hard {{ sha 'local beta commit' }}  |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git stash pop                                   |
@@ -68,28 +65,27 @@ Feature: handle merge conflicts between feature branch and main branch
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH | COMMAND                                        |
-      | beta   | git merge --abort                              |
-      |        | git reset --hard {{ sha 'local beta commit' }} |
-      |        | git checkout gamma                             |
-      | gamma  | git merge --no-edit --ff origin/gamma          |
-      |        | git merge --no-edit --ff main                  |
-      |        | git push                                       |
-      |        | git checkout main                              |
-      | main   | git push --tags                                |
-      |        | git stash pop                                  |
+      | BRANCH | COMMAND                               |
+      | beta   | git merge --abort                     |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
+      |        | git push                              |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | local beta commit              |
-      |        | origin        | origin beta commit             |
-      | gamma  | local, origin | gamma commit                   |
-      |        |               | Merge branch 'main' into gamma |
+      | BRANCH | LOCATION      | MESSAGE                                                |
+      | main   | local, origin | main commit                                            |
+      | alpha  | local, origin | alpha commit                                           |
+      |        |               | Merge branch 'main' into alpha                         |
+      | beta   | local         | local beta commit                                      |
+      |        | origin        | origin beta commit                                     |
+      | gamma  | local, origin | gamma commit                                           |
+      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
     And these committed files exist now
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
@@ -99,6 +95,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | conflicting_file | main content       |
       |        | feature3_file    | gamma content      |
 
+  @this
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
