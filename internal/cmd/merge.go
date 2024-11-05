@@ -54,7 +54,7 @@ func mergeCmd() *cobra.Command {
 
 func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		DryRun:           dryRun,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
