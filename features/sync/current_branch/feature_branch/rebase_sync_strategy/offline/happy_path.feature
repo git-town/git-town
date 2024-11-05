@@ -14,8 +14,11 @@ Feature: offline mode
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    When I run "git-town sync"
+    # And inspect the repo
+    When I run "git-town sync -v"
 
+  @debug
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |

@@ -726,10 +726,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.CaptureState()
 			updateInitialSHAs(state)
 		}
+		fmt.Println("111111111111111111111111111111111111111111111111111111111111")
 		var exitCode int
 		var runOutput string
 		if hasDevRepo {
+			fmt.Println("22222222222222222222222222222222222222222222222222222222")
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
+			fmt.Println("33333333333333333333333333333333333333333333333333333333333")
 			devRepo.Config.Reload()
 		} else {
 			parts, err := shellquote.Split(command)
