@@ -26,8 +26,8 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/alpha   |
       |        | git push                                |
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff origin/beta    |

@@ -23,8 +23,8 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/alpha   |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

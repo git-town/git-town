@@ -154,8 +154,8 @@ Feature: handle merge conflicts between feature branch and main branch
       | BRANCH | COMMAND                               |
       | beta   | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
