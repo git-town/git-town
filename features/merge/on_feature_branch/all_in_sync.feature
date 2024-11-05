@@ -17,7 +17,8 @@ Feature: merging a branch in a stack with its parent
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                              |
-      | beta   | git merge --no-edit --ff origin/beta |
+      | beta   | git fetch --prune --tags             |
+      |        | git merge --no-edit --ff origin/beta |
       |        | git merge --no-edit --ff alpha       |
       |        | git push                             |
       |        | git branch -D alpha                  |
