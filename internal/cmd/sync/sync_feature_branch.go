@@ -10,9 +10,8 @@ import (
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	trackingBranch, hasTrackingBranch := args.remoteName.Get()
 	syncFeatureParentBranch(syncStrategy, args)
-	if hasTrackingBranch {
+	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
 		syncFeatureTrackingBranchProgram(trackingBranch, hasTrackingBranch, syncStrategy, args)
 	}
 }
