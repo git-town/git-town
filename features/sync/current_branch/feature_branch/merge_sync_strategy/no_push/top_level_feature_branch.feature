@@ -21,17 +21,17 @@ Feature: syncing a top-level feature branch using --no-push
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
       |         | local         | local main commit                                          |
       | feature | local         | local feature commit                                       |
+      |         |               | Merge branch 'main' into feature                           |
       |         | local, origin | origin feature commit                                      |
       |         | local         | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | Merge branch 'main' into feature                           |
     And the initial branches and lineage exist now
 
   Scenario: undo
