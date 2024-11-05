@@ -95,7 +95,6 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | conflicting_file | main content       |
       |        | feature3_file    | gamma content      |
 
-  @this
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
@@ -113,6 +112,7 @@ Feature: handle merge conflicts between feature branch and main branch
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git commit --no-edit                  |
+      |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff main         |
@@ -141,10 +141,11 @@ Feature: handle merge conflicts between feature branch and main branch
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | beta   | git push                              |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
