@@ -64,7 +64,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineMergeData(repo, dryRun, verbose)
+	data, exit, err := determineMergeData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -72,7 +72,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil {
 		return err
 	}
-	runProgram := mergeProgram(data)
+	runProgram := mergeProgram(data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -112,7 +112,6 @@ type mergeData struct {
 	config                          config.ValidatedConfig
 	connector                       Option[hostingdomain.Connector]
 	dialogTestInputs                components.TestInputs
-	dryRun                          configdomain.DryRun
 	grandParentBranch               gitdomain.LocalBranchName
 	hasOpenChanges                  bool
 	initialBranch                   gitdomain.LocalBranchName
@@ -127,7 +126,7 @@ type mergeData struct {
 	stashSize                       gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (mergeData, bool, error) {
+func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (mergeData, bool, error) {
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return mergeData{}, false, err
@@ -220,7 +219,6 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		config:                          validatedConfig,
 		connector:                       connector,
 		dialogTestInputs:                dialogTestInputs,
-		dryRun:                          dryRun,
 		grandParentBranch:               grandParentBranch,
 		hasOpenChanges:                  repoStatus.OpenChanges,
 		initialBranch:                   initialBranch,
@@ -236,7 +234,7 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	}, false, err
 }
 
-func mergeProgram(data mergeData) program.Program {
+func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
 	sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(
@@ -275,7 +273,7 @@ func mergeProgram(data mergeData) program.Program {
 	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
