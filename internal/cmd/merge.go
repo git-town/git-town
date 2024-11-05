@@ -230,6 +230,8 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 
 func mergeProgram(data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
+	sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(gitdomain.RemoteOrigin), data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy())
 	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		Config:              data.config,

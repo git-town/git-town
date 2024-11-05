@@ -12,7 +12,7 @@ import (
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	syncFeatureParentBranch(syncStrategy, args)
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
-		syncFeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
+		FeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
 	}
 }
 
@@ -47,7 +47,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 }
 
 // separate pull and push of the tracking branch here?
-func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
+func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
