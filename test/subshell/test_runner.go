@@ -216,7 +216,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
-	fmt.Println("444444444444444444444444444444444444444444444")
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if len(opts.Dir) > 0 {
 		subProcess.Dir = opts.Dir
@@ -248,10 +247,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			return
 		}
 	} else {
-		fmt.Println("55555555555555555555555555555555555555555555555555555555555555555555555555555555")
 		err = subProcess.Run()
 	}
-	fmt.Println("666666666666666666666666666666666666666666666666666666666666666666666666666666")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {

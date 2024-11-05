@@ -16,7 +16,6 @@ Feature: offline mode
       |         | origin   | origin feature commit |
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                 |
