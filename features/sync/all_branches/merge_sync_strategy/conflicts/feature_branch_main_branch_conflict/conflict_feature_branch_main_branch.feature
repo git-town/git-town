@@ -25,12 +25,11 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/alpha   |
       |        | git push                                |
       |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff origin/beta    |
-      |        | git merge --no-edit --ff main           |
+      | beta   | git merge --no-edit --ff main           |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -68,8 +67,8 @@ Feature: handle merge conflicts between feature branch and main branch
       | BRANCH | COMMAND                               |
       | beta   | git merge --abort                     |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
@@ -125,10 +124,11 @@ Feature: handle merge conflicts between feature branch and main branch
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git commit --no-edit                  |
+      |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
@@ -152,7 +152,8 @@ Feature: handle merge conflicts between feature branch and main branch
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | beta   | git push                              |
+      | beta   | git merge --no-edit --ff origin/beta  |
+      |        | git push                              |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff main         |
       |        | git merge --no-edit --ff origin/gamma |
