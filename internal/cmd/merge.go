@@ -287,7 +287,22 @@ func validateMergeData(data mergeData) error {
 	if data.hasOpenChanges {
 		return errors.New(messages.MergeOpenChanges)
 	}
-	// ensure branches in sync with tracking branches
+	// ensure parent isn't deleted at remote
+	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch).Get()
+	if !hasParent {
+		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
+	}
+	if parentInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
+		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
+	}
+	// ensure branch isn't deleted at remote
+	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch).Get()
+	if !hasBranchInfo {
+		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
+	}
+	if branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
+		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
+	}
 	// ensure parent branch has only one child
 	return nil
 }

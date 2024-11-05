@@ -162,7 +162,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	}
 	switch data.branchToShip.SyncStatus {
 	case gitdomain.SyncStatusDeletedAtRemote:
-		return fmt.Errorf(messages.ShipBranchDeletedAtRemote, data.branchNameToShip)
+		return fmt.Errorf(messages.BranchDeletedAtRemote, data.branchNameToShip)
 	case
 		gitdomain.SyncStatusNotInSync,
 		gitdomain.SyncStatusAhead,
