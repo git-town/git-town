@@ -43,11 +43,11 @@ Feature: merging a branch in an unsynced stack
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
-      |        | git push --force-with-lease --force-if-includes      |
-      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git push -u origin alpha                             |
+      | BRANCH | COMMAND                                                   |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}       |
+      |        | git push --force-with-lease --force-if-includes           |
+      |        | git push origin {{ sha 'alpha commit' }}:refs/heads/alpha |
+      |        | git branch alpha {{ sha-in-origin 'initial commit' }}     |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
