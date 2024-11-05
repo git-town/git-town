@@ -26,11 +26,12 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/alpha   |
       |        | git push                                |
       |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff origin/beta    |
+      | beta   | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/beta    |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -53,6 +54,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout beta                               |
+      | beta   | git reset --hard {{ sha 'local beta commit' }}  |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git stash pop                                   |
@@ -64,15 +67,16 @@ Feature: handle merge conflicts between feature branches and their tracking bran
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git merge --abort                     |
-      |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
-      |        | git push                              |
-      |        | git checkout main                     |
-      | main   | git push --tags                       |
-      |        | git stash pop                         |
+      | BRANCH | COMMAND                                        |
+      | beta   | git merge --abort                              |
+      |        | git reset --hard {{ sha 'local beta commit' }} |
+      |        | git checkout gamma                             |
+      | gamma  | git merge --no-edit --ff main                  |
+      |        | git merge --no-edit --ff origin/gamma          |
+      |        | git push                                       |
+      |        | git checkout main                              |
+      | main   | git push --tags                                |
+      |        | git stash pop                                  |
     And the current branch is now "main"
     And the uncommitted file still exists
     And these commits exist now
@@ -110,11 +114,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git commit --no-edit                  |
-      |        | git merge --no-edit --ff main         |
       |        | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
@@ -139,11 +142,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | beta   | git merge --no-edit --ff main         |
-      |        | git push                              |
+      | beta   | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |

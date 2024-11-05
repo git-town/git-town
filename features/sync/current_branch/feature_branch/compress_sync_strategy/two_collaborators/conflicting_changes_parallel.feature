@@ -39,8 +39,8 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "my first commit"         |
       |         | git push --force-with-lease             |
@@ -61,7 +61,8 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -71,7 +72,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then it runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
-      |         | git merge --no-edit --ff main         |
       |         | git reset --soft main                 |
       |         | git commit -m "coworker first commit" |
       |         | git push --force-with-lease           |
@@ -93,7 +93,8 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -103,7 +104,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then it runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
-      |         | git merge --no-edit --ff main   |
       |         | git reset --soft main           |
       |         | git commit -m "my first commit" |
       |         | git push --force-with-lease     |
@@ -125,7 +125,8 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -135,7 +136,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then it runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
-      |         | git merge --no-edit --ff main         |
       |         | git reset --soft main                 |
       |         | git commit -m "coworker first commit" |
       |         | git push --force-with-lease           |

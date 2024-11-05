@@ -20,7 +20,8 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -39,10 +40,9 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | feature | git commit --no-edit          |
-      |         | git merge --no-edit --ff main |
-      |         | git push                      |
+      | BRANCH  | COMMAND              |
+      | feature | git commit --no-edit |
+      |         | git push             |
     And no merge is in progress
     And all branches are now synchronized
 

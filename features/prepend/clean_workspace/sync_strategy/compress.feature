@@ -23,14 +23,14 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       |          | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout branch-1                    |
-      | branch-1 | git merge --no-edit --ff origin/branch-1 |
-      |          | git merge --no-edit --ff main            |
+      | branch-1 | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/branch-1 |
       |          | git reset --soft main                    |
       |          | git commit -m "branch-1 commit"          |
       |          | git push --force-with-lease              |
       |          | git checkout branch-2                    |
-      | branch-2 | git merge --no-edit --ff origin/branch-2 |
-      |          | git merge --no-edit --ff branch-1        |
+      | branch-2 | git merge --no-edit --ff branch-1        |
+      |          | git merge --no-edit --ff origin/branch-2 |
       |          | git reset --soft branch-1                |
       |          | git commit -m "branch-2 commit"          |
       |          | git push --force-with-lease              |

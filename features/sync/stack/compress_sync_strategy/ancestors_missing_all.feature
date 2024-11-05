@@ -25,10 +25,10 @@ Feature: stacked changes where all ancestor branches aren't local
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |
-      |        | git merge --no-edit --ff origin/gamma |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git merge --no-edit --ff origin/alpha |
       |        | git merge --no-edit --ff origin/main  |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git reset --soft origin/beta          |
       |        | git commit -m "local gamma commit"    |
       |        | git push --force-with-lease           |

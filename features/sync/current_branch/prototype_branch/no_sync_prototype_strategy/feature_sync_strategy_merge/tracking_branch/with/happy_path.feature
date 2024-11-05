@@ -22,17 +22,17 @@ Feature: sync the current prototype branch with tracking branch
       | main      | git rebase origin/main --no-update-refs   |
       |           | git push                                  |
       |           | git checkout prototype                    |
-      | prototype | git merge --no-edit --ff origin/prototype |
-      |           | git merge --no-edit --ff main             |
+      | prototype | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/prototype |
     And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | main      | local, origin | main local commit                                              |
       |           |               | main origin commit                                             |
       | prototype | local         | local commit                                                   |
+      |           |               | Merge branch 'main' into prototype                             |
       |           | local, origin | origin commit                                                  |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
-      |           |               | Merge branch 'main' into prototype                             |
 
   Scenario: undo
     When I run "git-town undo"

@@ -24,7 +24,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -66,7 +67,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then it runs the commands
       | BRANCH  | COMMAND                                  |
       | feature | git commit --no-edit                     |
-      |         | git merge --no-edit --ff main            |
       |         | git reset --soft main                    |
       |         | git commit -m "conflicting local commit" |
       |         | git push --force-with-lease              |
@@ -85,8 +85,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                  |
-      | feature | git merge --no-edit --ff main            |
-      |         | git reset --soft main                    |
+      | feature | git reset --soft main                    |
       |         | git commit -m "conflicting local commit" |
       |         | git push --force-with-lease              |
       |         | git stash pop                            |

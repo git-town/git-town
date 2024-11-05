@@ -18,8 +18,8 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff origin/existing |
-      |          | git merge --no-edit --ff main            |
+      | existing | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is still "existing"
     And the initial commits exist now

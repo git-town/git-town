@@ -24,10 +24,10 @@ Feature: stacked changes where all ancestor branches aren't local
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |
-      |        | git merge --no-edit --ff origin/gamma |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git merge --no-edit --ff origin/alpha |
       |        | git merge --no-edit --ff origin/main  |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
     And all branches are now synchronized
     And the current branch is still "gamma"
@@ -37,14 +37,14 @@ Feature: stacked changes where all ancestor branches aren't local
       | alpha  | origin        | origin alpha commit                                    |
       | beta   | origin        | origin beta commit                                     |
       | gamma  | local, origin | local gamma commit                                     |
-      |        |               | origin gamma commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
       |        |               | origin beta commit                                     |
       |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
       |        |               | origin alpha commit                                    |
       |        |               | Merge remote-tracking branch 'origin/alpha' into gamma |
       |        |               | origin main commit                                     |
       |        |               | Merge remote-tracking branch 'origin/main' into gamma  |
+      |        |               | origin gamma commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
 
   Scenario: undo
     When I run "git-town undo"

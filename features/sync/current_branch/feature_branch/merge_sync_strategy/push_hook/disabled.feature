@@ -23,8 +23,8 @@ Feature: push-hook setting set to "false"
       | main    | git rebase origin/main --no-update-refs |
       |         | git push --no-verify                    |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push --no-verify                    |
     And all branches are now synchronized
     And the current branch is still "feature"
@@ -33,9 +33,9 @@ Feature: push-hook setting set to "false"
       | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |
       | feature | local, origin | local feature commit                                       |
+      |         |               | Merge branch 'main' into feature                           |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | Merge branch 'main' into feature                           |
 
   Scenario: undo
     When I run "git-town undo"
