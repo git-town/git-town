@@ -23,24 +23,24 @@ Feature: detached syncing a stacked feature branch using --no-push
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff main         |
+      | alpha  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/alpha |
       |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff alpha        |
+      | beta   | git merge --no-edit --ff alpha        |
+      |        | git merge --no-edit --ff origin/beta  |
     And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | local         | local main commit                                      |
       |        | origin        | origin main commit                                     |
       | alpha  | local         | local alpha commit                                     |
+      |        |               | Merge branch 'main' into alpha                         |
       |        | local, origin | origin alpha commit                                    |
       |        | local         | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        |               | Merge branch 'main' into alpha                         |
       | beta   | local         | local beta commit                                      |
+      |        |               | Merge branch 'alpha' into beta                         |
       |        | local, origin | origin beta commit                                     |
       |        | local         | Merge remote-tracking branch 'origin/beta' into beta   |
-      |        |               | Merge branch 'alpha' into beta                         |
     And the initial branches and lineage exist now
 
   Scenario: undo

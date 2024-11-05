@@ -25,24 +25,24 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff origin/parent  |
-      |        | git merge --no-edit --ff main           |
+      | parent | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/parent  |
       |        | git checkout child                      |
-      | child  | git merge --no-edit --ff origin/child   |
-      |        | git merge --no-edit --ff parent         |
+      | child  | git merge --no-edit --ff parent         |
+      |        | git merge --no-edit --ff origin/child   |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        | local         | local main commit                                        |
       | child  | local         | local child commit                                       |
+      |        |               | Merge branch 'parent' into child                         |
       |        | local, origin | origin child commit                                      |
       |        | local         | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | Merge branch 'parent' into child                         |
       | parent | local         | local parent commit                                      |
+      |        |               | Merge branch 'main' into parent                          |
       |        | local, origin | origin parent commit                                     |
       |        | local         | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | Merge branch 'main' into parent                          |
     And the initial branches and lineage exist now
 
   Scenario: undo

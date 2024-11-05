@@ -19,8 +19,8 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     Then it runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff origin/feature |
       |         | git merge --no-edit --ff origin/main    |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
@@ -28,9 +28,9 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | main    | local            | local main commit                                          |
       |         | origin           | origin main commit                                         |
       | feature | origin, worktree | local feature commit                                       |
+      |         |                  | Merge remote-tracking branch 'origin/main' into feature    |
       |         |                  | origin feature commit                                      |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |                  | Merge remote-tracking branch 'origin/main' into feature    |
       |         | worktree         | origin main commit                                         |
 
   Scenario: undo

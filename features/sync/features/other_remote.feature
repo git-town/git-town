@@ -20,8 +20,8 @@ Feature: ignores other Git remotes
       |         | frontend | git checkout main                       |
       | main    | frontend | git rebase origin/main --no-update-refs |
       |         | frontend | git checkout feature                    |
-      | feature | frontend | git merge --no-edit --ff origin/feature |
-      |         | frontend | git merge --no-edit --ff main           |
+      | feature | frontend | git merge --no-edit --ff main           |
+      |         | frontend | git merge --no-edit --ff origin/feature |
       |         | frontend | git push                                |
 
   Scenario: undo

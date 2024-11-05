@@ -19,8 +19,8 @@ Feature: auto-creating a prototype branch when appending
       |          | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff origin/existing |
-      |          | git merge --no-edit --ff main            |
+      | existing | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
     And branch "new" is now prototype

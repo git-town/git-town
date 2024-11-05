@@ -15,8 +15,8 @@ Feature: append a new feature branch to an existing feature branch in detached m
     Then it runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
-      |          | git merge --no-edit --ff origin/existing |
       |          | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
     And the initial commits exist now

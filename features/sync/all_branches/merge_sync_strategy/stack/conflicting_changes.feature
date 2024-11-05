@@ -22,8 +22,7 @@ Feature: sync a stack that makes conflicting changes
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
     And the current branch is now "alpha"
     And it prints the error:
       """
@@ -32,12 +31,12 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved alpha content"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                              |
-      | alpha  | git commit --no-edit                 |
-      |        | git push                             |
-      |        | git checkout beta                    |
-      | beta   | git merge --no-edit --ff origin/beta |
-      |        | git merge --no-edit --ff alpha       |
+      | BRANCH | COMMAND                               |
+      | alpha  | git commit --no-edit                  |
+      |        | git merge --no-edit --ff origin/alpha |
+      |        | git push                              |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff alpha        |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -47,12 +46,13 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
-      |        | git checkout alpha   |
-      | alpha  | git push --tags      |
-      |        | git stash pop        |
+      | BRANCH | COMMAND                              |
+      | beta   | git commit --no-edit                 |
+      |        | git merge --no-edit --ff origin/beta |
+      |        | git push                             |
+      |        | git checkout alpha                   |
+      | alpha  | git push --tags                      |
+      |        | git stash pop                        |
     And the current branch is now "alpha"
     And no merge is in progress
     And these commits exist now

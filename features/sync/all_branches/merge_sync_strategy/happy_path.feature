@@ -33,12 +33,12 @@ Feature: sync all feature branches
       |            | git checkout main                             |
       | main       | git rebase origin/main --no-update-refs       |
       |            | git checkout alpha                            |
-      | alpha      | git merge --no-edit --ff origin/alpha         |
-      |            | git merge --no-edit --ff main                 |
+      | alpha      | git merge --no-edit --ff main                 |
+      |            | git merge --no-edit --ff origin/alpha         |
       |            | git push                                      |
       |            | git checkout beta                             |
-      | beta       | git merge --no-edit --ff origin/beta          |
-      |            | git merge --no-edit --ff main                 |
+      | beta       | git merge --no-edit --ff main                 |
+      |            | git merge --no-edit --ff origin/beta          |
       |            | git push                                      |
       |            | git checkout observed                         |
       | observed   | git rebase origin/observed --no-update-refs   |

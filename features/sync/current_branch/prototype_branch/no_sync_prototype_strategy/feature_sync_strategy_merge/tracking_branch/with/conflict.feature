@@ -22,7 +22,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | git checkout main                         |
       | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout prototype                    |
-      | prototype | git merge --no-edit --ff origin/prototype |
+      | prototype | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/prototype |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -62,10 +63,9 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | prototype | git commit --no-edit          |
-      |           | git merge --no-edit --ff main |
-      |           | git stash pop                 |
+      | BRANCH    | COMMAND              |
+      | prototype | git commit --no-edit |
+      |           | git stash pop        |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |
@@ -83,10 +83,9 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | prototype | git commit --no-edit          |
-      |           | git merge --no-edit --ff main |
-      |           | git stash pop                 |
+      | BRANCH    | COMMAND              |
+      | prototype | git commit --no-edit |
+      |           | git stash pop        |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |

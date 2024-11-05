@@ -28,11 +28,11 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | main   | git rebase origin/main --no-update-refs |
       |        | git branch -D alpha                     |
       |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff origin/beta    |
-      |        | git merge --no-edit --ff main           |
+      | beta   | git merge --no-edit --ff main           |
       |        | git checkout --ours file                |
       |        | git add file                            |
       |        | git commit --no-edit                    |
+      |        | git merge --no-edit --ff origin/beta    |
       |        | git push                                |
     And the current branch is still "beta"
     And all branches are now synchronized

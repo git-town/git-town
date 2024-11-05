@@ -21,8 +21,8 @@ Feature: offline mode
       | feature | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                          |

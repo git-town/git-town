@@ -82,8 +82,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git rebase --continue                   |
       |         | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
       |         | git stash pop                           |
     And all branches are now synchronized
@@ -103,8 +103,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH  | COMMAND                                 |
       | main    | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
       |         | git stash pop                           |
     And all branches are now synchronized

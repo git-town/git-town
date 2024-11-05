@@ -62,29 +62,29 @@ Feature: sync a workspace with two independent stacks
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout first                      |
-      | first  | git merge --no-edit --ff origin/first   |
-      |        | git merge --no-edit --ff main           |
+      | first  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/first   |
       |        | git checkout second                     |
-      | second | git merge --no-edit --ff origin/second  |
-      |        | git merge --no-edit --ff first          |
+      | second | git merge --no-edit --ff first          |
+      |        | git merge --no-edit --ff origin/second  |
       |        | git checkout third                      |
-      | third  | git merge --no-edit --ff origin/third   |
-      |        | git merge --no-edit --ff second         |
+      | third  | git merge --no-edit --ff second         |
+      |        | git merge --no-edit --ff origin/third   |
       |        | git checkout fourth                     |
-      | fourth | git merge --no-edit --ff origin/fourth  |
-      |        | git merge --no-edit --ff third          |
+      | fourth | git merge --no-edit --ff third          |
+      |        | git merge --no-edit --ff origin/fourth  |
       |        | git checkout one                        |
-      | one    | git merge --no-edit --ff origin/one     |
-      |        | git merge --no-edit --ff main           |
+      | one    | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/one     |
       |        | git checkout two                        |
-      | two    | git merge --no-edit --ff origin/two     |
-      |        | git merge --no-edit --ff one            |
+      | two    | git merge --no-edit --ff one            |
+      |        | git merge --no-edit --ff origin/two     |
       |        | git checkout three                      |
-      | three  | git merge --no-edit --ff origin/three   |
-      |        | git merge --no-edit --ff two            |
+      | three  | git merge --no-edit --ff two            |
+      |        | git merge --no-edit --ff origin/three   |
       |        | git checkout four                       |
-      | four   | git merge --no-edit --ff origin/four    |
-      |        | git merge --no-edit --ff three          |
+      | four   | git merge --no-edit --ff three          |
+      |        | git merge --no-edit --ff origin/four    |
       |        | git checkout main                       |
       | main   | git push --tags                         |
       |        | git stash pop                           |
