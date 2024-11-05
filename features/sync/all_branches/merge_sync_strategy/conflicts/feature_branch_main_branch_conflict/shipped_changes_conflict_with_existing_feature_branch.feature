@@ -24,7 +24,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/alpha   |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -43,12 +42,12 @@ Feature: shipped changes conflict with multiple existing feature branches
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git commit --no-edit                  |
+      |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git branch -D beta                    |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff main         |
+      | gamma  | git merge --no-edit --ff main         |
     And it prints something like:
       """
       deleted branch "beta"
@@ -67,12 +66,13 @@ Feature: shipped changes conflict with multiple existing feature branches
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | gamma  | git commit --no-edit |
-      |        | git push             |
-      |        | git checkout main    |
-      | main   | git push --tags      |
-      |        | git stash pop        |
+      | BRANCH | COMMAND                               |
+      | gamma  | git commit --no-edit                  |
+      |        | git merge --no-edit --ff origin/gamma |
+      |        | git push                              |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
+      |        | git stash pop                         |
     And the current branch is now "main"
     And the uncommitted file still exists
     And all branches are now synchronized
