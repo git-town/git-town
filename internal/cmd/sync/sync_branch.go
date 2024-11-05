@@ -58,7 +58,7 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
-			remoteName:         branchInfo.RemoteName,
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	case
 		configdomain.BranchTypePerennialBranch,
@@ -73,7 +73,7 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       args.PushBranches,
-			remoteName:         branchInfo.RemoteName,
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branchInfo)
@@ -88,7 +88,7 @@ func localBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
 			pushBranches:       false,
-			remoteName:         branchInfo.RemoteName,
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
