@@ -8,14 +8,12 @@ Feature: merging a branch in a stack with its parent
       | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | origin        | alpha commit | alpha-file | alpha content |
+      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
-    And inspect the repo
 
-  @debug
   @this
   Scenario: result
     Then it runs the commands
@@ -25,6 +23,7 @@ Feature: merging a branch in a stack with its parent
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
+      |        | git push                              |
       |        | git branch -D alpha                   |
       |        | git push origin :alpha                |
     And the current branch is still "beta"
