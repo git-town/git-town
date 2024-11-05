@@ -17,8 +17,8 @@ Feature: sync a branch when the previous branch is active in another worktree
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout current                    |
-      | current | git merge --no-edit --ff origin/current |
-      |         | git merge --no-edit --ff main           |
+      | current | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/current |
     And the current branch is still "current"
     And no commits exist now
 
