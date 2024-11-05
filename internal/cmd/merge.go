@@ -301,7 +301,7 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
 	}
 	if branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
+		return fmt.Errorf(messages.BranchDeletedAtRemote, data.initialBranch)
 	}
 	// ensure parent branch has only one child
 	return nil
