@@ -13,8 +13,9 @@ Feature: merging a branch in a stack with its parent
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
+    And inspect the repo
 
-  # @debug
+  @debug
   @this
   Scenario: result
     Then it runs the commands
@@ -30,7 +31,6 @@ Feature: merging a branch in a stack with its parent
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
-    And inspect the repo
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
       | beta   | local, origin | beta commit                    | beta-file  | beta content  |
