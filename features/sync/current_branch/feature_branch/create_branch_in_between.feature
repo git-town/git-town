@@ -17,7 +17,8 @@ Feature: do not undo branches that were created while resolving conflicts
       |           | git checkout main                         |
       | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout feature-1                    |
-      | feature-1 | git merge --no-edit --ff origin/feature-1 |
+      | feature-1 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/feature-1 |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -34,9 +35,8 @@ Feature: do not undo branches that were created while resolving conflicts
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | feature-1 | git merge --no-edit --ff main |
-      |           | git push                      |
+      | BRANCH    | COMMAND  |
+      | feature-1 | git push |
     And no merge is in progress
     And all branches are now synchronized
 

@@ -10,13 +10,9 @@ import (
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	switch syncStrategy {
-	case configdomain.SyncStrategyMerge:
-		syncFeatureBranchMergeProgram(args)
-	case configdomain.SyncStrategyRebase:
-		syncFeatureBranchRebaseProgram(args)
-	case configdomain.SyncStrategyCompress:
-		syncFeatureBranchCompressProgram(args)
+	syncFeatureParentBranch(syncStrategy, args)
+	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
+		syncFeatureTrackingBranchProgram(trackingBranch, syncStrategy, args)
 	}
 }
 
@@ -31,46 +27,43 @@ type featureBranchArgs struct {
 	remoteName         Option[gitdomain.RemoteBranchName]
 }
 
-func syncFeatureBranchCompressProgram(args featureBranchArgs) {
-	trackingBranch, hasTrackingBranch := args.remoteName.Get()
-	if hasTrackingBranch {
-		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
-	}
-	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		Branch:             args.localName,
-		OriginalParentName: args.originalParentName,
-		OriginalParentSHA:  args.originalParentSHA,
-	})
-	if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
-		args.program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.localName})
-		args.program.Value.Add(&opcodes.CommitWithMessage{
-			AuthorOverride: None[gitdomain.Author](),
-			Message:        firstCommitMessage,
+func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
+	switch syncStrategy {
+	case configdomain.SyncStrategyMerge:
+		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
+			Branch:             args.localName,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
+		})
+	case configdomain.SyncStrategyRebase:
+		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{Branch: args.localName})
+	case configdomain.SyncStrategyCompress:
+		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
+			Branch:             args.localName,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
 		})
 	}
-	if hasTrackingBranch && args.offline.IsFalse() {
-		args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
-	}
 }
 
-// syncs the given feature branch using the "merge" sync strategy
-func syncFeatureBranchMergeProgram(args featureBranchArgs) {
-	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
+// separate pull and push of the tracking branch here?
+func syncFeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
+	switch syncStrategy {
+	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
-	}
-	args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-		Branch:             args.localName,
-		OriginalParentName: args.originalParentName,
-		OriginalParentSHA:  args.originalParentSHA,
-	})
-}
-
-// syncs the given feature branch using the "rebase" sync strategy
-func syncFeatureBranchRebaseProgram(args featureBranchArgs) {
-	args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
-		Branch: args.localName,
-	})
-	if trackingBranch, hasTrackingBranch := args.remoteName.Get(); hasTrackingBranch {
+		if firstCommitMessage, has := args.firstCommitMessage.Get(); has {
+			args.program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.localName})
+			args.program.Value.Add(&opcodes.CommitWithMessage{
+				AuthorOverride: None[gitdomain.Author](),
+				Message:        firstCommitMessage,
+			})
+		}
+		if args.offline.IsFalse() {
+			args.program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
+		}
+	case configdomain.SyncStrategyMerge:
+		args.program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
+	case configdomain.SyncStrategyRebase:
 		if args.offline.IsFalse() {
 			args.program.Value.Add(&opcodes.RebaseTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.pushBranches})
 		}

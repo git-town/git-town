@@ -20,7 +20,8 @@ Feature: do not ask for lineage of branches that don't need to get synced
       |           | git checkout main                         |
       | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout feature-1                    |
-      | feature-1 | git merge --no-edit --ff origin/feature-1 |
+      | feature-1 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/feature-1 |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -32,8 +33,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH    | COMMAND                       |
-      | feature-1 | git commit --no-edit          |
-      |           | git merge --no-edit --ff main |
-      |           | git push                      |
+      | BRANCH    | COMMAND              |
+      | feature-1 | git commit --no-edit |
+      |           | git push             |
     And all branches are now synchronized

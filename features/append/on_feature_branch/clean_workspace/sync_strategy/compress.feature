@@ -21,8 +21,8 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |          | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
       |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff origin/existing |
-      |          | git merge --no-edit --ff main            |
+      | existing | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff origin/existing |
       |          | git reset --soft main                    |
       |          | git commit -m "existing commit 1"        |
       |          | git push --force-with-lease              |

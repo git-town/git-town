@@ -25,12 +25,12 @@ Feature: stacked changes
       | main   | git rebase origin/main --no-update-refs |
       |        | git push                                |
       |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff origin/parent  |
-      |        | git merge --no-edit --ff main           |
+      | parent | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/parent  |
       |        | git push                                |
       |        | git checkout child                      |
-      | child  | git merge --no-edit --ff origin/child   |
-      |        | git merge --no-edit --ff parent         |
+      | child  | git merge --no-edit --ff parent         |
+      |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
     And all branches are now synchronized
     And the current branch is still "child"
@@ -39,13 +39,13 @@ Feature: stacked changes
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
       | child  | local, origin | local child commit                                       |
+      |        |               | Merge branch 'parent' into child                         |
       |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
-      |        |               | Merge branch 'parent' into child                         |
       | parent | local, origin | local parent commit                                      |
+      |        |               | Merge branch 'main' into parent                          |
       |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | Merge branch 'main' into parent                          |
 
   Scenario: undo
     When I run "git-town undo"

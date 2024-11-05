@@ -25,8 +25,8 @@ Feature: proposing using the "compress" sync strategy
       | existing | git checkout main                                                   |
       | main     | git rebase origin/main --no-update-refs                             |
       |          | git checkout existing                                               |
-      | existing | git merge --no-edit --ff origin/existing                            |
-      |          | git merge --no-edit --ff main                                       |
+      | existing | git merge --no-edit --ff main                                       |
+      |          | git merge --no-edit --ff origin/existing                            |
       |          | git reset --soft main                                               |
       |          | git commit -m "local existing commit 1"                             |
       |          | git push --force-with-lease                                         |

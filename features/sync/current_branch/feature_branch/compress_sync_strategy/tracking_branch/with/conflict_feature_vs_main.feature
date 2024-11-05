@@ -26,8 +26,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -45,10 +44,9 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                 |
-      | feature | git merge --abort                                       |
-      |         | git reset --hard {{ sha 'conflicting feature commit' }} |
-      |         | git stash pop                                           |
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+      |         | git stash pop     |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress
@@ -75,6 +73,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then it runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git commit --no-edit                       |
+      |         | git merge --no-edit --ff origin/feature    |
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
@@ -95,7 +94,8 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                    |
-      | feature | git reset --soft main                      |
+      | feature | git merge --no-edit --ff origin/feature    |
+      |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
       |         | git stash pop                              |

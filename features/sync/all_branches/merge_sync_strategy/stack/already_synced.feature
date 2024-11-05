@@ -42,17 +42,17 @@ Feature: sync a stack making independent changes
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff origin/alpha   |
-      |        | git merge --no-edit --ff main           |
+      | alpha  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/alpha   |
       |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff origin/beta    |
-      |        | git merge --no-edit --ff alpha          |
+      | beta   | git merge --no-edit --ff alpha          |
+      |        | git merge --no-edit --ff origin/beta    |
       |        | git checkout gamma                      |
-      | gamma  | git merge --no-edit --ff origin/gamma   |
-      |        | git merge --no-edit --ff beta           |
+      | gamma  | git merge --no-edit --ff beta           |
+      |        | git merge --no-edit --ff origin/gamma   |
       |        | git checkout delta                      |
-      | delta  | git merge --no-edit --ff origin/delta   |
-      |        | git merge --no-edit --ff gamma          |
+      | delta  | git merge --no-edit --ff gamma          |
+      |        | git merge --no-edit --ff origin/delta   |
       |        | git checkout main                       |
       | main   | git push --tags                         |
       |        | git stash pop                           |

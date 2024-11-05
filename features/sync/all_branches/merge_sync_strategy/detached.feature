@@ -33,11 +33,11 @@ Feature: sync all feature branches
     Then it runs the commands
       | BRANCH       | COMMAND                                         |
       | alpha        | git fetch --prune --tags                        |
+      |              | git merge --no-edit --ff main                   |
       |              | git merge --no-edit --ff origin/alpha           |
-      |              | git merge --no-edit --ff main                   |
       |              | git checkout beta                               |
-      | beta         | git merge --no-edit --ff origin/beta            |
-      |              | git merge --no-edit --ff main                   |
+      | beta         | git merge --no-edit --ff main                   |
+      |              | git merge --no-edit --ff origin/beta            |
       |              | git checkout contribution                       |
       | contribution | git rebase origin/contribution --no-update-refs |
       |              | git push                                        |

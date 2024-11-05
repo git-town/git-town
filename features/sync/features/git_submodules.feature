@@ -18,8 +18,8 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And the current branch is still "feature"
     And the uncommitted file still exists
 

@@ -22,8 +22,8 @@ Feature: syncing a branch whose parent was shipped
       | main   | git rebase origin/main --no-update-refs |
       |        | git branch -D parent                    |
       |        | git checkout child                      |
-      | child  | git merge --no-edit --ff origin/child   |
-      |        | git merge --no-edit --ff main           |
+      | child  | git merge --no-edit --ff main           |
+      |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
     And it prints:
       """

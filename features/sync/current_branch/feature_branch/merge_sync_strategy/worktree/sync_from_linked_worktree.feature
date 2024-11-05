@@ -26,8 +26,8 @@ Feature: sync a branch whose parent is active in another worktree
       | main   | git rebase origin/main --no-update-refs |
       |        | git push                                |
       |        | git checkout child                      |
-      | child  | git merge --no-edit --ff origin/child   |
-      |        | git merge --no-edit --ff origin/parent  |
+      | child  | git merge --no-edit --ff origin/parent  |
+      |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
     And the current branch is still "parent"
     And these commits exist now
@@ -35,9 +35,9 @@ Feature: sync a branch whose parent is active in another worktree
       | main   | local, origin, worktree | origin main commit                                      |
       |        |                         | local main commit                                       |
       | child  | origin, worktree        | local child commit                                      |
+      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
       |        |                         | origin child commit                                     |
       |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
       |        | worktree                | origin parent commit                                    |
       | parent | local                   | local parent commit                                     |
       |        | origin                  | origin parent commit                                    |

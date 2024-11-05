@@ -30,8 +30,8 @@ Feature: display all executed Git commands
       | main    | frontend | git rebase origin/main --no-update-refs                            |
       |         | backend  | git rev-list --left-right main...origin/main                       |
       | main    | frontend | git checkout feature                                               |
-      | feature | frontend | git merge --no-edit --ff origin/feature                            |
-      |         | frontend | git merge --no-edit --ff main                                      |
+      | feature | frontend | git merge --no-edit --ff main                                      |
+      |         | frontend | git merge --no-edit --ff origin/feature                            |
       |         | backend  | git rev-list --left-right feature...origin/feature                 |
       |         | backend  | git rev-parse --abbrev-ref --symbolic-full-name @{u}               |
       |         | backend  | git show-ref --verify --quiet refs/heads/main                      |

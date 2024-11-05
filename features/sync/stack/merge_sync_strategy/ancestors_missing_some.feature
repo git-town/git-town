@@ -25,13 +25,13 @@ Feature: stacked changes where an ancestor branch isn't local
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |
       |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git merge --no-edit --ff origin/main  |
+      | alpha  | git merge --no-edit --ff origin/main  |
+      |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
       |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/gamma |
-      |        | git merge --no-edit --ff origin/beta  |
+      | gamma  | git merge --no-edit --ff origin/beta  |
       |        | git merge --no-edit --ff alpha        |
+      |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
     And all branches are now synchronized
     And the current branch is still "gamma"
@@ -39,22 +39,22 @@ Feature: stacked changes where an ancestor branch isn't local
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | origin        | origin main commit                                     |
       | alpha  | local, origin | local alpha commit                                     |
-      |        |               | origin alpha commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       |        |               | origin main commit                                     |
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       | beta   | origin        | origin beta commit                                     |
       | gamma  | local, origin | local gamma commit                                     |
-      |        |               | origin gamma commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
       |        |               | origin beta commit                                     |
       |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
       |        |               | local alpha commit                                     |
-      |        |               | origin alpha commit                                    |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       |        |               | origin main commit                                     |
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
+      |        |               | origin alpha commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       |        |               | Merge branch 'alpha' into gamma                        |
+      |        |               | origin gamma commit                                    |
+      |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
 
   Scenario: undo
     When I run "git-town undo"

@@ -22,8 +22,8 @@ Feature: dry run
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And the current branch is still "feature"
     And the initial commits exist now
