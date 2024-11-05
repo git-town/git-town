@@ -38,8 +38,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
@@ -57,8 +57,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE     | FILE NAME        | FILE CONTENT |
       | feature | local, coworker, origin | the feature | conflicting_file | my content 1 |
@@ -74,8 +74,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
@@ -94,7 +94,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -102,12 +103,11 @@ Feature: two people make alternating conflicting changes to the same branch usin
     When I resolve the conflict in "conflicting_file" with "my content 1 and coworker content 1"
     And I run "git town continue" and close the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | feature | git commit --no-edit          |
-      |         | git merge --no-edit --ff main |
-      |         | git reset --soft main         |
-      |         | git commit -m "the feature"   |
-      |         | git push --force-with-lease   |
+      | BRANCH  | COMMAND                     |
+      | feature | git commit --no-edit        |
+      |         | git reset --soft main       |
+      |         | git commit -m "the feature" |
+      |         | git push --force-with-lease |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME        | FILE CONTENT                        |
       | feature | local, origin | the feature | conflicting_file | my content 1 and coworker content 1 |
@@ -124,8 +124,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
@@ -144,7 +144,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -152,12 +153,11 @@ Feature: two people make alternating conflicting changes to the same branch usin
     When the coworker resolves the conflict in "conflicting_file" with "my content 2 and coworker content 1"
     And the coworker runs "git town continue" and closes the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                       |
-      | feature | git commit --no-edit          |
-      |         | git merge --no-edit --ff main |
-      |         | git reset --soft main         |
-      |         | git commit -m "the feature"   |
-      |         | git push --force-with-lease   |
+      | BRANCH  | COMMAND                     |
+      | feature | git commit --no-edit        |
+      |         | git reset --soft main       |
+      |         | git commit -m "the feature" |
+      |         | git push --force-with-lease |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE     |
       | feature | local            | the feature |
@@ -174,8 +174,8 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff origin/feature |
-      |         | git merge --no-edit --ff main           |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
