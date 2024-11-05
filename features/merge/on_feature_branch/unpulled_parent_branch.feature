@@ -14,7 +14,6 @@ Feature: merging a branch in a stack with its parent
     And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                               |
