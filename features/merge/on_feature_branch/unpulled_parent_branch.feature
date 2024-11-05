@@ -21,15 +21,16 @@ Feature: merging a branch in a stack with its parent
       | BRANCH | COMMAND                               |
       | beta   | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
-      | beta   | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff alpha        |
-      |        | git push                              |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff alpha        |
+      |        | git merge --no-edit --ff origin/beta  |
       |        | git branch -D alpha                   |
       |        | git push origin :alpha                |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
+    And inspect the repo
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
       | beta   | local, origin | beta commit                    | beta-file  | beta content  |

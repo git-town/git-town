@@ -118,7 +118,9 @@ type mergeData struct {
 	initialBranch                   gitdomain.LocalBranchName
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
+	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
+	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
 	remotes                         gitdomain.Remotes
@@ -208,6 +210,10 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	parentBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, parentBranch.BranchName(), grandParentBranch.BranchName())
+	if err != nil {
+		return mergeData{}, false, err
+	}
 	return mergeData{
 		branchesSnapshot:                branchesSnapshot,
 		branchesToSync:                  branchesToSync,
@@ -220,7 +226,9 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 		initialBranch:                   initialBranch,
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
 		initialBranchInfo:               *initialBranchInfo,
+		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
+		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
 		remotes:                         remotes,
@@ -231,7 +239,16 @@ func determineMergeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun,
 func mergeProgram(data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
-	sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(gitdomain.RemoteOrigin), data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy())
+	sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(
+		gitdomain.RemoteOrigin),
+		data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
+		sync.FeatureTrackingArgs{
+			FirstCommitMessage: data.parentBranchFirstCommitMessage,
+			LocalName:          data.parentBranch,
+			Offline:            data.offline,
+			Program:            prog,
+			PushBranches:       true,
+		})
 	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		Config:              data.config,
