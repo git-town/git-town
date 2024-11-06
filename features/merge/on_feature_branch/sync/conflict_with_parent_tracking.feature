@@ -26,7 +26,6 @@ Feature: merging a branch with a parent that has conflicting changes
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
