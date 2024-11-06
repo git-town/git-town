@@ -16,7 +16,7 @@ Feature: cannot ship perennial branches using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | perennial | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship perennial branches
       """

@@ -18,7 +18,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -39,7 +39,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the other worktree
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

@@ -19,7 +19,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash                |
       |          | git checkout -b new main |
       | new      | git stash pop            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       conflicts between your uncommmitted changes and the main branch
       """
@@ -54,7 +54,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

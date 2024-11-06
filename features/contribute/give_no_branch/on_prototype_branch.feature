@@ -10,7 +10,7 @@ Feature: make the current prototype branch a contribution branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "prototype" is now a contribution branch
       """

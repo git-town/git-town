@@ -19,7 +19,7 @@ Feature: do not undo branches that were created while resolving conflicts
       |           | git checkout feature-1                    |
       | feature-1 | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-1 |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """

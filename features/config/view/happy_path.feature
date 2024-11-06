@@ -16,7 +16,7 @@ Feature: show the configuration
     And Git Town setting "feature-regex" is "^user-.*$"
     And Git Town setting "ship-strategy" is "squash-merge"
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: main
@@ -75,7 +75,7 @@ Feature: show the configuration
       perennial-branches = "merge"
       """
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: main
@@ -151,7 +151,7 @@ Feature: show the configuration
       perennial-branches = "merge"
       """
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: git-main
@@ -192,7 +192,7 @@ Feature: show the configuration
       | child  | feature   | alpha  | local     |
       | hotfix | feature   | qa     | local     |
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: main
@@ -236,7 +236,7 @@ Feature: show the configuration
   Scenario: no configuration data
     Given Git Town is not configured
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: (not set)

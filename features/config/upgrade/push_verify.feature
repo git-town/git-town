@@ -4,7 +4,7 @@ Feature: automatically upgrade outdated configuration
     Given a Git repo with origin
     And <LOCATION> Git Town setting "push-verify" is "true"
     When I run "git-town <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.push-verify" to "git-town.push-hook".
       """

@@ -14,7 +14,7 @@ Feature: an unrelated branch has an unknown parent
       | parent branch of branch-2 | down enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "branch-2": branch-1
       """

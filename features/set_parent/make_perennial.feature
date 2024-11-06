@@ -13,7 +13,7 @@ Feature: make a feature branch perennial
       | parent branch of child | down enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "child": <none> (perennial branch)
       """

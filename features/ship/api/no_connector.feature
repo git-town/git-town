@@ -18,7 +18,7 @@ Feature: cannot ship a branch without connector
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       shipping via the API requires a connector
       """

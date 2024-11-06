@@ -5,7 +5,7 @@ Feature: on perennial branch
     And the current branch is "main"
     When I run "git-town diff-parent"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """
@@ -18,7 +18,7 @@ Feature: on perennial branch
     And the current branch is "qa"
     When I run "git-town diff-parent"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """

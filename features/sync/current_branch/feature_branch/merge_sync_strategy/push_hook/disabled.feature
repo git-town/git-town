@@ -39,7 +39,7 @@ Feature: push-hook setting set to "false"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
+    Then Git Town prints:
       """
       nothing to undo
       """

@@ -21,11 +21,11 @@ Feature: handle conflicts between the shipped branch and the main branch
       | main    | git merge --squash --ff feature |
       |         | git reset --hard                |
       |         | git checkout feature            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -34,7 +34,7 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
+    Then Git Town prints:
       """
       nothing to undo
       """

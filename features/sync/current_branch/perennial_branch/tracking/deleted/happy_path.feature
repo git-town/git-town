@@ -20,7 +20,7 @@ Feature: sync perennial branch that was deleted at the remote
       |             | git checkout main         |
       | main        | git branch -D perennial-1 |
       |             | git push --tags           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "perennial-1"
       """

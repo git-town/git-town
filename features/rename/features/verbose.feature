@@ -40,7 +40,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
-    And it prints:
+    And Git Town prints:
       """
       Ran 25 shell commands.
       """
@@ -68,7 +68,7 @@ Feature: display all executed Git commands
       |        | frontend | git push origin :new                          |
       |        | backend  | git config --unset git-town-branch.new.parent |
       |        | backend  | git config git-town-branch.old.parent main    |
-    And it prints:
+    And Git Town prints:
       """
       Ran 17 shell commands.
       """

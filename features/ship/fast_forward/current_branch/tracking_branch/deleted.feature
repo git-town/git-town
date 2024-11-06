@@ -17,7 +17,7 @@ Feature: shipping a branch whose tracking branch is deleted using the fast-forwa
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" was deleted at the remote
       """

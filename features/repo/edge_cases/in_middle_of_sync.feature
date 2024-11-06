@@ -13,7 +13,7 @@ Feature: displaying the repo in the middle of an ongoing sync merge conflict
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And I ran "git-town sync"
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """

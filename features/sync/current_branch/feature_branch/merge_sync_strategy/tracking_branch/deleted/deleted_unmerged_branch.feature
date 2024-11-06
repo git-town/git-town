@@ -26,7 +26,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |          | git checkout branch-2                   |
       | branch-2 | git merge --no-edit --ff main           |
       |          | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """

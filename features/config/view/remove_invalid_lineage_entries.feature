@@ -7,7 +7,7 @@ Feature: remove parent entries for perennial branches
       | feature | feature | main   | local     |
     And Git Town parent setting for branch "feature" is "feature"
     When I run "git town config"
-    Then it prints:
+    Then Git Town prints:
       """
       removing lineage entry for "feature" because the parent is the child
       """

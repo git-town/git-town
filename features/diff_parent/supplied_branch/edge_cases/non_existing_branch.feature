@@ -7,7 +7,7 @@ Feature: does not diff non-existing branch
       | feature | feature | main   | local     |
     When I run "git-town diff-parent non-existing"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """

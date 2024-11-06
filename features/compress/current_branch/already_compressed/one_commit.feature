@@ -15,7 +15,7 @@ Feature: does not compress already compressed branches
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" has already just one commit
       """

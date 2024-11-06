@@ -24,7 +24,7 @@ Feature: sync a stack that makes conflicting changes
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
     And the current branch is now "alpha"
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
@@ -37,7 +37,7 @@ Feature: sync a stack that makes conflicting changes
       |        | git push                              |
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """

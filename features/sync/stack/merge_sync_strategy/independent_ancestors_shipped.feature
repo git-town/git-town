@@ -29,11 +29,11 @@ Feature: shipped parent of a stacked change with independent changes
       | feature-3 | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-3 |
       |           | git push                                  |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-2"
       """

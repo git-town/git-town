@@ -24,7 +24,7 @@ Feature: ship a parent branch
       |        | git push                       |
       |        | git push origin :parent        |
       |        | git branch -D parent           |
-    And it prints:
+    And Git Town prints:
       """
       branch "child" is now a child of "main"
       """

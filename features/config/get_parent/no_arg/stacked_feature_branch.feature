@@ -11,7 +11,7 @@ Feature: display the parent of a stacked feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       parent
       """

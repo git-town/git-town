@@ -52,7 +52,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """
@@ -82,7 +82,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """

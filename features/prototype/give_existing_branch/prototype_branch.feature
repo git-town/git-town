@@ -10,7 +10,7 @@ Feature: prototype another prototype branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "prototype" is already a prototype branch
       """

@@ -10,4 +10,4 @@ Feature: display the parent of an observed branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints no output
+    And Git Town prints no output

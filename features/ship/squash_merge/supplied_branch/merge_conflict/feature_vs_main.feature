@@ -26,11 +26,11 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |        | git reset --hard                |
       |        | git checkout other              |
       | other  | git stash pop                   |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -41,7 +41,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

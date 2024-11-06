@@ -10,7 +10,7 @@ import (
 )
 
 // Open opens a new window/tab in the default browser with the given URL.
-// If no browser is found, it prints the URL.
+// If no browser is found, Git Town prints the URL.
 func Open(url string, frontend frontendRunner, backend backendRunner) {
 	command, hasCommand := OpenBrowserCommand(backend).Get()
 	if !hasCommand {

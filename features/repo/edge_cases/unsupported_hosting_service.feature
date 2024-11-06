@@ -3,7 +3,7 @@ Feature: unsupported hosting platform
   Scenario:
     Given a Git repo with origin
     When I run "git-town repo"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       unsupported hosting platform
 

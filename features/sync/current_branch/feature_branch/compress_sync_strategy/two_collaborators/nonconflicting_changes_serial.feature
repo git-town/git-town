@@ -96,7 +96,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
@@ -146,7 +146,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """

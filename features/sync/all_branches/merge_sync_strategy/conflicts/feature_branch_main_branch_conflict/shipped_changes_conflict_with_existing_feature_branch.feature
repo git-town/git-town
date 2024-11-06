@@ -24,11 +24,11 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -48,15 +48,15 @@ Feature: shipped changes conflict with multiple existing feature branches
       | main   | git branch -D beta                    |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff main         |
-    And it prints something like:
+    And Git Town prints something like:
       """
       deleted branch "beta"
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".

@@ -18,7 +18,7 @@ Feature: branch was deleted at the remote
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" was deleted at the remote
       """

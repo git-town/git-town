@@ -10,7 +10,7 @@ Feature: display all executed Git commands
       |        | backend | git rev-parse --show-toplevel      |
       |        | backend | git config -lz --includes --global |
       |        | backend | git config -lz --includes --local  |
-    And it prints:
+    And Git Town prints:
       """
       Ran 4 shell commands.
       """

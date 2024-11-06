@@ -30,11 +30,11 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git branch -D alpha                     |
       |        | git checkout beta                       |
       | beta   | git rebase main --no-update-refs        |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
       """
-    And it prints an error like:
+    And Git Town prints an error like:
       """
       could not apply .* alpha commit 1
       """
@@ -46,11 +46,11 @@ Feature: stack that changes the same file in multiple commits per branch
     Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | beta   | git rebase --continue |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in favorite-fruit
       """
-    And it prints an error like:
+    And Git Town prints an error like:
       """
       could not apply .* alpha commit 2
       """

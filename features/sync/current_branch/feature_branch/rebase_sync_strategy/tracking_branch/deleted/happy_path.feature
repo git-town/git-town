@@ -27,7 +27,7 @@ Feature: sync a branch whose tracking branch was shipped
       | main      | git rebase origin/main --no-update-refs |
       |           | git branch -D feature-1                 |
       |           | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """

@@ -27,7 +27,7 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git branch -D feature-1                 |
       |           | git checkout feature-2                  |
       | feature-2 | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """

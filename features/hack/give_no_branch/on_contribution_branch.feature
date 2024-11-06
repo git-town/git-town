@@ -10,7 +10,7 @@ Feature: making the current contribution branch a feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "contribution" is now a feature branch
       """

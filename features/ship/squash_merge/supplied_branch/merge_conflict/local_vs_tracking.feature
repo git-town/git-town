@@ -19,7 +19,7 @@ Feature: refuses shipping a branch with conflicts between the supplied feature b
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is not in sync
       """

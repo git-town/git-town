@@ -17,7 +17,7 @@ Feature: rename a perennial branch
     Then Git Town runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """

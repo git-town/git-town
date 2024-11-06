@@ -24,7 +24,7 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parked"
       """

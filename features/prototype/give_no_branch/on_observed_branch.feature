@@ -10,7 +10,7 @@ Feature: prototype the current observed branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "observed" is now a prototype branch
       """

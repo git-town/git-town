@@ -9,7 +9,7 @@ Feature: make another local feature branch a contribution branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "local" is local only - branches you want to contribute to must have a remote branch because they are per definition other people's branches
       """

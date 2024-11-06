@@ -19,7 +19,7 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is not in sync
       """

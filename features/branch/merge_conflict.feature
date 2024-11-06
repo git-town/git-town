@@ -23,7 +23,7 @@ Feature: display the local branch hierarchy in the middle of a merge conflict
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
         main
           alpha

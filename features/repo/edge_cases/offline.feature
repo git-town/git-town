@@ -4,7 +4,7 @@ Feature: offline mode
     Given a Git repo with origin
     And offline mode is enabled
     When I run "git-town repo"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       this command requires an active internet connection
       """

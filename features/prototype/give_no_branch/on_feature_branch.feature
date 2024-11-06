@@ -10,7 +10,7 @@ Feature: prototype the current feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "feature" is now a prototype branch
       """

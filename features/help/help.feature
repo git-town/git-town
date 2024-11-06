@@ -4,7 +4,7 @@ Feature: help for commands
   Scenario Outline: known commands
     Given I am outside a Git repo
     When I run "git-town help <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Usage:
         git-town <COMMAND>
@@ -31,7 +31,7 @@ Feature: help for commands
   Scenario Outline: outside a Git repository
     Given I am outside a Git repo
     When I run "<COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Usage:
         git-town [flags]

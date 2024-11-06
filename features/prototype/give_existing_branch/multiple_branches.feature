@@ -12,22 +12,22 @@ Feature: prototype multiple other branches
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "feature" is now a prototype branch
       """
     And branch "feature" is now prototype
-    And it prints:
+    And Git Town prints:
       """
       branch "contribution" is now a prototype branch
       """
     And branch "contribution" is now prototype
-    And it prints:
+    And Git Town prints:
       """
       branch "observed" is now a prototype branch
       """
     And branch "observed" is now prototype
-    And it prints:
+    And Git Town prints:
       """
       branch "parked" is now a prototype branch
       """

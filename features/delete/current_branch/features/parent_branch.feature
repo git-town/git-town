@@ -25,7 +25,7 @@ Feature: delete a branch within a branch chain
       |        | git commit -m "Committing WIP for git town undo" |
       |        | git checkout alpha                               |
       | alpha  | git branch -D beta                               |
-    And it prints:
+    And Git Town prints:
       """
       branch "gamma" is now a child of "alpha"
       """

@@ -13,7 +13,7 @@ Feature: already existing remote branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is already a branch "existing" at the "origin" remote
       """

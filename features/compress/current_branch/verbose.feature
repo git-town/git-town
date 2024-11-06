@@ -42,7 +42,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
       |         | git stash list                                     |
-    And it prints:
+    And Git Town prints:
       """
       Ran 25 shell commands
       """

@@ -24,11 +24,11 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git branch -D child                     |
       |            | git checkout grandchild                 |
       | grandchild | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       git merge conflict
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".

@@ -18,7 +18,7 @@ Feature: display all executed Git commands
       |        | backend  | which open                                |
       |        | backend  | git rev-parse --abbrev-ref HEAD           |
       | <none> | frontend | open https://github.com/git-town/git-town |
-    And it prints:
+    And Git Town prints:
       """
       Ran 10 shell commands.
       """

@@ -26,11 +26,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git push                                |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -57,7 +57,7 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

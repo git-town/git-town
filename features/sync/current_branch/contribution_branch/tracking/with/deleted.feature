@@ -23,7 +23,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "contribution"
       """

@@ -29,7 +29,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the current branch is still "current"
     And the uncommitted file is stashed
     And a merge is now in progress
-    And it prints the error:
+    And Git Town prints the error:
       """
       git merge conflict
       """
@@ -49,7 +49,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

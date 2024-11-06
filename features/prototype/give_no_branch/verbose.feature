@@ -21,11 +21,11 @@ Feature: prototype the current branch verbosely
       |        | git branch -vva --sort=refname                 |
       |        | git config -lz --includes --global             |
       |        | git config -lz --includes --local              |
-    And it prints:
+    And Git Town prints:
       """
       Ran 9 shell commands
       """
-    And it prints:
+    And Git Town prints:
       """
       branch "feature" is now a prototype branch
       """
@@ -52,7 +52,7 @@ Feature: prototype the current branch verbosely
       | <none>  | git config --unset git-town.prototype-branches |
       |         | git stash list                                 |
       | feature | git stash pop                                  |
-    And it prints:
+    And Git Town prints:
       """
       Ran 15 shell commands
       """

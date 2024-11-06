@@ -24,7 +24,7 @@ Feature: ship a parent branch using the fast-forward strategy
       |        | git push origin :parent    |
       |        | git checkout child         |
       | child  | git branch -D parent       |
-    And it prints:
+    And Git Town prints:
       """
       branch "child" is now a child of "main"
       """

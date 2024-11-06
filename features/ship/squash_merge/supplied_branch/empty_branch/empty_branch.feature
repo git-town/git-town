@@ -22,7 +22,7 @@ Feature: does not ship empty feature branches
       |        | git add -A               |
       |        | git stash                |
       |        | git stash pop            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       the branch "empty" has no shippable changes
       """
@@ -34,7 +34,7 @@ Feature: does not ship empty feature branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

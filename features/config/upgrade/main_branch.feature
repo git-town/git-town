@@ -4,7 +4,7 @@ Feature: automatically upgrade outdated configuration
     Given a Git repo with origin
     And <LOCATION> Git Town setting "main-branch-name" is "main"
     When I run "git-town hack foo"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.main-branch-name" to "git-town.main-branch".
       """

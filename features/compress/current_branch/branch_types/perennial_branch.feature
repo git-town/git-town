@@ -14,7 +14,7 @@ Feature: does not compress perennial branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | perennial | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       better not compress perennial branches
       """
@@ -32,7 +32,7 @@ Feature: does not compress perennial branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       better not compress perennial branches
       """

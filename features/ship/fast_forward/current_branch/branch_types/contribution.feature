@@ -16,7 +16,7 @@ Feature: cannot ship contribution branches
     Then Git Town runs the commands
       | BRANCH       | COMMAND                  |
       | contribution | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship contribution branches
       """

@@ -31,7 +31,7 @@ Feature: Create proposals for prototype branches
       """
       https://github.com/git-town/git-town/compare/parent...prototype?expand=1
       """
-    And it prints:
+    And Git Town prints:
       """
       branch "prototype" is no longer a prototype branch
       """

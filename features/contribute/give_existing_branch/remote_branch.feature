@@ -12,7 +12,7 @@ Feature: make another remote branch a contribution branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       |        | git checkout remote-feature |
-    And it prints:
+    And Git Town prints:
       """
       branch "remote-feature" is now a contribution branch
       """

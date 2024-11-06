@@ -13,7 +13,7 @@ Feature: Cannot create proposals for contribution branches
     Then Git Town runs the commands
       | BRANCH       | COMMAND                  |
       | contribution | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot propose contribution branches
       """

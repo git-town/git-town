@@ -26,7 +26,7 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       |        | git merge --abort           |
       |        | git checkout other          |
       | other  | git stash pop               |
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -37,7 +37,7 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

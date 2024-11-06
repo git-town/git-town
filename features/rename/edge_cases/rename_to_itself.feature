@@ -12,7 +12,7 @@ Feature: rename a branch to itself
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot rename branch to current name
       """
@@ -22,7 +22,7 @@ Feature: rename a branch to itself
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot rename branch to current name
       """

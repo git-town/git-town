@@ -7,7 +7,7 @@ Feature: cannot observe the main branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot observe the main branch
       """

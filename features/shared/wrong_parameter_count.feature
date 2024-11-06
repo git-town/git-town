@@ -4,7 +4,7 @@ Feature: too few or many parameters
     Given I am outside a Git repo
     When I run "git-town <CMD>"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       Error: <ERROR>
       """

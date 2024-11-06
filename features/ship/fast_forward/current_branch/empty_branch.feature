@@ -17,7 +17,7 @@ Feature: does not ship an empty branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | empty  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       the branch "empty" has no shippable changes
       """
@@ -28,7 +28,7 @@ Feature: does not ship an empty branch using the fast-forward strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

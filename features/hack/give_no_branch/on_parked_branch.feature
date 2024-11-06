@@ -10,7 +10,7 @@ Feature: making the current parked branch a feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "parked" is now a feature branch
       """

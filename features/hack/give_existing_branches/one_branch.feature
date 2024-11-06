@@ -11,7 +11,7 @@ Feature: making a branch a feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints:
+    And Git Town prints:
       """
       branch "contribution" is now a feature branch
       """

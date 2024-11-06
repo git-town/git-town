@@ -26,11 +26,11 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | alpha  | git merge --no-edit --ff main |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -86,7 +86,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

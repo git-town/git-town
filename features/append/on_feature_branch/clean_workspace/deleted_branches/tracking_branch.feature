@@ -20,7 +20,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | main    | git rebase origin/main --no-update-refs |
       |         | git branch -D shipped                   |
       |         | git checkout -b new                     |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "shipped"
       """

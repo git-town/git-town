@@ -22,7 +22,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """

@@ -14,7 +14,7 @@ Feature: does not ship the main branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship the main branch
       """
@@ -24,7 +24,7 @@ Feature: does not ship the main branch using the fast-forward strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

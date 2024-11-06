@@ -96,7 +96,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
@@ -146,7 +146,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """

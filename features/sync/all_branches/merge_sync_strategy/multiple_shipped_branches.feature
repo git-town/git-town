@@ -30,11 +30,11 @@ Feature: multiple shipped branches
       |           | git merge --no-edit --ff origin/feature-3 |
       |           | git push                                  |
       |           | git push --tags                           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-2"
       """

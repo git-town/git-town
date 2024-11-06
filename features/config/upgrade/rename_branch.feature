@@ -4,7 +4,7 @@ Feature: automatically upgrade rename-branch alias
     Given a Git repo with origin
     And global Git setting "alias.rename-branch" is "town rename-branch"
     When I run "git town hack feat/upgrade-alias"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated global setting "alias.rename-branch" to "alias.rename".
       """

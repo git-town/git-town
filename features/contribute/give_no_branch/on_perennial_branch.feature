@@ -10,7 +10,7 @@ Feature: cannot make the current perennial branch a contribution branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot make perennial branches contribution branches
       """

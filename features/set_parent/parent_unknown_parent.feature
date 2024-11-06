@@ -14,7 +14,7 @@ Feature: setting the parent to a branch whose parent is unknown
       | parent branch of branch-2 | down enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "branch-2": branch-1
       """

@@ -34,11 +34,11 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       |           | git reset --soft main                     |
       |           | git commit -m "feature-3 commit A"        |
       |           | git push --force-with-lease               |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-2"
       """

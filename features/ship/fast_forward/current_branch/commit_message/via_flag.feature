@@ -17,7 +17,7 @@ Feature: ship a branch via the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       shipping with the fast-forward strategy does not use the given commit message
       """

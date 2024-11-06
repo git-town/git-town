@@ -13,7 +13,7 @@ Feature: display all executed Git commands
       | parent branch of child | up enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "child": main
       """
@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       |        | backend | git config -lz --includes --global           |
       |        | backend | git config -lz --includes --local            |
       |        | backend | git stash list                               |
-    And it prints:
+    And Git Town prints:
       """
       Ran 13 shell commands.
       """
@@ -57,7 +57,7 @@ Feature: display all executed Git commands
       |        | backend | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend | git remote get-url origin                      |
       |        | backend | git config git-town-branch.child.parent parent |
-    And it prints:
+    And Git Town prints:
       """
       Ran 11 shell commands.
       """

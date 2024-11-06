@@ -25,7 +25,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "prototype"
       """

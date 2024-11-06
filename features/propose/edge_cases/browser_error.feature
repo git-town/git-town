@@ -18,7 +18,7 @@ Feature: print the URL when the browser crashes
       | feature | git fetch --prune --tags                           |
       | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
-    And it prints:
+    And Git Town prints:
       """
       Please open in a browser: https://github.com/git-town/git-town/pull/123
       """

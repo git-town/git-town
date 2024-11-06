@@ -9,7 +9,7 @@ Feature: make another parked branch an observed branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "parked" is now an observed branch
       """

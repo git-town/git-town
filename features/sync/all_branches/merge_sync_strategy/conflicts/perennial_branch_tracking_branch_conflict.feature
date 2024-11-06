@@ -29,11 +29,11 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | alpha  | git rebase origin/alpha --no-update-refs |
       |        | git checkout beta                        |
       | beta   | git rebase origin/beta --no-update-refs  |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -78,7 +78,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """

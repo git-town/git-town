@@ -15,7 +15,7 @@ Feature: rename an unsynced branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
@@ -29,7 +29,7 @@ Feature: rename an unsynced branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """

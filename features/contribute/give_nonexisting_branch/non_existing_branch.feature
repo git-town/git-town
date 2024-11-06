@@ -6,7 +6,7 @@ Feature: cannot make non-existing branches contribution branches
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """

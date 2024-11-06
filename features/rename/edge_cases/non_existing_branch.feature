@@ -10,7 +10,7 @@ Feature: branch does not exist
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """

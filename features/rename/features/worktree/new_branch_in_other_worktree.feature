@@ -19,7 +19,7 @@ Feature: rename the current branch to a branch that is active in another worktre
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is already a branch "other"
       """
@@ -28,7 +28,7 @@ Feature: rename the current branch to a branch that is active in another worktre
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

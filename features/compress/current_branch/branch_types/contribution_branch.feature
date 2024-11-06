@@ -16,7 +16,7 @@ Feature: does not compress contribution branches
     Then Git Town runs the commands
       | BRANCH       | COMMAND                  |
       | contribution | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       you are merely contributing to branch "contribution" and should leave compressing it to the branch owner
       """

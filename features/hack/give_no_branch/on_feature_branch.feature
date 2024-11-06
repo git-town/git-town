@@ -10,7 +10,7 @@ Feature: cannot make the current feature branch a feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is already a feature branch
       """

@@ -26,7 +26,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
       |        | git checkout -b new                     |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parent"
       """

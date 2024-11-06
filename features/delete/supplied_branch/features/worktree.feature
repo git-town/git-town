@@ -20,7 +20,7 @@ Feature: delete a branch that is active in another worktree
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | good   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "dead" is active in another worktree
       """
@@ -29,7 +29,7 @@ Feature: delete a branch that is active in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

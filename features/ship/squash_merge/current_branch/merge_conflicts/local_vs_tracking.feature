@@ -17,7 +17,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is not in sync
       """

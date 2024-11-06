@@ -12,7 +12,7 @@ Feature: prototype another remote branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | main   | git checkout remote-feature |
-    And it prints:
+    And Git Town prints:
       """
       branch "remote-feature" is now a prototype branch
       """

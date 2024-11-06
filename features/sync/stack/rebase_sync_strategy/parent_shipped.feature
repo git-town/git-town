@@ -25,7 +25,7 @@ Feature: syncing a branch whose parent was shipped
       |        | git checkout child                              |
       | child  | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parent"
       """

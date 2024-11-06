@@ -11,7 +11,7 @@ Feature: already existing known remote branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is already a branch "existing"
       """

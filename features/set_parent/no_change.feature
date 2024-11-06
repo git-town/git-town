@@ -13,7 +13,7 @@ Feature: update the parent of a feature branch
       | parent branch of child | enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "child": parent
       """

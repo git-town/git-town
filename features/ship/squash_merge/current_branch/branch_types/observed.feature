@@ -16,7 +16,7 @@ Feature: cannot ship observed branches
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | observed | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship observed branches
       """

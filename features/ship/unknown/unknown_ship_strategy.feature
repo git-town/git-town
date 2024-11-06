@@ -17,7 +17,7 @@ Feature: unknown ship strategy
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And it prints the error:
+    And Git Town prints the error:
       """
       unknown ship strategy: "zonk"
       """
@@ -25,7 +25,7 @@ Feature: unknown ship strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       unknown ship strategy: "zonk"
       """

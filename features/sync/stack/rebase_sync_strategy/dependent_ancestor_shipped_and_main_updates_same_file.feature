@@ -28,7 +28,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
@@ -44,7 +44,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git branch -D alpha              |
       |        | git checkout beta                |
       | beta   | git rebase main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
       """

@@ -21,7 +21,7 @@ Feature: cannot ship not-up-to-date feature branches using the fast-forward stra
       | main    | git merge --ff-only feature |
       |         | git merge --abort           |
       |         | git checkout feature        |
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """

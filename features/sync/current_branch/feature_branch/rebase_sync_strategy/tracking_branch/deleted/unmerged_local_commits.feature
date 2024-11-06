@@ -26,7 +26,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       |         | git checkout shipped                    |
       | shipped | git rebase main --no-update-refs        |
       |         | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """

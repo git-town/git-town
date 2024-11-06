@@ -7,7 +7,7 @@ Feature: ask for missing configuration
     When I run "git-town delete" and enter into the dialog:
       | DIALOG      | KEYS  |
       | main branch | enter |
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       you cannot delete the main branch
       """

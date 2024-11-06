@@ -30,7 +30,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       |        | git reset --soft main                   |
       |        | git commit -m "child commit 1"          |
       |        | git push --force-with-lease             |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parent"
       """

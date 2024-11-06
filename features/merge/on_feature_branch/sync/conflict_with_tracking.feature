@@ -23,7 +23,7 @@ Feature: merging a branch with a conflicting parent
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """

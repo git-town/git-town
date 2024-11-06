@@ -25,7 +25,7 @@ Feature: syncing a branch whose parent was shipped
       | child  | git merge --no-edit --ff main           |
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parent"
       """

@@ -13,7 +13,7 @@ Feature: abort the dialog
       | parent branch of child | esc  |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "child": (aborted)
       """

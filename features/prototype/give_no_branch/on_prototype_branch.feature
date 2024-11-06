@@ -10,7 +10,7 @@ Feature: prototype the current prototoype branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "migrate-task-20223" is already a prototype branch
       """

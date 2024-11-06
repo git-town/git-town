@@ -26,7 +26,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       |         | git checkout shipped                    |
       | shipped | git merge --no-edit --ff main           |
       |         | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """

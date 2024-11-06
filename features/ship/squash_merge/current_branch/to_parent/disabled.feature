@@ -20,7 +20,7 @@ Feature: does not ship a child branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | gamma  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
@@ -32,7 +32,7 @@ Feature: does not ship a child branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

@@ -28,7 +28,7 @@ Feature: abort the ship via empty commit message
       |        | git reset --hard                |
       |        | git checkout other              |
       | other  | git stash pop                   |
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -40,7 +40,7 @@ Feature: abort the ship via empty commit message
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       nothing to undo
       """

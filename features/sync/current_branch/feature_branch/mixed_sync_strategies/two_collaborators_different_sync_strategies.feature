@@ -44,7 +44,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """
@@ -76,7 +76,7 @@ Feature: compatibility between different sync-feature-strategy settings
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """

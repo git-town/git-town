@@ -773,7 +773,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints:$`, func(ctx context.Context, expected *godog.DocString) error {
+	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
 			return fmt.Errorf("unexpected exit code %d", exitCode)
@@ -806,7 +806,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
+	sc.Step(`^Git Town prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.runExitCodeChecked = true
 		regex := regexp.MustCompile(expected.Content)
@@ -820,7 +820,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints no output$`, func(ctx context.Context) error {
+	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output := state.runOutput.GetOrPanic()
 		if len(output) > 0 {
@@ -829,7 +829,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
+	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		regex := regexp.MustCompile(expected.Content)
 		have := stripansi.Strip(state.runOutput.GetOrPanic())
@@ -839,7 +839,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
+	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.runExitCodeChecked = true
 		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {

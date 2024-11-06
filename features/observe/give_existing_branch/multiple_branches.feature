@@ -12,24 +12,24 @@ Feature: observing multiple other branches
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "feature" is now an observed branch
       """
     And branch "feature" is now observed
-    And it prints:
+    And Git Town prints:
       """
       branch "contribution" is now an observed branch
       """
     And branch "contribution" is now observed
     And there are now no contribution branches
-    And it prints:
+    And Git Town prints:
       """
       branch "parked" is now an observed branch
       """
     And branch "parked" is now observed
     And there are now no parked branches
-    And it prints:
+    And Git Town prints:
       """
       branch "prototype" is now an observed branch
       """

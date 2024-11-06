@@ -9,7 +9,7 @@ Feature: prototype another contribution branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints:
+    And Git Town prints:
       """
       branch "contribution" is now a prototype branch
       """

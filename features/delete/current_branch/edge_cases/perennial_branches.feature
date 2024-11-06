@@ -6,7 +6,7 @@ Feature: does not delete perennial branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       you cannot delete the main branch
       """
@@ -22,7 +22,7 @@ Feature: does not delete perennial branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | qa     | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       you cannot delete perennial branches
       """

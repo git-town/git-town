@@ -10,7 +10,7 @@ Feature: observe the current local feature branch
 
   Scenario: result
     Then Git Town runs no commands
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """

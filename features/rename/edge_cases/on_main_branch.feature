@@ -9,7 +9,7 @@ Feature: does not rename the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       the main branch cannot be renamed
       """
@@ -20,7 +20,7 @@ Feature: does not rename the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       the main branch cannot be renamed
       """

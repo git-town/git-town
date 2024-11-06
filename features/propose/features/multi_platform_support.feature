@@ -33,7 +33,7 @@ Feature: support many browsers and operating systems
     And the origin is "https://github.com/git-town/git-town.git"
     And no tool to open browsers is installed
     When I run "git-town propose"
-    Then it prints:
+    Then Git Town prints:
       """
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
