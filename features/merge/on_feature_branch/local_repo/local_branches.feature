@@ -1,4 +1,4 @@
-Feature: merging in a local repo
+Feature: merging local branches
 
   Background:
     Given a Git repo with origin
