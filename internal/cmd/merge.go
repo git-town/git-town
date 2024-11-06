@@ -277,16 +277,13 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         false,
+		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog.Get()
 }
 
 func validateMergeData(data mergeData) error {
-	if data.hasOpenChanges {
-		return errors.New(messages.MergeOpenChanges)
-	}
 	// ensure parent isn't deleted at remote
 	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch).Get()
 	if !hasParent {
