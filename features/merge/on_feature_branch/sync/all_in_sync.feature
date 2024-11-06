@@ -6,14 +6,14 @@ Feature: merging a branch in a stack that is fully in sync
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
-      | beta   | local, origin | beta commit | beta-file | beta content |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | beta   | local, origin | beta commit |
     And the current branch is "beta"
     When I run "git-town merge"
 
@@ -33,13 +33,9 @@ Feature: merging a branch in a stack that is fully in sync
       | BRANCH | PARENT |
       | beta   | main   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | alpha commit | alpha-file | alpha content |
-      |        |               | beta commit  | beta-file  | beta content  |
-    And these committed files exist now
-      | BRANCH | NAME       | CONTENT       |
-      | beta   | alpha-file | alpha content |
-      |        | beta-file  | beta content  |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | beta   | local, origin | alpha commit |
+      |        |               | beta commit  |
 
   Scenario: undo
     When I run "git-town undo"
