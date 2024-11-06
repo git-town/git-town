@@ -1,4 +1,4 @@
-Feature: merging a branch in a stack with its parent
+Feature: merging branches using the "merge" sync-strategy
 
   Background:
     Given a Git repo with origin
