@@ -15,7 +15,7 @@ Feature: merging a branch that was deleted at the remote
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
@@ -28,7 +28,7 @@ Feature: merging a branch that was deleted at the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And Git Town prints:
       """
       nothing to undo

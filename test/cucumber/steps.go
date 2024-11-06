@@ -539,6 +539,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^Git Town runs without errors`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		exitCode := state.runExitCode.GetOrPanic()
+		if exitCode != 0 {
+			return errors.New("unexpected failure of scenario")
+		}
+		return nil
+	})
+
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -887,15 +896,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Config.Reload()
-	})
-
-	sc.Step(`^it runs without errors`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		exitCode := state.runExitCode.GetOrPanic()
-		if exitCode != 0 {
-			return errors.New("unexpected failure of scenario")
-		}
-		return nil
 	})
 
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {

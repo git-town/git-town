@@ -15,7 +15,7 @@ Feature: merging a branch with uncommitted changes
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git add -A                            |
@@ -46,7 +46,7 @@ Feature: merging a branch with uncommitted changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git add -A                                           |
       |        | git stash                                            |

@@ -14,7 +14,7 @@ Feature: dry-run merging branches
     When I run "git-town merge --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -30,7 +30,7 @@ Feature: dry-run merging branches
 
   Scenario: undo
     When I run "git-town undo"
-    And it runs no commands
+    And Git Town runs no commands
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches exist now

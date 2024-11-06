@@ -15,7 +15,7 @@ Feature: merging a branch with disabled push-hook
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -38,7 +38,7 @@ Feature: merging a branch with disabled push-hook
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                     |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}         |
       |        | git push --force-with-lease --force-if-includes --no-verify |

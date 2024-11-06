@@ -18,7 +18,7 @@ Feature: merging a branch in a stack that is fully in sync
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -39,7 +39,7 @@ Feature: merging a branch in a stack that is fully in sync
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |
       |        | git push -u origin alpha                             |

@@ -15,7 +15,7 @@ Feature: merging a branch in a stack with its parent
     When I run "git-town merge -v"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       |        | git version                                     |
       |        | git rev-parse --show-toplevel                   |
@@ -71,7 +71,7 @@ Feature: merging a branch in a stack with its parent
 
   Scenario: undo
     When I run "git-town undo -v"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       |        | git version                                     |
       |        | git rev-parse --show-toplevel                   |

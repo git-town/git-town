@@ -15,7 +15,7 @@ Feature: merging a branch in offline mode
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
@@ -36,7 +36,7 @@ Feature: merging a branch in offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |

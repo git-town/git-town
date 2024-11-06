@@ -14,7 +14,7 @@ Feature: merging local branches
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | beta   | git fetch --prune --tags       |
       |        | git merge --no-edit --ff alpha |
@@ -31,7 +31,7 @@ Feature: merging local branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
